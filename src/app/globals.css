@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Anchor 对齐：About 区块向上保留一点空间，避免被固定导航遮挡太多 */
+#about {
+  scroll-margin-top: -150px;
+}
+
+body {
+  overflow-x: clip;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* CrackInterview Interactive Demo hover 样式 */
+.ci-animation-demo-link {
+  display: inline-block;
+  width: 30%;
+  max-width: 600px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  background-image: url('/img/crackinterview/Animation_Default.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  aspect-ratio: 16 / 9;
+}
+
+.ci-animation-demo-link:hover {
+  transform: scale(1.05);
+  background-image: url('/img/crackinterview/Animation_hover.png');
+}
+
+.ci-animation-demo-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  object-fit: contain;
+}
+
+.ci-animation-demo-image-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.ci-animation-demo-image-default,
+.ci-animation-demo-image-hover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.ci-animation-demo-image-hover {
+  opacity: 0;
+}
+
+.ci-animation-demo-link:hover .ci-animation-demo-image-hover {
+  opacity: 1;
+}
+
+.ci-animation-demo-link:hover .ci-animation-demo-image-default {
+  opacity: 0;
+}
+
+/* 通用 Explore the live site 按钮样式（匹配 Button 默认样式与 hover） */
+.live-site-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 32px;
+  height: 58px;
+  border-radius: 29px;
+  border: 1px solid transparent;
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.live-site-button:hover {
+  background-color: transparent;
+  color: rgb(0, 0, 0);
+  border-color: rgb(0, 0, 0);
+}
+
+/* Other Works 卡片 hover 效果 */
+.other-work-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.other-work-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+  border-color: rgba(0, 0, 0, 0.16);
+  background-color: #fdfdfd;
+}
+
+/* Case study 文案 + 箭头：默认浅色，卡片 hover 时点亮 */
+.other-work-card .case-study-hint {
+  color: rgba(0, 0, 0, 0.45);
+  transition: color 0.22s ease;
+}
+
+.other-work-card:hover .case-study-hint {
+  color: rgb(0, 0, 0);
+}
