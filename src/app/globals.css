@@ -41,12 +41,12 @@ body {
 /* CrackInterview Interactive Demo hover 样式 */
 .ci-animation-demo-link {
   display: inline-block;
-  width: 30%;
-  max-width: 600px;
+  width: 260px;
+  max-width: 100%;
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease;
-  background-image: url('/img/crackinterview/Animation_Default.png');
+  background-image: url('/img/crackinterview/Animation_Default.avif');
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -54,8 +54,8 @@ body {
 }
 
 .ci-animation-demo-link:hover {
-  transform: scale(1.05);
-  background-image: url('/img/crackinterview/Animation_hover.png');
+  transform: scale(1.2);
+  background-image: url('/img/crackinterview/Animation_hover.avif');
 }
 
 .ci-animation-demo-image {

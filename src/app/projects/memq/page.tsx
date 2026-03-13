@@ -1077,7 +1077,7 @@ export default function MemQProjectPage() {
                     }}
                   >
                     <Image
-                      src="/img/AI chat.PNG"
+                      src="/img/AI chat.avif"
                       alt="AI chat interface"
                       width={320}
                       height={692}
@@ -2636,7 +2636,7 @@ export default function MemQProjectPage() {
               }}
             >
               <Image
-                src="/img/Affinity Mapping.png"
+                src="/img/Affinity Mapping.avif"
                 alt="Affinity Mapping"
                 width={1200}
                 height={800}

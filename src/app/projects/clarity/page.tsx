@@ -469,7 +469,7 @@ export default function ClarityProjectPage() {
                 }}
               />
               <img
-                src="/img/Clarity/Persona.png"
+                src="/img/Clarity/Persona.avif"
                 alt="Grace Shelton"
                 style={{
                   position: 'relative',
@@ -627,7 +627,7 @@ export default function ClarityProjectPage() {
               width: '100%',
             }}
           >
-            {/* 左侧：APP.png 手机界面，上半部分可见，下半部分被容器裁切 */}
+            {/* 左侧：APP 手机界面，上半部分可见，下半部分被容器裁切 */}
             <div
               style={{
                 width: '100%',
@@ -637,7 +637,7 @@ export default function ClarityProjectPage() {
               }}
             >
               <img
-                src="/img/Clarity/APP.png"
+                src="/img/Clarity/APP.avif"
                 alt="Clarity app insights overview"
                 style={{
                   width: '100%',
@@ -688,7 +688,7 @@ export default function ClarityProjectPage() {
                   }}
                 >
                   <img
-                    src="/img/Clarity/Device.png"
+                    src="/img/Clarity/Device.avif"
                     alt="Clarity portable device"
                     style={{
                       width: '100%',
@@ -845,14 +845,14 @@ export default function ClarityProjectPage() {
             }}
           >
             <img
-                src="/img/Clarity/User%20Journey.png"
-                alt="Clarity user journey"
-                style={{
-                  width: '100%',
-                  maxWidth: '1120px',
-                  height: 'auto',
-                  display: 'block',
-                }}
+              src="/img/Clarity/User%20Journey.avif"
+              alt="Clarity user journey"
+              style={{
+                width: '100%',
+                maxWidth: '1120px',
+                height: 'auto',
+                display: 'block',
+              }}
             />
           </div>
 
@@ -862,7 +862,7 @@ export default function ClarityProjectPage() {
               position: 'relative',
               width: '100%',
               borderRadius: '8px',
-              backgroundImage: "url('/img/Clarity/App%20Design.png')",
+              backgroundImage: "url('/img/Clarity/App%20Design.avif')",
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
@@ -900,7 +900,7 @@ export default function ClarityProjectPage() {
           >
             {[
               {
-                img: '/img/Clarity/Tracking.png',
+                img: '/img/Clarity/Tracking.avif',
                 alt: 'Tracking',
                 title: 'Tracking',
                 desc: (
@@ -911,7 +911,7 @@ export default function ClarityProjectPage() {
                 ),
               },
               {
-                img: '/img/Clarity/Insights.png',
+                img: '/img/Clarity/Insights.avif',
                 alt: 'Insights',
                 title: 'Insights',
                 desc: (
@@ -922,7 +922,7 @@ export default function ClarityProjectPage() {
                 ),
               },
               {
-                img: '/img/Clarity/Learning.png',
+                img: '/img/Clarity/Learning.avif',
                 alt: 'Learning',
                 title: 'Learning',
                 desc: (
@@ -933,7 +933,7 @@ export default function ClarityProjectPage() {
                 ),
               },
               {
-                img: '/img/Clarity/Visits.png',
+                img: '/img/Clarity/Visits.avif',
                 alt: 'Visits',
                 title: 'Visits',
                 desc: (
@@ -1105,7 +1105,7 @@ export default function ClarityProjectPage() {
               }}
             >
               <img
-                src="/img/Clarity/Test.png"
+                src="/img/Clarity/Test.avif"
                 alt="User test"
                 style={{
                   width: '100%',
@@ -1254,7 +1254,7 @@ export default function ClarityProjectPage() {
               }}
             >
               <img
-                src="/img/Clarity/Device%20intensity.png"
+                src="/img/Clarity/Device%20intensity.avif"
                 alt="Device intensity"
                 style={{
                   width: '100%',
@@ -1284,7 +1284,7 @@ export default function ClarityProjectPage() {
               }}
             >
               <img
-                src="/img/Clarity/Device%20feedback.png"
+                src="/img/Clarity/Device%20feedback.avif"
                 alt="Device feedback"
                 style={{
                   width: '100%',
@@ -1456,7 +1456,7 @@ export default function ClarityProjectPage() {
               }}
             >
               <img
-                src="/img/Clarity/Device%20User%20Test.png"
+                src="/img/Clarity/Device%20User%20Test.avif"
                 alt="Device user test"
                 style={{
                   width: '100%',
@@ -1491,19 +1491,19 @@ export default function ClarityProjectPage() {
           >
             {[
               {
-                img: "/img/Clarity/Doctor%20Interface.png",
+                img: "/img/Clarity/Doctor%20Interface.avif",
                 alt: "Doctor's Interface",
                 title: "Doctor's Interface",
                 desc: "Design and test the doctor's interface to ensure it surfaces the right information and fits into clinical workflows.",
               },
               {
-                img: "/img/Clarity/Further%20Testing.png",
+                img: "/img/Clarity/Further%20Testing.avif",
                 alt: "Further Testing",
                 title: "Further Testing",
                 desc: "Test new versions of the device and app with the target audience to validate effectiveness and usability.",
               },
               {
-                img: "/img/Clarity/Other%20Diseases.png",
+                img: "/img/Clarity/Other%20Diseases.avif",
                 alt: "Other Diseases",
                 title: "Other Conditions",
                 desc: "Adapt the system to other chronic health conditions, improving overall doctor–patient communication.",

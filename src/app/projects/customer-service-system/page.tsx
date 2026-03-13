@@ -290,7 +290,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/customer-service-system.png"
+                src="/img/customer-service-system/customer-service-system.avif"
                 alt="Customer Service System overview"
                 style={{
                   width: '100%',
@@ -475,7 +475,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/User Role Map.jpg"
+                src="/img/customer-service-system/User Role Map.avif"
                 alt="User role map"
                 style={{
                   width: '100%',
@@ -558,7 +558,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/End User Journey.png"
+                src="/img/customer-service-system/End User Journey.avif"
                 alt="End User Journey"
                 style={{
                   width: '100%',
@@ -657,7 +657,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/Customer Support Journey.png"
+                src="/img/customer-service-system/Customer Support Journey.avif"
                 alt="Customer Support Journey"
                 style={{
                   width: '100%',
@@ -798,7 +798,7 @@ export default function CustomerServiceSystemPage() {
             }}
           >
             <img
-              src="/img/customer-service-system/Admin System Scope Map.jpg"
+              src="/img/customer-service-system/Admin System Scope Map.avif"
               alt="Admin System Scope Map"
               style={{
                 width: '100%',
@@ -1011,7 +1011,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/Cross-role User Flows.jpg"
+                src="/img/customer-service-system/Cross-role User Flows.avif"
                 alt="Cross-role User Flows"
                 style={{
                   width: '100%',
@@ -1068,7 +1068,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/End User – Mobile & Desktop.png"
+                src="/img/customer-service-system/End User – Mobile & Desktop.avif"
                 alt="End User – Mobile & Desktop"
                 style={{
                   width: '100%',
@@ -1125,7 +1125,7 @@ export default function CustomerServiceSystemPage() {
               }}
             >
               <img
-                src="/img/customer-service-system/Customer Support - Desktop.png"
+                src="/img/customer-service-system/Customer Support - Desktop.avif"
                 alt="Customer Support - Desktop"
                 style={{
                   width: '100%',

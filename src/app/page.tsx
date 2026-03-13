@@ -566,7 +566,7 @@ export default function Home() {
             title="Jobnova"
             description="An AI-native career ecosystem for job seekers to discover tailored opportunities and automate applications with hyper-personalized resumes."
             tags={['Product Design', 'AI', 'Career Tech', '0-to-1']}
-            imageUrl="/img/Jobnova_cover.png"
+            imageUrl="/img/Jobnova_cover.avif"
             href="/projects/jobnova"
           />
 
@@ -576,7 +576,7 @@ export default function Home() {
               title="MemQ: Smart Quiz & Memory APP"
               description="A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes."
               tags={['Mobile App', 'UX Design', 'Learning']}
-              imageUrl="/img/cover image.png"
+              imageUrl="/img/cover image.avif"
               href="/projects/memq"
             />
             <ShowcaseCard
@@ -584,7 +584,7 @@ export default function Home() {
               description="The Intent-Driven Generative UI Financial Agent — conversational AI that helps users manage finances through natural language and dynamic, context-aware interfaces."
               tags={['Product Design', 'Generative UI', 'Financial AI']}
               href="/projects/mono"
-              imageUrl="/img/mono_cover.png"
+              imageUrl="/img/mono_cover.avif"
             />
           </div>
         </div>
@@ -1325,7 +1325,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="/img/Beikemama.png"
+                  src="/img/Beikemama.avif"
                   alt="Beikemama"
                   style={{
                     width: '100%',

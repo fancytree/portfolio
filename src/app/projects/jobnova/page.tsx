@@ -1095,7 +1095,7 @@ export default function JobnovaProjectPage() {
                   <div
                     style={{
                       width: '100%',
-                      maxWidth: '100%',
+                        maxWidth: '360px',
                       borderRadius: '12px',
                       overflow: 'hidden',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -1103,7 +1103,7 @@ export default function JobnovaProjectPage() {
                     }}
                   >
                     <Image
-                      src="/img/chat.png"
+                      src="/img/chat.avif"
                       alt="Nova AI Agent chat interface"
                       width={800}
                       height={600}
@@ -1166,7 +1166,7 @@ export default function JobnovaProjectPage() {
                 }}
               >
                 <Image
-                  src="/img/Mockup.png"
+                  src="/img/Jobnova_cover.avif"
                   alt="Jobnova result mockup"
                   width={640}
                   height={480}
@@ -1174,6 +1174,7 @@ export default function JobnovaProjectPage() {
                     width: '100%',
                     height: 'auto',
                     display: 'block',
+                    objectFit: 'cover',
                   }}
                 />
               </div>

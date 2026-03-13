@@ -210,7 +210,7 @@ export default function CrackInterviewPage() {
             }}
           >
             <img
-              src="/img/crackinterview/cover.png"
+              src="/img/crackinterview/cover.avif"
               alt="CrackInterview cover"
               style={{
                 width: '100%',
@@ -410,7 +410,7 @@ export default function CrackInterviewPage() {
               }}
             >
               <img
-                src="/img/crackinterview/Persona.png"
+                src="/img/crackinterview/Persona.avif"
                 alt="Research Persona"
                 style={{
                   width: '100%',
@@ -506,22 +506,22 @@ export default function CrackInterviewPage() {
           >
             {[
               {
-                img: 'Core Features1.png',
+                img: 'Core Features1.avif',
                 title: 'Smart Job Matching',
                 desc: 'A custom job crawler monitors hiring platforms and, via AI matching, pushes high-relevance roles to users based on their profiles.',
               },
               {
-                img: 'Core Features2.png',
+                img: 'Core Features2.avif',
                 title: 'AI-Powered Mock Interviews',
                 desc: 'Simulates realistic, multi-stage interview flows and generates structured reports with actionable guidance.',
               },
               {
-                img: 'Core Features3.png',
+                img: 'Core Features3.avif',
                 title: 'Mentor Guidance',
                 desc: 'Connects mock interview results to liba.space’s mentor network for targeted career coaching.',
               },
               {
-                img: 'Core Features4.png',
+                img: 'Core Features4.avif',
                 title: 'Referral Support',
                 desc: 'Enables internal referrals through a trusted network once candidates are interview-ready.',
               },
@@ -635,7 +635,7 @@ export default function CrackInterviewPage() {
               }}
             >
               <img
-                src="/img/crackinterview/Conversation Design.png"
+                src="/img/crackinterview/Conversation%20Design.avif"
                 alt="Conversation Design"
                 style={{
                   width: '50%',
@@ -689,7 +689,7 @@ export default function CrackInterviewPage() {
               }}
             >
               <img
-                src="/img/crackinterview/Persona1.png"
+                src="/img/crackinterview/Persona1.avif"
                 alt="AI Interviewer Persona 1"
                 style={{
                   width: '48%',
@@ -699,7 +699,7 @@ export default function CrackInterviewPage() {
                 }}
               />
               <img
-                src="/img/crackinterview/Persona2.png"
+                src="/img/crackinterview/Persona2.avif"
                 alt="AI Interviewer Persona 2"
                 style={{
                   width: '48%',
@@ -975,7 +975,7 @@ export default function CrackInterviewPage() {
                   }}
                 >
                   <img
-                    src="/img/crackinterview/Wireframe.png"
+                    src="/img/crackinterview/Wireframe.avif"
                     alt="Wireframe"
                     style={{
                       maxWidth: '100%',

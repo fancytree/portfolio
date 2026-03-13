@@ -206,7 +206,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/bg.png"
+              src="/img/Milano%20Partecipa/bg.avif"
               alt="Milano Partecipa"
               style={{
                 width: '100%',
@@ -261,7 +261,7 @@ export default function MilanoPartecipaProjectPage() {
               }}
             >
               <img
-                src="/img/Milano%20Partecipa/What%20is%20Milano%20Partecipa.png"
+                src="/img/Milano%20Partecipa/What%20is%20Milano%20Partecipa.avif"
                 alt="What is Milano Partecipa"
                 style={{
                   width: '100%',
@@ -368,7 +368,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/The%20Process.png"
+              src="/img/Milano%20Partecipa/The%20Process.avif"
               alt="The Process"
               style={{
                 width: '100%',
@@ -657,7 +657,7 @@ export default function MilanoPartecipaProjectPage() {
               }}
             >
               <img
-                src="/img/Milano%20Partecipa/Heuristics%20Analysis.png"
+                src="/img/Milano%20Partecipa/Heuristics%20Analysis.avif"
                 alt="Heuristics Analysis"
                 style={{
                   width: '100%',
@@ -735,7 +735,7 @@ export default function MilanoPartecipaProjectPage() {
                 ×
               </button>
               <img
-                src="/img/Milano%20Partecipa/Heuristics%20Analysis.png"
+                src="/img/Milano%20Partecipa/Heuristics%20Analysis.avif"
                 alt="Heuristics Analysis (full size)"
                 style={{
                   maxWidth: '100%',
@@ -879,7 +879,7 @@ export default function MilanoPartecipaProjectPage() {
               }}
             >
               <img
-                src="/img/Milano%20Partecipa/Benchmarking.png"
+                src="/img/Milano%20Partecipa/Benchmarking.avif"
                 alt="Benchmarking"
                 style={{
                   width: '100%',
@@ -1098,7 +1098,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/Home.png"
+              src="/img/Milano%20Partecipa/Home.avif"
               alt="Home"
               style={{
                 width: '100%',
@@ -1116,7 +1116,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/Main%20Features%201.png"
+              src="/img/Milano%20Partecipa/Main%20Features%201.avif"
               alt="Main Features 1"
               style={{
                 width: '100%',
@@ -1134,7 +1134,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/Main%20Features%202.png"
+              src="/img/Milano%20Partecipa/Main%20Features%202.avif"
               alt="Main Features 2"
               style={{
                 width: '100%',
@@ -1152,7 +1152,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/Main%20Features%203.png"
+              src="/img/Milano%20Partecipa/Main%20Features%203.avif"
               alt="Main Features 3"
               style={{
                 width: '100%',
@@ -1170,7 +1170,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             <img
-              src="/img/Milano%20Partecipa/Main%20Features%204.png"
+              src="/img/Milano%20Partecipa/Main%20Features%204.avif"
               alt="Main Features 4"
               style={{
                 width: '100%',
@@ -1224,7 +1224,7 @@ export default function MilanoPartecipaProjectPage() {
               }}
             >
               <img
-                src="/img/Milano%20Partecipa/Open%20Card%20Sorting.png"
+                src="/img/Milano%20Partecipa/Open%20Card%20Sorting.avif"
                 alt="Open Card Sorting"
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
@@ -1243,7 +1243,7 @@ export default function MilanoPartecipaProjectPage() {
               }}
             >
               <img
-                src="/img/Milano%20Partecipa/Closed%20Card%20Sorting.png"
+                src="/img/Milano%20Partecipa/Closed%20Card%20Sorting.avif"
                 alt="Closed Card Sorting"
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
@@ -1262,7 +1262,7 @@ export default function MilanoPartecipaProjectPage() {
               }}
             >
               <img
-                src="/img/Milano%20Partecipa/Tree%20Testing.png"
+                src="/img/Milano%20Partecipa/Tree%20Testing.avif"
                 alt="Tree Testing"
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
@@ -1272,7 +1272,7 @@ export default function MilanoPartecipaProjectPage() {
           <div style={{ marginBottom: '48px' }}>
             <div style={{ width: '100%', overflow: 'hidden', marginBottom: '12px' }}>
               <img
-                src="/img/Milano%20Partecipa/IA_APP.png"
+                src="/img/Milano%20Partecipa/IA_APP.avif"
                 alt="Information Architecture: APP"
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
@@ -1284,7 +1284,7 @@ export default function MilanoPartecipaProjectPage() {
           <div style={{ marginBottom: '64px' }}>
             <div style={{ width: '100%', overflow: 'hidden', marginBottom: '12px' }}>
               <img
-                src="/img/Milano%20Partecipa/IA_Website.png"
+                src="/img/Milano%20Partecipa/IA_Website.avif"
                 alt="Information Architecture: Website"
                 style={{ width: '100%', height: 'auto', display: 'block' }}
               />
@@ -1308,14 +1308,14 @@ export default function MilanoPartecipaProjectPage() {
           </h3>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '24px' }}>
             <img
-              src="/img/Milano%20Partecipa/Wireframes_app.png"
+              src="/img/Milano%20Partecipa/Wireframes_app.avif"
               alt="Wireframes app"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
           </div>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '64px' }}>
             <img
-              src="/img/Milano%20Partecipa/Wireframes_Web.png"
+              src="/img/Milano%20Partecipa/Wireframes_Web.avif"
               alt="Wireframes Web"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
@@ -1335,21 +1335,21 @@ export default function MilanoPartecipaProjectPage() {
           </h3>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '24px' }}>
             <img
-              src="/img/Milano%20Partecipa/Design%20System%201.png"
+              src="/img/Milano%20Partecipa/Design%20System%201.avif"
               alt="Design System 1"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
           </div>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '24px' }}>
             <img
-              src="/img/Milano%20Partecipa/Design%20System%202.png"
+              src="/img/Milano%20Partecipa/Design%20System%202.avif"
               alt="Design System 2"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
           </div>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '64px' }}>
             <img
-              src="/img/Milano%20Partecipa/Design%20System%203.png"
+              src="/img/Milano%20Partecipa/Design%20System%203.avif"
               alt="Design System 3"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
@@ -1369,21 +1369,21 @@ export default function MilanoPartecipaProjectPage() {
           </h3>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '24px' }}>
             <img
-              src="/img/Milano%20Partecipa/Hi-Fi%20Prototype%201.png"
+              src="/img/Milano%20Partecipa/Hi-Fi%20Prototype%201.avif"
               alt="Hi-Fi Prototype 1"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
           </div>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '24px' }}>
             <img
-              src="/img/Milano%20Partecipa/Hi-Fi%20Prototype%202.png"
+              src="/img/Milano%20Partecipa/Hi-Fi%20Prototype%202.avif"
               alt="Hi-Fi Prototype 2"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
           </div>
           <div style={{ width: '100%', overflow: 'hidden', marginBottom: '64px' }}>
             <img
-              src="/img/Milano%20Partecipa/Hi-Fi%20Prototype%203.png"
+              src="/img/Milano%20Partecipa/Hi-Fi%20Prototype%203.avif"
               alt="Hi-Fi Prototype 3"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
@@ -1554,7 +1554,7 @@ export default function MilanoPartecipaProjectPage() {
             >
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                 <img
-                  src="/img/Milano%20Partecipa/Heatmap.png"
+                  src="/img/Milano%20Partecipa/Heatmap.avif"
                   alt="Homepage heatmap"
                   style={{
                     height: '400px',
@@ -1579,7 +1579,7 @@ export default function MilanoPartecipaProjectPage() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                 <img
-                  src="/img/Milano%20Partecipa/Proposed%20Solution.png"
+                  src="/img/Milano%20Partecipa/Proposed%20Solution.avif"
                   alt="Proposed solution"
                   style={{
                     height: '400px',

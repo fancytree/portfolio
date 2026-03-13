@@ -192,7 +192,7 @@ export default function BeikemamaProjectPage() {
             }}
           >
             <img
-              src="/img/Beikemama/cover.png"
+              src="/img/Beikemama/cover.avif"
               alt="Beikemama cover"
               style={{
                 width: '88%',
@@ -356,7 +356,7 @@ export default function BeikemamaProjectPage() {
                 }}
               >
                 <img
-                  src="/img/Beikemama/size%20of%20mother.png"
+                  src="/img/Beikemama/size%20of%20mother.webp"
                   alt="Size of mother user group"
                   style={{
                     width: '80%',
@@ -1012,7 +1012,7 @@ export default function BeikemamaProjectPage() {
             >
               <div>
                 <img
-                  src="/img/Beikemama/Persona%201.png"
+                  src="/img/Beikemama/Persona%201.avif"
                   alt="Persona 1"
                   style={{
                     width: '100%',
@@ -1023,7 +1023,7 @@ export default function BeikemamaProjectPage() {
               </div>
               <div>
                 <img
-                  src="/img/Beikemama/Persona%202.png"
+                  src="/img/Beikemama/Persona%202.avif"
                   alt="Persona 2"
                   style={{
                     width: '100%',
@@ -1034,7 +1034,7 @@ export default function BeikemamaProjectPage() {
               </div>
               <div>
                 <img
-                  src="/img/Beikemama/Persona%203.png"
+                  src="/img/Beikemama/Persona%203.avif"
                   alt="Persona 3"
                   style={{
                     width: '100%',
@@ -1045,7 +1045,7 @@ export default function BeikemamaProjectPage() {
               </div>
               <div>
                 <img
-                  src="/img/Beikemama/Persona%204.png"
+                  src="/img/Beikemama/Persona%204.avif"
                   alt="Persona 4"
                   style={{
                     width: '100%',
@@ -1099,7 +1099,7 @@ export default function BeikemamaProjectPage() {
               }}
             >
               <img
-                src="/img/Beikemama/Competition.png"
+                src="/img/Beikemama/Competition.avif"
                 alt="Competitive product analysis for Bekommom"
                 style={{
                   width: '100%',
@@ -1178,7 +1178,7 @@ export default function BeikemamaProjectPage() {
                       }}
                     >
                       <img
-                        src="/img/Beikemama/Reply%20in%20time.png"
+                        src="/img/Beikemama/Reply%20in%20time.webp"
                         alt="Reply in time icon"
                         style={{
                           width: '100%',
@@ -1242,7 +1242,7 @@ export default function BeikemamaProjectPage() {
                       }}
                     >
                       <img
-                        src="/img/Beikemama/Psychological%20relief.png"
+                        src="/img/Beikemama/Psychological%20relief.webp"
                         alt="Psychological relief icon"
                         style={{
                           width: '100%',
@@ -1296,7 +1296,7 @@ export default function BeikemamaProjectPage() {
                   }}
                 >
                   <img
-                    src="/img/Beikemama/NUF.png"
+                    src="/img/Beikemama/NUF.avif"
                     alt="NUF concept visualization"
                     style={{
                       width: '80%',
@@ -1387,7 +1387,7 @@ export default function BeikemamaProjectPage() {
                 </h2>
 
 
-                <h3
+              <h3
                   style={{
                     ...fontStyle,
                     fontSize: '20px',
@@ -1409,7 +1409,7 @@ export default function BeikemamaProjectPage() {
                   }}
                 >
                   <img
-                    src="/img/Beikemama/Information%20Architecture.png"
+                    src="/img/Beikemama/Information%20Architecture.avif"
                     alt="Information architecture for Bekommom"
                     style={{
                       width: '100%',
@@ -1459,7 +1459,7 @@ export default function BeikemamaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/Beikemama/Main%20flow.png"
+                      src="/img/Beikemama/Main%20flow.avif"
                       alt="Main flow of live broadcast"
                       style={{
                         width: '100%',
@@ -1503,7 +1503,7 @@ export default function BeikemamaProjectPage() {
                       }}
                     >
                       <img
-                        src="/img/Beikemama/Live%20Interaction.png"
+                        src="/img/Beikemama/Live%20Interaction.avif"
                         alt="Live interaction paid Q&A"
                         style={{
                           width: '100%',
@@ -1538,7 +1538,7 @@ export default function BeikemamaProjectPage() {
                       }}
                     >
                       <img
-                        src="/img/Beikemama/Interactive%20Game.png"
+                        src="/img/Beikemama/Interactive%20Game.avif"
                         alt="Interactive game live feature"
                         style={{
                           width: '100%',
@@ -1617,7 +1617,7 @@ export default function BeikemamaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/Beikemama/Hi-Fi%20Prototype.png"
+                      src="/img/Beikemama/Hi-Fi%20Prototype.avif"
                       alt="Bekommom hi-fi prototype"
                       style={{
                         width: '72%',
@@ -1638,7 +1638,7 @@ export default function BeikemamaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/Beikemama/Hi-Fi%20Prototype%201.png"
+                      src="/img/Beikemama/Hi-Fi%20Prototype%201.avif"
                       alt="Bekommom hi-fi prototype screens 1"
                       style={{
                         width: '100%',
@@ -1659,7 +1659,7 @@ export default function BeikemamaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/Beikemama/Hi-Fi%20Prototype%202.png"
+                      src="/img/Beikemama/Hi-Fi%20Prototype%202.avif"
                       alt="Bekommom hi-fi prototype screens 2"
                       style={{
                         width: '100%',
@@ -1680,7 +1680,7 @@ export default function BeikemamaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/Beikemama/Hi-Fi%20Prototype%203.png"
+                      src="/img/Beikemama/Hi-Fi%20Prototype%203.avif"
                       alt="Bekommom hi-fi prototype screens 3"
                       style={{
                         width: '100%',
