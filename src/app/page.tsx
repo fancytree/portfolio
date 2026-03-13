@@ -1233,7 +1233,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  src="/img/customer-service-system/customer-service-system.png"
+                  src="/img/customer-service-system_cover.avif"
                   alt="Customer Service System cover"
                   width={800}
                   height={450}
