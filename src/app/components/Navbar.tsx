@@ -22,8 +22,14 @@ export default function Navbar() {
           border: '0px solid transparent'
         }}
       >
-        {/* 左侧项目名称 / Logo */}
-        <div className="flex items-center gap-3">
+        {/* 左侧项目名称 / Logo：点击图标或文字都回到首页 */}
+        <Link
+          href="/"
+          className="flex items-center gap-3 cursor-pointer"
+          style={{
+            textDecoration: 'none',
+          }}
+        >
           <Image 
             src="/logo.svg" 
             alt="Logo" 
@@ -40,7 +46,7 @@ export default function Navbar() {
           >
             River
           </div>
-        </div>
+        </Link>
 
         {/* 右侧导航链接 */}
         <div className="flex items-center gap-6">

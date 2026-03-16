@@ -1558,7 +1558,7 @@ export default function BeikemamaProjectPage() {
                     transform: 'translateX(-50%)',
                     width: '100vw',
                     backgroundColor: '#FF7876',
-                    backgroundImage: 'url("/img/Beikemama/Design%20System.png")',
+                    backgroundImage: 'url("/img/Beikemama/Design%20System.avif")',
                     backgroundSize: 'auto 200%',
                     backgroundPosition: 'left 30%',
                     backgroundRepeat: 'no-repeat',

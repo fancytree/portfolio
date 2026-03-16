@@ -3,6 +3,7 @@
 
 import type { ReactNode } from "react";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 interface LayoutProps {
   children: ReactNode;
@@ -20,6 +21,9 @@ export default function Layout({ children }: LayoutProps) {
         {/* 这里包裹 children，后续页面内容会渲染在这里 */}
         <div className="w-full">{children}</div>
       </main>
+
+      {/* 全站底部：Let's work together + 版权信息 */}
+      <Footer />
     </div>
   );
 }
