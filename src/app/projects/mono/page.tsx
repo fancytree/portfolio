@@ -835,7 +835,7 @@ export default function MonoProjectPage() {
                 }}
               >
                 <Image
-                  src="/img/mono_cover.png"
+                  src="/img/mono_cover.avif"
                   alt="Mono result mockup"
                   width={640}
                   height={480}

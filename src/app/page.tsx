@@ -573,13 +573,6 @@ export default function Home() {
           {/* 其余项目：两列网格展示 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-12">
             <ShowcaseCard
-              title="Design System"
-              description="A scalable foundation of reusable UI patterns, tokens, and interaction rules designed for consistency across complex products."
-              tags={['Design System', 'UI Consistency', 'Patterns']}
-              imageUrl="/img/Beikemama/Design%20System.avif"
-              href="/projects/design_system"
-            />
-            <ShowcaseCard
               title="MemQ: Smart Quiz & Memory APP"
               description="A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes."
               tags={['Mobile App', 'UX Design', 'Learning']}

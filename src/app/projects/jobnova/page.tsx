@@ -498,6 +498,58 @@ export default function JobnovaProjectPage() {
         </ScrollAnimatedSection>
       </section>
 
+      {/* Design System Module */}
+      <section
+        className="w-screen py-16"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          paddingTop: '64px',
+          paddingBottom: '64px',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '0 24px',
+          }}
+        >
+          <h3
+            style={{
+              ...fontStyle,
+              fontSize: '28px',
+              lineHeight: '36px',
+              fontWeight: 300,
+              color: 'rgb(0, 0, 0)',
+              margin: 0,
+              marginBottom: '16px',
+            }}
+          >
+            Design System
+          </h3>
+
+          <div
+            style={{
+              width: '100%',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src="/img/Design%20system.avif"
+              alt="Design system"
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* What I Designed Section */}
       <section 
         className="w-screen py-16"
