@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
 // Design System 项目占位页（后续可继续按你现有项目模板完善）
@@ -69,8 +68,8 @@ export default function DesignSystemProjectPage() {
               marginBottom: '32px',
             }}
           >
-            A scalable foundation for consistent UI, interaction patterns, and reusable components. This page is
-            currently a placeholder and will be refined with your full case study content.
+            Decoding 12 leading design systems through a clear 3-layer framework: trends, company breakdown,
+            and actionable methods.
           </p>
 
           <div
@@ -82,19 +81,16 @@ export default function DesignSystemProjectPage() {
               border: '1px solid rgba(0, 0, 0, 0.06)',
             }}
           >
-            <div style={{ width: '100%', aspectRatio: '16 / 9' }}>
-              <Image
-                src="/img/Beikemama/Design%20System.avif"
-                alt="Design System cover"
-                width={1280}
-                height={720}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            </div>
+            <iframe
+              src="/design_system_article.html"
+              title="Design System Article"
+              style={{
+                width: '100%',
+                height: '200vh',
+                border: '0',
+                display: 'block',
+              }}
+            />
           </div>
         </div>
       </section>
