@@ -4,6 +4,7 @@
 import type { ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import AIChatWidget from "./AIChatWidget";
 
 interface LayoutProps {
   children: ReactNode;
@@ -24,6 +25,9 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* 全站底部：Let's work together + 版权信息 */}
       <Footer />
+
+      {/* 右下角 AI Chat */}
+      <AIChatWidget />
     </div>
   );
 }

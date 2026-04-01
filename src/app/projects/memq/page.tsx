@@ -254,6 +254,88 @@ export default function MemQProjectPage() {
         </ScrollAnimatedSection>
       </section>
 
+      {/* Design Process Section */}
+      <section
+        className="w-screen py-16"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          paddingTop: '80px',
+          paddingBottom: '80px',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div
+            style={{
+              maxWidth: '1280px',
+              margin: '0 auto',
+            }}
+          >
+            <h2
+              style={{
+                ...fontStyle,
+                fontSize: '34px',
+                lineHeight: '42px',
+                fontWeight: 300,
+                color: 'rgb(0, 0, 0)',
+                marginBottom: '20px',
+              }}
+            >
+              Design Process
+            </h2>
+            <p
+              style={{
+                ...fontStyle,
+                fontSize: '18px',
+                lineHeight: '30px',
+                fontWeight: 300,
+                color: 'rgba(0, 0, 0, 0.88)',
+                maxWidth: '920px',
+                marginBottom: '36px',
+              }}
+            >
+              The solution evolved through a focused cycle of discovery, prototyping, and refinement to keep learning paths simple and effective.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
+                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
+                  01 · Discover
+                </div>
+                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                  User Learning Patterns
+                </div>
+                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
+                  Synthesized interview feedback and usage observations to identify friction in capture, review, and recall.
+                </p>
+              </div>
+              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
+                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
+                  02 · Prototype
+                </div>
+                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                  Interaction Iteration
+                </div>
+                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
+                  Built and tested lightweight flows to improve quiz generation, flashcard structure, and overall task continuity.
+                </p>
+              </div>
+              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
+                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
+                  03 · Refine
+                </div>
+                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                  Product Readiness
+                </div>
+                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
+                  Converted validated patterns into consistent, implementation-ready UI decisions for stable daily usage.
+                </p>
+              </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
       {/* The Design Problem Section */}
       <section 
         className="w-screen py-16"

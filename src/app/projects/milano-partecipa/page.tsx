@@ -146,7 +146,7 @@ export default function MilanoPartecipaProjectPage() {
                   color: '#171616',
                 }}
               >
-                2025 · 16 weeks
+                2023 · 16 weeks
               </div>
             </div>
 

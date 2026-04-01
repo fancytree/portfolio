@@ -76,6 +76,22 @@ export default function JobnovaProjectPage() {
   const fontStyle = {
     fontFamily: 'system-ui, -apple-system, sans-serif',
   };
+  const headingLevel1Style = {
+    ...fontStyle,
+    fontSize: '36px',
+    lineHeight: '44px',
+    fontWeight: 500,
+    color: 'rgb(0, 0, 0)',
+    marginBottom: '16px',
+  };
+  const headingLevel2Style = {
+    ...fontStyle,
+    fontSize: '30px',
+    lineHeight: '38px',
+    fontWeight: 500,
+    color: 'rgb(0, 0, 0)',
+    marginBottom: '24px',
+  };
 
   // 展开/折叠状态
   const [isExpanded, setIsExpanded] = useState(false);
@@ -209,14 +225,7 @@ export default function JobnovaProjectPage() {
               {/* 项目标题和描述 */}
               <div style={{ marginTop: '16px' }}>
                 <h1
-                  style={{
-                    ...fontStyle,
-                    fontSize: '28px',
-                    lineHeight: '60px',
-                    fontWeight: 300,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '12px',
-                  }}
+                  style={headingLevel1Style}
                 >
                   Jobnova
                 </h1>
@@ -233,6 +242,81 @@ export default function JobnovaProjectPage() {
                   }}
                 >
                   An AI-native career ecosystem designed for modern job seekers to instantly discover tailored opportunities and automate the end-to-end application process with hyper-personalized resumes.
+                </p>
+              </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* Design Process Section */}
+      <section
+        className="w-screen py-16"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          paddingTop: '80px',
+          paddingBottom: '80px',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div
+            style={{
+              maxWidth: '1280px',
+              margin: '0 auto',
+            }}
+          >
+            <h2
+              style={headingLevel2Style}
+            >
+              Design Process
+            </h2>
+            <p
+              style={{
+                ...fontStyle,
+                fontSize: '18px',
+                lineHeight: '30px',
+                fontWeight: 300,
+                color: 'rgba(0, 0, 0, 0.88)',
+                maxWidth: '920px',
+                marginBottom: '36px',
+              }}
+            >
+              The product was shaped through an iterative loop of discovery, validation, and refinement to reduce complexity while preserving system rigor.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
+                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
+                  01 · Discover
+                </div>
+                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                  Problem Framing
+                </div>
+                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
+                  Consolidated interview findings and behavioral patterns to define user pain points and decision priorities.
+                </p>
+              </div>
+              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
+                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
+                  02 · Define & Test
+                </div>
+                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                  Interaction Validation
+                </div>
+                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
+                  Built rapid prototypes and ran usability checks to verify navigation logic, trust signals, and conversion flow.
+                </p>
+              </div>
+              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
+                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
+                  03 · Deliver
+                </div>
+                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                  Production-Ready System
+                </div>
+                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
+                  Translated validated flows into responsive UI patterns and design decisions that support implementation quality.
                 </p>
               </div>
             </div>
@@ -259,16 +343,9 @@ export default function JobnovaProjectPage() {
             }}
           >
             <h2
-              style={{
-                ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '16px',
-              }}
+              style={headingLevel2Style}
             >
-              The Design Problem
+              Design Problem
             </h2>
 
             <div
@@ -498,58 +575,6 @@ export default function JobnovaProjectPage() {
         </ScrollAnimatedSection>
       </section>
 
-      {/* Design System Module */}
-      <section
-        className="w-screen py-16"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '64px',
-          paddingBottom: '64px',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1280px',
-            margin: '0 auto',
-            padding: '0 24px',
-          }}
-        >
-          <h3
-            style={{
-              ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
-              color: 'rgb(0, 0, 0)',
-              margin: 0,
-              marginBottom: '16px',
-            }}
-          >
-            Design System
-          </h3>
-
-          <div
-            style={{
-              width: '100%',
-              borderRadius: '12px',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src="/img/Design%20system.avif"
-              alt="Design system"
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-              }}
-            />
-          </div>
-        </div>
-      </section>
-
       {/* What I Designed Section */}
       <section 
         className="w-screen py-16"
@@ -570,16 +595,9 @@ export default function JobnovaProjectPage() {
             }}
           >
             <h2
-              style={{
-                ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
-              }}
+              style={{ ...headingLevel2Style, marginBottom: '32px' }}
             >
-              What I Designed
+              Design Solutions
             </h2>
             <div
               style={{
@@ -1174,6 +1192,56 @@ export default function JobnovaProjectPage() {
         </ScrollAnimatedSection>
       </section>
 
+      {/* Design System Module */}
+      <section
+        className="w-screen py-16"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          paddingTop: '64px',
+          paddingBottom: '64px',
+        }}
+      >
+        <div
+          style={{
+            maxWidth: '1280px',
+            margin: '0 auto',
+            padding: '0 24px',
+          }}
+        >
+          <h2
+            style={{
+              ...headingLevel2Style,
+              marginTop: 0,
+              marginRight: 0,
+              marginLeft: 0,
+              marginBottom: '32px',
+            }}
+          >
+            Design System
+          </h2>
+
+          <div
+            style={{
+              width: '100%',
+              borderRadius: '12px',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src="/img/Design%20system.avif"
+              alt="Design system"
+              style={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* The Result Section */}
       <section
         className="w-screen py-16"
@@ -1193,16 +1261,9 @@ export default function JobnovaProjectPage() {
             }}
           >
             <h2
-              style={{
-                ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
-              }}
+              style={{ ...headingLevel2Style, marginBottom: '32px' }}
             >
-              The Result
+              Results
             </h2>
 
             {/* 左侧占位图 + 右侧内容整体 */}

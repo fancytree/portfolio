@@ -145,7 +145,7 @@ export default function ClarityProjectPage() {
                   color: '#171616',
                 }}
               >
-                2025 · 15 weeks
+                2024 · 15 weeks
               </div>
             </div>
 

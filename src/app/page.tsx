@@ -423,7 +423,7 @@ export default function Home() {
             height: '32.3984px',
           }}
         >
-          UX Designer · Creative Technologist
+          UX · Product Designer
         </p>
 
         {/* 第二部分：主标题（包含两句话，带鼠标跟随渐变效果） */}
@@ -1442,7 +1442,7 @@ export default function Home() {
               marginBottom: '24px',
             }}
           >
-            Solving complex problems through intuitive logic and human-centered design.
+            Human-First, Logic-Driven
           </p>
 
           {/* 正文段落 */}
@@ -1456,7 +1456,7 @@ export default function Home() {
                 color: 'rgb(0, 0, 0)',
               }}
             >
-              I am a UX Designer and Creative Technologist dedicated to transforming intricate technical challenges into seamless, high-integrity digital experiences. My design philosophy is built on the belief that technology should empower people, not intimidate them. I thrive at the intersection of analytical rigor and creative exploration—deconstructing technically dense environments to find the path that makes the most sense for the human at the other end of the screen.
+              I am a UX Designer focused on transforming complex logic into intuitive human experiences. My philosophy centers on user agency: I believe even the most sophisticated systems should feel like a natural extension of the user’s intent. By applying First-Principles Thinking, I deconstruct intricate environments into clear, navigable structures that prioritize cognitive ease and logical rigor.
             </p>
             <p
               style={{
@@ -1467,7 +1467,7 @@ export default function Home() {
                 color: 'rgb(0, 0, 0)',
               }}
             >
-              I approach design with a focus on empowerment through clarity. I don't just design interfaces; I design for the feeling of agency—that moment when a product works so intuitively that the user feels inherently capable. My goal is to build digital products that are as robust in their logic as they are effortless in their use, ensuring that even the most sophisticated systems feel accessible and human.
+              To ensure impact, I anchor my process in rigorous user research and functional validation. I treat design not as a visual layer, but as a system that must be refined through real-world feedback. By integrating a human-centered focus with rapid prototyping, I translate deep user insights into high-fidelity experiences that meet the highest standards of usability.
             </p>
           </div>
         </div>
@@ -1663,7 +1663,7 @@ export default function Home() {
               marginBottom: '24px',
             }}
           >
-            Let's create something meaningful together
+            Let’s turn complex challenges into seamless solutions.
           </p>
 
           {/* 正文段落 */}
@@ -1676,7 +1676,7 @@ export default function Home() {
               color: 'rgb(0, 0, 0)',
             }}
           >
-            I'm always interested in new opportunities, collaborations, and conversations about UX research, design, and creative technology. Whether you're looking for a UX designer, need help with usability testing, or want to explore AR experiences, I'd love to hear from you.
+            I am always interested in collaborating on projects that demand rigorous user research and technical precision. From conducting deep usability testing to implementing responsive, code-based interfaces, I’m ready to help bring your product vision to life with a human-first approach.
           </p>
         </div>
 
