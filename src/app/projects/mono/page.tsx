@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../../components/Button';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
@@ -74,7 +75,7 @@ function ScrollAnimatedSection({ children, initialDelay = 0 }: { children: React
 // Mono 项目详情页：The Intent-Driven Generative UI Financial Agent
 export default function MonoProjectPage() {
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   // 展开/折叠状态
@@ -107,9 +108,7 @@ export default function MonoProjectPage() {
               href="/"
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '24px',
-                fontWeight: 400,
+                ...textStyle.body,
                 color: 'oklch(0.556 0 0)',
                 textDecoration: 'none',
                 display: 'inline-block',
@@ -186,9 +185,7 @@ export default function MonoProjectPage() {
                   <div
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -197,9 +194,7 @@ export default function MonoProjectPage() {
                   <div
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -225,9 +220,7 @@ export default function MonoProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '18px',
-                    lineHeight: '32px',
-                    fontWeight: 300,
+                    ...textStyle.lead,
                     color: 'rgba(0, 0, 0, 1)',
                     marginBottom: '32px',
                     maxWidth: '645px',
@@ -294,9 +287,7 @@ export default function MonoProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '24px',
                 }}
@@ -337,9 +328,7 @@ export default function MonoProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '24px',
-                      fontWeight: 600,
+                      ...textStyle.h5,
                       color: 'rgb(0, 0, 0)',
                       marginBottom: '8px',
                     }}
@@ -349,9 +338,7 @@ export default function MonoProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                     }}
                   >
@@ -392,9 +379,7 @@ export default function MonoProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '24px',
-                      fontWeight: 600,
+                      ...textStyle.h5,
                       color: 'rgb(0, 0, 0)',
                       marginBottom: '8px',
                     }}
@@ -404,9 +389,7 @@ export default function MonoProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                     }}
                   >
@@ -449,9 +432,7 @@ export default function MonoProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '24px',
-                      fontWeight: 600,
+                      ...textStyle.h5,
                       color: 'rgb(0, 0, 0)',
                       marginBottom: '8px',
                     }}
@@ -461,9 +442,7 @@ export default function MonoProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                     }}
                   >
@@ -543,9 +522,7 @@ export default function MonoProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '16px',
                 }}
@@ -619,9 +596,7 @@ export default function MonoProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '16px',
                 }}
@@ -695,9 +670,7 @@ export default function MonoProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '16px',
                 }}
@@ -886,9 +859,7 @@ export default function MonoProjectPage() {
                       <h4
                         style={{
                           ...fontStyle,
-                          fontSize: '18px',
-                          lineHeight: '24px',
-                          fontWeight: 600,
+                          ...textStyle.h5,
                           color: 'rgb(0, 0, 0)',
                           margin: 0,
                         }}
@@ -899,9 +870,7 @@ export default function MonoProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -930,9 +899,7 @@ export default function MonoProjectPage() {
                       <h4
                         style={{
                           ...fontStyle,
-                          fontSize: '18px',
-                          lineHeight: '24px',
-                          fontWeight: 600,
+                          ...textStyle.h5,
                           color: 'rgb(0, 0, 0)',
                           margin: 0,
                         }}
@@ -943,9 +910,7 @@ export default function MonoProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -1036,9 +1001,7 @@ export default function MonoProjectPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '14px',
-                lineHeight: '22px',
-                fontWeight: 400,
+                ...textStyle.bodySm,
                 color: 'rgb(0, 0, 0)',
                 marginBottom: '16px',
               }}

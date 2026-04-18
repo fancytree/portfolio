@@ -3,6 +3,7 @@
 // 全站底部：Let's work together + 版权信息
 // 在所有页面底部显示
 
+import { useState, useEffect } from 'react';
 import Button from './Button';
 
 const fontStyle = {
@@ -10,6 +11,14 @@ const fontStyle = {
 };
 
 export default function Footer() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   const handleWorkWithMe = () => {
     if (typeof window === 'undefined') return;
     const isHome = window.location.pathname === '/';
@@ -27,7 +36,7 @@ export default function Footer() {
         backgroundColor: '#FFFFFF',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
-        paddingTop: '120px',
+        paddingTop: isMobile ? '60px' : '120px',
         paddingBottom: '80px',
       }}
     >
@@ -36,14 +45,15 @@ export default function Footer() {
         style={{
           maxWidth: '900px',
           margin: '0 auto',
+          padding: isMobile ? '0 24px' : '0',
         }}
       >
         {/* 大标题 */}
         <h2
           style={{
             ...fontStyle,
-            fontSize: '60px',
-            lineHeight: '75px',
+            fontSize: isMobile ? '32px' : '60px',
+            lineHeight: isMobile ? '40px' : '75px',
             fontWeight: 400,
             color: 'rgb(0, 0, 0)',
             textAlign: 'center',
@@ -54,7 +64,7 @@ export default function Footer() {
         </h2>
 
         {/* 按钮 */}
-        <div style={{ marginBottom: '240px' }}>
+        <div style={{ marginBottom: isMobile ? '80px' : '240px' }}>
           <Button onClick={handleWorkWithMe}>Work with me</Button>
         </div>
 

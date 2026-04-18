@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 本地 IDE / Agent 配置（Cursor、Claude 等），不进仓库
+.claude/
+
+# 根目录个人数据源（可能含隐私，不进仓库）
+/About me.csv
+/Portfolio Knowledge.csv

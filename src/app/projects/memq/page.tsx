@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../../components/Button';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
@@ -73,7 +74,7 @@ function ScrollAnimatedSection({ children, initialDelay = 0 }: { children: React
 
 export default function MemQProjectPage() {
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   // 展开/折叠状态
@@ -119,9 +120,7 @@ export default function MemQProjectPage() {
               href="/"
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '24px',
-                fontWeight: 400,
+                ...textStyle.body,
                 color: 'oklch(0.556 0 0)',
                 textDecoration: 'none',
                 display: 'inline-block',
@@ -198,9 +197,7 @@ export default function MemQProjectPage() {
                   <div
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -209,9 +206,7 @@ export default function MemQProjectPage() {
                   <div
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -237,9 +232,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '18px',
-                    lineHeight: '32px',
-                    fontWeight: 300,
+                    ...textStyle.lead,
                     color: 'rgba(0, 0, 0, 1)',
                     marginBottom: '32px',
                     maxWidth: '645px',
@@ -287,9 +280,7 @@ export default function MemQProjectPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '30px',
-                fontWeight: 300,
+                ...textStyle.leadSm,
                 color: 'rgba(0, 0, 0, 0.88)',
                 maxWidth: '920px',
                 marginBottom: '36px',
@@ -441,9 +432,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                       marginBottom: '8px',
                     }}
@@ -453,9 +442,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                       marginBottom: '8px',
                     }}
@@ -465,9 +452,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -492,9 +477,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -519,9 +502,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -546,9 +527,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
@@ -578,9 +557,7 @@ export default function MemQProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '24px',
                 }}
@@ -631,9 +608,7 @@ export default function MemQProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '24px',
-                      fontWeight: 600,
+                      ...textStyle.h5,
                       color: 'rgb(0, 0, 0)',
                       marginBottom: '8px',
                     }}
@@ -643,9 +618,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                     }}
                   >
@@ -695,9 +668,7 @@ export default function MemQProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '24px',
-                      fontWeight: 600,
+                      ...textStyle.h5,
                       color: 'rgb(0, 0, 0)',
                       marginBottom: '8px',
                     }}
@@ -707,9 +678,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                     }}
                   >
@@ -761,9 +730,7 @@ export default function MemQProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '24px',
-                      fontWeight: 600,
+                      ...textStyle.h5,
                       color: 'rgb(0, 0, 0)',
                       marginBottom: '8px',
                     }}
@@ -773,9 +740,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                     }}
                   >
@@ -838,9 +803,7 @@ export default function MemQProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '24px',
                 }}
@@ -862,9 +825,7 @@ export default function MemQProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '20px',
-                      lineHeight: '28px',
-                      fontWeight: 500,
+                      ...textStyle.h4,
                       color: 'rgb(0, 0, 0)',
                       marginTop: '32px',
                       marginBottom: '16px',
@@ -947,9 +908,7 @@ export default function MemQProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '24px',
                 }}
@@ -971,9 +930,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -984,9 +941,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                       margin: 0,
                     }}
@@ -1009,9 +964,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -1022,9 +975,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                       margin: 0,
                     }}
@@ -1047,9 +998,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -1060,9 +1009,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                       margin: 0,
                     }}
@@ -1127,9 +1074,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgba(255, 255, 255, 0.7)',
                       margin: 0,
                     }}
@@ -1231,9 +1176,7 @@ export default function MemQProjectPage() {
                 <h3
                   style={{
                     ...fontStyle,
-                    fontSize: '24px',
-                    lineHeight: '32px',
-                    fontWeight: 500,
+                    ...textStyle.h3Medium,
                     color: 'rgb(0, 0, 0)',
                     marginBottom: '24px',
                   }}
@@ -1284,9 +1227,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         marginBottom: '8px',
                       }}
@@ -1296,9 +1237,7 @@ export default function MemQProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                       }}
                     >
@@ -1348,9 +1287,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         marginBottom: '8px',
                       }}
@@ -1360,9 +1297,7 @@ export default function MemQProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                       }}
                     >
@@ -1411,9 +1346,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         marginBottom: '8px',
                       }}
@@ -1423,9 +1356,7 @@ export default function MemQProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                       }}
                     >
@@ -1440,9 +1371,7 @@ export default function MemQProjectPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '24px',
-                  lineHeight: '32px',
-                  fontWeight: 500,
+                  ...textStyle.h3Medium,
                   color: 'rgb(0, 0, 0)',
                   marginBottom: '24px',
                 }}
@@ -1479,9 +1408,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1490,9 +1417,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1525,9 +1450,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1536,9 +1459,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1571,9 +1492,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1582,9 +1501,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1614,9 +1531,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                       margin: 0,
                     }}
@@ -1654,9 +1569,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1665,9 +1578,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1700,9 +1611,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1711,9 +1620,7 @@ export default function MemQProjectPage() {
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
-                            lineHeight: '24px',
-                            fontWeight: 400,
+                            ...textStyle.body,
                             color: 'rgb(0, 0, 0)',
                           }}
                         >
@@ -1743,9 +1650,7 @@ export default function MemQProjectPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: 'rgb(0, 0, 0)',
                       margin: 0,
                     }}
@@ -1783,9 +1688,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: '#333333',
                     margin: 0,
                   }}
@@ -1799,9 +1702,7 @@ export default function MemQProjectPage() {
                 <h3
                   style={{
                     ...fontStyle,
-                    fontSize: '24px',
-                    lineHeight: '32px',
-                    fontWeight: 500,
+                    ...textStyle.h3Medium,
                     color: 'rgb(0, 0, 0)',
                     marginBottom: '24px',
                   }}
@@ -1851,9 +1752,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         marginBottom: '8px',
                       }}
@@ -1863,9 +1762,7 @@ export default function MemQProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -1919,9 +1816,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         marginBottom: '8px',
                       }}
@@ -1931,9 +1826,7 @@ export default function MemQProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -1986,9 +1879,7 @@ export default function MemQProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '18px',
-                        lineHeight: '24px',
-                        fontWeight: 600,
+                        ...textStyle.h5,
                         color: 'rgb(0, 0, 0)',
                         marginBottom: '8px',
                       }}
@@ -1998,9 +1889,7 @@ export default function MemQProjectPage() {
                     <p
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
@@ -2135,9 +2024,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgba(0, 0, 0, 0.7)',
                     marginBottom: '12px',
                   }}
@@ -2147,9 +2034,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     margin: 0,
                   }}
@@ -2244,9 +2129,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgba(0, 0, 0, 0.7)',
                     marginBottom: '12px',
                   }}
@@ -2256,9 +2139,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     margin: 0,
                   }}
@@ -2354,9 +2235,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgba(0, 0, 0, 0.7)',
                     marginBottom: '12px',
                   }}
@@ -2366,9 +2245,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     margin: 0,
                   }}
@@ -2524,9 +2401,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     margin: 0,
                   }}
@@ -2559,9 +2434,7 @@ export default function MemQProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     margin: 0,
                   }}
@@ -2579,9 +2452,7 @@ export default function MemQProjectPage() {
                 rel="noopener noreferrer"
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 400,
+                  ...textStyle.body,
                   color: 'rgb(0, 0, 0)',
                   textDecoration: 'none',
                   display: 'inline-flex',
@@ -2920,9 +2791,7 @@ export default function MemQProjectPage() {
                 <div
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     marginBottom: '16px',
                   }}
@@ -2939,9 +2808,7 @@ export default function MemQProjectPage() {
                   rel="noopener noreferrer"
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 400,
+                    ...textStyle.body,
                     color: 'rgb(0, 0, 0)',
                     textDecoration: 'none',
                     display: 'inline-flex',

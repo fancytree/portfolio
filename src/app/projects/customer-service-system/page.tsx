@@ -1,8 +1,9 @@
 import React from 'react';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function CustomerServiceSystemPage() {
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   return (
@@ -30,9 +31,7 @@ export default function CustomerServiceSystemPage() {
             href="/"
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
+              ...textStyle.body,
               color: 'oklch(0.556 0 0)',
               textDecoration: 'none',
               display: 'inline-block',
@@ -53,9 +52,7 @@ export default function CustomerServiceSystemPage() {
             <h1
               style={{
                 ...fontStyle,
-                fontSize: '40px',
-                lineHeight: '52px',
-                fontWeight: 300,
+                ...textStyle.displayXl,
                 color: 'rgb(0, 0, 0)',
                 marginBottom: '20px',
               }}
@@ -65,9 +62,7 @@ export default function CustomerServiceSystemPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '30px',
-                fontWeight: 300,
+                ...textStyle.leadSm,
                 color: 'rgb(0, 0, 0)',
                 maxWidth: '760px',
               }}
@@ -96,9 +91,7 @@ export default function CustomerServiceSystemPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -108,9 +101,7 @@ export default function CustomerServiceSystemPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -126,9 +117,7 @@ export default function CustomerServiceSystemPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -138,9 +127,7 @@ export default function CustomerServiceSystemPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -152,9 +139,7 @@ export default function CustomerServiceSystemPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -164,9 +149,7 @@ export default function CustomerServiceSystemPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -204,9 +187,7 @@ export default function CustomerServiceSystemPage() {
             <h2
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 300,
+                ...textStyle.h3,
                 color: '#171616',
                 marginBottom: '24px',
               }}
@@ -216,9 +197,7 @@ export default function CustomerServiceSystemPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '26px',
-                fontWeight: 300,
+                ...textStyle.bodyReading,
                 color: '#171616',
                 marginBottom: '24px',
               }}
@@ -249,9 +228,7 @@ export default function CustomerServiceSystemPage() {
                     paddingLeft: '24px',
                     marginBottom: '16px',
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 300,
+                    ...textStyle.bodyLight,
                     color: '#171616',
                   }}
                 >

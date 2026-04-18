@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../../components/Button';
-import JobnovaPageDesignMockup from './JobnovaPageDesignMockup';
+import ConnectnovaPageDesignMockup from './ConnectnovaPageDesignMockup';
 // 统一从 design-tokens 引用字体与文字样式预设，避免每页重复声明 Manrope 实例
 import { fontFamily, textStyle, textColor } from '@/lib/design-tokens';
 
@@ -207,14 +207,14 @@ const PERSONA_EXPERIENCED_PROFESSIONAL = {
   ],
 } as const;
 
-const JOBNOVA_PERSONAS = [PERSONA_FIRST_TIME_SEEKER, PERSONA_EXPERIENCED_PROFESSIONAL] as const;
+const CONNECTNOVA_PERSONAS = [PERSONA_FIRST_TIME_SEEKER, PERSONA_EXPERIENCED_PROFESSIONAL] as const;
 
 /** Persona 标题下方的导语（英文） */
 const PERSONA_SECTION_INTRO =
   'We have described 2 types of people according to their experience in the job market. The least experienced are recent graduates entering hiring for the first time — applying broadly with little strategy. And experienced professionals already in work, who know what they want but lack the time and tools to pursue it effectively.';
 
 /** UX research → Persona 下方的 Solution 四卡（英文）；icon 与 Key Pain Points 同风格圆底 stroke */
-const JOBNOVA_SOLUTION_CARDS = [
+const CONNECTNOVA_SOLUTION_CARDS = [
   {
     id: '01',
     icon: 'bell' as const,
@@ -245,7 +245,7 @@ const JOBNOVA_SOLUTION_CARDS = [
   },
 ] as const;
 
-type SolutionCardIconKind = (typeof JOBNOVA_SOLUTION_CARDS)[number]['icon'];
+type SolutionCardIconKind = (typeof CONNECTNOVA_SOLUTION_CARDS)[number]['icon'];
 
 /** Solution 卡图标（对齐 Key Pain Points：48px 圆 + 24px stroke 图标） */
 function SolutionCardIcon({ kind }: { kind: SolutionCardIconKind }) {
@@ -301,8 +301,8 @@ function SolutionCardIcon({ kind }: { kind: SolutionCardIconKind }) {
   }
 }
 
-// Jobnova 项目详情页（由 MemQ 模板复制，可替换为实际项目内容）
-export default function JobnovaProjectPage() {
+// Connectnova 项目详情页（由 MemQ 模板复制，可替换为实际项目内容）
+export default function ConnectnovaProjectPage() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -394,7 +394,7 @@ export default function JobnovaProjectPage() {
               <div>End-to-end responsive web platform · Mobile-first landing · Live 0-to-1 product</div>
             </div>
 
-            <h1 style={headingLevel1Style}>Jobnova</h1>
+            <h1 style={headingLevel1Style}>Connectnova</h1>
             <p
               style={{
                 ...fontStyle,
@@ -496,8 +496,8 @@ export default function JobnovaProjectPage() {
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px' }}>
                     <Image
-                      src="/img/jobnova-problems-icon.png"
-                      alt="Jobnova"
+                      src="/img/connectnova-problems-icon.png"
+                      alt="Connectnova"
                       width={106}
                       height={106}
                       style={{ borderRadius: '24px', objectFit: 'cover' }}
@@ -525,7 +525,7 @@ export default function JobnovaProjectPage() {
                         textAlign: 'center',
                       }}
                     >
-                      <p style={{ margin: 0, marginBottom: 0 }}>Jobnova automates the hardest parts of job searching — finding the right roles, tailoring your resume, and submitting applications at scale.</p>
+                      <p style={{ margin: 0, marginBottom: 0 }}>Connectnova automates the hardest parts of job searching — finding the right roles, tailoring your resume, and submitting applications at scale.</p>
                       <p style={{ margin: '1em 0 0 0' }}>You stay in control of your story. AI handles the rest.</p>
                     </div>
                   </div>
@@ -1011,11 +1011,11 @@ export default function JobnovaProjectPage() {
                 {PERSONA_SECTION_INTRO}
               </p>
 
-              {JOBNOVA_PERSONAS.map((persona, personaIdx) => (
+              {CONNECTNOVA_PERSONAS.map((persona, personaIdx) => (
                 <div
                   key={persona.index}
                   style={{
-                    marginBottom: personaIdx < JOBNOVA_PERSONAS.length - 1 ? '48px' : 0,
+                    marginBottom: personaIdx < CONNECTNOVA_PERSONAS.length - 1 ? '48px' : 0,
                   }}
                 >
                   <div
@@ -1221,7 +1221,7 @@ export default function JobnovaProjectPage() {
                 className="flex w-full flex-row gap-4 overflow-x-auto"
                 style={{ marginBottom: 0, WebkitOverflowScrolling: 'touch' }}
               >
-                {JOBNOVA_SOLUTION_CARDS.map((card) => (
+                {CONNECTNOVA_SOLUTION_CARDS.map((card) => (
                   <div
                     key={`solution-${card.id}`}
                     style={{
@@ -1317,7 +1317,7 @@ export default function JobnovaProjectPage() {
               }}
             >
               <p style={{ marginBottom: '24px' }}>
-                I designed JobNova to support every type of modern job seeker: <strong>the watchers, the optimizers, and the sprinters</strong>. The ecosystem automates the <strong>high-friction stages of the job search—manual filtering and resume tailoring</strong>—while still giving candidates <strong>absolute control</strong> over their <strong>professional narrative and how they connect with opportunities</strong>.
+                I designed Connectnova to support every type of modern job seeker: <strong>the watchers, the optimizers, and the sprinters</strong>. The ecosystem automates the <strong>high-friction stages of the job search—manual filtering and resume tailoring</strong>—while still giving candidates <strong>absolute control</strong> over their <strong>professional narrative and how they connect with opportunities</strong>.
               </p>
             </div>
 
@@ -1337,7 +1337,7 @@ export default function JobnovaProjectPage() {
             </h3>
             <Image
               src="/img/Work%20flow.avif"
-              alt="JobNova user flow diagram"
+              alt="Connectnova user flow diagram"
               width={2560}
               height={1440}
               sizes="(max-width: 1280px) 100vw, 1280px"
@@ -1382,7 +1382,7 @@ export default function JobnovaProjectPage() {
             </div>
             <Image
               src="/img/Mid%20Fidelity.png"
-              alt="JobNova mid-fidelity wireframes"
+              alt="Connectnova mid-fidelity wireframes"
               width={2560}
               height={1440}
               sizes="(max-width: 1280px) 100vw, 1280px"
@@ -1394,7 +1394,7 @@ export default function JobnovaProjectPage() {
               }}
             />
 
-            {/* 页面设计：Figma JobNova-Redesign 126:13489（入职引导第一步） */}
+            {/* 页面设计：Figma Connectnova-Redesign 126:13489（入职引导第一步） */}
             <h3
               style={{
                 ...fontStyle,
@@ -1421,7 +1421,7 @@ export default function JobnovaProjectPage() {
                 <Image
                   key={i}
                   src={`/img/jobnova/Screen%20${i}.avif`}
-                  alt={`JobNova page design — Screen ${i}`}
+                  alt={`Connectnova page design — Screen ${i}`}
                   width={2560}
                   height={1440}
                   sizes="(max-width: 1280px) 100vw, 1280px"
@@ -1498,7 +1498,7 @@ export default function JobnovaProjectPage() {
               maxWidth: '920px',
             }}
           >
-            Built a Jobnova UI kit spanning core patterns (navigation, job cards, forms, and AI surfaces) with a token hierarchy for color, typography, spacing, and elevation so marketing and product could stay visually aligned.
+            Built a Connectnova UI kit spanning core patterns (navigation, job cards, forms, and AI surfaces) with a token hierarchy for color, typography, spacing, and elevation so marketing and product could stay visually aligned.
           </p>
           <p
             style={{
@@ -1726,7 +1726,7 @@ export default function JobnovaProjectPage() {
               >
                 <Image
                   src="/img/Jobnova_cover.avif"
-                  alt="Jobnova result mockup"
+                  alt="Connectnova result mockup"
                   width={640}
                   height={480}
                   style={{
@@ -1781,7 +1781,7 @@ export default function JobnovaProjectPage() {
                   <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.04)', borderRadius: '12px', padding: '20px' }}>
                     <div style={{ ...fontStyle, fontSize: '36px', lineHeight: '42px', fontWeight: 600, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>Live</div>
                     <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '22px', fontWeight: 400, color: 'oklch(0.35 0 0)', margin: 0 }}>
-                      Shipped at jobnova.ai with an active beta cohort and ongoing instrumentation.
+                      Shipped at connectnova.ai with an active beta cohort and ongoing instrumentation.
                     </p>
                   </div>
                 </div>
@@ -1817,7 +1817,7 @@ export default function JobnovaProjectPage() {
                       margin: 0,
                     }}
                   >
-                    — Jobnova beta user
+                    — Connectnova beta user
                   </p>
                 </div>
 
@@ -1831,11 +1831,11 @@ export default function JobnovaProjectPage() {
                     marginBottom: '20px',
                   }}
                 >
-                  Live at jobnova.ai · Beta program · Metrics from moderated sessions, in-product survey (n=47), and usage analytics
+                  Live at connectnova.ai · Beta program · Metrics from moderated sessions, in-product survey (n=47), and usage analytics
                 </p>
 
                 <Button
-                  onClick={() => window.open('https://jobnova.ai/', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://connectnova.ai/', '_blank', 'noopener,noreferrer')}
                   style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   Explore the live site

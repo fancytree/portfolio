@@ -1,8 +1,9 @@
 import React from 'react';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function ClarityProjectPage() {
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   return (
@@ -30,9 +31,7 @@ export default function ClarityProjectPage() {
             href="/"
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
+              ...textStyle.body,
               color: 'oklch(0.556 0 0)',
               textDecoration: 'none',
               display: 'inline-block',
@@ -53,9 +52,7 @@ export default function ClarityProjectPage() {
             <h1
               style={{
                 ...fontStyle,
-                fontSize: '40px',
-                lineHeight: '52px',
-                fontWeight: 300,
+                ...textStyle.displayXl,
                 color: '#171616',
                 marginBottom: '16px',
               }}
@@ -65,9 +62,7 @@ export default function ClarityProjectPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '30px',
-                fontWeight: 300,
+                ...textStyle.leadSm,
                 color: '#171616',
                 maxWidth: '760px',
               }}
@@ -97,9 +92,7 @@ export default function ClarityProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -109,9 +102,7 @@ export default function ClarityProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -127,9 +118,7 @@ export default function ClarityProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -139,9 +128,7 @@ export default function ClarityProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -153,9 +140,7 @@ export default function ClarityProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -165,9 +150,7 @@ export default function ClarityProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -219,9 +202,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -426,9 +407,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -608,9 +587,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -787,9 +764,7 @@ export default function ClarityProjectPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 300,
+                    ...textStyle.bodyLight,
                     color: '#363C56',
                     margin: 0,
                     textAlign: 'center',
@@ -827,9 +802,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -878,9 +851,7 @@ export default function ClarityProjectPage() {
             <h2
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 300,
+                ...textStyle.h3,
                 color: '#171616',
                 margin: 0,
               }}
@@ -1002,9 +973,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1120,9 +1089,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1353,9 +1320,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1471,9 +1436,7 @@ export default function ClarityProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}

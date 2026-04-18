@@ -1,0 +1,15 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 1798.77 1052.52" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="gradient" filter="url(#filter0_f_0_186)">
+<ellipse id="Ellipse 1380" cx="433.968" cy="235.383" rx="433.968" ry="235.383" transform="matrix(0.999901 -0.0140935 -0.0153943 0.999882 220.023 222.581)" fill="var(--fill-0, #B0F809)"/>
+<ellipse id="Ellipse 1385" cx="339.746" cy="161.722" rx="339.746" ry="161.722" transform="matrix(0.999901 -0.0140935 -0.0153943 0.999882 643.326 512.484)" fill="var(--fill-0, #A2EA13)"/>
+<ellipse id="Ellipse 1381" cx="277.052" cy="120.992" rx="277.052" ry="120.992" transform="matrix(0.911955 -0.410289 0.405581 0.914059 1023.22 680.618)" fill="var(--fill-0, #F3FF74)"/>
+<ellipse id="Ellipse 1386" cx="112.443" cy="35.9697" rx="112.443" ry="35.9697" transform="matrix(0.999901 -0.0140935 -0.0153943 0.999882 444.275 643.82)" fill="var(--fill-0, #A6F513)"/>
+</g>
+<defs>
+<filter id="filter0_f_0_186" x="4.52995e-06" y="-3.33786e-06" width="1798.77" height="1052.52" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="108.192" result="effect1_foregroundBlur_0_186"/>
+</filter>
+</defs>
+</svg>

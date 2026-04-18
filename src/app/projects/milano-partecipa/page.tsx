@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function MilanoPartecipaProjectPage() {
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   const [heuristicsImageModalOpen, setHeuristicsImageModalOpen] = useState(false);
@@ -34,9 +35,7 @@ export default function MilanoPartecipaProjectPage() {
             href="/"
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
+              ...textStyle.body,
               color: 'oklch(0.556 0 0)',
               textDecoration: 'none',
               display: 'inline-block',
@@ -57,9 +56,7 @@ export default function MilanoPartecipaProjectPage() {
             <h1
               style={{
                 ...fontStyle,
-                fontSize: '40px',
-                lineHeight: '52px',
-                fontWeight: 300,
+                ...textStyle.displayXl,
                 color: '#171616',
                 marginBottom: '16px',
               }}
@@ -69,9 +66,7 @@ export default function MilanoPartecipaProjectPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '30px',
-                fontWeight: 300,
+                ...textStyle.leadSm,
                 color: '#171616',
                 maxWidth: '760px',
               }}
@@ -98,9 +93,7 @@ export default function MilanoPartecipaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -110,9 +103,7 @@ export default function MilanoPartecipaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -128,9 +119,7 @@ export default function MilanoPartecipaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -140,9 +129,7 @@ export default function MilanoPartecipaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -154,9 +141,7 @@ export default function MilanoPartecipaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -166,9 +151,7 @@ export default function MilanoPartecipaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -220,9 +203,7 @@ export default function MilanoPartecipaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -350,9 +331,7 @@ export default function MilanoPartecipaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -382,9 +361,7 @@ export default function MilanoPartecipaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -971,9 +948,7 @@ export default function MilanoPartecipaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1183,9 +1158,7 @@ export default function MilanoPartecipaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1608,9 +1581,7 @@ export default function MilanoPartecipaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}

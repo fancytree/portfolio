@@ -301,6 +301,15 @@ export default function Home() {
     fontFamily: 'system-ui, -apple-system, sans-serif',
   };
 
+  // 移动端检测
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   // 鼠标位置和 hover 状态
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -389,7 +398,7 @@ export default function Home() {
         lineHeight: '24px',
         color: 'oklch(0.145 0 0)',
         minHeight: 'calc(100vh - 80px)', // 减去 Layout main 的 pt-20 (80px)，确保 Hero 占满剩余视口
-        padding: '0 48px',
+        padding: isMobile ? '0 24px' : '0 48px',
         backgroundColor: '#FFFFFF',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
@@ -404,7 +413,7 @@ export default function Home() {
             fontSize: '16px',
             lineHeight: '24px',
             color: 'oklch(0.145 0 0)',
-            height: '399.984px',
+            height: isMobile ? 'auto' : '399.984px',
             maxWidth: '1152px',
             width: '100%',
             margin: '0 auto',
@@ -435,10 +444,10 @@ export default function Home() {
           onMouseLeave={() => setIsHovered(false)}
           style={{
             ...fontStyle,
-            fontSize: '72px',
+            fontSize: isMobile ? '36px' : '72px',
             fontWeight: 400,
-            letterSpacing: '-1.8px',
-            lineHeight: '79.2px',
+            letterSpacing: isMobile ? '-0.5px' : '-1.8px',
+            lineHeight: isMobile ? '44px' : '79.2px',
             transform: 'none',
             transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.7s cubic-bezier(0.4, 0, 0.2, 1), outline-color 0.7s cubic-bezier(0.4, 0, 0.2, 1), text-decoration-color 0.7s cubic-bezier(0.4, 0, 0.2, 1), fill 0.7s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
@@ -475,7 +484,7 @@ export default function Home() {
         </span>
 
         {/* 第三部分：三个并列的按钮 */}
-        <div className="flex items-center gap-4 mt-8">
+        <div className="flex flex-wrap items-center gap-4 mt-8">
           <Button
             onClick={() => {
               if (typeof window !== 'undefined') {
@@ -514,7 +523,7 @@ export default function Home() {
       </ScrollAnimatedSection>
     </section>
     {/* Selected Work 部分 */}
-    <section 
+    <section
       id="work"
       className="w-screen py-16"
       style={{
@@ -530,6 +539,7 @@ export default function Home() {
           style={{
             maxWidth: '1280px',
             margin: '0 auto',
+            padding: isMobile ? '0 24px' : '0',
           }}
         >
         {/* 标题 */}
@@ -593,7 +603,7 @@ export default function Home() {
     </section>
 
     {/* Approach 部分 */}
-    <section 
+    <section
       className="w-screen py-16"
       style={{
         backgroundColor: '#FFFFFF',
@@ -607,6 +617,7 @@ export default function Home() {
           style={{
             maxWidth: '1280px',
             margin: '0 auto',
+            padding: isMobile ? '0 24px' : '0',
           }}
         >
         {/* 标题 */}
@@ -632,8 +643,8 @@ export default function Home() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '60px',
-              lineHeight: '75px',
+              fontSize: isMobile ? '28px' : '60px',
+              lineHeight: isMobile ? '38px' : '75px',
               fontWeight: 400,
               color: 'rgb(0, 0, 0)', // 黑色
               textAlign: 'left',
@@ -647,7 +658,7 @@ export default function Home() {
     </section>
 
     {/* What I Do 部分 */}
-    <section 
+    <section
       className="w-screen py-16"
       style={{
         backgroundColor: '#FFFFFF',
@@ -661,6 +672,7 @@ export default function Home() {
           style={{
             maxWidth: '1280px',
             margin: '0 auto',
+            padding: isMobile ? '0 24px' : '0',
           }}
         >
         {/* 标题 */}
@@ -687,7 +699,7 @@ export default function Home() {
             <button
               onClick={() => toggleAccordion(0)}
               className="w-full flex items-center justify-between text-left relative"
-              style={{ height: '104px' }}
+              style={{ minHeight: '72px', height: isMobile ? 'auto' : '104px', padding: isMobile ? '16px 0' : '0' }}
             >
               <div className="flex items-center gap-4">
                 {/* 图标容器 */}
@@ -711,8 +723,8 @@ export default function Home() {
                 <h3
                   style={{
                     ...fontStyle,
-                    fontSize: '36px',
-                    lineHeight: '40px',
+                    fontSize: isMobile ? '22px' : '36px',
+                    lineHeight: isMobile ? '28px' : '40px',
                     fontWeight: 500,
                     color: 'rgb(0, 0, 0)',
                   }}
@@ -770,7 +782,7 @@ export default function Home() {
             <button
               onClick={() => toggleAccordion(1)}
               className="w-full flex items-center justify-between text-left relative"
-              style={{ height: '104px' }}
+              style={{ minHeight: '72px', height: isMobile ? 'auto' : '104px', padding: isMobile ? '16px 0' : '0' }}
             >
               <div className="flex items-center gap-4">
                 {/* 图标容器 */}
@@ -794,8 +806,8 @@ export default function Home() {
                 <h3
                   style={{
                     ...fontStyle,
-                    fontSize: '36px',
-                    lineHeight: '40px',
+                    fontSize: isMobile ? '22px' : '36px',
+                    lineHeight: isMobile ? '28px' : '40px',
                     fontWeight: 500,
                     color: 'rgb(0, 0, 0)',
                   }}
@@ -843,7 +855,7 @@ export default function Home() {
     </section>
 
     {/* Tools & Technologies 部分 */}
-    <section 
+    <section
       className="w-screen py-16"
       style={{
         backgroundColor: '#FFFFFF',
@@ -857,6 +869,7 @@ export default function Home() {
           style={{
             maxWidth: '1280px',
             margin: '0 auto',
+            padding: isMobile ? '0 24px' : '0',
           }}
         >
         {/* 标题 */}
@@ -903,7 +916,7 @@ export default function Home() {
     </section>
 
     {/* Other Works 部分 */}
-    <section 
+    <section
       className="w-screen py-16"
       style={{
         backgroundColor: '#FFFFFF',
@@ -917,6 +930,7 @@ export default function Home() {
           style={{
             maxWidth: '1280px',
             margin: '0 auto',
+            padding: isMobile ? '0 24px' : '0',
           }}
         >
           {/* 标题 */}
@@ -1396,15 +1410,15 @@ export default function Home() {
     </section>
 
     {/* About 部分 */}
-    <section 
+    <section
       id="about"
       className="w-screen"
       style={{
         backgroundColor: '#FFFFFF',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
-        paddingTop: '240px',
-        paddingBottom: '240px',
+        paddingTop: isMobile ? '80px' : '240px',
+        paddingBottom: isMobile ? '80px' : '240px',
       }}
     >
       <ScrollAnimatedSection>
@@ -1413,6 +1427,7 @@ export default function Home() {
         style={{
           maxWidth: '900px',
           margin: '0 auto',
+          padding: isMobile ? '0 24px' : '0',
         }}
       >
         {/* 标题 */}
@@ -1617,15 +1632,15 @@ export default function Home() {
     </section>
 
     {/* Get in Touch 部分 */}
-    <section 
+    <section
       id="contact"
       className="w-screen"
       style={{
         backgroundColor: '#FAFAFA',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
-        paddingTop: '240px',
-        paddingBottom: '240px',
+        paddingTop: isMobile ? '80px' : '240px',
+        paddingBottom: isMobile ? '80px' : '240px',
       }}
     >
       <ScrollAnimatedSection>
@@ -1634,6 +1649,7 @@ export default function Home() {
           style={{
             maxWidth: '900px',
             margin: '0 auto',
+            padding: isMobile ? '0 24px' : '0',
           }}
         >
         {/* 标题 */}

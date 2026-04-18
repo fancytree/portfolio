@@ -1,8 +1,9 @@
 import React from 'react';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function CrackInterviewPage() {
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   return (
@@ -30,9 +31,7 @@ export default function CrackInterviewPage() {
             href="/"
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
+              ...textStyle.body,
               color: 'oklch(0.556 0 0)',
               textDecoration: 'none',
               display: 'inline-block',
@@ -52,9 +51,7 @@ export default function CrackInterviewPage() {
             <h1
               style={{
                 ...fontStyle,
-                fontSize: '40px',
-                lineHeight: '52px',
-                fontWeight: 300,
+                ...textStyle.displayXl,
                 color: '#171616',
                 marginBottom: '16px',
               }}
@@ -91,9 +88,7 @@ export default function CrackInterviewPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '30px',
-                fontWeight: 300,
+                ...textStyle.leadSm,
                 color: '#171616',
                 maxWidth: '760px',
               }}
@@ -122,9 +117,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -134,9 +127,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -152,9 +143,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -164,9 +153,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -178,9 +165,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -190,9 +175,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -347,9 +330,7 @@ export default function CrackInterviewPage() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               marginBottom: '20px',
               maxWidth: '920px',
@@ -381,9 +362,7 @@ export default function CrackInterviewPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '26px',
-                fontWeight: 300,
+                ...textStyle.bodyReading,
                 color: '#171616',
               }}
             >
@@ -424,9 +403,7 @@ export default function CrackInterviewPage() {
               <h3
                 style={{
                   ...fontStyle,
-                  fontSize: '20px',
-                  lineHeight: '28px',
-                  fontWeight: 500,
+                  ...textStyle.h4,
                   color: '#171616',
                   marginBottom: '16px',
                 }}
@@ -436,9 +413,7 @@ export default function CrackInterviewPage() {
               <ul
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                   paddingLeft: 0,
                   margin: 0,
@@ -473,9 +448,7 @@ export default function CrackInterviewPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '16px',
             }}
@@ -485,9 +458,7 @@ export default function CrackInterviewPage() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               maxWidth: '920px',
               marginBottom: '32px',
@@ -581,9 +552,7 @@ export default function CrackInterviewPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -613,9 +582,7 @@ export default function CrackInterviewPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -655,9 +622,7 @@ export default function CrackInterviewPage() {
               <p
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '26px',
-                  fontWeight: 300,
+                  ...textStyle.bodyReading,
                   color: '#171616',
                   textAlign: 'center',
                   margin: 0,
@@ -712,9 +677,7 @@ export default function CrackInterviewPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '26px',
-                fontWeight: 300,
+                ...textStyle.bodyReading,
                 color: '#171616',
                 textAlign: 'center',
                 marginBottom: '32px',
@@ -750,9 +713,7 @@ export default function CrackInterviewPage() {
                 style={{
                   flex: '0 0 55%',
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '26px',
-                  fontWeight: 300,
+                  ...textStyle.bodyReading,
                   color: '#171616',
                   display: 'flex',
                   flexDirection: 'column',
@@ -885,9 +846,7 @@ export default function CrackInterviewPage() {
                 <p
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '26px',
-                    fontWeight: 300,
+                    ...textStyle.bodyReading,
                     color: '#495057',
                     margin: 0,
                     fontStyle: 'italic',
@@ -935,9 +894,7 @@ export default function CrackInterviewPage() {
                   <p
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '26px',
-                      fontWeight: 300,
+                      ...textStyle.bodyReading,
                       color: '#171616',
                       margin: 0,
                     }}
@@ -1012,9 +969,7 @@ export default function CrackInterviewPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1039,9 +994,7 @@ export default function CrackInterviewPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '26px',
-                  fontWeight: 300,
+                  ...textStyle.bodyReading,
                   color: '#171616',
                   maxWidth: '820px',
                 }}
@@ -1122,9 +1075,7 @@ export default function CrackInterviewPage() {
                   style={{
                     flex: 1,
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '26px',
-                    fontWeight: 300,
+                    ...textStyle.bodyReading,
                     color: '#171616',
                   }}
                 >
@@ -1165,9 +1116,7 @@ export default function CrackInterviewPage() {
                   style={{
                     flex: 1,
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '26px',
-                    fontWeight: 300,
+                    ...textStyle.bodyReading,
                     color: '#171616',
                   }}
                 >
@@ -1234,9 +1183,7 @@ export default function CrackInterviewPage() {
                   style={{
                     flex: 1,
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '26px',
-                    fontWeight: 300,
+                    ...textStyle.bodyReading,
                     color: '#171616',
                   }}
                 >
@@ -1278,9 +1225,7 @@ export default function CrackInterviewPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '26px',
-                fontWeight: 300,
+                ...textStyle.bodyReading,
                 color: '#171616',
                 maxWidth: '820px',
                 marginBottom: '16px',
@@ -1336,9 +1281,7 @@ export default function CrackInterviewPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '26px',
-                fontWeight: 300,
+                ...textStyle.bodyReading,
                 color: '#171616',
                 maxWidth: '820px',
                 marginBottom: '16px',
@@ -1400,9 +1343,7 @@ export default function CrackInterviewPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -1412,9 +1353,7 @@ export default function CrackInterviewPage() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               marginBottom: '24px',
             }}

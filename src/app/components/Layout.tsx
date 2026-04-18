@@ -18,9 +18,9 @@ export default function Layout({ children }: LayoutProps) {
       <Navbar />
 
       {/* 主体内容区域：为 fixed 导航预留顶部内边距（pt-20 = 80px，适应 72px 高度的导航栏），水平居中、限制最大宽度 max-w-7xl */}
-      <main className="mx-auto flex max-w-7xl flex-1 px-4 pt-20 pb-10 sm:px-6 lg:px-8">
-        {/* 这里包裹 children，后续页面内容会渲染在这里 */}
-        <div className="w-full">{children}</div>
+      <main className="mx-auto flex min-w-0 max-w-7xl flex-1 px-4 pt-20 pb-10 sm:px-6 lg:px-8">
+        {/* min-w-0：flex 子项可窄于内容最小宽度，子页面内视口全宽突破计算才正确 */}
+        <div className="w-full min-w-0">{children}</div>
       </main>
 
       {/* 全站底部：Let's work together + 版权信息 */}

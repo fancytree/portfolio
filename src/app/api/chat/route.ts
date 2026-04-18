@@ -18,9 +18,38 @@ type KnowledgeRow = {
 };
 type ChatApiSource = { project?: string | null; type?: string | null; title?: string | null };
 
-// Turso：TURSO_DATABASE_URL（libsql:// 或 file: 本地）；远程库需 TURSO_AUTH_TOKEN
+// Turso：TURSO_DATABASE_URL（libsql:// 或 file: 本地）；远程 libsql:// 必须配置 TURSO_AUTH_TOKEN
 const tursoUrl = process.env.TURSO_DATABASE_URL;
 const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
+
+/** 去掉换行、首尾空格、包裹引号，避免 Vercel / 复制粘贴导致 Turso 返回 HTTP 400 */
+function normalizeTursoUrl(url: string): string {
+  return url.trim().replace(/\r/g, '').replace(/\n/g, '').trim();
+}
+
+function normalizeTursoAuthToken(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  let t = raw.trim().replace(/\r/g, '').replace(/\n/g, '');
+  if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+    t = t.slice(1, -1).trim();
+  }
+  return t.length > 0 ? t : undefined;
+}
+
+/** 将 libSQL 底层错误转成访客可读说明（不暴露密钥） */
+function mapTursoErrorToUserMessage(msg: string): string {
+  if (/SERVER_ERROR|HTTP status 400|status 400|HttpServerError/i.test(msg)) {
+    return [
+      'Knowledge database connection failed (HTTP 400 — usually an invalid, expired, or malformed Turso token).',
+      'In Vercel → Settings → Environment Variables, set TURSO_AUTH_TOKEN to the database token from the Turso dashboard (Database → Show token), with no quotes or line breaks.',
+      'Confirm TURSO_DATABASE_URL matches Connect exactly. Regenerate the token on Turso if it was rotated.',
+    ].join(' ');
+  }
+  if (/401|Unauthorized|FORBIDDEN|403/i.test(msg)) {
+    return 'Knowledge database rejected the credentials. Check TURSO_AUTH_TOKEN on Vercel matches the current Turso database token.';
+  }
+  return msg;
+}
 const geminiApiKey = process.env.GEMINI_API_KEY;
 const knowledgeTable =
   process.env.CHAT_KNOWLEDGE_TABLE ?? process.env.SUPABASE_KNOWLEDGE_TABLE ?? 'portfolio_knowledge';
@@ -192,10 +221,22 @@ function mapAboutRows(rawRows: Array<Record<string, unknown>>): KnowledgeRow[] {
 }
 
 async function fetchKnowledge(question: string) {
-  if (!tursoUrl?.trim()) {
+  const url = normalizeTursoUrl(tursoUrl ?? '');
+  const token = normalizeTursoAuthToken(tursoAuthToken);
+
+  if (!url) {
     return {
       rows: [] as KnowledgeRow[],
       error: 'TURSO_DATABASE_URL is missing. Configure Turso (libSQL) for the chat knowledge base.',
+      emptyReason: null as string | null,
+    };
+  }
+
+  if (url.startsWith('libsql://') && !token) {
+    return {
+      rows: [] as KnowledgeRow[],
+      error:
+        'TURSO_AUTH_TOKEN is missing or empty. Remote Turso requires the database token from the Turso dashboard (no quotes or line breaks).',
       emptyReason: null as string | null,
     };
   }
@@ -214,8 +255,8 @@ async function fetchKnowledge(question: string) {
   }
 
   const client = createClient({
-    url: tursoUrl.trim(),
-    authToken: tursoAuthToken?.trim() || undefined,
+    url,
+    authToken: token,
   });
 
   const aboutIntent = isAboutIntent(question);
@@ -237,7 +278,7 @@ async function fetchKnowledge(question: string) {
     if (aboutIntent) {
       const r = await client.execute({
         sql:
-          `SELECT id, project, type, title, content, participant, tags FROM ${knowledgeTblQuoted} ` +
+          `SELECT * FROM ${knowledgeTblQuoted} ` +
           `WHERE lower(coalesce(project,'')) LIKE '%about%' OR lower(coalesce(type,'')) LIKE '%about%' ` +
           `OR lower(coalesce(tags,'')) LIKE '%about%' OR lower(coalesce(title,'')) LIKE '%about%' ` +
           `LIMIT 8`,
@@ -253,7 +294,7 @@ async function fetchKnowledge(question: string) {
       const { clause, args } = buildKeywordWhereClause(searchKeywords);
       if (clause.length > 0) {
         const r = await client.execute({
-          sql: `SELECT id, project, type, title, content, participant, tags FROM ${knowledgeTblQuoted} WHERE (${clause}) LIMIT 10`,
+          sql: `SELECT * FROM ${knowledgeTblQuoted} WHERE (${clause}) LIMIT 10`,
           args,
         });
         for (const row of r.rows) {
@@ -273,7 +314,7 @@ async function fetchKnowledge(question: string) {
     }
 
     const fb = await client.execute({
-      sql: `SELECT id, project, type, title, content, participant, tags FROM ${knowledgeTblQuoted} LIMIT 12`,
+      sql: `SELECT * FROM ${knowledgeTblQuoted} LIMIT 12`,
       args: [],
     });
     const fallbackRows: KnowledgeRow[] = [];
@@ -301,7 +342,7 @@ async function fetchKnowledge(question: string) {
     return { rows: [] as KnowledgeRow[], error: null as string | null, emptyReason: 'no_usable_content' };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    return { rows: [] as KnowledgeRow[], error: msg, emptyReason: null as string | null };
+    return { rows: [] as KnowledgeRow[], error: mapTursoErrorToUserMessage(msg), emptyReason: null as string | null };
   }
 }
 
@@ -525,6 +566,9 @@ function buildSources(rows: KnowledgeRow[]): ChatApiSource[] {
   }));
 }
 
+// 使用 Node 运行时，确保 @libsql/client 走稳定 HTTP 路径（避免 Edge 下异常）
+export const runtime = 'nodejs';
+
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as {
@@ -541,9 +585,16 @@ export async function POST(req: NextRequest) {
 
     const { rows, error, emptyReason } = await fetchKnowledge(question);
     if (error) {
+      const response =
+        error.startsWith('Knowledge database') ||
+        error.includes('TURSO_DATABASE_URL') ||
+        error.includes('TURSO_AUTH_TOKEN') ||
+        error.includes('Invalid CHAT_')
+          ? error
+          : `Knowledge search failed: ${error}`;
       return NextResponse.json(
         {
-          response: `Knowledge search failed: ${error}`,
+          response,
           sources: [],
           followUps: buildNoMatchFollowUps(question),
         },
@@ -554,7 +605,7 @@ export async function POST(req: NextRequest) {
     if (rows.length === 0) {
       const response =
         emptyReason === 'table_empty' || emptyReason?.startsWith('unreadable') || emptyReason === 'no_usable_content'
-          ? `I cannot read usable knowledge data from Supabase right now. Please verify table name, RLS policy, and anon key read permission.${emptyReason ? ` (${emptyReason})` : ''}`
+          ? `I cannot read usable knowledge data from Turso right now. Please verify table names in environment variables and that the knowledge table contains rows with non-empty content.${emptyReason ? ` (${emptyReason})` : ''}`
           : "I couldn't find a strong match for your question in the knowledge base yet. Please rephrase or mention a project name directly (Jobnova, MemQ, Mono, Clarity, etc.).";
       return NextResponse.json({
         response,

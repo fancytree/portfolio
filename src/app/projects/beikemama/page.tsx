@@ -1,8 +1,10 @@
 import React from 'react';
+import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function BeikemamaProjectPage() {
+  // fontFamily 从 token 读取，保持 system-ui（不改变原有视觉）
   const fontStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    fontFamily: fontFamily.system,
   };
 
   return (
@@ -30,9 +32,7 @@ export default function BeikemamaProjectPage() {
             href="/"
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '24px',
-              fontWeight: 400,
+              ...textStyle.body,
               color: 'oklch(0.556 0 0)',
               textDecoration: 'none',
               display: 'inline-block',
@@ -53,9 +53,7 @@ export default function BeikemamaProjectPage() {
             <h1
               style={{
                 ...fontStyle,
-                fontSize: '40px',
-                lineHeight: '52px',
-                fontWeight: 300,
+                ...textStyle.displayXl,
                 color: '#171616',
                 marginBottom: '16px',
               }}
@@ -65,9 +63,7 @@ export default function BeikemamaProjectPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '30px',
-                fontWeight: 300,
+                ...textStyle.leadSm,
                 color: '#171616',
                 maxWidth: '760px',
               }}
@@ -96,9 +92,7 @@ export default function BeikemamaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -108,9 +102,7 @@ export default function BeikemamaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -126,9 +118,7 @@ export default function BeikemamaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -138,9 +128,7 @@ export default function BeikemamaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -152,9 +140,7 @@ export default function BeikemamaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 300,
+                  ...textStyle.caption,
                   color: '#666666',
                   marginBottom: '4px',
                 }}
@@ -164,9 +150,7 @@ export default function BeikemamaProjectPage() {
               <div
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
+                  ...textStyle.bodyLight,
                   color: '#171616',
                 }}
               >
@@ -237,9 +221,7 @@ export default function BeikemamaProjectPage() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               maxWidth: '760px',
               marginBottom: '32px',
@@ -535,9 +517,7 @@ export default function BeikemamaProjectPage() {
           <ol
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               padding: '16px 20px',
               borderRadius: '12px',
@@ -588,9 +568,7 @@ export default function BeikemamaProjectPage() {
           <h2
             style={{
               ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '36px',
-              fontWeight: 300,
+              ...textStyle.h3,
               color: '#171616',
               marginBottom: '24px',
             }}
@@ -600,9 +578,7 @@ export default function BeikemamaProjectPage() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               maxWidth: '760px',
               marginBottom: '32px',
@@ -711,9 +687,7 @@ export default function BeikemamaProjectPage() {
           <p
             style={{
               ...fontStyle,
-              fontSize: '16px',
-              lineHeight: '26px',
-              fontWeight: 300,
+              ...textStyle.bodyReading,
               color: '#171616',
               maxWidth: '760px',
               marginBottom: '40px',
@@ -949,9 +923,7 @@ export default function BeikemamaProjectPage() {
                 <ul
                   style={{
                     ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '26px',
-                    fontWeight: 300,
+                    ...textStyle.bodyReading,
                     color: '#171616',
                     margin: 0,
                   }}
@@ -993,9 +965,7 @@ export default function BeikemamaProjectPage() {
             <h2
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 300,
+                ...textStyle.h3,
                 color: '#171616',
                 marginBottom: '32px',
               }}
@@ -1066,9 +1036,7 @@ export default function BeikemamaProjectPage() {
             <h2
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 300,
+                ...textStyle.h3,
                 color: '#171616',
                 marginBottom: '16px',
               }}
@@ -1078,9 +1046,7 @@ export default function BeikemamaProjectPage() {
             <p
               style={{
                 ...fontStyle,
-                fontSize: '16px',
-                lineHeight: '26px',
-                fontWeight: 300,
+                ...textStyle.bodyReading,
                 color: '#171616',
                 maxWidth: '760px',
                 marginBottom: '32px',
@@ -1118,9 +1084,7 @@ export default function BeikemamaProjectPage() {
               <h2
                 style={{
                   ...fontStyle,
-                  fontSize: '28px',
-                  lineHeight: '36px',
-                  fontWeight: 300,
+                  ...textStyle.h3,
                   color: '#171616',
                   marginBottom: '16px',
                 }}
@@ -1130,9 +1094,7 @@ export default function BeikemamaProjectPage() {
               <p
                 style={{
                   ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '26px',
-                  fontWeight: 300,
+                  ...textStyle.bodyReading,
                   color: '#171616',
                   maxWidth: '760px',
                   marginBottom: '40px',
@@ -1209,9 +1171,7 @@ export default function BeikemamaProjectPage() {
                       <p
                         style={{
                           ...fontStyle,
-                          fontSize: '16px',
-                          lineHeight: '24px',
-                          fontWeight: 300,
+                          ...textStyle.bodyLight,
                           color: '#171616',
                           margin: 0,
                         }}
@@ -1273,9 +1233,7 @@ export default function BeikemamaProjectPage() {
                       <p
                         style={{
                           ...fontStyle,
-                          fontSize: '16px',
-                          lineHeight: '24px',
-                          fontWeight: 300,
+                          ...textStyle.bodyLight,
                           color: '#171616',
                           margin: 0,
                         }}
@@ -1345,9 +1303,7 @@ export default function BeikemamaProjectPage() {
                   <ol
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '26px',
-                      fontWeight: 300,
+                      ...textStyle.bodyReading,
                       color: '#171616',
                       margin: 0,
                       display: 'flex',
@@ -1375,9 +1331,7 @@ export default function BeikemamaProjectPage() {
                 <h2
                   style={{
                     ...fontStyle,
-                    fontSize: '28px',
-                    lineHeight: '36px',
-                    fontWeight: 300,
+                    ...textStyle.h3,
                     color: '#171616',
                     margin: 0,
                     marginBottom: '16px',
@@ -1440,9 +1394,7 @@ export default function BeikemamaProjectPage() {
                   <h4
                     style={{
                       ...fontStyle,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      fontWeight: 400,
+                      ...textStyle.body,
                       color: '#171616',
                       margin: 0,
                       marginBottom: '12px',
@@ -1484,9 +1436,7 @@ export default function BeikemamaProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: '#171616',
                         margin: 0,
                         marginBottom: '12px',
@@ -1519,9 +1469,7 @@ export default function BeikemamaProjectPage() {
                     <h4
                       style={{
                         ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        fontWeight: 400,
+                        ...textStyle.body,
                         color: '#171616',
                         margin: 0,
                         marginBottom: '12px',
@@ -1595,9 +1543,7 @@ export default function BeikemamaProjectPage() {
                   <h2
                     style={{
                       ...fontStyle,
-                      fontSize: '28px',
-                      lineHeight: '36px',
-                      fontWeight: 300,
+                      ...textStyle.h3,
                       color: '#171616',
                       margin: 0,
                       marginBottom: '16px',
