@@ -36,7 +36,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center gap-3" style={{ textDecoration: 'none' }} onClick={closeMenu}>
           <Image src="/logo.svg" alt="Logo" width={24} height={24} className="object-contain" />
           <span style={{ ...fontStyle, color: '#000000', fontSize: '16px', fontWeight: 500, lineHeight: '24px' }}>
-            River
+            Mei.C
           </span>
         </Link>
 
