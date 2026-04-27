@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '../../components/Button';
-import JobnovaPageDesignMockup from './JobnovaPageDesignMockup';
 // 统一从 design-tokens 引用字体与文字样式预设，避免每页重复声明 Manrope 实例
 import { fontFamily, textStyle, textColor } from '@/lib/design-tokens';
+// 详情页通用 Hero（MemQ 风格的可展开"项目概览"），由两个项目页共享
+import ProjectHero from '../../components/ProjectHero';
 
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
@@ -303,15 +304,6 @@ function SolutionCardIcon({ kind }: { kind: SolutionCardIconKind }) {
 
 // Jobnova 项目详情页（由 MemQ 模板复制，可替换为实际项目内容）
 export default function JobnovaProjectPage() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const updateIsMobile = () => setIsMobile(window.innerWidth < 768);
-    updateIsMobile();
-    window.addEventListener('resize', updateIsMobile);
-    return () => window.removeEventListener('resize', updateIsMobile);
-  }, []);
-
   // fontStyle 仅作为 Manrope 字体家族的简写，仍保留以避免破坏下方大量 `...fontStyle` 的展开
   const fontStyle = {
     fontFamily: fontFamily.sans,
@@ -332,7 +324,7 @@ export default function JobnovaProjectPage() {
 
   return (
     <div className="w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
-      {/* Hero Section */}
+      {/* Hero Section —— 与 MemQ 详情页顶部节奏一致：上 120 / 下 80 */}
       <section 
         className="w-screen"
         style={{
@@ -340,73 +332,21 @@ export default function JobnovaProjectPage() {
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
           paddingTop: '120px',
-          paddingBottom: '40px',
+          paddingBottom: '80px',
         }}
       >
         <ScrollAnimatedSection initialDelay={200}>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            {/* 返回按钮 */}
-            <Link 
-              href="/"
-              style={{
-                ...fontStyle,
-                ...textStyle.body,
-                color: 'oklch(0.556 0 0)',
-                textDecoration: 'none',
-                display: 'inline-block',
-                marginBottom: '48px',
-                transition: 'color 0.3s ease',
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'rgb(0, 0, 0)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'oklch(0.556 0 0)'}
-            >
-              ← Back to Work
-            </Link>
-
-            {/* 角色与时间线（无交互，直接展示） */}
-            <div
-              style={{
-                ...fontStyle,
-                fontSize: '14px',
-                lineHeight: '24px',
-                fontWeight: 300,
-                color: 'rgba(102, 102, 102, 1)',
-                marginBottom: '8px',
-              }}
-            >
-              Founding Product Designer · AI Startup · 2025 – Present (Ongoing)
-            </div>
-            <div
-              className="flex flex-col gap-1"
-              style={{
-                ...fontStyle,
-                ...textStyle.body,
-                color: 'oklch(0.556 0 0)',
-                marginBottom: '20px',
-              }}
-            >
-              <div>Foundational discovery & interviews · Competitive benchmarking · Iterative usability testing</div>
-              <div>End-to-end responsive web platform · Mobile-first landing · Live 0-to-1 product</div>
-            </div>
-
-            <h1 style={headingLevel1Style}>Jobnova</h1>
-            <p
-              style={{
-                ...fontStyle,
-                ...textStyle.lead,
-                color: 'rgba(0, 0, 0, 1)',
-                marginBottom: '28px',
-                maxWidth: '720px',
-              }}
-            >
-              An AI-native career ecosystem designed for modern job seekers to instantly discover tailored opportunities and automate the end-to-end application process with hyper-personalized resumes.
-            </p>
-          </div>
+          {/* Hero 内层使用通用 ProjectHero 组件（与 connectnova 共享）。
+              文案与之前 Hero 中的两段角色信息保持一致，只是结构改为可展开样式。 */}
+          <ProjectHero
+            title="Jobnova"
+            roleSummary="Founding Product Designer · AI Startup · 2025 – Present (Ongoing)"
+            roleDetails={[
+              'Foundational discovery & interviews · Competitive benchmarking · Iterative usability testing',
+              'End-to-end responsive web platform · Mobile-first landing · Live 0-to-1 product',
+            ]}
+            description="An AI-native career ecosystem designed for modern job seekers to instantly discover tailored opportunities and automate the end-to-end application process with hyper-personalized resumes."
+          />
         </ScrollAnimatedSection>
       </section>
 

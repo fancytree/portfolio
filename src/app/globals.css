@@ -143,3 +143,218 @@ body {
 .other-work-card:hover .case-study-hint {
   color: rgb(0, 0, 0);
 }
+
+/* ====================================================
+   ConnectNova Design System — scoped to .cn-scope
+   ==================================================== */
+.cn-scope {
+  --cn-primary: #004ac6;
+  --cn-primary-dark: #003da8;
+  --cn-primary-light: rgba(0, 74, 198, 0.07);
+  --cn-primary-border: rgba(0, 74, 198, 0.18);
+  --cn-primary-ring: rgba(0, 74, 198, 0.12);
+
+  --cn-danger: rgba(200, 40, 20, 0.9);
+  --cn-danger-light: rgba(200, 40, 20, 0.04);
+  --cn-danger-border: rgba(200, 40, 20, 0.25);
+
+  --cn-success: rgba(20, 130, 60, 0.9);
+  --cn-success-light: rgba(20, 130, 60, 0.07);
+  --cn-success-border: rgba(20, 130, 60, 0.2);
+
+  --cn-purple: rgba(140, 60, 200, 0.85);
+  --cn-purple-light: rgba(140, 60, 200, 0.07);
+  --cn-purple-border: rgba(140, 60, 200, 0.2);
+
+  --cn-border: rgba(0, 0, 0, 0.14);
+  --cn-border-subtle: rgba(0, 0, 0, 0.1);
+  --cn-surface: #ffffff;
+  --cn-text: rgb(0, 0, 0);
+  --cn-text-muted: rgba(0, 0, 0, 0.5);
+  --cn-text-dim: rgba(0, 0, 0, 0.35);
+
+  --cn-radius-sm: 6px;
+  --cn-radius-md: 7px;
+  --cn-radius-lg: 10px;
+  --cn-radius-xl: 12px;
+  --cn-radius-2xl: 14px;
+  --cn-radius-full: 999px;
+
+  --cn-space-1: 4px;
+  --cn-space-2: 8px;
+  --cn-space-3: 12px;
+  --cn-space-4: 16px;
+  --cn-space-5: 20px;
+  --cn-space-6: 24px;
+  --cn-space-8: 32px;
+  --cn-space-12: 48px;
+}
+
+/* Buttons */
+.cn-scope .cn-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--cn-radius-md);
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  outline: none;
+  white-space: nowrap;
+}
+.cn-scope .cn-btn-sm { font-size: 12px; padding: 6px 12px; border-radius: var(--cn-radius-sm); }
+
+.cn-scope .cn-btn-primary { color: #fff; background: var(--cn-primary); border-color: var(--cn-primary); }
+.cn-scope .cn-btn-primary:hover { background: var(--cn-primary-dark); border-color: var(--cn-primary-dark); }
+
+.cn-scope .cn-btn-secondary { color: var(--cn-primary); background: #fff; border-color: var(--cn-primary-border); }
+.cn-scope .cn-btn-secondary:hover { background: var(--cn-primary-light); }
+
+.cn-scope .cn-btn-ghost { color: rgba(0, 0, 0, 0.6); background: transparent; border-color: var(--cn-border); }
+.cn-scope .cn-btn-ghost:hover { background: rgba(0, 0, 0, 0.04); }
+
+.cn-scope .cn-btn-danger { color: var(--cn-danger); background: #fff; border-color: var(--cn-danger-border); }
+.cn-scope .cn-btn-danger:hover { background: var(--cn-danger-light); }
+
+.cn-scope .cn-btn-shortlist {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cn-primary);
+  background: var(--cn-primary-light);
+  border: 1px solid var(--cn-primary-border);
+  border-radius: var(--cn-radius-sm);
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+.cn-scope .cn-btn-shortlist.is-active {
+  color: #fff;
+  background: var(--cn-primary);
+  border-color: var(--cn-primary);
+}
+
+/* Chips / Badges */
+.cn-scope .cn-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 3px 8px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.cn-scope .cn-chip-blue   { color: var(--cn-primary);  background: var(--cn-primary-light);  border-color: var(--cn-primary-border); }
+.cn-scope .cn-chip-green  { color: var(--cn-success);  background: var(--cn-success-light);  border-color: var(--cn-success-border); }
+.cn-scope .cn-chip-gray   { color: rgba(0,0,0,0.42);   background: rgba(0,0,0,0.05);         border-color: rgba(0,0,0,0.12); }
+.cn-scope .cn-chip-gray-dim { color: rgba(0,0,0,0.35); background: rgba(0,0,0,0.04);         border-color: rgba(0,0,0,0.10); }
+.cn-scope .cn-chip-purple { color: var(--cn-purple);   background: var(--cn-purple-light);   border-color: var(--cn-purple-border); }
+
+/* Inputs */
+.cn-scope .cn-input {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgb(0, 0, 0);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: var(--cn-radius-md);
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.cn-scope .cn-input:focus {
+  border-color: var(--cn-primary);
+  box-shadow: 0 0 0 3px var(--cn-primary-ring);
+}
+.cn-scope .cn-input:disabled {
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(0, 0, 0, 0.3);
+  cursor: not-allowed;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+.cn-scope .cn-input-search { padding-left: 32px; }
+
+/* Tab switcher */
+.cn-scope .cn-tab-group {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.cn-scope .cn-tab {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.45);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  outline: none;
+}
+.cn-scope .cn-tab.is-active { color: rgb(0, 0, 0); background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+
+/* Avatar */
+.cn-scope .cn-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: var(--cn-primary-light);
+  color: var(--cn-primary);
+}
+
+/* Score badge */
+.cn-scope .cn-score-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: var(--cn-primary);
+  color: #fff;
+}
+
+/* Progress bar */
+.cn-scope .cn-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.07);
+  overflow: hidden;
+}
+.cn-scope .cn-progress-bar {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--cn-primary);
+  opacity: 0.8;
+}
+
+/* Candidate row */
+.cn-scope .cn-candidate-row {
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--cn-radius-lg);
+  overflow: hidden;
+  background: #fff;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.cn-scope .cn-candidate-row.is-expanded {
+  border-color: rgba(0, 74, 198, 0.2);
+  background: rgba(0, 74, 198, 0.015);
+}

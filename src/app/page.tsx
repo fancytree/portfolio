@@ -569,9 +569,8 @@ export default function Home() {
           Case studies showcasing user-centered design, technical implementation, and creative problem-solving.
         </p>
 
-        {/* Showcase 卡片区域 */}
-        <div className="flex flex-col gap-10">
-          {/* 第一列：Jobnova 单独展示 */}
+        {/* Showcase 卡片区域：统一两列网格 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-12">
           <ShowcaseCard
             title="Jobnova"
             description="An AI-native career ecosystem for job seekers to discover tailored opportunities and automate applications with hyper-personalized resumes."
@@ -579,24 +578,32 @@ export default function Home() {
             imageUrl="/img/Jobnova_cover.avif"
             href="/projects/jobnova"
           />
-
-          {/* 其余项目：两列网格展示 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-12">
-            <ShowcaseCard
-              title="MemQ: Smart Quiz & Memory APP"
-              description="A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes."
-              tags={['Mobile App', 'UX Design', 'Learning']}
-              imageUrl="/img/cover image.avif"
-              href="/projects/memq"
-            />
-            <ShowcaseCard
-              title="Mono: Autonomous Interface Generation via LLM-to-JSON Orchestration"
-              description="The Intent-Driven Generative UI Financial Agent — conversational AI that helps users manage finances through natural language and dynamic, context-aware interfaces."
-              tags={['Product Design', 'Generative UI', 'Financial AI']}
-              href="/projects/mono"
-              imageUrl="/img/mono_cover.avif"
-            />
-          </div>
+          <ShowcaseCard
+            title="ConnectNova"
+            description="An AI-powered Chrome extension and web dashboard that helps recruiters rank LinkedIn candidates in minutes — not hours."
+            tags={['0-to-1', 'Design System', 'Chrome Extension', 'AI SaaS']}
+            imageUrl="/img/connectnova/connectnova.avif"
+            imageScale={1}
+            imageFit="contain"
+            bgImageUrl="/img/connectnova/Dashboard.avif"
+            bgBlur={28}
+            bgOverlay="linear-gradient(148deg, rgba(10,22,72,0.55) 0%, rgba(20,48,130,0.4) 50%, rgba(8,18,60,0.5) 100%)"
+            href="/projects/connectnova"
+          />
+          <ShowcaseCard
+            title="MemQ: Smart Quiz & Memory APP"
+            description="A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes."
+            tags={['Mobile App', 'UX Design', 'Learning']}
+            imageUrl="/img/cover image.avif"
+            href="/projects/memq"
+          />
+          <ShowcaseCard
+            title="Mono: Autonomous Interface Generation via LLM-to-JSON Orchestration"
+            description="The Intent-Driven Generative UI Financial Agent — conversational AI that helps users manage finances through natural language and dynamic, context-aware interfaces."
+            tags={['Product Design', 'Generative UI', 'Financial AI']}
+            href="/projects/mono"
+            imageUrl="/img/mono_cover.avif"
+          />
         </div>
       </div>
       </ScrollAnimatedSection>
