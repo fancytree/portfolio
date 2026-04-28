@@ -2299,7 +2299,7 @@ export default function ConnectnovaProjectPage() {
                     margin: 0,
                   }}
                 >
-                  Across all three, the same gap surfaced: <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>LinkedIn surfaces candidates but provides no place to collect, rank, or manage them</strong>. Everything after "find" is handled by a disconnected tool — or not at all.
+                  Across all three, the same gap surfaced: <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>LinkedIn surfaces candidates but provides no place to collect, rank, or manage them</strong>. Everything after &quot;find&quot; is handled by a disconnected tool — or not at all.
                 </p>
 
                 {/* Fig 1：三类用户各自的工作流程图 + 痛点 */}
@@ -2717,7 +2717,7 @@ export default function ConnectnovaProjectPage() {
                       ))}
                     </div>
                     <div style={{ ...fontStyle, fontSize: '13px', color: 'oklch(0.556 0 0)', fontStyle: 'italic' }}>
-                      Results aren't saved. Each session starts from zero. Candidates from different searches can't be combined.
+                      Results aren&apos;t saved. Each session starts from zero. Candidates from different searches can&apos;t be combined.
                     </div>
                   </div>
 
@@ -3189,7 +3189,7 @@ export default function ConnectnovaProjectPage() {
                         { name: '--cn-text', value: '#000000', bg: '#000000', light: true },
                         { name: '--cn-text-muted', value: 'rgba(0,0,0,0.5)', bg: 'rgba(0,0,0,0.5)', light: true },
                         { name: '--cn-border', value: 'rgba(0,0,0,0.14)', bg: 'rgba(0,0,0,0.14)', light: false },
-                      ].map(({ name, value, bg, light }) => (
+                      ].map(({ name, value, bg }) => (
                         <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '7px' }}>
                           <div style={{ width: '20px', height: '20px', borderRadius: '4px', background: bg, border: '1px solid rgba(0,0,0,0.08)', flexShrink: 0 }} />
                           <div style={{ minWidth: 0 }}>

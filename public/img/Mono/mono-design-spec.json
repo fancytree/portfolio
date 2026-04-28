@@ -1,0 +1,684 @@
+{
+  "meta": {
+    "product": "Mono",
+    "version": "1.0",
+    "description": "A precision design system for personal finance interfaces — optimized for data clarity, trust signaling, and rapid number scanning."
+  },
+
+  "tokens": {
+    "color": {
+      "light": [
+        {
+          "name": "--mono-color-brand",
+          "value": "#0D9488",
+          "usage": "Primary brand/action color for light theme CTAs, active states, and emphasis."
+        },
+        {
+          "name": "--mono-color-brand-hover",
+          "value": "#0F766E",
+          "usage": "Hover/pressed state of primary actions in light theme."
+        },
+        {
+          "name": "--mono-color-positive",
+          "value": "#10A37F",
+          "usage": "Semantic positive value color for income and favorable deltas."
+        },
+        {
+          "name": "--mono-color-positive-subtle",
+          "value": "rgba(16, 163, 127, 0.12)",
+          "usage": "Subtle positive background for chips and low-emphasis status indicators."
+        },
+        {
+          "name": "--mono-color-negative",
+          "value": "#E03E3E",
+          "usage": "Semantic negative color for overspend and destructive patterns."
+        },
+        {
+          "name": "--mono-color-negative-subtle",
+          "value": "rgba(224, 62, 62, 0.10)",
+          "usage": "Subtle negative background for warning rows and badges."
+        },
+        {
+          "name": "--mono-color-warning",
+          "value": "#D97706",
+          "usage": "Warning state color used near budget thresholds."
+        },
+        {
+          "name": "--mono-color-bg",
+          "value": "#FFFFFF",
+          "usage": "Primary page canvas in light theme."
+        },
+        {
+          "name": "--mono-color-surface",
+          "value": "#FFFFFF",
+          "usage": "Default card/panel background in light mode."
+        },
+        {
+          "name": "--mono-color-elevated",
+          "value": "#FAFAFA",
+          "usage": "Elevated/secondary container background in light mode."
+        },
+        {
+          "name": "--mono-color-surface-secondary",
+          "value": "#F3F3F3",
+          "usage": "Sub-surface for inset areas, row hovers, and muted blocks."
+        },
+        {
+          "name": "--mono-color-text-primary",
+          "value": "#171717",
+          "usage": "Primary text for headings, key values, and important labels in light mode."
+        },
+        {
+          "name": "--mono-color-text-secondary",
+          "value": "#737373",
+          "usage": "Secondary text for descriptions, metadata, and less prominent labels in light mode."
+        },
+        {
+          "name": "--mono-color-text-muted",
+          "value": "#5A6178",
+          "usage": "Muted tertiary text for footnotes, placeholders, and helper hints."
+        },
+        {
+          "name": "--mono-color-text-inverse",
+          "value": "#FFFFFF",
+          "usage": "Inverse text on filled brand/negative action backgrounds."
+        },
+        {
+          "name": "--mono-color-border",
+          "value": "#E0E0E0",
+          "usage": "Default border and divider color in light mode."
+        },
+        {
+          "name": "--mono-color-border-strong",
+          "value": "#B0B0B0",
+          "usage": "High-emphasis border for focus rings and selected states in light mode."
+        }
+      ],
+      "dark": [
+        {
+          "name": "--mono-color-brand",
+          "value": "#10A37F",
+          "usage": "Primary brand/action color for dark theme CTAs, active states, and emphasis."
+        },
+        {
+          "name": "--mono-color-brand-hover",
+          "value": "#0D8C6D",
+          "usage": "Hover/pressed state of primary actions in dark theme."
+        },
+        {
+          "name": "--mono-color-positive",
+          "value": "#10A37F",
+          "usage": "Semantic positive value color for income and favorable deltas."
+        },
+        {
+          "name": "--mono-color-positive-subtle",
+          "value": "rgba(16, 163, 127, 0.14)",
+          "usage": "Subtle positive background for chips and low-emphasis status indicators."
+        },
+        {
+          "name": "--mono-color-negative",
+          "value": "#E03E3E",
+          "usage": "Semantic negative color for overspend and destructive patterns."
+        },
+        {
+          "name": "--mono-color-negative-subtle",
+          "value": "rgba(224, 62, 62, 0.12)",
+          "usage": "Subtle negative background for warning rows and badges."
+        },
+        {
+          "name": "--mono-color-warning",
+          "value": "#D97706",
+          "usage": "Warning state color used near budget thresholds."
+        },
+        {
+          "name": "--mono-color-bg",
+          "value": "#212121",
+          "usage": "Primary page canvas in dark theme."
+        },
+        {
+          "name": "--mono-color-surface",
+          "value": "rgba(255, 255, 255, 0.08)",
+          "usage": "Default card/panel background in dark mode."
+        },
+        {
+          "name": "--mono-color-elevated",
+          "value": "rgba(255, 255, 255, 0.12)",
+          "usage": "Elevated/hovered container background in dark mode."
+        },
+        {
+          "name": "--mono-color-surface-secondary",
+          "value": "rgba(255, 255, 255, 0.06)",
+          "usage": "Sub-surface for inset areas and muted blocks."
+        },
+        {
+          "name": "--mono-color-text-primary",
+          "value": "#ECECEC",
+          "usage": "Primary text for headings, key values, and important labels in dark mode."
+        },
+        {
+          "name": "--mono-color-text-secondary",
+          "value": "#9B9B9B",
+          "usage": "Secondary text for descriptions, metadata, and less prominent labels in dark mode."
+        },
+        {
+          "name": "--mono-color-text-muted",
+          "value": "#737373",
+          "usage": "Muted tertiary text for footnotes, placeholders, and helper hints."
+        },
+        {
+          "name": "--mono-color-text-inverse",
+          "value": "#171717",
+          "usage": "Inverse text on high-contrast light chips in dark mode."
+        },
+        {
+          "name": "--mono-color-border",
+          "value": "rgba(255, 255, 255, 0.10)",
+          "usage": "Default border and divider color in dark mode."
+        },
+        {
+          "name": "--mono-color-border-strong",
+          "value": "rgba(255, 255, 255, 0.20)",
+          "usage": "High-emphasis border for focus rings and selected states in dark mode."
+        }
+      ]
+    },
+
+    "typography": [
+      {
+        "name": "--mono-text-heading",
+        "size": "24px",
+        "weight": 700,
+        "lineHeight": "32px",
+        "usage": "Section headings such as account names, dashboard panel titles, and modal headers."
+      },
+      {
+        "name": "--mono-text-subheading",
+        "size": "17px",
+        "weight": 600,
+        "lineHeight": "24px",
+        "usage": "Sub-section labels, card titles, and group headers within transaction lists."
+      },
+      {
+        "name": "--mono-text-body",
+        "size": "14px",
+        "weight": 400,
+        "lineHeight": "22px",
+        "usage": "General body copy for descriptions, insight narrative text, and form helper text."
+      },
+      {
+        "name": "--mono-text-label",
+        "size": "12px",
+        "weight": 500,
+        "lineHeight": "16px",
+        "usage": "Uppercase or sentence-case labels on badges, category chips, input field labels, and table column headers."
+      },
+      {
+        "name": "--mono-text-caption",
+        "size": "11px",
+        "weight": 400,
+        "lineHeight": "16px",
+        "usage": "Timestamps, footnotes, and secondary metadata that should recede visually."
+      },
+      {
+        "name": "--mono-text-mono-figure",
+        "size": "16px",
+        "weight": 500,
+        "lineHeight": "24px",
+        "usage": "Monospaced (font-family: 'IBM Plex Mono', monospace) style for all currency amounts, percentages, and numeric data to ensure column alignment and digit clarity."
+      },
+      {
+        "name": "--mono-text-mono-figure-lg",
+        "size": "28px",
+        "weight": 600,
+        "lineHeight": "36px",
+        "usage": "Large monospaced variant for primary balance displays on account summary headers where the number is the focal point."
+      },
+      {
+        "name": "--mono-text-mono-figure-sm",
+        "size": "13px",
+        "weight": 500,
+        "lineHeight": "20px",
+        "usage": "Small monospaced variant for inline figures inside table rows, sparkline axis labels, and compact gauge readouts."
+      }
+    ],
+
+    "spacing": [
+      { "name": "--mono-space-1", "value": "4px" },
+      { "name": "--mono-space-2", "value": "8px" },
+      { "name": "--mono-space-3", "value": "12px" },
+      { "name": "--mono-space-4", "value": "16px" },
+      { "name": "--mono-space-5", "value": "20px" },
+      { "name": "--mono-space-6", "value": "24px" },
+      { "name": "--mono-space-8", "value": "32px" },
+      { "name": "--mono-space-10", "value": "40px" },
+      { "name": "--mono-space-12", "value": "48px" },
+      { "name": "--mono-space-16", "value": "64px" }
+    ],
+
+    "radius": [
+      { "name": "--mono-radius-xs", "value": "4px" },
+      { "name": "--mono-radius-sm", "value": "8px" },
+      { "name": "--mono-radius-md", "value": "12px" },
+      { "name": "--mono-radius-lg", "value": "16px" },
+      { "name": "--mono-radius-xl", "value": "24px" },
+      { "name": "--mono-radius-full", "value": "9999px" }
+    ]
+  },
+
+  "components": [
+    {
+      "token": "account-summary",
+      "component": "<AccountSummary>",
+      "description": "Displays the headline financial state of a single account — its name, institution, current balance, and a 30-day delta. Emit this component when the user asks about their balance, net worth, a specific account, or opens the home dashboard.",
+      "props": [
+        {
+          "name": "accountName",
+          "type": "string",
+          "required": true,
+          "description": "Human-readable account label (e.g. 'Chase Checking', 'Vanguard Roth IRA') displayed as the card heading."
+        },
+        {
+          "name": "institutionLogo",
+          "type": "string",
+          "required": false,
+          "description": "URL to the bank or brokerage logo shown as a 32×32 rounded thumbnail left of the account name."
+        },
+        {
+          "name": "balance",
+          "type": "number",
+          "required": true,
+          "description": "Current account balance in the user's base currency, rendered using --mono-text-mono-figure-lg."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true,
+          "description": "ISO 4217 currency code (e.g. 'USD') used to format the balance with the correct symbol and locale."
+        },
+        {
+          "name": "delta30d",
+          "type": "number",
+          "required": false,
+          "description": "Signed numeric change in balance over the past 30 days; positive values render in --mono-color-positive, negative in --mono-color-negative."
+        },
+        {
+          "name": "accountType",
+          "type": "string",
+          "required": true,
+          "description": "Account category ('checking' | 'savings' | 'investment' | 'credit' | 'loan') used to select the icon and contextual footer copy."
+        },
+        {
+          "name": "lastSynced",
+          "type": "string",
+          "required": false,
+          "description": "ISO 8601 timestamp of the last data sync, formatted as a relative string ('2 min ago') in --mono-text-caption / --mono-color-text-muted."
+        }
+      ],
+      "tokens_used": [
+        "--mono-color-surface",
+        "--mono-color-border",
+        "--mono-color-text-primary",
+        "--mono-color-text-secondary",
+        "--mono-color-text-muted",
+        "--mono-color-positive",
+        "--mono-color-negative",
+        "--mono-text-heading",
+        "--mono-text-mono-figure-lg",
+        "--mono-text-mono-figure-sm",
+        "--mono-text-label",
+        "--mono-text-caption",
+        "--mono-radius-lg",
+        "--mono-space-6",
+        "--mono-space-4"
+      ],
+      "trigger_intent": "What's my checking account balance? / Show me my Chase balance / How much do I have across all accounts?",
+      "visual_notes": "Card is 100% width with 24px horizontal padding and 20px vertical padding on a white (#FFFFFF) surface with a 1px --mono-color-border border and --mono-radius-lg corners. Top row: 32×32 rounded institution logo on the left, accountName in --mono-text-heading / --mono-color-text-primary, and accountType badge (pill, --mono-radius-full, --mono-color-surface-secondary background) on the right. Middle: balance in --mono-text-mono-figure-lg centered or left-aligned with currency symbol in --mono-color-text-secondary. Below the balance: delta30d shown as '↑ $312.40 (2.4%)' or '↓ $88.00 (0.6%)' in --mono-text-mono-figure-sm colored by sign. Bottom: lastSynced in --mono-text-caption / --mono-color-text-muted. No interactive states on the card itself; tapping navigates to account detail."
+    },
+
+    {
+      "token": "transaction-list",
+      "component": "<TransactionList>",
+      "description": "Renders a scrollable, date-grouped list of debit and credit transactions for one or more accounts. Emit when the user asks to see recent spending, searches for a specific merchant, or requests their transaction history.",
+      "props": [
+        {
+          "name": "transactions",
+          "type": "object[]",
+          "required": true,
+          "description": "Array of transaction objects each containing { id, date, merchantName, category, amount, currency, direction: 'debit'|'credit', pending: boolean }."
+        },
+        {
+          "name": "groupByDate",
+          "type": "boolean",
+          "required": false,
+          "description": "When true (default), transactions are segmented under sticky date headers ('Today', 'Yesterday', 'April 22') sorted newest-first."
+        },
+        {
+          "name": "showCategory",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, a category chip (e.g. 'Food & Drink') appears below the merchant name in --mono-text-label / --mono-color-text-muted."
+        },
+        {
+          "name": "highlightMerchant",
+          "type": "string",
+          "required": false,
+          "description": "If provided, rows whose merchantName matches this string receive a --mono-color-accent left border to surface a search result."
+        },
+        {
+          "name": "maxRows",
+          "type": "number",
+          "required": false,
+          "description": "Caps the visible list length and appends a 'Show all N transactions' link; omit to render all rows."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true,
+          "description": "Base currency code used to format all amount values uniformly across the list."
+        }
+      ],
+      "tokens_used": [
+        "--mono-color-surface",
+        "--mono-color-surface-secondary",
+        "--mono-color-border",
+        "--mono-color-text-primary",
+        "--mono-color-text-secondary",
+        "--mono-color-text-muted",
+        "--mono-color-positive",
+        "--mono-color-negative",
+        "--mono-color-accent",
+        "--mono-text-subheading",
+        "--mono-text-body",
+        "--mono-text-label",
+        "--mono-text-caption",
+        "--mono-text-mono-figure",
+        "--mono-radius-sm",
+        "--mono-space-4",
+        "--mono-space-3",
+        "--mono-space-2"
+      ],
+      "trigger_intent": "Show me my recent transactions / What did I spend at Whole Foods last week? / List all my expenses this month",
+      "visual_notes": "Outer container is a white card with --mono-radius-lg and --mono-color-border border. Date group headers are sticky (position: sticky, top: 0) in --mono-text-label uppercase / --mono-color-text-muted on a --mono-color-surface-secondary background with 8px vertical padding. Each transaction row is 64px tall with 16px horizontal padding, a 44×44 merchant icon (rounded square, --mono-radius-sm, gray placeholder if no logo), merchant name in --mono-text-body / --mono-color-text-primary, and a right-aligned amount in --mono-text-mono-figure colored by direction: credits use --mono-color-positive, debits use --mono-color-text-primary (not red — red is reserved for errors). Pending rows render the amount in --mono-color-text-muted with a 'Pending' label. A 1px --mono-color-border divider sits between each row. Rows are tap-targets that expand to a detail sheet."
+    },
+
+    {
+      "token": "chart-sparkline",
+      "component": "<ChartSparkline>",
+      "description": "A compact inline area or line chart visualizing a time-series value (balance, spending, net worth) over a selected period. Emit when the user asks how a value has changed over time, requests a trend, or opens an account detail view.",
+      "props": [
+        {
+          "name": "data",
+          "type": "object[]",
+          "required": true,
+          "description": "Array of { date: string (ISO 8601), value: number } data points plotted left-to-right along the x-axis."
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "required": true,
+          "description": "Time range label ('7D' | '1M' | '3M' | '6M' | '1Y' | 'ALL') displayed in a segmented control above the chart and used to label the x-axis."
+        },
+        {
+          "name": "trend",
+          "type": "string",
+          "required": false,
+          "description": "'up' | 'down' | 'flat' — controls the line and gradient fill color: up → --mono-color-positive, down → --mono-color-negative, flat → --mono-color-accent."
+        },
+        {
+          "name": "height",
+          "type": "number",
+          "required": false,
+          "description": "Pixel height of the chart canvas; defaults to 80 for inline sparkline contexts, use 160 for expanded detail views."
+        },
+        {
+          "name": "showAxes",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, renders x-axis date labels and y-axis value gridlines; false renders a clean borderless sparkline with no labels."
+        },
+        {
+          "name": "highlightLast",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, places a filled circle at the final data point with a floating label showing the current value."
+        }
+      ],
+      "tokens_used": [
+        "--mono-color-surface",
+        "--mono-color-positive",
+        "--mono-color-positive-subtle",
+        "--mono-color-negative",
+        "--mono-color-negative-subtle",
+        "--mono-color-accent",
+        "--mono-color-border",
+        "--mono-color-text-muted",
+        "--mono-text-label",
+        "--mono-text-mono-figure-sm",
+        "--mono-text-caption",
+        "--mono-radius-md",
+        "--mono-space-4",
+        "--mono-space-2"
+      ],
+      "trigger_intent": "How has my savings balance changed this year? / Show me my spending trend over the last 3 months / Chart my net worth",
+      "visual_notes": "The chart sits inside a white card with no border in inline contexts. The SVG path is a smooth cubic bezier curve (not straight segments) with a gradient area fill beneath it: the gradient starts at 20% opacity of the trend color at the curve and fades to 0% at the bottom. The line stroke is 2px. The period segmented control sits flush to the top-right of the card in --mono-text-label; the active segment has an --mono-color-accent underline, not a filled pill. If showAxes is true, gridlines are 1px dashed --mono-color-border at 25/50/75% y positions, and date labels appear at start/mid/end of the x-axis in --mono-text-caption / --mono-color-text-muted. The highlight dot is 8px diameter, filled with the trend color, with a white 2px stroke so it pops from the line. Tooltip on hover/tap shows date + formatted value using --mono-text-mono-figure-sm on a --mono-color-brand background with --mono-color-text-inverse text."
+    },
+
+    {
+      "token": "budget-gauge",
+      "component": "<BudgetGauge>",
+      "description": "Shows spending progress toward a budget limit for a category or overall monthly budget, using a horizontal bar gauge with contextual color signaling. Emit when the user asks how much budget they have left, whether they are on track, or views a budget breakdown.",
+      "props": [
+        {
+          "name": "categoryName",
+          "type": "string",
+          "required": true,
+          "description": "Budget category label rendered as the gauge title (e.g. 'Groceries', 'Dining Out', 'Total Monthly')."
+        },
+        {
+          "name": "spent",
+          "type": "number",
+          "required": true,
+          "description": "Amount spent so far in the current period; used to calculate fill percentage against the limit."
+        },
+        {
+          "name": "limit",
+          "type": "number",
+          "required": true,
+          "description": "The budget ceiling for the period; the gauge fill equals (spent / limit) clamped to 100%."
+        },
+        {
+          "name": "currency",
+          "type": "string",
+          "required": true,
+          "description": "ISO 4217 currency code for formatting the spent and remaining values displayed below the bar."
+        },
+        {
+          "name": "period",
+          "type": "string",
+          "required": false,
+          "description": "'monthly' | 'weekly' | 'annual' — appended to the remaining label as context ('$240 left this month')."
+        },
+        {
+          "name": "showProjection",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, a secondary dashed marker on the gauge bar shows projected month-end spend based on daily burn rate."
+        },
+        {
+          "name": "categoryIcon",
+          "type": "string",
+          "required": false,
+          "description": "Emoji or icon name displayed left of categoryName to improve scanability in a stacked list of gauges."
+        }
+      ],
+      "tokens_used": [
+        "--mono-color-surface",
+        "--mono-color-surface-secondary",
+        "--mono-color-border",
+        "--mono-color-positive",
+        "--mono-color-warning",
+        "--mono-color-warning-subtle",
+        "--mono-color-negative",
+        "--mono-color-negative-subtle",
+        "--mono-color-text-primary",
+        "--mono-color-text-secondary",
+        "--mono-color-text-muted",
+        "--mono-text-subheading",
+        "--mono-text-label",
+        "--mono-text-mono-figure",
+        "--mono-text-caption",
+        "--mono-radius-full",
+        "--mono-radius-lg",
+        "--mono-space-4",
+        "--mono-space-3",
+        "--mono-space-2"
+      ],
+      "trigger_intent": "Am I on track with my budget this month? / How much do I have left for groceries? / Show me my budget breakdown",
+      "visual_notes": "Each gauge is a horizontal row inside a white card. Layout: left side has the categoryIcon (20px) + categoryName in --mono-text-subheading, right side has the spent/limit fraction in --mono-text-mono-figure / --mono-color-text-secondary. Below the label row is the gauge track: a full-width rounded bar (height 8px, --mono-radius-full) in --mono-color-surface-secondary as the empty track. The fill bar overlays it with --mono-radius-full on both ends and color driven by fill percentage — 0–74%: --mono-color-positive, 75–99%: --mono-color-warning, 100%+: --mono-color-negative with a subtle pulse animation. If showProjection is true, a 2px dashed vertical tick mark in --mono-color-text-muted appears at the projected percentage. Below the bar: '$ remaining this [period]' in --mono-text-caption / --mono-color-text-muted left-aligned and the percentage right-aligned in the same style. When overbudget, the remaining label switches to 'Over by $X' in --mono-color-negative. Multiple gauges stack with --mono-space-4 gaps."
+    },
+
+    {
+      "token": "insight-card",
+      "component": "<InsightCard>",
+      "description": "Surfaces a single AI-generated financial observation — a spending anomaly, savings opportunity, or behavioral pattern — in a scannable card format with optional action. Emit when the assistant has detected a meaningful financial pattern or the user asks for recommendations, tips, or a financial summary.",
+      "props": [
+        {
+          "name": "insightType",
+          "type": "string",
+          "required": true,
+          "description": "'anomaly' | 'opportunity' | 'pattern' | 'milestone' — controls the leading icon and accent strip color on the card's left edge."
+        },
+        {
+          "name": "headline",
+          "type": "string",
+          "required": true,
+          "description": "One short sentence (max ~60 chars) summarizing the insight — the first thing the user reads, styled in --mono-text-subheading."
+        },
+        {
+          "name": "body",
+          "type": "string",
+          "required": true,
+          "description": "2–3 sentence explanation of the insight with specific numbers — rendered in --mono-text-body / --mono-color-text-secondary."
+        },
+        {
+          "name": "metric",
+          "type": "string",
+          "required": false,
+          "description": "Key figure to highlight in a callout chip (e.g. '+$134 vs last month') using --mono-text-mono-figure styled by sign."
+        },
+        {
+          "name": "actionLabel",
+          "type": "string",
+          "required": false,
+          "description": "CTA text for an optional ghost button at the card bottom (e.g. 'Set a budget', 'See transactions')."
+        },
+        {
+          "name": "actionHref",
+          "type": "string",
+          "required": false,
+          "description": "Internal route or callback identifier the actionLabel button navigates to when tapped."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, an × icon appears in the top-right corner allowing the user to hide this insight permanently."
+        }
+      ],
+      "tokens_used": [
+        "--mono-color-surface",
+        "--mono-color-surface-secondary",
+        "--mono-color-border",
+        "--mono-color-accent",
+        "--mono-color-positive",
+        "--mono-color-positive-subtle",
+        "--mono-color-negative",
+        "--mono-color-negative-subtle",
+        "--mono-color-warning",
+        "--mono-color-warning-subtle",
+        "--mono-color-text-primary",
+        "--mono-color-text-secondary",
+        "--mono-color-text-muted",
+        "--mono-text-subheading",
+        "--mono-text-body",
+        "--mono-text-label",
+        "--mono-text-mono-figure",
+        "--mono-radius-lg",
+        "--mono-radius-sm",
+        "--mono-radius-full",
+        "--mono-space-6",
+        "--mono-space-4",
+        "--mono-space-3"
+      ],
+      "trigger_intent": "Do you notice anything unusual about my spending? / Give me a financial tip / What should I know about my money this week?",
+      "visual_notes": "Card is white with --mono-radius-lg and a 1px --mono-color-border border. A 4px solid left-edge accent strip (inset, not a separate element — use border-left) signals insightType: anomaly → --mono-color-negative, opportunity → --mono-color-positive, pattern → --mono-color-accent, milestone → --mono-color-warning. Top row: a 20×20 icon matching insightType (left) and an optional × dismiss button (right, 16px, --mono-color-text-muted). Below: headline in --mono-text-subheading / --mono-color-text-primary. Then body in --mono-text-body / --mono-color-text-secondary with --mono-space-2 gap. If metric is provided, it sits in a pill chip (--mono-radius-full, --mono-color-surface-secondary background, 8px horizontal padding, 4px vertical padding) in --mono-text-mono-figure colored by sign — positive green, negative red, neutral accent. If actionLabel is provided, a ghost button (no fill, 1px --mono-color-accent border, --mono-color-accent text, --mono-radius-sm) sits flush-left at the bottom with --mono-space-4 top margin."
+    },
+
+    {
+      "token": "action-button",
+      "component": "<ActionButton>",
+      "description": "A single-purpose call-to-action button for initiating financial operations such as transfers, payments, budget creation, or navigation. Emit inline whenever the assistant is recommending an action the user can take immediately.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "description": "Button text rendered in --mono-text-label weight 600; should be a concise verb phrase (e.g. 'Transfer Funds', 'Set Budget', 'View All')."
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "required": true,
+          "description": "'primary' | 'secondary' | 'ghost' | 'destructive' — controls fill, border, and text color treatment."
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "required": false,
+          "description": "'sm' | 'md' | 'lg' — sm is 32px tall for inline use, md is 44px for standard actions, lg is 56px for prominent full-width CTAs."
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false,
+          "description": "Optional icon name (from the Mono icon set) rendered at 16px left of the label with 8px gap."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, replaces the label and icon with a 16px spinner and disables pointer events to prevent double-submission."
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, renders the button at 40% opacity with cursor: not-allowed and suppresses all interaction events."
+        },
+        {
+          "name": "fullWidth",
+          "type": "boolean",
+          "required": false,
+          "description": "When true, the button stretches to 100% of its container width; default is fit-content."
+        }
+      ],
+      "tokens_used": [
+        "--mono-color-brand",
+        "--mono-color-accent",
+        "--mono-color-negative",
+        "--mono-color-surface",
+        "--mono-color-border",
+        "--mono-color-text-primary",
+        "--mono-color-text-inverse",
+        "--mono-text-label",
+        "--mono-radius-sm",
+        "--mono-radius-md",
+        "--mono-space-4",
+        "--mono-space-3",
+        "--mono-space-2"
+      ],
+      "trigger_intent": "How do I set up a budget? / I want to move money to savings / Help me pay this bill",
+      "visual_notes": "Variant styles: 'primary' — background --mono-color-accent, text --mono-color-text-inverse, no border, hover darkens background by 8% using filter:brightness(0.92); 'secondary' — background --mono-color-surface, 1px border --mono-color-border-strong, text --mono-color-text-primary, hover background --mono-color-surface-secondary; 'ghost' — no background, no border, text --mono-color-accent, hover shows --mono-color-surface-secondary background; 'destructive' — background --mono-color-negative, text --mono-color-text-inverse, use sparingly for irreversible actions. All variants use --mono-radius-sm for sm/md sizes and --mono-radius-md for lg. Horizontal padding is 16px (sm), 20px (md), 24px (lg). The label is always --mono-text-label weight 600 — never all-caps. Focus ring is a 2px --mono-color-accent outline with 2px offset. Loading spinner is a 16px SVG circle with a 2px stroke and a 270° arc, animated at 0.8s linear infinite rotation."
+    }
+  ]
+}

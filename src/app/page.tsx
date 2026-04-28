@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, type CSSProperties } from 'react';
 import Button from './components/Button';
 import ShowcaseCard from './components/ShowcaseCard';
 import Image from 'next/image';
@@ -112,12 +112,26 @@ function ToolTab({ tool }: { tool: string }) {
   );
 }
 
-// HighlightedText 组件 - 关键字强调效果
+// HighlightedText 组件 - 关键字强调效果（字母样式在 effect 中计算，避免渲染期读取 ref）
 function HighlightedText({ children }: { children: string }) {
+  const letters = useMemo(() => children.split(''), [children]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLSpanElement>(null);
-  const letters = children.split('');
+  const defaultLetterStyle = useMemo(
+    () =>
+      ({
+        display: 'inline-block',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      }) as CSSProperties,
+    []
+  );
+  const defaultLetterStyles = useMemo(
+    () => letters.map(() => ({ ...defaultLetterStyle })),
+    [letters, defaultLetterStyle]
+  );
+  /** 悬停时的字母样式；仅在 rAF 回调里更新，避免 effect 内同步 setState */
+  const [hoverLetterStyles, setHoverLetterStyles] = useState<CSSProperties[] | null>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLSpanElement>) => {
     if (!containerRef.current) return;
@@ -128,62 +142,61 @@ function HighlightedText({ children }: { children: string }) {
     });
   };
 
-  const getLetterStyle = (index: number) => {
-    if (!isHovered || !containerRef.current) {
-      return {
-        display: 'inline-block',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-      };
-    }
+  useEffect(() => {
+    if (!isHovered) return;
+    const id = requestAnimationFrame(() => {
+      const container = containerRef.current;
+      if (!container) {
+        return;
+      }
 
-    const letterElement = containerRef.current.children[index] as HTMLElement;
-    if (!letterElement) {
-      return {
-        display: 'inline-block',
-        transition: 'all 0.1s ease-out',
-      };
-    }
+      const maxDistance = 80;
+      const maxScale = 1.3;
+      const maxOffset = 4;
 
-    const letterRect = letterElement.getBoundingClientRect();
-    const containerRect = containerRef.current.getBoundingClientRect();
-    
-    const letterCenterX = letterRect.left - containerRect.left + letterRect.width / 2;
-    const letterCenterY = letterRect.top - containerRect.top + letterRect.height / 2;
-    
-    const dx = mousePosition.x - letterCenterX;
-    const dy = mousePosition.y - letterCenterY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
-    // 根据距离计算缩放和位移
-    const maxDistance = 80; // 影响范围
-    const maxScale = 1.3; // 最大缩放
-    const maxOffset = 4; // 最大位移
-    
-    if (distance === 0) {
-      return {
-        display: 'inline-block',
-        transform: `scale(${maxScale})`,
-        transition: 'all 0.1s ease-out',
-      };
-    }
-    
-    const normalizedDistance = Math.min(distance / maxDistance, 1);
-    const scale = 1 + (maxScale - 1) * (1 - normalizedDistance);
-    const offsetX = (dx / distance) * maxOffset * (1 - normalizedDistance);
-    const offsetY = (dy / distance) * maxOffset * (1 - normalizedDistance);
-    
-    return {
-      display: 'inline-block',
-      transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
-      transition: 'all 0.1s ease-out',
-    };
-  };
+      const next = letters.map((_, index) => {
+        const letterElement = container.children[index] as HTMLElement | undefined;
+        if (!letterElement) {
+          return { display: 'inline-block' as const, transition: 'all 0.1s ease-out' };
+        }
+        const letterRect = letterElement.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const letterCenterX = letterRect.left - containerRect.left + letterRect.width / 2;
+        const letterCenterY = letterRect.top - containerRect.top + letterRect.height / 2;
+        const dx = mousePosition.x - letterCenterX;
+        const dy = mousePosition.y - letterCenterY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance === 0) {
+          return {
+            display: 'inline-block',
+            transform: `scale(${maxScale})`,
+            transition: 'all 0.1s ease-out',
+          };
+        }
+        const normalizedDistance = Math.min(distance / maxDistance, 1);
+        const scale = 1 + (maxScale - 1) * (1 - normalizedDistance);
+        const offsetX = (dx / distance) * maxOffset * (1 - normalizedDistance);
+        const offsetY = (dy / distance) * maxOffset * (1 - normalizedDistance);
+        return {
+          display: 'inline-block',
+          transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
+          transition: 'all 0.1s ease-out',
+        };
+      });
+      setHoverLetterStyles(next);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [isHovered, mousePosition, letters, defaultLetterStyle]);
 
   return (
     <span
+      key={children}
       ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setHoverLetterStyles(null);
+      }}
       onMouseMove={handleMouseMove}
       style={{
         display: 'inline-block',
@@ -193,7 +206,11 @@ function HighlightedText({ children }: { children: string }) {
       {letters.map((letter, index) => (
         <span
           key={index}
-          style={getLetterStyle(index)}
+          style={
+            isHovered && hoverLetterStyles && hoverLetterStyles[index]
+              ? hoverLetterStyles[index]
+              : defaultLetterStyles[index] ?? defaultLetterStyle
+          }
         >
           {letter === ' ' ? '\u00A0' : letter}
         </span>
@@ -468,7 +485,7 @@ export default function Home() {
                 transition: 'color 0.7s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
-              Let's make technology feel more human, together.
+              Let&apos;s make technology feel more human, together.
             </span>
           </span>
           {/* 渐变覆盖层（覆盖两句话，但第二句话保持透明以显示底层灰色） */}
@@ -478,7 +495,7 @@ export default function Home() {
           >
             Turning user research and testing into meaningful, user-centered solutions.{' '}
             <span style={{ WebkitTextFillColor: 'transparent', color: 'transparent' }}>
-              Let's make technology feel more human, together.
+              Let&apos;s make technology feel more human, together.
             </span>
           </span>
         </span>
@@ -851,7 +868,7 @@ export default function Home() {
                     color: 'oklch(0.556 0 0)',
                   }}
                 >
-                  I design AI assistants that feel like part of the product, not a gimmick. I map conversations and connect large language models to real product data so people get clearer, faster answers. On this site, that's the AI chat in the corner—ask it about my work.
+                  I design AI assistants that feel like part of the product, not a gimmick. I map conversations and connect large language models to real product data so people get clearer, faster answers. On this site, that&apos;s the AI chat in the corner—ask it about my work.
                 </p>
               </div>
             </div>

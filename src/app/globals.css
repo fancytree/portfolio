@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Mono component preview — dark theme tokens */
+@theme {
+  --color-text-primary: #ececec;
+  --color-text-secondary: #9b9b9b;
+  --color-surface: rgba(255, 255, 255, 0.08);
+  --color-surface-muted: rgba(255, 255, 255, 0.06);
+  --color-surface-hover: rgba(255, 255, 255, 0.12);
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-default: rgba(255, 255, 255, 0.10);
+  --color-border-strong: rgba(255, 255, 255, 0.20);
+  --color-accent: #10a37f;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function CustomerServiceSystemPage() {
@@ -27,7 +28,7 @@ export default function CustomerServiceSystemPage() {
           }}
         >
           {/* Back link */}
-          <a
+          <Link
             href="/"
             style={{
               ...fontStyle,
@@ -39,7 +40,7 @@ export default function CustomerServiceSystemPage() {
             }}
           >
             ← Back to Work
-          </a>
+          </Link>
 
           {/* Title + intro */}
           <div

@@ -481,7 +481,7 @@ export default function MemQProjectPage() {
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
-                    I recruited participants to match my core personas: <strong>university students</strong> preparing for exams, <strong>language learners</strong> building vocabulary, <strong>working professionals</strong> learning new skills, and <strong>lifelong learners</strong> seeking efficient study methods. Several participants had experience with traditional flashcard apps (Anki, Quizlet) and AI tools (ChatGPT, Claude), which helped identify gaps in existing solutions and opportunities for MemQ's unique value proposition.
+                    I recruited participants to match my core personas: <strong>university students</strong> preparing for exams, <strong>language learners</strong> building vocabulary, <strong>working professionals</strong> learning new skills, and <strong>lifelong learners</strong> seeking efficient study methods. Several participants had experience with traditional flashcard apps (Anki, Quizlet) and AI tools (ChatGPT, Claude), which helped identify gaps in existing solutions and opportunities for MemQ&apos;s unique value proposition.
                   </p>
                 </div>
 
@@ -531,7 +531,7 @@ export default function MemQProjectPage() {
                       color: 'oklch(0.556 0 0)',
                     }}
                   >
-                    This was an independent, self-funded project with no formal budget. To respect participants' academic schedules, work commitments, and time zones, I scheduled sessions flexibly—accommodating early morning sessions for professionals, evening sessions for students, and weekend slots for those with busy weekday schedules. Several sessions were conducted remotely via video calls to maximize accessibility and participant comfort.
+                    This was an independent, self-funded project with no formal budget. To respect participants&apos; academic schedules, work commitments, and time zones, I scheduled sessions flexibly—accommodating early morning sessions for professionals, evening sessions for students, and weekend slots for those with busy weekday schedules. Several sessions were conducted remotely via video calls to maximize accessibility and participant comfort.
                   </p>
                 </div>
               </div>
@@ -794,7 +794,7 @@ export default function MemQProjectPage() {
               }}
             >
               <p style={{ marginBottom: '24px' }}>
-                I designed MemQ to support every learner's pace: <strong>the crammers, the casual reviewers, and the creators</strong>. The app keeps users focused on <strong>retention</strong> while giving them <strong>complete control</strong> over how they <strong>capture fleeting ideas</strong> and <strong>structure their personal knowledge base</strong>.
+                I designed MemQ to support every learner&apos;s pace: <strong>the crammers, the casual reviewers, and the creators</strong>. The app keeps users focused on <strong>retention</strong> while giving them <strong>complete control</strong> over how they <strong>capture fleeting ideas</strong> and <strong>structure their personal knowledge base</strong>.
               </p>
             </div>
 
@@ -819,7 +819,7 @@ export default function MemQProjectPage() {
                     My research showed that the biggest barrier to habit formation was the time spent manually creating cards. Users often spent more energy formatting text than actually learning. I solved this by building a multi-modal AI engine: users can simply upload a lecture PDF, type a topic, or chat with the assistant, and MemQ automatically extracts key concepts.
                   </p>
                   <p style={{ marginBottom: '24px', ...fontStyle, fontSize: '18px', lineHeight: '32px', fontWeight: 400, color: 'rgb(0, 0, 0)' }}>
-                    Usability tests revealed that context matters. A vocabulary word needs a definition and example sentence, while a complex concept needs a "Why" or "How" question. So, I engineered the backend to detect the content type (Knowledge Point vs. Vocabulary) and generate the most effective question format for that specific item.
+                    Usability tests revealed that context matters. A vocabulary word needs a definition and example sentence, while a complex concept needs a &quot;Why&quot; or &quot;How&quot; question. So, I engineered the backend to detect the content type (Knowledge Point vs. Vocabulary) and generate the most effective question format for that specific item.
                   </p>
 
                   <h4
@@ -1164,10 +1164,10 @@ export default function MemQProjectPage() {
               }}
             >
               <p style={{ marginBottom: '24px' }}>
-                Usability testing revealed that the new <strong>"One-Tap Capture"</strong> flow significantly reduced the barrier to entry. Where users previously abandoned manual entry after 30 seconds, the AI-assisted design enabled them to complete the loop in under 5 seconds.
+                Usability testing revealed that the new <strong>&quot;One-Tap Capture&quot;</strong> flow significantly reduced the barrier to entry. Where users previously abandoned manual entry after 30 seconds, the AI-assisted design enabled them to complete the loop in under 5 seconds.
               </p>
               <p style={{ marginBottom: '24px' }}>
-                Testers praised the <strong>"invisible interface"</strong> strategy—where complex tasks like tagging and syncing happened in the background—allowing them to focus entirely on learning. This shift in UX directly contributed to higher retention rates and validated the transition to a premium subscription model.
+                Testers praised the <strong>&quot;invisible interface&quot;</strong> strategy—where complex tasks like tagging and syncing happened in the background—allowing them to focus entirely on learning. This shift in UX directly contributed to higher retention rates and validated the transition to a premium subscription model.
               </p>
             </div>
 
@@ -1301,7 +1301,7 @@ export default function MemQProjectPage() {
                         color: 'rgb(0, 0, 0)',
                       }}
                     >
-                      Participants described the AI capture flow as 'magic, efficient, and intuitive' and said they felt 100% confident that the app correctly understood their study materials.
+                      Participants described the AI capture flow as &apos;magic, efficient, and intuitive&apos; and said they felt 100% confident that the app correctly understood their study materials.
                     </p>
                   </div>
 
@@ -1655,7 +1655,7 @@ export default function MemQProjectPage() {
                       margin: 0,
                     }}
                   >
-                    This drove the decision to build a context-aware engine instead of a marketplace, ensuring quizzes are generated directly from the user's own materials.
+                    This drove the decision to build a context-aware engine instead of a marketplace, ensuring quizzes are generated directly from the user&apos;s own materials.
                   </p>
                 </div>
               </div>
@@ -1683,7 +1683,7 @@ export default function MemQProjectPage() {
                     marginBottom: '16px',
                   }}
                 >
-                  "This is the most seamless study experience I've seen. I would feel 100% confident ditching my old messy notes for this."
+                  &quot;This is the most seamless study experience I&apos;ve seen. I would feel 100% confident ditching my old messy notes for this.&quot;
                 </p>
                 <p
                   style={{

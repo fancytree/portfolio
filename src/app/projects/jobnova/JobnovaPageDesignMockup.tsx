@@ -597,19 +597,23 @@ export default function JobnovaPageDesignMockup() {
     if (step !== 0) return;
     if (blockAutoPhase2.current) return;
     if (step0Phase === 1 && selectedPositions.size > 0 && step0PositionIntro === 'idle') {
-      setStep0PositionIntro('showExperience');
+      const id = requestAnimationFrame(() => setStep0PositionIntro('showExperience'));
+      return () => cancelAnimationFrame(id);
     }
   }, [step, step0Phase, selectedPositions.size, step0PositionIntro]);
 
   useEffect(() => {
     if (step !== 0 || step0Phase < 2) return;
     if (selectedPositions.size === 0) {
-      setStep0PositionIntro('idle');
-      setStep0ExperienceIntro('idle');
-      setStep0EmailIntro('idle');
-      setStep0Phase(1);
-      setExperienceLevel(null);
-      setEmailFrequency(null);
+      const id = requestAnimationFrame(() => {
+        setStep0PositionIntro('idle');
+        setStep0ExperienceIntro('idle');
+        setStep0EmailIntro('idle');
+        setStep0Phase(1);
+        setExperienceLevel(null);
+        setEmailFrequency(null);
+      });
+      return () => cancelAnimationFrame(id);
     }
   }, [step, step0Phase, selectedPositions.size]);
 
@@ -696,14 +700,17 @@ export default function JobnovaPageDesignMockup() {
   // 分析页：进度文案按间隔逐步切换，无滚动
   useEffect(() => {
     if (step !== 3) {
-      setAnalyzingStatusIdx(0);
-      return;
+      const id = requestAnimationFrame(() => setAnalyzingStatusIdx(0));
+      return () => cancelAnimationFrame(id);
     }
-    setAnalyzingStatusIdx(0);
+    const idRaf = requestAnimationFrame(() => setAnalyzingStatusIdx(0));
     const id = window.setInterval(() => {
       setAnalyzingStatusIdx((i) => Math.min(i + 1, ANALYZING_STATUS_LINES.length - 1));
     }, ANALYZING_STATUS_INTERVAL_MS);
-    return () => window.clearInterval(id);
+    return () => {
+      cancelAnimationFrame(idRaf);
+      window.clearInterval(id);
+    };
   }, [step]);
 
   // 点击已填领域渐变：回到领域单选题（不显示欢迎语）；须再点一次职位才会进入职级题
@@ -775,15 +782,21 @@ export default function JobnovaPageDesignMockup() {
   // 13144→13198：至少选一国后进入标签行与 Onsite/Remote 高亮态
   useEffect(() => {
     if (step !== 1 || step1Phase !== 1) return;
-    if (countries.length >= 1) setStep1Phase(2);
+    if (countries.length >= 1) {
+      const id = requestAnimationFrame(() => setStep1Phase(2));
+      return () => cancelAnimationFrame(id);
+    }
   }, [step, step1Phase, countries.length]);
 
   // 清空国家则退回 13144，并撤销签证摘要
   useEffect(() => {
     if (step !== 1 || step1Phase < 2) return;
     if (countries.length === 0) {
-      setStep1Phase(1);
-      setVisaPreference(null);
+      const id = requestAnimationFrame(() => {
+        setStep1Phase(1);
+        setVisaPreference(null);
+      });
+      return () => cancelAnimationFrame(id);
     }
   }, [step, step1Phase, countries.length]);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function MilanoPartecipaProjectPage() {
@@ -31,7 +32,7 @@ export default function MilanoPartecipaProjectPage() {
           }}
         >
           {/* Back link */}
-          <a
+          <Link
             href="/"
             style={{
               ...fontStyle,
@@ -43,7 +44,7 @@ export default function MilanoPartecipaProjectPage() {
             }}
           >
             ← Back to Work
-          </a>
+          </Link>
 
           {/* Title + intro */}
           <div

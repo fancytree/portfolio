@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function CrackInterviewPage() {
@@ -27,7 +28,7 @@ export default function CrackInterviewPage() {
           }}
         >
           {/* Back link */}
-          <a
+          <Link
             href="/"
             style={{
               ...fontStyle,
@@ -39,7 +40,7 @@ export default function CrackInterviewPage() {
             }}
           >
             ← Back to Work
-          </a>
+          </Link>
 
           <div
             style={{
