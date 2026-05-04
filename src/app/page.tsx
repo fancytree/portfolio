@@ -611,7 +611,7 @@ export default function Home() {
             title="MemQ: Smart Quiz & Memory APP"
             description="A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes."
             tags={['Mobile App', 'UX Design', 'Learning']}
-            imageUrl="/img/cover image.avif"
+            imageUrl="/img/MemQ/Cover.png"
             href="/projects/memq"
           />
           <ShowcaseCard
