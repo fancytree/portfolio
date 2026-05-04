@@ -3,10 +3,23 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from '../../components/Button';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
+// Key Screens 静态截图（public/img/MemQ）
+const MEMQ_KEY_SCREEN_ITEMS: { src: string; alt: string; title?: string; caption?: string }[] = [
+  { src: '/img/MemQ/Home.PNG', alt: 'MemQ home', title: 'Home', caption: "Today's queue" },
+  { src: '/img/MemQ/IMG_6659.PNG', alt: 'MemQ library', title: 'Library', caption: 'Lessons, cards & review counts' },
+  { src: '/img/MemQ/IMG_6660.PNG', alt: 'MemQ lesson detail', title: 'Lesson detail', caption: 'Mastery, terms & start review' },
+  { src: '/img/MemQ/IMG_6661.PNG', alt: 'MemQ multiple-choice study', title: 'Study', caption: 'Multiple-choice question' },
+  { src: '/img/MemQ/IMG_6662.PNG', alt: 'MemQ answer feedback', title: 'Study', caption: 'Right vs wrong, try again' },
+  { src: '/img/MemQ/IMG_6663.PNG', alt: 'MemQ explore', title: 'Explore', caption: 'Featured & trending lessons' },
+  { src: '/img/MemQ/IMG_6674.PNG', alt: 'MemQ recall mode', title: 'Recall', caption: 'Type an answer, see the model' },
+  { src: '/img/MemQ/IMG_6675.PNG', alt: 'MemQ profile', title: 'Profile', caption: 'Streak, stats & focus queue' },
+  { src: '/img/MemQ/IMG_6676.PNG', alt: 'MemQ lesson from Explore', title: 'Lesson preview', caption: 'From Explore — add to library' },
+  { src: '/img/MemQ/IMG_6677.PNG', alt: 'MemQ AI Assistant Q&A', title: 'Assistant', caption: 'Q&A grounded in your decks' },
+  { src: '/img/MemQ/IMG_6678.PNG', alt: 'MemQ Assistant save card', title: 'Assistant', caption: 'Save the answer as a card' },
+  { src: '/img/MemQ/IMG_6679.PNG', alt: 'MemQ Assistant pick lesson', title: 'Assistant', caption: 'Pick or create a lesson' },
+];
 
-// 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -22,17 +35,12 @@ function useScrollAnimation(initialDelay: number = 0) {
             }
           });
         },
-        {
-          threshold: 0.1,
-          rootMargin: '0px 0px -100px 0px',
-        }
+        { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
       );
 
       if (ref.current) {
         const rect = ref.current.getBoundingClientRect();
-        const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-        
-        if (isInViewport) {
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
           setIsVisible(true);
         } else {
           observer.observe(ref.current);
@@ -40,30 +48,30 @@ function useScrollAnimation(initialDelay: number = 0) {
       }
 
       return () => {
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
+        if (ref.current) observer.unobserve(ref.current);
       };
     }, initialDelay);
 
-    return () => {
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [initialDelay]);
 
   return { ref, isVisible };
 }
 
-// ScrollAnimatedSection 组件：包装内容并应用滚动动画
-function ScrollAnimatedSection({ children, initialDelay = 0 }: { children: React.ReactNode; initialDelay?: number }) {
+function ScrollAnimatedSection({
+  children,
+  initialDelay = 0,
+}: {
+  children: React.ReactNode;
+  initialDelay?: number;
+}) {
   const { ref, isVisible } = useScrollAnimation(initialDelay);
-
   return (
     <div
       ref={ref}
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(48px)',
+        transform: isVisible ? 'translateY(0)' : 'translateY(40px)',
         transition: 'opacity 0.8s ease-out, transform 0.8s ease-out',
       }}
     >
@@ -72,54 +80,104 @@ function ScrollAnimatedSection({ children, initialDelay = 0 }: { children: React
   );
 }
 
-export default function MemQProjectPage() {
-  const fontStyle = {
-    fontFamily: fontFamily.system,
-  };
+function ImgPlaceholder({
+  label,
+  height = 200,
+  dark = false,
+}: {
+  label: string;
+  height?: number;
+  dark?: boolean;
+}) {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height,
+        backgroundColor: dark ? 'rgba(255,255,255,0.06)' : '#EBEBEB',
+        borderRadius: '12px',
+        border: `1px solid ${dark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)'}`,
+        display: 'flex',
+        flexDirection: 'column' as const,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px',
+      }}
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke={dark ? 'rgba(255,255,255,0.25)' : '#C0C0C0'}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </svg>
+      <span
+        style={{
+          fontSize: '11px',
+          fontFamily: 'system-ui',
+          color: dark ? 'rgba(255,255,255,0.25)' : '#C0C0C0',
+          letterSpacing: '0.02em',
+        }}
+      >
+        {label}
+      </span>
+    </div>
+  );
+}
 
-  // 展开/折叠状态
+const SECTION: React.CSSProperties = {
+  width: '100vw',
+  marginLeft: 'calc(-50vw + 50%)',
+  marginRight: 'calc(-50vw + 50%)',
+};
+
+const CONTAINER: React.CSSProperties = {
+  maxWidth: '1280px',
+  margin: '0 auto',
+};
+
+const LABEL_STYLE: React.CSSProperties = {
+  fontSize: '11px',
+  fontWeight: 700,
+  letterSpacing: '0.1em',
+  textTransform: 'uppercase',
+  color: 'rgba(0,0,0,0.38)',
+  marginBottom: '14px',
+};
+
+export default function MemQProjectPage() {
+  const f = { fontFamily: fontFamily.system };
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isDesignProblemExpanded, setIsDesignProblemExpanded] = useState(false);
-  
-  // Dig Deeper 卡片 hover 状态
-  const [isPersonasHovered, setIsPersonasHovered] = useState(false);
-  const [isAffinityMapHovered, setIsAffinityMapHovered] = useState(false);
-  const [isUserFlowsHovered, setIsUserFlowsHovered] = useState(false);
-  
-  // Personas 弹窗状态
-  const [isPersonasModalOpen, setIsPersonasModalOpen] = useState(false);
-  
-  // Affinity Map 弹窗状态
-  const [isAffinityMapModalOpen, setIsAffinityMapModalOpen] = useState(false);
-  
-  // User Flows 弹窗状态
-  const [isUserFlowsModalOpen, setIsUserFlowsModalOpen] = useState(false);
 
   return (
     <div className="w-full" style={{ backgroundColor: '#FAFAFA' }}>
-      {/* Hero Section */}
-      <section 
-        className="w-screen"
+
+      {/* ─────────────────────────────────────────
+          1. HERO
+      ───────────────────────────────────────── */}
+      <section
         style={{
+          ...SECTION,
           backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
           paddingTop: '120px',
           paddingBottom: '80px',
         }}
       >
         <ScrollAnimatedSection initialDelay={200}>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            {/* 返回按钮 */}
-            <Link 
+          <div style={CONTAINER}>
+
+            {/* Back */}
+            <Link
               href="/"
               style={{
-                ...fontStyle,
+                ...f,
                 ...textStyle.body,
                 color: 'oklch(0.556 0 0)',
                 textDecoration: 'none',
@@ -127,260 +185,20 @@ export default function MemQProjectPage() {
                 marginBottom: '48px',
                 transition: 'color 0.3s ease',
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'rgb(0, 0, 0)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'oklch(0.556 0 0)'}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#000')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'oklch(0.556 0 0)')}
             >
               ← Back to Work
             </Link>
 
-            {/* Project Overview 可展开信息卡片 */}
+            {/* Meta row */}
             <div
-              style={{
-                paddingTop: '0px',
-              }}
+              style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '16px', cursor: 'pointer' }}
+              onClick={() => setIsExpanded(!isExpanded)}
             >
-              {/* 上面一行：主要信息 + 展开按钮 */}
-              <div 
-                className="flex items-center cursor-pointer"
-                onClick={() => setIsExpanded(!isExpanded)}
-                style={{
-                  paddingBottom: '0',
-                  gap: '4px',
-                  transition: 'padding-bottom 0.4s ease-out',
-                  height: 'fit-content',
-                }}
-              >
-                <div
-                  style={{
-                    ...fontStyle,
-                    fontSize: '14px',
-                    lineHeight: '24px',
-                    fontWeight: 300,
-                    color: 'rgba(102, 102, 102, 1)',
-                  }}
-                >
-                  Solo Full-Stack Developer & Designer · 8-week end-to-end development
-                </div>
-                <button
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Image
-                    src="/expand.svg"
-                    alt="Expand"
-                    width={24}
-                    height={24}
-                  />
-                </button>
-              </div>
-
-              {/* 展开内容 */}
-              <div
-                style={{
-                  maxHeight: isExpanded ? '500px' : '0',
-                  overflow: 'hidden',
-                  transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                  paddingTop: isExpanded ? '12px' : '0',
-                }}
-              >
-                <div className="flex flex-col" style={{ gap: '6px' }}>
-                  <div
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    4 informal user interviews · 12 TestFlight feedback points · 2 major usability improvements
-                  </div>
-                  <div
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    Smart Study Companion App · Mobile Learning · Self-funded project · Designed and built from scratch · Self-funded, Bootstrapped
-                  </div>
-                </div>
-              </div>
-
-              {/* 项目标题和描述 */}
-              <div style={{ marginTop: '16px' }}>
-                <h1
-                  style={{
-                    ...fontStyle,
-                    fontSize: '28px',
-                    lineHeight: '60px',
-                    fontWeight: 300,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  MemQ: Smart Quiz & Memory APP
-                </h1>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.lead,
-                    color: 'rgba(0, 0, 0, 1)',
-                    marginBottom: '32px',
-                    maxWidth: '645px',
-                    height: '100%',
-                  }}
-                >
-                  A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes.
-                </p>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
-      {/* Design Process Section */}
-      <section
-        className="w-screen py-16"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            <h2
-              style={{
-                ...fontStyle,
-                fontSize: '34px',
-                lineHeight: '42px',
-                fontWeight: 300,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '20px',
-              }}
-            >
-              Design Process
-            </h2>
-            <p
-              style={{
-                ...fontStyle,
-                ...textStyle.leadSm,
-                color: 'rgba(0, 0, 0, 0.88)',
-                maxWidth: '920px',
-                marginBottom: '36px',
-              }}
-            >
-              The solution evolved through a focused cycle of discovery, prototyping, and refinement to keep learning paths simple and effective.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
-                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
-                  01 · Discover
-                </div>
-                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
-                  User Learning Patterns
-                </div>
-                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
-                  Synthesized interview feedback and usage observations to identify friction in capture, review, and recall.
-                </p>
-              </div>
-              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
-                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
-                  02 · Prototype
-                </div>
-                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
-                  Interaction Iteration
-                </div>
-                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
-                  Built and tested lightweight flows to improve quiz generation, flashcard structure, and overall task continuity.
-                </p>
-              </div>
-              <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', padding: '22px', background: '#FFFFFF' }}>
-                <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 500, color: 'oklch(0.556 0 0)', marginBottom: '8px' }}>
-                  03 · Refine
-                </div>
-                <div style={{ ...fontStyle, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
-                  Product Readiness
-                </div>
-                <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgba(0, 0, 0, 0.82)', margin: 0 }}>
-                  Converted validated patterns into consistent, implementation-ready UI decisions for stable daily usage.
-                </p>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
-      {/* The Design Problem Section */}
-      <section 
-        className="w-screen py-16"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            <h2
-              style={{
-                ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '16px',
-              }}
-            >
-              The Design Problem
-            </h2>
-
-            {/* 上面一行：主要信息 + 展开按钮 */}
-            <div 
-              className="flex items-center cursor-pointer"
-              onClick={() => setIsDesignProblemExpanded(!isDesignProblemExpanded)}
-              style={{
-                paddingBottom: '0',
-                gap: '4px',
-                transition: 'padding-bottom 0.4s ease-out',
-                height: 'fit-content',
-                marginBottom: '16px',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '24px',
-                  fontWeight: 300,
-                  color: 'rgba(102, 102, 102, 1)',
-                }}
-              >
-                Reserch context at a glance
-              </div>
+              <span style={{ ...f, fontSize: '13px', fontWeight: 300, color: 'rgba(102,102,102,1)' }}>
+                Solo Full-Stack Developer & Designer · 8-week end-to-end development
+              </span>
               <button
                 style={{
                   background: 'transparent',
@@ -389,2455 +207,1891 @@ export default function MemQProjectPage() {
                   padding: '4px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  transform: isDesignProblemExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
+                  transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                   flexShrink: 0,
                 }}
               >
-                <Image
-                  src="/expand.svg"
-                  alt="Expand"
-                  width={24}
-                  height={24}
-                />
+                <Image src="/expand.svg" alt="Expand" width={20} height={20} />
               </button>
             </div>
 
-            {/* 展开内容 */}
+            {/* Expandable meta */}
             <div
               style={{
-                maxHeight: isDesignProblemExpanded ? '2000px' : '0',
+                maxHeight: isExpanded ? '120px' : '0',
                 overflow: 'hidden',
-                transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                paddingTop: isDesignProblemExpanded ? '12px' : '0',
-                maxWidth: '780px',
+                transition: 'max-height 0.5s cubic-bezier(0.4,0,0.2,1)',
+                marginBottom: isExpanded ? '12px' : '0',
               }}
             >
-              <div className="flex flex-col" style={{ gap: '24px' }}>
-                {/* Participants & Rounds */}
-                <div>
-                  <h3
-                    style={{
-                      ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '28px',
-                      fontWeight: 500,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Participants & Rounds
-                  </h3>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    <strong>Foundational phase:</strong> 8 in-depth interviews and 24 survey responses exploring learning habits, study pain points, and expectations for AI-powered educational tools.
-                  </p>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    <strong>Usability testing Round 1:</strong> 6 moderated sessions on the mobile prototype, focusing on core workflows: course creation, PDF import, AI chat interactions, and flashcard learning experience.
-                  </p>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    <strong>Usability testing Round 2:</strong> 5 additional sessions, including 3 returning participants to observe how familiarity with AI features changed their learning behavior and tool adoption patterns.
-                  </p>
-                </div>
-
-                {/* Recruitment & Personas */}
-                <div>
-                  <h3
-                    style={{
-                      ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '28px',
-                      fontWeight: 500,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Recruitment & Personas
-                  </h3>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    I recruited participants to match my core personas: <strong>university students</strong> preparing for exams, <strong>language learners</strong> building vocabulary, <strong>working professionals</strong> learning new skills, and <strong>lifelong learners</strong> seeking efficient study methods. Several participants had experience with traditional flashcard apps (Anki, Quizlet) and AI tools (ChatGPT, Claude), which helped identify gaps in existing solutions and opportunities for MemQ&apos;s unique value proposition.
-                  </p>
-                </div>
-
-                {/* Competitive Analysis */}
-                <div>
-                  <h3
-                    style={{
-                      ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '28px',
-                      fontWeight: 500,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Competitive Analysis
-                  </h3>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    To ground the concept, I ran a competitive review of existing learning and flashcard applications, looking at content creation workflows, AI integration patterns, PDF processing capabilities, and spaced repetition implementations. This helped identify key gaps: fragmented workflows across multiple tools, significant manual content creation overhead, limited AI integration in flashcard apps, and poor PDF-to-study-material conversion experiences.
-                  </p>
-                </div>
-
-                {/* Scheduling & Constraints */}
-                <div>
-                  <h3
-                    style={{
-                      ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '28px',
-                      fontWeight: 500,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    Scheduling & Constraints
-                  </h3>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    This was an independent, self-funded project with no formal budget. To respect participants&apos; academic schedules, work commitments, and time zones, I scheduled sessions flexibly—accommodating early morning sessions for professionals, evening sessions for students, and weekend slots for those with busy weekday schedules. Several sessions were conducted remotely via video calls to maximize accessibility and participant comfort.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-                maxWidth: '780px',
-                marginTop: '24px',
-              }}
-            >
-              <p style={{ marginBottom: '24px' }}>
-                Most learners only have fragmented 5–10 minute windows to study, so the interaction needs to feel immediate and frictionless. My research revealed that <strong>card creation is the make-or-break moment where a habit is either formed or abandoned</strong>—especially when users are commuting, typing on a mobile keyboard, or trying to capture a thought before it fades.
+              <p style={{ ...f, ...textStyle.body, color: 'oklch(0.556 0 0)', marginBottom: '4px' }}>
+                8 user interviews · 12 TestFlight feedback points · 2 major usability improvements
+              </p>
+              <p style={{ ...f, ...textStyle.body, color: 'oklch(0.556 0 0)' }}>
+                Smart Study App · Mobile Learning · Self-funded · Bootstrapped
               </p>
             </div>
 
-            {/* Key Pain Points */}
-            <div style={{ marginTop: '48px', maxWidth: '1280px' }}>
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                Key Pain Points
-              </h3>
-              <div className="flex flex-row" style={{ gap: '24px' }}>
-                {/* Card 1: Irrelevant Content */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      border: '1px solid rgba(0, 0, 0, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '40px',
-                    }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="rgba(0, 0, 0, 0.7)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <line x1="15" y1="9" x2="9" y2="15"></line>
-                      <line x1="9" y1="9" x2="15" y2="15"></line>
-                    </svg>
-                  </div>
-                  {/* Content */}
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h5,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Irrelevant Content
-                  </h4>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  >
-                    Pre-made decks force users to waste time on concepts they already know, rather than their specific knowledge gaps.
-                  </p>
-                </div>
-
-                {/* Card 2: Creation Friction */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      border: '1px solid rgba(0, 0, 0, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '40px',
-                    }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="rgba(0, 0, 0, 0.7)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                  </div>
-                  {/* Content */}
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h5,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Creation Friction
-                  </h4>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  >
-                    The complexity of manual entry turns capturing a quick thought into a chore, often leading to abandonment.
-                  </p>
-                </div>
-
-                {/* Card 3: Static Scheduling */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      border: '1px solid rgba(0, 0, 0, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '40px',
-                    }}
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="rgba(0, 0, 0, 0.7)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                  </div>
-                  {/* Content */}
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h5,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Static Scheduling
-                  </h4>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  >
-                    Without smart prioritization, critical and urgent concepts get lost in a sea of easy, linear tasks.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
-      {/* What I Designed Section */}
-      <section 
-        className="w-screen py-16"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            <h2
+            {/* Title */}
+            <h1
               style={{
-                ...fontStyle,
+                ...f,
                 fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
+                lineHeight: '56px',
+                fontWeight: 300,
+                color: '#000',
+                marginBottom: '10px',
               }}
             >
-              What I Designed
-            </h2>
-            <div
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-                maxWidth: '780px',
-              }}
-            >
-              <p style={{ marginBottom: '24px' }}>
-                I designed MemQ to support every learner&apos;s pace: <strong>the crammers, the casual reviewers, and the creators</strong>. The app keeps users focused on <strong>retention</strong> while giving them <strong>complete control</strong> over how they <strong>capture fleeting ideas</strong> and <strong>structure their personal knowledge base</strong>.
-              </p>
-            </div>
+              MemQ: Turn AI Conversations into Lasting Knowledge
+            </h1>
 
-            {/* AI-Capture System */}
-            <div style={{ width: '100%', maxWidth: '1280px', marginTop: '48px' }}>
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                I designed an AI-Capture System that eliminates data entry chores
-              </h3>
-              
-              {/* Left-Right Layout: Text Content and Video */}
-              <div style={{ display: 'flex', flexDirection: 'row', gap: '48px', alignItems: 'flex-start' }}>
-                {/* Left Column: Text Content */}
-                <div style={{ flex: 1 }}>
-                  <p style={{ marginBottom: '24px', ...fontStyle, fontSize: '18px', lineHeight: '32px', fontWeight: 400, color: 'rgb(0, 0, 0)' }}>
-                    My research showed that the biggest barrier to habit formation was the time spent manually creating cards. Users often spent more energy formatting text than actually learning. I solved this by building a multi-modal AI engine: users can simply upload a lecture PDF, type a topic, or chat with the assistant, and MemQ automatically extracts key concepts.
-                  </p>
-                  <p style={{ marginBottom: '24px', ...fontStyle, fontSize: '18px', lineHeight: '32px', fontWeight: 400, color: 'rgb(0, 0, 0)' }}>
-                    Usability tests revealed that context matters. A vocabulary word needs a definition and example sentence, while a complex concept needs a &quot;Why&quot; or &quot;How&quot; question. So, I engineered the backend to detect the content type (Knowledge Point vs. Vocabulary) and generate the most effective question format for that specific item.
-                  </p>
-
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h4,
-                      color: 'rgb(0, 0, 0)',
-                      marginTop: '32px',
-                      marginBottom: '16px',
-                    }}
-                  >
-                    Key creation features:
-                  </h4>
-                  <ul
-                    style={{
-                      ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '32px',
-                      fontWeight: 400,
-                      color: 'rgb(0, 0, 0)',
-                      paddingLeft: '24px',
-                      marginBottom: '24px',
-                      listStyleType: 'disc',
-                    }}
-                  >
-                    <li style={{ marginBottom: '12px' }}>
-                      <strong>Multi-modal Input</strong> to accommodate any source material (Manual, PDF Upload, Topic Generation).
-                    </li>
-                    <li style={{ marginBottom: '12px' }}>
-                      <strong>Context-aware Extraction</strong> to automatically turn chat conversations into saved flashcards.
-                    </li>
-                    <li style={{ marginBottom: '12px' }}>
-                      <strong>Adaptive Question Generator</strong> that formats quizzes differently for vocabulary (definitions) vs. concepts (conceptual understanding).
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Right Column: Phone Video */}
-                <div
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '100%',
-                      maxWidth: '320px',
-                      aspectRatio: '9/19.5',
-                      borderRadius: '24px',
-                      overflow: 'hidden',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      backgroundColor: '#000000',
-                    }}
-                  >
-                    <video
-                      src="/img/MemQ Video.mp4"
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block',
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Design Responses */}
-            <div
-              style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: '12px',
-                padding: '32px',
-                marginTop: '64px',
-                maxWidth: '1280px',
-              }}
-            >
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                Design Responses
-              </h3>
-              <div className="flex flex-row" style={{ gap: '24px' }}>
-                {/* Card 1: Creation friction */}
-                <div
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    <span style={{ fontSize: '24px' }}>⚡️</span>
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        margin: 0,
-                      }}
-                    >
-                      Creation friction
-                    </h4>
-                  </div>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                      margin: 0,
-                    }}
-                  >
-                    Multi-modal AI input (PDF, Chat) + auto-formatting
-                  </p>
-                </div>
-
-                {/* Card 2: Irrelevant content */}
-                <div
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    <span style={{ fontSize: '24px' }}>🧠</span>
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        margin: 0,
-                      }}
-                    >
-                      Irrelevant content
-                    </h4>
-                  </div>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                      margin: 0,
-                    }}
-                  >
-                    Context-aware generation tailored to specific knowledge gaps
-                  </p>
-                </div>
-
-                {/* Card 3: Static scheduling */}
-                <div
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                    <span style={{ fontSize: '24px' }}>📉</span>
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        margin: 0,
-                      }}
-                    >
-                      Static scheduling
-                    </h4>
-                  </div>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                      margin: 0,
-                    }}
-                  >
-                    Dynamic Spaced Repetition algorithm + Smart priority queue
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* AI assistant */}
-            <div
-              style={{
-                marginTop: '64px',
-                maxWidth: '1280px',
-                backgroundColor: '#191919',
-                borderRadius: '12px',
-                padding: '32px',
-              }}
-            >
-              <div className="flex flex-row" style={{ gap: '48px', alignItems: 'center' }}>
-                {/* Left Column: Text Content */}
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="rgb(255, 255, 255)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    <h3
-                      style={{
-                        ...fontStyle,
-                        fontSize: '24px',
-                        lineHeight: '32px',
-                        fontWeight: 600,
-                        color: 'rgb(255, 255, 255)',
-                        margin: 0,
-                      }}
-                    >
-                      Context-Aware Engine that structures knowledge
-                    </h3>
-                  </div>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      fontSize: '18px',
-                      lineHeight: '32px',
-                      fontWeight: 400,
-                      color: 'rgb(255, 255, 255)',
-                      marginBottom: '16px',
-                    }}
-                  >
-                    The AI engine intelligently detects the content type—distinguishing between vocabulary and complex concepts—to generate the most effective question formats. It transforms passive reading materials into interactive quizzes without the user needing to write a single prompt.
-                  </p>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgba(255, 255, 255, 0.7)',
-                      margin: 0,
-                    }}
-                  >
-                    Used for: Concept extraction, smart formatting, instant definitions
-                  </p>
-                </div>
-
-                {/* Right Column: Phone Screenshot */}
-                <div
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '100%',
-                      maxWidth: '320px',
-                      aspectRatio: '9/19.5',
-                      borderRadius: '24px',
-                      overflow: 'hidden',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      backgroundColor: '#000000',
-                    }}
-                  >
-                    <Image
-                      src="/img/AI chat.avif"
-                      alt="AI chat interface"
-                      width={320}
-                      height={692}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        display: 'block',
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
-      {/* Impact Section */}
-      <section
-        className="w-screen py-16"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            <h2
-              style={{
-                ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
-              }}
-            >
-              Impact
-            </h2>
-            <div
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-                maxWidth: '780px',
-              }}
-            >
-              <p style={{ marginBottom: '24px' }}>
-                Usability testing revealed that the new <strong>&quot;One-Tap Capture&quot;</strong> flow significantly reduced the barrier to entry. Where users previously abandoned manual entry after 30 seconds, the AI-assisted design enabled them to complete the loop in under 5 seconds.
-              </p>
-              <p style={{ marginBottom: '24px' }}>
-                Testers praised the <strong>&quot;invisible interface&quot;</strong> strategy—where complex tasks like tagging and syncing happened in the background—allowing them to focus entirely on learning. This shift in UX directly contributed to higher retention rates and validated the transition to a premium subscription model.
-              </p>
-            </div>
-
-            {/* What improved between rounds */}
-            <div style={{ marginTop: '64px', width: '100%' }}>
-                <h3
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.h3Medium,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '24px',
-                  }}
-                >
-                  What improved between rounds
-                </h3>
-                <div className="flex flex-row" style={{ gap: '24px', width: '100%' }}>
-                  {/* Card 1: Critical issues */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(0, 0, 0, 0.7)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                        <line x1="12" y1="9" x2="12" y2="13"></line>
-                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                      </svg>
-                    </div>
-                    {/* Content */}
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      Critical issues
-                    </h4>
-                    <p
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.body,
-                        color: 'rgb(0, 0, 0)',
-                      }}
-                    >
-                      Round 1 surfaced high abandonment rates during manual entry. The AI-assisted update resolved this friction point completely and had 0 critical drop-offs in the final validation.
-                    </p>
-                  </div>
-
-                  {/* Card 2: Flow & confidence */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(0, 0, 0, 0.7)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                      </svg>
-                    </div>
-                    {/* Content */}
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      Flow & confidence
-                    </h4>
-                    <p
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.body,
-                        color: 'rgb(0, 0, 0)',
-                      }}
-                    >
-                      Participants described the AI capture flow as &apos;magic, efficient, and intuitive&apos; and said they felt 100% confident that the app correctly understood their study materials.
-                    </p>
-                  </div>
-
-                  {/* Card 3: Engagement shift */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(0, 0, 0, 0.7)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                      </svg>
-                    </div>
-                    {/* Content */}
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      Engagement shift
-                    </h4>
-                    <p
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.body,
-                        color: 'rgb(0, 0, 0)',
-                      }}
-                    >
-                      Instead of complaining about typing fatigue, round two feedback shifted to requests for more file formats, showing users had moved past the friction of starting to active daily use.
-                    </p>
-                  </div>
-                </div>
-            </div>
-
-            {/* Data-Informed Design Decisions */}
-            <div style={{ marginTop: '64px', width: '100%' }}>
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                Data-Informed Design Decisions
-              </h3>
-              <div className="flex flex-row" style={{ gap: '24px', width: '100%' }}>
-                {/* Card 1: Preferred method of card creation */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    padding: '48px',
-                    flex: 1,
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      fontSize: '20px',
-                      lineHeight: '28px',
-                      fontWeight: 600,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '24px',
-                    }}
-                  >
-                    Preferred method of card creation
-                  </h4>
-                  <div style={{ marginBottom: '24px' }}>
-                    {/* Data Bar 1 */}
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          AI / Auto-generation (From PDF or Chat)
-                        </span>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          78%
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '8px',
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '78%',
-                            height: '100%',
-                            backgroundColor: 'rgb(0, 0, 0)',
-                            borderRadius: '4px',
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Data Bar 2 */}
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          Manual Typing
-                        </span>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          15%
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '8px',
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '15%',
-                            height: '100%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            borderRadius: '4px',
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Data Bar 3 */}
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          Copy & Pasting
-                        </span>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          7%
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '8px',
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '7%',
-                            height: '100%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            borderRadius: '4px',
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                      margin: 0,
-                    }}
-                  >
-                    Aligning with this, I prioritized AI generation as the primary action, relegating manual entry to a secondary option to minimize friction.
-                  </p>
-                </div>
-
-                {/* Card 2: Importance of personalized study content */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    padding: '48px',
-                    flex: 1,
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      fontSize: '20px',
-                      lineHeight: '28px',
-                      fontWeight: 600,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '24px',
-                    }}
-                  >
-                    Importance of personalized study content
-                  </h4>
-                  <div style={{ marginBottom: '24px' }}>
-                    {/* Data Bar 1 */}
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          Custom content (My own notes/exams)
-                        </span>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          85%
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '8px',
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '85%',
-                            height: '100%',
-                            backgroundColor: 'rgb(0, 0, 0)',
-                            borderRadius: '4px',
-                          }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Data Bar 2 */}
-                    <div style={{ marginBottom: '16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          Generic decks (Pre-made lists)
-                        </span>
-                        <span
-                          style={{
-                            ...fontStyle,
-                            ...textStyle.body,
-                            color: 'rgb(0, 0, 0)',
-                          }}
-                        >
-                          15%
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '8px',
-                          backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                          borderRadius: '4px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: '15%',
-                            height: '100%',
-                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                            borderRadius: '4px',
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                      margin: 0,
-                    }}
-                  >
-                    This drove the decision to build a context-aware engine instead of a marketplace, ensuring quizzes are generated directly from the user&apos;s own materials.
-                  </p>
-                </div>
-              </div>
-
-              {/* Comment */}
-              <div
-                style={{
-                  backgroundColor: '#F7F7F7',
-                  borderRadius: '12px',
-                  padding: '32px',
-                  marginTop: '48px',
-                  maxWidth: '1280px',
-                  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <p
-                  style={{
-                    ...fontStyle,
-                    fontSize: '18px',
-                    lineHeight: '28px',
-                    fontWeight: 400,
-                    fontStyle: 'italic',
-                    color: '#333333',
-                    margin: 0,
-                    marginBottom: '16px',
-                  }}
-                >
-                  &quot;This is the most seamless study experience I&apos;ve seen. I would feel 100% confident ditching my old messy notes for this.&quot;
-                </p>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: '#333333',
-                    margin: 0,
-                  }}
-                >
-                  — Round 2 usability testing participant
-                </p>
-              </div>
-
-              {/* Future Improvements */}
-              <div style={{ marginTop: '64px', width: '100%' }}>
-                <h3
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.h3Medium,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '24px',
-                  }}
-                >
-                  Future Improvements
-                </h3>
-                <div className="flex flex-row" style={{ gap: '24px', width: '100%' }}>
-                  {/* Card 1: Smarter multi-modal capture */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(0, 0, 0, 0.7)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M5 12h14"></path>
-                        <path d="M12 5l7 7-7 7"></path>
-                      </svg>
-                    </div>
-                    {/* Content */}
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      Smarter multi-modal capture
-                    </h4>
-                    <p
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.body,
-                        color: 'rgb(0, 0, 0)',
-                        margin: 0,
-                      }}
-                    >
-                      Use desktop browser extensions for PDFs and fast capture. Future integrations with major LLMs, Notion, and camera-based capture will let learners save key concepts from chats, notes, and real-world materials in a single step.
-                    </p>
-                  </div>
-
-                  {/* Card 2: Deeper progress insights */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(0, 0, 0, 0.7)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M22 12h-4"></path>
-                        <path d="M6 12H2"></path>
-                        <path d="M12 2v4"></path>
-                        <path d="M12 18v4"></path>
-                      </svg>
-                    </div>
-                    {/* Content */}
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      Richer multi-modal recall
-                    </h4>
-                    <p
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.body,
-                        color: 'rgb(0, 0, 0)',
-                        margin: 0,
-                      }}
-                    >
-                      Add richer multimedia support—starting with images captured from the camera—to reinforce memory at both the term and question level, tying abstract concepts to concrete visual cues.
-                    </p>
-                  </div>
-
-                  {/* Card 3: Community-sourced patterns */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    {/* Icon */}
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(0, 0, 0, 0.7)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                      </svg>
-                    </div>
-                    {/* Content */}
-                    <h4
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.h5,
-                        color: 'rgb(0, 0, 0)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      Community-sourced patterns
-                    </h4>
-                    <p
-                      style={{
-                        ...fontStyle,
-                        ...textStyle.body,
-                        color: 'rgb(0, 0, 0)',
-                        margin: 0,
-                      }}
-                    >
-                      Explore class-style cohorts where learners can keep each other accountable while selectively sharing materials and deck patterns that others can remix.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
-      {/* Dig Deeper Section */}
-      <section
-        className="w-screen py-16"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '120px',
-        }}
-      >
-        <ScrollAnimatedSection>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            <h2
-              style={{
-                ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
-              }}
-            >
-              Dig Deeper
-            </h2>
-            <div className="flex flex-row" style={{ gap: '24px', width: '100%' }}>
-              {/* Card 1: Personas */}
-              <div
-                onClick={() => setIsPersonasModalOpen(true)}
-                onMouseEnter={() => setIsPersonasHovered(true)}
-                onMouseLeave={() => setIsPersonasHovered(false)}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '12px',
-                  padding: '48px',
-                  flex: 1,
-                  boxShadow: isPersonasHovered ? '0 6px 10px rgba(0, 0, 0, 0.08)' : '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  position: 'relative',
-                  transition: 'box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  transitionDelay: isPersonasHovered ? '0.3s' : '0s',
-                  cursor: 'pointer',
-                }}
-              >
-                {/* Icon */}
-                <div
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    backgroundColor: isPersonasHovered ? '#000000' : 'rgba(0, 0, 0, 0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '24px',
-                    transition: 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transitionDelay: isPersonasHovered ? '0.1s' : '0s',
-                  }}
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={isPersonasHovered ? '#FFFFFF' : 'rgba(0, 0, 0, 0.7)'}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ 
-                      transition: 'stroke 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      transitionDelay: isPersonasHovered ? '0.1s' : '0s',
-                    }}
-                  >
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                  </svg>
-                </div>
-                {/* Dropdown Arrow */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '24px',
-                    right: '24px',
-                  }}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="rgba(0, 0, 0, 0.5)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </div>
-                {/* Content */}
-                <h3
-                  style={{
-                    ...fontStyle,
-                    fontSize: '20px',
-                    lineHeight: '28px',
-                    fontWeight: 600,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '8px',
-                  }}
-                >
-                  Personas
-                </h3>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgba(0, 0, 0, 0.7)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  Meet Alex and Taylor
-                </p>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    margin: 0,
-                  }}
-                >
-                  Used to capture different learning motivations: Urgent Exam Cramming , and Casual Learning.
-                </p>
-              </div>
-
-              {/* Card 2: Affinity Map */}
-              <div
-                onClick={() => setIsAffinityMapModalOpen(true)}
-                onMouseEnter={() => setIsAffinityMapHovered(true)}
-                onMouseLeave={() => setIsAffinityMapHovered(false)}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '12px',
-                  padding: '48px',
-                  flex: 1,
-                  boxShadow: isAffinityMapHovered ? '0 6px 10px rgba(0, 0, 0, 0.08)' : '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  position: 'relative',
-                  transition: 'box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  transitionDelay: isAffinityMapHovered ? '0.3s' : '0s',
-                  cursor: 'pointer',
-                }}
-              >
-                {/* Icon */}
-                <div
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    backgroundColor: isAffinityMapHovered ? '#000000' : 'rgba(0, 0, 0, 0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '24px',
-                    transition: 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transitionDelay: isAffinityMapHovered ? '0.1s' : '0s',
-                  }}
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={isAffinityMapHovered ? '#FFFFFF' : 'rgba(0, 0, 0, 0.7)'}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ 
-                      transition: 'stroke 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      transitionDelay: isAffinityMapHovered ? '0.1s' : '0s',
-                    }}
-                  >
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                  </svg>
-                </div>
-                {/* Dropdown Arrow */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '24px',
-                    right: '24px',
-                  }}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="rgba(0, 0, 0, 0.5)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </div>
-                {/* Content */}
-                <h3
-                  style={{
-                    ...fontStyle,
-                    fontSize: '20px',
-                    lineHeight: '28px',
-                    fontWeight: 600,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '8px',
-                  }}
-                >
-                  Affinity Map
-                </h3>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgba(0, 0, 0, 0.7)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  Synthesizing research insights
-                </p>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    margin: 0,
-                  }}
-                >
-                  How I clustered interview data into three core friction themes: Manual Entry Fatigue, Content Relevance, and Scheduling Guilt.
-                </p>
-              </div>
-
-              {/* Card 3: User Flows */}
-              <div
-                onClick={() => setIsUserFlowsModalOpen(true)}
-                onMouseEnter={() => setIsUserFlowsHovered(true)}
-                onMouseLeave={() => setIsUserFlowsHovered(false)}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '12px',
-                  padding: '48px',
-                  flex: 1,
-                  boxShadow: isUserFlowsHovered ? '0 6px 10px rgba(0, 0, 0, 0.08)' : '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  position: 'relative',
-                  transition: 'box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                  transitionDelay: isUserFlowsHovered ? '0.3s' : '0s',
-                  cursor: 'pointer',
-                }}
-              >
-                {/* Icon */}
-                <div
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    backgroundColor: isUserFlowsHovered ? '#000000' : 'rgba(0, 0, 0, 0.05)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '24px',
-                    transition: 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transitionDelay: isUserFlowsHovered ? '0.1s' : '0s',
-                  }}
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={isUserFlowsHovered ? '#FFFFFF' : 'rgba(0, 0, 0, 0.7)'}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ 
-                      transition: 'stroke 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      transitionDelay: isUserFlowsHovered ? '0.1s' : '0s',
-                    }}
-                  >
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                    <polyline points="15 18 21 12 15 6"></polyline>
-                  </svg>
-                </div>
-                {/* Dropdown Arrow */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '24px',
-                    right: '24px',
-                  }}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="rgba(0, 0, 0, 0.5)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                  </svg>
-                </div>
-                {/* Content */}
-                <h3
-                  style={{
-                    ...fontStyle,
-                    fontSize: '20px',
-                    lineHeight: '28px',
-                    fontWeight: 600,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '8px',
-                  }}
-                >
-                  User Flows
-                </h3>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgba(0, 0, 0, 0.7)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  Complete user journey flows
-                </p>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    margin: 0,
-                  }}
-                >
-                  Visualizing the complete user journey across capture, learning, and study workflows.
-                </p>
-              </div>
-            </div>
-
-            {/* View live prototype button */}
-            <div style={{ marginTop: '48px', display: 'flex', justifyContent: 'flex-start' }}>
-              <a
-                href="https://www.figma.com/make/GA35kSGfjySKnWeIVkeEO9/Create-Interactive-Prototype?fullscreen=1&t=A11iQhjNy1J7lofo-1"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}
-              >
-                <Button>
-                  View live prototype
-                </Button>
-              </a>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
-      {/* Personas Modal */}
-      {isPersonasModalOpen && (
-        <div
-          onClick={() => setIsPersonasModalOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px',
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-              width: '100%',
-              maxWidth: '800px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              position: 'relative',
-              padding: '48px',
-            }}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsPersonasModalOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '24px',
-                right: '24px',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'rgba(0, 0, 0, 0.7)',
-                ...fontStyle,
-                fontSize: '24px',
-                lineHeight: '1',
-              }}
-            >
-              ×
-            </button>
-
-            {/* Header Section */}
-            <div style={{ marginBottom: '32px' }}>
-              <h2
-                style={{
-                  ...fontStyle,
-                  fontSize: '32px',
-                  lineHeight: '40px',
-                  fontWeight: 700,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '8px',
-                }}
-              >
-                Personas: Two Types of Learners
-              </h2>
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '18px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Two user personas representing distinct study motivations and behaviors.
-              </p>
-            </div>
-
-            {/* Introductory Paragraph */}
+            {/* Subtitle */}
             <p
               style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '28px',
+                ...f,
+                ...textStyle.lead,
+                color: '#000',
+                maxWidth: '600px',
+                marginBottom: '36px',
+              }}
+            >
+              People ask AI the same questions over and over — not because they&apos;re lazy, but because
+              nothing helps them actually retain the answer. MemQ closes that loop: ask, get knowledge
+              cards, learn through spaced repetition, own the knowledge forever.
+            </p>
+
+            {/* Workflow chips */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' as const }}>
+              {[
+                { n: '01', label: 'Ask AI' },
+                { n: '02', label: 'Generate Cards' },
+                { n: '03', label: 'Spaced Repetition' },
+                { n: '04', label: 'Master It' },
+              ].map((item, i) => (
+                <div key={item.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      backgroundColor: '#FFF',
+                      border: '1px solid rgba(0,0,0,0.1)',
+                      borderRadius: '100px',
+                      padding: '5px 14px',
+                    }}
+                  >
+                    <span style={{ ...f, fontSize: '11px', fontWeight: 500, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.06em' }}>
+                      {item.n}
+                    </span>
+                    <span style={{ ...f, fontSize: '13px', fontWeight: 500, color: '#000' }}>
+                      {item.label}
+                    </span>
+                  </div>
+                  {i < 3 && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                    </svg>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* App Store 胶囊入口 */}
+            <a
+              href="https://apps.apple.com/app/id6757248312"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                backgroundColor: '#000',
+                borderRadius: '100px',
+                padding: '11px 20px 11px 18px',
+                textDecoration: 'none',
+                marginTop: '24px',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 10px 24px rgba(0,0,0,0.18)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <svg width="18" height="21" viewBox="0 0 24 28" fill="#fff" aria-hidden>
+                <path d="M20.024 14.61c-.03-3.267 2.664-4.854 2.783-4.93-1.518-2.22-3.878-2.524-4.714-2.556-1.996-.203-3.914 1.178-4.928 1.178-1.012 0-2.56-1.153-4.218-1.12-2.153.034-4.146 1.252-5.252 3.163-2.253 3.904-.575 9.677 1.612 12.842 1.074 1.547 2.345 3.282 4.017 3.22 1.615-.065 2.222-1.038 4.174-1.038 1.954 0 2.516 1.038 4.22 1.003 1.74-.03 2.84-1.572 3.902-3.124 1.24-1.79 1.75-3.534 1.773-3.623-.038-.017-3.39-1.3-3.369-5.015zM16.79 5.178c.886-1.079 1.487-2.567 1.323-4.078-1.28.054-2.845.858-3.762 1.913-.82.945-1.547 2.481-1.355 3.934 1.43.11 2.889-.727 3.794-1.77z" />
+              </svg>
+              <span style={{ ...f, fontSize: '14px', fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>Live on the App Store</span>
+            </a>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          2. THE PROBLEM
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#FAFAFA', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            <div style={{ ...f, ...LABEL_STYLE }}>The Problem</div>
+
+            <p
+              style={{
+                ...f,
+                fontSize: '22px',
+                lineHeight: '36px',
                 fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
+                color: '#000',
+                maxWidth: '740px',
                 marginBottom: '48px',
               }}
             >
-              I created two personas from interview data to represent opposite ends of the spectrum. These helped me design for high-pressure students (Alex) and habit-building casual learners.
+              People ask AI the same question five times — not from laziness, but because{' '}
+              <strong>there&apos;s no bridge between &ldquo;I got an answer&rdquo; and &ldquo;I actually know this.&rdquo;</strong>{' '}
+              The knowledge stays in the chat window, never in their head.
             </p>
 
-            {/* Persona Cards Section */}
+            <div className="flex flex-row" style={{ gap: '20px' }}>
+              {[
+                {
+                  icon: (
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  ),
+                  title: 'AI as a Crutch',
+                  body: 'Users ask AI the same questions repeatedly because the answer never gets internalized — it stays in the chat window, not in their head.',
+                },
+                {
+                  icon: (
+                    <>
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </>
+                  ),
+                  title: 'Capture Friction',
+                  body: 'Manually creating study cards from AI answers is too tedious — users never bridge the gap between getting an answer and learning it.',
+                },
+                {
+                  icon: (
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  ),
+                  title: 'Knowledge Fades',
+                  body: "Even when users save notes, there's no system to resurface them at the right time — knowledge decays without spaced repetition.",
+                },
+              ].map((card) => (
+                <div
+                  key={card.title}
+                  style={{
+                    backgroundColor: '#FFF',
+                    border: '1px solid rgba(0,0,0,0.08)',
+                    borderRadius: '12px',
+                    padding: '24px',
+                    flex: 1,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(0,0,0,0.05)',
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '40px',
+                    }}
+                  >
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      {card.icon}
+                    </svg>
+                  </div>
+                  <h4 style={{ ...f, ...textStyle.h5, color: '#000', marginBottom: '8px' }}>
+                    {card.title}
+                  </h4>
+                  <p style={{ ...f, ...textStyle.body, color: 'rgba(0,0,0,0.7)', margin: 0 }}>
+                    {card.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          2.5. DESIGN PROCESS
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#FAFAFA', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            <div style={{ ...f, ...LABEL_STYLE }}>Design Process</div>
+            <h2 style={{ ...f, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: '#000', marginBottom: '10px' }}>
+              From Observation to Shipped Product
+            </h2>
+            <p style={{ ...f, ...textStyle.leadSm, color: 'rgba(0,0,0,0.55)', maxWidth: '540px', marginBottom: '44px' }}>
+              8 weeks, one person, two major rounds of testing. Here&apos;s how the product evolved from a
+              single observation into a shipped app.
+            </p>
+
+            {/* Process timeline */}
+            <div style={{ position: 'relative' as const, marginBottom: '56px' }}>
+
+              {/* Connecting line */}
+              <div
+                style={{
+                  position: 'absolute' as const,
+                  top: '20px',
+                  left: '20px',
+                  right: '20px',
+                  height: '1px',
+                  backgroundColor: 'rgba(0,0,0,0.1)',
+                  zIndex: 0,
+                }}
+              />
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '16px', position: 'relative' as const, zIndex: 1 }}>
+                {[
+                  {
+                    n: '01',
+                    phase: 'Research',
+                    title: 'User Interviews',
+                    desc: '8 interviews across students, professionals, and language learners. Key observation: they keep asking AI the same questions.',
+                    tag: '2 weeks',
+                  },
+                  {
+                    n: '02',
+                    phase: 'Synthesis',
+                    title: 'Core Insight',
+                    desc: 'The problem isn\'t AI quality — it\'s that nothing bridges "got an answer" and "actually know this." People need a retention layer.',
+                    tag: '3 days',
+                  },
+                  {
+                    n: '03',
+                    phase: 'Build',
+                    title: 'MVP Development',
+                    desc: 'Designed and shipped the core loop: AI card generation + spaced repetition engine. Cut everything else to validate the fundamentals.',
+                    tag: '3 weeks',
+                  },
+                  {
+                    n: '04',
+                    phase: 'Test',
+                    title: 'TestFlight Round 1',
+                    desc: '6 sessions. Found: card creation was the drop-off point. AI generation redesigned as the primary path. Manual entry became secondary.',
+                    tag: '1 week',
+                  },
+                  {
+                    n: '05',
+                    phase: 'Iterate',
+                    title: 'Platform Expansion',
+                    desc: 'Explore, smarter lesson creation, and Assistant upgrades — Quiz me with lesson pickers plus one-tap "new lesson" from generated terms. Feature questions replaced basic how-tos.',
+                    tag: '2 weeks',
+                  },
+                ].map((item, i) => (
+                  <div key={item.n} style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'flex-start' }}>
+                    {/* Dot */}
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        backgroundColor: i === 4 ? '#000' : '#FFF',
+                        border: `1px solid ${i === 4 ? '#000' : 'rgba(0,0,0,0.15)'}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '16px',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <span
+                        style={{
+                          ...f,
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          color: i === 4 ? '#FFF' : 'rgba(0,0,0,0.5)',
+                          letterSpacing: '0.04em',
+                        }}
+                      >
+                        {item.n}
+                      </span>
+                    </div>
+                    {/* Content */}
+                    <div
+                      style={{
+                        ...f,
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        letterSpacing: '0.1em',
+                        textTransform: 'uppercase' as const,
+                        color: 'rgba(0,0,0,0.35)',
+                        marginBottom: '4px',
+                      }}
+                    >
+                      {item.phase}
+                    </div>
+                    <div style={{ ...f, fontSize: '14px', fontWeight: 600, color: '#000', marginBottom: '8px' }}>
+                      {item.title}
+                    </div>
+                    <p style={{ ...f, fontSize: '13px', lineHeight: '20px', color: 'rgba(0,0,0,0.55)', margin: '0 0 10px' }}>
+                      {item.desc}
+                    </p>
+                    <div
+                      style={{
+                        ...f,
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        color: 'rgba(0,0,0,0.4)',
+                        backgroundColor: 'rgba(0,0,0,0.05)',
+                        borderRadius: '100px',
+                        padding: '3px 10px',
+                      }}
+                    >
+                      {item.tag}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Research quotes */}
+            <div
+              style={{
+                ...f,
+                fontSize: '10px',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase' as const,
+                color: 'rgba(0,0,0,0.35)',
+                marginBottom: '16px',
+              }}
+            >
+              What We Heard
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+              {[
+                {
+                  quote: 'I ask ChatGPT the same questions about Python syntax at least once a week. I just can\'t seem to make it stick.',
+                  persona: 'Working professional, software adjacent',
+                },
+                {
+                  quote: 'I take notes when I\'m studying but I never go back to them. I just search for it again next time I need it.',
+                  persona: 'University student, exam prep',
+                },
+                {
+                  quote: 'I use Anki but making the cards takes longer than actually learning. So I just don\'t make them.',
+                  persona: 'Language learner, Japanese',
+                },
+              ].map((q) => (
+                <div
+                  key={q.persona}
+                  style={{
+                    backgroundColor: '#FFF',
+                    border: '1px solid rgba(0,0,0,0.08)',
+                    borderRadius: '12px',
+                    padding: '20px',
+                  }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="rgba(0,0,0,0.15)"
+                    style={{ marginBottom: '12px', display: 'block' }}
+                  >
+                    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+                    <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+                  </svg>
+                  <p style={{ ...f, fontSize: '14px', lineHeight: '22px', color: '#000', marginBottom: '12px', fontStyle: 'italic' as const }}>
+                    {q.quote}
+                  </p>
+                  <span style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.4)' }}>
+                    — {q.persona}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          3. THE LEARNING LOOP
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#F0F0F0', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            <div style={{ ...f, ...LABEL_STYLE }}>The Solution</div>
+            <h2 style={{ ...f, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: '#000', marginBottom: '10px' }}>
+              The Learning Loop
+            </h2>
+            <p style={{ ...f, ...textStyle.leadSm, color: 'rgba(0,0,0,0.6)', maxWidth: '560px', marginBottom: '40px' }}>
+              Every part of MemQ serves one workflow. Only the knowledge you personally asked about ever enters it.
+            </p>
+
+            {/* 4-step grid */}
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '24px',
-                marginBottom: '48px',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '2px',
               }}
             >
-              {/* Card 1: ALEX */}
-              <div
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                  borderRadius: '12px',
-                  padding: '24px',
-                }}
-              >
-                <h3
+              {[
+                {
+                  n: '01',
+                  title: 'Ask AI',
+                  desc: 'Type a question, topic, or concept you want to learn. No templates — just ask naturally.',
+                  icon: <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />,
+                  dark: false,
+                },
+                {
+                  n: '02',
+                  title: 'Generate Cards',
+                  desc: 'AI creates structured knowledge cards — vocabulary gets definitions, concepts get "Why" and "How" questions.',
+                  icon: (
+                    <>
+                      <rect x="2" y="3" width="20" height="14" rx="2" />
+                      <line x1="8" y1="21" x2="16" y2="21" />
+                      <line x1="12" y1="17" x2="12" y2="21" />
+                    </>
+                  ),
+                  dark: false,
+                },
+                {
+                  n: '03',
+                  title: 'Spaced Repetition',
+                  desc: 'The memory curve resurfaces cards at optimal intervals. Review sessions take minutes, not hours.',
+                  icon: <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />,
+                  dark: false,
+                },
+                {
+                  n: '04',
+                  title: 'Master It',
+                  desc: 'Knowledge moves from short-term recall to long-term retention. You stop asking AI — because you already know.',
+                  icon: (
+                    <>
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </>
+                  ),
+                  dark: true,
+                },
+              ].map((step, i) => (
+                <div
+                  key={step.n}
                   style={{
-                    ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 700,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
+                    backgroundColor: step.dark ? '#1A1A1A' : '#FFF',
+                    padding: '28px',
+                    borderRadius:
+                      i === 0 ? '12px 0 0 12px' : i === 3 ? '0 12px 12px 0' : '0',
                   }}
                 >
-                  ALEX – THE CRAMMER
-                </h3>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    margin: 0,
-                  }}
-                >
-                  Needs to convert lecture slides into quizzes instantly to survive exam week.
-                </p>
-              </div>
-
-              {/* Card 2: TAYLOR */}
-              <div
-                style={{
-                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                  borderRadius: '12px',
-                  padding: '24px',
-                }}
-              >
-                <h3
-                  style={{
-                    ...fontStyle,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    fontWeight: 700,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  TAYLOR – THE CASUAL LEARNER
-                </h3>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    margin: 0,
-                  }}
-                >
-                  Captures interesting facts or vocabulary to maintain a stress-free daily habit.
-                </p>
-              </div>
-            </div>
-
-            {/* Footer Section */}
-            <div>
-              <a
-                href="https://drive.google.com/file/d/1XBUN7cAseyk1iJQyoZXrZUV3AOGMRhZg/view"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  ...fontStyle,
-                  ...textStyle.body,
-                  color: 'rgb(0, 0, 0)',
-                  textDecoration: 'none',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                }}
-              >
-                View detailed persona slides
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                  <polyline points="15 3 21 3 21 9"></polyline>
-                  <line x1="10" y1="14" x2="21" y2="3"></line>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Affinity Map Modal */}
-      {isAffinityMapModalOpen && (
-        <div
-          onClick={() => setIsAffinityMapModalOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px',
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-              width: '100%',
-              maxWidth: '800px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              position: 'relative',
-              padding: '48px',
-            }}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsAffinityMapModalOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '24px',
-                right: '24px',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'rgba(0, 0, 0, 0.7)',
-                ...fontStyle,
-                fontSize: '24px',
-                lineHeight: '1',
-              }}
-            >
-              ×
-            </button>
-
-            {/* Header Section */}
-            <div style={{ marginBottom: '32px' }}>
-              <h2
-                style={{
-                  ...fontStyle,
-                  fontSize: '32px',
-                  lineHeight: '40px',
-                  fontWeight: 700,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '8px',
-                }}
-              >
-                Affinity Mapping Process
-              </h2>
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '18px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                How interview data was synthesized into key pain point themes.
-              </p>
-            </div>
-
-            {/* Introductory Paragraph */}
-            <p
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '28px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
-              }}
-            >
-              I synthesized findings from 5 in-depth interviews and survey responses into clusters that revealed three critical friction themes: manual entry fatigue, irrelevant content, and scheduling anxiety.
-            </p>
-
-            {/* Affinity Map Image */}
-            <div
-              style={{
-                width: '100%',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                marginBottom: '32px',
-                border: '1px solid rgba(0, 0, 0, 0.1)',
-              }}
-            >
-              <Image
-                src="/img/Affinity Mapping.avif"
-                alt="Affinity Mapping"
-                width={1200}
-                height={800}
-                style={{
-                  width: '100%',
-                  height: 'auto',
-                  display: 'block',
-                }}
-              />
-            </div>
-
-            {/* Button & Caption Section */}
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ marginBottom: '12px', display: 'inline-block' }}>
-                <a
-                  href="https://www.figma.com/board/Cm7Zt4jv6S7JqqTTOhMhV0/Affinity-Mapping?node-id=0-1&t=iesZYr1Kf9kG9zK9-1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ textDecoration: 'none' }}
-                >
-                  <Button
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                  >
-                    View interactive research board
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '28px' }}>
+                    <span
+                      style={{
+                        ...f,
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        color: step.dark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.3)',
+                      }}
+                    >
+                      {step.n}
+                    </span>
                     <svg
                       width="16"
                       height="16"
                       viewBox="0 0 24 24"
                       fill="none"
-                      stroke="currentColor"
+                      stroke={step.dark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.25)'}
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                      <polyline points="15 3 21 3 21 9"></polyline>
-                      <line x1="10" y1="14" x2="21" y2="3"></line>
+                      {step.icon}
                     </svg>
-                  </Button>
-                </a>
-              </div>
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '14px',
-                  lineHeight: '20px',
-                  fontWeight: 400,
-                  color: 'rgba(0, 0, 0, 0.7)',
-                  margin: 0,
-                }}
-              >
-                Explore the full-resolution board and zoom in to read individual research insights and sticky notes.
-              </p>
+                  </div>
+                  <h3
+                    style={{
+                      ...f,
+                      fontSize: '17px',
+                      lineHeight: '24px',
+                      fontWeight: 600,
+                      color: step.dark ? '#FFF' : '#000',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p
+                    style={{
+                      ...f,
+                      fontSize: '14px',
+                      lineHeight: '22px',
+                      color: step.dark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)',
+                      margin: 0,
+                    }}
+                  >
+                    {step.desc}
+                  </p>
+                </div>
+              ))}
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* User Flows Modal */}
-      {isUserFlowsModalOpen && (
-        <div
-          onClick={() => setIsUserFlowsModalOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px',
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-              width: '100%',
-              maxWidth: '1200px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              position: 'relative',
-              padding: '48px',
-            }}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsUserFlowsModalOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '24px',
-                right: '24px',
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: '8px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'rgba(0, 0, 0, 0.7)',
-                ...fontStyle,
-                fontSize: '24px',
-                lineHeight: '1',
-              }}
-            >
-              ×
-            </button>
-
-            {/* Header Section */}
-            <div style={{ marginBottom: '32px' }}>
-              <h2
+            {/* User Journey arc */}
+            <div style={{ marginTop: '40px' }}>
+              <div
                 style={{
-                  ...fontStyle,
-                  fontSize: '32px',
-                  lineHeight: '40px',
+                  ...f,
+                  fontSize: '10px',
                   fontWeight: 700,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '8px',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase' as const,
+                  color: 'rgba(0,0,0,0.35)',
+                  marginBottom: '20px',
                 }}
               >
-                User Flows
-              </h2>
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '18px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Visualizing the complete user journey across capture, learning, and study workflows. These flows map how users interact with AI chat, create lessons, add terms, and engage with the spaced repetition system.
-              </p>
+                User Journey · From Dependency to Ownership
+              </div>
+
+              <div style={{ backgroundColor: '#FFF', borderRadius: '12px', padding: '32px 28px', overflow: 'hidden' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', position: 'relative' as const }}>
+
+                  {/* Connecting line */}
+                  <div
+                    style={{
+                      position: 'absolute' as const,
+                      top: '16px',
+                      left: '10%',
+                      right: '10%',
+                      height: '2px',
+                      background: 'linear-gradient(90deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.15) 50%, #000 100%)',
+                      zIndex: 0,
+                    }}
+                  />
+
+                  {[
+                    {
+                      stage: 'Discovery',
+                      emoji: '🤔',
+                      feeling: 'Frustrated',
+                      moment: '"I\'ve asked this five times already."',
+                      desc: 'Realizes AI answers never stick',
+                      dark: false,
+                    },
+                    {
+                      stage: 'First Card',
+                      emoji: '😮',
+                      feeling: 'Surprised',
+                      moment: '"That took 3 seconds?"',
+                      desc: 'AI generates cards from their question',
+                      dark: false,
+                    },
+                    {
+                      stage: 'First Review',
+                      emoji: '😌',
+                      feeling: 'Engaged',
+                      moment: '"Oh — I actually remember this."',
+                      desc: 'Spaced repetition surfaces a card at the right moment',
+                      dark: false,
+                    },
+                    {
+                      stage: 'Building Habit',
+                      emoji: '💪',
+                      feeling: 'Committed',
+                      moment: '"2 minutes a day is enough."',
+                      desc: 'Daily review becomes automatic, not effortful',
+                      dark: false,
+                    },
+                    {
+                      stage: 'Mastery',
+                      emoji: '🎯',
+                      feeling: 'Confident',
+                      moment: '"I stopped needing to ask."',
+                      desc: 'Knowledge is internalized, AI dependency broken',
+                      dark: true,
+                    },
+                  ].map((item, i) => (
+                    <div
+                      key={item.stage}
+                      style={{
+                        position: 'relative' as const,
+                        zIndex: 1,
+                        paddingRight: i < 4 ? '12px' : '0',
+                      }}
+                    >
+                      {/* Dot on line */}
+                      <div
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          borderRadius: '50%',
+                          backgroundColor: item.dark ? '#000' : '#F0F0F0',
+                          border: item.dark ? 'none' : '1px solid rgba(0,0,0,0.1)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '14px',
+                          marginBottom: '20px',
+                        }}
+                      >
+                        {item.emoji}
+                      </div>
+
+                      <div style={{ ...f, fontSize: '11px', fontWeight: 700, color: item.dark ? '#000' : 'rgba(0,0,0,0.4)', textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '4px' }}>
+                        {item.feeling}
+                      </div>
+                      <div style={{ ...f, fontSize: '14px', fontWeight: 600, color: '#000', marginBottom: '6px' }}>
+                        {item.stage}
+                      </div>
+                      <p style={{ ...f, fontSize: '12px', lineHeight: '18px', color: 'rgba(0,0,0,0.5)', margin: '0 0 10px' }}>
+                        {item.desc}
+                      </p>
+                      <p style={{ ...f, fontSize: '12px', lineHeight: '18px', color: '#000', fontStyle: 'italic' as const, margin: 0 }}>
+                        {item.moment}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* Workflow Images */}
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          4. PHASE 1 — MVP
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#FAFAFA', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            {/* Phase tag */}
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '32px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                backgroundColor: '#000',
+                borderRadius: '100px',
+                padding: '4px 14px',
+                marginBottom: '24px',
               }}
             >
-              {/* Overall Application Architecture Flow - Keep Image */}
-              <div>
-                <h3
-                  style={{
-                    ...fontStyle,
-                    fontSize: '20px',
-                    lineHeight: '28px',
-                    fontWeight: 600,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '16px',
-                  }}
-                >
-                  Overall Application Architecture Flow
-                </h3>
+              <span style={{ ...f, fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', color: '#FFF', textTransform: 'uppercase' as const }}>
+                Phase 01 · MVP
+              </span>
+            </div>
+
+            <h2 style={{ ...f, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: '#000', marginBottom: '48px' }}>
+              Ship the Core Loop
+            </h2>
+
+            <div style={{ display: 'flex', gap: '64px', alignItems: 'flex-start' }}>
+
+              {/* Left: text */}
+              <div style={{ flex: 1 }}>
+                <p style={{ ...f, fontSize: '17px', lineHeight: '30px', color: '#000', marginBottom: '20px' }}>
+                  The MVP was built to validate one thing: can we make the jump from &ldquo;I asked AI&rdquo;
+                  to &ldquo;I actually learned this&rdquo; feel effortless? Instead of making users build
+                  flashcard decks manually, MemQ lets you type a question or topic, and the AI generates
+                  structured knowledge cards ready to study.
+                </p>
+                <p style={{ ...f, fontSize: '17px', lineHeight: '30px', color: '#000', marginBottom: '36px' }}>
+                  The spaced repetition engine does the rest — surfacing cards at the right intervals so
+                  knowledge moves from short-term recall to long-term retention. Every card in your library
+                  is something <em>you</em> wanted to learn.
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '14px' }}>
+                  {[
+                    {
+                      title: 'AI Card Generation',
+                      desc: 'Type a topic or question, get structured knowledge cards instantly.',
+                    },
+                    {
+                      title: 'Context-aware Formatting',
+                      desc: 'Vocabulary gets definitions and examples; concepts get "Why" and "How" questions.',
+                    },
+                    {
+                      title: 'Spaced Repetition Engine',
+                      desc: 'The memory curve resurfaces cards at optimal intervals for long-term retention.',
+                    },
+                  ].map((feat) => (
+                    <div key={feat.title} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                      <div
+                        style={{
+                          width: '5px',
+                          height: '5px',
+                          borderRadius: '50%',
+                          backgroundColor: '#000',
+                          marginTop: '11px',
+                          flexShrink: 0,
+                        }}
+                      />
+                      <p style={{ ...f, fontSize: '15px', lineHeight: '26px', color: '#000', margin: 0 }}>
+                        <strong>{feat.title}</strong> — {feat.desc}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right: phone video（浅灰实线描边，避免半透明黑边在浅底上偏深） */}
+              <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                 <div
                   style={{
                     width: '100%',
-                    borderRadius: '12px',
+                    maxWidth: '260px',
+                    aspectRatio: '9/19.5',
+                    borderRadius: '24px',
                     overflow: 'hidden',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    border: '1px solid #EDEDED',
+                    backgroundColor: '#000',
                   }}
                 >
-                  <Image
-                    src="/img/Overall Application Architecture Flow.png"
-                    alt="Overall Application Architecture Flow"
-                    width={1200}
-                    height={800}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                    }}
+                  <video
+                    src="/img/MemQ Video.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 </div>
               </div>
 
-              {/* Other Workflows - Combined Link */}
-              <div>
-                <h3
-                  style={{
-                    ...fontStyle,
-                    fontSize: '20px',
-                    lineHeight: '28px',
-                    fontWeight: 600,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '16px',
-                  }}
-                >
-                  Additional Workflows
-                </h3>
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          5. PHASE 2 — ITERATION
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#FAFAFA', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            {/* Phase tag */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                backgroundColor: '#1A1A1A',
+                borderRadius: '100px',
+                padding: '4px 14px',
+                marginBottom: '24px',
+              }}
+            >
+              <span style={{ ...f, fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', color: '#FFF', textTransform: 'uppercase' as const }}>
+                Phase 02 · Iteration
+              </span>
+            </div>
+
+            <h2 style={{ ...f, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: '#000', marginBottom: '12px' }}>
+              Explore Platform, Assistant & Smarter Creation
+            </h2>
+            <p style={{ ...f, ...textStyle.leadSm, color: 'rgba(0,0,0,0.6)', maxWidth: '640px', marginBottom: '56px' }}>
+              After validating the core loop, Phase 02 layered on a curated Explore experience, a redesigned lesson-creation
+              path, and a stronger AI Assistant — including a new <strong>Quiz me</strong> mode where learners pick any lesson
+              to practice, plus a direct <strong>Create new lesson</strong> action when assistant-generated terms deserve
+              their own deck.
+            </p>
+
+            {/* ── Lesson creation: visual flow ── */}
+            <h3 style={{ ...f, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: '#000', marginBottom: '20px' }}>
+              Redesigned Lesson Creation
+            </h3>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '64px',
+                alignItems: 'flex-start',
+                marginBottom: '48px',
+                flexWrap: 'wrap' as const,
+              }}
+            >
+              {/* 左侧：Before / After 流程说明 */}
+              <div style={{ flex: '1 1 300px', minWidth: 0, display: 'flex', flexDirection: 'column' as const, gap: '12px' }}>
+              {/* BEFORE row */}
+              <div style={{ backgroundColor: '#FFF', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '24px 28px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                  <span style={{ ...f, fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.3)' }}>
+                    Before
+                  </span>
+                  <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(0,0,0,0.07)' }} />
+                  <span style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.4)', fontStyle: 'italic' as const }}>
+                    Manual terms, topic→AI, or PDF/Doc upload — but no clean way to fix just one term
+                  </span>
+                </div>
+
+                {/* Flow row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto' as const, paddingBottom: '4px' }}>
+                  {[
+                    { label: 'Lesson shell first', sub: 'Structure before content felt right', warn: true },
+                    null,
+                    { label: 'Manual terms', sub: 'Create & edit by hand' },
+                    null,
+                    { label: 'Topic → AI', sub: 'Generate from a topic' },
+                    null,
+                    { label: 'Upload PDF / Doc', sub: 'AI analyzes & drafts cards' },
+                    null,
+                    { label: 'One off card?', sub: 'Rework by hand or redo the batch', warn: true },
+                  ].map((item, i) => {
+                    if (item === null) {
+                      return (
+                        <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                          <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                        </svg>
+                      );
+                    }
+                    return (
+                      <div
+                        key={item.label}
+                        style={{
+                          flexShrink: 0,
+                          backgroundColor: item.warn ? 'rgba(0,0,0,0.04)' : 'rgba(0,0,0,0.03)',
+                          border: `1px solid ${item.warn ? 'rgba(0,0,0,0.15)' : 'rgba(0,0,0,0.08)'}`,
+                          borderRadius: '8px',
+                          padding: '10px 14px',
+                          minWidth: '100px',
+                        }}
+                      >
+                        <div style={{ ...f, fontSize: '13px', fontWeight: item.warn ? 600 : 400, color: item.warn ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)' }}>
+                          {item.label}
+                        </div>
+                        <div style={{ ...f, fontSize: '11px', color: 'rgba(0,0,0,0.35)', marginTop: '2px' }}>
+                          {item.sub}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '14px' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.35)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  <span style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.4)' }}>
+                    All three creation paths existed, yet naming and scaffolding still ran ahead of the material — and a single weak term meant painful rework.
+                  </span>
+                </div>
+              </div>
+
+              {/* AFTER row */}
+              <div style={{ backgroundColor: '#FFF', border: '1px solid rgba(0,0,0,0.12)', borderRadius: '12px', padding: '24px 28px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+                  <span style={{ ...f, fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: '#000' }}>
+                    After
+                  </span>
+                  <div style={{ flex: 1, height: '1px', backgroundColor: 'rgba(0,0,0,0.1)' }} />
+                  <span style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.5)', fontStyle: 'italic' as const }}>
+                    Same three ways in — plus regenerate AI content for a single term, and name the lesson when it&apos;s ready
+                  </span>
+                </div>
+
+                {/* Flow row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflowX: 'auto' as const, paddingBottom: '4px' }}>
+                  {[
+                    { label: 'Manual terms', sub: 'Create & edit by hand' },
+                    null,
+                    { label: 'Topic → AI', sub: 'Generate from a topic' },
+                    null,
+                    { label: 'Upload PDF / Doc', sub: 'AI analyzes & drafts cards' },
+                    null,
+                    { label: 'Regenerate term', sub: 'One card, new AI pass', highlight: true },
+                    null,
+                    { label: 'Name lesson', sub: 'Title after content lands' },
+                  ].map((item, i) => {
+                    if (item === null) {
+                      return (
+                        <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.3)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                          <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+                        </svg>
+                      );
+                    }
+                    return (
+                      <div
+                        key={item.label}
+                        style={{
+                          flexShrink: 0,
+                          backgroundColor: item.highlight ? '#000' : 'rgba(0,0,0,0.04)',
+                          border: `1px solid ${item.highlight ? '#000' : 'rgba(0,0,0,0.1)'}`,
+                          borderRadius: '8px',
+                          padding: '10px 14px',
+                          minWidth: '110px',
+                        }}
+                      >
+                        <div style={{ ...f, fontSize: '13px', fontWeight: 500, color: item.highlight ? '#FFF' : 'rgba(0,0,0,0.85)' }}>
+                          {item.label}
+                        </div>
+                        <div style={{ ...f, fontSize: '11px', color: item.highlight ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.4)', marginTop: '2px' }}>
+                          {item.sub}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '14px' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+                  </svg>
+                  <span style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.5)' }}>
+                    Matches how people think: pick the material first, label the lesson when you&apos;re done — not the other way around.
+                  </span>
+                </div>
+              </div>
+              </div>
+
+              {/* 右侧：新版流程演示视频（规格与 Ship the Core Loop 一致；浅灰实线描边） */}
+              <div style={{ flex: '0 0 auto', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
                 <div
                   style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '16px',
+                    width: '100%',
+                    maxWidth: '260px',
+                    aspectRatio: '9/19.5',
+                    borderRadius: '24px',
+                    overflow: 'hidden',
+                    border: '1px solid #EDEDED',
+                    backgroundColor: '#000',
                   }}
                 >
-                  <ul style={{ margin: 0, paddingLeft: '24px', listStyleType: 'disc' }}>
-                    <li style={{ marginBottom: '8px' }}>AI Chat Assistant Flow</li>
-                    <li style={{ marginBottom: '8px' }}>Create Lesson and Add Terms Flow</li>
-                    <li style={{ marginBottom: '8px' }}>Study Flow (SRS Spaced Repetition System)</li>
-                  </ul>
+                  <video
+                    src="/img/MemQ/Scene-1.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
                 </div>
-                <a
-                  href="https://drive.google.com/file/d/1S33Sj4i9PaZNNPBYsbZN-24vQwiYqiSb/view?usp=sharing"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'rgb(0, 0, 0)',
-                    textDecoration: 'none',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  View all workflows
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                    <polyline points="15 3 21 3 21 9"></polyline>
-                    <line x1="10" y1="14" x2="21" y2="3"></line>
-                  </svg>
-                </a>
               </div>
             </div>
+
+            {/* ── AI Assistant & Quiz me ── */}
+            <div
+              style={{
+                backgroundColor: '#FFF',
+                border: '1px solid rgba(0,0,0,0.08)',
+                borderRadius: '12px',
+                padding: '28px 32px',
+                marginBottom: '40px',
+              }}
+            >
+              <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-start', flexWrap: 'wrap' as const }}>
+                <div style={{ flex: '1 1 280px', minWidth: 0 }}>
+                  <h3 style={{ ...f, fontSize: '18px', lineHeight: '26px', fontWeight: 500, color: '#000', marginBottom: '12px' }}>
+                    AI Assistant & Quiz me
+                  </h3>
+                  <p style={{ ...f, fontSize: '15px', lineHeight: '26px', color: 'rgba(0,0,0,0.65)', marginBottom: '20px' }}>
+                    The assistant stayed grounded in personal decks, but got clearer structure and faster study loops — so
+                    asking, saving, and drilling read as one product instead of disconnected experiments.
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '10px' }}>
+                    {[
+                      'Assistant IA, prompts, and save flows tuned for quicker daily Q&A',
+                      'New Quiz me tab: AI-driven practice on real lesson cards',
+                      'Lesson picker inside Quiz me — choose which deck to drill against',
+                      'Generated terms: add Create new lesson to spin strong suggestions into their own lesson',
+                    ].map((feat) => (
+                      <div key={feat} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                        <svg
+                          width="13"
+                          height="13"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="rgba(0,0,0,0.45)"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ marginTop: '5px', flexShrink: 0 }}
+                        >
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span style={{ ...f, fontSize: '14px', lineHeight: '22px', color: 'rgba(0,0,0,0.72)' }}>{feat}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 右侧：Assistant / Quiz 截图横排 */}
+                <div
+                  style={{
+                    flex: '1 1 200px',
+                    display: 'flex',
+                    flexDirection: 'row' as const,
+                    gap: '10px',
+                    alignItems: 'stretch',
+                    justifyContent: 'center',
+                    minWidth: 0,
+                  }}
+                >
+                  {['/img/MemQ/AI1.PNG', '/img/MemQ/AI2.PNG'].map((src, i) => (
+                    <div key={src} style={{ flex: '1 1 0', minWidth: 0 }}>
+                      <div
+                        style={{
+                          width: '100%',
+                          aspectRatio: '9 / 19.5',
+                          borderRadius: '32px',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(0,0,0,0.1)',
+                          backgroundColor: '#F5F5F5',
+                          position: 'relative',
+                        }}
+                      >
+                        <Image
+                          src={src}
+                          alt={`MemQ AI Assistant screenshot ${i + 1}`}
+                          fill
+                          sizes="(max-width: 900px) 42vw, 22vw"
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Explore Platform ── */}
+            <div
+              style={{
+                backgroundColor: '#191919',
+                borderRadius: '12px',
+                padding: '40px',
+              }}
+            >
+              <div style={{ display: 'flex', gap: '56px', alignItems: 'flex-start' }}>
+
+                {/* Left */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <h3 style={{ ...f, fontSize: '20px', lineHeight: '28px', fontWeight: 600, color: '#FFF', margin: 0 }}>
+                      Explore Platform
+                    </h3>
+                  </div>
+                  <p style={{ ...f, fontSize: '16px', lineHeight: '28px', color: 'rgba(255,255,255,0.75)', marginBottom: '24px' }}>
+                    A curated library of high-quality lessons users can add to their library with one tap.
+                    Power users can publish their own lessons for the community — turning MemQ into a shared
+                    knowledge network, not just a personal study tool.
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '10px' }}>
+                    {[
+                      'Curated lessons across popular learning topics',
+                      'One-tap add to personal library',
+                      'Publish your own lessons for others to learn from',
+                    ].map((feat) => (
+                      <div key={feat} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                        <svg
+                          width="13"
+                          height="13"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="rgba(255,255,255,0.4)"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          style={{ marginTop: '5px', flexShrink: 0 }}
+                        >
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span style={{ ...f, fontSize: '14px', lineHeight: '22px', color: 'rgba(255,255,255,0.65)' }}>
+                          {feat}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 右侧：Explore 界面截图（横排三列） */}
+                <div
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'row' as const,
+                    gap: '10px',
+                    alignItems: 'stretch',
+                    justifyContent: 'center',
+                    minWidth: 0,
+                  }}
+                >
+                  {['/img/MemQ/Explore1.PNG', '/img/MemQ/Explore2.PNG', '/img/MemQ/Explore3.PNG'].map((src, i) => (
+                    <div key={src} style={{ flex: '1 1 0', minWidth: 0 }}>
+                      <div
+                        style={{
+                          width: '100%',
+                          aspectRatio: '9 / 19.5',
+                          borderRadius: '20px',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(255,255,255,0.14)',
+                          backgroundColor: 'rgba(0,0,0,0.35)',
+                          position: 'relative',
+                        }}
+                      >
+                        <Image
+                          src={src}
+                          alt={`MemQ Explore platform screenshot ${i + 1}`}
+                          fill
+                          sizes="(max-width: 900px) 30vw, 33vw"
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </div>
+
           </div>
-        </div>
-      )}
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          6. DESIGN SYSTEM — EDITORIAL
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#F5F4F0', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            {/* ── Header ── */}
+            <div style={{ ...f, ...LABEL_STYLE }}>Visual Design · Iteration</div>
+
+            <div style={{ display: 'flex', gap: '64px', alignItems: 'flex-end', marginBottom: '32px' }}>
+              <h2
+                style={{
+                  ...f,
+                  fontSize: '56px',
+                  lineHeight: '60px',
+                  fontWeight: 300,
+                  letterSpacing: '-0.025em',
+                  color: '#1A1A18',
+                  margin: 0,
+                  flexShrink: 0,
+                }}
+              >
+                Editorial
+              </h2>
+              <p style={{ ...f, fontSize: '16px', lineHeight: '26px', color: 'rgba(26,26,24,0.55)', maxWidth: '520px', marginBottom: '4px' }}>
+                A quiet, typography-first system for spaced-repetition learning. Borrowed from editorial
+                print — generous hierarchy, hairline rules, restrained colour. The screen treated as a page.
+                One accent. One surface tone. One radius scale. Decisions, not options.
+              </p>
+            </div>
+
+            {/* Hairline rule */}
+            <div style={{ height: '1px', backgroundColor: 'rgba(26,26,24,0.12)', marginBottom: '40px' }} />
+
+            {/* ── Rules + Color side by side ── */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '16px' }}>
+
+              {/* Editorial Behaviour rules */}
+              <div>
+                <div
+                  style={{
+                    ...f,
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase' as const,
+                    color: 'rgba(26,26,24,0.4)',
+                    marginBottom: '20px',
+                  }}
+                >
+                  Editorial Behaviour
+                </div>
+
+                {[
+                  {
+                    n: 'i.',
+                    title: 'Type before chrome',
+                    desc: 'Hierarchy by weight, scale, and white space — not boxes, shadows, or accent fills. A heading does the work a card would do elsewhere.',
+                  },
+                  {
+                    n: 'ii.',
+                    title: 'One semantic accent',
+                    desc: 'Teal #1A8A72 reserved for state: due cards, active tabs, primary actions, mastery progress. It earns attention because it is rare.',
+                  },
+                  {
+                    n: 'iii.',
+                    title: 'Hairlines, not shadows',
+                    desc: '1px borders on warm white separate regions. Shadows not used. Surfaces are flat and meet at clean edges.',
+                  },
+                  {
+                    n: 'iv.',
+                    title: 'Numbers are display',
+                    desc: 'Streak counts, queue totals, mastery percentages set in the heaviest grotesk weight at large sizes. Data is the headline.',
+                  },
+                  {
+                    n: 'v.',
+                    title: 'Cards in a stream',
+                    desc: 'Distinct rounded cards with 8px gaps — never flush list-rows. Each card is its own object on the page canvas.',
+                  },
+                  {
+                    n: 'vi.',
+                    title: 'One elevated action',
+                    desc: 'Create is the one moment shadow appears: a circular FAB raised above the tab bar. Every other surface is flat.',
+                  },
+                ].map((rule, i) => (
+                  <div
+                    key={rule.n}
+                    style={{
+                      display: 'flex',
+                      gap: '16px',
+                      paddingTop: '16px',
+                      paddingBottom: '16px',
+                      borderTop: '1px solid rgba(26,26,24,0.08)',
+                    }}
+                  >
+                    <span
+                      style={{
+                        ...f,
+                        fontSize: '13px',
+                        fontStyle: 'italic' as const,
+                        color: 'rgba(26,26,24,0.35)',
+                        flexShrink: 0,
+                        width: '20px',
+                        paddingTop: '1px',
+                      }}
+                    >
+                      {rule.n}
+                    </span>
+                    <div>
+                      <div style={{ ...f, fontSize: '14px', fontWeight: 600, color: '#1A1A18', marginBottom: '4px' }}>
+                        {rule.title}
+                      </div>
+                      <p style={{ ...f, fontSize: '13px', lineHeight: '20px', color: 'rgba(26,26,24,0.55)', margin: 0 }}>
+                        {rule.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                {/* Close last rule border */}
+                <div style={{ height: '1px', backgroundColor: 'rgba(26,26,24,0.08)' }} />
+              </div>
+
+              {/* Right column: Color + Type */}
+              <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '12px' }}>
+
+                {/* Color tokens */}
+                <div
+                  style={{
+                    backgroundColor: '#FDFCF9',
+                    border: '1px solid rgba(26,26,24,0.1)',
+                    borderRadius: '12px',
+                    padding: '24px',
+                  }}
+                >
+                  <div
+                    style={{
+                      ...f,
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase' as const,
+                      color: 'rgba(26,26,24,0.4)',
+                      marginBottom: '18px',
+                    }}
+                  >
+                    Colour Tokens
+                  </div>
+
+                  {/* Accent full-width swatch — most important token */}
+                  <div style={{ marginBottom: '12px' }}>
+                    <div
+                      style={{
+                        height: '56px',
+                        borderRadius: '8px',
+                        backgroundColor: '#1A8A72',
+                        marginBottom: '8px',
+                      }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                      <span style={{ ...f, fontSize: '12px', fontWeight: 600, color: '#1A1A18' }}>Accent</span>
+                      <span style={{ ...f, fontSize: '11px', color: 'rgba(26,26,24,0.4)', letterSpacing: '0.04em' }}>#1A8A72</span>
+                    </div>
+                    <div style={{ ...f, fontSize: '11px', color: 'rgba(26,26,24,0.4)', marginTop: '2px' }}>
+                      Due · Active · Primary · Mastery
+                    </div>
+                  </div>
+
+                  <div style={{ height: '1px', backgroundColor: 'rgba(26,26,24,0.08)', marginBottom: '12px' }} />
+
+                  {/* Other tokens grid */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                    {[
+                      { name: 'Canvas', val: '#F9F8F5', color: '#F9F8F5', border: 'rgba(26,26,24,0.1)' },
+                      { name: 'Surface', val: '#FFFFFF', color: '#FFFFFF', border: 'rgba(26,26,24,0.1)' },
+                      { name: 'Muted', val: 'rgba(26,26,24,0.05)', color: 'rgba(26,26,24,0.05)', border: 'rgba(26,26,24,0.1)' },
+                      { name: 'Ink', val: '#1A1A18', color: '#1A1A18', border: 'transparent' },
+                      { name: 'Ink Dim', val: '45% opacity', color: 'rgba(26,26,24,0.45)', border: 'transparent' },
+                      { name: 'Hairline', val: '10% opacity', color: 'rgba(26,26,24,0.1)', border: 'rgba(26,26,24,0.1)' },
+                    ].map((token) => (
+                      <div key={token.name}>
+                        <div
+                          style={{
+                            height: '36px',
+                            borderRadius: '6px',
+                            backgroundColor: token.color,
+                            border: `1px solid ${token.border}`,
+                            marginBottom: '6px',
+                          }}
+                        />
+                        <div style={{ ...f, fontSize: '11px', fontWeight: 600, color: '#1A1A18', marginBottom: '1px' }}>
+                          {token.name}
+                        </div>
+                        <div style={{ ...f, fontSize: '10px', color: 'rgba(26,26,24,0.4)' }}>
+                          {token.val}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Type scale */}
+                <div
+                  style={{
+                    backgroundColor: '#FDFCF9',
+                    border: '1px solid rgba(26,26,24,0.1)',
+                    borderRadius: '12px',
+                    padding: '24px',
+                  }}
+                >
+                  <div
+                    style={{
+                      ...f,
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase' as const,
+                      color: 'rgba(26,26,24,0.4)',
+                      marginBottom: '16px',
+                    }}
+                  >
+                    Type Scale
+                  </div>
+                  {[
+                    { label: 'Display', size: '34px', weight: 800, sample: 'MemQ', color: '#1A1A18' },
+                    { label: 'Title', size: '22px', weight: 600, sample: 'Your Lessons', color: '#1A1A18' },
+                    { label: 'Body', size: '17px', weight: 400, sample: 'Due in 2 days', color: '#1A1A18' },
+                    { label: 'Caption', size: '12px', weight: 500, sample: '12 CARDS DUE', color: 'rgba(26,26,24,0.5)' },
+                  ].map((t, i, arr) => (
+                    <div
+                      key={t.label}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        justifyContent: 'space-between',
+                        gap: '8px',
+                        paddingTop: i === 0 ? 0 : '12px',
+                        paddingBottom: '12px',
+                        borderBottom: i < arr.length - 1 ? '1px solid rgba(26,26,24,0.06)' : 'none',
+                      }}
+                    >
+                      <span style={{ ...f, fontSize: t.size, fontWeight: t.weight, color: t.color, lineHeight: 1.2, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const }}>
+                        {t.sample}
+                      </span>
+                      <span style={{ ...f, fontSize: '10px', color: 'rgba(26,26,24,0.3)', flexShrink: 0 }}>
+                        {t.size}/{t.weight}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+              </div>
+            </div>
+
+            {/* ── iv. Numbers as Display ── */}
+            <div
+              style={{
+                backgroundColor: '#FDFCF9',
+                border: '1px solid rgba(26,26,24,0.1)',
+                borderRadius: '12px',
+                padding: '32px',
+                marginBottom: '12px',
+              }}
+            >
+              <div
+                style={{
+                  ...f,
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase' as const,
+                  color: 'rgba(26,26,24,0.4)',
+                  marginBottom: '24px',
+                }}
+              >
+                iv. Numbers are Display
+              </div>
+
+              <div style={{ display: 'flex', gap: '0', alignItems: 'flex-end' }}>
+                {[
+                  { val: '127', label: 'day streak', teal: false },
+                  { val: '85%', label: 'mastery', teal: true },
+                  { val: '32', label: 'due today', teal: true },
+                  { val: '14d', label: 'next review', teal: false },
+                ].map((num, i) => (
+                  <div
+                    key={num.val}
+                    style={{
+                      flex: 1,
+                      paddingRight: '32px',
+                      borderRight: i < 3 ? '1px solid rgba(26,26,24,0.08)' : 'none',
+                      paddingLeft: i > 0 ? '32px' : '0',
+                    }}
+                  >
+                    <div
+                      style={{
+                        ...f,
+                        fontSize: '64px',
+                        lineHeight: '64px',
+                        fontWeight: 800,
+                        color: num.teal ? '#1A8A72' : '#1A1A18',
+                        letterSpacing: '-0.03em',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      {num.val}
+                    </div>
+                    <div style={{ ...f, fontSize: '12px', color: 'rgba(26,26,24,0.45)', letterSpacing: '0.02em' }}>
+                      {num.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Key Screens ── */}
+            <div
+              style={{
+                backgroundColor: '#FDFCF9',
+                border: '1px solid rgba(26,26,24,0.1)',
+                borderRadius: '12px',
+                padding: '28px',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '24px' }}>
+                <div style={{ ...f, fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'rgba(26,26,24,0.4)' }}>
+                  Key Screens
+                </div>
+                <div style={{ ...f, fontSize: '10px', color: 'rgba(26,26,24,0.3)', letterSpacing: '0.04em' }}>
+                  In-app captures
+                </div>
+              </div>
+
+              {/* 12 张：固定两行，每行 6 个 */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(6, minmax(0, 1fr))',
+                  columnGap: '12px',
+                  rowGap: '40px',
+                }}
+              >
+                {MEMQ_KEY_SCREEN_ITEMS.map((item) => (
+                  <div key={item.src} style={{ minWidth: 0 }}>
+                    <div
+                      style={{
+                        width: '100%',
+                        aspectRatio: '9 / 19.5',
+                        borderRadius: '22px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(26,26,24,0.1)',
+                        backgroundColor: '#FAFAF8',
+                        position: 'relative',
+                      }}
+                    >
+                      <Image
+                        src={item.src}
+                        alt={item.alt}
+                        fill
+                        sizes="(max-width: 768px) 16vw, (max-width: 1200px) 14vw, 12vw"
+                        style={{ objectFit: 'cover' }}
+                      />
+                    </div>
+                    {(item.title != null || item.caption != null) && (
+                      <div style={{ marginTop: '12px' }}>
+                        {item.title != null && (
+                          <div style={{ ...f, fontSize: '12px', fontWeight: 600, color: 'rgba(26,26,24,0.7)' }}>{item.title}</div>
+                        )}
+                        {item.caption != null && (
+                          <div style={{ ...f, fontSize: '11px', color: 'rgba(26,26,24,0.4)' }}>{item.caption}</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          7. IMPACT
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#FAFAFA', paddingTop: '80px', paddingBottom: '80px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            <div style={{ ...f, ...LABEL_STYLE }}>Impact</div>
+            <h2 style={{ ...f, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: '#000', marginBottom: '12px' }}>
+              The Loop Held Up in Testing
+            </h2>
+            <p style={{ ...f, ...textStyle.leadSm, color: 'rgba(0,0,0,0.6)', maxWidth: '600px', marginBottom: '48px' }}>
+              Testers stopped asking &ldquo;how do I add a card&rdquo; and started asking &ldquo;can I import more file
+              formats&rdquo; — the shift confirmed they&apos;d moved from onboarding friction into active daily use.
+            </p>
+
+            {/* Metrics */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '2px',
+                marginBottom: '40px',
+              }}
+            >
+              {[
+                { val: '78%', label: 'preferred AI generation over manual entry' },
+                { val: '85%', label: 'wanted content from their own materials, not pre-made decks' },
+                { val: '0', label: 'critical drop-offs in the final validation round' },
+              ].map((m, i) => (
+                <div
+                  key={m.val}
+                  style={{
+                    backgroundColor: '#FFF',
+                    padding: '32px 28px',
+                    borderRadius: i === 0 ? '12px 0 0 12px' : i === 2 ? '0 12px 12px 0' : '0',
+                  }}
+                >
+                  <div style={{ ...f, fontSize: '52px', lineHeight: '60px', fontWeight: 300, color: '#000', marginBottom: '8px' }}>
+                    {m.val}
+                  </div>
+                  <div style={{ ...f, fontSize: '13px', lineHeight: '20px', color: 'rgba(0,0,0,0.5)' }}>
+                    {m.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Data charts */}
+            <div className="flex flex-row" style={{ gap: '20px', marginBottom: '32px' }}>
+
+              <div style={{ backgroundColor: '#FFF', borderRadius: '12px', padding: '32px', flex: 1 }}>
+                <h4 style={{ ...f, fontSize: '15px', fontWeight: 600, color: '#000', marginBottom: '24px' }}>
+                  Preferred method of card creation
+                </h4>
+                {[
+                  { label: 'AI / Auto-generation', pct: 78 },
+                  { label: 'Manual Typing', pct: 15 },
+                  { label: 'Copy & Pasting', pct: 7 },
+                ].map((d) => (
+                  <div key={d.label} style={{ marginBottom: '14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <span style={{ ...f, fontSize: '13px', color: '#000' }}>{d.label}</span>
+                      <span style={{ ...f, fontSize: '13px', fontWeight: 600, color: '#000' }}>{d.pct}%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '5px', backgroundColor: 'rgba(0,0,0,0.07)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${d.pct}%`, height: '100%', backgroundColor: '#000', borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                ))}
+                <p style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.45)', marginTop: '20px', margin: 0 }}>
+                  AI generation is the primary action — manual entry is a fallback, not the default.
+                </p>
+              </div>
+
+              <div style={{ backgroundColor: '#FFF', borderRadius: '12px', padding: '32px', flex: 1 }}>
+                <h4 style={{ ...f, fontSize: '15px', fontWeight: 600, color: '#000', marginBottom: '24px' }}>
+                  Importance of personalized study content
+                </h4>
+                {[
+                  { label: 'Custom content (my own materials)', pct: 85 },
+                  { label: 'Generic decks (pre-made lists)', pct: 15 },
+                ].map((d) => (
+                  <div key={d.label} style={{ marginBottom: '14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <span style={{ ...f, fontSize: '13px', color: '#000' }}>{d.label}</span>
+                      <span style={{ ...f, fontSize: '13px', fontWeight: 600, color: '#000' }}>{d.pct}%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '5px', backgroundColor: 'rgba(0,0,0,0.07)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ width: `${d.pct}%`, height: '100%', backgroundColor: '#000', borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                ))}
+                <p style={{ ...f, fontSize: '12px', color: 'rgba(0,0,0,0.45)', marginTop: '20px', margin: 0 }}>
+                  Every card in MemQ was generated for you, from what you personally wanted to learn.
+                </p>
+              </div>
+
+            </div>
+
+            {/* Quote */}
+            <div
+              style={{
+                backgroundColor: '#FFF',
+                borderRadius: '12px',
+                padding: '28px 32px',
+                borderLeft: '3px solid #000',
+              }}
+            >
+              <p style={{ ...f, fontSize: '17px', lineHeight: '28px', fontStyle: 'italic' as const, color: '#333', marginBottom: '10px' }}>
+                &ldquo;This is the most seamless study experience I&apos;ve seen. I would feel 100% confident
+                ditching my old messy notes for this.&rdquo;
+              </p>
+              <p style={{ ...f, fontSize: '13px', color: 'rgba(0,0,0,0.45)', margin: 0 }}>
+                — Round 2 usability testing participant
+              </p>
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          8. WHAT'S NEXT
+      ───────────────────────────────────────── */}
+      <section style={{ ...SECTION, backgroundColor: '#FAFAFA', paddingTop: '80px', paddingBottom: '120px' }}>
+        <ScrollAnimatedSection>
+          <div style={CONTAINER}>
+
+            <div style={{ ...f, ...LABEL_STYLE }}>What&apos;s Next</div>
+            <h2 style={{ ...f, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: '#000', marginBottom: '36px' }}>
+              Future Directions
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4" style={{ gap: '20px' }}>
+              {[
+                {
+                  title: 'LLM & Browser Integration',
+                  desc: 'A browser extension that intercepts AI chat sessions and lets users save any answer as a knowledge card in one tap — making the learn-from-AI workflow completely seamless.',
+                  icon: (
+                    <>
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="2" y1="12" x2="22" y2="12" />
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </>
+                  ),
+                },
+                {
+                  title: 'Richer Multi-modal Recall',
+                  desc: 'Add image support — starting with camera capture — to reinforce memory at both the term and question level, tying abstract concepts to concrete visual cues.',
+                  icon: (
+                    <>
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                      <circle cx="12" cy="13" r="4" />
+                    </>
+                  ),
+                },
+                // 词汇类卡片：发音、例句、同反义等专项深化
+                {
+                  title: 'Vocabulary-first Card Depth',
+                  desc: 'Optimize vocabulary cards as a dedicated surface: pronunciation (audio and IPA where it helps), richer example sentences, and explicit synonym/antonym links — so language decks feel as deep as dedicated apps without breaking the MemQ review loop.',
+                  icon: (
+                    <>
+                      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                      <line x1="12" y1="19" x2="12" y2="23" />
+                      <line x1="8" y1="23" x2="16" y2="23" />
+                    </>
+                  ),
+                },
+                {
+                  title: 'Social Learning Loops',
+                  desc: "Build on the Explore platform with learning cohorts — where users can follow each other's progress, remix published lessons, and keep each other accountable.",
+                  icon: (
+                    <>
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </>
+                  ),
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  style={{
+                    backgroundColor: '#FFF',
+                    border: '1px solid rgba(0,0,0,0.08)',
+                    borderRadius: '12px',
+                    padding: '24px',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '40px',
+                      height: '40px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(0,0,0,0.05)',
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '40px',
+                    }}
+                  >
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      {item.icon}
+                    </svg>
+                  </div>
+                  <h4 style={{ ...f, ...textStyle.h5, color: '#000', marginBottom: '8px' }}>
+                    {item.title}
+                  </h4>
+                  <p style={{ ...f, ...textStyle.body, color: 'rgba(0,0,0,0.65)', margin: 0 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          APP STORE CTA
+      ───────────────────────────────────────── */}
+      <section
+        style={{
+          ...SECTION,
+          backgroundColor: '#1A1916',
+          paddingTop: '80px',
+          paddingBottom: '80px',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ ...CONTAINER, textAlign: 'center' as const, padding: '0 24px' }}>
+
+            {/* Eyebrow */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '100px', padding: '4px 12px 4px 8px', marginBottom: '28px',
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: '#1A8A72', display: 'inline-block' }} />
+              <span style={{ fontFamily: fontFamily.system, fontSize: '11px', fontWeight: 600, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.08em' }}>
+                AVAILABLE NOW
+              </span>
+            </div>
+
+            <h2 style={{
+              fontFamily: fontFamily.system,
+              fontSize: '36px',
+              fontWeight: 600,
+              color: '#fff',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.2,
+              marginBottom: '12px',
+            }}>
+              Try MemQ on iPhone
+            </h2>
+
+            <p style={{
+              fontFamily: fontFamily.system,
+              fontSize: '16px',
+              color: 'rgba(255,255,255,0.45)',
+              marginBottom: '36px',
+              maxWidth: '400px',
+              margin: '0 auto 36px',
+              lineHeight: 1.6,
+            }}>
+              Turn any AI conversation into lasting knowledge. Free to download.
+            </p>
+
+            {/* App Store badge */}
+            <a
+              href="https://apps.apple.com/app/id6757248312"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                backgroundColor: '#fff',
+                borderRadius: '14px',
+                padding: '12px 22px',
+                textDecoration: 'none',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              {/* Apple logo */}
+              <svg width="22" height="26" viewBox="0 0 24 28" fill="#000">
+                <path d="M20.024 14.61c-.03-3.267 2.664-4.854 2.783-4.93-1.518-2.22-3.878-2.524-4.714-2.556-1.996-.203-3.914 1.178-4.928 1.178-1.012 0-2.56-1.153-4.218-1.12-2.153.034-4.146 1.252-5.252 3.163-2.253 3.904-.575 9.677 1.612 12.842 1.074 1.547 2.345 3.282 4.017 3.22 1.615-.065 2.222-1.038 4.174-1.038 1.954 0 2.516 1.038 4.22 1.003 1.74-.03 2.84-1.572 3.902-3.124 1.24-1.79 1.75-3.534 1.773-3.623-.038-.017-3.39-1.3-3.369-5.015zM16.79 5.178c.886-1.079 1.487-2.567 1.323-4.078-1.28.054-2.845.858-3.762 1.913-.82.945-1.547 2.481-1.355 3.934 1.43.11 2.889-.727 3.794-1.77z"/>
+              </svg>
+              <div style={{ textAlign: 'left' as const }}>
+                <div style={{ fontFamily: fontFamily.system, fontSize: '10px', color: '#000', opacity: 0.6, letterSpacing: '0.04em', marginBottom: '1px' }}>Download on the</div>
+                <div style={{ fontFamily: fontFamily.system, fontSize: '18px', fontWeight: 700, color: '#000', letterSpacing: '-0.01em', lineHeight: 1 }}>App Store</div>
+              </div>
+            </a>
+
+            {/* Meta */}
+            <div style={{ marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+              {['iOS 17+', 'iPhone', 'Free'].map((tag, i, arr) => (
+                <span key={tag} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <span style={{ fontFamily: fontFamily.system, fontSize: '12px', color: 'rgba(255,255,255,0.35)', letterSpacing: '0.02em' }}>{tag}</span>
+                  {i < arr.length - 1 && <span style={{ width: 3, height: 3, borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.2)', display: 'inline-block' }} />}
+                </span>
+              ))}
+            </div>
+
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* 页尾返回作品集 */}
+      <div
+        style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '48px 24px 80px',
+          textAlign: 'center',
+        }}
+      >
+        <Link
+          href="/"
+          style={{
+            ...f,
+            fontSize: '16px',
+            fontWeight: 500,
+            color: 'rgb(0, 0, 0)',
+            textDecoration: 'none',
+            borderBottom: '1px solid rgba(0,0,0,0.25)',
+          }}
+        >
+          ← Back to Work
+        </Link>
+      </div>
 
     </div>
   );
