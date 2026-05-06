@@ -592,14 +592,14 @@ export default function Home() {
             title="Jobnova"
             description="An AI-native career ecosystem for job seekers to discover tailored opportunities and automate applications with hyper-personalized resumes."
             tags={['Product Design', 'AI', 'Career Tech', '0-to-1']}
-            imageUrl="/img/Jobnova_cover.avif"
+            imageUrl="/img/Jobnova.avif"
             href="/projects/jobnova"
           />
           <ShowcaseCard
             title="ConnectNova"
             description="An AI-powered Chrome extension and web dashboard that helps recruiters rank LinkedIn candidates in minutes — not hours."
             tags={['0-to-1', 'Design System', 'Chrome Extension', 'AI SaaS']}
-            imageUrl="/img/connectnova/connectnova.avif"
+            imageUrl="/img/Connectnova.avif"
             imageScale={1}
             imageFit="contain"
             bgImageUrl="/img/connectnova/Dashboard.avif"
@@ -611,7 +611,7 @@ export default function Home() {
             title="MemQ: Smart Quiz & Memory APP"
             description="A streamlined mobile learning experience designed for lifelong learners to capture knowledge and master subjects through custom flashcards and quizzes."
             tags={['Mobile App', 'UX Design', 'Learning']}
-            imageUrl="/img/MemQ/Cover.png"
+            imageUrl="/img/MemQ.avif"
             href="/projects/memq"
           />
           <ShowcaseCard

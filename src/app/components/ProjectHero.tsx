@@ -26,6 +26,10 @@ export type ProjectHeroProps = {
   containerMaxWidth?: number | string;
   /** 折叠状态下默认是否展开（用于初始 SSR 或调试），默认 false */
   defaultExpanded?: boolean;
+  /** 标题区描述下方的可选主按钮文案（如：Explore the live site） */
+  primaryCtaLabel?: string;
+  /** 主按钮跳转地址；与 primaryCtaLabel 搭配使用 */
+  primaryCtaHref?: string;
 };
 
 /**
@@ -44,6 +48,8 @@ export default function ProjectHero({
   descriptionMaxWidth = '645px',
   containerMaxWidth = '1280px',
   defaultExpanded = false,
+  primaryCtaLabel,
+  primaryCtaHref,
 }: ProjectHeroProps) {
   // 项目概览折叠状态
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
@@ -178,6 +184,45 @@ export default function ProjectHero({
           >
             {description}
           </p>
+          {primaryCtaLabel && primaryCtaHref && (
+            <a
+              href={primaryCtaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                ...fontStyle,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                borderRadius: '9999px',
+                backgroundColor: '#010214',
+                color: '#FFFFFF',
+                textDecoration: 'none',
+                fontSize: '15px',
+                lineHeight: '22px',
+                fontWeight: 500,
+                padding: '12px 18px',
+              }}
+            >
+              {primaryCtaLabel}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ flexShrink: 0 }}
+                aria-hidden
+              >
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          )}
         </div>
       </div>
     </div>

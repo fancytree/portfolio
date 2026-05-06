@@ -1858,6 +1858,8 @@ export default function ConnectnovaProjectPage() {
               'Chrome Extension UI · Web Dashboard & AI ranking interface · Token-based design system · Live 0-to-1 MVP',
             ]}
             description="An AI-powered recruiting platform — a Chrome extension that collects LinkedIn candidate profiles, paired with a web dashboard to manage projects, rank candidates instantly, and build a structured pipeline. Designed to replace hours of manual screening with a fast, systematic workflow."
+            primaryCtaLabel="Explore the live site"
+            primaryCtaHref="https://connectnova.ai/"
           />
         </ScrollAnimatedSection>
       </section>
@@ -4972,7 +4974,115 @@ export default function ConnectnovaProjectPage() {
             </div>
 
             {/* ——————————————————————————————————————————————
-                04 · DESIGN DECISIONS — decision / rationale table
+                04 · OUTREACH — ongoing prototype
+                —————————————————————————————————————————————— */}
+            <div style={{ marginBottom: '96px' }}>
+              <div
+                style={{
+                  ...fontStyle,
+                  fontSize: '12px',
+                  lineHeight: '16px',
+                  fontWeight: 500,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'oklch(0.556 0 0)',
+                  marginBottom: '12px',
+                }}
+              >
+                04 · outreach
+              </div>
+              <h2
+                style={{
+                  ...fontStyle,
+                  fontSize: '28px',
+                  lineHeight: '36px',
+                  fontWeight: 500,
+                  color: 'rgb(0, 0, 0)',
+                  marginTop: 0,
+                  marginBottom: '20px',
+                }}
+              >
+                Outreach module (ongoing)
+              </h2>
+              <p
+                style={{
+                  ...fontStyle,
+                  fontSize: '17px',
+                  lineHeight: '30px',
+                  fontWeight: 400,
+                  color: 'rgba(0, 0, 0, 0.82)',
+                  maxWidth: '760px',
+                  marginTop: 0,
+                  marginBottom: '24px',
+                }}
+              >
+                Ongoing exploration for recruiter outreach workflows. This prototype tests messaging loops and follow-up orchestration on top of the current platform architecture.
+              </p>
+              <div style={{ width: '100%', margin: '0 0 48px' }}>
+                <div
+                  style={{
+                    ...fontStyle,
+                    fontSize: '11px',
+                    lineHeight: '16px',
+                    fontWeight: 500,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'oklch(0.556 0 0)',
+                    marginBottom: '8px',
+                  }}
+                >
+                  Outreach workflow
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    borderRadius: '14px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img
+                    src="/img/connectnova/Workflow.avif"
+                    alt="Outreach workflow for ConnectNova"
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  ...fontStyle,
+                  fontSize: '17px',
+                  lineHeight: '30px',
+                  fontWeight: 400,
+                  color: 'rgba(0, 0, 0, 0.82)',
+                  marginTop: 0,
+                  marginBottom: '24px',
+                  maxWidth: '980px',
+                }}
+              >
+                Sequence editing canvas — users can visually build and edit a Sequence by adding nodes and connecting steps. This interactive prototype focuses on component organization and a first-pass interaction experience.
+              </div>
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '980px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  borderRadius: '14px',
+                  overflow: 'hidden',
+                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                  backgroundColor: '#FFFFFF',
+                }}
+              >
+                <iframe
+                  style={{ border: 0, width: '100%', height: '560px', display: 'block' }}
+                  src="https://embed.figma.com/proto/e7hxbnwajw3R2vy3S79kQU/ConnectNova?node-id=379-1216&viewport=238%2C698%2C0.44&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=379%3A1216&page-id=373%3A1205&embed-host=share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
+            {/* ——————————————————————————————————————————————
+                05 · DESIGN DECISIONS — decision / rationale table
                 复用 Problem "Why tools don't solve it" 的表格 DNA
                 —————————————————————————————————————————————— */}
             <div>
@@ -4988,7 +5098,7 @@ export default function ConnectnovaProjectPage() {
                   marginBottom: '12px',
                 }}
               >
-                04 · Design decisions
+                05 · Design decisions
               </div>
               <h2
                 style={{
