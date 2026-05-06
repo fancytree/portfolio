@@ -519,7 +519,7 @@ export default function Home() {
             onClick={() => {
               // 在新标签页打开简历 PDF，浏览器中可直接下载
               if (typeof window !== 'undefined') {
-                window.open('/MeiChai_UX%20designer.pdf', '_blank');
+                window.open('/MeiChai_Product%20designer.pdf', '_blank');
               }
             }}
           >
@@ -973,6 +973,9 @@ export default function Home() {
 
           {/* 作品卡片 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 暂时隐藏：Other Works 中仅保留 Beikemama，其余项目先不渲染 */}
+            {false && (
+              <>
             {/* 1. CrackInterview.AI · 2025 */}
             <a
               href="/projects/crackinterview"
@@ -1338,6 +1341,8 @@ export default function Home() {
                 </svg>
               </span>
             </a>
+              </>
+            )}
 
             {/* 5. Beikemama · 2020 */}
             <a

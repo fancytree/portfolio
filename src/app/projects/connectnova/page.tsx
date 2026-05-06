@@ -3380,7 +3380,7 @@ export default function ConnectnovaProjectPage() {
                   justifyContent: 'center',
                   flexDirection: 'column',
                   gap: '10px',
-                  padding: '28px',
+                  padding: '14px',
                 }}
                 aria-label="Platform overview — Dashboard and Chrome Extension"
               >
@@ -3396,6 +3396,7 @@ export default function ConnectnovaProjectPage() {
                   <div
                     style={{
                       flex: '0 1 auto',
+                      height: '560px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -3407,12 +3408,13 @@ export default function ConnectnovaProjectPage() {
                     <img
                       src="/img/connectnova/Dashboard.avif"
                       alt="ConnectNova dashboard overview"
-                      style={{ width: 'auto', height: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
+                      style={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
                     />
                   </div>
                   <div
                     style={{
                       flex: '0 1 auto',
+                      height: '560px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -3424,7 +3426,7 @@ export default function ConnectnovaProjectPage() {
                     <img
                       src="/img/connectnova/Extension.avif"
                       alt="ConnectNova extension overview"
-                      style={{ width: 'auto', height: 'auto', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
+                      style={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
                     />
                   </div>
                 </div>
