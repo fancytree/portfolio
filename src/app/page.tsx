@@ -600,11 +600,6 @@ export default function Home() {
             description="An AI-powered Chrome extension and web dashboard that helps recruiters rank LinkedIn candidates in minutes — not hours."
             tags={['0-to-1', 'Design System', 'Chrome Extension', 'AI SaaS']}
             imageUrl="/img/Connectnova.avif"
-            imageScale={1}
-            imageFit="contain"
-            bgImageUrl="/img/connectnova/Dashboard.avif"
-            bgBlur={28}
-            bgOverlay="linear-gradient(148deg, rgba(10,22,72,0.55) 0%, rgba(20,48,130,0.4) 50%, rgba(8,18,60,0.5) 100%)"
             href="/projects/connectnova"
           />
           <ShowcaseCard
