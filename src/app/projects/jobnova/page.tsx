@@ -347,6 +347,30 @@ export default function JobnovaProjectPage() {
             ]}
             description="An AI-native career ecosystem designed for modern job seekers to instantly discover tailored opportunities and automate the end-to-end application process with hyper-personalized resumes."
           />
+
+          {/* 实现现状说明 banner */}
+          <div style={{ maxWidth: '1280px', margin: '24px auto 0' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '10px 16px',
+              borderRadius: '8px',
+              background: 'rgba(234, 179, 8, 0.08)',
+              border: '1px solid rgba(234, 179, 8, 0.28)',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(161,120,0,0.9)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span style={{ fontFamily: 'var(--font-sans, sans-serif)', fontSize: '13px', lineHeight: '20px', fontWeight: 500, color: 'rgba(120,88,0,0.9)' }}>
+              UX structure and workflows shipped as designed. Visual design system is pending implementation — the engineering team is focused on feature development.
+            </span>
+          </div>
+          </div>
         </ScrollAnimatedSection>
       </section>
 
@@ -1665,7 +1689,7 @@ export default function JobnovaProjectPage() {
                 }}
               >
                 <Image
-                  src="/img/Jobnova_cover.avif"
+                  src="/img/Jobnova.avif"
                   alt="Jobnova result mockup"
                   width={640}
                   height={480}
@@ -1768,22 +1792,11 @@ export default function JobnovaProjectPage() {
                     lineHeight: '24px',
                     fontWeight: 500,
                     color: 'oklch(0.4 0 0)',
-                    marginBottom: '20px',
+                    marginBottom: '0',
                   }}
                 >
-                  Live at jobnova.ai · Beta program · Metrics from moderated sessions, in-product survey (n=47), and usage analytics
+                  Metrics from moderated sessions and in-product survey (n=47) · Engineering implementation ongoing
                 </p>
-
-                <Button
-                  onClick={() => window.open('https://jobnova.ai/', '_blank', 'noopener,noreferrer')}
-                  style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                >
-                  Explore the live site
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </Button>
               </div>
             </div>
 
@@ -1805,24 +1818,49 @@ export default function JobnovaProjectPage() {
         <ScrollAnimatedSection>
           <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
             <h2 style={{ ...headingLevel2Style, marginBottom: '28px' }}>Reflection</h2>
-            {/* 三卡复盘，与 Next Steps / Key Pain Points 视觉一致 */}
+
+            {/* 实现现状说明 */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '14px',
+                padding: '18px 22px',
+                marginBottom: '28px',
+                borderRadius: '10px',
+                background: 'rgba(0,0,0,0.03)',
+                border: '1px solid rgba(0,0,0,0.08)',
+                maxWidth: '760px',
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '2px' }}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <p style={{ ...fontStyle, fontSize: '14px', lineHeight: '22px', color: 'rgba(0,0,0,0.6)', margin: 0 }}>
+                The UX structure, information architecture, and core workflows shipped as designed and are live in production. Visual design polish is pending — the engineering team is currently prioritizing feature development.
+              </p>
+            </div>
+
+            {/* 三卡复盘 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {(
                 [
                   {
                     title: 'What worked well',
                     body:
-                      'Pairing visible match scores with user-controlled auto-apply thresholds created a believable mental model: people felt the system was working for them, not instead of them. Anchoring research quotes to specific UI decisions in the case study made the narrative easier to defend in critique.',
+                      'Applying a mental model of "agent + supervisor" — where Nova acts but the user retains visible control — mapped directly to how people described trust in interviews. Match scores and thresholds weren\'t features; they were the trust surface.',
                   },
                   {
                     title: "What I'd do differently",
                     body:
-                      'I would run earlier unmoderated tests on notification density and copy variants; we optimized the "Golden Hour" pattern late, and earlier signal on fatigue would have reduced iteration churn on alert styling.',
+                      'Advocate harder for visual implementation early. Design debt compounds the same way technical debt does — once engineering velocity shifts to new features, the gap rarely closes on its own.',
                   },
                   {
                     title: 'What I learned',
                     body:
-                      'High-volume automation products need design languages for trust and reversibility as much as for efficiency—small transparency affordances (queues, scores, pause controls) disproportionately affect adoption when stakes are professional reputation.',
+                      'In automation that touches professional identity, the UX principle of perceived control matters more than actual control. Users don\'t need to configure everything — they need to feel like they could.',
                   },
                 ] as const
               ).map((item) => (
@@ -1888,7 +1926,7 @@ export default function JobnovaProjectPage() {
           </h2>
           <div className="flex flex-row" style={{ gap: '24px', width: '100%', flexWrap: 'wrap' }}>
 
-                  {/* Card 1: Deeper AI Agent integration */}
+                  {/* Card 1: Ship the core experience */}
                   <div
                     style={{
                       backgroundColor: '#FFFFFF',
@@ -1912,23 +1950,54 @@ export default function JobnovaProjectPage() {
                       }}
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 8V4H8"></path>
-                        <rect x="2" y="8" width="20" height="12" rx="2"></rect>
-                        <path d="M6 16v2"></path>
-                        <path d="M10 16v2"></path>
-                        <path d="M14 16v2"></path>
-                        <path d="M18 16v2"></path>
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                      </svg>
+                    </div>
+                    <h4 style={{ ...fontStyle, fontSize: '18px', lineHeight: '24px', fontWeight: 600, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
+                      Visual design implementation
+                    </h4>
+                    <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
+                      UX and structure are live — the immediate next step is closing the visual gap: applying the design system, typography, and component styling to match the intended experience.
+                    </p>
+                  </div>
+
+                  {/* Card 2: Validate key design hypotheses */}
+                  <div
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(0, 0, 0, 0.1)',
+                      borderRadius: '12px',
+                      padding: '24px',
+                      flex: 1,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                        border: '1px solid rgba(0, 0, 0, 0.15)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: '40px',
+                      }}
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                       </svg>
                     </div>
                     <h4 style={{ ...fontStyle, fontSize: '18px', lineHeight: '24px', fontWeight: 600, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
                       Deeper AI Agent integration
                     </h4>
                     <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                      Tighten integration with the Nova AI agent across the product: smarter job matching, automated referral outreach, and interview-prep summaries so users get end-to-end support from discovery to offer.
+                      Tighten Nova AI across the full journey: smarter match explanations, automated referral outreach, and interview-prep summaries — so users get end-to-end support from discovery to offer.
                     </p>
                   </div>
 
-                  {/* Card 2: Automated application data visualization */}
+                  {/* Card 3: Expand once the base is validated */}
                   <div
                     style={{
                       backgroundColor: '#FFFFFF',
@@ -1952,52 +2021,15 @@ export default function JobnovaProjectPage() {
                       }}
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                      </svg>
-                    </div>
-                    <h4 style={{ ...fontStyle, fontSize: '18px', lineHeight: '24px', fontWeight: 600, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
-                      Automated application data visualization
-                    </h4>
-                    <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                      Improve dashboards and tracking for all automated applications: clear status by stage, response rates, and funnel views so users can see exactly where each application stands and optimize their strategy.
-                    </p>
-                  </div>
-
-                  {/* Card 3: Interview & follow-up pipeline */}
-                  <div
-                    style={{
-                      backgroundColor: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.1)',
-                      borderRadius: '12px',
-                      padding: '24px',
-                      flex: 1,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: '48px',
-                        height: '48px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                        border: '1px solid rgba(0, 0, 0, 0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '40px',
-                      }}
-                    >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M9 11l3 3L22 4"></path>
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
                       </svg>
                     </div>
                     <h4 style={{ ...fontStyle, fontSize: '18px', lineHeight: '24px', fontWeight: 600, color: 'rgb(0, 0, 0)', marginBottom: '8px' }}>
                       Interview &amp; follow-up pipeline
                     </h4>
                     <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                      A unified view of interview invites, next steps, and recruiter touchpoints so users can track each application stage and never miss a follow-up or deadline.
+                      A unified view of interview invites, next steps, and recruiter touchpoints — so users can track every application stage and never miss a follow-up or deadline.
                     </p>
                   </div>
                 </div>
