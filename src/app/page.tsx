@@ -589,18 +589,18 @@ export default function Home() {
         {/* Showcase 卡片区域：统一两列网格 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 gap-y-12">
           <ShowcaseCard
-            title="Jobnova"
-            description="An AI-native career ecosystem for job seekers to discover tailored opportunities and automate applications with hyper-personalized resumes."
-            tags={['Product Design', 'AI', 'Career Tech', '0-to-1']}
-            imageUrl="/img/Jobnova.avif"
-            href="/projects/jobnova"
-          />
-          <ShowcaseCard
             title="ConnectNova"
             description="An AI-powered Chrome extension and web dashboard that helps recruiters rank LinkedIn candidates in minutes — not hours."
             tags={['0-to-1', 'Design System', 'Chrome Extension', 'AI SaaS']}
             imageUrl="/img/Connectnova.avif"
             href="/projects/connectnova"
+          />
+          <ShowcaseCard
+            title="Jobnova"
+            description="An AI-native career ecosystem for job seekers to discover tailored opportunities and automate applications with hyper-personalized resumes."
+            tags={['Product Design', 'AI', 'Career Tech', '0-to-1']}
+            imageUrl="/img/Jobnova.avif"
+            href="/projects/jobnova"
           />
           <ShowcaseCard
             title="MemQ: Smart Quiz & Memory APP"
