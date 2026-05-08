@@ -1743,6 +1743,8 @@ export default function ConnectnovaProjectPage() {
   const [mockMaxCount, setMockMaxCount] = useState(defaultMockMaxCount);
   const [mockCountCustomOpen, setMockCountCustomOpen] = useState(false);
   const [mockCountCustomDraft, setMockCountCustomDraft] = useState(String(defaultMockMaxCount));
+  // Overview 模块：Dashboard 视图切换（MVP / Outreach）
+  const [overviewDashboardMode, setOverviewDashboardMode] = useState<'ranking' | 'outreach'>('ranking');
   const [isDashboardRedirecting, setIsDashboardRedirecting] = useState(false);
   const [removedMockCandidates, setRemovedMockCandidates] = useState<string[]>([]);
   const demoTargetCount =
@@ -1864,338 +1866,13 @@ export default function ConnectnovaProjectPage() {
         </ScrollAnimatedSection>
       </section>
 
-      {/* Problem Section —— 编辑体叙事：日常现实 + 现有工具为何不解决 + 设计挑战。
-          用浅灰 #FAFAFA 与上（Hero，白）、下（UX research，白）区分节奏；
-          内部三个小节用"编号眉题 + H2"的杂志排版节奏，避免与 UX research 的标题层级撞车。 */}
-      <section
-        className="w-screen"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-            {/* 分区一级标题 */}
-            <h1 style={headingLevel1Style}>Problem</h1>
-
-            {/* ——————————————————————————————————————————————
-                SUBSECTION 1 · The recruiter's daily reality
-                两段叙事 + 中间一个视觉锚定的 pull-stat "3–4 hrs / day"
-                —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '64px' }}>
-              {/* 眉题：小号字母间距大 */}
-              <div
-                style={{
-                  ...fontStyle,
-                  fontSize: '12px',
-                  lineHeight: '16px',
-                  fontWeight: 500,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: 'oklch(0.556 0 0)',
-                  marginBottom: '12px',
-                }}
-              >
-                01 · Field observation
-              </div>
-              <h2
-                style={{
-                  ...fontStyle,
-                  fontSize: '28px',
-                  lineHeight: '36px',
-                  fontWeight: 500,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '20px',
-                }}
-              >
-                The recruiter&apos;s daily reality
-              </h2>
-
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '17px',
-                  lineHeight: '30px',
-                  fontWeight: 400,
-                  color: 'rgba(0, 0, 0, 0.82)',
-                  maxWidth: '760px',
-                  marginBottom: '32px',
-                }}
-              >
-                A typical sourcing session on LinkedIn looks like this: search for <em style={{ fontStyle: 'italic', color: 'rgb(0, 0, 0)' }}>&quot;Senior Product Manager, San Francisco,&quot;</em> get hundreds of results, then open each profile one by one — reading, judging, copying notes into a spreadsheet. Repeat for every role, every day.
-              </p>
-
-              {/* Pull stat —— 数据锚：左边大数字，右边一句出处 */}
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'auto 1fr',
-                  alignItems: 'center',
-                  columnGap: '32px',
-                  padding: '28px 0',
-                  borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-                  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-                  maxWidth: '760px',
-                  marginBottom: '32px',
-                }}
-              >
-                <div
-                  style={{
-                    ...fontStyle,
-                    fontSize: 'clamp(48px, 7vw, 72px)',
-                    lineHeight: '1',
-                    fontWeight: 300,
-                    color: 'rgb(0, 0, 0)',
-                    letterSpacing: '-0.02em',
-                    fontVariantNumeric: 'tabular-nums',
-                  }}
-                >
-                  3–4<span style={{ fontSize: '0.45em', marginLeft: '6px', fontWeight: 400, letterSpacing: '0' }}>hrs / day</span>
-                </div>
-                <div
-                  style={{
-                    ...fontStyle,
-                    fontSize: '14px',
-                    lineHeight: '22px',
-                    fontWeight: 400,
-                    color: 'oklch(0.556 0 0)',
-                    borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
-                    paddingLeft: '24px',
-                  }}
-                >
-                  Spent on manual sourcing alone, estimated by our market partner — a seasoned headhunter who walked us through his daily workflow.
-                </div>
-              </div>
-
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '17px',
-                  lineHeight: '30px',
-                  fontWeight: 400,
-                  color: 'rgba(0, 0, 0, 0.82)',
-                  maxWidth: '760px',
-                  margin: 0,
-                }}
-              >
-                The frustration wasn&apos;t just the time — it was the lack of structure. There was no way to systematically compare candidates, no record of who had been reviewed, and no connection between this session and the next one for the same role.
-              </p>
-            </div>
-
-            {/* ——————————————————————————————————————————————
-                SUBSECTION 2 · Why existing tools don't solve it
-                3 行对比表 + 以左侧 accent bar 收尾的 gap 陈述
-                —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '64px' }}>
-              <div
-                style={{
-                  ...fontStyle,
-                  fontSize: '12px',
-                  lineHeight: '16px',
-                  fontWeight: 500,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: 'oklch(0.556 0 0)',
-                  marginBottom: '12px',
-                }}
-              >
-                02 · Tooling audit
-              </div>
-              <h2
-                style={{
-                  ...fontStyle,
-                  fontSize: '28px',
-                  lineHeight: '36px',
-                  fontWeight: 500,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                Why existing tools don&apos;t solve it
-              </h2>
-
-              {/* 对比表：单卡容器 + 每行独立 2 列网格，左工具 / 右原因，行间细分隔线 */}
-              <div
-                style={{
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  borderRadius: '14px',
-                  background: '#FFFFFF',
-                  overflow: 'hidden',
-                  marginBottom: '32px',
-                }}
-              >
-                {[
-                  {
-                    tool: "LinkedIn's native search",
-                    reason: 'Ranks by keyword match and premium status — not by fit for a specific role.',
-                  },
-                  {
-                    tool: 'ATS platforms',
-                    reason: "Enter the picture after sourcing is done; they don't touch the screening phase.",
-                  },
-                  {
-                    tool: 'Spreadsheets',
-                    reason: 'Capture data but add manual overhead — and still require someone to do the ranking.',
-                  },
-                ].map(({ tool, reason }, idx, arr) => (
-                  <div
-                    key={tool}
-                    className="grid grid-cols-1 md:grid-cols-[minmax(200px,280px)_1fr]"
-                    style={{
-                      columnGap: '32px',
-                      rowGap: '4px',
-                      padding: '22px 24px',
-                      borderBottom: idx < arr.length - 1 ? '1px solid rgba(0, 0, 0, 0.06)' : 'none',
-                    }}
-                  >
-                    <div
-                      style={{
-                        ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '26px',
-                        fontWeight: 500,
-                        color: 'rgb(0, 0, 0)',
-                      }}
-                    >
-                      {tool}
-                    </div>
-                    <div
-                      style={{
-                        ...fontStyle,
-                        fontSize: '16px',
-                        lineHeight: '26px',
-                        fontWeight: 400,
-                        color: 'rgba(0, 0, 0, 0.72)',
-                      }}
-                    >
-                      {reason}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Gap 陈述：以 2px 左侧 accent 条 + italic 带出，视觉上像 pull quote */}
-              <blockquote
-                style={{
-                  margin: 0,
-                  borderLeft: '2px solid rgb(0, 0, 0)',
-                  paddingLeft: '20px',
-                  maxWidth: '760px',
-                }}
-              >
-                <p
-                  style={{
-                    ...fontStyle,
-                    fontSize: '19px',
-                    lineHeight: '30px',
-                    fontWeight: 400,
-                    fontStyle: 'italic',
-                    color: 'rgb(0, 0, 0)',
-                    margin: 0,
-                  }}
-                >
-                  The gap was clear: nothing existed between <span style={{ fontStyle: 'normal', fontWeight: 500 }}>&quot;run a LinkedIn search&quot;</span> and <span style={{ fontStyle: 'normal', fontWeight: 500 }}>&quot;have a ranked, manageable shortlist.&quot;</span>
-                </p>
-              </blockquote>
-            </div>
-
-            {/* ——————————————————————————————————————————————
-                SUBSECTION 3 · The design challenge
-                深色反白卡片 + 3 颗约束 pill，作为整个 Problem 分区的收尾
-                —————————————————————————————————————————————— */}
-            <div>
-              <div
-                style={{
-                  ...fontStyle,
-                  fontSize: '12px',
-                  lineHeight: '16px',
-                  fontWeight: 500,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: 'oklch(0.556 0 0)',
-                  marginBottom: '12px',
-                }}
-              >
-                03 · Brief
-              </div>
-              <h2
-                style={{
-                  ...fontStyle,
-                  fontSize: '28px',
-                  lineHeight: '36px',
-                  fontWeight: 500,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                The design challenge
-              </h2>
-
-              <div
-                style={{
-                  background: 'rgb(0, 0, 0)',
-                  color: '#FFFFFF',
-                  borderRadius: '16px',
-                  padding: '36px 40px',
-                  maxWidth: '900px',
-                }}
-              >
-                <p
-                  style={{
-                    ...fontStyle,
-                    fontSize: '20px',
-                    lineHeight: '32px',
-                    fontWeight: 300,
-                    color: '#FFFFFF',
-                    marginTop: 0,
-                    marginBottom: '28px',
-                  }}
-                >
-                  Build a tool <strong style={{ fontWeight: 500, color: '#FFFFFF' }}>fast enough to ship in 6 weeks</strong>, <strong style={{ fontWeight: 500, color: '#FFFFFF' }}>simple enough for busy recruiters to adopt without training</strong> — and <strong style={{ fontWeight: 500, color: '#FFFFFF' }}>structured enough to grow into a full candidate management platform</strong>, not just a one-trick ranking widget.
-                </p>
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '10px',
-                  }}
-                >
-                  {['6-week shipping window', 'Zero-training adoption', 'Platform, not widget'].map((label) => (
-                    <span
-                      key={label}
-                      style={{
-                        ...fontStyle,
-                        fontSize: '13px',
-                        lineHeight: '20px',
-                        fontWeight: 500,
-                        color: '#FFFFFF',
-                        padding: '6px 14px',
-                        borderRadius: '999px',
-                        border: '1px solid rgba(255, 255, 255, 0.24)',
-                        background: 'rgba(255, 255, 255, 0.06)',
-                      }}
-                    >
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
-
       {/* Process Section —— 四步线性叙事：Discovery → Product decision → IA → Design system。
           视觉策略：
-          · 白底，与上方 Problem（#FAFAFA）形成节奏对比
+          · 白底，紧接 Hero 展开方法论，再由 Problem 进入背景叙事
           · 两栏栅格（desktop 160px 编号列 | 1fr 叙事列），移动端堆叠
           · 大号 thin 数字 01/02/03/04 作为视觉脊梁，呼应 Problem 里的 "3–4 hrs/day" 排印节奏
           · Step 3 用纯 CSS "三层 vs 两层" IA 对比图作为分区 centerpiece，其它三步配统一样式的占位图
-          · 整块顶部一条 hairline，与 Problem 作为"分区切换"的信号 */}
+          · 整块顶部一条 hairline，作为 Hero 与正文内容切换的信号 */}
       <section
         className="w-screen"
         style={{
@@ -2209,7 +1886,7 @@ export default function ConnectnovaProjectPage() {
         <ScrollAnimatedSection>
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             {/* 分区一级标题 + 导语 */}
-            <h1 style={headingLevel1Style}>Process</h1>
+            <h1 style={headingLevel1Style}>Design Process</h1>
             <p
               style={{
                 ...fontStyle,
@@ -2221,15 +1898,335 @@ export default function ConnectnovaProjectPage() {
                 marginBottom: '72px',
               }}
             >
-              Four decisions that shaped ConnectNova — from the first conversation with our market partner, through the architectural calls that turned a ranking widget into a platform.
+              As the sole designer and frontend engineer on a two-person startup team, I run a compressed loop where prototyping happens in code, not Figma — eliminating the handoff entirely and letting the backend ship as soon as requirements are clear.
             </p>
+
+            {/* 六阶段流程总览 */}
+            <div
+              className="grid grid-cols-1 md:grid-cols-3"
+              style={{
+                gap: '16px',
+                marginBottom: '96px',
+              }}
+            >
+              {[
+                {
+                  phase: 'Research',
+                  title: 'Active research + live feedback',
+                  body: 'Conducted user research and continuously collected real feedback from shipped V0 users — design decisions are grounded in actual usage, not assumptions.',
+                  output: 'User insights',
+                },
+                {
+                  phase: 'Prototype',
+                  title: 'Build in code, not Figma',
+                  body: 'Rapidly implemented functional frontend via vibe coding. The output is real, runnable code — not a static mockup — so there is no translation loss when handing off to the backend.',
+                  output: 'Functional frontend',
+                },
+                {
+                  phase: 'Validate',
+                  title: 'Test with domain expertise',
+                  body: 'Internal testing with the full team, including a market partner who works in the recruiting industry — validation is grounded in real domain knowledge.',
+                  output: 'Validated flows',
+                },
+                {
+                  phase: 'Ship',
+                  title: 'Backend hooks in, MVP goes live',
+                  body: 'The backend engineer connects APIs directly to the already-built frontend. Speed is possible because the frontend is real code from day one.',
+                  output: 'Live product',
+                },
+                {
+                  phase: 'Polish',
+                  title: 'Design after shipping, not before',
+                  body: 'Used Figma MCP to generate a Figma file from the live codebase, then systematically refined the UI — design decisions are grounded in what actually shipped.',
+                  output: 'Refined UI system',
+                },
+                {
+                  phase: 'Iterate',
+                  title: 'Feedback feeds the next cycle',
+                  body: 'Collect real user feedback, make targeted adjustments, and rapidly prototype the next version — the loop restarts from a position of live data.',
+                  output: 'Next version brief',
+                },
+              ].map((item, i) => (
+                <div
+                  key={item.phase}
+                  style={{
+                    border: '1px solid rgba(0, 0, 0, 0.08)',
+                    borderRadius: '16px',
+                    background: i === 0 ? '#000000' : '#FFFFFF',
+                    color: i === 0 ? '#FFFFFF' : 'rgb(0, 0, 0)',
+                    padding: '24px',
+                    minHeight: '240px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: '11px',
+                      lineHeight: '16px',
+                      fontWeight: 500,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: i === 0 ? 'rgba(255,255,255,0.58)' : 'oklch(0.556 0 0)',
+                      marginBottom: '18px',
+                    }}
+                  >
+                    {String(i + 1).padStart(2, '0')} · {item.phase}
+                  </div>
+                  <h2
+                    style={{
+                      ...fontStyle,
+                      fontSize: '18px',
+                      lineHeight: '26px',
+                      fontWeight: 500,
+                      color: i === 0 ? '#FFFFFF' : 'rgb(0, 0, 0)',
+                      marginTop: 0,
+                      marginBottom: '12px',
+                    }}
+                  >
+                    {item.title}
+                  </h2>
+                  <p
+                    style={{
+                      ...fontStyle,
+                      fontSize: '14px',
+                      lineHeight: '22px',
+                      fontWeight: 400,
+                      color: i === 0 ? 'rgba(255,255,255,0.72)' : 'rgba(0, 0, 0, 0.66)',
+                      margin: 0,
+                    }}
+                  >
+                    {item.body}
+                  </p>
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: '12px',
+                      lineHeight: '18px',
+                      fontWeight: 500,
+                      color: i === 0 ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.35)',
+                      marginTop: 'auto',
+                      paddingTop: '24px',
+                    }}
+                  >
+                    Output · {item.output}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Problem Section —— 编辑体叙事：日常现实 + 现有工具为何不解决 + 设计挑战。
+                用浅灰 #FAFAFA 与上（Hero，白）、下（UX research，白）区分节奏；
+                内部三个小节用"编号眉题 + H2"的杂志排版节奏，避免与 UX research 的标题层级撞车。 */}
+            <section
+              className="w-screen"
+              style={{
+                backgroundColor: '#FAFAFA',
+                marginLeft: 'calc(-50vw + 50%)',
+                marginRight: 'calc(-50vw + 50%)',
+                paddingTop: '80px',
+                paddingBottom: '80px',
+              }}
+            >
+              <ScrollAnimatedSection>
+                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+                  {/* 分区一级标题 */}
+                  <h1 style={headingLevel1Style}>Problem</h1>
+
+                  {/* ——————————————————————————————————————————————
+                      SUBSECTION 00 · Who it's for — Personas
+                      —————————————————————————————————————————————— */}
+                  <div style={{ marginBottom: '80px' }}>
+                    <div style={{ ...fontStyle, fontSize: '12px', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'oklch(0.556 0 0)', marginBottom: '12px' }}>
+                      00 · Who it&apos;s for
+                    </div>
+                    <h2 style={{ ...fontStyle, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: 'rgb(0,0,0)', marginBottom: '12px' }}>
+                      Two users, one shared problem
+                    </h2>
+                    <p style={{ ...fontStyle, fontSize: '17px', lineHeight: '28px', fontWeight: 400, color: 'rgba(0,0,0,0.65)', maxWidth: '680px', marginBottom: '36px' }}>
+                      ConnectNova is built for anyone who finds people on LinkedIn — but two user types define the core problem space.
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '16px' }}>
+
+                      {/* Persona 01 — Alex Chen · Headhunter (Validated) */}
+                      <div style={{ background: '#000', borderRadius: '16px', padding: '32px', display: 'flex', flexDirection: 'column' as const }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                          <span style={{ ...fontStyle, fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.45)' }}>01 · Headhunter</span>
+                          <span style={{ ...fontStyle, fontSize: '11px', fontWeight: 500, color: '#fff', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)', borderRadius: '999px', padding: '3px 10px' }}>Validated User</span>
+                        </div>
+
+                        <div style={{ ...fontStyle, fontSize: '22px', fontWeight: 600, color: '#fff', letterSpacing: '-0.01em', marginBottom: '3px' }}>Alex Chen</div>
+                        <div style={{ ...fontStyle, fontSize: '13px', color: 'rgba(255,255,255,0.45)', marginBottom: '24px' }}>Independent Headhunter · Technical &amp; Management Roles</div>
+
+                        <blockquote style={{ margin: '0 0 24px', padding: '16px 18px', background: 'rgba(255,255,255,0.06)', borderRadius: '10px', borderLeft: '2px solid rgba(255,255,255,0.25)' }}>
+                          <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '24px', fontStyle: 'italic', color: 'rgba(255,255,255,0.85)', margin: 0 }}>
+                            &ldquo;I can get 500 results from a LinkedIn search. The problem is I still have to open every single one.&rdquo;
+                          </p>
+                        </blockquote>
+
+                        <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '10px', marginBottom: '28px' }}>
+                          {[
+                            'Reviews ~500 profiles manually per search to build a shortlist',
+                            'LinkedIn Recruiter Lite costs $170/month — but ranking who\'s worth contacting still relies on human judgment for every profile',
+                            'Connection requests and follow-ups sent one by one — no way to scale outreach',
+                          ].map((pt, i) => (
+                            <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                              <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.35)', flexShrink: 0, marginTop: '9px', display: 'inline-block' }} />
+                              <span style={{ ...fontStyle, fontSize: '14px', lineHeight: '22px', color: 'rgba(255,255,255,0.68)' }}>{pt}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                          <div style={{ ...fontStyle, fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.35)', marginBottom: '10px' }}>Current tools</div>
+                          <span style={{ ...fontStyle, fontSize: '12px', fontWeight: 500, color: 'rgba(255,255,255,0.65)', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.13)', borderRadius: '6px', padding: '4px 10px' }}>LinkedIn Recruiter Lite</span>
+                        </div>
+                      </div>
+
+                      {/* Persona 02 — Jordan Park · Sales/BD (Target) */}
+                      <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', padding: '32px', display: 'flex', flexDirection: 'column' as const }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                          <span style={{ ...fontStyle, fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', textTransform: 'uppercase' as const, color: 'oklch(0.556 0 0)' }}>02 · Sales &amp; BD</span>
+                          <span style={{ ...fontStyle, fontSize: '11px', fontWeight: 500, color: 'oklch(0.556 0 0)', background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '999px', padding: '3px 10px' }}>Target User · Not yet validated</span>
+                        </div>
+
+                        <div style={{ ...fontStyle, fontSize: '22px', fontWeight: 600, color: '#000', letterSpacing: '-0.01em', marginBottom: '3px' }}>Jordan Park</div>
+                        <div style={{ ...fontStyle, fontSize: '13px', color: 'oklch(0.556 0 0)', marginBottom: '24px' }}>Account Executive · B2B Sales &amp; Business Development</div>
+
+                        <blockquote style={{ margin: '0 0 24px', padding: '16px 18px', background: 'rgba(0,0,0,0.03)', borderRadius: '10px', borderLeft: '2px solid rgba(0,0,0,0.18)' }}>
+                          <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '24px', fontStyle: 'italic', color: 'rgba(0,0,0,0.82)', margin: 0 }}>
+                            &ldquo;Sales Navigator tells me who&apos;s out there. It doesn&apos;t tell me who&apos;s worth my time.&rdquo;
+                          </p>
+                        </blockquote>
+
+                        <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '10px', marginBottom: '28px' }}>
+                          {[
+                            'Sales Navigator gives a list — but ranking by ICP criteria is still manual evaluation for every profile',
+                            'Dripify automates outreach sequences but requires a pre-curated list; it can\'t tell you who to contact',
+                            'Two-tool workflow (Sales Nav → manual curation → Dripify) creates a gap that costs time and quality',
+                          ].map((pt, i) => (
+                            <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                              <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'rgba(0,0,0,0.25)', flexShrink: 0, marginTop: '9px', display: 'inline-block' }} />
+                              <span style={{ ...fontStyle, fontSize: '14px', lineHeight: '22px', color: 'rgba(0,0,0,0.68)' }}>{pt}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+                          <div style={{ ...fontStyle, fontSize: '11px', letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '10px' }}>Current tools</div>
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' as const }}>
+                            {['LinkedIn Sales Navigator', 'Dripify'].map((tool) => (
+                              <span key={tool} style={{ ...fontStyle, fontSize: '12px', fontWeight: 500, color: 'rgba(0,0,0,0.6)', background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '6px', padding: '4px 10px' }}>{tool}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {/* ——————————————————————————————————————————————
+                      SUBSECTION 01 · Field observation
+                      —————————————————————————————————————————————— */}
+                  <div style={{ marginBottom: '64px' }}>
+                    <div style={{ ...fontStyle, fontSize: '12px', lineHeight: '16px', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'oklch(0.556 0 0)', marginBottom: '12px' }}>
+                      01 · Field observation
+                    </div>
+                    <h2 style={{ ...fontStyle, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: 'rgb(0,0,0)', marginBottom: '20px' }}>
+                      The same friction, two different contexts
+                    </h2>
+                    <p style={{ ...fontStyle, fontSize: '17px', lineHeight: '30px', fontWeight: 400, color: 'rgba(0,0,0,0.82)', maxWidth: '760px', marginBottom: '32px' }}>
+                      Whether searching for a candidate or a prospect, the workflow is structurally identical: run a LinkedIn search, get hundreds of results, then open each profile one by one — reading, judging, copying notes into a spreadsheet. Repeat for every role or segment, every day.
+                    </p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', columnGap: '32px', padding: '28px 0', borderTop: '1px solid rgba(0,0,0,0.12)', borderBottom: '1px solid rgba(0,0,0,0.12)', maxWidth: '760px', marginBottom: '32px' }}>
+                      <div style={{ ...fontStyle, fontSize: 'clamp(48px, 7vw, 72px)', lineHeight: '1', fontWeight: 300, color: 'rgb(0,0,0)', letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>
+                        500<span style={{ fontSize: '0.35em', marginLeft: '6px', fontWeight: 400, letterSpacing: '0' }}>profiles / search</span>
+                      </div>
+                      <div style={{ ...fontStyle, fontSize: '14px', lineHeight: '22px', fontWeight: 400, color: 'oklch(0.556 0 0)', borderLeft: '1px solid rgba(0,0,0,0.12)', paddingLeft: '24px' }}>
+                        Average LinkedIn search results our market partner — a seasoned headhunter — has to manually review per role. Sales reps face the same volume when prospecting by ICP.
+                      </div>
+                    </div>
+
+                    <p style={{ ...fontStyle, fontSize: '17px', lineHeight: '30px', fontWeight: 400, color: 'rgba(0,0,0,0.82)', maxWidth: '760px', margin: 0 }}>
+                      The frustration wasn&apos;t just the time — it was the lack of structure. No way to systematically compare people, no record of who had been reviewed, and no connection between this session and the next one for the same goal.
+                    </p>
+                  </div>
+
+                  {/* ——————————————————————————————————————————————
+                      SUBSECTION 02 · Tooling audit
+                      —————————————————————————————————————————————— */}
+                  <div style={{ marginBottom: '64px' }}>
+                    <div style={{ ...fontStyle, fontSize: '12px', lineHeight: '16px', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'oklch(0.556 0 0)', marginBottom: '12px' }}>
+                      02 · Tooling audit
+                    </div>
+                    <h2 style={{ ...fontStyle, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: 'rgb(0,0,0)', marginBottom: '24px' }}>
+                      Why existing tools don&apos;t solve it
+                    </h2>
+
+                    <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#FFFFFF', overflow: 'hidden', marginBottom: '32px' }}>
+                      {[
+                        { tool: 'LinkedIn Recruiter Lite', user: 'Alex', reason: 'Provides search access and InMail credits — but deciding who\'s the best fit is still a manual call, profile by profile.' },
+                        { tool: 'LinkedIn Sales Navigator', user: 'Jordan', reason: 'Advanced search and company data — but evaluating ICP fit for each result remains entirely manual.' },
+                        { tool: 'Dripify', user: 'Jordan', reason: 'Automates outreach sequences — but requires a pre-curated list. It can\'t tell you who\'s worth contacting.' },
+                        { tool: "LinkedIn's native search", user: null, reason: 'Ranks by keyword match and premium status — not by fit for a specific role or ICP.' },
+                        { tool: 'Spreadsheets', user: null, reason: 'Capture data but add manual overhead — and still require someone to do the ranking.' },
+                      ].map(({ tool, user, reason }, idx, arr) => (
+                        <div key={tool} className="grid grid-cols-1 md:grid-cols-[minmax(220px,300px)_1fr]" style={{ columnGap: '32px', rowGap: '4px', padding: '20px 24px', borderBottom: idx < arr.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none', alignItems: 'baseline' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ ...fontStyle, fontSize: '15px', lineHeight: '26px', fontWeight: 500, color: 'rgb(0,0,0)' }}>{tool}</span>
+                            {user && (
+                              <span style={{ ...fontStyle, fontSize: '10px', fontWeight: 500, color: 'oklch(0.556 0 0)', background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '4px', padding: '1px 6px', letterSpacing: '0.04em' }}>{user}</span>
+                            )}
+                          </div>
+                          <div style={{ ...fontStyle, fontSize: '15px', lineHeight: '26px', fontWeight: 400, color: 'rgba(0,0,0,0.68)' }}>{reason}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <blockquote style={{ margin: 0, borderLeft: '2px solid rgb(0,0,0)', paddingLeft: '20px', maxWidth: '760px' }}>
+                      <p style={{ ...fontStyle, fontSize: '19px', lineHeight: '30px', fontWeight: 400, fontStyle: 'italic', color: 'rgb(0,0,0)', margin: 0 }}>
+                        The gap was the same for both users: nothing existed between <span style={{ fontStyle: 'normal', fontWeight: 500 }}>&quot;run a LinkedIn search&quot;</span> and <span style={{ fontStyle: 'normal', fontWeight: 500 }}>&quot;have a ranked, actionable shortlist — ready to reach.&quot;</span>
+                      </p>
+                    </blockquote>
+                  </div>
+
+                  {/* ——————————————————————————————————————————————
+                      SUBSECTION 03 · The design challenge
+                      —————————————————————————————————————————————— */}
+                  <div>
+                    <div style={{ ...fontStyle, fontSize: '12px', lineHeight: '16px', fontWeight: 500, letterSpacing: '0.12em', textTransform: 'uppercase' as const, color: 'oklch(0.556 0 0)', marginBottom: '12px' }}>
+                      03 · Brief
+                    </div>
+                    <h2 style={{ ...fontStyle, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: 'rgb(0,0,0)', marginBottom: '24px' }}>
+                      The design challenge
+                    </h2>
+
+                    <div style={{ background: 'rgb(0,0,0)', color: '#FFFFFF', borderRadius: '16px', padding: '36px 40px', maxWidth: '900px' }}>
+                      <p style={{ ...fontStyle, fontSize: '20px', lineHeight: '32px', fontWeight: 300, color: '#FFFFFF', marginTop: 0, marginBottom: '28px' }}>
+                        Build a tool <strong style={{ fontWeight: 500, color: '#FFFFFF' }}>fast enough to ship in 6 weeks</strong>, <strong style={{ fontWeight: 500, color: '#FFFFFF' }}>simple enough for recruiters and sales teams to adopt without training</strong> — and <strong style={{ fontWeight: 500, color: '#FFFFFF' }}>structured enough to grow into a full Find → Rank → Reach platform</strong>, not just a one-trick ranking widget.
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: '10px' }}>
+                        {['6-week shipping window', 'Zero-training adoption', 'Find → Rank → Reach'].map((label) => (
+                          <span key={label} style={{ ...fontStyle, fontSize: '13px', lineHeight: '20px', fontWeight: 500, color: '#FFFFFF', padding: '6px 14px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.24)', background: 'rgba(255,255,255,0.06)' }}>
+                            {label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ScrollAnimatedSection>
+            </section>
 
             {/* ——————————————————————————————————————————————
                 STEP 01 · DISCOVERY
                 —————————————————————————————————————————————— */}
             <div
               className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
-              style={{ marginBottom: '96px' }}
+              style={{ marginTop: '96px', marginBottom: '96px' }}
             >
               {/* 左列：超大 thin 数字 + 眉题标签 */}
               <div>
@@ -2288,7 +2285,7 @@ export default function ConnectnovaProjectPage() {
                     marginBottom: '20px',
                   }}
                 >
-                  Before touching any design, I mapped three distinct user segments — each with a different toolchain and a different kind of friction. The primary user is an <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>individual LinkedIn user</strong> who searches for people regularly but has no structured way to collect or revisit results. Our market partner — a seasoned headhunter — works with <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>LinkedIn Recruiter Lite</strong> and manages multiple roles simultaneously. Enterprise teams add a third layer: an <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>ATS platform</strong> that handles post-apply tracking but offers no sourcing intelligence.
+                  Before touching any design, I mapped how our two core users actually work today — tracing every step from the moment they open LinkedIn to the moment they reach out to someone.
                 </p>
                 <p
                   style={{
@@ -2301,46 +2298,34 @@ export default function ConnectnovaProjectPage() {
                     margin: 0,
                   }}
                 >
-                  Across all three, the same gap surfaced: <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>LinkedIn surfaces candidates but provides no place to collect, rank, or manage them</strong>. Everything after &quot;find&quot; is handled by a disconnected tool — or not at all.
+                  The same gap surfaced in both workflows: <strong style={{ fontWeight: 500, color: 'rgb(0,0,0)' }}>LinkedIn surfaces people but provides no way to rank or prioritize them</strong>. Everything after &quot;find&quot; is handled by a disconnected tool — or not at all.
                 </p>
 
-                {/* Fig 1：三类用户各自的工作流程图 + 痛点 */}
+                {/* Fig 1：两类用户的工作流程图 + 痛点 */}
                 {(() => {
                   const segments = [
                     {
-                      label: 'Individual LinkedIn user',
-                      badge: 'Primary',
+                      label: 'Alex · Headhunter',
+                      badge: 'Validated user',
                       badgeBlue: true,
                       steps: [
-                        { label: 'Run search', sub: 'Keywords + filters', pain: null },
-                        { label: 'Scroll results', sub: 'Browse profiles\nin feed', pain: 'No way to\nsave results' },
-                        { label: 'Open profiles', sub: 'Each in a\nnew tab', pain: 'Context lost\nbetween tabs' },
-                        { label: 'Take notes', sub: 'Screenshot or\ncopy URL', pain: 'No structure\nor format' },
-                        { label: 'Re-search later', sub: 'Start over\nnext time', pain: 'Duplicates\neffort' },
+                        { label: 'Search in\nRecruiter Lite', sub: 'Keywords +\nfilters', pain: null },
+                        { label: 'Scroll ~500\nresults', sub: 'Browse profiles\nin feed', pain: 'No way to\npre-filter' },
+                        { label: 'Open each\nprofile', sub: 'One by one,\nnew tab', pain: 'No AI\nscreening' },
+                        { label: 'Copy to\nSpreadsheet', sub: 'Paste name,\ntitle, URL', pain: 'Manual &\nerror-prone' },
+                        { label: 'Message\nmanually', sub: 'Connection req\n+ follow-up', pain: 'No way\nto scale' },
                       ],
                     },
                     {
-                      label: 'Headhunter / talent scout',
-                      badge: 'Market partner',
+                      label: 'Jordan · Sales & BD',
+                      badge: 'Target user',
                       badgeBlue: false,
                       steps: [
-                        { label: 'Search in\nRecruiter Lite', sub: "LinkedIn's paid\nsourcing tool", pain: null },
-                        { label: 'Shortlist\nmanually', sub: 'Review each\nprofile', pain: 'No AI\npre-screening' },
-                        { label: 'Copy to Sheets', sub: 'Paste name,\ntitle, URL', pain: 'Manual &\nerror-prone' },
-                        { label: 'Present\nto client', sub: 'Export or\nemail file', pain: 'Version\nchaos' },
-                        { label: 'Track status', sub: 'Update cells\nper candidate', pain: 'No pipeline\nview' },
-                      ],
-                    },
-                    {
-                      label: 'Enterprise recruiter',
-                      badge: null,
-                      badgeBlue: false,
-                      steps: [
-                        { label: 'Post job\nin ATS', sub: 'Greenhouse,\nLever, etc.', pain: null },
-                        { label: 'Source on\nLinkedIn', sub: 'Separate tool,\nno bridge', pain: 'ATS & LinkedIn\nnot connected' },
-                        { label: 'Copy profiles\nmanually', sub: 'Switch tabs,\ncopy fields', pain: 'Duplicate\ndata entry' },
-                        { label: 'Import to ATS', sub: 'Re-enter data\nby hand', pain: 'Sourcing\ncontext lost' },
-                        { label: 'Track pipeline', sub: 'Screen &\ninterview', pain: null },
+                        { label: 'Search in\nSales Navigator', sub: 'Advanced\npeople search', pain: null },
+                        { label: 'Evaluate\nICP fit', sub: 'Review each\nprofile manually', pain: 'No ranking\nby criteria' },
+                        { label: 'Curate list\nmanually', sub: 'Copy names\ninto spreadsheet', pain: 'Time-consuming\n& subjective' },
+                        { label: 'Import to\nDripify', sub: 'Upload list\nfor outreach', pain: 'Two-tool\ngap' },
+                        { label: 'Run outreach\nsequence', sub: 'Auto connect\n+ message', pain: null },
                       ],
                     },
                   ];
@@ -2492,7 +2477,7 @@ export default function ConnectnovaProjectPage() {
                           fontStyle: 'italic',
                         }}
                       >
-                        Shared gap across all three: LinkedIn surfaces candidates but provides no place to collect, rank, or track them.
+                        Shared gap: LinkedIn gives you a list of people. Neither user has a way to rank, prioritize, or reach them without switching tools and doing it manually.
                       </div>
                     </div>
                   );
@@ -2562,7 +2547,7 @@ export default function ConnectnovaProjectPage() {
                     marginBottom: '20px',
                   }}
                 >
-                  The original ask was simple: paste a JD, upload candidates, get a ranking.
+                  The original ask was straightforward: collect profiles from LinkedIn using the Chrome extension, describe what you&apos;re looking for, get an AI-ranked shortlist.
                 </p>
                 <p
                   style={{
@@ -2576,7 +2561,7 @@ export default function ConnectnovaProjectPage() {
                     marginBottom: '24px',
                   }}
                 >
-                  I pushed back and advocated for introducing the <strong style={{ fontWeight: 500, color: 'rgb(0, 0, 0)' }}>Project</strong> concept — a container that binds candidates to a specific hiring need. Three reasons:
+                  I pushed back and advocated for introducing the <strong style={{ fontWeight: 500, color: 'rgb(0, 0, 0)' }}>Project</strong> concept — a container that groups collected profiles under a specific search goal. Three reasons:
                 </p>
 
                 {/* 编号理由列表：小号 eyebrow 数字 + 内容 */}
@@ -2593,9 +2578,9 @@ export default function ConnectnovaProjectPage() {
                   }}
                 >
                   {[
-                    'Headhunters juggle multiple roles simultaneously; candidates need to be scoped per role.',
-                    'A single role is often sourced across multiple sessions — those candidates have to consolidate into the same project.',
-                    'Long-term the platform has to grow into candidate management — pipeline, outreach, notes. Project is the architectural foundation for all of it.',
+                    'Users work on multiple goals simultaneously — a headhunter runs several roles at once, a sales rep targets different segments. Profiles need to be scoped per goal, not mixed together.',
+                    'A single sourcing goal often spans multiple LinkedIn search sessions. Project gives all those sessions a shared home so nothing gets lost between them.',
+                    'Long-term the platform needs to support outreach, notes, and pipeline tracking. Project is the architectural foundation — without it, none of that has a place to live.',
                   ].map((reason, i) => (
                     <li
                       key={i}
@@ -2655,7 +2640,7 @@ export default function ConnectnovaProjectPage() {
                       margin: 0,
                     }}
                   >
-                    &ldquo;This shouldn&apos;t just be a ranking tool. It should be a candidate management platform.&rdquo;
+                    &ldquo;This shouldn&apos;t just be a ranking tool. It should be a pipeline management platform.&rdquo;
                   </p>
                 </blockquote>
 
@@ -2686,8 +2671,8 @@ export default function ConnectnovaProjectPage() {
                     {/* 流程节点 */}
                     <div className="flex flex-wrap items-center" style={{ gap: '8px', marginBottom: '14px' }}>
                       {[
-                        { label: 'Paste JD', sub: 'Job description' },
-                        { label: 'Upload candidates', sub: 'From this session only' },
+                        { label: 'Set search goal', sub: 'Any people-search goal' },
+                        { label: 'Extract LinkedIn profiles', sub: 'From this search only' },
                         { label: 'AI ranking', sub: 'One-time analysis' },
                         { label: 'Done', sub: 'Session ends', terminal: true },
                       ].map(({ label, sub, terminal }, i, arr) => (
@@ -2748,7 +2733,7 @@ export default function ConnectnovaProjectPage() {
                         overflow: 'hidden',
                       }}
                     >
-                      {/* Project 顶部：名称 + hiring need */}
+                      {/* Project 顶部：名称 + search goal */}
                       <div
                         style={{
                           padding: '12px 16px',
@@ -2761,22 +2746,22 @@ export default function ConnectnovaProjectPage() {
                           <span style={{ ...fontStyle, fontSize: '13px', fontWeight: 600, color: 'rgb(0,0,0)' }}>Senior Product Manager — Fintech</span>
                         </div>
                         <div style={{ ...fontStyle, fontSize: '11px', color: 'rgba(0,0,0,0.48)', lineHeight: '16px' }}>
-                          Hiring need: 5+ yrs PM in fintech; strong data sense; US-based
+                          Search goal: 5+ yrs PM in fintech; strong data sense; US-based
                         </div>
                       </div>
 
-                      {/* 两列：候选人池 + 排名版本 */}
+                      {/* 两列：profile池 + 排名版本 */}
                       <div className="grid grid-cols-1 sm:grid-cols-2">
                         {/* 候选人池 */}
                         <div style={{ padding: '12px 16px', borderRight: '1px solid rgba(0,0,0,0.06)' }}>
                           <div style={{ ...fontStyle, fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 500, color: 'rgba(0,0,0,0.36)', marginBottom: '10px' }}>
-                            Candidate pool · 24 total
+                            Profile pool · 24 total
                           </div>
                           <div style={{ ...fontStyle, fontSize: '10px', color: 'rgba(0,0,0,0.4)', marginBottom: '6px' }}>
-                            Session 1 · Jan 10 · 12 candidates
+                            Session 1 · Jan 10 · 12 profiles
                           </div>
                           <div style={{ ...fontStyle, fontSize: '10px', color: 'rgba(0,0,0,0.4)', marginBottom: '10px' }}>
-                            Session 2 · Jan 18 · 12 candidates
+                            Session 2 · Jan 18 · 12 profiles
                           </div>
                           {['Alex Morgan', 'Jamie Carter', 'Taylor Nguyen'].map((name) => (
                             <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 0', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
@@ -2823,7 +2808,7 @@ export default function ConnectnovaProjectPage() {
                     </div>
 
                     <div style={{ ...fontStyle, fontSize: '13px', color: 'oklch(0.556 0 0)', fontStyle: 'italic', marginTop: '14px' }}>
-                      One Project = one hiring need · candidates accumulate across sessions · rankings are versioned and reusable.
+                      One Project = one search goal · profiles accumulate across sessions · rankings are versioned and reusable.
                     </div>
                   </div>
                 </div>
@@ -3288,10 +3273,9 @@ export default function ConnectnovaProjectPage() {
           </div>
         </ScrollAnimatedSection>
       </section>
-
       {/* Solution Section —— 产品亮相：The platform at a glance + Chrome Extension + Web Dashboard (2x2) + Design decisions。
           视觉策略：
-          · 灰底 #FAFAFA，与 Problem 共用同一灰基调（"事实陈述型"章节），让 Process 的白底在中间作为叙事转折
+          · 灰底 #FAFAFA，与 Problem 共用同一灰基调（"事实陈述型"章节），与顶部 Process 的白底拉开节奏
           · 每个 subsection 有独立的 layout（hero/split/2x2/table），避免四段均质
           · Extension 占位图用 mock LinkedIn 顶栏"装"一下，兑现"嵌入 LinkedIn"的语义
           · Dashboard 的 4 个功能用 2x2 feature grid 作为 Solution 的视觉 centerpiece */}
@@ -3384,6 +3368,49 @@ export default function ConnectnovaProjectPage() {
                 }}
                 aria-label="Platform overview — Dashboard and Chrome Extension"
               >
+                {/* 左图切换：ranking MVP 与 with outreach；右图保持不变 */}
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', marginBottom: '4px' }}>
+                  <div
+                    style={{
+                      display: 'inline-flex',
+                      gap: '6px',
+                      padding: '4px',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(0, 0, 0, 0.08)',
+                      background: '#FFFFFF',
+                    }}
+                  >
+                    {[
+                      { key: 'ranking' as const, label: 'ranking MVP' },
+                      { key: 'outreach' as const, label: 'with outreach' },
+                    ].map(({ key, label }) => {
+                      const active = overviewDashboardMode === key;
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => setOverviewDashboardMode(key)}
+                          style={{
+                            ...fontStyle,
+                            fontSize: '12px',
+                            lineHeight: '18px',
+                            fontWeight: 500,
+                            borderRadius: '999px',
+                            border: '1px solid transparent',
+                            padding: '6px 12px',
+                            color: active ? '#FFFFFF' : 'rgba(0, 0, 0, 0.7)',
+                            background: active ? '#0052CC' : 'transparent',
+                            cursor: 'pointer',
+                            transition: 'all 160ms ease',
+                          }}
+                          aria-pressed={active}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
                 <div
                   style={{
                     width: '100%',
@@ -3406,8 +3433,16 @@ export default function ConnectnovaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/connectnova/Dashboard.avif"
-                      alt="ConnectNova dashboard overview"
+                      src={
+                        overviewDashboardMode === 'outreach'
+                          ? '/img/connectnova/DashboardLayout.avif?v=20260508-2'
+                          : '/img/connectnova/Dashboard.avif'
+                      }
+                      alt={
+                        overviewDashboardMode === 'outreach'
+                          ? 'ConnectNova dashboard overview with outreach workflow'
+                          : 'ConnectNova dashboard overview ranking MVP'
+                      }
                       style={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
                     />
                   </div>
@@ -5217,7 +5252,7 @@ export default function ConnectnovaProjectPage() {
               A few honest notes on what worked, what I&apos;d rework, and where the product is headed from here.
             </p>
 
-            {/* 三幕容器 —— 窄阅读栏，居左而非居中，保持整页左对齐的节律 */}
+            {/* 四幕容器 —— 窄阅读栏，居左而非居中，保持整页左对齐的节律 */}
             <div
               style={{
                 maxWidth: '760px',
@@ -5228,39 +5263,61 @@ export default function ConnectnovaProjectPage() {
               {[
                 {
                   roman: 'I',
-                  label: 'Proud of',
+                  label: 'Process',
                   items: [
                     {
-                      kicker: 'Designing beyond the brief.',
-                      body: "The decision to introduce the Project concept wasn't in the original requirements. It came from stepping back and asking where this product needed to be in a year — not just what it needed to do this week. That one structural decision changed the platform's trajectory from a disposable ranking widget to something with a real foundation for growth.",
+                      kicker: 'Code is a design medium.',
+                      body: 'Prototyping in real code meant zero translation between design and engineering. What got designed got shipped — no handoff gap, no fidelity loss.',
                     },
                     {
-                      kicker: 'Shipping a coherent product in six weeks.',
-                      body: "With a token-based design system in place early, every page felt like it belonged to the same product. The speed didn't come from cutting corners — it came from making the right foundational decisions fast.",
+                      kicker: 'Figma came after, not before.',
+                      body: 'Used Figma MCP to generate specs from the live codebase. Design documentation caught up to the product — not the other way around.',
                     },
                   ],
                 },
                 {
                   roman: 'II',
-                  label: 'Would redo',
+                  label: 'Methods',
                   items: [
                     {
-                      kicker: 'Earlier and broader user research.',
-                      body: 'Our primary domain insight came from one market partner. That was invaluable, but a single perspective — however expert — has blind spots. I would have pushed to speak with three to five recruiters with different workflows before committing to the IA.',
+                      kicker: 'Map the workflow before touching the IA.',
+                      body: "Tracing both users' end-to-end journeys — before any interface decisions — made the shared gap obvious. The problem defined itself once the workflow was visible.",
+                    },
+                    {
+                      kicker: 'Same job, different context.',
+                      body: 'Recruiters and sales reps share one core JTBD: find and prioritize people on LinkedIn. Recognizing this let us design one platform instead of two separate products.',
+                    },
+                    {
+                      kicker: 'Domain expertise is a research shortcut — with a cost.',
+                      body: 'One expert partner gave us speed and depth. But a single perspective has blind spots. The tradeoff was velocity over breadth.',
                     },
                   ],
                 },
                 {
                   roman: 'III',
+                  label: 'Proud of',
+                  items: [
+                    {
+                      kicker: 'Designing beyond the brief.',
+                      body: "Project wasn't in the original spec. Advocating for it changed the platform from a ranking widget into the foundation for a full pipeline product.",
+                    },
+                    {
+                      kicker: 'Speed through good foundations.',
+                      body: 'A token-based design system established early meant every screen felt coherent at launch — not polished later, but right from the start.',
+                    },
+                  ],
+                },
+                {
+                  roman: 'IV',
                   label: 'What comes next',
                   items: [
                     {
                       kicker: null,
-                      body: 'V0 is live. The immediate priority is structured user testing with real recruiters — validating the two-layer IA, the ranking interface, and whether the Project concept matches how they actually think about their work.',
+                      body: 'V0 is live. Next priority: structured testing with real users to validate the two-layer IA and the Project concept.',
                     },
                     {
                       kicker: null,
-                      body: 'Longer term, the platform roadmap points toward pipeline management, candidate outreach, and team collaboration — all of which the current architecture was deliberately designed to support.',
+                      body: 'Roadmap: outreach automation, pipeline tracking, and team collaboration — all of which the current architecture was designed to support.',
                     },
                   ],
                 },
