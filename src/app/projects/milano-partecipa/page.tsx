@@ -1703,6 +1703,29 @@ export default function MilanoPartecipaProjectPage() {
           </div>
         </div>
       </section>
+      {/* 页尾返回作品集 */}
+      <div
+        style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '48px 24px 80px',
+          textAlign: 'center',
+        }}
+      >
+        <Link
+          href="/"
+          style={{
+            fontFamily: 'var(--font-manrope, sans-serif)',
+            fontSize: '16px',
+            fontWeight: 500,
+            color: 'rgb(0, 0, 0)',
+            textDecoration: 'none',
+            borderBottom: '1px solid rgba(0,0,0,0.25)',
+          }}
+        >
+          ← Back to Work
+        </Link>
+      </div>
     </div>
   );
 }

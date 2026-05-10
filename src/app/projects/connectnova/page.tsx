@@ -1725,117 +1725,8 @@ export default function ConnectnovaProjectPage() {
     marginBottom: '16px',
   };
 
-  const extensionMockRows = [
-    { name: 'Alex Morgan', role: 'Senior Product Manager @ Stripe' },
-    { name: 'Jamie Carter', role: 'Principal PM @ Notion' },
-    { name: 'Taylor Nguyen', role: 'Lead Product Manager @ Airbnb' },
-    { name: 'Jordan Patel', role: 'Group Product Manager @ Uber' },
-  ];
-  const totalMockCandidates = extensionMockRows.length;
-  const defaultMockCollectionMode: 'pages' | 'count' = 'count';
-  const defaultMockMaxPages = 4;
-  const defaultMockMaxCount = 4;
-  const [collectionState, setCollectionState] = useState<'idle' | 'collecting' | 'done'>('idle');
-  const [collectedCount, setCollectedCount] = useState(0);
-  const [isCountFlipping, setIsCountFlipping] = useState(false);
-  const [mockCollectionMode, setMockCollectionMode] = useState<'pages' | 'count'>(defaultMockCollectionMode);
-  const [mockMaxPages, setMockMaxPages] = useState(defaultMockMaxPages);
-  const [mockMaxCount, setMockMaxCount] = useState(defaultMockMaxCount);
-  const [mockCountCustomOpen, setMockCountCustomOpen] = useState(false);
-  const [mockCountCustomDraft, setMockCountCustomDraft] = useState(String(defaultMockMaxCount));
   // Overview 模块：Dashboard 视图切换（MVP / Outreach）
   const [overviewDashboardMode, setOverviewDashboardMode] = useState<'ranking' | 'outreach'>('ranking');
-  const [isDashboardRedirecting, setIsDashboardRedirecting] = useState(false);
-  const [removedMockCandidates, setRemovedMockCandidates] = useState<string[]>([]);
-  const demoTargetCount =
-    mockCollectionMode === 'pages'
-      ? Math.max(1, Math.min(mockMaxPages, totalMockCandidates))
-      : Math.max(1, Math.min(mockMaxCount, totalMockCandidates));
-  const doneVisibleCandidates = extensionMockRows
-    .slice(0, demoTargetCount)
-    .filter((candidate) => !removedMockCandidates.includes(candidate.name));
-  const doneCollectedCount = doneVisibleCandidates.length;
-  const quickCountPresets = [1, 2, 3, 4];
-  const mockCountSliderPercent =
-    ((mockMaxCount - 1) / Math.max(1, totalMockCandidates - 1)) * 100;
-
-  const getMockInitials = (name: string) =>
-    name
-      .split(' ')
-      .map((part) => part[0] ?? '')
-      .join('')
-      .slice(0, 2)
-      .toUpperCase();
-
-  const resetCollectionDemo = () => {
-    setCollectionState('idle');
-    setCollectedCount(0);
-    setIsCountFlipping(false);
-    setIsDashboardRedirecting(false);
-    setRemovedMockCandidates([]);
-    setMockCollectionMode(defaultMockCollectionMode);
-    setMockMaxPages(defaultMockMaxPages);
-    setMockMaxCount(defaultMockMaxCount);
-    setMockCountCustomOpen(false);
-    setMockCountCustomDraft(String(defaultMockMaxCount));
-  };
-
-  const handleStartCollection = () => {
-    if (collectionState !== 'idle') return;
-    setCollectedCount(0);
-    setRemovedMockCandidates([]);
-    setMockCountCustomOpen(false);
-    setCollectionState('collecting');
-  };
-
-  const handleGoToDashboard = () => {
-    if (collectionState !== 'done' || isDashboardRedirecting || doneCollectedCount === 0) return;
-    setIsDashboardRedirecting(true);
-    window.setTimeout(() => {
-      resetCollectionDemo();
-    }, 650);
-  };
-
-  const handleRemoveDoneCandidate = (name: string) => {
-    setRemovedMockCandidates((prev) => (prev.includes(name) ? prev : [...prev, name]));
-  };
-
-  // 逐条收集动画：每 600ms 完成一条并推进计数
-  useEffect(() => {
-    if (collectionState !== 'collecting') return;
-    if (collectedCount >= demoTargetCount) {
-      // 避免在 effect 同步路径里直接 setState（eslint react-hooks/set-state-in-effect）
-      const doneTimer = window.setTimeout(() => {
-        setCollectionState('done');
-      }, 0);
-      return () => window.clearTimeout(doneTimer);
-    }
-
-    const timer = window.setTimeout(() => {
-      setCollectedCount((prev) => prev + 1);
-      setIsCountFlipping(true);
-    }, 600);
-
-    return () => window.clearTimeout(timer);
-  }, [collectionState, collectedCount, demoTargetCount]);
-
-  // 数字翻动的轻量动效：持续 200ms
-  useEffect(() => {
-    if (!isCountFlipping) return;
-    const timer = window.setTimeout(() => {
-      setIsCountFlipping(false);
-    }, 200);
-    return () => window.clearTimeout(timer);
-  }, [isCountFlipping]);
-
-  // 完成态停留 2 秒后自动回到 Idle
-  useEffect(() => {
-    if (collectionState !== 'done' || isDashboardRedirecting) return;
-    const timer = window.setTimeout(() => {
-      resetCollectionDemo();
-    }, 2000);
-    return () => window.clearTimeout(timer);
-  }, [collectionState, isDashboardRedirecting]);
 
   return (
     <div className="w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
@@ -2733,21 +2624,48 @@ export default function ConnectnovaProjectPage() {
                         overflow: 'hidden',
                       }}
                     >
-                      {/* Project 顶部：名称 + search goal */}
+                      {/* Project 顶部：名称 + search goal；标题行右侧为继续收集示意 CTA */}
                       <div
                         style={{
                           padding: '12px 16px',
                           borderBottom: '1px solid rgba(0,0,0,0.06)',
                           background: 'rgba(0,82,204,0.03)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '12px',
                         }}
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                          <span style={{ ...fontStyle, fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, color: 'rgba(0,82,204,0.7)' }}>Project</span>
-                          <span style={{ ...fontStyle, fontSize: '13px', fontWeight: 600, color: 'rgb(0,0,0)' }}>Senior Product Manager — Fintech</span>
+                        <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                            <span style={{ ...fontStyle, fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, color: 'rgba(0,82,204,0.7)' }}>Project</span>
+                            <span style={{ ...fontStyle, fontSize: '13px', fontWeight: 600, color: 'rgb(0,0,0)' }}>Senior Product Manager — Fintech</span>
+                          </div>
+                          <div style={{ ...fontStyle, fontSize: '11px', color: 'rgba(0,0,0,0.48)', lineHeight: '16px' }}>
+                            Search goal: 5+ yrs PM in fintech; strong data sense; US-based
+                          </div>
                         </div>
-                        <div style={{ ...fontStyle, fontSize: '11px', color: 'rgba(0,0,0,0.48)', lineHeight: '16px' }}>
-                          Search goal: 5+ yrs PM in fintech; strong data sense; US-based
-                        </div>
+                        <button
+                          type="button"
+                          style={{
+                            ...fontStyle,
+                            alignSelf: 'center',
+                            flexShrink: 0,
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '6px 10px',
+                            fontSize: '10px',
+                            fontWeight: 600,
+                            lineHeight: '14px',
+                            color: '#FFFFFF',
+                            background: 'linear-gradient(135deg, #004ac6 0%, #2563eb 100%)',
+                            boxShadow: '0 4px 12px rgba(0, 74, 198, 0.2)',
+                            cursor: 'default',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          Collect More Candidates
+                        </button>
                       </div>
 
                       {/* 两列：profile池 + 排名版本 */}
@@ -2808,7 +2726,7 @@ export default function ConnectnovaProjectPage() {
                     </div>
 
                     <div style={{ ...fontStyle, fontSize: '13px', color: 'oklch(0.556 0 0)', fontStyle: 'italic', marginTop: '14px' }}>
-                      One Project = one search goal · profiles accumulate across sessions · rankings are versioned and reusable.
+                      One Project = one search goal · profiles accumulate across sessions, so you keep adding to the same project and manage one unified ranking pipeline — not loose, disconnected lists that each need their own separate rank pass · rankings are versioned and reusable.
                     </div>
                   </div>
                 </div>
@@ -3368,7 +3286,7 @@ export default function ConnectnovaProjectPage() {
                 }}
                 aria-label="Platform overview — Dashboard and Chrome Extension"
               >
-                {/* 左图切换：ranking MVP 与 with outreach；右图保持不变 */}
+                {/* 左图切换：Ranking MVP 与 With outreach；右图保持不变 */}
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', marginBottom: '4px' }}>
                   <div
                     style={{
@@ -3381,8 +3299,8 @@ export default function ConnectnovaProjectPage() {
                     }}
                   >
                     {[
-                      { key: 'ranking' as const, label: 'ranking MVP' },
-                      { key: 'outreach' as const, label: 'with outreach' },
+                      { key: 'ranking' as const, label: 'Ranking MVP' },
+                      { key: 'outreach' as const, label: 'With outreach' },
                     ].map(({ key, label }) => {
                       const active = overviewDashboardMode === key;
                       return (
@@ -3459,8 +3377,8 @@ export default function ConnectnovaProjectPage() {
                     }}
                   >
                     <img
-                      src="/img/connectnova/Extension.avif"
-                      alt="ConnectNova extension overview"
+                      src="/img/connectnova/Extension_home.avif"
+                      alt="ConnectNova Chrome extension overview"
                       style={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain', display: 'block' }}
                     />
                   </div>
@@ -3469,1340 +3387,153 @@ export default function ConnectnovaProjectPage() {
             </div>
 
             {/* ——————————————————————————————————————————————
-                02 · CHROME EXTENSION — split layout
+                02 · CHROME EXTENSION — 整图导出（与 Overview 卡片视觉一致）
                 —————————————————————————————————————————————— */}
-            <div
-              className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-14 items-start"
-              style={{ marginBottom: '96px' }}
-            >
-              {/* 左：文字 + 编号 bullets */}
-              <div>
-                <div
-                  style={{
-                    ...fontStyle,
-                    fontSize: '12px',
-                    lineHeight: '16px',
-                    fontWeight: 500,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
-                    color: 'oklch(0.556 0 0)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  02 · Chrome extension
-                </div>
-                <h2
-                  style={{
-                    ...fontStyle,
-                    fontSize: '28px',
-                    lineHeight: '36px',
-                    fontWeight: 500,
-                    color: 'rgb(0, 0, 0)',
-                    marginTop: 0,
-                    marginBottom: '20px',
-                  }}
-                >
-                  Collect without leaving LinkedIn
-                </h2>
-                <p
-                  style={{
-                    ...fontStyle,
-                    fontSize: '17px',
-                    lineHeight: '30px',
-                    fontWeight: 400,
-                    color: 'rgba(0, 0, 0, 0.82)',
-                    marginTop: 0,
-                    marginBottom: '24px',
-                  }}
-                >
-                  Recruiters already do their sourcing on LinkedIn&apos;s search pages. The extension embeds as a side panel, so collection happens <em style={{ fontStyle: 'italic' }}>inside</em> the existing workflow — not next to it.
-                </p>
+            <div style={{ marginBottom: '96px' }}>
+              <div
+                style={{
+                  ...fontStyle,
+                  fontSize: '12px',
+                  lineHeight: '16px',
+                  fontWeight: 500,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'oklch(0.556 0 0)',
+                  marginBottom: '12px',
+                }}
+              >
+                02 · Chrome extension
+              </div>
+              <h2
+                style={{
+                  ...fontStyle,
+                  fontSize: '28px',
+                  lineHeight: '36px',
+                  fontWeight: 500,
+                  color: 'rgb(0, 0, 0)',
+                  marginTop: 0,
+                  marginBottom: '20px',
+                }}
+              >
+                Collect without leaving LinkedIn
+              </h2>
+              <p
+                style={{
+                  ...fontStyle,
+                  fontSize: '17px',
+                  lineHeight: '30px',
+                  fontWeight: 400,
+                  color: 'rgba(0, 0, 0, 0.82)',
+                  marginTop: 0,
+                  marginBottom: '24px',
+                  maxWidth: '760px',
+                }}
+              >
+                Recruiters already do their sourcing on LinkedIn&apos;s search pages. The extension embeds as a side panel, so collection happens <em style={{ fontStyle: 'italic' }}>inside</em> the existing workflow — not next to it.
+              </p>
 
-                <ol
-                  style={{
-                    listStyle: 'none',
-                    padding: 0,
-                    margin: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '16px',
-                  }}
-                >
-                  {[
-                    {
-                      title: 'Define collection scope',
-                      body: 'Set a page range or a candidate count — whatever matches the role\u2019s sourcing depth.',
-                    },
-                    {
-                      title: 'One click to start',
-                      body: 'The extension walks through the search results and captures every profile it finds.',
-                    },
-                    {
-                      title: 'Save to a project',
-                      body: 'Results are saved into a chosen project and land directly in the dashboard — no copy-paste.',
-                    },
-                  ].map(({ title, body }, i) => (
-                    <li
-                      key={title}
+              <ol
+                style={{
+                  listStyle: 'none',
+                  padding: 0,
+                  margin: 0,
+                  marginBottom: '32px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  maxWidth: '760px',
+                }}
+              >
+                {[
+                  {
+                    title: 'Define collection scope',
+                    body: 'Set a page range or a candidate count — whatever matches the role\u2019s sourcing depth.',
+                  },
+                  {
+                    title: 'One click to start',
+                    body: 'The extension walks through the search results and captures every profile it finds.',
+                  },
+                  {
+                    title: 'Save to a project',
+                    body: 'Results are saved into a chosen project and land directly in the dashboard — no copy-paste.',
+                  },
+                ].map(({ title, body }, i) => (
+                  <li
+                    key={title}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr',
+                      columnGap: '16px',
+                      alignItems: 'baseline',
+                    }}
+                  >
+                    <span
                       style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'auto 1fr',
-                        columnGap: '16px',
-                        alignItems: 'baseline',
+                        ...fontStyle,
+                        fontSize: '13px',
+                        lineHeight: '24px',
+                        fontWeight: 500,
+                        color: 'oklch(0.556 0 0)',
+                        fontVariantNumeric: 'tabular-nums',
+                        letterSpacing: '0.08em',
                       }}
                     >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>
                       <span
                         style={{
                           ...fontStyle,
-                          fontSize: '13px',
+                          fontSize: '16px',
                           lineHeight: '24px',
                           fontWeight: 500,
-                          color: 'oklch(0.556 0 0)',
-                          fontVariantNumeric: 'tabular-nums',
-                          letterSpacing: '0.08em',
+                          color: 'rgb(0, 0, 0)',
                         }}
                       >
-                        {String(i + 1).padStart(2, '0')}
+                        {title}
                       </span>
-                      <span>
+                      <span style={{ display: 'block', marginTop: '4px' }}>
                         <span
                           style={{
                             ...fontStyle,
-                            fontSize: '16px',
+                            fontSize: '15px',
                             lineHeight: '24px',
-                            fontWeight: 500,
-                            color: 'rgb(0, 0, 0)',
+                            fontWeight: 400,
+                            color: 'rgba(0, 0, 0, 0.72)',
                           }}
                         >
-                          {title}
-                        </span>
-                        <span style={{ display: 'block', marginTop: '4px' }}>
-                          <span
-                            style={{
-                              ...fontStyle,
-                              fontSize: '15px',
-                              lineHeight: '24px',
-                              fontWeight: 400,
-                              color: 'rgba(0, 0, 0, 0.72)',
-                            }}
-                          >
-                            {body}
-                          </span>
+                          {body}
                         </span>
                       </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+                    </span>
+                  </li>
+                ))}
+              </ol>
 
-              {/* 右：Mock LinkedIn chrome 包裹的占位图
-                    —— 给"嵌入 LinkedIn"的叙事一个具体的视觉锚 */}
               <div
                 style={{
                   border: '1px solid rgba(0, 0, 0, 0.08)',
-                  borderRadius: '14px',
-                  background: '#FFFFFF',
-                  overflow: 'hidden',
-                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -12px rgba(0, 0, 0, 0.08)',
+                  borderRadius: '16px',
+                  background: '#F8F9FB',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '14px',
                 }}
+                aria-label="ConnectNova Chrome extension — full export"
               >
-                {/* Mock browser bar */}
-                <div
+                <img
+                  src="/img/connectnova/Extension.avif"
+                  alt="ConnectNova Chrome extension embedded in LinkedIn"
                   style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '14px',
-                    padding: '12px 16px',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
-                    background: '#FAFAFA',
+                    width: '100%',
+                    height: 'auto',
+                    maxWidth: '100%',
+                    display: 'block',
+                    objectFit: 'contain',
+                    borderRadius: '12px',
                   }}
-                >
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    {['#F56E6E', '#F5BA3A', '#6BD19F'].map((c) => (
-                      <span
-                        key={c}
-                        style={{
-                          width: '10px',
-                          height: '10px',
-                          borderRadius: '999px',
-                          background: c,
-                          display: 'inline-block',
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div
-                    style={{
-                      ...fontStyle,
-                      fontSize: '11px',
-                      lineHeight: '20px',
-                      fontWeight: 400,
-                      color: 'oklch(0.556 0 0)',
-                      background: '#FFFFFF',
-                      border: '1px solid rgba(0, 0, 0, 0.08)',
-                      borderRadius: '6px',
-                      padding: '2px 10px',
-                      flex: '1 1 auto',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    linkedin.com/search/results/people/?keywords=senior+product+manager
-                  </div>
-                </div>
-                {/* 交互演示区：Chrome Extension 收集流程 */}
-                <div
-                  style={{
-                    height: '600px',
-                    display: 'grid',
-                    gridTemplateColumns: 'minmax(170px, 0.62fr) minmax(320px, 1fr)',
-                  }}
-                  aria-label="Chrome extension collection flow demo"
-                >
-                  {/* 左侧：LinkedIn 环境提示（静态，不参与交互） */}
-                  <div
-                    style={{
-                      background: '#FFFFFF',
-                      padding: '14px 10px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '8px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        ...fontStyle,
-                        fontSize: '9px',
-                        letterSpacing: '0.14em',
-                        textTransform: 'uppercase',
-                        fontWeight: 500,
-                        color: 'rgba(0, 0, 0, 0.46)',
-                      }}
-                    >
-                      LinkedIn search results
-                    </div>
-                    {extensionMockRows.map((candidate) => {
-                      return (
-                        <div
-                          key={candidate.name}
-                          style={{
-                            height: '50px',
-                            display: 'grid',
-                            gridTemplateColumns: '36px 1fr auto',
-                            alignItems: 'center',
-                            columnGap: '8px',
-                            borderRadius: '8px',
-                            padding: '0 8px',
-                            borderLeft: '2px solid transparent',
-                            background: '#FFFFFF',
-                          }}
-                        >
-                          <span
-                            aria-hidden
-                            style={{
-                              width: '30px',
-                              height: '30px',
-                              borderRadius: '999px',
-                              background: 'rgba(0, 0, 0, 0.1)',
-                              display: 'inline-block',
-                            }}
-                          />
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                            <span
-                              style={{
-                                ...fontStyle,
-                                fontSize: '11px',
-                                lineHeight: '14px',
-                                fontWeight: 500,
-                                color: 'rgba(0, 0, 0, 0.7)',
-                              }}
-                            >
-                              {candidate.name}
-                            </span>
-                            <span
-                              style={{
-                                ...fontStyle,
-                                fontSize: '9px',
-                                lineHeight: '11px',
-                                fontWeight: 400,
-                                color: 'rgba(0, 0, 0, 0.48)',
-                                maxWidth: '120px',
-                                whiteSpace: 'nowrap',
-                                textOverflow: 'ellipsis',
-                                overflow: 'hidden',
-                              }}
-                            >
-                              {candidate.role}
-                            </span>
-                          </div>
-                          <span
-                            aria-hidden
-                            style={{
-                              width: '8px',
-                              height: '8px',
-                              borderRadius: '999px',
-                              background: 'rgba(0, 0, 0, 0.12)',
-                            }}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* 右侧：ConnectNova 侧边栏 panel */}
-                  <div
-                    style={{
-                      background: '#f5f9ff',
-                      borderLeft: '1px solid rgba(0, 0, 0, 0.08)',
-                      padding: '0',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    {/* 顶部栏：对齐真实 extension 的品牌头部 */}
-                    <div
-                      style={{
-                        background: '#FFFFFF',
-                        borderBottom: '1px solid rgba(13, 28, 46, 0.06)',
-                        padding: '10px 12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                        }}
-                      >
-                        <span
-                          aria-hidden
-                          style={{
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '6px',
-                            background: 'linear-gradient(135deg, #004ac6 0%, #2563eb 100%)',
-                          }}
-                        />
-                        <span
-                          style={{
-                            ...fontStyle,
-                            fontSize: '14px',
-                            lineHeight: '16px',
-                            fontWeight: 700,
-                            color: '#0d1c2e',
-                          }}
-                        >
-                          ConnectNova
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={resetCollectionDemo}
-                        style={{
-                          border: 'none',
-                          background: 'transparent',
-                          padding: 0,
-                          ...fontStyle,
-                          fontSize: '14px',
-                          lineHeight: '14px',
-                          fontWeight: 500,
-                          color: 'rgba(13, 28, 46, 0.4)',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        ×
-                      </button>
-                    </div>
-
-                    <div
-                      style={{
-                        padding: '12px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '10px',
-                        flex: '1 1 auto',
-                        minHeight: 0,
-                      }}
-                    >
-                      {/* Idle：配置卡片（1:1 对齐 extension Step1） */}
-                      {collectionState === 'idle' && (
-                        <>
-                          <div
-                            style={{
-                              borderRadius: '12px',
-                              background: '#FFFFFF',
-                              boxShadow: '0 2px 12px rgba(13, 28, 46, 0.06)',
-                              overflow: 'hidden',
-                            }}
-                          >
-                            <div
-                              style={{
-                                height: '34px',
-                                padding: '0 12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                boxShadow: '0 1px 0 rgba(13, 28, 46, 0.06)',
-                              }}
-                            >
-                              <span
-                                aria-hidden
-                                style={{
-                                  width: '8px',
-                                  height: '8px',
-                                  borderRadius: '999px',
-                                  background: '#006a61',
-                                }}
-                              />
-                              <span
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '11px',
-                                  lineHeight: '14px',
-                                  fontWeight: 500,
-                                  color: 'rgba(13, 28, 46, 0.88)',
-                                }}
-                              >
-                                LinkedIn people search detected
-                              </span>
-                            </div>
-
-                            <div style={{ padding: '10px 12px 12px' }}>
-                              <div
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '9px',
-                                  lineHeight: '12px',
-                                  fontWeight: 700,
-                                  letterSpacing: '0.12em',
-                                  textTransform: 'uppercase',
-                                  color: 'rgba(13, 28, 46, 0.45)',
-                                  marginBottom: '4px',
-                                }}
-                              >
-                                Save to project
-                              </div>
-                              <div
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '13px',
-                                  lineHeight: '18px',
-                                  fontWeight: 600,
-                                  color: '#0d1c2e',
-                                  background: '#f5f9ff',
-                                  borderRadius: '10px',
-                                  padding: '8px 10px',
-                                  marginBottom: '10px',
-                                }}
-                              >
-                                Senior PM · SF
-                              </div>
-
-                              <div
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '9px',
-                                  lineHeight: '12px',
-                                  fontWeight: 700,
-                                  letterSpacing: '0.12em',
-                                  textTransform: 'uppercase',
-                                  color: '#004ac6',
-                                  marginBottom: '4px',
-                                }}
-                              >
-                                Step 1
-                              </div>
-                              <div
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '14px',
-                                  lineHeight: '20px',
-                                  fontWeight: 700,
-                                  color: '#0d1c2e',
-                                  marginBottom: '8px',
-                                }}
-                              >
-                                Collection mode
-                              </div>
-
-                              <div
-                                style={{
-                                  display: 'grid',
-                                  gridTemplateColumns: '1fr 1fr',
-                                  borderRadius: '10px',
-                                  background: '#f5f9ff',
-                                  padding: '4px',
-                                  gap: '4px',
-                                  marginBottom: '8px',
-                                }}
-                              >
-                                {[
-                                  { key: 'pages', label: 'By pages' },
-                                  { key: 'count', label: 'By count' },
-                                ].map((mode) => (
-                                  <button
-                                    key={mode.key}
-                                    type="button"
-                                    onClick={() => setMockCollectionMode(mode.key as 'pages' | 'count')}
-                                    style={{
-                                      ...fontStyle,
-                                      height: '30px',
-                                      borderRadius: '8px',
-                                      border: 'none',
-                                      fontSize: '11px',
-                                      lineHeight: '14px',
-                                      fontWeight: 600,
-                                      cursor: 'pointer',
-                                      color: mockCollectionMode === mode.key ? '#0d1c2e' : 'rgba(13, 28, 46, 0.52)',
-                                      background: mockCollectionMode === mode.key ? '#FFFFFF' : 'transparent',
-                                      boxShadow:
-                                        mockCollectionMode === mode.key
-                                          ? '0 1px 4px rgba(13, 28, 46, 0.08)'
-                                          : 'none',
-                                      transition: 'all 180ms ease',
-                                    }}
-                                  >
-                                    {mode.label}
-                                  </button>
-                                ))}
-                              </div>
-
-                              {mockCollectionMode === 'pages' ? (
-                                <div
-                                  style={{
-                                    borderRadius: '10px',
-                                    background: '#f5f9ff',
-                                    padding: '8px 10px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                  }}
-                                >
-                                  <button
-                                    type="button"
-                                    onClick={() => setMockMaxPages((prev) => Math.max(1, prev - 1))}
-                                    style={{
-                                      width: '22px',
-                                      height: '22px',
-                                      borderRadius: '6px',
-                                      border: 'none',
-                                      background: '#FFFFFF',
-                                      color: 'rgba(13, 28, 46, 0.8)',
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    -
-                                  </button>
-                                  <span
-                                    style={{
-                                      ...fontStyle,
-                                      fontSize: '12px',
-                                      lineHeight: '16px',
-                                      fontWeight: 600,
-                                      color: '#0d1c2e',
-                                      fontVariantNumeric: 'tabular-nums',
-                                    }}
-                                  >
-                                    {mockMaxPages} pages
-                                  </span>
-                                  <button
-                                    type="button"
-                                    onClick={() => setMockMaxPages((prev) => Math.min(9, prev + 1))}
-                                    style={{
-                                      width: '22px',
-                                      height: '22px',
-                                      borderRadius: '6px',
-                                      border: 'none',
-                                      background: '#FFFFFF',
-                                      color: 'rgba(13, 28, 46, 0.8)',
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    +
-                                  </button>
-                                </div>
-                              ) : (
-                                <div
-                                  style={{
-                                    borderRadius: '10px',
-                                    background: '#f5f9ff',
-                                    padding: '8px 10px',
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      position: 'relative',
-                                      paddingTop: '18px',
-                                      marginBottom: '6px',
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: `calc(${mockCountSliderPercent}% )`,
-                                        transform: 'translateX(-50%)',
-                                        ...fontStyle,
-                                        fontSize: '9px',
-                                        lineHeight: '12px',
-                                        fontWeight: 700,
-                                        color: '#004ac6',
-                                        background: '#eaf1ff',
-                                        border: '1px solid #c9d9f6',
-                                        borderRadius: '6px',
-                                        height: '18px',
-                                        padding: '0 6px',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontVariantNumeric: 'tabular-nums',
-                                      }}
-                                    >
-                                      {mockMaxCount}
-                                    </span>
-                                    <input
-                                      type="range"
-                                      min={1}
-                                      max={totalMockCandidates}
-                                      step={1}
-                                      value={mockMaxCount}
-                                      onChange={(event) => {
-                                        const value = Number(event.target.value);
-                                        setMockMaxCount(value);
-                                        setMockCountCustomDraft(String(value));
-                                      }}
-                                      style={{
-                                        width: '100%',
-                                        accentColor: '#2563eb',
-                                      }}
-                                    />
-                                  </div>
-
-                                  <div style={{ display: 'flex', gap: '5px', marginBottom: '7px', flexWrap: 'wrap' }}>
-                                    {quickCountPresets.map((preset) => (
-                                      <button
-                                        key={preset}
-                                        type="button"
-                                        onClick={() => {
-                                          setMockMaxCount(preset);
-                                          setMockCountCustomOpen(false);
-                                          setMockCountCustomDraft(String(preset));
-                                        }}
-                                        style={{
-                                          height: '20px',
-                                          minWidth: '24px',
-                                          borderRadius: '6px',
-                                          border: 'none',
-                                          padding: '0 6px',
-                                          ...fontStyle,
-                                          fontSize: '10px',
-                                          lineHeight: '12px',
-                                          fontWeight: 600,
-                                          fontVariantNumeric: 'tabular-nums',
-                                          color: mockMaxCount === preset ? '#004ac6' : 'rgba(13, 28, 46, 0.6)',
-                                          background: mockMaxCount === preset ? '#d5e3fc' : '#FFFFFF',
-                                          cursor: 'pointer',
-                                        }}
-                                      >
-                                        {preset}
-                                      </button>
-                                    ))}
-                                    {!mockCountCustomOpen ? (
-                                      <button
-                                        type="button"
-                                        onClick={() => {
-                                          setMockCountCustomOpen(true);
-                                          setMockCountCustomDraft(String(mockMaxCount));
-                                        }}
-                                        style={{
-                                          height: '20px',
-                                          borderRadius: '6px',
-                                          border: 'none',
-                                          padding: '0 8px',
-                                          ...fontStyle,
-                                          fontSize: '10px',
-                                          lineHeight: '12px',
-                                          fontWeight: 600,
-                                          color: 'rgba(13, 28, 46, 0.6)',
-                                          background: '#FFFFFF',
-                                          cursor: 'pointer',
-                                        }}
-                                      >
-                                        Custom
-                                      </button>
-                                    ) : (
-                                      <input
-                                        type="number"
-                                        min={1}
-                                        max={totalMockCandidates}
-                                        value={mockCountCustomDraft}
-                                        autoFocus
-                                        onChange={(event) => setMockCountCustomDraft(event.target.value)}
-                                        onBlur={() => {
-                                          const value = Number.parseInt(mockCountCustomDraft, 10);
-                                          if (!Number.isNaN(value)) {
-                                            const nextValue = Math.min(totalMockCandidates, Math.max(1, value));
-                                            setMockMaxCount(nextValue);
-                                            setMockCountCustomDraft(String(nextValue));
-                                          } else {
-                                            setMockCountCustomDraft(String(mockMaxCount));
-                                          }
-                                          setMockCountCustomOpen(false);
-                                        }}
-                                        style={{
-                                          width: '46px',
-                                          height: '20px',
-                                          borderRadius: '6px',
-                                          border: '1px solid rgba(13, 28, 46, 0.14)',
-                                          background: '#FFFFFF',
-                                          textAlign: 'center',
-                                          ...fontStyle,
-                                          fontSize: '10px',
-                                          lineHeight: '12px',
-                                          fontWeight: 600,
-                                          color: '#0d1c2e',
-                                          fontVariantNumeric: 'tabular-nums',
-                                        }}
-                                      />
-                                    )}
-                                  </div>
-
-                                  <div
-                                    style={{
-                                      ...fontStyle,
-                                      fontSize: '11px',
-                                      lineHeight: '14px',
-                                      fontWeight: 600,
-                                      color: '#0d1c2e',
-                                      fontVariantNumeric: 'tabular-nums',
-                                    }}
-                                  >
-                                    Up to {mockMaxCount} profiles
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              borderRadius: '10px',
-                              background: '#d5e3fc',
-                              padding: '9px 10px',
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '7px',
-                            }}
-                          >
-                            <span
-                              aria-hidden
-                              style={{
-                                width: '18px',
-                                height: '18px',
-                                borderRadius: '999px',
-                                background: 'rgba(255, 255, 255, 0.65)',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#004ac6',
-                                fontSize: '11px',
-                                fontWeight: 700,
-                              }}
-                            >
-                              i
-                            </span>
-                            <p
-                              style={{
-                                ...fontStyle,
-                                fontSize: '11px',
-                                lineHeight: '14px',
-                                fontWeight: 400,
-                                color: 'rgba(0, 74, 198, 0.76)',
-                                margin: 0,
-                              }}
-                            >
-                              Collection pauses if you switch tabs and resumes when you return.
-                            </p>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Collecting：Step2 + 进度 + 候选人列表 */}
-                      {collectionState === 'collecting' && (
-                        <div
-                          style={{
-                            borderRadius: '12px',
-                            background: '#FFFFFF',
-                            boxShadow: '0 2px 12px rgba(13, 28, 46, 0.06)',
-                            overflow: 'hidden',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            minHeight: 0,
-                            flex: '1 1 auto',
-                          }}
-                        >
-                          <div
-                            style={{
-                              padding: '10px 12px',
-                              boxShadow: '0 1px 0 rgba(13, 28, 46, 0.06)',
-                            }}
-                          >
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '9px',
-                                lineHeight: '12px',
-                                fontWeight: 700,
-                                letterSpacing: '0.12em',
-                                textTransform: 'uppercase',
-                                color: '#004ac6',
-                                marginBottom: '4px',
-                              }}
-                            >
-                              Step 2
-                            </div>
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '14px',
-                                lineHeight: '20px',
-                                fontWeight: 700,
-                                color: '#0d1c2e',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                              }}
-                            >
-                              <span>Collecting...</span>
-                              <span
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '5px',
-                                  height: '20px',
-                                  padding: '0 8px',
-                                  borderRadius: '999px',
-                                  background: '#d5e3fc',
-                                  color: '#004ac6',
-                                  fontSize: '10px',
-                                  fontWeight: 700,
-                                  fontVariantNumeric: 'tabular-nums',
-                                  transform: isCountFlipping ? 'translateY(-2px)' : 'translateY(0)',
-                                  opacity: isCountFlipping ? 0.72 : 1,
-                                  transition: 'transform 200ms ease, opacity 200ms ease',
-                                }}
-                              >
-                                <span
-                                  className="animate-spin"
-                                  style={{
-                                    width: '9px',
-                                    height: '9px',
-                                    borderRadius: '999px',
-                                    border: '2px solid rgba(0, 74, 198, 0.25)',
-                                    borderTopColor: '#004ac6',
-                                    display: 'inline-block',
-                                  }}
-                                />
-                                {collectedCount}
-                              </span>
-                            </div>
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '11px',
-                                lineHeight: '14px',
-                                fontWeight: 400,
-                                color: 'rgba(13, 28, 46, 0.56)',
-                              }}
-                            >
-                              Scanning LinkedIn results and extracting profiles.
-                            </div>
-                          </div>
-
-                          <div style={{ padding: '10px 12px 12px', display: 'flex', flexDirection: 'column', flex: '1 1 auto', minHeight: 0 }}>
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '11px',
-                                lineHeight: '14px',
-                                fontWeight: 500,
-                                color: 'rgba(13, 28, 46, 0.72)',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                marginBottom: '6px',
-                              }}
-                            >
-                              <span>Progress</span>
-                              <span style={{ color: '#004ac6', fontVariantNumeric: 'tabular-nums' }}>
-                                {Math.round((collectedCount / demoTargetCount) * 100)}%
-                              </span>
-                            </div>
-                            <div
-                              style={{
-                                height: '6px',
-                                borderRadius: '999px',
-                                background: '#d5e3fc',
-                                overflow: 'hidden',
-                                marginBottom: '8px',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  display: 'block',
-                                  height: '100%',
-                                  width: `${(collectedCount / demoTargetCount) * 100}%`,
-                                  background: 'linear-gradient(90deg, #004ac6 0%, #2563eb 100%)',
-                                  transition: 'width 300ms ease',
-                                }}
-                              />
-                            </div>
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '11px',
-                                lineHeight: '14px',
-                                fontWeight: 400,
-                                color: 'rgba(13, 28, 46, 0.52)',
-                                marginBottom: '8px',
-                              }}
-                            >
-                              {mockCollectionMode === 'pages'
-                                ? `Collecting page ${Math.min(collectedCount + 1, demoTargetCount)}/${demoTargetCount}`
-                                : `Collecting: ${collectedCount}/${demoTargetCount} candidates`}
-                            </div>
-
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                              {extensionMockRows
-                                .slice(0, demoTargetCount)
-                                .slice(0, collectedCount)
-                                .reverse()
-                                .map((candidate, idx) => {
-                                  const isNewest = idx === 0 && collectedCount < demoTargetCount;
-                                  return (
-                                    <div
-                                      key={`collecting-${candidate.name}`}
-                                      style={{
-                                        borderRadius: '10px',
-                                        background: '#f5f9ff',
-                                        padding: '7px 9px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        boxShadow: isNewest ? '0 3px 12px rgba(0, 74, 198, 0.14)' : 'none',
-                                        transition: 'box-shadow 200ms ease',
-                                      }}
-                                    >
-                                      <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: '7px' }}>
-                                        <span
-                                          aria-hidden
-                                          style={{
-                                            width: '24px',
-                                            height: '24px',
-                                            borderRadius: '999px',
-                                            background: '#dfe7f5',
-                                            color: 'rgba(13, 28, 46, 0.72)',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            ...fontStyle,
-                                            fontSize: '9px',
-                                            lineHeight: '9px',
-                                            fontWeight: 700,
-                                            flex: '0 0 auto',
-                                          }}
-                                        >
-                                          {getMockInitials(candidate.name)}
-                                        </span>
-                                        <div style={{ minWidth: 0 }}>
-                                          <div
-                                            style={{
-                                              ...fontStyle,
-                                              fontSize: '11px',
-                                              lineHeight: '14px',
-                                              fontWeight: 500,
-                                              color: 'rgba(13, 28, 46, 0.82)',
-                                              whiteSpace: 'nowrap',
-                                              overflow: 'hidden',
-                                              textOverflow: 'ellipsis',
-                                              maxWidth: '108px',
-                                            }}
-                                          >
-                                            {candidate.name}
-                                          </div>
-                                          <div
-                                            style={{
-                                              ...fontStyle,
-                                              fontSize: '9px',
-                                              lineHeight: '12px',
-                                              fontWeight: 400,
-                                              color: 'rgba(13, 28, 46, 0.48)',
-                                              whiteSpace: 'nowrap',
-                                              overflow: 'hidden',
-                                              textOverflow: 'ellipsis',
-                                              maxWidth: '108px',
-                                            }}
-                                          >
-                                            {candidate.role}
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <span
-                                        style={{
-                                          height: '20px',
-                                          borderRadius: '999px',
-                                          padding: '0 8px',
-                                          display: 'inline-flex',
-                                          alignItems: 'center',
-                                          ...fontStyle,
-                                          fontSize: '9px',
-                                          fontWeight: 700,
-                                          color: isNewest ? '#004ac6' : '#006a61',
-                                          background: isNewest ? '#d5e3fc' : '#e6f6f1',
-                                        }}
-                                      >
-                                        {isNewest ? 'Collecting' : 'Collected'}
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Done：完成统计 + 完整列表 */}
-                      {collectionState === 'done' && (
-                        <div
-                          style={{
-                            borderRadius: '12px',
-                            background: '#FFFFFF',
-                            boxShadow: '0 2px 12px rgba(13, 28, 46, 0.06)',
-                            overflow: 'hidden',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: '1 1 auto',
-                            minHeight: 0,
-                          }}
-                        >
-                          <div style={{ padding: '10px 12px' }}>
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '9px',
-                                lineHeight: '12px',
-                                fontWeight: 700,
-                                letterSpacing: '0.12em',
-                                textTransform: 'uppercase',
-                                color: '#006a61',
-                                marginBottom: '4px',
-                              }}
-                            >
-                              Completed
-                            </div>
-                            <div
-                              style={{
-                                ...fontStyle,
-                                fontSize: '14px',
-                                lineHeight: '20px',
-                                fontWeight: 700,
-                                color: '#0d1c2e',
-                                marginBottom: '8px',
-                              }}
-                            >
-                              Collection finished
-                            </div>
-                            <div
-                              style={{
-                                borderRadius: '10px',
-                                background: 'linear-gradient(135deg, #ecf8f5 0%, #f5f9ff 100%)',
-                                padding: '8px 10px',
-                                marginBottom: '8px',
-                              }}
-                            >
-                              <div
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '9px',
-                                  lineHeight: '12px',
-                                  fontWeight: 700,
-                                  letterSpacing: '0.06em',
-                                  textTransform: 'uppercase',
-                                  color: 'rgba(13, 28, 46, 0.45)',
-                                  marginBottom: '2px',
-                                }}
-                              >
-                                Total profiles collected
-                              </div>
-                              <div
-                                style={{
-                                  ...fontStyle,
-                                  fontSize: '24px',
-                                  lineHeight: '1.1',
-                                  fontWeight: 700,
-                                  color: '#006a61',
-                                  fontVariantNumeric: 'tabular-nums',
-                                  transform: isCountFlipping ? 'translateY(-2px)' : 'translateY(0)',
-                                  opacity: isCountFlipping ? 0.72 : 1,
-                                  transition: 'transform 200ms ease, opacity 200ms ease',
-                                }}
-                              >
-                                {doneCollectedCount}
-                              </div>
-                            </div>
-
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                              {doneVisibleCandidates.map((candidate) => (
-                                <div
-                                  key={`done-${candidate.name}`}
-                                  style={{
-                                    borderRadius: '10px',
-                                    background: '#f5f9ff',
-                                    padding: '7px 9px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                  }}
-                                >
-                                  <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: '7px' }}>
-                                    <span
-                                      aria-hidden
-                                      style={{
-                                        width: '24px',
-                                        height: '24px',
-                                        borderRadius: '999px',
-                                        background: '#dfe7f5',
-                                        color: 'rgba(13, 28, 46, 0.72)',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        ...fontStyle,
-                                        fontSize: '9px',
-                                        lineHeight: '9px',
-                                        fontWeight: 700,
-                                        flex: '0 0 auto',
-                                      }}
-                                    >
-                                      {getMockInitials(candidate.name)}
-                                    </span>
-                                    <div style={{ minWidth: 0 }}>
-                                      <div
-                                        style={{
-                                          ...fontStyle,
-                                          fontSize: '11px',
-                                          lineHeight: '14px',
-                                          fontWeight: 500,
-                                          color: 'rgba(13, 28, 46, 0.82)',
-                                          whiteSpace: 'nowrap',
-                                          overflow: 'hidden',
-                                          textOverflow: 'ellipsis',
-                                          maxWidth: '108px',
-                                        }}
-                                      >
-                                        {candidate.name}
-                                      </div>
-                                      <div
-                                        style={{
-                                          ...fontStyle,
-                                          fontSize: '9px',
-                                          lineHeight: '12px',
-                                          fontWeight: 400,
-                                          color: 'rgba(13, 28, 46, 0.48)',
-                                          whiteSpace: 'nowrap',
-                                          overflow: 'hidden',
-                                          textOverflow: 'ellipsis',
-                                          maxWidth: '108px',
-                                        }}
-                                      >
-                                        {candidate.role}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                                    <a
-                                      href={`https://www.linkedin.com/in/${candidate.name.toLowerCase().replace(/\s+/g, '-')}/`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      style={{
-                                        height: '20px',
-                                        borderRadius: '999px',
-                                        padding: '0 8px',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        ...fontStyle,
-                                        fontSize: '9px',
-                                        fontWeight: 700,
-                                        color: '#004ac6',
-                                        background: '#d5e3fc',
-                                        textDecoration: 'none',
-                                      }}
-                                    >
-                                      LinkedIn
-                                    </a>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleRemoveDoneCandidate(candidate.name)}
-                                      style={{
-                                        width: '20px',
-                                        height: '20px',
-                                        borderRadius: '6px',
-                                        border: 'none',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        ...fontStyle,
-                                        fontSize: '12px',
-                                        fontWeight: 600,
-                                        color: 'rgba(13, 28, 46, 0.52)',
-                                        background: '#eef3fc',
-                                        cursor: 'pointer',
-                                      }}
-                                    >
-                                      ×
-                                    </button>
-                                  </div>
-                                </div>
-                              ))}
-                              {doneVisibleCandidates.length === 0 && (
-                                <div
-                                  style={{
-                                    ...fontStyle,
-                                    fontSize: '10px',
-                                    lineHeight: '14px',
-                                    fontWeight: 500,
-                                    color: 'rgba(13, 28, 46, 0.45)',
-                                    textAlign: 'center',
-                                    padding: '10px 0 2px',
-                                  }}
-                                >
-                                  No candidates left in this collection.
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {collectionState === 'idle' && (
-                      <button
-                        type="button"
-                        onClick={handleStartCollection}
-                        style={{
-                          ...fontStyle,
-                          margin: '0 12px 12px',
-                          width: 'calc(100% - 24px)',
-                          height: '42px',
-                          borderRadius: '10px',
-                          border: 'none',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '8px',
-                          fontSize: '14px',
-                          lineHeight: '20px',
-                          fontWeight: 500,
-                          color: '#FFFFFF',
-                          background: 'linear-gradient(135deg, #004ac6 0%, #2563eb 100%)',
-                          cursor: 'pointer',
-                          boxShadow: '0 8px 20px rgba(0, 74, 198, 0.28)',
-                        }}
-                      >
-                        Start Collection
-                      </button>
-                    )}
-
-                    {collectionState === 'collecting' && (
-                      <div
-                        style={{
-                          ...fontStyle,
-                          margin: '0 12px 12px',
-                          fontSize: '11px',
-                          lineHeight: '14px',
-                          fontWeight: 400,
-                          color: 'rgba(13, 28, 46, 0.42)',
-                          textAlign: 'center',
-                        }}
-                      >
-                        You can close this panel; collection continues in the background.
-                      </div>
-                    )}
-
-                    {collectionState === 'done' && (
-                      <div
-                        style={{
-                          margin: '0 12px 12px',
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1.2fr',
-                          gap: '8px',
-                        }}
-                      >
-                        <button
-                          type="button"
-                          onClick={resetCollectionDemo}
-                          style={{
-                            ...fontStyle,
-                            height: '40px',
-                            borderRadius: '10px',
-                            border: '1px solid #c9d9f6',
-                            background: '#FFFFFF',
-                            color: '#004ac6',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          New collection
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleGoToDashboard}
-                          disabled={isDashboardRedirecting || doneCollectedCount === 0}
-                          style={{
-                            ...fontStyle,
-                            height: '40px',
-                            borderRadius: '10px',
-                            border: 'none',
-                            background: 'linear-gradient(135deg, #004ac6 0%, #2563eb 100%)',
-                            color: '#FFFFFF',
-                            fontSize: '12px',
-                            fontWeight: 600,
-                            boxShadow: '0 8px 20px rgba(0, 74, 198, 0.28)',
-                            cursor: isDashboardRedirecting || doneCollectedCount === 0 ? 'default' : 'pointer',
-                            opacity: isDashboardRedirecting || doneCollectedCount === 0 ? 0.72 : 1,
-                          }}
-                        >
-                          {isDashboardRedirecting ? (
-                            <span
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                              }}
-                            >
-                              <span
-                                className="animate-spin"
-                                style={{
-                                  width: '10px',
-                                  height: '10px',
-                                  borderRadius: '999px',
-                                  border: '2px solid rgba(255, 255, 255, 0.35)',
-                                  borderTopColor: '#FFFFFF',
-                                  display: 'inline-block',
-                                }}
-                              />
-                              Opening...
-                            </span>
-                          ) : (
-                            doneCollectedCount === 0 ? 'No candidates' : 'Go to dashboard'
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                />
               </div>
             </div>
 
