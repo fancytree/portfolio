@@ -3429,7 +3429,7 @@ export default function ConnectnovaProjectPage() {
                   maxWidth: '760px',
                 }}
               >
-                Recruiters already do their sourcing on LinkedIn&apos;s search pages. The extension embeds as a side panel, so collection happens <em style={{ fontStyle: 'italic' }}>inside</em> the existing workflow — not next to it.
+                I designed the extension as an in-context collection tool for LinkedIn search pages, focusing on clear page recognition, flexible collection controls, and calmer feedback during long-running collection tasks.
               </p>
 
               <ol
@@ -3446,16 +3446,16 @@ export default function ConnectnovaProjectPage() {
               >
                 {[
                   {
-                    title: 'Define collection scope',
-                    body: 'Set a page range or a candidate count — whatever matches the role\u2019s sourcing depth.',
+                    title: 'LinkedIn Search page detected',
+                    body: 'A visible detection state helps users understand whether they are on the correct LinkedIn page before starting collection.',
                   },
                   {
-                    title: 'One click to start',
-                    body: 'The extension walks through the search results and captures every profile it finds.',
+                    title: 'Flexible collection inputs',
+                    body: 'I used input + stepper and input + slider patterns so recruiters can choose the collection range that best fits different sourcing needs.',
                   },
                   {
-                    title: 'Save to a project',
-                    body: 'Results are saved into a chosen project and land directly in the dashboard — no copy-paste.',
+                    title: 'Animated collecting state',
+                    body: 'The collecting process includes motion feedback to make progress feel active and reduce waiting anxiety during longer tasks.',
                   },
                 ].map(({ title, body }, i) => (
                   <li
@@ -3511,6 +3511,61 @@ export default function ConnectnovaProjectPage() {
               </ol>
 
               <div
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+                style={{
+                  maxWidth: '760px',
+                  marginBottom: '32px',
+                }}
+                aria-label="Chrome extension collection performance data"
+              >
+                {[
+                  {
+                    value: '76% -> 93%',
+                    label: 'collect completion rate',
+                  },
+                  {
+                    value: '72% -> 87%',
+                    label: 'save rate after collection',
+                  },
+                ].map(({ value, label }) => (
+                  <div
+                    key={label}
+                    style={{
+                      border: '1px solid rgba(0, 0, 0, 0.08)',
+                      borderRadius: '16px',
+                      background: '#FFFFFF',
+                      padding: '24px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        ...fontStyle,
+                        fontSize: '44px',
+                        lineHeight: '50px',
+                        fontWeight: 600,
+                        letterSpacing: '-0.05em',
+                        color: 'rgb(0, 0, 0)',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {value}
+                    </div>
+                    <div
+                      style={{
+                        ...fontStyle,
+                        fontSize: '15px',
+                        lineHeight: '24px',
+                        fontWeight: 400,
+                        color: 'rgba(0, 0, 0, 0.72)',
+                      }}
+                    >
+                      {label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div
                 style={{
                   border: '1px solid rgba(0, 0, 0, 0.08)',
                   borderRadius: '16px',
@@ -3538,7 +3593,7 @@ export default function ConnectnovaProjectPage() {
             </div>
 
             {/* ——————————————————————————————————————————————
-                03 · WEB DASHBOARD — 4-feature 2x2 showcase
+                03 · NEW RANKING/RERANK — 整图导出（沿用 Chrome extension 流程格式）
                 —————————————————————————————————————————————— */}
             <div style={{ marginBottom: '96px' }}>
               <div
@@ -3553,7 +3608,209 @@ export default function ConnectnovaProjectPage() {
                   marginBottom: '12px',
                 }}
               >
-                03 · Web dashboard
+                03 · New Ranking/Rerank
+              </div>
+              <h2
+                style={{
+                  ...fontStyle,
+                  fontSize: '28px',
+                  lineHeight: '36px',
+                  fontWeight: 500,
+                  color: 'rgb(0, 0, 0)',
+                  marginTop: 0,
+                  marginBottom: '20px',
+                }}
+              >
+                Make AI evaluation criteria visible and editable
+              </h2>
+              <p
+                style={{
+                  ...fontStyle,
+                  fontSize: '17px',
+                  lineHeight: '30px',
+                  fontWeight: 400,
+                  color: 'rgba(0, 0, 0, 0.82)',
+                  marginTop: 0,
+                  marginBottom: '24px',
+                  maxWidth: '760px',
+                }}
+              >
+                To balance transparency, trust, and control in AI products — and to keep the ranking process from feeling like a black box — I designed an evaluation criteria layer that users can review, adjust, and apply before generating a new ranking.
+              </p>
+
+              <ol
+                style={{
+                  listStyle: 'none',
+                  padding: 0,
+                  margin: 0,
+                  marginBottom: '32px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  maxWidth: '760px',
+                }}
+              >
+                {[
+                  {
+                    title: 'Expose AI-generated criteria',
+                    body: 'The system translates the hiring brief into evaluation criteria before ranking, making the AI logic visible to recruiters.',
+                  },
+                  {
+                    title: 'Support user edits',
+                    body: 'Users can modify the generated evaluation criteria when they need more control over how candidates are assessed.',
+                  },
+                ].map(({ title, body }, i) => (
+                  <li
+                    key={title}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr',
+                      columnGap: '16px',
+                      alignItems: 'baseline',
+                    }}
+                  >
+                    <span
+                      style={{
+                        ...fontStyle,
+                        fontSize: '13px',
+                        lineHeight: '24px',
+                        fontWeight: 500,
+                        color: 'oklch(0.556 0 0)',
+                        fontVariantNumeric: 'tabular-nums',
+                        letterSpacing: '0.08em',
+                      }}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>
+                      <span
+                        style={{
+                          ...fontStyle,
+                          fontSize: '16px',
+                          lineHeight: '24px',
+                          fontWeight: 500,
+                          color: 'rgb(0, 0, 0)',
+                        }}
+                      >
+                        {title}
+                      </span>
+                      <span style={{ display: 'block', marginTop: '4px' }}>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '15px',
+                            lineHeight: '24px',
+                            fontWeight: 400,
+                            color: 'rgba(0, 0, 0, 0.72)',
+                          }}
+                        >
+                          {body}
+                        </span>
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              <div
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+                style={{
+                  maxWidth: '760px',
+                  marginBottom: '32px',
+                }}
+                aria-label="Evaluation criteria usage data"
+              >
+                {[
+                  {
+                    value: '84%',
+                    label: 'of users generated evaluation criteria',
+                  },
+                  {
+                    value: '31%',
+                    label: 'of users edited the criteria before running the ranking',
+                  },
+                ].map(({ value, label }) => (
+                  <div
+                    key={value}
+                    style={{
+                      border: '1px solid rgba(0, 0, 0, 0.08)',
+                      borderRadius: '16px',
+                      background: '#FFFFFF',
+                      padding: '24px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        ...fontStyle,
+                        fontSize: '56px',
+                        lineHeight: '60px',
+                        fontWeight: 600,
+                        letterSpacing: '-0.05em',
+                        color: 'rgb(0, 0, 0)',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      {value}
+                    </div>
+                    <div
+                      style={{
+                        ...fontStyle,
+                        fontSize: '15px',
+                        lineHeight: '24px',
+                        fontWeight: 400,
+                        color: 'rgba(0, 0, 0, 0.72)',
+                      }}
+                    >
+                      {label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '16px',
+                  background: '#F8F9FB',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '14px',
+                }}
+                aria-label="ConnectNova new ranking and rerank flow"
+              >
+                <img
+                  src="/img/connectnova/Rerank.avif"
+                  alt="ConnectNova new ranking and rerank workflow"
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxWidth: '100%',
+                    display: 'block',
+                    objectFit: 'contain',
+                    borderRadius: '12px',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* ——————————————————————————————————————————————
+                04 · WEB DASHBOARD — 4-feature 2x2 showcase
+                —————————————————————————————————————————————— */}
+            <div style={{ marginBottom: '96px' }}>
+              <div
+                style={{
+                  ...fontStyle,
+                  fontSize: '12px',
+                  lineHeight: '16px',
+                  fontWeight: 500,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: 'oklch(0.556 0 0)',
+                  marginBottom: '12px',
+                }}
+              >
+                04 · Web dashboard
               </div>
               <h2
                 style={{
@@ -3586,28 +3843,28 @@ export default function ConnectnovaProjectPage() {
               <div className="grid grid-cols-1 gap-6">
                 {[
                   {
-                    tag: '3.1',
+                    tag: '4.1',
                     title: 'Project list',
                     body: 'Every hiring need appears as a Project card. Status is visible at a glance — which are ranked, which still have unprocessed candidates.',
                     figNumber: 6,
                     figCaption: 'Project overview · card grid',
                   },
                   {
-                    tag: '3.2',
+                    tag: '4.2',
                     title: 'Project detail · AI Ranking',
                     body: 'Opening a project lands on the latest ranking, no extra hop. Each candidate ships with an AI score, a dimension breakdown, and the rationale behind it. History is a version-switch away.',
                     figNumber: 7,
                     figCaption: 'Ranking view · score + dimension breakdown',
                   },
                   {
-                    tag: '3.3',
+                    tag: '4.3',
                     title: 'Candidate Pool',
                     body: 'Every candidate in the project — ranked or not — in one view. Search, tag, annotate. The foundation for pipeline management down the road.',
                     figNumber: 8,
                     figCaption: 'Candidate pool · full roster',
                   },
                   {
-                    tag: '3.4',
+                    tag: '4.4',
                     title: 'Profile Panel',
                     body: "Clicking a candidate slides in their full LinkedIn profile — work history, education, skills — alongside any notes the recruiter has added.",
                     figNumber: 9,
@@ -3715,7 +3972,7 @@ export default function ConnectnovaProjectPage() {
                         gap: '20px',
                       }}
                     >
-                      {tag === '3.4' ? (
+                      {tag === '4.4' ? (
                         <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,460px)] lg:gap-8">
                           {/* Profile Panel：左文案 + 右 Fig 9（lg 起双列；小屏文案在上） */}
                           <div className="min-w-0">{copyBlock}</div>
@@ -3725,10 +3982,10 @@ export default function ConnectnovaProjectPage() {
                         </div>
                       ) : (
                         <>
-                          {tag === '3.1' ? (
+                          {tag === '4.1' ? (
                             <ProjectListViewMock fontStyle={fontStyle} />
-                          ) : tag === '3.2' || tag === '3.3' ? (
-                            <AIRankingViewMock fontStyle={fontStyle} defaultTab={tag === '3.3' ? 'pool' : 'rankings'} />
+                          ) : tag === '4.2' || tag === '4.3' ? (
+                            <AIRankingViewMock fontStyle={fontStyle} defaultTab={tag === '4.3' ? 'pool' : 'rankings'} />
                           ) : (
                             placeholderVisual
                           )}
@@ -3742,7 +3999,7 @@ export default function ConnectnovaProjectPage() {
             </div>
 
             {/* ——————————————————————————————————————————————
-                04 · OUTREACH — ongoing prototype
+                05 · OUTREACH — ongoing prototype
                 —————————————————————————————————————————————— */}
             <div style={{ marginBottom: '96px' }}>
               <div
@@ -3757,7 +4014,7 @@ export default function ConnectnovaProjectPage() {
                   marginBottom: '12px',
                 }}
               >
-                04 · outreach
+                05 · outreach
               </div>
               <h2
                 style={{
@@ -3850,7 +4107,7 @@ export default function ConnectnovaProjectPage() {
             </div>
 
             {/* ——————————————————————————————————————————————
-                05 · DESIGN DECISIONS — decision / rationale table
+                06 · DESIGN DECISIONS — decision / rationale table
                 复用 Problem "Why tools don't solve it" 的表格 DNA
                 —————————————————————————————————————————————— */}
             <div>
@@ -3866,7 +4123,7 @@ export default function ConnectnovaProjectPage() {
                   marginBottom: '12px',
                 }}
               >
-                05 · Design decisions
+                06 · Design decisions
               </div>
               <h2
                 style={{
