@@ -4046,6 +4046,537 @@ export default function ConnectnovaProjectPage() {
               >
                 Ongoing exploration for recruiter outreach workflows. This prototype tests messaging loops and follow-up orchestration on top of the current platform architecture.
               </p>
+
+              {/* Outreach：01 Problem Definition — 双栏版式与 Process「01 · Discovery」一致，右侧留图文位 */}
+              <div
+                className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
+                style={{ marginTop: '56px', marginBottom: '72px' }}
+              >
+                <div>
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: 'clamp(64px, 8vw, 96px)',
+                      lineHeight: '1',
+                      fontWeight: 200,
+                      letterSpacing: '-0.04em',
+                      color: 'rgb(0, 0, 0)',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    01
+                  </div>
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: '11px',
+                      lineHeight: '16px',
+                      fontWeight: 500,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: 'oklch(0.556 0 0)',
+                      marginTop: '16px',
+                      maxWidth: '160px',
+                    }}
+                  >
+                    Problem Definition
+                  </div>
+                </div>
+                <div>
+                  <h2
+                    style={{
+                      ...fontStyle,
+                      fontSize: '28px',
+                      lineHeight: '36px',
+                      fontWeight: 500,
+                      color: 'rgb(0, 0, 0)',
+                      marginTop: 0,
+                      marginBottom: '20px',
+                    }}
+                  >
+                    Projects, Candidates, Campaigns, and Leads
+                  </h2>
+                  <ol
+                    style={{
+                      listStyle: 'none',
+                      padding: 0,
+                      margin: 0,
+                      marginBottom: '28px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '16px',
+                      maxWidth: '760px',
+                    }}
+                  >
+                    {[
+                      'Users are already familiar with the Campaigns/Leads model. How do we introduce Projects and Candidates without creating conceptual confusion or duplicating mental models?',
+                      'How do we map Candidates (scoped to a Project) to Leads (scoped to a Campaign), when the same person may exist across multiple Projects and Campaigns?',
+                      'How do we design the trigger logic so users can launch a Campaign directly from a Project context, with Candidates automatically becoming Leads?',
+                    ].map((q, i) => (
+                      <li
+                        key={`outreach-problem-${i}`}
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'auto 1fr',
+                          columnGap: '16px',
+                          alignItems: 'baseline',
+                        }}
+                      >
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '13px',
+                            lineHeight: '30px',
+                            fontWeight: 500,
+                            color: 'oklch(0.556 0 0)',
+                            fontVariantNumeric: 'tabular-nums',
+                            letterSpacing: '0.08em',
+                          }}
+                        >
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '16px',
+                            lineHeight: '28px',
+                            fontWeight: 400,
+                            color: 'rgba(0, 0, 0, 0.82)',
+                          }}
+                        >
+                          {q}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                  {/* 触点1：Campaign 创建流程 — 仅在关键步骤下挂 ↑ 考量（与 Discovery 同样式） */}
+                  <div
+                    style={{
+                      marginTop: '4px',
+                      border: '1px solid rgba(0, 0, 0, 0.08)',
+                      borderRadius: '14px',
+                      background: '#FFFFFF',
+                      overflow: 'hidden',
+                    }}
+                    aria-label="Touchpoint 1 — Campaign creation flow from Project"
+                  >
+                    <div style={{ padding: '24px 24px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            color: 'rgb(0, 0, 0)',
+                          }}
+                        >
+                          Touchpoint 1 · Campaign from Project
+                        </span>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '10px',
+                            fontWeight: 500,
+                            color: '#0052CC',
+                            background: 'rgba(0, 82, 204, 0.07)',
+                            border: '1px solid rgba(0, 82, 204, 0.18)',
+                            borderRadius: '4px',
+                            padding: '2px 7px',
+                          }}
+                        >
+                          Outreach MVP
+                        </span>
+                      </div>
+                      <div className="flex items-start overflow-x-auto pb-1" style={{ gap: 0, rowGap: '20px' }}>
+                        {[
+                          {
+                            label: 'Create\nCampaign',
+                            sub: 'New outreach\ncampaign',
+                            pain: null,
+                          },
+                          {
+                            label: 'Select\nProject',
+                            sub: 'Sourcing\ncontainer',
+                            pain: 'Keeps Leads scoped\nto one hiring goal',
+                          },
+                          {
+                            label: 'Leads from\nranking',
+                            sub: 'Version · latest\nby default',
+                            pain: 'Latest rank avoids\nstale cohort drift',
+                          },
+                          {
+                            label: 'Score\nfilter',
+                            sub: 'e.g. above 80\nor above 60',
+                            pain: 'Scores become a\nsendable slice',
+                          },
+                          {
+                            label: 'Sequence',
+                            sub: 'Select or\ncreate new',
+                            pain: null,
+                          },
+                          {
+                            label: 'Launch &\ntrack',
+                            sub: 'Created ·\nmonitor campaign',
+                            pain: null,
+                          },
+                        ].map(({ label: stepLabel, sub, pain }, i, arr) => (
+                          <div key={stepLabel} className="flex items-start" style={{ flex: '1 0 88px', minWidth: '88px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1, minWidth: 0 }}>
+                              <div
+                                style={{
+                                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                                  borderRadius: '8px',
+                                  background: 'rgba(0, 0, 0, 0.02)',
+                                  padding: '8px 10px',
+                                  width: '100%',
+                                  textAlign: 'center',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    ...fontStyle,
+                                    fontSize: '12px',
+                                    fontWeight: 500,
+                                    color: 'rgb(0, 0, 0)',
+                                    lineHeight: '16px',
+                                    marginBottom: '3px',
+                                    whiteSpace: 'pre-line',
+                                  }}
+                                >
+                                  {stepLabel}
+                                </div>
+                                <div
+                                  style={{
+                                    ...fontStyle,
+                                    fontSize: '10px',
+                                    fontWeight: 400,
+                                    color: 'rgba(0, 0, 0, 0.4)',
+                                    lineHeight: '14px',
+                                    whiteSpace: 'pre-line',
+                                  }}
+                                >
+                                  {sub}
+                                </div>
+                              </div>
+                              {pain ? (
+                                <div
+                                  style={{
+                                    ...fontStyle,
+                                    fontSize: '10px',
+                                    fontWeight: 500,
+                                    color: 'rgba(200, 50, 30, 0.85)',
+                                    background: 'rgba(220, 60, 40, 0.07)',
+                                    border: '1px solid rgba(220, 60, 40, 0.18)',
+                                    borderRadius: '5px',
+                                    padding: '3px 7px',
+                                    textAlign: 'center',
+                                    lineHeight: '13px',
+                                    whiteSpace: 'pre-line',
+                                  }}
+                                >
+                                  ↑ {pain}
+                                </div>
+                              ) : (
+                                <div style={{ height: '32px' }} />
+                              )}
+                            </div>
+                            {i < arr.length - 1 && (
+                              <div
+                                aria-hidden
+                                style={{
+                                  ...fontStyle,
+                                  fontSize: '14px',
+                                  fontWeight: 300,
+                                  color: 'rgba(0, 0, 0, 0.2)',
+                                  padding: '0 4px',
+                                  marginTop: '22px',
+                                  flexShrink: 0,
+                                }}
+                              >
+                                →
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 触点2：Rank 结束后触发 Outreach — 同上，仅重点步骤带考量 */}
+                  <div
+                    style={{
+                      marginTop: '24px',
+                      border: '1px solid rgba(0, 0, 0, 0.08)',
+                      borderRadius: '14px',
+                      background: '#FFFFFF',
+                      overflow: 'hidden',
+                    }}
+                    aria-label="Touchpoint 2 — Outreach after ranking completes"
+                  >
+                    <div style={{ padding: '24px 24px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '12px',
+                            fontWeight: 500,
+                            color: 'rgb(0, 0, 0)',
+                          }}
+                        >
+                          Touchpoint 2 · After ranking completes
+                        </span>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            fontSize: '10px',
+                            fontWeight: 500,
+                            color: '#0052CC',
+                            background: 'rgba(0, 82, 204, 0.07)',
+                            border: '1px solid rgba(0, 82, 204, 0.18)',
+                            borderRadius: '4px',
+                            padding: '2px 7px',
+                          }}
+                        >
+                          Outreach MVP
+                        </span>
+                      </div>
+                      <div className="flex items-start overflow-x-auto pb-1" style={{ gap: 0, rowGap: '20px' }}>
+                        {[
+                          {
+                            label: 'Ranking\ncomplete',
+                            sub: 'Rank run\nfinishes',
+                            pain: null,
+                          },
+                          {
+                            label: 'Start\noutreach?',
+                            sub: 'Post-rank\nprompt',
+                            pain: 'Explicit opt-in,\nno pushy automation',
+                          },
+                          {
+                            label: 'Score\nfilter',
+                            sub: 'e.g. above 80\nor above 60',
+                            pain: null,
+                          },
+                          {
+                            label: 'Sequence',
+                            sub: 'Select or\ncreate new',
+                            pain: null,
+                          },
+                          {
+                            label: 'Launch &\ntrack',
+                            sub: 'Go live +\nmonitor',
+                            pain: 'Closes rank →\nreach loop',
+                          },
+                        ].map(({ label: stepLabel, sub, pain }, i, arr) => (
+                          <div key={`tp2-${i}`} className="flex items-start" style={{ flex: '1 0 88px', minWidth: '88px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', flex: 1, minWidth: 0 }}>
+                              <div
+                                style={{
+                                  border: '1px solid rgba(0, 0, 0, 0.1)',
+                                  borderRadius: '8px',
+                                  background: 'rgba(0, 0, 0, 0.02)',
+                                  padding: '8px 10px',
+                                  width: '100%',
+                                  textAlign: 'center',
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    ...fontStyle,
+                                    fontSize: '12px',
+                                    fontWeight: 500,
+                                    color: 'rgb(0, 0, 0)',
+                                    lineHeight: '16px',
+                                    marginBottom: '3px',
+                                    whiteSpace: 'pre-line',
+                                  }}
+                                >
+                                  {stepLabel}
+                                </div>
+                                <div
+                                  style={{
+                                    ...fontStyle,
+                                    fontSize: '10px',
+                                    fontWeight: 400,
+                                    color: 'rgba(0, 0, 0, 0.4)',
+                                    lineHeight: '14px',
+                                    whiteSpace: 'pre-line',
+                                  }}
+                                >
+                                  {sub}
+                                </div>
+                              </div>
+                              {pain ? (
+                                <div
+                                  style={{
+                                    ...fontStyle,
+                                    fontSize: '10px',
+                                    fontWeight: 500,
+                                    color: 'rgba(200, 50, 30, 0.85)',
+                                    background: 'rgba(220, 60, 40, 0.07)',
+                                    border: '1px solid rgba(220, 60, 40, 0.18)',
+                                    borderRadius: '5px',
+                                    padding: '3px 7px',
+                                    textAlign: 'center',
+                                    lineHeight: '13px',
+                                    whiteSpace: 'pre-line',
+                                  }}
+                                >
+                                  ↑ {pain}
+                                </div>
+                              ) : (
+                                <div style={{ height: '32px' }} />
+                              )}
+                            </div>
+                            {i < arr.length - 1 && (
+                              <div
+                                aria-hidden
+                                style={{
+                                  ...fontStyle,
+                                  fontSize: '14px',
+                                  fontWeight: 300,
+                                  color: 'rgba(0, 0, 0, 0.2)',
+                                  padding: '0 4px',
+                                  marginTop: '22px',
+                                  flexShrink: 0,
+                                }}
+                              >
+                                →
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Outreach：02 Competitive analysis — 与 Process「02 · Product decision」同构；长眉题允许在左栏折行 */}
+              <div
+                className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
+                style={{ marginBottom: '72px' }}
+              >
+                <div>
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: 'clamp(64px, 8vw, 96px)',
+                      lineHeight: '1',
+                      fontWeight: 200,
+                      letterSpacing: '-0.04em',
+                      color: 'rgb(0, 0, 0)',
+                      fontVariantNumeric: 'tabular-nums',
+                    }}
+                  >
+                    02
+                  </div>
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: '11px',
+                      lineHeight: '16px',
+                      fontWeight: 500,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: 'oklch(0.556 0 0)',
+                      marginTop: '16px',
+                      maxWidth: '160px',
+                    }}
+                  >
+                    Competitive Analysis &amp; Design Adaptation
+                  </div>
+                </div>
+                <div>
+                  <h2
+                    style={{
+                      ...fontStyle,
+                      fontSize: '28px',
+                      lineHeight: '36px',
+                      fontWeight: 500,
+                      color: 'rgb(0, 0, 0)',
+                      marginTop: 0,
+                      marginBottom: '20px',
+                    }}
+                  >
+                    MVP patterns from established outreach tools
+                  </h2>
+                  <p
+                    style={{
+                      ...fontStyle,
+                      fontSize: '17px',
+                      lineHeight: '30px',
+                      fontWeight: 400,
+                      color: 'rgba(0, 0, 0, 0.82)',
+                      maxWidth: '760px',
+                      marginTop: 0,
+                      marginBottom: '16px',
+                    }}
+                  >
+                    Since we are building an MVP, we referenced established outreach platforms (e.g. Apollo, Outreach.io, Salesloft) for core functionality and interaction patterns, adapting only the visual language to align with our design system.
+                  </p>
+                  <div
+                    style={{
+                      ...fontStyle,
+                      fontSize: '15px',
+                      lineHeight: '24px',
+                      fontWeight: 500,
+                      color: 'rgb(0, 0, 0)',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    Features referenced:
+                  </div>
+                  <ul
+                    style={{
+                      ...fontStyle,
+                      margin: '0 0 28px',
+                      paddingLeft: '1.15em',
+                      fontSize: '16px',
+                      lineHeight: '28px',
+                      fontWeight: 400,
+                      color: 'rgba(0, 0, 0, 0.78)',
+                      maxWidth: '760px',
+                    }}
+                  >
+                    <li style={{ marginBottom: '8px' }}>
+                      <strong style={{ fontWeight: 500, color: 'rgb(0, 0, 0)' }}>Campaign creation flow</strong> — multi-step setup with audience, sequence, and schedule
+                    </li>
+                    <li style={{ marginBottom: '8px' }}>
+                      <strong style={{ fontWeight: 500, color: 'rgb(0, 0, 0)' }}>Lead status tracking</strong> — pipeline view with stages (New / Contacted / Replied / Converted)
+                    </li>
+                    <li style={{ marginBottom: '8px' }}>
+                      <strong style={{ fontWeight: 500, color: 'rgb(0, 0, 0)' }}>Sequence builder</strong> — automated multi-touch messaging with delay intervals
+                    </li>
+                    <li>
+                      <strong style={{ fontWeight: 500, color: 'rgb(0, 0, 0)' }}>Campaign analytics</strong> — open rate, reply rate, conversion per campaign
+                    </li>
+                  </ul>
+                  <div
+                    style={{
+                      width: '100%',
+                      borderRadius: '14px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(0, 0, 0, 0.08)',
+                      background: '#F8F9FB',
+                      padding: '10px',
+                    }}
+                    aria-label="Competitive analysis — outreach reference visual"
+                  >
+                    <img
+                      src="/img/connectnova/outreach%20.avif"
+                      alt="ConnectNova outreach — competitive analysis and design adaptation reference"
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        display: 'block',
+                        borderRadius: '8px',
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
               <div style={{ width: '100%', margin: '0 0 48px' }}>
                 <div
                   style={{
