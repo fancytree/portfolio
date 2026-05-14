@@ -22,42 +22,45 @@ function useScrollAnimation(initialDelay: number = 0) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const observer = new IntersectionObserver(
+    let observer: IntersectionObserver | null = null;
+
+    const timer = window.setTimeout(() => {
+      observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               setIsVisible(true);
-              observer.unobserve(entry.target);
+              observer?.unobserve(entry.target);
             }
           });
         },
         {
-          threshold: 0.1,
-          rootMargin: '0px 0px -100px 0px',
+          // 大块章节（如整段 Solution）高度极大；threshold 0.1 要求「可见面积 / 元素总面积 ≥ 10%」，
+          // 用户刚滚到标题时往往达不到，导致整段一直 opacity:0。0 表示任意像素进入视口即触发。
+          threshold: 0,
+          rootMargin: '0px 0px -80px 0px',
         }
       );
 
-      if (ref.current) {
-        const rect = ref.current.getBoundingClientRect();
+      const el = ref.current;
+      if (el) {
+        const rect = el.getBoundingClientRect();
         const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-        
+
         if (isInViewport) {
           setIsVisible(true);
         } else {
-          observer.observe(ref.current);
+          observer.observe(el);
         }
       }
-
-      return () => {
-        if (ref.current) {
-          observer.unobserve(ref.current);
-        }
-      };
     }, initialDelay);
 
     return () => {
-      clearTimeout(timer);
+      window.clearTimeout(timer);
+      if (observer && ref.current) {
+        observer.unobserve(ref.current);
+      }
+      observer?.disconnect();
     };
   }, [initialDelay]);
 
