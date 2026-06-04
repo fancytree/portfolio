@@ -3726,11 +3726,11 @@ export default function ConnectnovaProjectPage() {
                 {[
                   {
                     value: '84%',
-                    label: 'of users generated evaluation criteria',
+                    label: 'of ranks included AI-generated evaluation criteria',
                   },
                   {
                     value: '31%',
-                    label: 'of users edited the criteria before running the ranking',
+                    label: 'of ranks had criteria edited before the ranking ran',
                   },
                 ].map(({ value, label }) => (
                   <div
