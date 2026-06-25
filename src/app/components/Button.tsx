@@ -24,20 +24,21 @@ export default function Button({
 
   // 基础样式
   const baseStyle = {
-    fontFamily: 'system-ui, -apple-system, sans-serif',
-    fontSize: '16px',
+    fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace',
+    fontSize: '14px',
     fontStyle: 'normal' as const,
     fontVariant: 'normal' as const,
-    fontWeight: 500,
+    fontWeight: 700,
     letterSpacing: 'normal' as const,
-    lineHeight: '24px',
+    lineHeight: '20px',
     textDecoration: 'none' as const,
     textAlign: 'center' as const,
-    height: '58px',
-    padding: '16px 32px',
-    borderRadius: '29px', // Pill Button: 高度的一半 (58px / 2 = 29px)
+    height: '50px',
+    padding: '14px 24px',
+    borderRadius: '999px',
     cursor: 'pointer' as const,
-    transition: 'all 0.3s ease-in-out', // 平滑过渡动画
+    transition: 'all 0.24s ease',
+    boxShadow: '4px 4px 0 #1E1E14',
   };
 
   // 根据 variant 和 hover 状态应用不同的样式
@@ -47,28 +48,32 @@ export default function Button({
       if (isHovered) {
         return {
           color: 'rgb(255, 255, 255)',
-          backgroundColor: 'rgb(0, 0, 0)',
-          border: '1px solid rgb(0, 0, 0)',
+          backgroundColor: '#1E1E14',
+          border: '2px solid #1E1E14',
+          transform: 'translate(-2px, -2px)',
+          boxShadow: '6px 6px 0 #F5A045',
         };
       }
       return {
-        color: 'rgb(0, 0, 0)',
-        backgroundColor: 'transparent',
-        border: '1px solid rgb(0, 0, 0)',
+        color: '#1E1E14',
+        backgroundColor: '#FFFFFF',
+        border: '2px solid #1E1E14',
       };
     } else {
       // 默认按钮：hover 时变为幽灵按钮样式
       if (isHovered) {
         return {
-          color: 'rgb(0, 0, 0)',
-          backgroundColor: 'transparent',
-          border: '1px solid rgb(0, 0, 0)',
+          color: '#1E1E14',
+          backgroundColor: '#F5A045',
+          border: '2px solid #1E1E14',
+          transform: 'translate(-2px, -2px)',
+          boxShadow: '6px 6px 0 #1E1E14',
         };
       }
       return {
-        color: 'rgb(255, 255, 255)',
-        backgroundColor: 'rgb(0, 0, 0)',
-        border: '1px solid transparent',
+        color: '#FFFFFF',
+        backgroundColor: '#1E1E14',
+        border: '2px solid #1E1E14',
       };
     }
   };
@@ -89,4 +94,3 @@ export default function Button({
     </button>
   );
 }
-

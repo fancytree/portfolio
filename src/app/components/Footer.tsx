@@ -1,97 +1,80 @@
 'use client';
 
-// 全站底部：Let's work together + 版权信息
-// 在所有页面底部显示
+import { useState } from 'react';
 
-import { useState, useEffect } from 'react';
-import Button from './Button';
-
-const fontStyle = {
-  fontFamily: 'system-ui, -apple-system, sans-serif',
-};
+const footerLinks = [
+  { href: 'mailto:flyskytoo@outlook.com', label: 'Email' },
+  { href: 'https://www.linkedin.com/in/meichai/', label: 'LinkedIn' },
+  { href: 'https://github.com/fancytree', label: 'GitHub' },
+];
 
 export default function Footer() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
+  const [cursor, setCursor] = useState({ x: 0, y: 0, visible: false });
 
-  const handleWorkWithMe = () => {
+  const handleGetInTouch = () => {
     if (typeof window === 'undefined') return;
-    const isHome = window.location.pathname === '/';
-    if (isHome) {
-      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.location.href = '/#contact';
-    }
+    window.location.href = '/contact';
   };
 
   return (
-    <section
-      className="w-screen"
+    <footer
+      className="mei-contact-footer w-screen"
+      onMouseEnter={() => setCursor((prev) => ({ ...prev, visible: true }))}
+      onMouseLeave={() => setCursor((prev) => ({ ...prev, visible: false }))}
+      onMouseMove={(event) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        setCursor({
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+          visible: true,
+        });
+      }}
       style={{
-        backgroundColor: '#FFFFFF',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
-        paddingTop: isMobile ? '60px' : '120px',
-        paddingBottom: '80px',
       }}
     >
-      <div
-        className="flex flex-col items-center w-full"
-        style={{
-          maxWidth: '900px',
-          margin: '0 auto',
-          padding: isMobile ? '0 24px' : '0',
-        }}
-      >
-        {/* 大标题 */}
-        <h2
-          style={{
-            ...fontStyle,
-            fontSize: isMobile ? '32px' : '60px',
-            lineHeight: isMobile ? '40px' : '75px',
-            fontWeight: 400,
-            color: 'rgb(0, 0, 0)',
-            textAlign: 'center',
-            marginBottom: '48px',
-          }}
-        >
-          Let&apos;s work together
-        </h2>
+      <div className="mei-footer-content-wrapper">
+        <h2 className="mei-footer-title">Let&apos;s work together</h2>
+        <button type="button" className="mei-footer-cta-button" onClick={handleGetInTouch}>
+          Get in Touch
+        </button>
 
-        {/* 按钮 */}
-        <div style={{ marginBottom: isMobile ? '80px' : '240px' }}>
-          <Button onClick={handleWorkWithMe}>Work with me</Button>
+        <div className="mei-footer-links" aria-label="Footer links">
+          {footerLinks.map((link, index) => (
+            <span className="mei-footer-link-group" key={link.href}>
+              <a
+                href={link.href}
+                className="mei-footer-link"
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >
+                {link.label}
+              </a>
+              {index < footerLinks.length - 1 ? (
+                <span className="mei-link-separator" aria-hidden="true">
+                  |
+                </span>
+              ) : null}
+            </span>
+          ))}
         </div>
-
-        {/* 分割线 */}
-        <div
-          style={{
-            width: '100%',
-            height: '1px',
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
-            marginBottom: '48px',
-          }}
-        />
-
-        {/* 版权信息 */}
-        <p
-          style={{
-            ...fontStyle,
-            fontSize: '18px',
-            lineHeight: '32px',
-            fontWeight: 400,
-            color: 'oklch(0.556 0 0)',
-            textAlign: 'center',
-          }}
-        >
-          © 2025 Mei Chai. Designed with intention.
-        </p>
       </div>
-    </section>
+
+      <div className="mei-footer-bottom-bar">
+        <p>© 2026 MEI CHAI</p>
+      </div>
+
+      <div
+        className="mei-cursor-effects"
+        aria-hidden="true"
+        style={{
+          left: cursor.x,
+          top: cursor.y,
+          opacity: cursor.visible ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${cursor.visible ? 1 : 0})`,
+        }}
+      />
+    </footer>
   );
 }

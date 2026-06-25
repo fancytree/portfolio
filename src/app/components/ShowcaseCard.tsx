@@ -33,17 +33,26 @@ export default function ShowcaseCard({
   fullWidth = false,
   href,
 }: ShowcaseCardProps) {
-  const fontStyle = { fontFamily: 'system-ui, -apple-system, sans-serif' };
+  const fontStyle = { fontFamily: 'Nunito, system-ui, -apple-system, sans-serif' };
+  const monoStyle = { fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace' };
 
   const CardContent = (
     <div
-      className="flex flex-col cursor-pointer group"
-      style={fullWidth ? { gridColumn: 'span 2' } : {}}
+      className="mei-showcase-card flex flex-col cursor-pointer group"
+      style={{
+        ...(fullWidth ? { gridColumn: 'span 2' } : {}),
+        border: '3px solid #1E1E14',
+        borderRadius: '8px',
+        background: '#FFFFFF',
+        overflow: 'hidden',
+        boxShadow: '8px 8px 0 #1E1E14',
+        transition: 'transform 0.24s ease, box-shadow 0.24s ease',
+      }}
     >
       {/* 封面区 */}
       <div
-        className={`w-full aspect-video rounded-t-2xl overflow-hidden mb-4 relative${!imageBg && !bgImageUrl ? ' bg-gray-300' : ''}`}
-        style={{ minHeight: '200px', ...(imageBg ? { background: imageBg } : {}) }}
+        className={`w-full aspect-video overflow-hidden relative${!imageBg && !bgImageUrl ? ' bg-gray-300' : ''}`}
+        style={{ minHeight: '200px', borderBottom: '3px solid #1E1E14', ...(imageBg ? { background: imageBg } : {}) }}
       >
         {/* 模糊底层图 */}
         {bgImageUrl && (
@@ -91,30 +100,40 @@ export default function ShowcaseCard({
 
         {/* 右下角箭头 */}
         <div
-          className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-md"
-          style={{ zIndex: 3 }}
+          className="absolute bottom-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+          style={{ zIndex: 3, background: '#F5A045', border: '2px solid #1E1E14', boxShadow: '3px 3px 0 #1E1E14' }}
         >
           <Image src="/arrow.svg" alt="Arrow" width={20} height={20} className="object-contain" />
         </div>
       </div>
 
       {/* 文字区 */}
-      <div className="flex flex-col">
-        <div className="flex flex-wrap gap-2 mb-2">
+      <div className="flex flex-col" style={{ padding: '18px' }}>
+        <div className="flex flex-wrap gap-2 mb-3">
           {tags.map((tag, i) => (
             <span
               key={i}
-              className="text-xs px-2 py-1 rounded"
-              style={{ ...fontStyle, fontSize: '12px', color: 'rgb(0,0,0)', backgroundColor: 'rgba(0,0,0,0.05)' }}
+              className="text-xs px-2 py-1"
+              style={{
+                ...monoStyle,
+                fontSize: '11px',
+                lineHeight: '16px',
+                color: '#1E1E14',
+                backgroundColor: '#FFFFFF',
+                border: '1px solid rgba(30, 30, 20, 0.35)',
+                borderRadius: '4px',
+              }}
             >
+              <span style={{ color: '#F5A045', fontWeight: 800 }}>[</span>
               {tag}
+              <span style={{ color: '#F5A045', fontWeight: 800 }}>]</span>
             </span>
           ))}
         </div>
-        <h3 className="mb-2" style={{ ...fontStyle, fontSize: '18px', lineHeight: '24px', fontWeight: 500, color: 'rgb(0,0,0)' }}>
+        <h3 className="mb-2" style={{ ...fontStyle, fontSize: '22px', lineHeight: '28px', fontWeight: 700, color: '#1E1E14' }}>
           {title}
         </h3>
-        <p style={{ ...fontStyle, fontSize: '14px', lineHeight: '20px', fontWeight: 400, color: 'oklch(0.556 0 0)' }}>
+        <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '23px', fontWeight: 400, color: '#555666' }}>
           {description}
         </p>
       </div>

@@ -7,14 +7,14 @@ import { useState } from 'react';
 import Link from "next/link";
 import Image from "next/image";
 
-const fontStyle = {
-  fontFamily: 'system-ui, -apple-system, sans-serif',
+const navFontStyle = {
+  fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace',
 };
 
 const navLinks = [
-  { href: '#work', label: 'Work' },
-  { href: '#about', label: 'About' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/works', label: 'Work' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -25,38 +25,61 @@ export default function Navbar() {
   return (
     <header className="fixed w-full top-0 z-50">
       {/* 背景层 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-transparent backdrop-blur-lg -z-10" />
+      <div className="absolute inset-0 -z-10" style={{ background: 'rgba(255, 255, 255, 0.88)', backdropFilter: 'blur(14px)' }} />
 
       {/* 导航栏主体 */}
       <nav
-        className="relative z-10 flex items-center justify-between mx-auto px-6 md:px-12"
-        style={{ height: '72px', maxWidth: '1280px', width: '100%' }}
+        className="relative z-10 flex w-full items-center justify-center"
+        style={{
+          height: 'clamp(60px, 10vh, 80px)',
+          padding: 'clamp(0.5rem, 2vh, 1rem) 0',
+        }}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3" style={{ textDecoration: 'none' }} onClick={closeMenu}>
-          <Image src="/logo.svg" alt="Logo" width={24} height={24} className="object-contain" />
-          <span style={{ ...fontStyle, color: '#000000', fontSize: '16px', fontWeight: 500, lineHeight: '24px' }}>
-            Mei.C
-          </span>
+        <Link
+          href="/"
+          className="mei-logo-link"
+          style={{
+            textDecoration: 'none',
+            position: 'absolute',
+            left: 'clamp(0.5rem, 1vw, 2vw)',
+          }}
+          onClick={closeMenu}
+          aria-label="Mei portfolio home"
+        >
+          <Image src="/logo.gif" alt="" width={96} height={48} className="mei-logo-img" unoptimized />
         </Link>
 
         {/* 桌面端链接 */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center justify-center gap-4">
           {navLinks.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
-              style={{ ...fontStyle, color: '#000000', fontSize: '16px', fontWeight: 500 }}
-              className="transition-colors duration-700"
+              style={{
+                ...navFontStyle,
+                color: '#1E1E14',
+                fontSize: '15px',
+                fontWeight: 500,
+                border: '2px solid #1E1E14',
+                borderRadius: '999px',
+                padding: '0.45em 1.35em',
+                background: '#FFFFFF',
+              }}
+              className="mei-nav-link"
             >
-              {label}
+              <span>{label}</span>
             </Link>
           ))}
         </div>
 
         {/* 移动端汉堡按钮 */}
         <button
-          className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5"
+          className="absolute right-4 md:hidden flex flex-col justify-center items-center gap-1.5"
+          style={{
+            height: 'clamp(48px, 9vw, 64px)',
+            width: 'clamp(48px, 9vw, 64px)',
+          }}
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
         >
@@ -65,7 +88,7 @@ export default function Navbar() {
               display: 'block',
               width: '22px',
               height: '2px',
-              backgroundColor: '#000',
+              backgroundColor: '#1E1E14',
               borderRadius: '2px',
               transition: 'transform 0.3s ease, opacity 0.3s ease',
               transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none',
@@ -76,7 +99,7 @@ export default function Navbar() {
               display: 'block',
               width: '22px',
               height: '2px',
-              backgroundColor: '#000',
+              backgroundColor: '#1E1E14',
               borderRadius: '2px',
               transition: 'opacity 0.3s ease',
               opacity: menuOpen ? 0 : 1,
@@ -87,7 +110,7 @@ export default function Navbar() {
               display: 'block',
               width: '22px',
               height: '2px',
-              backgroundColor: '#000',
+              backgroundColor: '#1E1E14',
               borderRadius: '2px',
               transition: 'transform 0.3s ease, opacity 0.3s ease',
               transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none',
@@ -101,8 +124,9 @@ export default function Navbar() {
         className="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
         style={{
           maxHeight: menuOpen ? '240px' : '0px',
-          backgroundColor: 'rgba(255,255,255,0.96)',
+          backgroundColor: 'rgba(255,255,255,0.98)',
           backdropFilter: 'blur(16px)',
+          borderBottom: '2px solid #1E1E14',
         }}
       >
         <div className="flex flex-col px-6 pb-6 pt-2 gap-5">
@@ -111,7 +135,7 @@ export default function Navbar() {
               key={href}
               href={href}
               onClick={closeMenu}
-              style={{ ...fontStyle, color: '#000000', fontSize: '20px', fontWeight: 500 }}
+              style={{ ...navFontStyle, color: '#1E1E14', fontSize: '20px', fontWeight: 600 }}
             >
               {label}
             </Link>
