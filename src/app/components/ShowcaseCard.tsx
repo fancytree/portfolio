@@ -34,7 +34,7 @@ export default function ShowcaseCard({
   href,
 }: ShowcaseCardProps) {
   const fontStyle = { fontFamily: 'Nunito, system-ui, -apple-system, sans-serif' };
-  const monoStyle = { fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace' };
+  const monoStyle = { fontFamily: "var(--font-nunito), 'Nunito', sans-serif" };
 
   const CardContent = (
     <div

@@ -26,9 +26,9 @@
   --foreground: #1e1e14;
   --mei-ink: #1e1e14;
   --mei-paper: #ffffff;
-  --mei-orange: #f5a045;
+  --mei-orange: #222222;
   --mei-muted: #555666;
-  --mei-font-primary: 'interstate-mono', var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mei-font-primary: var(--font-nunito), 'Nunito', sans-serif;
   --mei-font-secondary: var(--font-nunito), 'Nunito', sans-serif;
 }
 
@@ -72,7 +72,7 @@ body.no-scroll {
 .mei-logo-img {
   display: block;
   width: auto;
-  height: clamp(30px, 7vw, 38px);
+  height: 40px;
   transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -119,6 +119,68 @@ body.no-scroll {
   transform: scaleX(1);
 }
 
+/* 主色改深色后，导航 hover 填充为 #222，文字需翻白以保证对比 */
+.mei-nav-link:hover span,
+.mei-nav-link:focus-visible span {
+  color: #ffffff;
+}
+
+/* ===== Nav pill（Figma node 680:966）：图标 + 标签，激活态深色胶囊 ===== */
+.mei-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 39px;
+  color: #767676;
+  background: transparent;
+  font-family: var(--font-nunito), 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.mei-nav-ico {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  transition: filter 0.2s ease;
+}
+
+/* 图标本身是 #767676 灰；hover 变深、激活态翻白以匹配胶囊文字色 */
+.mei-nav-pill:hover .mei-nav-ico,
+.mei-nav-pill:focus-visible .mei-nav-ico {
+  filter: brightness(0);
+}
+
+.mei-nav-pill.is-active .mei-nav-ico,
+.mei-nav-pill.is-active:hover .mei-nav-ico,
+.mei-nav-pill.is-active:focus-visible .mei-nav-ico {
+  filter: brightness(0) invert(1);
+}
+
+.mei-nav-pill:hover,
+.mei-nav-pill:focus-visible {
+  color: #222222;
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.mei-nav-pill.is-active {
+  background: #222222;
+  color: #ffffff;
+}
+
+.mei-nav-pill.is-active:hover,
+.mei-nav-pill.is-active:focus-visible {
+  color: #ffffff;
+}
+
 .mei-role-chip {
   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
@@ -149,13 +211,16 @@ body.no-scroll {
 .mei-job-role-container {
   position: fixed;
   z-index: 12;
-  top: calc(45vh - 3.5rem);
+  top: 50vh;
   left: 50%;
-  transform: translateX(-50%);
+  /* transform 由内联 style 控制（居中 + 飞出位移） */
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
+  gap: 0.1rem;
+  width: min(94vw, 960px);
+  white-space: normal;
+  will-change: transform, opacity;
 }
 
 .mei-typewriter {
@@ -172,24 +237,19 @@ body.no-scroll {
 }
 
 .mei-scroll-title {
-  position: absolute;
-  width: 100%;
-  top: calc(45vh - 7rem);
-  left: 0;
+  margin: 0;
   color: var(--mei-ink);
   font-family: "MeiNunito", sans-serif;
   font-weight: 800;
   font-style: normal;
   letter-spacing: 0;
   font-synthesis-weight: none;
-  font-size: clamp(2rem, 1rem + 8vw, 8rem);
+  font-size: clamp(3rem, 1.5rem + 7vw, 7rem);
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 1.1;
-  padding: 0.5em 1rem;
-  opacity: 1;
-  transition: transform 0.7s cubic-bezier(.4, 2, .6, 1), opacity 0.45s ease;
+  white-space: normal;
+  line-height: 1.02;
+  padding: 0.06em 0;
+  will-change: transform, opacity;
 }
 
 .mei-bottom-gif {
@@ -358,39 +418,13 @@ body.no-scroll {
   opacity: 0.5;
 }
 
-.mei-copy-hero.is-scrolled .mei-job-role-container {
-  top: calc(45vh - 3.5rem);
-}
-
-.mei-copy-hero.is-scrolled .mei-category-select {
-  animation: meiFloatY 3s ease-in-out infinite;
-  opacity: 1;
-  will-change: opacity, translate;
-  justify-content: center;
-  top: calc(51vh + 1rem);
-  left: 50%;
-  right: auto;
-  scale: 1.3;
-  transform: translateX(-50%);
-}
-
-.mei-copy-hero.is-scrolled .mei-category-select,
-.mei-copy-hero.is-scrolled .mei-drop-zone {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.mei-copy-hero.is-scrolled .mei-drop-zone {
-  display: inline-flex;
-}
-
 .mei-copy-hero.is-scrolled .mei-scroll-down {
   opacity: 0;
 }
 
 .mei-after-hero-spacer {
-  min-height: 200dvh;
-  padding: 2rem 0;
+  min-height: 42dvh;
+  padding: 0;
   background: #ffffff;
 }
 
@@ -411,7 +445,7 @@ body.no-scroll {
 .mei-works-header h1 {
   margin: 0 0 0.5rem;
   color: var(--mei-ink);
-  font-family: var(--mei-font-secondary);
+  font-family: "MeiNunito", var(--mei-font-secondary);
   font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 800;
   letter-spacing: 0;
@@ -422,6 +456,7 @@ body.no-scroll {
   margin: 0 auto;
   max-width: 600px;
   color: var(--mei-ink);
+  font-family: var(--mei-font-secondary);
   font-size: clamp(1rem, 2.5vw, 1.25rem);
   line-height: 1.55;
 }
@@ -456,8 +491,8 @@ body.no-scroll {
 .mei-work-summary span {
   color: var(--mei-ink);
   font-family: var(--mei-font-secondary);
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 800;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 500;
   line-height: 1.1;
 }
 
@@ -582,6 +617,84 @@ body.no-scroll {
 .mei-project-card-link:hover .mei-project-link::before,
 .mei-project-card-link:focus-visible .mei-project-link::before {
   transform: scaleX(1);
+}
+
+/* 按钮 hover 填充深色后文字翻白 */
+.mei-project-card-link:hover .mei-project-link,
+.mei-project-card-link:focus-visible .mei-project-link {
+  color: #ffffff;
+}
+
+/* ===== Home: "Stuff I built" 横向作品区 ===== */
+.mei-stuff-page {
+  background: #ffffff;
+  color: var(--mei-ink);
+  padding: 2rem 0 7rem;
+  font-family: var(--mei-font-primary);
+}
+
+.mei-stuff-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mei-stuff-section-head {
+  margin-bottom: 1.5rem;
+}
+
+.mei-stuff-section-head h2 {
+  margin: 0 0 0.25rem;
+  color: var(--mei-ink);
+  font-family: var(--mei-font-secondary);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.mei-stuff-section-head p {
+  margin: 0;
+  color: var(--mei-muted);
+  font-size: 0.95rem;
+}
+
+.mei-stuff-row {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0 1.25rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mei-stuff-card {
+  flex: 0 0 320px;
+  max-width: 320px;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.mei-stuff-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mei-stuff-row::-webkit-scrollbar-thumb {
+  background: rgba(34, 34, 34, 0.2);
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .mei-stuff-stack {
+    padding: 0 1.25rem;
+    gap: 3rem;
+  }
+  .mei-stuff-card {
+    flex-basis: 78vw;
+    max-width: 78vw;
+  }
 }
 
 .mei-tab-page {
@@ -840,13 +953,10 @@ body.no-scroll {
   height: 90dvh;
   min-height: 620px;
   padding-top: 4rem;
-  background-color: var(--mei-orange);
-  border-radius: 50% / 10%;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5));
+  background-color: #222222;
+  border-radius: 0;
   overflow: hidden;
-  color: var(--mei-ink);
+  color: #ffffff;
   font-family: var(--mei-font-primary);
 }
 
@@ -866,7 +976,7 @@ body.no-scroll {
 
 .mei-footer-title {
   margin: 0 0 1rem;
-  color: var(--mei-ink);
+  color: #ffffff;
   font-family: "MeiNunito", sans-serif;
   font-size: clamp(2.5rem, 8vw, 4rem);
   font-weight: 800;
@@ -878,8 +988,8 @@ body.no-scroll {
   display: inline-block;
   border: 0;
   border-radius: 999px;
-  background-color: var(--mei-ink);
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #222222;
   cursor: pointer;
   font-family: var(--mei-font-primary);
   font-size: 1rem;
@@ -890,8 +1000,8 @@ body.no-scroll {
 
 .mei-footer-cta-button:hover,
 .mei-footer-cta-button:focus-visible {
-  background-color: #ffffff;
-  color: var(--mei-ink);
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #222222;
   outline: none;
   transform: scale(1.05);
 }
@@ -913,7 +1023,7 @@ body.no-scroll {
 
 .mei-footer-link {
   position: relative;
-  color: var(--mei-ink);
+  color: #ffffff;
   font-weight: 500;
   text-decoration: none;
 }
@@ -924,7 +1034,7 @@ body.no-scroll {
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: var(--mei-ink);
+  background-color: #ffffff;
   content: '';
   transform: scaleX(0);
   transform-origin: bottom right;
@@ -942,7 +1052,7 @@ body.no-scroll {
 }
 
 .mei-link-separator {
-  color: rgba(30, 30, 20, 0.5);
+  color: rgba(255, 255, 255, 0.4);
   user-select: none;
 }
 
@@ -951,13 +1061,13 @@ body.no-scroll {
   z-index: 2;
   width: 100%;
   padding: 1.5rem 2rem;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
   text-align: center;
 }
 
 .mei-footer-bottom-bar p {
   margin: 0;
-  color: var(--mei-ink);
+  color: rgba(255, 255, 255, 0.85);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -969,7 +1079,7 @@ body.no-scroll {
   width: 9vh;
   height: 9vh;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: #f5a045;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
 }

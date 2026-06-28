@@ -24,7 +24,7 @@ export default function Button({
 
   // 基础样式
   const baseStyle = {
-    fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace',
+    fontFamily: "var(--font-nunito), 'Nunito', sans-serif",
     fontSize: '14px',
     fontStyle: 'normal' as const,
     fontVariant: 'normal' as const,

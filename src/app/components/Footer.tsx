@@ -13,7 +13,7 @@ export default function Footer() {
 
   const handleGetInTouch = () => {
     if (typeof window === 'undefined') return;
-    window.location.href = '/contact';
+    window.location.href = 'mailto:flyskytoo@outlook.com';
   };
 
   return (

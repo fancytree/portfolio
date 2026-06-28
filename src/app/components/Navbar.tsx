@@ -1,26 +1,26 @@
 'use client';
 
-// 顶部导航栏组件
-// 使用方法：在布局组件或页面中直接使用 <Navbar /> 渲染导航栏
+// 顶部导航栏组件 —— 按 Figma node 680:966 实现：图标 + 标签胶囊，当前页为深色激活态。
 
 import { useState } from 'react';
-import Link from "next/link";
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
-const navFontStyle = {
-  fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace',
-};
-
-const navLinks = [
-  { href: '/works', label: 'Work' },
-  { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
+const navLinks: { href: string; label: string; icon: string }[] = [
+  { href: '/', label: 'Home', icon: '/home.svg' },
+  { href: '/not-daily-fun', label: 'Not daily fun', icon: '/fun.svg' },
+  { href: '/about', label: 'Resume', icon: '/resume.svg' },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const closeMenu = () => setMenuOpen(false);
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   return (
     <header className="fixed w-full top-0 z-50">
@@ -43,31 +43,25 @@ export default function Navbar() {
             textDecoration: 'none',
             position: 'absolute',
             left: 'clamp(0.5rem, 1vw, 2vw)',
+            top: '50%',
+            transform: 'translateY(-50%)',
           }}
           onClick={closeMenu}
           aria-label="Mei portfolio home"
         >
-          <Image src="/logo.gif" alt="" width={96} height={48} className="mei-logo-img" unoptimized />
+          <Image src="/logo.gif" alt="" width={80} height={40} className="mei-logo-img" unoptimized />
         </Link>
 
-        {/* 桌面端链接 */}
-        <div className="hidden md:flex items-center justify-center gap-4">
-          {navLinks.map(({ href, label }) => (
+        {/* 桌面端链接 —— gap 24px（Figma） */}
+        <div className="hidden md:flex items-center justify-center" style={{ gap: '24px' }}>
+          {navLinks.map(({ href, label, icon }) => (
             <Link
               key={href}
               href={href}
-              style={{
-                ...navFontStyle,
-                color: '#1E1E14',
-                fontSize: '15px',
-                fontWeight: 500,
-                border: '2px solid #1E1E14',
-                borderRadius: '999px',
-                padding: '0.45em 1.35em',
-                background: '#FFFFFF',
-              }}
-              className="mei-nav-link"
+              className={`mei-nav-pill${isActive(href) ? ' is-active' : ''}`}
+              aria-current={isActive(href) ? 'page' : undefined}
             >
+              <img src={icon} alt="" width={20} height={20} className="mei-nav-ico" />
               <span>{label}</span>
             </Link>
           ))}
@@ -88,7 +82,7 @@ export default function Navbar() {
               display: 'block',
               width: '22px',
               height: '2px',
-              backgroundColor: '#1E1E14',
+              backgroundColor: '#222222',
               borderRadius: '2px',
               transition: 'transform 0.3s ease, opacity 0.3s ease',
               transform: menuOpen ? 'translateY(6px) rotate(45deg)' : 'none',
@@ -99,7 +93,7 @@ export default function Navbar() {
               display: 'block',
               width: '22px',
               height: '2px',
-              backgroundColor: '#1E1E14',
+              backgroundColor: '#222222',
               borderRadius: '2px',
               transition: 'opacity 0.3s ease',
               opacity: menuOpen ? 0 : 1,
@@ -110,7 +104,7 @@ export default function Navbar() {
               display: 'block',
               width: '22px',
               height: '2px',
-              backgroundColor: '#1E1E14',
+              backgroundColor: '#222222',
               borderRadius: '2px',
               transition: 'transform 0.3s ease, opacity 0.3s ease',
               transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : 'none',
@@ -126,18 +120,20 @@ export default function Navbar() {
           maxHeight: menuOpen ? '240px' : '0px',
           backgroundColor: 'rgba(255,255,255,0.98)',
           backdropFilter: 'blur(16px)',
-          borderBottom: '2px solid #1E1E14',
+          borderBottom: '2px solid #222222',
         }}
       >
-        <div className="flex flex-col px-6 pb-6 pt-2 gap-5">
-          {navLinks.map(({ href, label }) => (
+        <div className="flex flex-col px-6 pb-6 pt-3 gap-3 items-start">
+          {navLinks.map(({ href, label, icon }) => (
             <Link
               key={href}
               href={href}
               onClick={closeMenu}
-              style={{ ...navFontStyle, color: '#1E1E14', fontSize: '20px', fontWeight: 600 }}
+              className={`mei-nav-pill${isActive(href) ? ' is-active' : ''}`}
+              aria-current={isActive(href) ? 'page' : undefined}
             >
-              {label}
+              <img src={icon} alt="" width={20} height={20} className="mei-nav-ico" />
+              <span>{label}</span>
             </Link>
           ))}
         </div>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
 
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
@@ -74,133 +73,67 @@ function ScrollAnimatedSection({ children, initialDelay = 0 }: { children: React
   );
 }
 
-// ContactCard 组件
-function ContactCard({
-  iconSrc,
-  iconAlt,
-  title,
-  content,
-  onClick,
-}: {
-  iconSrc: string;
-  iconAlt: string;
-  title: string;
-  content: string;
-  onClick?: () => void;
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-  const fontStyle = {
-    fontFamily: 'Nunito, system-ui, -apple-system, sans-serif',
-  };
+/* ===== Hero 滚动编排（按 scrollY 分段驱动）=====
+ * 1) 0–FLY1:        "Hi! I'm Mei" 稳定
+ * 2) FLY1–SWAP:     "Mei" 向上飞出 + 淡出
+ * 3) SWAP:          文案切换为 "Hi! I'm a Product Designer"
+ * 4) SWAP–IN_END:   "Product Designer" 由下方飞入
+ * 5) IN_END–HOLD:   整句保持不动（不随滚动渐隐）
+ * 6) HOLD–OUT_END:  整块（打字机+标题）像 Mei 一样向上飞出
+ * 之后滚动到 "Stuff I built"
+ */
+const HERO_FLY1 = 120;
+const HERO_SWAP = 220;
+const HERO_IN_END = 360;
+const HERO_HOLD = 560;
+const HERO_OUT_END = 760;
+const HERO_GIF_FADE = 200; // GIF 从这里开始淡出（早于文字飞出），到 ~360 完全消失
 
-  return (
-    <div
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        backgroundColor: 'rgb(255, 255, 255)',
-        padding: '24px',
-        borderRadius: '16px',
-        display: 'flex',
-        gap: '16px',
-        alignItems: 'flex-start',
-        cursor: 'pointer',
-        transition: 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        transitionDelay: isHovered ? '0.3s' : '0s',
-        transform: isHovered ? 'scale(1.02)' : 'scale(1)',
-        boxShadow: isHovered ? '0 6px 10px rgba(0, 0, 0, 0.08)' : 'none',
-      }}
-    >
-      <div
-        style={{
-          width: '48px',
-          height: '48px',
-          backgroundColor: isHovered ? 'rgb(0, 0, 0)' : 'rgba(0, 0, 0, 0.05)',
-          borderRadius: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-          transition: 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          transitionDelay: isHovered ? '0.1s' : '0s',
-        }}
-      >
-        <Image
-          src={iconSrc}
-          alt={iconAlt}
-          width={20}
-          height={20}
-          style={{ 
-            filter: isHovered ? 'brightness(0) invert(1)' : 'brightness(0)',
-            transition: 'filter 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            transitionDelay: isHovered ? '0.1s' : '0s',
-          }}
-        />
-      </div>
-      <div className="flex flex-col">
-        <h3
-          style={{
-            ...fontStyle,
-            fontSize: '14px',
-            lineHeight: '20px',
-            fontWeight: 700,
-            color: 'rgb(0, 0, 0)',
-            marginBottom: '4px',
-          }}
-        >
-          {title}
-        </h3>
-        <p
-          style={{
-            ...fontStyle,
-            fontSize: '16px',
-            lineHeight: '24px',
-            fontWeight: 400,
-            color: 'rgb(0, 0, 0)',
-          }}
-        >
-          {content}
-        </p>
-      </div>
-    </div>
-  );
+function heroChoreo(sy: number) {
+  const clamp01 = (t: number) => Math.min(Math.max(t, 0), 1);
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * clamp01(t);
+
+  // 大标题（单元素：Mei 飞出 → 切词 → Product Designer 飞入 → 保持）
+  let bigY = 0;
+  let bigO = 1;
+  if (sy < HERO_FLY1) {
+    bigY = 0;
+    bigO = 1;
+  } else if (sy < HERO_SWAP) {
+    const t = (sy - HERO_FLY1) / (HERO_SWAP - HERO_FLY1);
+    bigY = lerp(0, -150, t);
+    bigO = lerp(1, 0, t);
+  } else if (sy < HERO_IN_END) {
+    const t = (sy - HERO_SWAP) / (HERO_IN_END - HERO_SWAP);
+    bigY = lerp(150, 0, t);
+    bigO = lerp(0, 1, t);
+  } else {
+    bigY = 0;
+    bigO = 1;
+  }
+
+  // 整块飞出（保持期之后）
+  const outT = (sy - HERO_HOLD) / (HERO_OUT_END - HERO_HOLD);
+  const blockY = sy < HERO_HOLD ? 0 : lerp(0, -220, outT);
+  const blockO = sy < HERO_HOLD ? 1 : lerp(1, 0, outT);
+
+  // GIF 提前淡出：它在底部、最先与上滚的 Stuff 区重叠，所以比文字更早消失
+  const gifO = sy < HERO_GIF_FADE ? 1 : lerp(1, 0, (sy - HERO_GIF_FADE) / 160);
+
+  return { bigY, bigO, blockY, blockO, gifO, scrolled: sy >= HERO_SWAP };
 }
 
 export default function Home() {
-  // 共享的字体样式
-  const fontStyle = {
-    fontFamily: 'Nunito, system-ui, -apple-system, sans-serif',
-  };
   const monoStyle = {
-    fontFamily: 'interstate-mono, var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace',
+    fontFamily: "var(--font-nunito), 'Nunito', sans-serif",
   };
 
-  // 移动端检测
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
-  const roleRoutes = [
-    { label: 'Designer', href: '/works#designer-page' },
-    { label: 'Researcher', href: '/about' },
-    { label: 'AI Builder', href: '/works#ai-builder-page' },
-    { label: 'Creative Coder', href: '/works#creative-coder-page' },
-  ];
   const initialHeroText = "Hi! I'm";
   const [typedHeroText, setTypedHeroText] = useState('');
   const [heroIntroVisible, setHeroIntroVisible] = useState(false);
   const [heroAnimationComplete, setHeroAnimationComplete] = useState(false);
-  const [isHeroScrolled, setIsHeroScrolled] = useState(false);
-  const [titleOpacity, setTitleOpacity] = useState(0);
+  const [heroScroll, setHeroScroll] = useState(0);
   const [scrollDownVisible, setScrollDownVisible] = useState(false);
-  const [activeRole, setActiveRole] = useState<string | null>(null);
-  const [placeholderRole, setPlaceholderRole] = useState<string | null>(null);
-  const [draggingRole, setDraggingRole] = useState<string | null>(null);
 
   useEffect(() => {
     const timeouts: number[] = [];
@@ -220,7 +153,7 @@ export default function Home() {
       setHeroIntroVisible(false);
       setHeroAnimationComplete(false);
       setScrollDownVisible(false);
-      setTitleOpacity(0);
+      setHeroScroll(0);
 
       await sleep(250);
       if (cancelled) return;
@@ -235,7 +168,6 @@ export default function Home() {
       await sleep(250);
       if (cancelled) return;
       setHeroIntroVisible(true);
-      setTitleOpacity(1);
 
       await sleep(700);
       if (cancelled) return;
@@ -258,14 +190,18 @@ export default function Home() {
 
     let scrollFadeTimeout: number | undefined;
 
+    let ticking = false;
     const onScroll = () => {
-      const scrollY = window.scrollY;
-      const scrolled = scrollY > 300;
-      setIsHeroScrolled(scrolled);
-      setTypedHeroText(scrolled ? `${initialHeroText} a` : initialHeroText);
-
-      const nextTitleOpacity = 1 - Math.min(scrollY / 200, 1);
-      setTitleOpacity(nextTitleOpacity);
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          setHeroScroll(scrollY);
+          // 顶部 "Hi! I'm Mei"；标题切换点（Mei 飞出后）改为 "Hi! I'm a Product Designer"
+          setTypedHeroText(scrollY >= HERO_SWAP ? "Hi! I'm a" : initialHeroText);
+          ticking = false;
+        });
+      }
 
       setScrollDownVisible(false);
       if (scrollFadeTimeout) {
@@ -276,11 +212,6 @@ export default function Home() {
           setScrollDownVisible(true);
         }
       }, 900);
-
-      if (!scrolled) {
-        setActiveRole(null);
-        setPlaceholderRole(null);
-      }
     };
 
     window.addEventListener('scroll', onScroll);
@@ -292,24 +223,6 @@ export default function Home() {
       }
     };
   }, [heroAnimationComplete]);
-
-  const jumpToRole = (href: string, label: string) => {
-    setActiveRole(label);
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        window.location.href = href;
-      }, 260);
-    }
-  };
-
-  const updateHeroArticle = (label: string | null) => {
-    if (!label) {
-      setTypedHeroText(`${initialHeroText} a`);
-      return;
-    }
-    const article = /^[aeiouAEIOU]/.test(label.charAt(0)) ? ' an' : ' a';
-    setTypedHeroText(`${initialHeroText}${article}`);
-  };
 
   const workSections = [
     {
@@ -348,6 +261,18 @@ export default function Home() {
       title: 'Researcher',
       subtitle: 'Discovery, validation, service mapping, and civic systems.',
       projects: [
+        {
+          title: 'Walnut Coding',
+          description: 'Post-trial parent decision-making in children’s coding education — why parents hesitate after a trial class and the evidence they need before they pay. A sanitized, chart-driven UX research case study.',
+          image: '/img/walnut-coding-cover.svg',
+          href: '/projects/walnut-coding',
+        },
+        {
+          title: 'Parent Sharing Behavior',
+          description: 'Why the highest-value parents share the least in public — an NPS, social-sharing & referral study of 7–12-year-olds, and how to redesign sharing around social comfort. Sanitized & chart-driven.',
+          image: '/img/walnut-sharing-cover.svg',
+          href: '/projects/walnut-sharing',
+        },
         {
           title: 'Milano Partecipa',
           description: 'Civic participation service research for improving daily access, awareness, and community engagement.',
@@ -402,64 +327,53 @@ export default function Home() {
     },
   ];
 
+  const { bigY, bigO, blockY, blockO, gifO, scrolled } = heroChoreo(heroScroll);
+
   return (
     <>
-    <section 
+    <section
       id="hero"
-      className={`mei-copy-hero w-screen ${isHeroScrolled ? 'is-scrolled' : ''}`}
+      className={`mei-copy-hero w-screen ${scrolled ? 'is-scrolled' : ''}`}
       style={{
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
       }}
     >
-      <div className="mei-job-role-container">
+      <div
+        className="mei-job-role-container"
+        style={{
+          opacity: blockO,
+          pointerEvents: blockO < 0.05 ? 'none' : 'auto',
+          transform: `translate(-50%, calc(-50% + ${blockY}px))`,
+        }}
+      >
         <h2 className="mei-typewriter" style={monoStyle}>
           {typedHeroText}
         </h2>
-        <div
-          className="mei-drop-zone"
-          onDragOver={(event) => {
-            event.preventDefault();
-            updateHeroArticle(placeholderRole);
+        <h1
+          className="mei-scroll-title"
+          style={{
+            opacity: heroIntroVisible ? bigO : 0,
+            transform: heroIntroVisible ? `translateY(${bigY}px)` : 'translateY(120px)',
+            transition: heroAnimationComplete
+              ? 'none'
+              : 'transform 0.7s cubic-bezier(.2,1.2,.6,1), opacity 0.5s',
           }}
-          onDrop={(event) => {
-            event.preventDefault();
-            const label = event.dataTransfer.getData('text/plain');
-            const role = roleRoutes.find((item) => item.label === label);
-            if (role) {
-              setDraggingRole(null);
-              setPlaceholderRole(null);
-              jumpToRole(role.href, role.label);
-            }
-          }}
-          aria-label="Drop a role to jump into Mei's portfolio"
         >
-          <span>{activeRole ?? placeholderRole ?? '[Drop Here]'}</span>
-        </div>
+          {scrolled ? 'Product Designer' : 'Mei'}
+        </h1>
       </div>
-
-      <h1
-        className="mei-scroll-title"
-        style={{
-          opacity: heroIntroVisible ? titleOpacity : 0,
-          transform: heroIntroVisible ? 'translateY(0)' : 'translateY(200px)',
-          transition: heroIntroVisible
-            ? 'transform 0.7s cubic-bezier(.2,1.2,.6,1), opacity 0.5s'
-            : undefined,
-        }}
-      >
-        MEI
-      </h1>
 
       <aside
         className="mei-bottom-gif"
         aria-hidden="true"
         style={{
-          opacity: heroIntroVisible ? 1 : 0,
+          opacity: heroIntroVisible ? gifO : 0,
+          pointerEvents: 'none',
           transform: heroIntroVisible ? 'translateY(0)' : 'translateY(100px)',
-          transition: heroIntroVisible
-            ? 'transform 1.2s cubic-bezier(.4,1.25,.6,1), opacity 0.5s'
-            : undefined,
+          transition: heroAnimationComplete
+            ? 'opacity 0.15s linear'
+            : 'transform 1.2s cubic-bezier(.4,1.25,.6,1), opacity 0.3s',
         }}
       >
         <img src="/meiwave.gif" alt="" />
@@ -489,46 +403,6 @@ export default function Home() {
         <span>D</span><span>o</span><span>w</span><span>n</span>
       </div>
 
-      <div className="mei-category-select" role="group" aria-label="Drag or choose a portfolio role">
-        {roleRoutes.map((role) => (
-          <span
-            key={role.label}
-            id={`role-${role.label.replace(/\s+/g, '-').toLowerCase()}`}
-            role="button"
-            tabIndex={0}
-            draggable
-            className="mei-category-item"
-            onClick={() => jumpToRole(role.href, role.label)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                jumpToRole(role.href, role.label);
-              }
-            }}
-            onDragStart={(event) => {
-              event.dataTransfer.setData('text/plain', role.label);
-              setDraggingRole(role.label);
-              setPlaceholderRole(role.label);
-              updateHeroArticle(role.label);
-            }}
-            onDragEnd={() => {
-              setDraggingRole(null);
-              setPlaceholderRole(null);
-              if (isHeroScrolled && !activeRole) {
-                setTypedHeroText(`${initialHeroText} a`);
-              }
-            }}
-            style={{
-              opacity: draggingRole === role.label && !activeRole ? 0 : 1,
-            }}
-          >
-            <span className="mei-bracket" aria-hidden="true">[</span>
-            {role.label}
-            <span className="mei-bracket" aria-hidden="true">]</span>
-          </span>
-        ))}
-      </div>
-
     </section>
 
     <section
@@ -539,12 +413,11 @@ export default function Home() {
         marginRight: 'calc(-50vw + 50%)',
       }}
     />
-    {false && (
-    <>
-    {/* Works 部分 */}
+
+    {/* Stuff I built —— 横向作品展示，按角色分组 */}
     <section
       id="work"
-      className="mei-works-page w-screen"
+      className="mei-stuff-page w-screen"
       style={{
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
@@ -552,371 +425,38 @@ export default function Home() {
     >
       <ScrollAnimatedSection>
         <header className="mei-works-header">
-          <h1>Works</h1>
-          <p>Case studies, experiments, and systems grouped by the roles you can drag in the opening scene.</p>
+          <h1>Stuff I built</h1>
+          <p>Case studies, experiments, and systems — grouped by the roles I play.</p>
         </header>
 
-        <div className="mei-work-details-stack">
-          {workSections.map((section, index) => (
-            <details key={section.id} id={section.id} className="mei-work-details" open={index === 0}>
-              <summary className="mei-work-summary">
-                <span>{section.title}</span>
-                <small>{section.subtitle}</small>
-              </summary>
-              <div className="mei-work-section-content">
-                <ul className="mei-project-list">
-                  {section.projects.map((project) => (
-                    <li className="mei-project-card" key={project.title}>
-                      <a href={project.href} className="mei-project-card-link">
-                        <div className="mei-project-image">
-                          <img src={project.image} alt="" />
-                        </div>
-                        <div className="mei-project-info">
-                          <h3>{project.title}</h3>
-                          <p>{project.description}</p>
-                          <span className="mei-project-link">Read More</span>
-                        </div>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+        <div className="mei-stuff-stack">
+          {workSections.map((section) => (
+            <div key={section.id} id={section.id} className="mei-stuff-section">
+              <div className="mei-stuff-section-head">
+                <h2>{section.title}</h2>
+                <p>{section.subtitle}</p>
               </div>
-            </details>
+              <div className="mei-stuff-row">
+                {section.projects.map((project) => (
+                  <article className="mei-project-card mei-stuff-card" key={project.title}>
+                    <a href={project.href} className="mei-project-card-link">
+                      <div className="mei-project-image">
+                        <img src={project.image} alt="" />
+                      </div>
+                      <div className="mei-project-info">
+                        <h3>{project.title}</h3>
+                        <p>{project.description}</p>
+                        <span className="mei-project-link">Read case study</span>
+                      </div>
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </ScrollAnimatedSection>
     </section>
-
-    {/* About 部分 */}
-    <section
-      id="about"
-      className="w-screen"
-      style={{
-        backgroundColor: '#FFFFFF',
-        marginLeft: 'calc(-50vw + 50%)',
-        marginRight: 'calc(-50vw + 50%)',
-        paddingTop: isMobile ? '80px' : '240px',
-        paddingBottom: isMobile ? '80px' : '240px',
-      }}
-    >
-      <ScrollAnimatedSection>
-        <div
-        className="flex flex-col w-full"
-        style={{
-          maxWidth: '900px',
-          margin: '0 auto',
-          padding: isMobile ? '0 24px' : '0',
-        }}
-      >
-        {/* 标题 */}
-        <h2
-          style={{
-            ...fontStyle,
-            fontSize: '28px',
-            lineHeight: '36px',
-            fontWeight: 500,
-            color: 'oklch(0.556 0 0)', // 灰色
-            marginBottom: '80px',
-          }}
-        >
-          About
-        </h2>
-
-        {/* 副标题和正文段落整体 */}
-        <div style={{ marginBottom: '80px' }}>
-          {/* 副标题 */}
-          <p
-            style={{
-              ...fontStyle,
-              fontSize: '22px',
-              lineHeight: '32px',
-              fontWeight: 500,
-              color: 'rgb(0, 0, 0)',
-              marginBottom: '24px',
-            }}
-          >
-            Human-First, Logic-Driven
-          </p>
-
-          {/* 正文段落 */}
-          <div className="flex flex-col gap-6">
-            <p
-              style={{
-                ...fontStyle,
-                fontSize: '20px',
-                lineHeight: '28px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-              }}
-            >
-              I am a UX Designer focused on transforming complex logic into intuitive human experiences. My philosophy centers on user agency: I believe even the most sophisticated systems should feel like a natural extension of the user’s intent. By applying First-Principles Thinking, I deconstruct intricate environments into clear, navigable structures that prioritize cognitive ease and logical rigor.
-            </p>
-            <p
-              style={{
-                ...fontStyle,
-                fontSize: '20px',
-                lineHeight: '28px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-              }}
-            >
-              To ensure impact, I anchor my process in rigorous user research and functional validation. I treat design not as a visual layer, but as a system that must be refined through real-world feedback. By integrating a human-centered focus with rapid prototyping, I translate deep user insights into high-fidelity experiences that meet the highest standards of usability.
-            </p>
-          </div>
-        </div>
-
-        {/* 四列内容 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          {/* Strategy & Research */}
-          <div>
-            <h3
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '24px',
-                fontWeight: 700,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '12px',
-              }}
-            >
-              Strategy &amp; Research
-            </h3>
-            <div className="flex flex-col gap-1">
-              <p
-                style={{
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '24px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                  margin: 0,
-                }}
-              >
-                User Research
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Data Analysis
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Usability Testing
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Information Architecture
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Content Design
-              </p>
-            </div>
-          </div>
-
-          {/* UX/UI Design */}
-          <div>
-            <h3
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '24px',
-                fontWeight: 700,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '12px',
-              }}
-            >
-              UX/UI Design
-            </h3>
-            <div className="flex flex-col gap-1">
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Interaction Design
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Design Systems
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Wireframing
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Prototyping
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Accessibility (WCAG)
-              </p>
-            </div>
-          </div>
-
-          {/* Tech & Specialized */}
-          <div>
-            <h3
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '24px',
-                fontWeight: 700,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '12px',
-              }}
-            >
-              Tech &amp; Specialized
-            </h3>
-            <div className="flex flex-col gap-1">
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Agentic Design
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Conversational UX
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                AR/VR
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Rapid Prototyping (Vibe Coding, MCP)
-              </p>
-            </div>
-          </div>
-
-          {/* Tools */}
-          <div>
-            <h3
-              style={{
-                ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '24px',
-                fontWeight: 700,
-                color: 'rgb(0, 0, 0)',
-                marginBottom: '12px',
-              }}
-            >
-              Tools
-            </h3>
-            <div className="flex flex-col gap-1">
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Figma
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Protopie
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Adobe Creative Suite
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                Dify &amp; Coze
-              </p>
-              <p style={{ ...fontStyle, fontSize: '16px', lineHeight: '24px', fontWeight: 400, color: 'rgb(0, 0, 0)', margin: 0 }}>
-                ComfyU
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      </ScrollAnimatedSection>
-    </section>
-
-    {/* Get in Touch 部分 */}
-    <section
-      id="contact"
-      className="w-screen"
-      style={{
-        backgroundColor: '#FAFAFA',
-        marginLeft: 'calc(-50vw + 50%)',
-        marginRight: 'calc(-50vw + 50%)',
-        paddingTop: isMobile ? '80px' : '240px',
-        paddingBottom: isMobile ? '80px' : '240px',
-      }}
-    >
-      <ScrollAnimatedSection>
-        <div
-          className="flex flex-col w-full"
-          style={{
-            maxWidth: '900px',
-            margin: '0 auto',
-            padding: isMobile ? '0 24px' : '0',
-          }}
-        >
-        {/* 标题 */}
-        <h2
-          style={{
-            ...fontStyle,
-            fontSize: '28px',
-            lineHeight: '36px',
-            fontWeight: 500,
-            color: 'oklch(0.556 0 0)', // 灰色
-            marginBottom: '80px',
-          }}
-        >
-          Get in Touch
-        </h2>
-
-        {/* 副标题和正文段落整体 */}
-        <div style={{ marginBottom: '80px' }}>
-          {/* 副标题 */}
-          <p
-            style={{
-              ...fontStyle,
-              fontSize: '22px',
-              lineHeight: '32px',
-              fontWeight: 500,
-              color: 'rgb(0, 0, 0)',
-              marginBottom: '24px',
-            }}
-          >
-            Let’s turn complex challenges into seamless solutions.
-          </p>
-
-          {/* 正文段落 */}
-          <p
-            style={{
-              ...fontStyle,
-              fontSize: '20px',
-              lineHeight: '28px',
-              fontWeight: 400,
-              color: 'rgb(0, 0, 0)',
-            }}
-          >
-            I am always interested in collaborating on projects that demand rigorous user research and technical precision. From conducting deep usability testing to implementing responsive, code-based interfaces, I’m ready to help bring your product vision to life with a human-first approach.
-          </p>
-        </div>
-
-        {/* 三个卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ContactCard
-            iconSrc="/Mail.svg"
-            iconAlt="Email"
-            title="Email"
-            content="Send a message"
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.location.href = 'mailto:flyskytoo@outlook.com';
-              }
-            }}
-          />
-          <ContactCard
-            iconSrc="/LinkedIN.svg"
-            iconAlt="LinkedIn"
-            title="LinkedIn"
-            content="Contact"
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.open('https://www.linkedin.com/in/meichai/', '_blank', 'noopener,noreferrer');
-              }
-            }}
-          />
-          <ContactCard
-            iconSrc="/Github.svg"
-            iconAlt="GitHub"
-            title="GitHub"
-            content="Check my Profile"
-            onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.open('https://github.com/fancytree', '_blank', 'noopener,noreferrer');
-              }
-            }}
-          />
-        </div>
-      </div>
-      </ScrollAnimatedSection>
-    </section>
-
-    {/* Let's work together + 版权信息 已移至 Layout 的 Footer 组件，全站统一显示 */}
-    </>
-    )}
     </>
   );
 }

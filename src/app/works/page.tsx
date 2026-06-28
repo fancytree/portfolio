@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect } from 'react';
+
 const workSections = [
   {
     id: 'designer-page',
@@ -35,6 +39,18 @@ const workSections = [
     title: 'Researcher',
     subtitle: 'Discovery, validation, service mapping, and civic systems.',
     projects: [
+      {
+        title: 'Walnut Coding',
+        description: 'Post-trial parent decision-making in children’s coding education — why parents hesitate after a trial class and the evidence they need before they pay. A sanitized, chart-driven UX research case study.',
+        image: '/img/walnut-coding-cover.svg',
+        href: '/projects/walnut-coding',
+      },
+      {
+        title: 'Parent Sharing Behavior',
+        description: 'Why the highest-value parents share the least in public — an NPS, social-sharing & referral study of 7–12-year-olds, and how to redesign sharing around social comfort. Sanitized & chart-driven.',
+        image: '/img/walnut-sharing-cover.svg',
+        href: '/projects/walnut-sharing',
+      },
       {
         title: 'Milano Partecipa',
         description: 'Civic participation service research for improving daily access, awareness, and community engagement.',
@@ -90,6 +106,31 @@ const workSections = [
 ];
 
 export default function WorksPage() {
+  // 当通过 /works#xxx-page 进入时（例如首页把角色拖进 [Drop Here] 后跳转），
+  // 展开对应的 <details> 并滚动到位。参考 Mei Portfolio/projects.js 的实现。
+  useEffect(() => {
+    const openFromHash = () => {
+      const hash = window.location.hash;
+      if (!hash) return;
+      let target: Element | null = null;
+      try {
+        target = document.querySelector(hash);
+      } catch {
+        target = document.getElementById(hash.slice(1));
+      }
+      if (target && target.tagName === 'DETAILS') {
+        (target as HTMLDetailsElement).open = true;
+        // 等浏览器把展开后的布局算好再滚动，否则会停在折叠时的位置
+        requestAnimationFrame(() =>
+          target!.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        );
+      }
+    };
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+    return () => window.removeEventListener('hashchange', openFromHash);
+  }, []);
+
   return (
     <section
       className="mei-works-page w-screen"
