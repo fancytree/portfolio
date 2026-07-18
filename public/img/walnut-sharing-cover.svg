@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="640" height="220" role="img" aria-label="Parent sharing and referral behavior research cover">
+  <defs>
+    <linearGradient id="ws-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E4A40"/>
+      <stop offset="0.55" stop-color="#2F6B5E"/>
+      <stop offset="1" stop-color="#4E8C7C"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="640" height="220" fill="url(#ws-bg)"/>
+
+  <!-- eyebrow -->
+  <text x="40" y="46" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="2.2" fill="#DCEDE6" opacity="0.92">UX RESEARCH · GROWTH</text>
+
+  <!-- title -->
+  <text x="38" y="108" font-family="Nunito, system-ui, sans-serif" font-size="40" font-weight="800" fill="#F6F8F5">Parent Sharing</text>
+  <text x="40" y="146" font-family="Nunito, system-ui, sans-serif" font-size="17" font-weight="400" fill="#E3EEE9">NPS · social sharing · referral</text>
+
+  <!-- declining public-share bars motif -->
+  <g transform="translate(40,168)">
+    <rect x="0"  y="2"  width="150" height="9" rx="4" fill="#F6F8F5" opacity="0.95"/>
+    <rect x="0"  y="16" width="104" height="9" rx="4" fill="#CFE3DB" opacity="0.9"/>
+    <rect x="0"  y="30" width="66"  height="9" rx="4" fill="#A9CDC1" opacity="0.85"/>
+  </g>
+
+  <!-- referral network motif (public -> private) -->
+  <g transform="translate(470,40)" stroke="#F6F8F5" stroke-opacity="0.85" fill="none">
+    <circle cx="20" cy="20" r="13" stroke-width="2"/>
+    <line x1="30" y1="30" x2="78" y2="78" stroke-width="2" stroke-opacity="0.5" stroke-dasharray="4 4"/>
+    <circle cx="90" cy="92" r="9" fill="#F6F8F5" stroke-opacity="0"/>
+    <line x1="20" y1="33" x2="20" y2="120" stroke-width="2" stroke-opacity="0.4"/>
+    <circle cx="20" cy="128" r="7" fill="#C98A2B" stroke-opacity="0"/>
+  </g>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#F6F8F5" opacity="0.92">
+    <text x="500" y="64">public</text>
+    <text x="566" y="138">private</text>
+    <text x="500" y="176">refer</text>
+  </g>
+
+  <!-- focus frame -->
+  <rect x="456" y="28" width="160" height="160" rx="12" fill="none" stroke="#F6F8F5" stroke-opacity="0.4" stroke-dasharray="5 5"/>
+</svg>

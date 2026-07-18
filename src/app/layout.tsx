@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { geistMono, geistSans, nunito } from "./fonts";
+import { dmMono, fraunces, geistMono, geistSans, inter, nunito } from "./fonts";
 import "./globals.css";
 // 引入页面基础布局组件，用于包裹整个应用内容
 import Layout from "./components/Layout";
@@ -19,13 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="stylesheet" href="https://use.typekit.net/nnb5nol.css" />
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${nunito.variable} antialiased`}
-      >
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${nunito.variable} ${fraunces.variable} ${inter.variable} ${dmMono.variable}`}
+    >
+      <body className="antialiased">
         {/* 使用自定义布局组件包裹整个应用的 children */}
         <Layout>{children}</Layout>
       </body>

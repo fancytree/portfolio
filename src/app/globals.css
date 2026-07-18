@@ -26,9 +26,9 @@
   --foreground: #1e1e14;
   --mei-ink: #1e1e14;
   --mei-paper: #ffffff;
-  --mei-orange: #f5a045;
+  --mei-orange: #222222;
   --mei-muted: #555666;
-  --mei-font-primary: 'interstate-mono', var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mei-font-primary: var(--font-nunito), 'Nunito', sans-serif;
   --mei-font-secondary: var(--font-nunito), 'Nunito', sans-serif;
 }
 
@@ -43,9 +43,25 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Anchor 对齐：About 区块向上保留一点空间，避免被固定导航遮挡太多 */
+html.mei-snap-page {
+  scroll-snap-type: y proximity;
+}
+
+.mei-section-screen {
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* 首页分屏导航：点击锚点时直接落到 section 顶部 */
 #about {
-  scroll-margin-top: -150px;
+  scroll-margin-top: 0;
+}
+
+/* 首页分屏导航：点击锚点时直接落到 section 顶部 */
+#work,
+#strategy {
+  scroll-margin-top: 0;
 }
 
 body {
@@ -64,6 +80,91 @@ body.no-scroll {
   min-height: 100dvh;
 }
 
+.mei-motion-section {
+  --mei-section-shift: 0px;
+  opacity: 0.001;
+  transform: translate3d(0, calc(30px + var(--mei-section-shift)), 0) scale(0.992);
+  filter: blur(5px);
+  transition:
+    opacity 0.56s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform, filter;
+}
+
+.mei-motion-section[data-visible='true'] {
+  opacity: 1;
+  transform: translate3d(0, var(--mei-section-shift), 0) scale(1);
+  filter: blur(0);
+}
+
+.mei-interactive-row {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.28s ease;
+  will-change: transform;
+}
+
+.mei-process-step {
+  transition:
+    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.32s ease;
+  will-change: transform;
+}
+
+.mei-email-pill {
+  background: transparent;
+  border-color: rgb(10 10 10 / 60%);
+  color: rgb(10 10 10 / 60%);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    border-color 0.24s ease,
+    color 0.24s ease,
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mei-email-icon {
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mei-email-icon-copy {
+  opacity: 0;
+  transform: translateY(2px) scale(0.92);
+}
+
+.mei-email-pill:hover,
+.mei-email-pill:focus-visible {
+  border-color: rgb(10 10 10);
+  color: rgb(10 10 10);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.mei-email-pill:hover .mei-email-icon-mail,
+.mei-email-pill:focus-visible .mei-email-icon-mail {
+  opacity: 0;
+  transform: translateY(-2px) scale(0.92);
+}
+
+.mei-email-pill:hover .mei-email-icon-copy,
+.mei-email-pill:focus-visible .mei-email-icon-copy {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (hover: hover) {
+  .mei-interactive-row:hover {
+    transform: translate3d(8px, 0, 0);
+  }
+
+  .mei-process-step:hover {
+    transform: translate3d(0, -4px, 0) scale(1.01);
+  }
+}
+
 .mei-logo-link {
   display: inline-flex;
   align-items: center;
@@ -72,7 +173,7 @@ body.no-scroll {
 .mei-logo-img {
   display: block;
   width: auto;
-  height: clamp(30px, 7vw, 38px);
+  height: 40px;
   transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
@@ -83,40 +184,6 @@ body.no-scroll {
 
 .mei-logo-link:focus-visible {
   outline: none;
-}
-
-.mei-nav-link {
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-}
-
-.mei-nav-link::before {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: 999px;
-  background: var(--mei-orange);
-  content: '';
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.35s cubic-bezier(.4, 1, .6, 1);
-}
-
-.mei-nav-link span {
-  position: relative;
-  z-index: 1;
-}
-
-.mei-nav-link:hover,
-.mei-nav-link:focus-visible {
-  outline: none;
-  transform: scale(1.05);
-}
-
-.mei-nav-link:hover::before,
-.mei-nav-link:focus-visible::before {
-  transform: scaleX(1);
 }
 
 .mei-role-chip {
@@ -149,13 +216,16 @@ body.no-scroll {
 .mei-job-role-container {
   position: fixed;
   z-index: 12;
-  top: calc(45vh - 3.5rem);
+  top: 50vh;
   left: 50%;
-  transform: translateX(-50%);
+  /* transform 由内联 style 控制（居中 + 飞出位移） */
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  white-space: nowrap;
+  gap: 0.1rem;
+  width: min(94vw, 960px);
+  white-space: normal;
+  will-change: transform, opacity;
 }
 
 .mei-typewriter {
@@ -172,24 +242,19 @@ body.no-scroll {
 }
 
 .mei-scroll-title {
-  position: absolute;
-  width: 100%;
-  top: calc(45vh - 7rem);
-  left: 0;
+  margin: 0;
   color: var(--mei-ink);
   font-family: "MeiNunito", sans-serif;
   font-weight: 800;
   font-style: normal;
   letter-spacing: 0;
   font-synthesis-weight: none;
-  font-size: clamp(2rem, 1rem + 8vw, 8rem);
+  font-size: clamp(3rem, 1.5rem + 7vw, 7rem);
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 1.1;
-  padding: 0.5em 1rem;
-  opacity: 1;
-  transition: transform 0.7s cubic-bezier(.4, 2, .6, 1), opacity 0.45s ease;
+  white-space: normal;
+  line-height: 1.02;
+  padding: 0.06em 0;
+  will-change: transform, opacity;
 }
 
 .mei-bottom-gif {
@@ -263,6 +328,148 @@ body.no-scroll {
 .mei-scroll-down > span:nth-child(10) { animation-delay: 0.49s; }
 .mei-scroll-down > span:nth-child(11) { animation-delay: 0.56s; }
 .mei-scroll-down > span:nth-child(12) { animation-delay: 0.63s; }
+
+.mei-scroll-drop-line {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1px;
+  height: 1.18em;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.mei-scroll-drop-line::before {
+  position: absolute;
+  inset: 0;
+  background: #303030;
+  content: '';
+  transform: translateY(-120%);
+  animation: meiScrollDropLine 0.95s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes meiScrollDropLine {
+  0% {
+    transform: translateY(-120%);
+  }
+  55% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(120%);
+  }
+}
+
+.mei-hero-scroll-down-line {
+  position: relative;
+  display: inline-block;
+  width: 1px;
+  height: 1.25em;
+  flex: 0 0 auto;
+  overflow: hidden;
+  color: currentColor;
+  vertical-align: middle;
+}
+
+.mei-hero-scroll-down-line::before {
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  content: '';
+  transform: translateY(-120%);
+  animation: meiScrollDropLine 1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+.mei-view-all-work-link {
+  position: relative;
+  overflow: hidden;
+  color: #303030;
+  text-decoration: none;
+  transition: color 0.32s ease;
+}
+
+.mei-view-all-work-link::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #303030;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.34s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.mei-view-all-work-link:hover,
+.mei-view-all-work-link:focus-visible {
+  color: #ffffff;
+  outline: none;
+}
+
+.mei-view-all-work-link:hover::before,
+.mei-view-all-work-link:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.mei-view-all-work-icon {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.34s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.mei-view-all-work-link:hover .mei-view-all-work-icon,
+.mei-view-all-work-link:focus-visible .mei-view-all-work-icon {
+  transform: rotate(45deg);
+}
+
+.mei-back-to-top {
+  transition: color 0.25s ease;
+}
+
+.mei-back-to-top:hover,
+.mei-back-to-top:focus-visible {
+  color: #ffffff;
+  outline: none;
+}
+
+.mei-back-to-top-icon-frame {
+  display: inline-flex;
+  width: 26.5px;
+  height: 26.777px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #070707;
+}
+
+.mei-back-to-top-icon {
+  transition: transform 0.25s ease;
+}
+
+.mei-back-to-top:hover .mei-back-to-top-icon,
+.mei-back-to-top:focus-visible .mei-back-to-top-icon {
+  animation: meiBackToTopArrow 0.85s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes meiBackToTopArrow {
+  0% {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+}
 
 .mei-category-select {
   position: fixed;
@@ -358,39 +565,13 @@ body.no-scroll {
   opacity: 0.5;
 }
 
-.mei-copy-hero.is-scrolled .mei-job-role-container {
-  top: calc(45vh - 3.5rem);
-}
-
-.mei-copy-hero.is-scrolled .mei-category-select {
-  animation: meiFloatY 3s ease-in-out infinite;
-  opacity: 1;
-  will-change: opacity, translate;
-  justify-content: center;
-  top: calc(51vh + 1rem);
-  left: 50%;
-  right: auto;
-  scale: 1.3;
-  transform: translateX(-50%);
-}
-
-.mei-copy-hero.is-scrolled .mei-category-select,
-.mei-copy-hero.is-scrolled .mei-drop-zone {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.mei-copy-hero.is-scrolled .mei-drop-zone {
-  display: inline-flex;
-}
-
 .mei-copy-hero.is-scrolled .mei-scroll-down {
   opacity: 0;
 }
 
 .mei-after-hero-spacer {
-  min-height: 200dvh;
-  padding: 2rem 0;
+  min-height: 42dvh;
+  padding: 0;
   background: #ffffff;
 }
 
@@ -411,7 +592,7 @@ body.no-scroll {
 .mei-works-header h1 {
   margin: 0 0 0.5rem;
   color: var(--mei-ink);
-  font-family: var(--mei-font-secondary);
+  font-family: "MeiNunito", var(--mei-font-secondary);
   font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 800;
   letter-spacing: 0;
@@ -422,6 +603,7 @@ body.no-scroll {
   margin: 0 auto;
   max-width: 600px;
   color: var(--mei-ink);
+  font-family: var(--mei-font-secondary);
   font-size: clamp(1rem, 2.5vw, 1.25rem);
   line-height: 1.55;
 }
@@ -456,8 +638,8 @@ body.no-scroll {
 .mei-work-summary span {
   color: var(--mei-ink);
   font-family: var(--mei-font-secondary);
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 800;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 500;
   line-height: 1.1;
 }
 
@@ -582,6 +764,84 @@ body.no-scroll {
 .mei-project-card-link:hover .mei-project-link::before,
 .mei-project-card-link:focus-visible .mei-project-link::before {
   transform: scaleX(1);
+}
+
+/* 按钮 hover 填充深色后文字翻白 */
+.mei-project-card-link:hover .mei-project-link,
+.mei-project-card-link:focus-visible .mei-project-link {
+  color: #ffffff;
+}
+
+/* ===== Home: "Stuff I built" 横向作品区 ===== */
+.mei-stuff-page {
+  background: #ffffff;
+  color: var(--mei-ink);
+  padding: 2rem 0 7rem;
+  font-family: var(--mei-font-primary);
+}
+
+.mei-stuff-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mei-stuff-section-head {
+  margin-bottom: 1.5rem;
+}
+
+.mei-stuff-section-head h2 {
+  margin: 0 0 0.25rem;
+  color: var(--mei-ink);
+  font-family: var(--mei-font-secondary);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.mei-stuff-section-head p {
+  margin: 0;
+  color: var(--mei-muted);
+  font-size: 0.95rem;
+}
+
+.mei-stuff-row {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0 1.25rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mei-stuff-card {
+  flex: 0 0 320px;
+  max-width: 320px;
+  margin: 0;
+  scroll-snap-align: start;
+}
+
+.mei-stuff-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mei-stuff-row::-webkit-scrollbar-thumb {
+  background: rgba(34, 34, 34, 0.2);
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .mei-stuff-stack {
+    padding: 0 1.25rem;
+    gap: 3rem;
+  }
+  .mei-stuff-card {
+    flex-basis: 78vw;
+    max-width: 78vw;
+  }
 }
 
 .mei-tab-page {
@@ -830,150 +1090,6 @@ body.no-scroll {
   line-height: 1.1;
 }
 
-.mei-contact-footer {
-  position: sticky;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 90dvh;
-  min-height: 620px;
-  padding-top: 4rem;
-  background-color: var(--mei-orange);
-  border-radius: 50% / 10%;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5));
-  overflow: hidden;
-  color: var(--mei-ink);
-  font-family: var(--mei-font-primary);
-}
-
-.mei-footer-content-wrapper {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex: 1;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-  text-align: center;
-}
-
-.mei-footer-title {
-  margin: 0 0 1rem;
-  color: var(--mei-ink);
-  font-family: "MeiNunito", sans-serif;
-  font-size: clamp(2.5rem, 8vw, 4rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: 0;
-}
-
-.mei-footer-cta-button {
-  display: inline-block;
-  border: 0;
-  border-radius: 999px;
-  background-color: var(--mei-ink);
-  color: #ffffff;
-  cursor: pointer;
-  font-family: var(--mei-font-primary);
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 0.8em 2.5em;
-  transition: transform 0.25s cubic-bezier(.4, 1.1, .6, 1), background-color 0.25s ease, color 0.25s ease;
-}
-
-.mei-footer-cta-button:hover,
-.mei-footer-cta-button:focus-visible {
-  background-color: #ffffff;
-  color: var(--mei-ink);
-  outline: none;
-  transform: scale(1.05);
-}
-
-.mei-footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  margin-top: 2.5rem;
-}
-
-.mei-footer-link-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.mei-footer-link {
-  position: relative;
-  color: var(--mei-ink);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.mei-footer-link::after {
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--mei-ink);
-  content: '';
-  transform: scaleX(0);
-  transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
-}
-
-.mei-footer-link:hover::after,
-.mei-footer-link:focus-visible::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-
-.mei-footer-link:focus-visible {
-  outline: none;
-}
-
-.mei-link-separator {
-  color: rgba(30, 30, 20, 0.5);
-  user-select: none;
-}
-
-.mei-footer-bottom-bar {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding: 1.5rem 2rem;
-  background-color: rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.mei-footer-bottom-bar p {
-  margin: 0;
-  color: var(--mei-ink);
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-}
-
-.mei-cursor-effects {
-  position: absolute;
-  z-index: 1;
-  width: 9vh;
-  height: 9vh;
-  border-radius: 50%;
-  background-color: #ffffff;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
 @keyframes meiBlinkingCursor {
   from { border-right-color: var(--mei-ink); }
   to { border-right-color: transparent; }
@@ -1104,28 +1220,6 @@ body.no-scroll {
   .mei-tool-cloud span {
     min-height: 42px;
     padding: 0 1rem;
-  }
-
-  .mei-contact-footer {
-    height: 78dvh;
-    min-height: 520px;
-    padding-top: 3rem;
-    border-radius: 38% / 7%;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-
-  .mei-footer-title {
-    font-size: clamp(2.3rem, 12vw, 3.25rem);
-  }
-
-  .mei-footer-links,
-  .mei-footer-link-group {
-    gap: 0.85rem;
-  }
-
-  .mei-cursor-effects {
-    display: none;
   }
 
   .mei-hero {
