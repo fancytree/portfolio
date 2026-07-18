@@ -43,6 +43,16 @@ html {
   scroll-behavior: smooth;
 }
 
+html.mei-snap-page {
+  scroll-snap-type: y proximity;
+}
+
+.mei-section-screen {
+  min-height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 /* Anchor 对齐：固定导航下方保留一点呼吸空间 */
 #about {
   scroll-margin-top: 72px;
@@ -100,6 +110,49 @@ body.no-scroll {
     transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.32s ease;
   will-change: transform;
+}
+
+.mei-email-pill {
+  background: transparent;
+  border-color: rgb(10 10 10 / 60%);
+  color: rgb(10 10 10 / 60%);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    border-color 0.24s ease,
+    color 0.24s ease,
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mei-email-icon {
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mei-email-icon-copy {
+  opacity: 0;
+  transform: translateY(2px) scale(0.92);
+}
+
+.mei-email-pill:hover,
+.mei-email-pill:focus-visible {
+  border-color: rgb(10 10 10);
+  color: rgb(10 10 10);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.mei-email-pill:hover .mei-email-icon-mail,
+.mei-email-pill:focus-visible .mei-email-icon-mail {
+  opacity: 0;
+  transform: translateY(-2px) scale(0.92);
+}
+
+.mei-email-pill:hover .mei-email-icon-copy,
+.mei-email-pill:focus-visible .mei-email-icon-copy {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 @media (hover: hover) {

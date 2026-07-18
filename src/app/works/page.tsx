@@ -79,41 +79,41 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 const productProjects: Project[] = [
   {
     title: 'ConnectNova',
-    category: 'Designer',
+    category: 'Founding Designer',
     time: '2026 – Present',
-    tags: ['AI', 'Chrome Extension', 'Dashboard'],
+    tags: ['AI Recruiting', 'Chrome Extension', 'Design System'],
     description:
-      'AI recruiting platform that turns LinkedIn sourcing into a structured candidate-ranking workflow across a Chrome extension and dashboard.',
+      'Led product direction, UX strategy, and interaction design for a two-part recruiting workflow: a LinkedIn Chrome extension for sourcing and a dashboard for candidate ranking, review, and outreach.',
     image: '/img/Connectnova.avif',
     href: '/projects/connectnova',
   },
   {
     title: 'Jobnova',
-    category: 'Designer',
+    category: 'Lead Designer',
     time: '2025 – Present',
-    tags: ['AI', 'Career Platform', 'Personalization'],
+    tags: ['AI Career Search', 'Personalization', 'Web App'],
     description:
-      'AI career platform for tailored job discovery and personalized applications, helping job seekers move from scattered search to focused action.',
+      'Led design for an AI career platform that helps job seekers move from scattered search to focused action through tailored job discovery, match reasoning, and application support.',
     image: '/img/Jobnova.avif',
     href: '/projects/jobnova',
   },
   {
     title: 'MemQ',
-    category: 'Designer',
+    category: 'Indie iOS Designer',
     time: '2026 · 8 weeks',
-    tags: ['Mobile', 'EdTech', 'Learning'],
+    tags: ['iOS App', 'Built & Shipped', 'Memory Loop'],
     description:
-      'Mobile learning app that captures knowledge, turns it into quizzes, and supports durable memory through repeatable study loops.',
+      'Independently designed, developed, and launched an iOS learning app that turns captured knowledge into quizzes and review loops, helping learners retain what they ask AI.',
     image: '/img/MemQ.avif',
     href: '/projects/memq',
   },
   {
     title: 'Beikemama',
-    category: 'Designer',
+    category: 'UX/UI Designer',
     time: '2020 · 8 weeks',
-    tags: ['Community', 'Live', 'Social'],
+    tags: ['Parenting Community', 'Live Q&A', 'Social UX'],
     description:
-      'Live parenting community for pregnant women and young families, combining expert Q&A, social support, and parent-child activities.',
+      'Designed a live parenting community for pregnant women and young families, connecting expert Q&A, social support, and parent-child activities into a warmer mobile experience.',
     image: '/img/Beikemama.avif',
     href: '/projects/beikemama',
   },
@@ -162,21 +162,21 @@ const productProjects: Project[] = [
 const researchProjects: Project[] = [
   {
     title: 'Walnut Coding',
-    category: 'Researcher',
+    category: 'UX Researcher',
     time: '24–72 hrs post-trial',
-    tags: ['UX Research', 'EdTech', 'Behavioral'],
+    tags: ['Post-Trial Research', 'Parent Decision', 'Conversion'],
     description:
-      'UX research on post-trial parent decisions in children’s coding education: why families hesitate and what evidence helps them commit.',
+      'Investigated why parents hesitate after trial coding classes and translated hesitation patterns into clearer evidence, comparison, and decision-support opportunities.',
     image: '/img/walnut-coding-cover.svg',
     href: '/projects/walnut-coding',
   },
   {
     title: 'Parent Sharing Behavior',
-    category: 'Researcher',
+    category: 'UX Researcher',
     time: '2025 · Research study',
-    tags: ['UX Research', 'Growth', 'Behavioral'],
+    tags: ['Referral Research', 'NPS Analysis', 'Growth UX'],
     description:
-      'Research into why high-value parents hesitate to share publicly, and how referral experiences can be redesigned around social comfort.',
+      'Studied why high-value parents hesitate to share publicly, reframing referral design around social comfort, private trust, and parent-controlled expression.',
     image: '/img/walnut-sharing-cover.svg',
     href: '/projects/walnut-sharing',
   },

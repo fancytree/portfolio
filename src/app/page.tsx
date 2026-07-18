@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, AudioWaveform, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
+import { ArrowUpRight, AudioWaveform, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -240,41 +240,41 @@ type Project = {
 const productProjects: Project[] = [
   {
     title: 'ConnectNova',
-    category: 'Designer',
+    category: 'Founding Designer',
     time: '2026 – Present',
-    tags: ['AI', 'Chrome Extension', 'Dashboard'],
+    tags: ['AI Recruiting', 'Chrome Extension', 'Design System'],
     description:
-      'AI recruiting platform that turns LinkedIn sourcing into a structured candidate-ranking workflow across a Chrome extension and dashboard.',
+      'Led product direction, UX strategy, and interaction design for a two-part recruiting workflow: a LinkedIn Chrome extension for sourcing and a dashboard for candidate ranking, review, and outreach.',
     image: '/img/Connectnova.avif',
     href: '/projects/connectnova',
   },
   {
     title: 'Jobnova',
-    category: 'Designer',
+    category: 'Lead Designer',
     time: '2025 – Present',
-    tags: ['AI', 'Career Platform', 'Personalization'],
+    tags: ['AI Career Search', 'Personalization', 'Web App'],
     description:
-      'AI career platform for tailored job discovery and personalized applications, helping job seekers move from scattered search to focused action.',
+      'Led design for an AI career platform that helps job seekers move from scattered search to focused action through tailored job discovery, match reasoning, and application support.',
     image: '/img/Jobnova.avif',
     href: '/projects/jobnova',
   },
   {
     title: 'MemQ',
-    category: 'Designer',
+    category: 'Indie iOS Designer',
     time: '2026 · 8 weeks',
-    tags: ['Mobile', 'EdTech', 'Learning'],
+    tags: ['iOS App', 'Built & Shipped', 'Memory Loop'],
     description:
-      'Mobile learning app that captures knowledge, turns it into quizzes, and supports durable memory through repeatable study loops.',
+      'Independently designed, developed, and launched an iOS learning app that turns captured knowledge into quizzes and review loops, helping learners retain what they ask AI.',
     image: '/img/MemQ.avif',
     href: '/projects/memq',
   },
   {
     title: 'Beikemama',
-    category: 'Designer',
+    category: 'UX/UI Designer',
     time: '2020 · 8 weeks',
-    tags: ['Community', 'Live', 'Social'],
+    tags: ['Parenting Community', 'Live Q&A', 'Social UX'],
     description:
-      'Live parenting community for pregnant women and young families, combining expert Q&A, social support, and parent-child activities.',
+      'Designed a live parenting community for pregnant women and young families, connecting expert Q&A, social support, and parent-child activities into a warmer mobile experience.',
     image: '/img/Beikemama.avif',
     href: '/projects/beikemama',
   },
@@ -323,21 +323,21 @@ const productProjects: Project[] = [
 const researchProjects: Project[] = [
   {
     title: 'Walnut Coding',
-    category: 'Researcher',
+    category: 'UX Researcher',
     time: '24–72 hrs post-trial',
-    tags: ['UX Research', 'EdTech', 'Behavioral'],
+    tags: ['Post-Trial Research', 'Parent Decision', 'Conversion'],
     description:
-      'UX research on post-trial parent decisions in children’s coding education: why families hesitate and what evidence helps them commit.',
+      'Investigated why parents hesitate after trial coding classes and translated hesitation patterns into clearer evidence, comparison, and decision-support opportunities.',
     image: '/img/walnut-coding-cover.svg',
     href: '/projects/walnut-coding',
   },
   {
     title: 'Parent Sharing Behavior',
-    category: 'Researcher',
+    category: 'UX Researcher',
     time: '2025 · Research study',
-    tags: ['UX Research', 'Growth', 'Behavioral'],
+    tags: ['Referral Research', 'NPS Analysis', 'Growth UX'],
     description:
-      'Research into why high-value parents hesitate to share publicly, and how referral experiences can be redesigned around social comfort.',
+      'Studied why high-value parents hesitate to share publicly, reframing referral design around social comfort, private trust, and parent-controlled expression.',
     image: '/img/walnut-sharing-cover.svg',
     href: '/projects/walnut-sharing',
   },
@@ -366,7 +366,7 @@ const researchProjects: Project[] = [
 const workGroups = [
   {
     label: 'Product',
-    items: productProjects.filter((project) => ['ConnectNova', 'Jobnova', 'Beikemama'].includes(project.title)),
+    items: productProjects.filter((project) => ['ConnectNova', 'Jobnova', 'MemQ', 'Beikemama'].includes(project.title)),
   },
   { label: 'Research', items: researchProjects.slice(0, 2) },
 ];
@@ -531,15 +531,29 @@ const experienceItems = [
 
 const skills = ['User Research', 'Product Strategy', 'Interaction Design', 'Information Architecture', 'AI UX'];
 const toolkit = ['Figma', 'ProtoPie', 'Cursor', 'Dify & Coze', 'ComfyUI'];
+const contactEmail = 'mei.chai@mail.polimi.it';
 
 export default function Home() {
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.classList.add('mei-snap-page');
+    return () => document.documentElement.classList.remove('mei-snap-page');
+  }, []);
+
+  const copyEmail = async () => {
+    await navigator.clipboard.writeText(contactEmail);
+    setEmailCopied(true);
+    window.setTimeout(() => setEmailCopied(false), 1200);
+  };
+
   return (
     <>
       {/* Hero — 整屏高度（100vh）；左右内边距与导航栏一致（px-6 sm:px-8）。
           负 marginTop 抵消 Layout 的 pt-12（导航栏高度），让 hero 顶到视口顶部，
           导航栏悬浮在 hero 上方（半透明 + 模糊），而不是与 hero 之间留白 */}
       <section
-        className="flex w-screen flex-col bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
+        className="mei-section-screen flex w-screen flex-col bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
         style={{ ...fullBleed, marginTop: '-48px', height: '100vh' }}
       >
         <div className="text-[13px] leading-relaxed text-[#0a0a0a]/70 sm:text-[15px]" style={fontMono}>
@@ -559,10 +573,28 @@ export default function Home() {
               <RotatingRole /> Designer
             </h1>
           </div>
-          <p className="max-w-[560px] text-[16px] font-light sm:text-[20px]" style={fontBody}>
+          <p className="max-w-[860px] text-[16px] font-light sm:text-[20px]" style={fontBody}>
             I design AI-powered product experiences from research to working prototypes, turning complex systems
             into interfaces people can understand, trust, and use.
           </p>
+          <div
+            className="mt-4 flex max-w-[380px] flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[13px] leading-tight text-[#0a0a0a] sm:text-[15px] md:text-[18px]"
+            style={fontBody}
+          >
+            <span>Open to thoughtful chats</span>
+            <button
+              type="button"
+              onClick={copyEmail}
+              className="mei-email-pill inline-flex min-h-[22px] items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] leading-none sm:min-h-[24px] sm:px-3 sm:text-[11px] md:min-h-[27px] md:px-3.5 md:text-[12px]"
+              aria-label="Copy email address"
+            >
+              <span className="relative size-3 sm:size-3.5" aria-hidden="true">
+                <Mail strokeWidth={1.8} className="mei-email-icon mei-email-icon-mail absolute inset-0 size-full" />
+                <Copy strokeWidth={1.8} className="mei-email-icon mei-email-icon-copy absolute inset-0 size-full" />
+              </span>
+              <span>{emailCopied ? 'copied' : 'email'}</span>
+            </button>
+          </div>
         </div>
 
         <div className="flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
@@ -577,7 +609,7 @@ export default function Home() {
       {/* Work */}
       <MotionSection
         id="work"
-        className="flex w-screen flex-col items-center bg-white px-6 pb-16 sm:px-10 md:px-16 md:pb-24"
+        className="mei-section-screen flex w-screen flex-col items-center bg-white px-6 pb-16 sm:px-10 md:px-16 md:pb-24"
         style={fullBleed}
       >
         <div className="w-full max-w-[1200px]">
@@ -587,8 +619,9 @@ export default function Home() {
                 Work
               </h2>
               <p className="max-w-[560px] text-[16px] font-light text-[#0a0a0a] md:text-[20px]" style={fontBody}>
-                Selected work across AI products, civic services, health, education, and internal tools. Each case
-                shows how I move from fuzzy problems to validated flows, systems, and shipped interfaces.
+                Selected projects across AI recruiting, career tools, learning products, and parenting communities,
+                plus research on education decisions and sharing behavior. Each case connects user insight to clearer
+                flows, product systems, and testable interfaces.
               </p>
             </div>
           </Reveal>
@@ -686,7 +719,7 @@ export default function Home() {
       {/* Strategy */}
       <section
         id="strategy"
-        className="flex w-screen flex-col items-center gap-16 bg-[#0a0a0a] px-6 py-16 sm:px-8 md:gap-24 md:py-28"
+        className="mei-section-screen flex w-screen flex-col items-center gap-16 bg-[#0a0a0a] px-6 py-16 sm:px-8 md:gap-24 md:py-28"
         style={fullBleed}
       >
         <Reveal>
@@ -766,7 +799,7 @@ export default function Home() {
       {/* About + How Can I Help */}
       <MotionSection
         id="about"
-        className="flex w-screen flex-col items-center bg-[#f3f1ea] px-6 py-16 sm:px-10 md:px-16 md:py-28"
+        className="mei-section-screen flex w-screen flex-col items-center bg-[#f3f1ea] px-6 py-16 sm:px-10 md:px-16 md:py-28"
         style={fullBleed}
       >
         <div className="w-full max-w-[1200px]">
