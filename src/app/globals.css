@@ -53,15 +53,15 @@ html.mei-snap-page {
   scroll-snap-stop: always;
 }
 
-/* Anchor 对齐：固定导航下方保留一点呼吸空间 */
+/* 首页分屏导航：点击锚点时直接落到 section 顶部 */
 #about {
-  scroll-margin-top: 72px;
+  scroll-margin-top: 0;
 }
 
-/* Anchor 对齐：Home 页 Work / Strategy 锚点，避免被固定导航（48px）遮挡 */
+/* 首页分屏导航：点击锚点时直接落到 section 顶部 */
 #work,
 #strategy {
-  scroll-margin-top: 56px;
+  scroll-margin-top: 0;
 }
 
 body {

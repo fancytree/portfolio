@@ -34,7 +34,8 @@ export default function Navbar() {
     const target = document.getElementById(hash);
     if (!target) return;
     e.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth' });
+    const top = target.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({ top, behavior: 'smooth' });
     history.replaceState(null, '', href);
   };
 
