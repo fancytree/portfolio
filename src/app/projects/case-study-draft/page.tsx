@@ -2,13 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import CaseStudyControls from '../../components/CaseStudyControls';
-import CaseStudyBackButton from '../../components/CaseStudyBackButton';
-import CaseStudyHero from '../../components/CaseStudyHero';
+import { useRouter } from 'next/navigation';
+import { ArrowUp, ArrowUpRight, X } from 'lucide-react';
 // 统一从 design-tokens 引用字体与文字样式预设，避免每页重复声明 Manrope 实例
 import { fontFamily, textStyle, textColor } from '@/lib/design-tokens';
-
-const CASE_STUDY_CONTENT_WIDTH = '980px';
 
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
@@ -73,6 +70,348 @@ function ScrollAnimatedSection({ children, initialDelay = 0 }: { children: React
       }}
     >
       {children}
+    </div>
+  );
+}
+
+const CASE_STUDY_NAV_ITEMS = [
+  { id: 'problem-definition', label: 'Problem definition' },
+  { id: 'solution-direction', label: 'Solution direction' },
+  { id: 'constraints', label: 'Constraints' },
+  { id: 'iterations', label: 'Iterations' },
+  { id: 'implementation', label: 'Implementation' },
+  { id: 'edge-case', label: 'Edge case' },
+  { id: 'development', label: 'Development' },
+] as const;
+
+const CASE_STUDY_CONTENT_WIDTH = '980px';
+const CASE_STUDY_IMAGE_SIZES = '(max-width: 980px) 100vw, 980px';
+
+const TLDR_POINTS = [
+  {
+    label: 'Problem',
+    body: 'Job seekers were spending hours filtering roles, comparing scattered job descriptions, and rewriting resumes without knowing whether the extra effort would actually improve their chances.',
+  },
+  {
+    label: 'Direction',
+    body: 'The product frames AI as an assistant with visible user control: match reasoning, editable tailoring, and clear application intent, so automation feels inspectable instead of mysterious.',
+  },
+  {
+    label: 'Users',
+    body: 'The early audience includes new graduates, career switchers, passive candidates, and time-constrained applicants who need faster decisions without giving up agency over their applications.',
+  },
+  {
+    label: 'UX focus',
+    body: 'I organized the experience around three repeated questions: is this role worth my time, why does it match or not match me, and what should I change before applying?',
+  },
+  {
+    label: 'Design role',
+    body: 'As founding designer, I led the UX structure, research synthesis, user flows, wireframes, responsive product screens, interaction patterns, and the first design-system foundation.',
+  },
+  {
+    label: 'AI behavior',
+    body: 'The interface keeps AI recommendations close to user intent by showing reasoning, making tailored content editable, and separating suggestion from final action.',
+  },
+  {
+    label: 'Prototype',
+    body: 'I translated the core journey into working React prototypes so the team could evaluate the search, fit explanation, and resume-tailoring flow before committing to implementation details.',
+  },
+  {
+    label: 'Tradeoff',
+    body: 'The hardest balance was reducing friction without turning the job search into a black box. The solution favors concise defaults, expandable reasoning, and clear checkpoints before submission.',
+  },
+  {
+    label: 'Outcome',
+    body: 'The core workflow shipped live, with beta feedback showing stronger adoption when AI actions appeared directly inside the job-search flow rather than as a separate tool.',
+  },
+] as const;
+
+function scrollToCaseStudyTarget(id: string) {
+  if (id === 'case-study-top') {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function CaseStudyQuickNav({ visible, activeId }: { visible: boolean; activeId: string }) {
+  return (
+    <aside
+      className="hidden xl:flex"
+      aria-label="Case study quick navigation"
+      style={{
+        position: 'fixed',
+        left: '24px',
+        top: '118px',
+        zIndex: 35,
+        width: '190px',
+        flexDirection: 'column',
+        gap: '12px',
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? 'auto' : 'none',
+        transform: visible ? 'translateY(0)' : 'translateY(18px)',
+        transition: 'opacity 0.32s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)',
+      }}
+    >
+      <button
+        type="button"
+        className="mei-case-study-scroll-top"
+        onClick={() => scrollToCaseStudyTarget('case-study-top')}
+        style={{
+          fontFamily: fontFamily.sans,
+          alignSelf: 'flex-start',
+          border: 0,
+          background: 'transparent',
+          color: 'rgb(10 10 10 / 0.55)',
+          cursor: 'pointer',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '7px',
+          fontSize: '13px',
+          fontWeight: 300,
+          lineHeight: '18px',
+          padding: 0,
+          textAlign: 'left',
+        }}
+      >
+        Scroll to top
+        <span className="mei-case-study-scroll-top-icon" aria-hidden="true">
+          <ArrowUp size={12} strokeWidth={1.6} />
+        </span>
+      </button>
+
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {CASE_STUDY_NAV_ITEMS.map((item) => {
+          const isActive = item.id === activeId;
+          const idleColor = 'rgb(10 10 10 / 0.62)';
+          const activeColor = '#ed5b2b';
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => scrollToCaseStudyTarget(item.id)}
+              style={{
+                fontFamily: fontFamily.sans,
+                width: 'fit-content',
+                border: 0,
+                background: 'transparent',
+                color: isActive ? activeColor : idleColor,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontSize: '14px',
+                fontWeight: 300,
+                lineHeight: '20px',
+                padding: '2px 0',
+                textAlign: 'left',
+                transition: 'color 0.2s ease',
+              }}
+              aria-current={isActive ? 'true' : undefined}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = activeColor;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = isActive ? activeColor : idleColor;
+              }}
+            >
+              <span
+                aria-hidden
+                style={{
+                  display: 'inline-block',
+                  width: '14px',
+                  height: '1px',
+                  backgroundColor: isActive ? activeColor : 'rgb(10 10 10 / 0.18)',
+                  opacity: isActive ? 1 : 0,
+                  transition: 'background-color 0.2s ease, opacity 0.2s ease',
+                }}
+              />
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
+    </aside>
+  );
+}
+
+function CaseStudyTldrButton({
+  visible,
+  onOpen,
+}: {
+  visible: boolean;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="mei-case-study-tldr-button"
+      data-visible={visible}
+      onClick={onOpen}
+      aria-label="Open abbreviated case study"
+      style={{
+        position: 'fixed',
+        bottom: '22px',
+        zIndex: 45,
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '10px',
+        overflow: 'hidden',
+        border: '1px solid rgb(10 10 10 / 0.72)',
+        borderRadius: '999px',
+        background: 'rgb(243 241 234 / 0.72)',
+        backdropFilter: 'blur(14px)',
+        color: '#0a0a0a',
+        cursor: 'pointer',
+        fontFamily: fontFamily.sans,
+        fontSize: '14px',
+        fontWeight: 400,
+        lineHeight: '20px',
+        opacity: visible ? 1 : 0,
+        padding: '9px 16px',
+        pointerEvents: visible ? 'auto' : 'none',
+        transition:
+          'opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease',
+      }}
+    >
+      <span
+        className="mei-case-study-tldr-dot"
+        aria-hidden
+        style={{
+          display: 'inline-block',
+          height: '6px',
+          width: '6px',
+          borderRadius: '999px',
+          background: 'currentColor',
+        }}
+      />
+      <span className="mei-case-study-tldr-label">TL;DR</span>
+    </button>
+  );
+}
+
+function CaseStudyTldrModal({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  if (!open) return null;
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="case-study-tldr-title"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 60,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgb(10 10 10 / 0.26)',
+        padding: '24px',
+      }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          position: 'relative',
+          width: 'min(860px, 100%)',
+          maxHeight: 'min(720px, calc(100dvh - 48px))',
+          overflow: 'auto',
+          border: '1px solid #cccccc',
+          borderRadius: '8px',
+          background: '#f3f1ea',
+          color: '#0a0a0a',
+          padding: 0,
+          boxShadow: '0 24px 80px rgb(0 0 0 / 0.18)',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          style={{
+            position: 'sticky',
+            top: 0,
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '24px',
+            padding: '18px 28px',
+            background: '#f3f1ea',
+            borderRadius: '8px 8px 0 0',
+          }}
+        >
+          <h2
+            id="case-study-tldr-title"
+            style={{
+              fontFamily: fontFamily.display,
+              fontSize: '30px',
+              fontWeight: 500,
+              lineHeight: 1,
+              margin: 0,
+            }}
+          >
+            TL;DR
+          </h2>
+
+          <button
+            type="button"
+            className="mei-case-study-tldr-close"
+            onClick={onClose}
+            aria-label="Close TL;DR"
+          >
+            <X size={16} strokeWidth={1.7} />
+          </button>
+        </div>
+
+        <div style={{ padding: '0 28px 28px' }}>
+          {TLDR_POINTS.map((point, index) => (
+            <article
+              key={point.label}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                borderBottom: index === TLDR_POINTS.length - 1 ? 0 : '1px solid #cccccc',
+                padding: index === 0 ? '0 0 18px' : '18px 0',
+              }}
+            >
+              <h3
+                style={{
+                  fontFamily: fontFamily.display,
+                  color: '#ed5b2b',
+                  fontSize: '22px',
+                  fontWeight: 500,
+                  lineHeight: '24px',
+                  margin: 0,
+                }}
+              >
+                {point.label}
+              </h3>
+              <p
+                style={{
+                  fontFamily: fontFamily.sans,
+                  color: 'rgb(10 10 10 / 0.78)',
+                  fontSize: '15px',
+                  fontWeight: 300,
+                  lineHeight: '24px',
+                  margin: 0,
+                }}
+              >
+                {point.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -304,7 +643,11 @@ function SolutionCardIcon({ kind }: { kind: SolutionCardIconKind }) {
 }
 
 // Jobnova 项目详情页（由 MemQ 模板复制，可替换为实际项目内容）
-export default function JobnovaProjectPage() {
+export default function CaseStudyDraftPage() {
+  const [caseControlsVisible, setCaseControlsVisible] = useState(false);
+  const [activeCaseSectionId, setActiveCaseSectionId] = useState(CASE_STUDY_NAV_ITEMS[0].id);
+  const [tldrOpen, setTldrOpen] = useState(false);
+  const router = useRouter();
   // fontStyle 仅作为 Manrope 字体家族的简写，仍保留以避免破坏下方大量 `...fontStyle` 的展开
   const fontStyle = {
     fontFamily: fontFamily.sans,
@@ -323,27 +666,337 @@ export default function JobnovaProjectPage() {
     marginBottom: '24px',
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const firstContentSection = document.getElementById('problem-definition');
+      if (!firstContentSection) {
+        setCaseControlsVisible(window.scrollY > 220);
+        return;
+      }
+
+      setCaseControlsVisible(firstContentSection.getBoundingClientRect().top <= 240);
+
+      const probeY = 180;
+      const currentSection =
+        CASE_STUDY_NAV_ITEMS.find((item) => {
+          const section = document.getElementById(item.id);
+          if (!section) return false;
+          const rect = section.getBoundingClientRect();
+          return rect.top <= probeY && rect.bottom > probeY;
+        }) ??
+        [...CASE_STUDY_NAV_ITEMS].reverse().find((item) => {
+          const section = document.getElementById(item.id);
+          if (!section) return false;
+          return section.getBoundingClientRect().top <= probeY;
+        });
+
+      if (currentSection) {
+        setActiveCaseSectionId(currentSection.id);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setTldrOpen(false);
+      }
+    };
+
+    if (tldrOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [tldrOpen]);
+
+  const handleBackClick = () => {
+    if (window.history.length > 1) {
+      router.back();
+      return;
+    }
+
+    router.push('/works');
+  };
+
   return (
     <div className="mei-project-page w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
-      <CaseStudyHero
-        title="Jobnova AI Career Platform"
-        subtitle="An AI-native job search platform focused on fit reasoning, resume tailoring, and faster application workflows."
-        tags={['AI Product', 'Web UX', 'UX Research', 'Design System', 'Career Tech']}
-        aboutLabel="About Jobnova"
-        about="Jobnova helps job seekers move from scattered searching to focused action. The product combines AI job matching, fit explanations, and resume tailoring so users can understand which opportunities are worth pursuing and apply with more confidence."
-        liveSiteHref="https://jobnova.ai/"
-        meta={[
-          { label: 'Role', value: ['Founding Designer,', 'UX Strategy, Product Design'] },
-          { label: 'Team', value: ['1 Designer,', '1 Product Lead,', 'Engineering team'] },
-          { label: 'Tool', value: ['Figma,', 'Cursor, Lovable,', 'React prototype'] },
-          { label: 'Company', value: ['Nova AI'] },
-          { label: 'Year', value: ['2025 – Ongoing'] },
-        ]}
-      />
+      <CaseStudyQuickNav visible={caseControlsVisible} activeId={activeCaseSectionId} />
+      <CaseStudyTldrButton visible={caseControlsVisible} onOpen={() => setTldrOpen(true)} />
+      <CaseStudyTldrModal open={tldrOpen} onClose={() => setTldrOpen(false)} />
 
-      {/* Problems & Solutions — 与 Hero / Context 相同全宽突破；内层仅 maxWidth 1280 + 居中，不再叠加 px（否则比其它区块窄一整圈） */}
+      {/* Hero Section */}
       <section
+        id="case-study-top"
+        className="mei-case-study-hero w-screen"
+        style={{
+          backgroundColor: '#FFFFFF',
+          color: '#0a0a0a',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          marginTop: '-48px',
+          minHeight: '100svh',
+          padding: 0,
+        }}
+      >
+        <ScrollAnimatedSection initialDelay={200}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              gap: 0,
+              width: '100%',
+            }}
+          >
+            <div
+              aria-label="Project visual placeholder"
+              style={{
+                alignItems: 'center',
+                background:
+                  'radial-gradient(circle at 50% 80%, rgb(237 91 43 / 0.14), transparent 34%), linear-gradient(135deg, #f3f1ea, #ffffff 44%, #d7d7d7)',
+                border: 0,
+                borderRadius: 0,
+                color: 'rgb(10 10 10 / 0.38)',
+                display: 'flex',
+                fontFamily: fontFamily.sans,
+                fontSize: '12px',
+                fontWeight: 300,
+                justifyContent: 'center',
+                letterSpacing: '0.02em',
+                minHeight: 'clamp(320px, 54svh, 620px)',
+                overflow: 'hidden',
+                position: 'relative',
+                width: '100%',
+              }}
+            >
+              <span
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  inset: 'clamp(28px, 5vw, 72px)',
+                  border: '1px dashed rgb(10 10 10 / 0.18)',
+                  borderRadius: '8px',
+                }}
+              />
+              <span
+                style={{
+                  background: 'rgb(255 255 255 / 0.72)',
+                  border: '1px solid rgb(10 10 10 / 0.14)',
+                  borderRadius: '8px',
+                  color: 'rgb(10 10 10 / 0.45)',
+                  padding: '18px 26px',
+                }}
+              >
+                Project visual placeholder
+              </span>
+            </div>
+
+            <div style={{ padding: 'clamp(34px, 6vh, 64px) clamp(28px, 6vw, 118px) clamp(46px, 7vh, 76px)' }}>
+              <button
+                type="button"
+                onClick={handleBackClick}
+                style={{
+                  ...fontStyle,
+                  background: 'transparent',
+                  border: 0,
+                  color: 'rgb(10 10 10 / 0.58)',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  fontSize: '13px',
+                  lineHeight: '20px',
+                  marginBottom: '34px',
+                  padding: 0,
+                  textDecoration: 'none',
+                  transition: 'color 0.24s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#ed5b2b';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgb(10 10 10 / 0.58)';
+                }}
+              >
+                ← Back
+              </button>
+
+              <div style={{ marginBottom: 'clamp(42px, 7vh, 72px)' }}>
+                <h1
+                  style={{
+                    ...fontStyle,
+                    color: '#0a0a0a',
+                    fontSize: 'clamp(32px, 3.5vw, 54px)',
+                    fontWeight: 400,
+                    lineHeight: 1.08,
+                    margin: '0 0 10px',
+                  }}
+                >
+                  Jobnova AI Career Platform
+                </h1>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: 'rgb(10 10 10 / 0.64)',
+                    fontSize: 'clamp(15px, 1.25vw, 20px)',
+                    fontWeight: 300,
+                    lineHeight: 1.45,
+                    margin: '0 0 14px',
+                    maxWidth: '820px',
+                  }}
+                >
+                  An AI-native job search platform focused on fit reasoning, resume tailoring, and faster application workflows.
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {['AI Product', 'Web UX', 'UX Research', 'Design System', 'Career Tech'].map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        ...fontStyle,
+                        alignItems: 'center',
+                        background: 'rgb(243 241 234 / 0.86)',
+                        borderRadius: '999px',
+                        color: 'rgb(10 10 10 / 0.58)',
+                        display: 'inline-flex',
+                        fontSize: '11px',
+                        fontWeight: 400,
+                        lineHeight: '18px',
+                        minHeight: '25px',
+                        padding: '0 10px',
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div
+                className="grid grid-cols-1 gap-7 lg:grid-cols-[minmax(0,1.35fr)_minmax(380px,1fr)]"
+                style={{ alignItems: 'start' }}
+              >
+              <div>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: '#ed5b2b',
+                  fontSize: '12px',
+                    fontWeight: 500,
+                    letterSpacing: '0.02em',
+                  lineHeight: '18px',
+                  margin: '0 0 9px',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  About Jobnova
+                </p>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: 'rgb(10 10 10 / 0.72)',
+                    fontSize: '15px',
+                    fontWeight: 300,
+                    lineHeight: 1.6,
+                    margin: '0 0 18px',
+                    maxWidth: '650px',
+                  }}
+                >
+                  Jobnova helps job seekers move from scattered searching to focused action. The product combines AI
+                  job matching, fit explanations, and resume tailoring so users can understand which opportunities are
+                  worth pursuing and apply with more confidence.
+                </p>
+                <a
+                  href="https://jobnova.ai/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mei-view-all-work-link mei-case-study-live-link group"
+                  style={{
+                    ...fontStyle,
+                    alignItems: 'center',
+                    border: '1px solid rgb(10 10 10 / 0.72)',
+                    borderRadius: '999px',
+                    display: 'inline-flex',
+                    fontSize: '14px',
+                    fontWeight: 400,
+                    gap: '10px',
+                    lineHeight: '20px',
+                    padding: '9px 16px',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
+                  <span className="relative z-10">View live site</span>
+                  <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
+                </a>
+              </div>
+
+              <div
+                className="grid grid-cols-2"
+                style={{
+                  columnGap: '32px',
+                  rowGap: '24px',
+                }}
+              >
+                {[
+                  { label: 'Role', value: ['Founding Designer,', 'UX Strategy, Product Design'] },
+                  { label: 'Team', value: ['1 Designer,', '1 Product Lead,', 'Engineering team'] },
+                  { label: 'Tool', value: ['Figma,', 'Cursor, Lovable,', 'React prototype'] },
+                  { label: 'Company', value: ['Nova AI'] },
+                  { label: 'Year', value: ['2025 – Ongoing'] },
+                ].map((item) => (
+                  <div key={item.label}>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: '#ed5b2b',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        letterSpacing: '0.02em',
+                        lineHeight: '18px',
+                        margin: '0 0 7px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {item.label}
+                    </p>
+                    {item.value.map((line) => (
+                      <p
+                        key={line}
+                        style={{
+                          ...fontStyle,
+                          color: 'rgb(10 10 10 / 0.68)',
+                          fontSize: '14px',
+                          fontWeight: 300,
+                          lineHeight: '23px',
+                          margin: 0,
+                        }}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      {/* Problems & Solutions — 与 Hero / Context 相同全宽突破；内层仅统一阅读宽度 + 居中。 */}
+      <section
+        id="problem-definition"
         className="w-screen"
         style={{
           backgroundColor: '#FFFFFF',
@@ -507,6 +1160,7 @@ export default function JobnovaProjectPage() {
 
       {/* UX research：导语 + In-depth interviews + Key Pain Points + Persona + Solution */}
       <section
+        id="solution-direction"
         className="w-screen py-16"
         style={{
           backgroundColor: '#FFFFFF',
@@ -1209,7 +1863,8 @@ export default function JobnovaProjectPage() {
       </section>
 
       {/* What I Designed Section */}
-      <section 
+      <section
+        id="constraints"
         className="w-screen py-16"
         style={{
           backgroundColor: '#FFFFFF',
@@ -1272,7 +1927,7 @@ export default function JobnovaProjectPage() {
               alt="JobNova user flow diagram"
               width={2560}
               height={1440}
-              sizes="(max-width: 1280px) 100vw, 1280px"
+              sizes={CASE_STUDY_IMAGE_SIZES}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -1317,7 +1972,7 @@ export default function JobnovaProjectPage() {
               alt="JobNova mid-fidelity wireframes"
               width={2560}
               height={1440}
-              sizes="(max-width: 1280px) 100vw, 1280px"
+              sizes={CASE_STUDY_IMAGE_SIZES}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -1356,7 +2011,7 @@ export default function JobnovaProjectPage() {
                   alt={`JobNova page design — Screen ${i}`}
                   width={2560}
                   height={1440}
-                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  sizes={CASE_STUDY_IMAGE_SIZES}
                   style={{
                     width: '100%',
                     height: 'auto',
@@ -1372,6 +2027,7 @@ export default function JobnovaProjectPage() {
 
       {/* Design System Module */}
       <section
+        id="iterations"
         className="w-screen py-16"
         style={{
           backgroundColor: '#FFFFFF',
@@ -1407,9 +2063,12 @@ export default function JobnovaProjectPage() {
               overflow: 'hidden',
             }}
           >
-            <img
+            <Image
               src="/img/Design%20system.avif"
               alt="Design system"
+              width={2560}
+              height={1440}
+              sizes={CASE_STUDY_IMAGE_SIZES}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -1451,6 +2110,7 @@ export default function JobnovaProjectPage() {
 
       {/* Validation：测试方法与数据图表 */}
       <section
+        id="implementation"
         className="w-screen py-16"
         style={{
           backgroundColor: '#FFFFFF',
@@ -1623,6 +2283,7 @@ export default function JobnovaProjectPage() {
 
       {/* Results：业务与用户成果 */}
       <section
+        id="edge-case"
         className="w-screen py-16"
         style={{
           backgroundColor: '#FFFFFF',
@@ -1774,6 +2435,7 @@ export default function JobnovaProjectPage() {
 
       {/* Reflection：项目复盘 */}
       <section
+        id="development"
         className="w-screen py-16"
         style={{
           backgroundColor: '#FFFFFF',
@@ -2001,9 +2663,32 @@ export default function JobnovaProjectPage() {
                     </p>
                   </div>
                 </div>
-                <div style={{ marginTop: '56px' }}>
-                  <CaseStudyBackButton />
-                </div>
+
+          <button
+            type="button"
+            onClick={handleBackClick}
+            style={{
+              ...fontStyle,
+              background: 'transparent',
+              border: 0,
+              color: 'rgb(10 10 10 / 0.58)',
+              cursor: 'pointer',
+              fontSize: '13px',
+              lineHeight: '20px',
+              marginTop: '32px',
+              padding: 0,
+              textDecoration: 'none',
+              transition: 'color 0.24s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#ed5b2b';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'rgb(10 10 10 / 0.58)';
+            }}
+          >
+            ← Back
+          </button>
         </div>
       </section>
 

@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import Button from '../../components/Button';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 import MonoComponentShowcase from './MonoComponentShowcase';
 
@@ -80,163 +82,30 @@ export default function MonoProjectPage() {
   };
 
   // 展开/折叠状态
-  const [isExpanded, setIsExpanded] = useState(false);
   // Design token color mode switcher
   const [colorMode, setColorMode] = useState<'light' | 'dark'>('light');
   // Mono 站点登录提示弹窗
   const [isMonoLoginModalOpen, setIsMonoLoginModalOpen] = useState(false);
 
   return (
-    <div className="w-full" style={{ backgroundColor: '#FAFAFA' }}>
+    <div className="mei-project-page w-full" style={{ backgroundColor: '#FAFAFA' }}>
+      <CaseStudyControls />
       {/* Hero Section */}
-      <section 
-        className="w-screen"
-        style={{
-          backgroundColor: '#FAFAFA',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '120px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection initialDelay={200}>
-          <div
-            style={{
-              maxWidth: '1280px',
-              margin: '0 auto',
-            }}
-          >
-            {/* 返回按钮 */}
-            <Link 
-              href="/"
-              style={{
-                ...fontStyle,
-                ...textStyle.body,
-                color: 'oklch(0.556 0 0)',
-                textDecoration: 'none',
-                display: 'inline-block',
-                marginBottom: '48px',
-                transition: 'color 0.3s ease',
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'rgb(0, 0, 0)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'oklch(0.556 0 0)'}
-            >
-              ← Back to Work
-            </Link>
-
-            {/* Project Overview 可展开信息卡片 */}
-            <div
-              style={{
-                paddingTop: '0px',
-              }}
-            >
-              {/* 上面一行：主要信息 + 展开按钮 */}
-              <div 
-                className="flex items-center cursor-pointer"
-                onClick={() => setIsExpanded(!isExpanded)}
-                style={{
-                  paddingBottom: '0',
-                  gap: '4px',
-                  transition: 'padding-bottom 0.4s ease-out',
-                  height: 'fit-content',
-                }}
-              >
-                <div
-                  style={{
-                    ...fontStyle,
-                    fontSize: '14px',
-                    lineHeight: '24px',
-                    fontWeight: 300,
-                    color: 'rgba(102, 102, 102, 1)',
-                  }}
-                >
-                  Product Designer &amp; AI Architect · Financial AI · 2026
-                </div>
-                <button
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                    flexShrink: 0,
-                  }}
-                >
-                  <Image
-                    src="/expand.svg"
-                    alt="Expand"
-                    width={24}
-                    height={24}
-                  />
-                </button>
-              </div>
-
-              {/* 展开内容 */}
-              <div
-                style={{
-                  maxHeight: isExpanded ? '500px' : '0',
-                  overflow: 'hidden',
-                  transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                  paddingTop: isExpanded ? '12px' : '0',
-                }}
-              >
-                <div className="flex flex-col" style={{ gap: '6px' }}>
-                  <div
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    Intent-driven UX Research · Generative UI Patterns · Financial Domain Discovery
-                  </div>
-                  <div
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'oklch(0.556 0 0)',
-                    }}
-                  >
-                    Generative UI Financial Agent · Conversational Flows · Real-time Financial Insights
-                  </div>
-                </div>
-              </div>
-
-              {/* 项目标题和描述 */}
-              <div style={{ marginTop: '16px' }}>
-                <h1
-                  style={{
-                    ...fontStyle,
-                    fontSize: '28px',
-                    lineHeight: '60px',
-                    fontWeight: 300,
-                    color: 'rgb(0, 0, 0)',
-                    marginBottom: '12px',
-                  }}
-                >
-                  Mono: A Personal Finance Agent Built on the A2UI Protocol
-                </h1>
-                <p
-                  style={{
-                    ...fontStyle,
-                    ...textStyle.lead,
-                    color: 'rgba(0, 0, 0, 1)',
-                    marginBottom: '32px',
-                    maxWidth: '645px',
-                    height: '100%',
-                  }}
-                >
-                  Mono turns natural language into real-time, contextual financial views — rendered cards, charts, and forms that match exactly what you asked for. The A2UI protocol bridges LLM intent and deterministic UI output, eliminating the gap between what a user asks and what they see.
-                </p>
-              </div>
-            </div>
-          </div>
-        </ScrollAnimatedSection>
-      </section>
+      <CaseStudyHero
+        title="Mono"
+        subtitle="A personal finance agent built on the A2UI protocol, turning natural language into deterministic financial interface views."
+        tags={['AI Product', 'Generative UI', 'Finance', 'Protocol Design', 'Web UX']}
+        aboutLabel="About Mono"
+        about="Mono bridges LLM intent and deterministic UI output. Instead of returning only text, it renders contextual financial cards, charts, and forms that match the user's request, making conversational finance feel actionable and inspectable."
+        liveSiteHref="https://mono.riverstudio.cc/"
+        meta={[
+          { label: 'Role', value: ['Product Designer,', 'AI Architect'] },
+          { label: 'Team', value: ['Solo product designer'] },
+          { label: 'Tool', value: ['Figma,', 'React,', 'A2UI protocol'] },
+          { label: 'Company', value: ['River Studio'] },
+          { label: 'Year', value: ['2026'] },
+        ]}
+      />
 
       {/* Core Research Pillars Section */}
       <section 
@@ -668,7 +537,7 @@ export default function MonoProjectPage() {
               }}
             >
               <p style={{ marginBottom: '24px' }}>
-                Every user input passes through a <strong>CoT reasoning engine</strong> before anything is rendered. The LLM doesn't guess — it scores its own confidence, asks a follow-up if needed, and only routes to a component once intent is unambiguous. Three mechanisms make this reliable.
+                Every user input passes through a <strong>CoT reasoning engine</strong> before anything is rendered. The LLM doesn&apos;t guess — it scores its own confidence, asks a follow-up if needed, and only routes to a component once intent is unambiguous. Three mechanisms make this reliable.
               </p>
             </div>
           </div>
@@ -1540,6 +1409,10 @@ export default function MonoProjectPage() {
 
           </div>
         </ScrollAnimatedSection>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </section>
 
       {/* Mono 站点登录信息弹窗 */}
@@ -1775,29 +1648,7 @@ export default function MonoProjectPage() {
         </div>
       )}
 
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-manrope, sans-serif)',
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

@@ -1,5 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function BeikemamaProjectPage() {
@@ -9,186 +11,23 @@ export default function BeikemamaProjectPage() {
   };
 
   return (
-    <div className="w-full" style={{ backgroundColor: '#FFFFFF' }}>
+    <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
+      <CaseStudyControls />
       {/* Hero / Overview */}
-      <section
-        className="w-screen"
-        style={{
-          backgroundColor: '#FFFFFF',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '120px',
-          paddingBottom: '80px',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '0 24px',
-          }}
-        >
-          {/* Back link */}
-          <Link
-            href="/"
-            style={{
-              ...fontStyle,
-              ...textStyle.body,
-              color: 'oklch(0.556 0 0)',
-              textDecoration: 'none',
-              display: 'inline-block',
-              marginBottom: '40px',
-            }}
-          >
-            ← Back to Work
-          </Link>
-
-          {/* Title + intro */}
-          <div
-            style={{
-              borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-              paddingBottom: '24px',
-              marginBottom: '32px',
-            }}
-          >
-            <h1
-              style={{
-                ...fontStyle,
-                ...textStyle.displayXl,
-                color: '#171616',
-                marginBottom: '16px',
-              }}
-            >
-              Beikemama
-            </h1>
-            <p
-              style={{
-                ...fontStyle,
-                ...textStyle.leadSm,
-                color: '#171616',
-                maxWidth: '760px',
-              }}
-            >
-              Bekommom is a live social product for pregnant women and families with children aged 0–6. By combining
-              real-time streams, interactive Q&amp;A with experts or influencers, and parent–child activities, it helps
-              users quickly gain practical parenting knowledge and exchange experiences with trustworthy communities.
-            </p>
-          </div>
-
-          {/* Meta */}
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '24px',
-              marginBottom: '64px',
-            }}
-          >
-            <div
-              style={{
-                paddingRight: '24px',
-                borderRight: '1px solid rgba(0, 0, 0, 0.08)',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Role
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Product Designer · UX & UI
-              </div>
-            </div>
-
-            <div
-              style={{
-                paddingRight: '24px',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Timeline
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                2020 · 8 weeks
-              </div>
-            </div>
-
-            <div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Platform
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Mobile App · Community
-              </div>
-            </div>
-          </div>
-
-          {/* Hero visual with gradient background + cover image */}
-          <div
-            style={{
-              width: '100%',
-              aspectRatio: '16 / 8',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              background:
-                'radial-gradient(circle at top left, rgba(235, 130, 146, 0.79), transparent 80%), radial-gradient(circle at bottom right, rgba(255, 234, 195, 0.6), transparent 80%), linear-gradient(135deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02))',
-              marginTop: 0,
-              marginBottom: '64px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              src="/img/Beikemama/cover.avif"
-              alt="Beikemama cover"
-              style={{
-                width: '88%',
-                height: 'auto',
-                objectFit: 'contain',
-                display: 'block',
-              }}
-            />
-          </div>
-        </div>
-      </section>
+      <CaseStudyHero
+        title="Beikemama"
+        subtitle="A live social product for pregnant women and families with children aged 0-6, combining real-time streams, expert Q&A, and parent-child activities."
+        tags={['Mobile App', 'Community', 'Parenting', 'Live Q&A', 'UX/UI']}
+        aboutLabel="About Beikemama"
+        about="Beikemama helps parents quickly gain practical parenting knowledge and exchange experience with trustworthy communities. The product combines live streams, interactive expert Q&A, and parent-child activities into a more supportive family-learning platform."
+        meta={[
+          { label: 'Role', value: ['Product Designer,', 'UX & UI'] },
+          { label: 'Team', value: ['Solo designer,', 'Product team'] },
+          { label: 'Tool', value: ['Figma,', 'Research synthesis,', 'Prototype'] },
+          { label: 'Company', value: ['Beikemama'] },
+          { label: 'Year', value: ['2020 · 8 weeks'] },
+        ]}
+      />
 
       {/* Structure sections (empty shells to fill later) */}
       <section
@@ -1641,30 +1480,12 @@ export default function BeikemamaProjectPage() {
             </div>
           </div>
         </div>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </section>
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-manrope, sans-serif)',
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

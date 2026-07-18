@@ -45,7 +45,7 @@ export default function Footer() {
           className="mei-back-to-top flex items-center justify-end gap-2 text-[16px] font-light text-[#070707]"
           style={fontBody}
         >
-          <span className="mei-back-to-top-text whitespace-nowrap">BACK TO TOP</span>
+          <span className="mei-back-to-top-text whitespace-nowrap">Scroll to top</span>
           <span className="mei-back-to-top-icon-frame" aria-hidden="true">
             <ArrowUp size={17} strokeWidth={1.5} className="mei-back-to-top-icon" />
           </span>

@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 // 统一从 design-tokens 引用字体与文字样式预设，避免每页重复声明 Manrope 实例
 import { fontFamily, textStyle, textColor } from '@/lib/design-tokens';
-// 详情页通用 Hero（MemQ 风格的可展开"项目概览"），由两个项目页共享
-import ProjectHero from '../../components/ProjectHero';
 
 /** Fig 7：Solution 卡片内嵌 mock 外框高度 */
 const connectNovaSolutionMockFrameClassName =
@@ -15,6 +15,8 @@ const connectNovaSolutionMockFrameClassName =
 /** Fig 9：Profile Panel mock 专用外框（比 Fig 7 更高，便于侧栏内滚动与内容展开） */
 const connectNovaProfilePanelMockFrameClassName =
   'h-[min(500px,58svh)] w-full min-h-0 overflow-hidden rounded-[10px] border border-dashed border-black/15 sm:h-[min(540px,62svh)]';
+
+const CASE_STUDY_CONTENT_WIDTH = '980px';
 
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
@@ -1732,33 +1734,23 @@ export default function ConnectnovaProjectPage() {
   const [overviewDashboardMode, setOverviewDashboardMode] = useState<'ranking' | 'outreach'>('ranking');
 
   return (
-    <div className="w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
-      {/* Hero Section —— 结构与 MemQ 详情页顶部一致：返回按钮 + 可展开"项目概览" + H1 + 描述 */}
-      <section 
-        className="w-screen"
-        style={{
-          backgroundColor: '#FFFFFF',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '120px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection initialDelay={200}>
-          {/* Hero 内层使用通用 ProjectHero 组件（与 jobnova 共享） */}
-          <ProjectHero
-            title="ConnectNova"
-            roleSummary="Founding Product Designer · AI Startup · 2026 – Present (Ongoing)"
-            roleDetails={[
-              'Requirements definition & product strategy · Competitive benchmarking · Rapid design iteration',
-              'Chrome Extension UI · Web Dashboard & AI ranking interface · Token-based design system · Live 0-to-1 MVP',
-            ]}
-            description="An AI-powered recruiting platform — a Chrome extension that collects LinkedIn candidate profiles, paired with a web dashboard to manage projects, rank candidates instantly, and build a structured pipeline. Designed to replace hours of manual screening with a fast, systematic workflow."
-            primaryCtaLabel="Explore the live site"
-            primaryCtaHref="https://connectnova.ai/"
-          />
-        </ScrollAnimatedSection>
-      </section>
+    <div className="mei-project-page w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
+      <CaseStudyControls />
+      <CaseStudyHero
+        title="ConnectNova AI Recruiting Platform"
+        subtitle="An AI-powered recruiting workflow that turns LinkedIn sourcing into structured candidate collection, ranking, and review."
+        tags={['AI Product', 'Chrome Extension', 'Web UX', 'Recruiting Tech', 'Design System']}
+        aboutLabel="About ConnectNova"
+        about="ConnectNova pairs a Chrome extension inside LinkedIn with a web dashboard for managing hiring projects, ranking candidates instantly, and building a structured pipeline. I shaped the 0-to-1 product experience from requirements and competitive research to shipped frontend flows."
+        liveSiteHref="https://connectnova.ai/"
+        meta={[
+          { label: 'Role', value: ['Founding Designer,', 'UX Strategy, Product Design'] },
+          { label: 'Team', value: ['1 Designer,', '1 Founder,', 'Engineering team'] },
+          { label: 'Tool', value: ['Figma,', 'Cursor, Lovable,', 'React prototype'] },
+          { label: 'Company', value: ['Nova AI'] },
+          { label: 'Year', value: ['2026 – Ongoing'] },
+        ]}
+      />
 
       {/* Process Section —— 四步线性叙事：Discovery → Product decision → IA → Design system。
           视觉策略：
@@ -1778,7 +1770,7 @@ export default function ConnectnovaProjectPage() {
         }}
       >
         <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ maxWidth: CASE_STUDY_CONTENT_WIDTH, margin: '0 auto' }}>
             {/* 分区一级标题 + 导语 */}
             <h1 style={headingLevel1Style}>Design Process</h1>
             <p
@@ -1924,7 +1916,7 @@ export default function ConnectnovaProjectPage() {
               }}
             >
               <ScrollAnimatedSection>
-                <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+                <div style={{ maxWidth: CASE_STUDY_CONTENT_WIDTH, margin: '0 auto' }}>
                   {/* 分区一级标题 */}
                   <h1 style={headingLevel1Style}>Problem</h1>
 
@@ -3211,7 +3203,7 @@ export default function ConnectnovaProjectPage() {
         }}
       >
         <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ maxWidth: CASE_STUDY_CONTENT_WIDTH, margin: '0 auto' }}>
             {/* 分区一级标题 + 导语 */}
             <h1 style={headingLevel1Style}>Solution</h1>
             <p
@@ -4756,7 +4748,7 @@ export default function ConnectnovaProjectPage() {
         }}
       >
         <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ maxWidth: CASE_STUDY_CONTENT_WIDTH, margin: '0 auto' }}>
             {/* 分区一级标题 + 导语 */}
             <h1 style={headingLevel1Style}>Reflection</h1>
             <p
@@ -5002,34 +4994,13 @@ export default function ConnectnovaProjectPage() {
                   </svg>
                 </a>
               </div>
+              <div style={{ marginTop: '56px' }}>
+                <CaseStudyBackButton />
+              </div>
             </div>
           </div>
         </ScrollAnimatedSection>
       </section>
-
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            ...fontStyle,
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
 
 
     </div>

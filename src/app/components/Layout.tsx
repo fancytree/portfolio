@@ -6,6 +6,7 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import CustomCursor from "./CustomCursor";
 
 interface LayoutProps {
   children: ReactNode;
@@ -32,6 +33,7 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen text-zinc-900" style={{ backgroundColor: '#FFFFFF' }}>
       {/* 顶部导航栏 */}
       <Navbar />
+      <CustomCursor />
 
       {/* 正文：相对定位 + 不透明背景，盖住下方 fixed footer；底部用 margin 留出 footer 高度的滚动距离。
           margin 不属于白色背景区域，所以滚动到底时不会把 fixed footer 遮住。 */}

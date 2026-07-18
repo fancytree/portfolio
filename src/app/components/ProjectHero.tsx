@@ -40,7 +40,7 @@ export type ProjectHeroProps = {
  * - 描述使用 textStyle.lead
  */
 export default function ProjectHero({
-  backHref = '/',
+  backHref = '/works',
   roleSummary,
   roleDetails = [],
   title,
@@ -54,8 +54,8 @@ export default function ProjectHero({
   // 项目概览折叠状态
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
-  // 仅作为 Manrope 字体家族的简写，便于与现有页面其它区块的 ...fontStyle 保持一致
   const fontStyle = { fontFamily: fontFamily.sans } as const;
+  const displayStyle = { fontFamily: fontFamily.display } as const;
 
   return (
     <div
@@ -70,14 +70,14 @@ export default function ProjectHero({
         style={{
           ...fontStyle,
           ...textStyle.body,
-          color: 'oklch(0.556 0 0)',
+          color: 'rgb(10 10 10 / 0.58)',
           textDecoration: 'none',
           display: 'inline-block',
           marginBottom: '48px',
           transition: 'color 0.3s ease',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.color = 'rgb(0, 0, 0)')}
-        onMouseLeave={(e) => (e.currentTarget.style.color = 'oklch(0.556 0 0)')}
+        onMouseEnter={(e) => (e.currentTarget.style.color = '#ed5b2b')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'rgb(10 10 10 / 0.58)')}
       >
         ← Back to Work
       </Link>
@@ -101,7 +101,7 @@ export default function ProjectHero({
               fontSize: '14px',
               lineHeight: '24px',
               fontWeight: 300,
-              color: 'rgba(102, 102, 102, 1)',
+              color: 'rgb(10 10 10 / 0.58)',
             }}
           >
             {roleSummary}
@@ -146,9 +146,9 @@ export default function ProjectHero({
                 <div
                   key={idx}
                   style={{
-                    ...fontStyle,
-                    ...textStyle.body,
-                    color: 'oklch(0.556 0 0)',
+                  ...fontStyle,
+                  ...textStyle.body,
+                  color: 'rgb(10 10 10 / 0.58)',
                   }}
                 >
                   {line}
@@ -162,12 +162,12 @@ export default function ProjectHero({
         <div style={{ marginTop: '16px' }}>
           <h1
             style={{
-              ...fontStyle,
-              fontSize: '28px',
-              lineHeight: '60px',
-              fontWeight: 300,
-              color: 'rgb(0, 0, 0)',
-              marginBottom: '12px',
+              ...displayStyle,
+              fontSize: 'clamp(56px, 9vw, 112px)',
+              lineHeight: 0.95,
+              fontWeight: 500,
+              color: '#0a0a0a',
+              marginBottom: '22px',
             }}
           >
             {title}
@@ -176,8 +176,8 @@ export default function ProjectHero({
             style={{
               ...fontStyle,
               ...textStyle.lead,
-              color: 'rgba(0, 0, 0, 1)',
-              marginBottom: '32px',
+              color: 'rgb(10 10 10 / 0.82)',
+              marginBottom: '34px',
               maxWidth: descriptionMaxWidth,
               height: '100%',
             }}
@@ -196,13 +196,25 @@ export default function ProjectHero({
                 justifyContent: 'center',
                 gap: '8px',
                 borderRadius: '9999px',
-                backgroundColor: '#010214',
-                color: '#FFFFFF',
+                border: '1px solid #0a0a0a',
+                backgroundColor: 'transparent',
+                color: '#0a0a0a',
                 textDecoration: 'none',
-                fontSize: '15px',
+                fontSize: '14px',
                 lineHeight: '22px',
-                fontWeight: 500,
-                padding: '12px 18px',
+                fontWeight: 400,
+                padding: '9px 16px',
+                transition: 'border-color 0.24s ease, color 0.24s ease, transform 0.24s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#ed5b2b';
+                e.currentTarget.style.color = '#ed5b2b';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#0a0a0a';
+                e.currentTarget.style.color = '#0a0a0a';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               {primaryCtaLabel}

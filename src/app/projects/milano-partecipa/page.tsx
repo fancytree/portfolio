@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function MilanoPartecipaProjectPage() {
@@ -12,156 +14,23 @@ export default function MilanoPartecipaProjectPage() {
   const [heuristicsImageModalOpen, setHeuristicsImageModalOpen] = useState(false);
 
   return (
-    <div className="w-full" style={{ backgroundColor: '#FFFFFF' }}>
+    <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
+      <CaseStudyControls />
       {/* Hero / Overview */}
-      <section
-        className="w-screen"
-        style={{
-          backgroundColor: '#FFFFFF',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '120px',
-          paddingBottom: 0,
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '0 24px',
-          }}
-        >
-          {/* Back link */}
-          <Link
-            href="/"
-            style={{
-              ...fontStyle,
-              ...textStyle.body,
-              color: 'oklch(0.556 0 0)',
-              textDecoration: 'none',
-              display: 'inline-block',
-              marginBottom: '40px',
-            }}
-          >
-            ← Back to Work
-          </Link>
-
-          {/* Title + intro */}
-          <div
-            style={{
-              borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-              paddingBottom: '24px',
-              marginBottom: '32px',
-            }}
-          >
-            <h1
-              style={{
-                ...fontStyle,
-                ...textStyle.displayXl,
-                color: '#171616',
-                marginBottom: '16px',
-              }}
-            >
-              Milano Partecipa
-            </h1>
-            <p
-              style={{
-                ...fontStyle,
-                ...textStyle.leadSm,
-                color: '#171616',
-                maxWidth: '760px',
-              }}
-            >
-              Milano Partecipa redesigns the Municipality of Milan’s digital platform for citizen engagement. Through user research and information architecture refinement, the project improves accessibility, usability, and participation—supporting activities like referendums and petitions with open-source tools and a focus on inclusivity for underrepresented groups.
-            </p>
-          </div>
-
-          {/* Meta */}
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '24px',
-              marginBottom: '64px',
-            }}
-          >
-            <div
-              style={{
-                paddingRight: '24px',
-                borderRight: '1px solid rgba(0, 0, 0, 0.08)',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Role
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Product & Service Designer
-              </div>
-            </div>
-
-            <div
-              style={{
-                paddingRight: '24px',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Timeline
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                2023 · 16 weeks
-              </div>
-            </div>
-
-            <div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Platform
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Web & Mobile platform
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CaseStudyHero
+        title="Milano Partecipa"
+        subtitle="A civic participation platform redesign for the Municipality of Milan, focused on accessibility, usability, and inclusive engagement."
+        tags={['Civic Tech', 'Service Design', 'Information Architecture', 'Accessibility', 'UX Research']}
+        aboutLabel="About Milano Partecipa"
+        about="Milano Partecipa redesigns the Municipality of Milan's digital platform for citizen engagement. Through research and information architecture refinement, the project improves access to referendums, petitions, and participation tools for broader civic inclusion."
+        meta={[
+          { label: 'Role', value: ['Product & Service Designer'] },
+          { label: 'Team', value: ['Design team,', 'Research collaborators'] },
+          { label: 'Tool', value: ['Figma,', 'Heuristic evaluation,', 'IA mapping'] },
+          { label: 'Company', value: ['Municipality platform'] },
+          { label: 'Year', value: ['2023 · 16 weeks'] },
+        ]}
+      />
 
 
       {/* Project overview image + What is Milano Partecipa? */}
@@ -1702,30 +1571,12 @@ export default function MilanoPartecipaProjectPage() {
             </div>
           </div>
         </div>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </section>
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-manrope, sans-serif)',
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

@@ -2,7 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 // Key Screens 静态截图（public/img/MemQ）
 const MEMQ_KEY_SCREEN_ITEMS: { src: string; alt: string; title?: string; caption?: string }[] = [
@@ -154,184 +156,30 @@ const LABEL_STYLE: React.CSSProperties = {
 
 export default function MemQProjectPage() {
   const f = { fontFamily: fontFamily.system };
-  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="w-full" style={{ backgroundColor: '#FAFAFA' }}>
+    <div className="mei-project-page w-full" style={{ backgroundColor: '#FAFAFA' }}>
+      <CaseStudyControls />
 
       {/* ─────────────────────────────────────────
           1. HERO
       ───────────────────────────────────────── */}
-      <section
-        style={{
-          ...SECTION,
-          backgroundColor: '#FAFAFA',
-          paddingTop: '120px',
-          paddingBottom: '80px',
-        }}
-      >
-        <ScrollAnimatedSection initialDelay={200}>
-          <div style={CONTAINER}>
-
-            {/* Back */}
-            <Link
-              href="/"
-              style={{
-                ...f,
-                ...textStyle.body,
-                color: 'oklch(0.556 0 0)',
-                textDecoration: 'none',
-                display: 'inline-block',
-                marginBottom: '48px',
-                transition: 'color 0.3s ease',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#000')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'oklch(0.556 0 0)')}
-            >
-              ← Back to Work
-            </Link>
-
-            {/* Meta row */}
-            <div
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '16px', cursor: 'pointer' }}
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              <span style={{ ...f, fontSize: '13px', fontWeight: 300, color: 'rgba(102,102,102,1)' }}>
-                Solo Full-Stack Developer & Designer · 8-week end-to-end development
-              </span>
-              <button
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  transition: 'transform 0.4s cubic-bezier(0.4,0,0.2,1)',
-                  transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                  flexShrink: 0,
-                }}
-              >
-                <Image src="/expand.svg" alt="Expand" width={20} height={20} />
-              </button>
-            </div>
-
-            {/* Expandable meta */}
-            <div
-              style={{
-                maxHeight: isExpanded ? '120px' : '0',
-                overflow: 'hidden',
-                transition: 'max-height 0.5s cubic-bezier(0.4,0,0.2,1)',
-                marginBottom: isExpanded ? '12px' : '0',
-              }}
-            >
-              <p style={{ ...f, ...textStyle.body, color: 'oklch(0.556 0 0)', marginBottom: '4px' }}>
-                8 user interviews · 12 TestFlight feedback points · 2 major usability improvements
-              </p>
-              <p style={{ ...f, ...textStyle.body, color: 'oklch(0.556 0 0)' }}>
-                Smart Study App · Mobile Learning · Self-funded · Bootstrapped
-              </p>
-            </div>
-
-            {/* Title */}
-            <h1
-              style={{
-                ...f,
-                fontSize: '28px',
-                lineHeight: '56px',
-                fontWeight: 300,
-                color: '#000',
-                marginBottom: '10px',
-              }}
-            >
-              MemQ: Turn AI Conversations into Lasting Knowledge
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              style={{
-                ...f,
-                ...textStyle.lead,
-                color: '#000',
-                maxWidth: '600px',
-                marginBottom: '36px',
-              }}
-            >
-              People ask AI the same questions over and over — not because they&apos;re lazy, but because
-              nothing helps them actually retain the answer. MemQ closes that loop: ask, get knowledge
-              cards, learn through spaced repetition, own the knowledge forever.
-            </p>
-
-            {/* Workflow chips */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' as const }}>
-              {[
-                { n: '01', label: 'Ask AI' },
-                { n: '02', label: 'Generate Cards' },
-                { n: '03', label: 'Spaced Repetition' },
-                { n: '04', label: 'Master It' },
-              ].map((item, i) => (
-                <div key={item.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      backgroundColor: '#FFF',
-                      border: '1px solid rgba(0,0,0,0.1)',
-                      borderRadius: '100px',
-                      padding: '5px 14px',
-                    }}
-                  >
-                    <span style={{ ...f, fontSize: '11px', fontWeight: 500, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.06em' }}>
-                      {item.n}
-                    </span>
-                    <span style={{ ...f, fontSize: '13px', fontWeight: 500, color: '#000' }}>
-                      {item.label}
-                    </span>
-                  </div>
-                  {i < 3 && (
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-                    </svg>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* App Store 胶囊入口 */}
-            <a
-              href="https://apps.apple.com/app/id6757248312"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '10px',
-                backgroundColor: '#000',
-                borderRadius: '100px',
-                padding: '11px 20px 11px 18px',
-                textDecoration: 'none',
-                marginTop: '24px',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 10px 24px rgba(0,0,0,0.18)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <svg width="18" height="21" viewBox="0 0 24 28" fill="#fff" aria-hidden>
-                <path d="M20.024 14.61c-.03-3.267 2.664-4.854 2.783-4.93-1.518-2.22-3.878-2.524-4.714-2.556-1.996-.203-3.914 1.178-4.928 1.178-1.012 0-2.56-1.153-4.218-1.12-2.153.034-4.146 1.252-5.252 3.163-2.253 3.904-.575 9.677 1.612 12.842 1.074 1.547 2.345 3.282 4.017 3.22 1.615-.065 2.222-1.038 4.174-1.038 1.954 0 2.516 1.038 4.22 1.003 1.74-.03 2.84-1.572 3.902-3.124 1.24-1.79 1.75-3.534 1.773-3.623-.038-.017-3.39-1.3-3.369-5.015zM16.79 5.178c.886-1.079 1.487-2.567 1.323-4.078-1.28.054-2.845.858-3.762 1.913-.82.945-1.547 2.481-1.355 3.934 1.43.11 2.889-.727 3.794-1.77z" />
-              </svg>
-              <span style={{ ...f, fontSize: '14px', fontWeight: 600, color: '#fff', letterSpacing: '0.02em' }}>Live on the App Store</span>
-            </a>
-
-          </div>
-        </ScrollAnimatedSection>
-      </section>
+      <CaseStudyHero
+        title="MemQ"
+        subtitle="An iOS study app that turns AI conversations into lasting knowledge through generated cards and spaced repetition."
+        tags={['iOS Product', 'AI Learning', 'Full-stack', 'SwiftUI', 'Spaced Repetition']}
+        aboutLabel="About MemQ"
+        about="MemQ closes the loop between asking AI and actually remembering the answer. I designed, developed, and launched the iOS product end-to-end, translating AI conversations into knowledge cards, review flows, and a personal learning library."
+        liveSiteHref="https://apps.apple.com/app/id6757248312"
+        liveSiteLabel="Try MemQ"
+        meta={[
+          { label: 'Role', value: ['Solo Designer,', 'Full-stack Developer'] },
+          { label: 'Team', value: ['Independent project'] },
+          { label: 'Tool', value: ['SwiftUI,', 'Supabase,', 'LLM workflow'] },
+          { label: 'Company', value: ['Self-initiated'] },
+          { label: 'Year', value: ['2026 · launched'] },
+        ]}
+      />
 
       {/* ─────────────────────────────────────────
           2. THE PROBLEM
@@ -2067,31 +1915,13 @@ export default function MemQProjectPage() {
 
           </div>
         </ScrollAnimatedSection>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </section>
 
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            ...f,
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
 
     </div>
   );

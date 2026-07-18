@@ -1,5 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function CrackInterviewPage() {
@@ -8,204 +10,24 @@ export default function CrackInterviewPage() {
   };
 
   return (
-    <div className="w-full" style={{ backgroundColor: '#FFFFFF' }}>
+    <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
+      <CaseStudyControls />
       {/* Hero / Overview */}
-      <section
-        className="w-screen"
-        style={{
-          backgroundColor: '#FFFFFF',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '120px',
-          paddingBottom: '80px',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '0 24px',
-          }}
-        >
-          {/* Back link */}
-          <Link
-            href="/"
-            style={{
-              ...fontStyle,
-              ...textStyle.body,
-              color: 'oklch(0.556 0 0)',
-              textDecoration: 'none',
-              display: 'inline-block',
-              marginBottom: '40px',
-            }}
-          >
-            ← Back to Work
-          </Link>
-
-          <div
-            style={{
-              borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-              paddingBottom: '24px',
-              marginBottom: '32px',
-            }}
-          >
-            <h1
-              style={{
-                ...fontStyle,
-                ...textStyle.displayXl,
-                color: '#171616',
-                marginBottom: '16px',
-              }}
-            >
-              CrackInterview
-            </h1>
-            <div style={{ marginBottom: '16px' }}>
-              <a
-                href="https://crackinterview.ai/"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  textDecoration: 'none',
-                }}
-                className="live-site-button"
-              >
-                Explore the live site
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ flexShrink: 0 }}
-                >
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </a>
-            </div>
-            <p
-              style={{
-                ...fontStyle,
-                ...textStyle.leadSm,
-                color: '#171616',
-                maxWidth: '760px',
-              }}
-            >
-              <strong>CrackInterview.AI</strong> is an AI-powered mock interview platform designed to help users
-              practice and improve their performance in tech job interviews. I led the UX/UI design, focusing on
-              creating a streamlined user flow and an intuitive, engaging experience.
-            </p>
-          </div>
-
-          {/* Meta */}
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '24px',
-              marginBottom: '64px',
-            }}
-          >
-            <div
-              style={{
-                paddingRight: '24px',
-                borderRight: '1px solid rgba(0, 0, 0, 0.08)',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Role
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Product Designer · UX & UI
-              </div>
-            </div>
-
-            <div
-              style={{
-                paddingRight: '24px',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Timeline
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                2025 · 8 weeks
-              </div>
-            </div>
-
-            <div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Platform
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Web app
-              </div>
-            </div>
-          </div>
-
-          {/* Cover image inside hero */}
-          <div
-            style={{
-              width: '100%',
-              marginTop: 0,
-              marginBottom: '8px',
-            }}
-          >
-            <img
-              src="/img/crackinterview/cover.avif"
-              alt="CrackInterview cover"
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-                borderRadius: '16px',
-              }}
-            />
-          </div>
-        </div>
-      </section>
+      <CaseStudyHero
+        title="CrackInterview.AI"
+        subtitle="An AI-powered mock interview platform that helps candidates practice, improve, and prepare for technical job interviews."
+        tags={['AI Product', 'Career Tech', 'Web UX', 'Interview Prep', 'UX/UI']}
+        aboutLabel="About CrackInterview"
+        about="CrackInterview.AI helps users practice and improve their performance in technical interviews through AI-powered mock interviews, mentor guidance, and job-search support. I led the UX/UI design with a focus on streamlined flows and an engaging preparation experience."
+        liveSiteHref="https://crackinterview.ai/"
+        meta={[
+          { label: 'Role', value: ['Product Designer,', 'UX & UI'] },
+          { label: 'Team', value: ['Solo designer,', 'Startup team'] },
+          { label: 'Tool', value: ['Figma,', 'Prototype,', 'AI workflow'] },
+          { label: 'Company', value: ['Nova AI'] },
+          { label: 'Year', value: ['2025 · 8 weeks'] },
+        ]}
+      />
 
 
       {/* Project Background & Goals */}
@@ -1441,30 +1263,12 @@ export default function CrackInterviewPage() {
             ))}
           </div>
         </div>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </section>
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-manrope, sans-serif)',
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

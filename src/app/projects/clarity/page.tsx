@@ -1,5 +1,7 @@
 import React from 'react';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily, textStyle } from '@/lib/design-tokens';
 
 export default function ClarityProjectPage() {
@@ -8,159 +10,23 @@ export default function ClarityProjectPage() {
   };
 
   return (
-    <div className="w-full" style={{ backgroundColor: '#FFFFFF' }}>
+    <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
+      <CaseStudyControls />
       {/* Hero / Overview */}
-      <section
-        className="w-screen"
-        style={{
-          backgroundColor: '#FFFFFF',
-          marginLeft: 'calc(-50vw + 50%)',
-          marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '120px',
-          paddingBottom: 0,
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '0 24px',
-          }}
-        >
-          {/* Back link */}
-          <Link
-            href="/"
-            style={{
-              ...fontStyle,
-              ...textStyle.body,
-              color: 'oklch(0.556 0 0)',
-              textDecoration: 'none',
-              display: 'inline-block',
-              marginBottom: '40px',
-            }}
-          >
-            ← Back to Work
-          </Link>
-
-          {/* Title + intro */}
-          <div
-            style={{
-              borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-              paddingBottom: '24px',
-              marginBottom: '32px',
-            }}
-          >
-            <h1
-              style={{
-                ...fontStyle,
-                ...textStyle.displayXl,
-                color: '#171616',
-                marginBottom: '16px',
-              }}
-            >
-              Clarity
-            </h1>
-            <p
-              style={{
-                ...fontStyle,
-                ...textStyle.leadSm,
-                color: '#171616',
-                maxWidth: '760px',
-              }}
-            >
-              Clarity is a system designed to support women approaching or experiencing menopause. It combines a mobile
-              app and a portable tracking device to help users monitor symptoms, track emotions, and gain insights for a
-              healthier life. The system aims to improve communication with healthcare providers, empowering women to
-              make informed decisions about their health and manage menopause more proactively.
-            </p>
-          </div>
-
-          {/* Meta */}
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '24px',
-              marginBottom: '64px',
-            }}
-          >
-            <div
-              style={{
-                paddingRight: '24px',
-                borderRight: '1px solid rgba(0, 0, 0, 0.08)',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Role
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Product & Service Designer
-              </div>
-            </div>
-
-            <div
-              style={{
-                paddingRight: '24px',
-              }}
-            >
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Timeline
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                2024 · 15 weeks
-              </div>
-            </div>
-
-            <div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.caption,
-                  color: '#666666',
-                  marginBottom: '4px',
-                }}
-              >
-                Platform
-              </div>
-              <div
-                style={{
-                  ...fontStyle,
-                  ...textStyle.bodyLight,
-                  color: '#171616',
-                }}
-              >
-                Mobile app & wearable device
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CaseStudyHero
+        title="Clarity"
+        subtitle="A menopause support system combining a mobile app and portable tracking device for symptom, emotion, and health insight tracking."
+        tags={['Health Tech', 'Mobile App', 'Wearable', 'Service Design', 'UX Research']}
+        aboutLabel="About Clarity"
+        about="Clarity supports women approaching or experiencing menopause by helping them monitor symptoms, track emotions, and communicate more clearly with healthcare providers. The project combines product, service, and device thinking into one coherent support system."
+        meta={[
+          { label: 'Role', value: ['Product & Service Designer'] },
+          { label: 'Team', value: ['Design team,', 'Research collaborators'] },
+          { label: 'Tool', value: ['Figma,', 'Prototype,', 'Service blueprint'] },
+          { label: 'Company', value: ['Academic project'] },
+          { label: 'Year', value: ['2024 · 15 weeks'] },
+        ]}
+      />
 
       {/* Project overview video & Main Problem */}
       <section
@@ -1527,30 +1393,12 @@ export default function ClarityProjectPage() {
           </div>
 
         </div>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </section>
-      {/* 页尾返回作品集 */}
-      <div
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '48px 24px 80px',
-          textAlign: 'center',
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            fontFamily: 'var(--font-manrope, sans-serif)',
-            fontSize: '16px',
-            fontWeight: 500,
-            color: 'rgb(0, 0, 0)',
-            textDecoration: 'none',
-            borderBottom: '1px solid rgba(0,0,0,0.25)',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

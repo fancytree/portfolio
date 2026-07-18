@@ -2,7 +2,7 @@
 
 // 顶部导航栏组件 —— Logo + 词标，右侧大写文字链接，透明磨砂背景。
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -17,7 +17,32 @@ const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isNavLight, setIsNavLight] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const updateNavTone = () => {
+      const navProbeY = 24;
+      const darkSections = Array.from(document.querySelectorAll<HTMLElement>('#strategy'));
+
+      setIsNavLight(
+        darkSections.some((section) => {
+          const rect = section.getBoundingClientRect();
+          return rect.top <= navProbeY && rect.bottom >= navProbeY;
+        })
+      );
+    };
+
+    updateNavTone();
+    window.addEventListener('scroll', updateNavTone, { passive: true });
+    window.addEventListener('resize', updateNavTone);
+    return () => {
+      window.removeEventListener('scroll', updateNavTone);
+      window.removeEventListener('resize', updateNavTone);
+    };
+  }, [pathname]);
+
+  const navInk = isNavLight ? '#f3f1ea' : '#0a0a0a';
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -40,12 +65,24 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-white/20 backdrop-blur-md">
+    <header className="fixed top-0 z-50 w-full bg-transparent backdrop-blur-md">
       <nav className="flex h-12 w-full items-center justify-between px-6 sm:px-8">
         {/* Logo */}
         <Link href="/" className="mei-logo-link flex items-center gap-2" onClick={closeMenu} aria-label="Mei portfolio home">
-          <img src="/logo.gif" alt="" width={33} height={20} className="mei-logo-img" style={{ height: '20px', width: 'auto' }} />
-          <span className="text-[16px] text-[#0a0a0a]" style={fontBody}>
+          <img
+            src="/logo.gif"
+            alt=""
+            width={33}
+            height={20}
+            className="mei-logo-img"
+            style={{
+              filter: isNavLight ? 'brightness(0) invert(1)' : 'none',
+              height: '20px',
+              transition: 'filter 0.24s ease',
+              width: 'auto',
+            }}
+          />
+          <span className="text-[16px]" style={{ ...fontBody, color: navInk, transition: 'color 0.24s ease' }}>
             MEI CHAI
           </span>
         </Link>
@@ -60,7 +97,7 @@ export default function Navbar() {
               rel={target ? 'noopener noreferrer' : undefined}
               onClick={handleNavClick(href)}
               className="relative text-[13px] text-[#0a0a0a] uppercase transition-opacity hover:opacity-60"
-              style={{ ...fontBody, opacity: isActive(href) ? 1 : 0.75 }}
+              style={{ ...fontBody, color: navInk, opacity: isActive(href) ? 1 : 0.75, transition: 'color 0.24s ease, opacity 0.2s ease' }}
               aria-current={isActive(href) ? 'page' : undefined}
             >
               {label}
@@ -79,9 +116,9 @@ export default function Navbar() {
               display: 'block',
               width: '18px',
               height: '2px',
-              backgroundColor: '#0a0a0a',
+              backgroundColor: navInk,
               borderRadius: '2px',
-              transition: 'transform 0.3s ease, opacity 0.3s ease',
+              transition: 'background-color 0.24s ease, transform 0.3s ease, opacity 0.3s ease',
               transform: menuOpen ? 'translateY(5px) rotate(45deg)' : 'none',
             }}
           />
@@ -90,9 +127,9 @@ export default function Navbar() {
               display: 'block',
               width: '18px',
               height: '2px',
-              backgroundColor: '#0a0a0a',
+              backgroundColor: navInk,
               borderRadius: '2px',
-              transition: 'opacity 0.3s ease',
+              transition: 'background-color 0.24s ease, opacity 0.3s ease',
               opacity: menuOpen ? 0 : 1,
             }}
           />
@@ -101,9 +138,9 @@ export default function Navbar() {
               display: 'block',
               width: '18px',
               height: '2px',
-              backgroundColor: '#0a0a0a',
+              backgroundColor: navInk,
               borderRadius: '2px',
-              transition: 'transform 0.3s ease, opacity 0.3s ease',
+              transition: 'background-color 0.24s ease, transform 0.3s ease, opacity 0.3s ease',
               transform: menuOpen ? 'translateY(-5px) rotate(-45deg)' : 'none',
             }}
           />
@@ -115,7 +152,7 @@ export default function Navbar() {
         className="overflow-hidden transition-all duration-300 ease-in-out md:hidden"
         style={{
           maxHeight: menuOpen ? '240px' : '0px',
-          backgroundColor: 'rgba(255, 255, 255, 0.2)',
+          backgroundColor: isNavLight ? 'rgba(10, 10, 10, 0.22)' : 'rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(12px)',
         }}
       >
@@ -128,7 +165,7 @@ export default function Navbar() {
               rel={target ? 'noopener noreferrer' : undefined}
               onClick={handleNavClick(href)}
               className="text-[14px] text-[#0a0a0a] uppercase"
-              style={{ ...fontBody, opacity: isActive(href) ? 1 : 0.75 }}
+              style={{ ...fontBody, color: navInk, opacity: isActive(href) ? 1 : 0.75 }}
               aria-current={isActive(href) ? 'page' : undefined}
             >
               {label}

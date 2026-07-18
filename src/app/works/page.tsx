@@ -210,7 +210,7 @@ const workGroups = [
 export default function WorksPage() {
   return (
     <section
-      className="flex w-screen flex-col items-center bg-white px-6 pb-16 sm:px-10 md:px-16 md:pb-24"
+      className="flex w-screen flex-col items-center bg-[#f3f1ea] px-6 pb-16 sm:px-10 md:px-16 md:pb-24"
       style={fullBleed}
     >
       <div className="w-full max-w-[1200px]">

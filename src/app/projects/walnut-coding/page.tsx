@@ -10,7 +10,9 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily } from '@/lib/design-tokens';
 
 /* ------------------------------------------------------------------ */
@@ -771,68 +773,25 @@ export default function WalnutCodingPage() {
   const isMobile = useIsMobile();
 
   return (
-    <div style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
+    <div className="mei-project-page" style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
+      <CaseStudyControls />
       {/* ---------------------------------------------------------- */}
       {/* HERO                                                        */}
       {/* ---------------------------------------------------------- */}
-      <FullBleed bg={C.paper} pad={isMobile ? '32px 24px 64px' : '40px 24px 80px'}>
-        <Reveal>
-          <Link
-            href="/works"
-            style={{ fontFamily: sans, fontSize: '15px', color: C.muted, textDecoration: 'none', display: 'inline-block', marginBottom: '48px' }}
-          >
-            ← Back to Work
-          </Link>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
-            <Pill text="UX Research" />
-            <Pill text="Conversion" color={C.sage} />
-            <Pill text="EdTech" color={C.slate} />
-            <Pill text="Sanitized Case Study" color={C.muted} />
-          </div>
-          <h1
-            style={{
-              fontFamily: sans,
-              fontSize: 'clamp(34px, 6vw, 60px)',
-              lineHeight: 1.08,
-              fontWeight: 500,
-              letterSpacing: '-0.02em',
-              color: C.ink,
-              margin: '0 0 24px',
-              maxWidth: '900px',
-            }}
-          >
-            Walnut Coding: Post-Trial Parent Decision-Making in Children’s Coding Education
-          </h1>
-          <p style={{ fontFamily: sans, fontSize: 'clamp(18px, 2.4vw, 22px)', lineHeight: 1.55, fontWeight: 300, color: C.inkSoft, maxWidth: '760px', margin: '0 0 40px' }}>
-            After an 8–12-year-old finishes a Scratch trial class, how do parents decide within 24–72 hours whether the course is
-            worth paying for? A research story about turning a broad business goal into a researchable conversion problem.
-          </p>
-
-          {/* meta strip */}
-          <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: '1px', backgroundColor: C.line, border: `1px solid ${C.line}`, borderRadius: '14px', overflow: 'hidden' }}>
-            {[
-              { k: 'Role', v: 'UX Researcher' },
-              { k: 'Focus', v: 'Trial → paid decision' },
-              { k: 'Segment', v: 'Parents of ages 8–12' },
-              { k: 'Window', v: '24–72 hrs post-trial' },
-            ].map((m) => (
-              <div key={m.k} style={{ backgroundColor: C.paper, padding: '18px 20px' }}>
-                <div style={{ fontFamily: mono, fontSize: '11px', letterSpacing: '0.06em', color: C.muted, marginBottom: '6px' }}>{m.k.toUpperCase()}</div>
-                <div style={{ fontFamily: sans, fontSize: '15px', fontWeight: 600, color: C.ink }}>{m.v}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* confidentiality note */}
-          <div style={{ display: 'flex', gap: '14px', marginTop: '24px', backgroundColor: C.paperAlt, borderRadius: '14px', padding: '20px 22px', maxWidth: '900px' }}>
-            <span style={{ fontFamily: mono, fontSize: '11px', fontWeight: 700, color: C.walnut, flexShrink: 0, letterSpacing: '0.06em' }}>NOTE</span>
-            <p style={{ fontFamily: sans, fontSize: '14px', lineHeight: 1.6, fontWeight: 300, color: C.inkSoft, margin: 0 }}>
-              A sanitized reconstruction based on my work at Walnut Education. No internal reports, dashboards, transcripts, sample sizes
-              or exact conversion metrics are disclosed. Public desk research is cited; internal evidence is generalized and anonymized.
-            </p>
-          </div>
-        </Reveal>
-      </FullBleed>
+      <CaseStudyHero
+        title="Walnut Coding"
+        subtitle="A UX research case study on post-trial parent decision-making for children's coding education."
+        tags={['UX Research', 'Education', 'Parent Decision-making', 'Conversion', 'Research Strategy']}
+        aboutLabel="About Walnut Coding"
+        about="This research examines how parents decide whether to continue after a trial coding class. The work maps evidence chains, hesitation signals, and communication opportunities that help families understand learning value without relying on promotion-heavy follow-up."
+        meta={[
+          { label: 'Role', value: ['UX Researcher'] },
+          { label: 'Team', value: ['Research lead,', 'Business stakeholders'] },
+          { label: 'Tool', value: ['Interview synthesis,', 'Decision mapping,', 'Opportunity framing'] },
+          { label: 'Company', value: ['Walnut Education'] },
+          { label: 'Year', value: ['Research dossier'] },
+        ]}
+      />
 
       {/* ---------------------------------------------------------- */}
       {/* 01 CONTEXT                                                  */}
@@ -1108,25 +1067,13 @@ export default function WalnutCodingPage() {
             <EvidenceChain />
           </div>
         </Reveal>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </FullBleed>
 
-      {/* footer back link */}
-      <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '56px 24px 96px', textAlign: 'center' }}>
-        <Link
-          href="/works"
-          style={{
-            fontFamily: sans,
-            fontSize: '16px',
-            fontWeight: 500,
-            color: C.ink,
-            textDecoration: 'none',
-            borderBottom: `1px solid ${C.lineStrong}`,
-            paddingBottom: '2px',
-          }}
-        >
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

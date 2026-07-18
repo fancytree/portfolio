@@ -1,5 +1,5 @@
 // "Not daily fun" — 占位页面，之后填充内容（off-hours / 个人作品等）。
-// 复用全局 .mei-works-page / .mei-works-header 样式，保持与重设计一致的视觉。
+// 复用全局 .mei-works-page / .mei-works-header 样式，保持与首页一致的视觉。
 
 export const metadata = {
   title: 'Not daily fun — Mei Chai',
@@ -8,7 +8,7 @@ export const metadata = {
 export default function NotDailyFunPage() {
   return (
     <section
-      className="mei-works-page w-screen"
+      className="mei-works-page mei-unified-placeholder w-screen"
       style={{
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',

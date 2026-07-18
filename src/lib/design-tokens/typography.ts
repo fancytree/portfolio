@@ -10,19 +10,11 @@
  *   <h1 style={{ ...textStyle.h1, color: textColor.primary }}>Title</h1>
  */
 
-import { Manrope } from 'next/font/google';
-
-// 统一集中加载 Manrope，避免每个页面重复 new 实例
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-});
-
 // Tier 1 —— 原子 token
 export const fontFamily = {
-  sans: manrope.style.fontFamily,
-  system: 'system-ui, -apple-system, sans-serif',
+  sans: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
+  system: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
+  display: 'var(--font-fraunces), Fraunces, Georgia, serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 } as const;
 
@@ -82,19 +74,19 @@ export const letterSpacing = {
 // Tier 2 —— 语义文字色别名
 export const textColor = {
   /** 正文主色（非纯黑，降低对比度刺眼） */
-  primary: '#171616',
+  primary: '#0a0a0a',
   /** 纯黑，用于 H1/强调 */
-  strong: 'rgb(0, 0, 0)',
+  strong: '#0a0a0a',
   /** 次级/辅助，如副标题、说明 */
-  secondary: '#6D6D7A',
+  secondary: 'rgb(10 10 10 / 0.68)',
   /** 更轻的静默灰 */
-  muted: 'oklch(0.556 0 0)',
+  muted: 'rgb(10 10 10 / 0.58)',
   /** 引用等深灰 */
   subtle: 'oklch(0.4 0 0)',
   /** 在暗色背景上的文字 */
   inverse: '#FFFFFF',
-  /** 品牌强调色：JobNova 荧光绿 */
-  accentLime: '#B0F809',
+  /** 首页强调色 */
+  accentLime: '#ed5b2b',
 } as const;
 
 // Tier 3 —— 文字样式预设（纯 typography scale）

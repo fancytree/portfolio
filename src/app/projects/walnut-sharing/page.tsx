@@ -9,7 +9,9 @@
  */
 
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyBackButton from '../../components/CaseStudyBackButton';
+import CaseStudyHero from '../../components/CaseStudyHero';
 import { fontFamily } from '@/lib/design-tokens';
 
 /* ------------------------------------------------------------------ */
@@ -605,61 +607,23 @@ export default function WalnutSharingPage() {
   const isMobile = useIsMobile();
 
   return (
-    <div style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
+    <div className="mei-project-page" style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
+      <CaseStudyControls />
       {/* HERO */}
-      <FullBleed bg={C.paper} pad={isMobile ? '32px 24px 64px' : '40px 24px 80px'}>
-        <Reveal>
-          <Link href="/works" style={{ fontFamily: sans, fontSize: '15px', color: C.muted, textDecoration: 'none', display: 'inline-block', marginBottom: '48px' }}>
-            ← Back to Work
-          </Link>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
-            <Pill text="UX Research" />
-            <Pill text="Growth / Referral" color={C.walnut} />
-            <Pill text="NPS & Social Sharing" color={C.slate} />
-            <Pill text="Sanitized Case Study" color={C.muted} />
-          </div>
-          <h1
-            style={{
-              fontFamily: sans,
-              fontSize: 'clamp(34px, 6vw, 58px)',
-              lineHeight: 1.08,
-              fontWeight: 500,
-              letterSpacing: '-0.02em',
-              color: C.ink,
-              margin: '0 0 24px',
-              maxWidth: '920px',
-            }}
-          >
-            Walnut Coding: Parent Sharing &amp; Referral Behavior
-          </h1>
-          <p style={{ fontFamily: sans, fontSize: 'clamp(18px, 2.4vw, 22px)', lineHeight: 1.55, fontWeight: 300, color: C.inkSoft, maxWidth: '770px', margin: '0 0 40px' }}>
-            Why do the parents with the <em>highest</em> course value share the <em>least</em> in public? An NPS,
-            social-sharing &amp; referral study of parents of 7–12-year-olds — and how to redesign sharing around social comfort, not more buttons.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4" style={{ gap: '1px', backgroundColor: C.line, border: `1px solid ${C.line}`, borderRadius: '14px', overflow: 'hidden' }}>
-            {[
-              { k: 'Role', v: 'UX Researcher' },
-              { k: 'Focus', v: 'Sharing & referral growth' },
-              { k: 'Segment', v: 'Parents of ages 7–12' },
-              { k: 'Methods', v: '16 interviews + data' },
-            ].map((m) => (
-              <div key={m.k} style={{ backgroundColor: C.paper, padding: '18px 20px' }}>
-                <div style={{ fontFamily: mono, fontSize: '11px', letterSpacing: '0.06em', color: C.muted, marginBottom: '6px' }}>{m.k.toUpperCase()}</div>
-                <div style={{ fontFamily: sans, fontSize: '15px', fontWeight: 600, color: C.ink }}>{m.v}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', gap: '14px', marginTop: '24px', backgroundColor: C.paperAlt, borderRadius: '14px', padding: '20px 22px', maxWidth: '920px' }}>
-            <span style={{ fontFamily: mono, fontSize: '11px', fontWeight: 700, color: C.teal, flexShrink: 0, letterSpacing: '0.06em' }}>NOTE</span>
-            <p style={{ fontFamily: sans, fontSize: '14px', lineHeight: 1.6, fontWeight: 300, color: C.inkSoft, margin: 0 }}>
-              A portfolio case based on an internal research project. All business data, user info, and product details are anonymized or
-              generalized. Quantitative findings are directional / simulated ranges; interview quotes are paraphrased.
-            </p>
-          </div>
-        </Reveal>
-      </FullBleed>
+      <CaseStudyHero
+        title="Parent Sharing Behavior"
+        subtitle="A UX research case study on referral behavior, social image, and parent willingness to share learning progress."
+        tags={['UX Research', 'Growth', 'Referral', 'Education', 'Behavioral Insight']}
+        aboutLabel="About the Research"
+        about="This study explores why parents do or do not share children's learning content publicly. The case turns qualitative patterns into product and content opportunities that trade promotion pressure for permission and parent-centered storytelling."
+        meta={[
+          { label: 'Role', value: ['UX Researcher'] },
+          { label: 'Team', value: ['Research lead,', 'Growth stakeholders'] },
+          { label: 'Tool', value: ['Interview synthesis,', 'Pain scoring,', 'Opportunity framing'] },
+          { label: 'Company', value: ['Walnut Education'] },
+          { label: 'Year', value: ['Research dossier'] },
+        ]}
+      />
 
       {/* 01 CONTEXT + paradox */}
       <FullBleed bg={C.card}>
@@ -864,14 +828,13 @@ export default function WalnutSharingPage() {
             “My child is growing, and this progress is worth recording.”
           </p>
         </Reveal>
+      
+          <div style={{ marginTop: '56px' }}>
+            <CaseStudyBackButton />
+          </div>
       </FullBleed>
 
-      {/* footer back link */}
-      <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '56px 24px 96px', textAlign: 'center' }}>
-        <Link href="/works" style={{ fontFamily: sans, fontSize: '16px', fontWeight: 500, color: C.ink, textDecoration: 'none', borderBottom: `1px solid ${C.lineStrong}`, paddingBottom: '2px' }}>
-          ← Back to Work
-        </Link>
-      </div>
+      
     </div>
   );
 }

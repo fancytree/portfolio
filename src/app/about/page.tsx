@@ -21,12 +21,12 @@ const skillColumns = [
 
 const capabilities = [
   {
-    title: 'UX/UI designer',
-    body: 'User-centered design focused on creating intuitive interfaces that solve real problems. From wireframes to high-fidelity prototypes, I craft experiences that balance aesthetics with functionality.',
+    title: 'AI product design',
+    body: 'I shape AI-powered workflows from research and product strategy to interaction design, design systems, and working prototypes people can trust.',
   },
   {
-    title: 'AI & Conversation designer',
-    body: 'I design AI assistants that feel like part of the product, not a gimmick. I map conversations and connect large language models to real product data so people get clearer, faster answers.',
+    title: 'Research to shipped prototypes',
+    body: 'I translate interviews, behavioral patterns, and messy product logic into clear flows, testable interfaces, and code-based prototypes.',
   },
 ];
 
@@ -52,7 +52,7 @@ const contactLinks = [
   {
     title: 'Email',
     body: 'Send a message',
-    href: 'mailto:flyskytoo@outlook.com',
+    href: 'mailto:mei.chai@mail.polimi.it',
     icon: '/Mail.svg',
   },
   {
@@ -81,13 +81,13 @@ export default function AboutPage() {
       <div className="mei-tab-container">
         <header className="mei-tab-header">
           <h1>About</h1>
-          <p>Human-first, logic-driven product design for complex systems.</p>
+          <p>AI product designer focused on making complex systems understandable, trustworthy, and ready to ship.</p>
         </header>
 
         <section className="mei-about-section">
           <p className="mei-section-kicker">Approach</p>
           <p className="mei-approach-statement">
-            Explore my process of transforming <span>insights</span> into impact. Dive into stories of <span>user-centered</span> design where <span>strategic thinking</span> meets <span>technical precision</span>.
+            I work where <span>research</span>, product logic, and implementation meet, turning ambiguous AI workflows into interfaces that feel calm, legible, and useful.
           </p>
         </section>
 
@@ -116,10 +116,10 @@ export default function AboutPage() {
           <p className="mei-section-kicker">About</p>
           <div className="mei-about-copy">
             <p>
-              I am a UX Designer focused on transforming complex logic into intuitive human experiences. My philosophy centers on user agency: I believe even the most sophisticated systems should feel like a natural extension of the user&apos;s intent.
+              I design AI-powered product experiences from research to working prototypes, turning complex systems into interfaces people can understand, trust, and use.
             </p>
             <p>
-              To ensure impact, I anchor my process in rigorous user research and functional validation. I treat design not as a visual layer, but as a system that must be refined through real-world feedback. By integrating a human-centered focus with rapid prototyping, I translate deep user insights into high-fidelity experiences that meet the highest standards of usability.
+              My work spans founding design for Nova AI products, independent iOS product development, and UX research for education, community, and decision-making systems.
             </p>
           </div>
 
@@ -140,7 +140,7 @@ export default function AboutPage() {
         <section className="mei-about-section">
           <p className="mei-section-kicker">Get in Touch</p>
           <p className="mei-contact-copy">
-            I am always interested in collaborating on projects that demand rigorous user research and technical precision. From deep usability testing to responsive, code-based interfaces, I am ready to help bring product visions to life with a human-first approach.
+            Open to thoughtful chats about AI products, UX strategy, prototyping, and work that needs both product judgment and hands-on making.
           </p>
 
           <div className="mei-contact-grid">
