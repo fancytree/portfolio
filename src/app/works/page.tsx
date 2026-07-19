@@ -270,7 +270,7 @@ export default function WorksPage() {
                               <img
                                 src={project.image}
                                 alt=""
-                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                className="h-full w-full object-cover"
                               />
                             </div>
                             <div className="flex min-w-0 flex-1 flex-col justify-center gap-5 pt-1 md:min-h-[194px]">

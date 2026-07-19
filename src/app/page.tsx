@@ -672,7 +672,7 @@ export default function Home() {
                                 <img
                                   src={project.image}
                                   alt=""
-                                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                  className="h-full w-full object-cover"
                                 />
                               </div>
                               <div className="flex min-w-0 flex-1 flex-col justify-center gap-5 pt-1 md:min-h-[194px]">
@@ -823,7 +823,7 @@ export default function Home() {
                 </p>
                 <div className="flex-1 divide-y divide-[#cccccc]">
                   {experienceItems.map((item) => (
-                    <div key={`${item.company}-${item.role}`} className="mei-interactive-row grid gap-3 py-5 first:pt-0 md:grid-cols-[150px_1fr] md:gap-8">
+                    <div key={`${item.company}-${item.role}`} className="grid gap-3 py-5 first:pt-0 md:grid-cols-[150px_1fr] md:gap-8">
                       <p className="text-[13px] text-[#ed5b2b] md:text-[14px]" style={fontBody}>
                         {item.period}
                       </p>
