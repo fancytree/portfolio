@@ -1761,6 +1761,7 @@ export default function ConnectnovaProjectPage() {
           · 整块顶部一条 hairline，作为 Hero 与正文内容切换的信号 */}
       <section
         className="w-screen"
+        data-case-nav-label="Design Process"
         style={{
           backgroundColor: '#FFFFFF',
           marginLeft: 'calc(-50vw + 50%)',
@@ -1907,6 +1908,7 @@ export default function ConnectnovaProjectPage() {
                 内部三个小节用"编号眉题 + H2"的杂志排版节奏，避免与 UX research 的标题层级撞车。 */}
             <section
               className="w-screen"
+              data-case-nav-label="Problem"
               style={{
                 backgroundColor: '#FAFAFA',
                 marginLeft: 'calc(-50vw + 50%)',
@@ -2111,6 +2113,7 @@ export default function ConnectnovaProjectPage() {
                 STEP 01 · DISCOVERY
                 —————————————————————————————————————————————— */}
             <div
+              data-case-nav-label="01 / Discovery"
               className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
               style={{ marginTop: '96px', marginBottom: '96px' }}
             >
@@ -2375,6 +2378,7 @@ export default function ConnectnovaProjectPage() {
                 STEP 02 · PRODUCT DECISION
                 —————————————————————————————————————————————— */}
             <div
+              data-case-nav-label="02 / Product Decision"
               className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
               style={{ marginBottom: '96px' }}
             >
@@ -2733,6 +2737,7 @@ export default function ConnectnovaProjectPage() {
                 centerpiece: 纯 CSS 三层 vs 两层对比图
                 —————————————————————————————————————————————— */}
             <div
+              data-case-nav-label="03 / Information Architecture"
               className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
               style={{ marginBottom: '96px' }}
             >
@@ -2971,7 +2976,10 @@ export default function ConnectnovaProjectPage() {
             {/* ——————————————————————————————————————————————
                 STEP 04 · SYSTEM BUILDING
                 —————————————————————————————————————————————— */}
-            <div className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14">
+            <div
+              className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
+              data-case-nav-label="04 / System Building"
+            >
               <div>
                 <div
                   style={{
@@ -3194,6 +3202,7 @@ export default function ConnectnovaProjectPage() {
           · Dashboard 的 4 个功能用 2x2 feature grid 作为 Solution 的视觉 centerpiece */}
       <section
         className="w-screen"
+        data-case-nav-label="Solution"
         style={{
           backgroundColor: '#FAFAFA',
           marginLeft: 'calc(-50vw + 50%)',
@@ -3223,7 +3232,7 @@ export default function ConnectnovaProjectPage() {
             {/* ——————————————————————————————————————————————
                 01 · OVERVIEW — The platform at a glance
                 —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '96px' }}>
+            <div data-case-nav-label="01 / Overview" style={{ marginBottom: '96px' }}>
               <div
                 style={{
                   ...fontStyle,
@@ -3336,7 +3345,7 @@ export default function ConnectnovaProjectPage() {
                   <div
                     style={{
                       flex: '0 1 auto',
-                      height: '560px',
+                      height: 'min(410px, 33vw)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -3362,7 +3371,7 @@ export default function ConnectnovaProjectPage() {
                   <div
                     style={{
                       flex: '0 1 auto',
-                      height: '560px',
+                      height: 'min(410px, 33vw)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -3384,7 +3393,7 @@ export default function ConnectnovaProjectPage() {
             {/* ——————————————————————————————————————————————
                 02 · CHROME EXTENSION — 整图导出（与 Overview 卡片视觉一致）
                 —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '96px' }}>
+            <div data-case-nav-label="02 / Chrome Extension" style={{ marginBottom: '96px' }}>
               <div
                 style={{
                   ...fontStyle,
@@ -3590,7 +3599,7 @@ export default function ConnectnovaProjectPage() {
             {/* ——————————————————————————————————————————————
                 03 · NEW RANKING/RERANK — 整图导出（沿用 Chrome extension 流程格式）
                 —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '96px' }}>
+            <div data-case-nav-label="03 / Ranking & Rerank" style={{ marginBottom: '96px' }}>
               <div
                 style={{
                   ...fontStyle,
@@ -3792,7 +3801,7 @@ export default function ConnectnovaProjectPage() {
             {/* ——————————————————————————————————————————————
                 04 · WEB DASHBOARD — 4-feature 2x2 showcase
                 —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '96px' }}>
+            <div data-case-nav-label="04 / Web Dashboard" style={{ marginBottom: '96px' }}>
               <div
                 style={{
                   ...fontStyle,
@@ -3996,7 +4005,7 @@ export default function ConnectnovaProjectPage() {
             {/* ——————————————————————————————————————————————
                 05 · OUTREACH — ongoing prototype
                 —————————————————————————————————————————————— */}
-            <div style={{ marginBottom: '96px' }}>
+            <div data-case-nav-label="05 / Outreach" style={{ marginBottom: '96px' }}>
               <div
                 style={{
                   ...fontStyle,
@@ -4636,7 +4645,7 @@ export default function ConnectnovaProjectPage() {
                 06 · DESIGN DECISIONS — decision / rationale table
                 复用 Problem "Why tools don't solve it" 的表格 DNA
                 —————————————————————————————————————————————— */}
-            <div>
+            <div data-case-nav-label="06 / Design Decisions">
               <div
                 style={{
                   ...fontStyle,
@@ -4739,6 +4748,7 @@ export default function ConnectnovaProjectPage() {
           · kicker 首次全部使用 italic medium —— 作为 Reflection 独有的排印 signature */}
       <section
         className="w-screen"
+        data-case-nav-label="Reflection"
         style={{
           backgroundColor: '#FFFFFF',
           marginLeft: 'calc(-50vw + 50%)',
