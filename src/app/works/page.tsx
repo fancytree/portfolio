@@ -88,14 +88,14 @@ const productProjects: Project[] = [
     href: '/projects/connectnova',
   },
   {
-    title: 'Jobnova',
+    title: 'JobNova',
     category: 'Lead Designer',
     time: '2025 – Present',
-    tags: ['AI Career Search', 'Personalization', 'Web App'],
+    tags: ['0-to-1 AI SaaS', 'AI Workflow', 'Product Strategy'],
     description:
-      'Led design for an AI career platform that helps job seekers move from scattered search to focused action through tailored job discovery, match reasoning, and application support.',
+      'Designed a 0-to-1 AI job-search system that helps users complete relevant applications faster without giving up trust or control.',
     image: '/img/Jobnova.avif',
-    href: '/projects/jobnova',
+    href: '/projects/jobnova-ai-platform',
   },
   {
     title: 'MemQ',

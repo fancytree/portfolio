@@ -1,12 +1,21 @@
 'use client';
 
 import { ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
 import { fontFamily } from '@/lib/design-tokens';
 import CaseStudyBackButton from './CaseStudyBackButton';
 
 type CaseStudyMetaItem = {
   label: string;
-  value: string[];
+  value?: string[];
+  icons?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    containerSize?: number;
+    transform?: string;
+  }[];
 };
 
 type CaseStudyHeroProps = {
@@ -19,6 +28,8 @@ type CaseStudyHeroProps = {
   liveSiteHref?: string;
   liveSiteLabel?: string;
   visualLabel?: string;
+  compactTypography?: boolean;
+  wideDetails?: boolean;
 };
 
 export default function CaseStudyHero({
@@ -31,6 +42,8 @@ export default function CaseStudyHero({
   liveSiteHref,
   liveSiteLabel = 'View live site',
   visualLabel = 'Project visual placeholder',
+  compactTypography = false,
+  wideDetails = false,
 }: CaseStudyHeroProps) {
   const fontStyle = { fontFamily: fontFamily.sans };
 
@@ -110,9 +123,9 @@ export default function CaseStudyHero({
               style={{
                 ...fontStyle,
                 color: '#0a0a0a',
-                fontSize: 'clamp(32px, 3.5vw, 54px)',
+                fontSize: compactTypography ? 'clamp(29px, 3vw, 46px)' : 'clamp(32px, 3.5vw, 54px)',
                 fontWeight: 400,
-                lineHeight: 1.08,
+                lineHeight: compactTypography ? 1.12 : 1.08,
                 margin: '0 0 10px',
               }}
             >
@@ -122,7 +135,7 @@ export default function CaseStudyHero({
               style={{
                 ...fontStyle,
                 color: 'rgb(10 10 10 / 0.64)',
-                fontSize: 'clamp(15px, 1.25vw, 20px)',
+                fontSize: compactTypography ? 'clamp(14px, 1.1vw, 18px)' : 'clamp(15px, 1.25vw, 20px)',
                 fontWeight: 300,
                 lineHeight: 1.45,
                 margin: '0 0 14px',
@@ -155,7 +168,14 @@ export default function CaseStudyHero({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(360px,0.9fr)_minmax(0,1.25fr)]" style={{ alignItems: 'start' }}>
+          <div
+            className={`grid grid-cols-1 gap-10 ${
+              wideDetails
+                ? 'relative left-1/2 w-[calc(100vw-48px)] max-w-[1330px] -translate-x-1/2 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1fr)]'
+                : 'lg:grid-cols-[minmax(360px,0.9fr)_minmax(0,1.25fr)]'
+            }`}
+            style={{ alignItems: 'start' }}
+          >
             <div>
               <p
                 style={{
@@ -175,7 +195,7 @@ export default function CaseStudyHero({
                 style={{
                   ...fontStyle,
                   color: 'rgb(10 10 10 / 0.72)',
-                  fontSize: '15px',
+                  fontSize: compactTypography ? '14px' : '15px',
                   fontWeight: 300,
                   lineHeight: 1.6,
                   margin: '0 0 18px',
@@ -234,21 +254,53 @@ export default function CaseStudyHero({
                   >
                     {item.label}
                   </p>
-                  {item.value.map((line) => (
-                    <p
-                      key={line}
-                      style={{
-                        ...fontStyle,
-                        color: 'rgb(10 10 10 / 0.68)',
-                        fontSize: '14px',
-                        fontWeight: 300,
-                        lineHeight: '23px',
-                        margin: 0,
-                      }}
-                    >
-                      {line}
-                    </p>
-                  ))}
+                  {item.icons?.length ? (
+                    <div style={{ alignItems: 'center', display: 'flex', gap: '24px' }}>
+                      {item.icons.map((icon) => (
+                        <span
+                          key={icon.src}
+                          style={{
+                            alignItems: 'center',
+                            background: '#fff',
+                            borderRadius: icon.containerSize ? '10px' : 0,
+                            display: 'inline-flex',
+                            height: `${icon.containerSize ?? icon.height}px`,
+                            justifyContent: 'center',
+                            overflow: 'hidden',
+                            width: `${icon.containerSize ?? icon.width}px`,
+                          }}
+                        >
+                          <Image
+                            src={icon.src}
+                            alt={icon.alt}
+                            width={icon.width}
+                            height={icon.height}
+                            style={{
+                              height: `${icon.height}px`,
+                              transform: icon.transform,
+                              width: `${icon.width}px`,
+                            }}
+                          />
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    item.value?.map((line) => (
+                      <p
+                        key={line}
+                        style={{
+                          ...fontStyle,
+                          color: 'rgb(10 10 10 / 0.68)',
+                          fontSize: '14px',
+                          fontWeight: 300,
+                          lineHeight: '23px',
+                          margin: 0,
+                        }}
+                      >
+                        {line}
+                      </p>
+                    ))
+                  )}
                 </div>
               ))}
             </div>

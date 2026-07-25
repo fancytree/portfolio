@@ -45,6 +45,18 @@ function getDirectProjectSections() {
   }
 }
 
+function getProjectContentSections() {
+  const root = document.querySelector<HTMLElement>('.mei-project-page');
+  if (!root) return [];
+
+  const labeledSections = Array.from(root.querySelectorAll<HTMLElement>('[data-case-nav-label]'));
+  if (labeledSections.length > 1) {
+    return labeledSections;
+  }
+
+  return getDirectProjectSections().slice(1);
+}
+
 function getGeneratedTldrPoints(
   navItems: CaseStudyNavItem[],
   customPoints: CaseStudyTldrPoint[] | undefined,
@@ -375,8 +387,7 @@ export default function CaseStudyControls({ tldrPoints }: CaseStudyControlsProps
 
   useEffect(() => {
     const prepareSections = () => {
-      const sections = getDirectProjectSections();
-      const contentSections = sections.slice(1);
+      const contentSections = getProjectContentSections();
 
       const nextItems = contentSections
         .map((section, index) => {
@@ -390,12 +401,12 @@ export default function CaseStudyControls({ tldrPoints }: CaseStudyControlsProps
 
           return {
             id: section.id,
-            label: label.length > 28 ? `${label.slice(0, 28).trim()}...` : label,
+            label: label.length > 36 ? `${label.slice(0, 36).trim()}...` : label,
           };
         })
         .filter((item): item is CaseStudyNavItem => Boolean(item));
 
-      setNavItems(nextItems.slice(0, 9));
+      setNavItems(nextItems.slice(0, 16));
       setPageTitle(normalizeLabel(document.querySelector('h1')?.textContent ?? 'This project'));
       setPageDescription(normalizeLabel(document.querySelector('.mei-project-page p')?.textContent ?? ''));
     };

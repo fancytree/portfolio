@@ -1179,13 +1179,13 @@ body.no-scroll {
 }
 
 .mei-project-page {
-  background: var(--mei-paper) !important;
+  background: #ffffff !important;
   color: var(--mei-ink);
   font-family: var(--mei-font-primary) !important;
 }
 
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) {
-  background: var(--mei-paper) !important;
+  background: #ffffff !important;
 }
 
 .mei-project-page > section:not(.mei-case-study-hero) > div {
