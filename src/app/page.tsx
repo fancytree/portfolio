@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, AudioWaveform, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
+import { AudioWaveform, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -328,7 +328,7 @@ const researchProjects: Project[] = [
     tags: ['Post-Trial Research', 'Parent Decision', 'Conversion'],
     description:
       'Investigated why parents hesitate after trial coding classes and translated hesitation patterns into clearer evidence, comparison, and decision-support opportunities.',
-    image: '/img/walnut-coding-cover.svg',
+    image: '/img/walnut-coding-cover-v2.webp',
     href: '/projects/walnut-coding',
   },
   {
@@ -338,7 +338,7 @@ const researchProjects: Project[] = [
     tags: ['Referral Research', 'NPS Analysis', 'Growth UX'],
     description:
       'Studied why high-value parents hesitate to share publicly, reframing referral design around social comfort, private trust, and parent-controlled expression.',
-    image: '/img/walnut-sharing-cover.svg',
+    image: '/img/walnut-sharing-cover-v2.webp',
     href: '/projects/walnut-sharing',
   },
   {
@@ -695,25 +695,6 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full max-w-[1200px]">
-          <Reveal>
-            <div className="flex flex-col items-center gap-8 pt-12 text-[#303030] md:gap-10 md:pt-14">
-              <div className="flex items-center gap-1.5 text-[14px] uppercase md:text-[16px]" style={fontBody}>
-                <span>Scroll</span>
-                <span className="mei-scroll-drop-line" aria-hidden="true" />
-              </div>
-              <Link
-                href="/works"
-                className="mei-view-all-work-link group inline-flex min-h-[38px] items-center justify-center gap-2.5 rounded-full border border-[#303030] px-4 text-[13px] sm:text-[15px] md:min-h-[46px] md:gap-3 md:px-5 md:text-[18px]"
-                style={fontBody}
-              >
-                <ArrowUpRight strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0 md:size-6" />
-                <span className="relative z-10">View All Work</span>
-                <ArrowUpRight strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0 md:size-6" />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
       </MotionSection>
 
       {/* Strategy */}

@@ -728,7 +728,7 @@ export default function CaseStudyDraftPage() {
       return;
     }
 
-    router.push('/works');
+    router.push('/#work');
   };
 
   return (

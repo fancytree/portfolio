@@ -1522,10 +1522,10 @@ export default function MonoProjectPage() {
                       wordBreak: 'break-all',
                     }}
                   >
-                    flyskytoo@outlook.com
+                    mei.chai@mail.polimi.it
                   </div>
                   <button
-                    onClick={() => navigator.clipboard.writeText('flyskytoo@outlook.com')}
+                    onClick={() => navigator.clipboard.writeText('mei.chai@mail.polimi.it')}
                     style={{
                       padding: '6px 10px',
                       borderRadius: '6px',

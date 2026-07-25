@@ -781,6 +781,8 @@ export default function WalnutCodingPage() {
       <CaseStudyHero
         title="Walnut Coding"
         subtitle="A UX research case study on post-trial parent decision-making for children's coding education."
+        visualSrc="/img/walnut-coding-hero.webp"
+        visualAlt="A research synthesis map connecting a child's coding trial to parent evidence, hesitation, and payment confidence."
         tags={['UX Research', 'Education', 'Parent Decision-making', 'Conversion', 'Research Strategy']}
         aboutLabel="About Walnut Coding"
         about="This research examines how parents decide whether to continue after a trial coding class. The work maps evidence chains, hesitation signals, and communication opportunities that help families understand learning value without relying on promotion-heavy follow-up."

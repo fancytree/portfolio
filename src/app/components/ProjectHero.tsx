@@ -40,7 +40,7 @@ export type ProjectHeroProps = {
  * - 描述使用 textStyle.lead
  */
 export default function ProjectHero({
-  backHref = '/works',
+  backHref = '/#work',
   roleSummary,
   roleDetails = [],
   title,

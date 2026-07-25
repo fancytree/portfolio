@@ -613,6 +613,8 @@ export default function WalnutSharingPage() {
       <CaseStudyHero
         title="Parent Sharing Behavior"
         subtitle="A UX research case study on referral behavior, social image, and parent willingness to share learning progress."
+        visualSrc="/img/walnut-sharing-hero.webp"
+        visualAlt="A research synthesis map contrasting public sharing pressure with private, parent-controlled sharing."
         tags={['UX Research', 'Growth', 'Referral', 'Education', 'Behavioral Insight']}
         aboutLabel="About the Research"
         about="This study explores why parents do or do not share children's learning content publicly. The case turns qualitative patterns into product and content opportunities that trade promotion pressure for permission and parent-centered storytelling."

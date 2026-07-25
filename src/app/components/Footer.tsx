@@ -10,7 +10,7 @@ const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 
 const socialLinks = [
   { href: 'https://www.linkedin.com/in/meichai/', label: 'LinkedIn' },
-  { href: 'mailto:flyskytoo@outlook.com', label: 'Email' },
+  { href: 'mailto:mei.chai@mail.polimi.it', label: 'Email' },
   { href: 'https://github.com/fancytree', label: 'GitHub' },
   { href: '/about', label: 'Resume' },
 ];
@@ -55,7 +55,7 @@ export default function Footer() {
       {/* 中部：Let's work together + 印章徽标 */}
       <div className="flex w-full flex-col gap-6">
         <div className="flex flex-col items-start justify-between gap-10 sm:flex-row sm:items-end">
-          <a href="mailto:flyskytoo@outlook.com" className="group flex items-center gap-3">
+          <a href="mailto:mei.chai@mail.polimi.it" className="group flex items-center gap-3">
             <h2
               className="text-[40px] leading-[1.05] text-[#0a0a0a] sm:text-[56px] md:text-[72px]"
               style={fontDisplay}
@@ -70,7 +70,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="mailto:flyskytoo@outlook.com"
+            href="mailto:mei.chai@mail.polimi.it"
             aria-label="Email Mei"
             className="relative flex size-[140px] shrink-0 items-center justify-center self-center transition-transform duration-300 hover:scale-105 sm:size-[170px] md:size-[214px]"
           >

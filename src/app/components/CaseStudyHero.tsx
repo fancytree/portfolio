@@ -28,6 +28,9 @@ type CaseStudyHeroProps = {
   liveSiteHref?: string;
   liveSiteLabel?: string;
   visualLabel?: string;
+  visualSrc?: string;
+  visualAlt?: string;
+  visualObjectPosition?: string;
   compactTypography?: boolean;
   wideDetails?: boolean;
 };
@@ -42,6 +45,9 @@ export default function CaseStudyHero({
   liveSiteHref,
   liveSiteLabel = 'View live site',
   visualLabel = 'Project visual placeholder',
+  visualSrc,
+  visualAlt,
+  visualObjectPosition = 'center',
   compactTypography = false,
   wideDetails = false,
 }: CaseStudyHeroProps) {
@@ -91,26 +97,39 @@ export default function CaseStudyHero({
             width: '100%',
           }}
         >
-          <span
-            aria-hidden
-            style={{
-              position: 'absolute',
-              inset: 'clamp(28px, 5vw, 72px)',
-              border: '1px dashed rgb(10 10 10 / 0.18)',
-              borderRadius: '8px',
-            }}
-          />
-          <span
-            style={{
-              background: 'rgb(255 255 255 / 0.72)',
-              border: '1px solid rgb(10 10 10 / 0.14)',
-              borderRadius: '8px',
-              color: 'rgb(10 10 10 / 0.45)',
-              padding: '18px 26px',
-            }}
-          >
-            {visualLabel}
-          </span>
+          {visualSrc ? (
+            <Image
+              src={visualSrc}
+              alt={visualAlt ?? ''}
+              fill
+              priority
+              sizes="100vw"
+              style={{ objectFit: 'cover', objectPosition: visualObjectPosition }}
+            />
+          ) : (
+            <>
+              <span
+                aria-hidden
+                style={{
+                  position: 'absolute',
+                  inset: 'clamp(28px, 5vw, 72px)',
+                  border: '1px dashed rgb(10 10 10 / 0.18)',
+                  borderRadius: '8px',
+                }}
+              />
+              <span
+                style={{
+                  background: 'rgb(255 255 255 / 0.72)',
+                  border: '1px solid rgb(10 10 10 / 0.14)',
+                  borderRadius: '8px',
+                  color: 'rgb(10 10 10 / 0.45)',
+                  padding: '18px 26px',
+                }}
+              >
+                {visualLabel}
+              </span>
+            </>
+          )}
         </div>
 
         <div style={{ padding: 'clamp(34px, 6vh, 64px) clamp(28px, 6vw, 118px) clamp(46px, 7vh, 76px)' }}>
