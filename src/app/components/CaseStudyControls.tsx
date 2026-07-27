@@ -118,19 +118,23 @@ function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; act
 
   return (
     <aside
-      className="hidden xl:flex"
+      className="mei-case-study-rail hidden xl:flex"
       aria-label="Case study quick navigation"
       style={{
         position: 'fixed',
-        left: '24px',
-        top: '118px',
+        left: 0,
+        top: '88px',
         zIndex: 35,
-        width: '190px',
+        width: '240px',
+        height: 'calc(100svh - 112px)',
+        boxSizing: 'border-box',
         flexDirection: 'column',
         gap: '12px',
+        padding: '30px 24px 24px',
+        borderRight: '1px solid rgb(10 10 10 / 0.07)',
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? 'auto' : 'none',
-        transform: visible ? 'translateY(0)' : 'translateY(18px)',
+        transform: visible ? 'translateX(0)' : 'translateX(-16px)',
         transition: 'opacity 0.32s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >
@@ -419,7 +423,10 @@ export default function CaseStudyControls({ tldrPoints }: CaseStudyControlsProps
     const handleScroll = () => {
       const sections = getDirectProjectSections();
       const hero = sections[0];
-      setVisible(hero ? hero.getBoundingClientRect().bottom <= 220 : window.scrollY > window.innerHeight * 0.75);
+      const projectRoot = document.querySelector('.mei-project-page');
+      const footerIsEntering = projectRoot ? projectRoot.getBoundingClientRect().bottom <= window.innerHeight : false;
+      const hasPassedHero = hero ? hero.getBoundingClientRect().bottom <= 220 : window.scrollY > window.innerHeight * 0.75;
+      setVisible(hasPassedHero && !footerIsEntering);
 
       let current: CaseStudyNavItem | undefined;
       for (const item of navItems) {

@@ -1195,6 +1195,21 @@ body.no-scroll {
   margin-left: auto !important;
 }
 
+@media (min-width: 1280px) {
+  .mei-project-page > section:not(:first-of-type) {
+    width: calc(100vw - 240px) !important;
+    margin-right: 0 !important;
+    margin-left: calc(-50vw + 50% + 240px) !important;
+  }
+
+  .mei-project-page > section:not(:first-of-type) > div {
+    width: 100%;
+    max-width: 980px !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+}
+
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) h1 {
   font-family: var(--mei-font-secondary) !important;
   font-size: clamp(4rem, 11vw, 8.75rem) !important;
