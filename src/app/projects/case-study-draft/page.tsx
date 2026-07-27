@@ -84,6 +84,8 @@ const CASE_STUDY_NAV_ITEMS = [
   { id: 'development', label: 'Development' },
 ] as const;
 
+type CaseStudyNavId = (typeof CASE_STUDY_NAV_ITEMS)[number]['id'];
+
 const CASE_STUDY_CONTENT_WIDTH = '980px';
 const CASE_STUDY_IMAGE_SIZES = '(max-width: 980px) 100vw, 980px';
 
@@ -137,7 +139,7 @@ function scrollToCaseStudyTarget(id: string) {
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function CaseStudyQuickNav({ visible, activeId }: { visible: boolean; activeId: string }) {
+function CaseStudyQuickNav({ visible, activeId }: { visible: boolean; activeId: CaseStudyNavId }) {
   return (
     <aside
       className="hidden xl:flex"
@@ -645,7 +647,7 @@ function SolutionCardIcon({ kind }: { kind: SolutionCardIconKind }) {
 // Jobnova 项目详情页（由 MemQ 模板复制，可替换为实际项目内容）
 export default function CaseStudyDraftPage() {
   const [caseControlsVisible, setCaseControlsVisible] = useState(false);
-  const [activeCaseSectionId, setActiveCaseSectionId] = useState(CASE_STUDY_NAV_ITEMS[0].id);
+  const [activeCaseSectionId, setActiveCaseSectionId] = useState<CaseStudyNavId>(CASE_STUDY_NAV_ITEMS[0].id);
   const [tldrOpen, setTldrOpen] = useState(false);
   const router = useRouter();
   // fontStyle 仅作为 Manrope 字体家族的简写，仍保留以避免破坏下方大量 `...fontStyle` 的展开

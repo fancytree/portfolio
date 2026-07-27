@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, type LucideIcon } from 'react';
+import { useState } from 'react';
 import {
   AlarmClock,
   CalendarDays,
@@ -19,6 +19,7 @@ import {
   TimerReset,
   Trash2,
   UserCheck,
+  type LucideIcon,
 } from 'lucide-react';
 import { fontFamily } from '@/lib/design-tokens';
 
