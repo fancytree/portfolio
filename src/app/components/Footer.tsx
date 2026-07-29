@@ -12,7 +12,7 @@ const socialLinks = [
   { href: 'https://www.linkedin.com/in/meichai/', label: 'LinkedIn' },
   { href: 'mailto:mei.chai@mail.polimi.it', label: 'Email' },
   { href: 'https://github.com/fancytree', label: 'GitHub' },
-  { href: '/about', label: 'Resume' },
+  { href: '/MeiChai_Product_Designer_Resume.pdf', label: 'Resume', target: '_blank' },
 ];
 
 export default function Footer() {
@@ -29,8 +29,8 @@ export default function Footer() {
             <span key={link.label}>
               <a
                 href={link.href}
-                target={link.href.startsWith('http') ? '_blank' : undefined}
-                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                target={'target' in link ? link.target : link.href.startsWith('http') ? '_blank' : undefined}
+                rel={'target' in link || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 className="hover:underline"
               >
                 {link.label}
