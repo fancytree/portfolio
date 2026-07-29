@@ -234,6 +234,9 @@ type Project = {
   tags: string[];
   description: string;
   image: string;
+  imageFit?: 'cover' | 'contain';
+  imageScale?: number;
+  imageBackground?: string;
   href: string;
 };
 
@@ -242,7 +245,7 @@ const productProjects: Project[] = [
     title: 'ConnectNova',
     category: 'Founding Designer',
     time: '2026 – Present',
-    tags: ['AI Recruiting', 'Chrome Extension', 'Design System'],
+    tags: ['AI Recruiting', 'SaaS Platform', 'End-to-end Workflow'],
     description:
       'Led product direction, UX strategy, and interaction design for a two-part recruiting workflow: a LinkedIn Chrome extension for sourcing and a dashboard for candidate ranking, review, and outreach.',
     image: '/img/Connectnova.avif',
@@ -252,7 +255,7 @@ const productProjects: Project[] = [
     title: 'JobNova',
     category: 'Lead Designer',
     time: '2025 – Present',
-    tags: ['0-to-1 AI SaaS', 'AI Workflow', 'Product Strategy'],
+    tags: ['AI Job Search', '0-to-1 Product', 'Trust & Automation'],
     description:
       'Designed a 0-to-1 AI job-search system that helps users complete relevant applications faster without giving up trust or control.',
     image: '/img/Jobnova.avif',
@@ -262,7 +265,7 @@ const productProjects: Project[] = [
     title: 'MemQ',
     category: 'Indie iOS Designer',
     time: '2026 · 8 weeks',
-    tags: ['iOS App', 'Built & Shipped', 'Memory Loop'],
+    tags: ['AI Learning', 'iOS Product', 'Built & Shipped'],
     description:
       'Independently designed, developed, and launched an iOS learning app that turns captured knowledge into quizzes and review loops, helping learners retain what they ask AI.',
     image: '/img/MemQ.avif',
@@ -272,17 +275,21 @@ const productProjects: Project[] = [
     title: 'Beikemama',
     category: 'UX/UI Designer',
     time: '2020 · 8 weeks',
-    tags: ['Parenting Community', 'Live Q&A', 'Social UX'],
+    tags: ['Parenting Community', 'Mobile Product', 'Live Q&A'],
     description:
       'Designed a live parenting community for pregnant women and young families, connecting expert Q&A, social support, and parent-child activities into a warmer mobile experience.',
-    image: '/img/Beikemama.avif',
+    image: '/img/Beikemama/Beikemama.avif',
+    imageFit: 'contain',
+    imageScale: 0.76,
+    imageBackground:
+      'radial-gradient(circle at 18% 18%, rgb(255 224 164 / 0.82), transparent 42%), radial-gradient(circle at 84% 24%, rgb(255 112 124 / 0.42), transparent 40%), radial-gradient(circle at 74% 88%, rgb(112 204 196 / 0.42), transparent 44%), linear-gradient(135deg, #fff8f3 0%, #ffe9e8 52%, #effaf7 100%)',
     href: '/projects/beikemama',
   },
   {
     title: 'Mono',
     category: 'AI Builder',
-    time: '2026',
-    tags: ['AI', 'FinTech', 'Generative UI'],
+    time: '2026 · 4 weeks',
+    tags: ['AI Agent', 'FinTech', 'Generative UI'],
     description:
       'Intent-driven financial agent that turns natural language into structured UI states for clearer, more actionable money insights.',
     image: '/img/mono_cover.avif',
@@ -292,7 +299,7 @@ const productProjects: Project[] = [
     title: 'CrackInterview.AI',
     category: 'AI Builder',
     time: '2025 · 8 weeks',
-    tags: ['AI', 'EdTech', 'Interview Prep'],
+    tags: ['AI Interviewing', 'EdTech', 'Conversational UX'],
     description:
       'AI mock interview platform that gives technical candidates structured practice, adaptive conversations, and clearer feedback loops.',
     image: '/img/CrackInterview_cover.avif',
@@ -302,7 +309,7 @@ const productProjects: Project[] = [
     title: 'Customer Service System',
     category: 'Creative Coder',
     time: '2022 · 4 weeks',
-    tags: ['Enterprise', 'Chat', 'Workflow'],
+    tags: ['Enterprise UX', 'Multi-role System', 'Service Workflow'],
     description:
       'Multi-role customer support system mapping messaging, escalation, and admin workflows across users, promoters, agents, and operators.',
     image: '/img/customer-service-system_cover.avif',
@@ -312,7 +319,7 @@ const productProjects: Project[] = [
     title: 'This Portfolio',
     category: 'Creative Coder',
     time: '2026 – Ongoing',
-    tags: ['Experimental', 'Motion', 'Personal'],
+    tags: ['Creative Coding', 'Motion Design', 'AI-assisted Build'],
     description:
       'A living interface experiment blending motion, interaction, AI-assisted iteration, and portfolio storytelling into one evolving system.',
     image: '/meiwave.gif',
@@ -324,8 +331,8 @@ const researchProjects: Project[] = [
   {
     title: 'Walnut Coding',
     category: 'UX Researcher',
-    time: '24–72 hrs post-trial',
-    tags: ['Post-Trial Research', 'Parent Decision', 'Conversion'],
+    time: '2020',
+    tags: ['UX Research', 'Parent Decision', 'Conversion Journey'],
     description:
       'Investigated why parents hesitate after trial coding classes and translated hesitation patterns into clearer evidence, comparison, and decision-support opportunities.',
     image: '/img/walnut-coding-cover-v2.webp',
@@ -334,8 +341,8 @@ const researchProjects: Project[] = [
   {
     title: 'Parent Sharing Behavior',
     category: 'UX Researcher',
-    time: '2025 · Research study',
-    tags: ['Referral Research', 'NPS Analysis', 'Growth UX'],
+    time: '2022',
+    tags: ['UX Research', 'Sharing Behavior', 'Referral Design'],
     description:
       'Studied why high-value parents hesitate to share publicly, reframing referral design around social comfort, private trust, and parent-controlled expression.',
     image: '/img/walnut-sharing-cover-v2.webp',
@@ -355,7 +362,7 @@ const researchProjects: Project[] = [
     title: 'Clarity',
     category: 'Researcher',
     time: '2024 · 15 weeks',
-    tags: ['UX Research', 'HealthTech', 'Product'],
+    tags: ['UX Research', 'Digital Health', 'Clinical Workflow'],
     description:
       'Digital health product work for menopause symptom tracking, personal insights, and clearer communication between patients and clinicians.',
     image: '/img/Clarity.avif',
@@ -366,7 +373,9 @@ const researchProjects: Project[] = [
 const workGroups = [
   {
     label: 'Product',
-    items: productProjects.filter((project) => ['ConnectNova', 'JobNova', 'MemQ', 'Beikemama'].includes(project.title)),
+    items: ['JobNova', 'ConnectNova', 'MemQ', 'Mono', 'Beikemama'].flatMap((title) =>
+      productProjects.filter((project) => project.title === title)
+    ),
   },
   { label: 'Research', items: researchProjects.slice(0, 2) },
 ];
@@ -668,11 +677,18 @@ export default function Home() {
                         <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr]">
                           <div className="overflow-hidden">
                             <div className="flex flex-col gap-5 pt-8 md:flex-row md:items-start md:gap-9">
-                              <div className="h-[220px] w-full shrink-0 overflow-hidden bg-[#cccccc] md:h-[239px] md:w-[360px]">
+                              <div
+                                className="h-[220px] w-full shrink-0 overflow-hidden md:h-[239px] md:w-[360px]"
+                                style={{ background: project.imageBackground ?? '#cccccc' }}
+                              >
                                 <img
                                   src={project.image}
                                   alt=""
-                                  className="h-full w-full object-cover"
+                                  className={`h-full w-full ${project.imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
+                                  style={{
+                                    transform: `scale(${project.imageScale ?? 1})`,
+                                    transformOrigin: 'center',
+                                  }}
                                 />
                               </div>
                               <div className="flex min-w-0 flex-1 flex-col justify-center gap-5 pt-1 md:min-h-[194px]">

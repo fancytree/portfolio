@@ -28,14 +28,14 @@ export default function BeikemamaProjectPage() {
           { label: 'Year', value: ['2020 · 8 weeks'] },
         ]}
         visualLabel="Beikemama live parenting experience"
-        visualSrc="/img/Beikemama/cover.avif"
+        visualSrc="/img/Beikemama/cover-77400e7e.avif"
         visualAlt="Beikemama Live app identity and mobile experiences for parenting content, expert live streams, and family communities."
         visualObjectPosition="center bottom"
         visualObjectFit="contain"
-        visualImageScale={0.76}
+        visualImageScale={1.02}
         visualTransformOrigin="center bottom"
         visualHeight="clamp(300px, 38vw, 540px)"
-        visualBackground="#FFFFFF"
+        visualBackground="radial-gradient(circle at 16% 20%, rgb(255 224 164 / 0.78), transparent 34%), radial-gradient(circle at 84% 20%, rgb(255 112 124 / 0.38), transparent 36%), radial-gradient(circle at 76% 88%, rgb(112 204 196 / 0.38), transparent 40%), linear-gradient(135deg, #fff9f5 0%, #ffebe9 50%, #eefaf7 100%)"
       />
 
       {/* Structure sections (empty shells to fill later) */}

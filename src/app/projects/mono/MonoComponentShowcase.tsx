@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { List, PieChart, ChevronDown, ChevronUp, Tag, Zap, Receipt, X, Check, Calendar, RefreshCw } from 'lucide-react';
+import { List, PieChart, ChevronDown, ChevronUp, Tag, Zap, Receipt, X, Check, Calendar } from 'lucide-react';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 
@@ -93,7 +93,7 @@ function BudgetStatusCard({ category, limit, spent, remaining, period, pct, stat
   const deltaColor = status === 'critical' ? 'rgba(248,113,113,0.7)' : status === 'warning' ? 'rgba(251,191,36,0.6)' : 'rgba(16,163,127,0.4)';
 
   return (
-    <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, padding: '14px 16px', minWidth: 320 }}>
+    <div style={{ width: '100%', minWidth: 0, boxSizing: 'border-box', background: T.surface, border: `1px solid ${T.border}`, borderRadius: 12, padding: '14px 16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: T.textPrimary }}>{category}</span>
         <span style={{ fontSize: 11, color: T.textSecond }}>{period}</span>
@@ -171,12 +171,12 @@ function SpendingRecordsCard({ title, subtitle, items, chartData, totalStr }: {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 10 }}>
         <div>
           <div style={{ fontSize: 13, fontWeight: 600, color: T.textPrimary }}>{title}</div>
           <div style={{ fontSize: 11, color: T.textSecond, marginTop: 2 }}>{subtitle}</div>
         </div>
-        <div style={{ display: 'flex', gap: 4 }}>
+        <div style={{ display: 'flex', gap: 4, marginLeft: 'auto' }}>
           <button style={tabBtn(view === 'breakdown')} onClick={() => setView('breakdown')}>
             <PieChart size={11} /> Breakdown
           </button>
@@ -491,31 +491,27 @@ function Label({ name, desc }: { name: string; desc: string }) {
 
 export default function MonoComponentShowcase() {
   return (
-    <div style={{
-      background: '#1A1A1A',
-      borderRadius: 16,
-      border: '1px solid rgba(255,255,255,0.07)',
-      padding: 20,
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
-      gridTemplateRows: 'auto auto auto',
-      gap: 16,
-      alignItems: 'start',
-    }}>
+    <div
+      className="grid w-full min-w-0 max-w-full grid-cols-1 items-start gap-4 p-4 sm:p-5 lg:grid-cols-2 xl:grid-cols-12"
+      style={{
+        background: '#1A1A1A',
+        borderRadius: 16,
+        border: '1px solid rgba(255,255,255,0.07)',
+      }}
+    >
 
-      {/* Col 1–2, Row 1: BudgetGauge × 2 */}
-      <div>
+      {/* Desktop row 1: BudgetGauge × 2 + SpendingRecords */}
+      <div className="min-w-0 xl:col-span-4">
         <Label name="BudgetGauge" desc="Budget progress — color shifts green → amber → red as spending nears the cap." />
         <BudgetStatusCard {...BUDGET_NORMAL} />
       </div>
 
-      <div>
+      <div className="min-w-0 xl:col-span-4">
         <Label name="BudgetGauge · Afford" desc='"Can I afford $74 at Whole Foods?" — delta bar shows before/after state.' />
         <BudgetStatusCard {...BUDGET_AFFORD} />
       </div>
 
-      {/* Col 3, Row 1–2: SpendingRecords */}
-      <div style={{ gridColumn: '3', gridRow: '1 / 3' }}>
+      <div className="min-w-0 xl:col-span-4">
         <Label name="SpendingRecords" desc="Donut breakdown and transaction list — toggle between views." />
         <SpendingRecordsCard
           title="This Week"
@@ -526,16 +522,15 @@ export default function MonoComponentShowcase() {
         />
       </div>
 
-      {/* Col 4, Row 1–3: RecordExpense */}
-      <div style={{ gridColumn: '4', gridRow: '1 / 4' }}>
+      {/* Desktop row 2: InsightCards + ConfirmExpense */}
+      <div className="min-w-0 xl:col-span-4 xl:col-start-9 xl:row-start-2">
         <Label name="ConfirmExpense" desc="AI-parsed expense form — pre-fills amount, merchant, category from natural language. User confirms or edits before saving." />
         <RecordExpenseCard />
       </div>
 
-      {/* Col 1–2, Row 2: InsightCards */}
-      <div style={{ gridColumn: '1 / 3' }}>
+      <div className="min-w-0 lg:col-span-2 xl:col-span-8 xl:col-start-1 xl:row-start-2">
         <Label name="InsightCard" desc="AI-generated financial observations with expandable charts and tags." />
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div className="grid min-w-0 grid-cols-1 gap-3 md:grid-cols-2">
           <InsightCard
             title="Dining & Food up 28%"
             subtitle="vs. last month"

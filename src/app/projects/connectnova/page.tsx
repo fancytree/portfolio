@@ -1534,16 +1534,33 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
   const dropdownVersions = ['v2 · After client feedback', 'v1 · Initial ranking'];
 
   return (
-    <div className="cn-scope" style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '14px', background: '#FFFFFF', overflow: 'hidden', marginTop: '12px', position: 'relative' as const }}>
+    <div
+      className="cn-scope min-w-0 max-w-full"
+      style={{
+        width: '100%',
+        boxSizing: 'border-box',
+        border: '1px solid rgba(0,0,0,0.08)',
+        borderRadius: '14px',
+        background: '#FFFFFF',
+        overflow: 'hidden',
+        marginTop: '12px',
+        position: 'relative' as const,
+      }}
+    >
       {/* Header */}
-      <div style={{ padding: '14px 24px', borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.015)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        className="flex flex-col items-start gap-1.5 px-4 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6"
+        style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.015)' }}
+      >
         <div style={{ ...s, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase' as const, fontWeight: 500, color: 'rgba(0,0,0,0.4)' }}>
           Components
         </div>
-        <span style={{ ...s, fontSize: '10px', fontWeight: 500, color: 'rgba(0,0,0,0.38)', fontStyle: 'italic' as const }}>Interactive · hover &amp; click to explore</span>
+        <span style={{ ...s, maxWidth: '100%', fontSize: '10px', lineHeight: '15px', fontWeight: 500, color: 'rgba(0,0,0,0.38)', fontStyle: 'italic' as const }}>
+          Interactive · hover &amp; click to explore
+        </span>
       </div>
 
-      <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column' as const, gap: '24px' }}>
+      <div className="flex min-w-0 flex-col gap-6 p-4 sm:p-6">
 
         {/* Row 1: Buttons */}
         <div>
@@ -1557,8 +1574,8 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
         </div>
 
         {/* Row 2: Status badges + Tab switcher */}
-        <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: '20px' }}>
-          <div>
+        <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-2">
+          <div className="min-w-0">
             {sectionLabel('Status badges')}
             <div className="flex flex-wrap" style={{ gap: '6px' }}>
               <span className="cn-chip cn-chip-blue" style={s}>Active</span>
@@ -1569,7 +1586,7 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
               <span className="cn-chip cn-chip-purple" style={s}>New</span>
             </div>
           </div>
-          <div>
+          <div className="min-w-0">
             {sectionLabel('Tab switcher')}
             <div className="cn-tab-group">
               {(['rankings', 'pool'] as const).map(tab => (
@@ -1589,9 +1606,9 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
         {/* Row 3: Inputs */}
         <div>
           {sectionLabel('Inputs')}
-          <div className="grid grid-cols-1 sm:grid-cols-3" style={{ gap: '12px' }}>
+          <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-3">
             {/* Search */}
-            <div>
+            <div className="min-w-0">
               <div style={{ ...s, fontSize: '11px', fontWeight: 500, color: 'rgba(0,0,0,0.5)', marginBottom: '6px' }}>Search</div>
               <div style={{ position: 'relative' as const }}>
                 <svg style={{ position: 'absolute' as const, left: '10px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' as const, opacity: 0.35 }} width="14" height="14" viewBox="0 0 24 24" fill="none">
@@ -1612,7 +1629,7 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
               </div>
             </div>
             {/* Text input */}
-            <div>
+            <div className="min-w-0">
               <div style={{ ...s, fontSize: '11px', fontWeight: 500, color: 'rgba(0,0,0,0.5)', marginBottom: '6px' }}>Project name</div>
               <input
                 type="text"
@@ -1622,7 +1639,7 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
               />
             </div>
             {/* Disabled input */}
-            <div>
+            <div className="min-w-0">
               <div style={{ ...s, fontSize: '11px', fontWeight: 500, color: 'rgba(0,0,0,0.5)', marginBottom: '6px' }}>Hiring need <span style={{ color: 'rgba(0,0,0,0.3)', fontWeight: 400 }}>(disabled)</span></div>
               <input
                 type="text"
@@ -1636,17 +1653,17 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
         </div>
 
         {/* Row 4: Dropdown + Popup trigger */}
-        <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: '20px' }}>
+        <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-2">
           {/* Dropdown */}
-          <div>
+          <div className="min-w-0">
             {sectionLabel('Dropdown')}
             <div style={{ position: 'relative' as const }}>
               <button
                 onClick={() => setDropdownOpen(v => !v)}
-                style={{ ...s, fontSize: '13px', fontWeight: 400, color: 'rgb(0,0,0)', background: '#fff', border: `1px solid ${dropdownOpen ? 'var(--cn-primary)' : 'rgba(0,0,0,0.16)'}`, borderRadius: '7px', padding: '8px 12px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', outline: 'none', boxShadow: dropdownOpen ? '0 0 0 3px var(--cn-primary-ring)' : 'none', transition: 'border-color 0.15s' }}
+                style={{ ...s, minWidth: 0, fontSize: '13px', fontWeight: 400, color: 'rgb(0,0,0)', background: '#fff', border: `1px solid ${dropdownOpen ? 'var(--cn-primary)' : 'rgba(0,0,0,0.16)'}`, borderRadius: '7px', padding: '8px 12px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', cursor: 'pointer', outline: 'none', boxShadow: dropdownOpen ? '0 0 0 3px var(--cn-primary-ring)' : 'none', transition: 'border-color 0.15s' }}
               >
-                <span>{selectedVersion}</span>
-                <span style={{ ...s, fontSize: '10px', color: 'rgba(0,0,0,0.35)', transform: dropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>▾</span>
+                <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedVersion}</span>
+                <span style={{ ...s, flexShrink: 0, fontSize: '10px', color: 'rgba(0,0,0,0.35)', transform: dropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}>▾</span>
               </button>
               {dropdownOpen && (
                 <div style={{ position: 'absolute' as const, top: 'calc(100% + 4px)', left: 0, right: 0, background: '#fff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.1)', zIndex: 10, overflow: 'hidden' }}>
@@ -1666,7 +1683,7 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
           </div>
 
           {/* Popup trigger */}
-          <div>
+          <div className="min-w-0">
             {sectionLabel('Popup / Confirm dialog')}
             <button
               onClick={() => setPopupOpen(true)}
@@ -1682,7 +1699,7 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
       </div>
 
       {/* Footer */}
-      <div style={{ padding: '12px 24px', borderTop: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.015)', ...s, fontSize: '13px', color: 'oklch(0.556 0 0)', fontStyle: 'italic' as const }}>
+      <div className="px-4 py-3 sm:px-6" style={{ borderTop: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.015)', ...s, overflowWrap: 'anywhere', fontSize: '13px', lineHeight: '20px', color: 'oklch(0.556 0 0)', fontStyle: 'italic' as const }}>
         All components share the same token layer — swap a color variable and both extension and dashboard update together
       </div>
 
@@ -1693,7 +1710,7 @@ function DesignSystemComponentsMock({ fontStyle }: { fontStyle: { fontFamily: st
           onClick={() => setPopupOpen(false)}
         >
           <div
-            style={{ background: '#fff', borderRadius: '12px', padding: '24px', width: '300px', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
+            style={{ background: '#fff', borderRadius: '12px', padding: 'clamp(18px, 4vw, 24px)', width: 'min(300px, calc(100% - 32px))', boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}
             onClick={e => e.stopPropagation()}
           >
             <div style={{ ...s, fontSize: '15px', fontWeight: 600, color: 'rgb(0,0,0)', marginBottom: '8px' }}>Delete this project?</div>
@@ -1746,20 +1763,19 @@ export default function ConnectnovaProjectPage() {
         meta={[
           { label: 'Role', value: ['Founding Designer,', 'UX Strategy, Product Design'] },
           { label: 'Team', value: ['1 Designer,', '1 Founder,', 'Engineering team'] },
-          { label: 'Tool', value: ['Figma,', 'Cursor, Lovable,', 'React prototype'] },
+          { label: 'Tool', value: ['Figma, Stitch,', 'PostHog, Claude,', 'Cursor'] },
           { label: 'Company', value: ['Nova AI'] },
           { label: 'Year', value: ['2026 – Ongoing'] },
         ]}
         visualLabel="ConnectNova recruiting workflow"
-        visualSrc="/img/connectnova/Connectnova.avif"
+        visualSrc="/img/connectnova/Connectnova-5af98874.avif"
         visualAlt="ConnectNova recruiting dashboard and LinkedIn extension shown as one connected sourcing and ranking workflow."
         visualObjectPosition="center bottom"
         visualObjectFit="contain"
         visualImageScale={0.9}
         visualTransformOrigin="center bottom"
         visualHeight="clamp(300px, 38vw, 540px)"
-        visualBackground="radial-gradient(circle at 78% 22%, rgb(123 178 255 / 0.24), transparent 28%), radial-gradient(circle at 18% 78%, rgb(133 145 255 / 0.2), transparent 31%), radial-gradient(circle at 52% 54%, rgb(46 85 137 / 0.3), transparent 44%), linear-gradient(135deg, #050b16 0%, #0a1729 48%, #07111f 100%)"
-        visualNavTone="light"
+        visualBackground="radial-gradient(circle at 82% 16%, rgb(111 163 255 / 0.38), transparent 32%), radial-gradient(circle at 14% 84%, rgb(116 214 224 / 0.3), transparent 36%), radial-gradient(circle at 52% 42%, rgb(190 203 255 / 0.42), transparent 44%), linear-gradient(135deg, #f8fbff 0%, #e7efff 50%, #f1f8ff 100%)"
       />
 
       {/* Process Section —— 四步线性叙事：Discovery → Product decision → IA → Design system。
@@ -2987,10 +3003,10 @@ export default function ConnectnovaProjectPage() {
                 STEP 04 · SYSTEM BUILDING
                 —————————————————————————————————————————————— */}
             <div
-              className="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6 md:gap-14"
+              className="grid grid-cols-1 gap-6 md:grid-cols-[160px_minmax(0,1fr)] md:gap-14"
               data-case-nav-label="04 / System Building"
             >
-              <div>
+              <div className="min-w-0">
                 <div
                   style={{
                     ...fontStyle,
@@ -3019,7 +3035,7 @@ export default function ConnectnovaProjectPage() {
                   System building
                 </div>
               </div>
-              <div>
+              <div className="min-w-0">
                 <h2
                   style={{
                     ...fontStyle,

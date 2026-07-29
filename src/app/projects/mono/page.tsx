@@ -1267,13 +1267,12 @@ export default function MonoProjectPage() {
               The Result
             </h2>
 
-            {/* 左侧占位图 + 右侧内容整体 */}
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '48px', alignItems: 'flex-start' }}>
+            {/* 左侧结果图 + 右侧内容：优先保证文字栏的可读宽度 */}
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(320px,0.8fr)_minmax(420px,1.2fr)] lg:gap-10 xl:gap-12">
               {/* 左侧：Mockup 图片 */}
               <div
+                className="w-full max-w-[520px] justify-self-center lg:justify-self-start"
                 style={{
-                  flex: '0 0 640px',
-                  width: '640px',
                   borderRadius: '12px',
                   overflow: 'hidden',
                   border: '1px solid rgba(0, 0, 0, 0.1)',
@@ -1293,7 +1292,7 @@ export default function MonoProjectPage() {
               </div>
 
               {/* 右侧：The Result 内容整体（段落 + 两张卡片） */}
-              <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="min-w-0">
                 <div
                   style={{
                     ...fontStyle,
@@ -1310,7 +1309,7 @@ export default function MonoProjectPage() {
                 </div>
 
                 {/* 两个结果卡片 */}
-                <div className="flex flex-row" style={{ gap: '24px' }}>
+                <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-5">
                   {/* Card 1: Stable A2UI Execution */}
                   <div
                     style={{
