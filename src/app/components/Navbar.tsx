@@ -23,7 +23,7 @@ export default function Navbar() {
   useEffect(() => {
     const updateNavTone = () => {
       const navProbeY = 24;
-      const darkSections = Array.from(document.querySelectorAll<HTMLElement>('#strategy'));
+      const darkSections = Array.from(document.querySelectorAll<HTMLElement>('#strategy, [data-nav-tone="light"]'));
 
       setIsNavLight(
         darkSections.some((section) => {

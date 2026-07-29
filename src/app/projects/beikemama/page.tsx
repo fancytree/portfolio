@@ -27,6 +27,15 @@ export default function BeikemamaProjectPage() {
           { label: 'Company', value: ['Beikemama'] },
           { label: 'Year', value: ['2020 · 8 weeks'] },
         ]}
+        visualLabel="Beikemama live parenting experience"
+        visualSrc="/img/Beikemama/cover.avif"
+        visualAlt="Beikemama Live app identity and mobile experiences for parenting content, expert live streams, and family communities."
+        visualObjectPosition="center bottom"
+        visualObjectFit="contain"
+        visualImageScale={0.76}
+        visualTransformOrigin="center bottom"
+        visualHeight="clamp(300px, 38vw, 540px)"
+        visualBackground="#FFFFFF"
       />
 
       {/* Structure sections (empty shells to fill later) */}
@@ -47,6 +56,8 @@ export default function BeikemamaProjectPage() {
           }}
         >
           <h2
+            id="background"
+            data-case-nav-label="Background"
             style={{
               ...fontStyle,
               fontSize: '32px',
@@ -406,6 +417,8 @@ export default function BeikemamaProjectPage() {
           }}
         >
           <h2
+            id="user-research"
+            data-case-nav-label="User research"
             style={{
               ...fontStyle,
               ...textStyle.h3,
@@ -512,6 +525,8 @@ export default function BeikemamaProjectPage() {
           </div>
 
           <h2
+            id="user-interview"
+            data-case-nav-label="User interview"
             style={{
               ...fontStyle,
               fontSize: '24px',
@@ -803,6 +818,8 @@ export default function BeikemamaProjectPage() {
             }}
           >
             <h2
+              id="persona"
+              data-case-nav-label="Persona"
               style={{
                 ...fontStyle,
                 ...textStyle.h3,
@@ -874,6 +891,8 @@ export default function BeikemamaProjectPage() {
             }}
           >
             <h2
+              id="competitive-product-analysis"
+              data-case-nav-label="Competitive product analysis"
               style={{
                 ...fontStyle,
                 ...textStyle.h3,
@@ -922,6 +941,8 @@ export default function BeikemamaProjectPage() {
               }}
             >
               <h2
+                id="opportunity"
+                data-case-nav-label="Opportunity"
                 style={{
                   ...fontStyle,
                   ...textStyle.h3,
@@ -1169,6 +1190,8 @@ export default function BeikemamaProjectPage() {
                 }}
               >
                 <h2
+                  id="concept"
+                  data-case-nav-label="Concept"
                   style={{
                     ...fontStyle,
                     ...textStyle.h3,
@@ -1360,6 +1383,8 @@ export default function BeikemamaProjectPage() {
                     }}
                   >
                     <h3
+                      id="design-system"
+                      data-case-nav-label="Design System"
                       style={{
                         ...fontStyle,
                         fontSize: '20px',
@@ -1381,6 +1406,8 @@ export default function BeikemamaProjectPage() {
                   }}
                 >
                   <h2
+                    id="hi-fi-prototype"
+                    data-case-nav-label="Hi-Fi Prototype"
                     style={{
                       ...fontStyle,
                       ...textStyle.h3,

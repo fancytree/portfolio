@@ -1189,6 +1189,15 @@ export default function JobnovaAIPlatformPage() {
           { label: 'Year', value: ['2025 – Ongoing'] },
         ]}
         visualLabel="JobNova product system"
+        visualSrc="/img/jobnova/Jobnova.avif"
+        visualAlt="JobNova AI job-search platform shown across job matching, Auto Apply, and application scoring interfaces."
+        visualObjectPosition="center bottom"
+        visualObjectFit="contain"
+        visualImageScale={0.9}
+        visualTransformOrigin="center bottom"
+        visualHeight="clamp(300px, 38vw, 540px)"
+        visualBackground="radial-gradient(circle at 76% 24%, rgb(174 255 72 / 0.24), transparent 27%), radial-gradient(circle at 20% 78%, rgb(166 139 255 / 0.2), transparent 30%), radial-gradient(circle at 52% 54%, rgb(57 91 129 / 0.3), transparent 42%), linear-gradient(135deg, #05070d 0%, #0b1220 48%, #07110f 100%)"
+        visualNavTone="light"
         compactTypography
         wideDetails
       />
@@ -1773,6 +1782,42 @@ export default function JobnovaAIPlatformPage() {
                 </span>
                 . I worked with engineering to turn the experience into implementable system behavior.
               </p>
+
+              <div className="w-full bg-[#f3f1ea] p-4 sm:p-6 lg:p-8">
+                <figure className="relative m-0 w-full overflow-hidden" aria-label="JobNova design system">
+                  <Image
+                    src="/img/jobnova/design system.avif"
+                    alt="JobNova design system covering colors, typography, spacing, components, icons, cards, filters, and application states."
+                    width={4126}
+                    height={8493}
+                    sizes="(min-width: 1280px) 916px, calc(100vw - 80px)"
+                    className="block h-auto w-full"
+                  />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-0 bottom-0 h-[clamp(180px,28vw,360px)]"
+                    style={{
+                      background:
+                        'linear-gradient(180deg, rgb(243 241 234 / 0) 0%, rgb(243 241 234 / 0.2) 24%, rgb(243 241 234 / 0.82) 76%, #f3f1ea 100%)',
+                    }}
+                  />
+                </figure>
+              </div>
+
+              <blockquote
+                className="m-0 max-w-[820px] border-l border-[#ed5b2b] py-1 pl-[21px]"
+                style={bodyStyle}
+              >
+                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]">
+                  Design system principle
+                </p>
+                <p className="m-0 mt-3 text-[16px] font-normal leading-6 text-[#0a0a0a]">
+                  I treated the design system as a set of intentional constraints, not a catalogue to expand. For every
+                  new interaction, I first reused an existing token or component. If it could not meet the need, I
+                  created a controlled variant; only when neither option preserved the intended behavior did I
+                  introduce something new.
+                </p>
+              </blockquote>
             </div>
 
             <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="Results">

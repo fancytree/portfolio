@@ -31,6 +31,12 @@ type CaseStudyHeroProps = {
   visualSrc?: string;
   visualAlt?: string;
   visualObjectPosition?: string;
+  visualObjectFit?: 'cover' | 'contain';
+  visualImageScale?: number;
+  visualTransformOrigin?: string;
+  visualBackground?: string;
+  visualHeight?: string;
+  visualNavTone?: 'light';
   compactTypography?: boolean;
   wideDetails?: boolean;
 };
@@ -48,6 +54,12 @@ export default function CaseStudyHero({
   visualSrc,
   visualAlt,
   visualObjectPosition = 'center',
+  visualObjectFit = 'cover',
+  visualImageScale = 1,
+  visualTransformOrigin = 'center',
+  visualBackground,
+  visualHeight,
+  visualNavTone,
   compactTypography = false,
   wideDetails = false,
 }: CaseStudyHeroProps) {
@@ -78,9 +90,11 @@ export default function CaseStudyHero({
       >
         <div
           aria-label={visualLabel}
+          data-nav-tone={visualNavTone}
           style={{
             alignItems: 'center',
             background:
+              visualBackground ??
               'radial-gradient(circle at 50% 80%, rgb(237 91 43 / 0.14), transparent 34%), linear-gradient(135deg, #f3f1ea, #ffffff 44%, #d7d7d7)',
             border: 0,
             borderRadius: 0,
@@ -91,7 +105,7 @@ export default function CaseStudyHero({
             fontWeight: 300,
             justifyContent: 'center',
             letterSpacing: '0.02em',
-            minHeight: 'clamp(320px, 54svh, 620px)',
+            minHeight: visualHeight ?? 'clamp(320px, 54svh, 620px)',
             overflow: 'hidden',
             position: 'relative',
             width: '100%',
@@ -104,7 +118,12 @@ export default function CaseStudyHero({
               fill
               priority
               sizes="100vw"
-              style={{ objectFit: 'cover', objectPosition: visualObjectPosition }}
+              style={{
+                objectFit: visualObjectFit,
+                objectPosition: visualObjectPosition,
+                transform: `scale(${visualImageScale})`,
+                transformOrigin: visualTransformOrigin,
+              }}
             />
           ) : (
             <>

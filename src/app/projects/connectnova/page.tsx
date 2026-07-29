@@ -1750,6 +1750,16 @@ export default function ConnectnovaProjectPage() {
           { label: 'Company', value: ['Nova AI'] },
           { label: 'Year', value: ['2026 – Ongoing'] },
         ]}
+        visualLabel="ConnectNova recruiting workflow"
+        visualSrc="/img/connectnova/Connectnova.avif"
+        visualAlt="ConnectNova recruiting dashboard and LinkedIn extension shown as one connected sourcing and ranking workflow."
+        visualObjectPosition="center bottom"
+        visualObjectFit="contain"
+        visualImageScale={0.9}
+        visualTransformOrigin="center bottom"
+        visualHeight="clamp(300px, 38vw, 540px)"
+        visualBackground="radial-gradient(circle at 78% 22%, rgb(123 178 255 / 0.24), transparent 28%), radial-gradient(circle at 18% 78%, rgb(133 145 255 / 0.2), transparent 31%), radial-gradient(circle at 52% 54%, rgb(46 85 137 / 0.3), transparent 44%), linear-gradient(135deg, #050b16 0%, #0a1729 48%, #07111f 100%)"
+        visualNavTone="light"
       />
 
       {/* Process Section —— 四步线性叙事：Discovery → Product decision → IA → Design system。

@@ -179,6 +179,16 @@ export default function MemQProjectPage() {
           { label: 'Company', value: ['Self-initiated'] },
           { label: 'Year', value: ['2026 · launched'] },
         ]}
+        visualLabel="MemQ learning system"
+        visualSrc="/img/MemQ/MemQ.avif"
+        visualAlt="MemQ iOS learning experience shown across knowledge review, progress, and spaced-repetition screens."
+        visualObjectPosition="center bottom"
+        visualObjectFit="contain"
+        visualImageScale={0.9}
+        visualTransformOrigin="center bottom"
+        visualHeight="clamp(300px, 38vw, 540px)"
+        visualBackground="radial-gradient(circle at 74% 22%, rgb(143 235 210 / 0.22), transparent 28%), radial-gradient(circle at 20% 78%, rgb(48 181 150 / 0.24), transparent 31%), radial-gradient(circle at 52% 55%, rgb(45 99 92 / 0.3), transparent 43%), linear-gradient(135deg, #04100f 0%, #09201c 47%, #061613 100%)"
+        visualNavTone="light"
       />
 
       {/* ─────────────────────────────────────────
