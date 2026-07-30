@@ -403,14 +403,18 @@ function JobCard({ state }: { state: StateConfig }) {
   );
 }
 
-export default function AutoApplyStateSwitcher() {
-  const [activeId, setActiveId] = useState<StateId>('submitted');
-  const activeState = states.find((state) => state.id === activeId) ?? states[0];
+export default function AutoApplyStateSwitcher({ stateIds }: { stateIds?: StateId[] }) {
+  const visibleStates =
+    stateIds
+      ?.map((id) => states.find((state) => state.id === id))
+      .filter((state): state is StateConfig => Boolean(state)) ?? states;
+  const [activeId, setActiveId] = useState<StateId>(stateIds?.[0] ?? 'submitted');
+  const activeState = visibleStates.find((state) => state.id === activeId) ?? visibleStates[0];
 
   return (
     <div className="mt-8 flex w-full flex-col gap-3" style={{ fontFamily: fontFamily.sans }}>
       <div className="flex flex-wrap gap-2" role="tablist" aria-label="Auto Apply application states">
-        {states.map((state) => {
+        {visibleStates.map((state) => {
           const Icon = state.tabIcon;
           const selected = state.id === activeId;
           return (

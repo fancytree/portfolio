@@ -162,7 +162,17 @@ function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; act
         ← Back
       </button>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <nav
+        style={{
+          display: 'flex',
+          minHeight: 0,
+          flex: 1,
+          flexDirection: 'column',
+          gap: '8px',
+          overflowY: 'auto',
+          paddingRight: '4px',
+        }}
+      >
         {items.map((item) => {
           const isActive = item.id === activeId;
           const idleColor = 'rgb(10 10 10 / 0.62)';

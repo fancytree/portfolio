@@ -238,6 +238,7 @@ export default function CaseStudyHero({
                   lineHeight: 1.6,
                   margin: '0 0 18px',
                   maxWidth: '650px',
+                  whiteSpace: 'pre-line',
                 }}
               >
                 {about}
