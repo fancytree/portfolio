@@ -5,6 +5,7 @@ import Image from 'next/image';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import CaseStudyBackButton from '../../components/CaseStudyBackButton';
 import CaseStudyHero from '../../components/CaseStudyHero';
+import ConnectnovaNarrative from './ConnectnovaNarrative';
 // 统一从 design-tokens 引用字体与文字样式预设，避免每页重复声明 Manrope 实例
 import { fontFamily, textStyle, textColor } from '@/lib/design-tokens';
 
@@ -427,9 +428,11 @@ function ProjectListViewMock({ fontStyle }: { fontStyle: { fontFamily: string } 
 function AIRankingViewMock({
   fontStyle,
   defaultTab = 'rankings',
+  enableProfilePanel = false,
 }: {
   fontStyle: { fontFamily: string };
   defaultTab?: 'rankings' | 'pool';
+  enableProfilePanel?: boolean;
 }) {
   // 对齐截图主色（ConnectNova 系蓝）
   const primary = '#0052CC';
@@ -437,6 +440,9 @@ function AIRankingViewMock({
   const [hasEntered, setHasEntered] = useState(false);
   const [activeTab, setActiveTab] = useState<'rankings' | 'pool'>(defaultTab);
   const [expandedCandidateName, setExpandedCandidateName] = useState<string | null>(null);
+  const [profileCandidateName, setProfileCandidateName] = useState<string | null>(null);
+  const [profilePanelVisible, setProfilePanelVisible] = useState(false);
+  const profilePanelTimerRef = useRef<number | null>(null);
 
   type RationaleSegment = { text: string; bold?: boolean };
 
@@ -541,8 +547,35 @@ function AIRankingViewMock({
 
   useEffect(() => {
     const timer = window.setTimeout(() => setHasEntered(true), 40);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      if (profilePanelTimerRef.current != null) window.clearTimeout(profilePanelTimerRef.current);
+    };
   }, []);
+
+  const openProfilePanel = (candidateName: string) => {
+    if (!enableProfilePanel) return;
+    if (profilePanelTimerRef.current != null) {
+      window.clearTimeout(profilePanelTimerRef.current);
+      profilePanelTimerRef.current = null;
+    }
+    if (profileCandidateName) {
+      setProfileCandidateName(candidateName);
+      setProfilePanelVisible(true);
+      return;
+    }
+    setProfileCandidateName(candidateName);
+    setProfilePanelVisible(false);
+    requestAnimationFrame(() => requestAnimationFrame(() => setProfilePanelVisible(true)));
+  };
+
+  const closeProfilePanel = () => {
+    setProfilePanelVisible(false);
+    profilePanelTimerRef.current = window.setTimeout(() => {
+      setProfileCandidateName(null);
+      profilePanelTimerRef.current = null;
+    }, 300);
+  };
 
   const iconClass = 'h-3.5 w-3.5 shrink-0';
   const [allFilter, setAllFilter] = useState<'all' | 'unranked' | 'excluded'>('all');
@@ -599,6 +632,10 @@ function AIRankingViewMock({
   const poolAllCount = poolRows.length;
   const poolUnrankedCount = poolRows.filter((item) => !item.hasRanked).length;
   const poolExcludedCount = poolRows.filter((item) => item.isExcluded).length;
+  const profileCandidate =
+    rankingRows.find((candidate) => candidate.name === profileCandidateName) ??
+    poolRows.find((candidate) => candidate.name === profileCandidateName) ??
+    null;
   const filteredPoolRows = poolRows.filter((item) => {
     if (allFilter === 'unranked') return !item.hasRanked;
     if (allFilter === 'excluded') return item.isExcluded;
@@ -613,7 +650,7 @@ function AIRankingViewMock({
 
   return (
     <div
-      className={`flex flex-col bg-slate-50 ${connectNovaSolutionMockFrameClassName}`}
+      className={`relative flex flex-col overflow-hidden bg-slate-50 ${connectNovaSolutionMockFrameClassName}`}
       style={fontStyle}
       aria-label="AI Ranking mock view"
     >
@@ -758,16 +795,31 @@ function AIRankingViewMock({
               <div className="mt-2 divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
                 {searchedPoolRows.map((item) => (
                   <div key={item.id} className="flex items-center gap-2.5 px-2.5 py-2.5">
-                    <Image
-                      src={item.avatarSrc}
-                      alt=""
-                      width={28}
-                      height={28}
-                      className="h-7 w-7 shrink-0 rounded-full object-cover ring-1 ring-slate-200"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => openProfilePanel(item.name)}
+                      className={`shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC]/35 ${
+                        enableProfilePanel ? 'transition-transform hover:scale-105' : 'cursor-default'
+                      }`}
+                      aria-label={enableProfilePanel ? `Open ${item.name} profile` : undefined}
+                    >
+                      <Image
+                        src={item.avatarSrc}
+                        alt=""
+                        width={28}
+                        height={28}
+                        className="h-7 w-7 rounded-full object-cover ring-1 ring-slate-200"
+                      />
+                    </button>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1">
-                        <span className="truncate text-[9px] font-semibold text-slate-900">{item.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => openProfilePanel(item.name)}
+                          className={`truncate rounded-sm text-left text-[9px] font-semibold text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC]/25 ${enableProfilePanel ? 'hover:text-[#0052CC] hover:underline' : 'cursor-default'}`}
+                        >
+                          {item.name}
+                        </button>
                         {!item.hasRanked && (
                           <span className="rounded-full bg-amber-100 px-1.5 py-0.5 text-[7px] font-semibold uppercase tracking-wide text-amber-900">
                             Unranked
@@ -961,12 +1013,7 @@ function AIRankingViewMock({
                       }}
                     >
                       <div className="mb-2 flex items-start gap-1.5">
-                        {/* 左侧：点击展开 Criteria */}
-                        <button
-                          type="button"
-                          onClick={handleToggleCriteria}
-                          className="flex min-w-0 flex-1 items-start gap-1.5 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC]/25"
-                        >
+                        <div className="flex min-w-0 flex-1 items-start gap-1.5">
                           <span
                             className={`inline-flex h-7 min-w-[26px] shrink-0 items-center justify-center rounded-full text-[10px] font-bold tabular-nums ${
                               isRankOne
@@ -976,22 +1023,42 @@ function AIRankingViewMock({
                           >
                             {candidate.rank}
                           </span>
-                          <Image
-                            src={candidate.avatarSrc}
-                            alt=""
-                            width={28}
-                            height={28}
-                            className="h-7 w-7 shrink-0 rounded-full object-cover ring-1 ring-slate-200"
-                          />
-                          <span className="min-w-0">
+                          <button
+                            type="button"
+                            onClick={() => openProfilePanel(candidate.name)}
+                            className={`shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC]/35 ${
+                              enableProfilePanel ? 'cursor-pointer transition-transform hover:scale-105' : 'cursor-default'
+                            }`}
+                            aria-label={enableProfilePanel ? `Open ${candidate.name} profile` : undefined}
+                          >
+                            <Image
+                              src={candidate.avatarSrc}
+                              alt=""
+                              width={28}
+                              height={28}
+                              className="h-7 w-7 rounded-full object-cover ring-1 ring-slate-200"
+                            />
+                          </button>
+                          <div className="min-w-0 flex-1">
                             <span className="flex flex-wrap items-center gap-1">
-                              <span className="truncate text-[10px] font-bold text-slate-900">{candidate.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => openProfilePanel(candidate.name)}
+                                className={`truncate rounded-sm text-left text-[10px] font-bold text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC]/25 ${enableProfilePanel ? 'hover:text-[#0052CC] hover:underline' : 'cursor-default'}`}
+                              >
+                                {candidate.name}
+                              </button>
                               <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-[3px] bg-[#0A66C2]">
                                 <Image src="/LinkedIN.svg" alt="" width={10} height={10} className="h-2.5 w-2.5 invert" />
                               </span>
                             </span>
-                            <span className="mt-0.5 line-clamp-2 text-[8px] leading-3 text-slate-500">{candidate.headline}</span>
-                            <span className="mt-1 inline-flex items-center gap-0.5 text-[7.5px] text-slate-400">
+                            <button
+                              type="button"
+                              onClick={handleToggleCriteria}
+                              className="mt-0.5 block w-full rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-[#0052CC]/25"
+                            >
+                              <span className="line-clamp-2 text-[8px] leading-3 text-slate-500">{candidate.headline}</span>
+                              <span className="mt-1 inline-flex items-center gap-0.5 text-[7.5px] text-slate-400">
                               <svg className="h-2.5 w-2.5" viewBox="0 0 24 24" fill="none" aria-hidden>
                                 <path
                                   d="M12 20h9M4 13l8-8a2 2 0 113 3l-8 8-4 1 1-4z"
@@ -1002,9 +1069,10 @@ function AIRankingViewMock({
                                 />
                               </svg>
                               {candidate.note}
-                            </span>
-                          </span>
-                        </button>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
 
                         {/* 右侧：操作 + 分数（不触发折叠） */}
                         <div className="flex shrink-0 items-start gap-1">
@@ -1122,16 +1190,64 @@ function AIRankingViewMock({
           </div>
         )}
       </div>
+
+      {enableProfilePanel && profileCandidate && (
+        <div
+          className="absolute inset-y-0 right-0 z-40 w-[min(340px,86%)] [&>*]:!h-full"
+          style={{
+            boxShadow: profilePanelVisible ? '-18px 0 45px rgba(15,23,42,0.18)' : 'none',
+            transform: profilePanelVisible ? 'translateX(0)' : 'translateX(100%)',
+            transition: profilePanelVisible
+              ? 'transform 300ms cubic-bezier(0.2, 0, 0, 1), box-shadow 300ms ease'
+              : 'transform 260ms cubic-bezier(0.4, 0, 1, 1), box-shadow 180ms ease',
+            willChange: 'transform',
+          }}
+        >
+          <ProfilePanelSlideMock
+            defaultOpen
+            panelOnly
+            fontStyle={fontStyle}
+            profile={{
+              name: profileCandidate.name,
+              avatarSrc: profileCandidate.avatarSrc,
+              headline: 'headline' in profileCandidate
+                ? profileCandidate.headline
+                : `${profileCandidate.title} · ${profileCandidate.company}`,
+              company: profileCandidate.company,
+              location: profileCandidate.location,
+            }}
+            onRequestClose={closeProfilePanel}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
 /** Fig 9：列表 + Profile 抽屉（结构对齐 ConnectNova `Sheet` Profile，外框高度与 Fig 7 共用常量） */
-function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string } }) {
+function ProfilePanelSlideMock({
+  defaultOpen = false,
+  fontStyle,
+  panelOnly = false,
+  profile,
+  onRequestClose,
+}: {
+  defaultOpen?: boolean;
+  fontStyle: { fontFamily: string };
+  panelOnly?: boolean;
+  profile?: {
+    name: string;
+    avatarSrc: string;
+    headline: string;
+    company: string;
+    location: string;
+  };
+  onRequestClose?: () => void;
+}) {
   const primary = '#0052CC';
-  const [gridOpen, setGridOpen] = useState(false);
-  const [panelVisible, setPanelVisible] = useState(false);
-  const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [gridOpen, setGridOpen] = useState(defaultOpen);
+  const [panelVisible, setPanelVisible] = useState(defaultOpen);
+  const [activeRowId, setActiveRowId] = useState<string | null>(defaultOpen ? '1' : null);
   const [notesEditing, setNotesEditing] = useState(false);
   const [notesValue, setNotesValue] = useState('');
   const [aboutExpanded, setAboutExpanded] = useState(false);
@@ -1164,6 +1280,10 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
   };
 
   const closePanel = () => {
+    if (panelOnly && onRequestClose) {
+      onRequestClose();
+      return;
+    }
     setPanelVisible(false);
     closeTimerRef.current = window.setTimeout(() => {
       setGridOpen(false);
@@ -1171,6 +1291,7 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
       setAboutExpanded(false);
       setNotesEditing(false);
       closeTimerRef.current = null;
+      onRequestClose?.();
     }, 220);
   };
 
@@ -1209,16 +1330,20 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
 
   return (
     <div
-      className={`grid min-h-0 bg-slate-50 ${connectNovaProfilePanelMockFrameClassName}`}
+      className={`${panelOnly ? 'block' : 'grid'} min-h-0 bg-slate-50 ${connectNovaProfilePanelMockFrameClassName}`}
       style={{
         ...fontStyle,
-        gridTemplateColumns: gridOpen ? 'minmax(0,1fr) 300px' : 'minmax(0,1fr) 0fr',
+        gridTemplateColumns: panelOnly
+          ? undefined
+          : gridOpen
+            ? 'minmax(0,1fr) 300px'
+            : 'minmax(0,1fr) 0fr',
         transition: 'grid-template-columns 280ms ease',
       }}
       aria-label="Profile panel slide-in mock"
     >
       {/* 左：Ranked 列表（示意 Fig 7 入口） */}
-      <div className="flex min-h-0 min-w-0 flex-col border-r border-black/[0.06] bg-white">
+      <div className={`${panelOnly ? 'hidden' : 'flex'} min-h-0 min-w-0 flex-col border-r border-black/[0.06] bg-white`}>
         <div className="shrink-0 border-b border-black/[0.06] px-3 py-2">
           <div className="text-[10px] font-semibold uppercase tracking-wide text-black/45">Ranked candidates</div>
           <div className="text-[9px] text-black/45">Click a row to open profile (Sheet)</div>
@@ -1256,9 +1381,9 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
       </div>
 
       {/* 右：对齐真实 SheetContent — 固定 300px 宽 + translate 滑入 */}
-      <div className="relative min-h-0 overflow-hidden bg-white">
+      <div className="relative h-full min-h-0 w-full overflow-hidden bg-white">
         <div
-          className="absolute inset-y-0 right-0 h-full min-h-0 w-[300px] border-l border-black/[0.08] bg-white"
+          className={`absolute inset-y-0 right-0 h-full min-h-0 border-l border-black/[0.08] bg-white ${panelOnly ? 'w-full' : 'w-[300px]'}`}
           style={{
             transform: panelTransform,
             transition: panelTransition,
@@ -1298,7 +1423,7 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
 
                 <div className="relative z-10 flex items-start gap-2.5 pt-10">
                 <Image
-                  src="/img/jobnova/persona-sarah.jpg"
+                  src={profile?.avatarSrc ?? '/img/jobnova/persona-sarah.jpg'}
                   alt=""
                   width={48}
                   height={48}
@@ -1306,7 +1431,7 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
                 />
                 <div className="min-w-0 pt-0.5">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <h2 className="text-[13px] font-bold leading-tight text-black/90">Sarah Chen</h2>
+                    <h2 className="text-[13px] font-bold leading-tight text-black/90">{profile?.name ?? 'Sarah Chen'}</h2>
                     <a
                       href="https://www.linkedin.com"
                       target="_blank"
@@ -1319,7 +1444,7 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
                     </a>
                   </div>
                   <p className="mt-1 text-[10px] font-normal leading-snug text-black/75">
-                    Senior Product Manager · Roadmaps, discovery, and shipping cross-team outcomes.
+                    {profile?.headline ?? 'Senior Product Manager · Roadmaps, discovery, and shipping cross-team outcomes.'}
                   </p>
                   <div className="mt-1.5 flex flex-col gap-0.5 text-[9px] text-black/50">
                     <span className="flex items-center gap-1">
@@ -1331,7 +1456,7 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
                           strokeLinejoin="round"
                         />
                       </svg>
-                      Google
+                      {profile?.company ?? 'Google'}
                     </span>
                     <span className="flex items-center gap-1">
                       <svg className="h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -1343,7 +1468,7 @@ function ProfilePanelSlideMock({ fontStyle }: { fontStyle: { fontFamily: string 
                         />
                         <circle cx="12" cy="11" r="2" fill="currentColor" />
                       </svg>
-                      San Francisco Bay Area
+                      {profile?.location ?? 'San Francisco Bay Area'}
                     </span>
                   </div>
 
@@ -1754,22 +1879,27 @@ export default function ConnectnovaProjectPage() {
     <div className="mei-project-page w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
       <CaseStudyControls />
       <CaseStudyHero
-        title="ConnectNova AI Recruiting Platform"
-        subtitle="An AI-powered recruiting workflow that turns LinkedIn sourcing into structured candidate collection, ranking, and review."
-        tags={['AI Product', 'Chrome Extension', 'Web UX', 'Recruiting Tech', 'Design System']}
-        aboutLabel="About ConnectNova"
-        about="ConnectNova pairs a Chrome extension inside LinkedIn with a web dashboard for managing hiring projects, ranking candidates instantly, and building a structured pipeline. I shaped the 0-to-1 product experience from requirements and competitive research to shipped frontend flows."
+        title="ConnectNova AI Sourcing Platform"
+        subtitle="An AI-powered LinkedIn sourcing tool that re-ranks search results by fit and surfaces the best candidates and contacts first."
+        tags={['AI Search', 'Chrome Extension', 'B2B SaaS', 'Recruiting & Sales', 'Workflow Design']}
+        aboutLabel="Overview"
+        about={`ConnectNova uses AI to re-rank LinkedIn search results, helping recruiters and sales teams surface the best-fit people faster.
+
+I led the 0–1 design of the Chrome extension and web platform.`}
         liveSiteHref="https://connectnova.ai/"
         meta={[
-          { label: 'Role', value: ['Founding Designer,', 'UX Strategy, Product Design'] },
-          { label: 'Team', value: ['1 Designer,', '1 Founder,', 'Engineering team'] },
-          { label: 'Tool', value: ['Figma, Stitch,', 'PostHog, Claude,', 'Cursor'] },
+          {
+            label: 'Role',
+            value: ['Founding Product Designer', 'Product Strategy', 'UX Design', 'Information Architecture', 'Interaction Design'],
+          },
+          { label: 'Team', value: ['Founding Team', '1 Product Designer', '1 Founder', 'Engineering Team'] },
+          { label: 'Tool', value: ['Figma', 'PostHog', 'Claude Code'] },
           { label: 'Company', value: ['Nova AI'] },
-          { label: 'Year', value: ['2026 – Ongoing'] },
+          { label: 'Year', value: ['2026 — Present'] },
         ]}
-        visualLabel="ConnectNova recruiting workflow"
+        visualLabel="ConnectNova AI sourcing workflow"
         visualSrc="/img/connectnova/Connectnova-5af98874.avif"
-        visualAlt="ConnectNova recruiting dashboard and LinkedIn extension shown as one connected sourcing and ranking workflow."
+        visualAlt="ConnectNova dashboard and LinkedIn extension shown as one connected sourcing, ranking, evaluation, and outreach workflow."
         visualObjectPosition="center bottom"
         visualObjectFit="contain"
         visualImageScale={0.9}
@@ -1777,6 +1907,4889 @@ export default function ConnectnovaProjectPage() {
         visualHeight="clamp(300px, 38vw, 540px)"
         visualBackground="radial-gradient(circle at 82% 16%, rgb(111 163 255 / 0.38), transparent 32%), radial-gradient(circle at 14% 84%, rgb(116 214 224 / 0.3), transparent 36%), radial-gradient(circle at 52% 42%, rgb(190 203 255 / 0.42), transparent 44%), linear-gradient(135deg, #f8fbff 0%, #e7efff 50%, #f1f8ff 100%)"
       />
+
+      <ConnectnovaNarrative
+        informationArchitectureVisual={<AIRankingViewMock fontStyle={fontStyle} enableProfilePanel />}
+        designComponentsVisual={<DesignSystemComponentsMock fontStyle={fontStyle} />}
+        manageWorkspaceVisual={
+          <div className="[&>*]:!h-full" style={{ height: 'min(540px, 62svh)' }}>
+            <AIRankingViewMock fontStyle={fontStyle} defaultTab="rankings" enableProfilePanel />
+          </div>
+        }
+      />
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="Platform at a glance"
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(72px, 9vw, 120px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <h1 style={{ ...headingLevel1Style, marginBottom: '16px' }}>Solution</h1>
+            <p
+              style={{
+                ...fontStyle,
+                color: 'rgba(0, 0, 0, 0.88)',
+                fontSize: '18px',
+                fontWeight: 400,
+                lineHeight: '30px',
+                margin: '0 0 72px',
+                maxWidth: '780px',
+              }}
+            >
+              Two tightly coupled products — an extension that lives inside LinkedIn, and a dashboard that turns collected profiles into a ranked, manageable pipeline.
+            </p>
+            <p style={{ ...fontStyle, color: '#2459d3', fontSize: '12px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 16px', textTransform: 'uppercase' }}>
+              01 · Overview
+            </p>
+            <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.4vw, 56px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 20px' }}>
+              The platform at a glance
+            </h2>
+            <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 32px', maxWidth: '820px' }}>
+              ConnectNova is made up of two tightly coupled products — a <strong style={{ color: textColor.strong, fontWeight: 500 }}>Chrome extension</strong> that lives inside LinkedIn, and a <strong style={{ color: textColor.strong, fontWeight: 500 }}>web dashboard</strong> for managing, ranking, and reviewing candidates.
+            </p>
+
+            <div
+              style={{
+                alignItems: 'center',
+                background: '#F8F9FB',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                borderRadius: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                justifyContent: 'center',
+                padding: '14px',
+              }}
+              aria-label="Platform overview — Dashboard and Chrome Extension"
+            >
+              <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '4px', width: '100%' }}>
+                <div style={{ background: '#FFFFFF', border: '1px solid rgba(0, 0, 0, 0.08)', borderRadius: '999px', display: 'inline-flex', gap: '6px', padding: '4px' }}>
+                  {[
+                    { key: 'ranking' as const, label: 'Ranking MVP' },
+                    { key: 'outreach' as const, label: 'With outreach' },
+                  ].map(({ key, label }) => {
+                    const active = overviewDashboardMode === key;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setOverviewDashboardMode(key)}
+                        style={{
+                          ...fontStyle,
+                          background: active ? '#0052CC' : 'transparent',
+                          border: '1px solid transparent',
+                          borderRadius: '999px',
+                          color: active ? '#FFFFFF' : 'rgba(0, 0, 0, 0.7)',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          lineHeight: '18px',
+                          padding: '6px 12px',
+                          transition: 'all 160ms ease',
+                        }}
+                        aria-pressed={active}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)]" style={{ alignItems: 'start' }}>
+                <div style={{ alignItems: 'center', border: '8px solid #E5E7EB', borderRadius: '20px', display: 'flex', height: 'clamp(260px, 33vw, 410px)', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Image
+                    src={overviewDashboardMode === 'outreach' ? '/img/connectnova/DashboardLayout.avif' : '/img/connectnova/Dashboard.avif'}
+                    alt={overviewDashboardMode === 'outreach' ? 'ConnectNova dashboard overview with outreach workflow' : 'ConnectNova dashboard overview ranking MVP'}
+                    width={1600}
+                    height={1000}
+                    sizes="(max-width: 768px) 100vw, 70vw"
+                    style={{ display: 'block', height: '100%', maxWidth: '100%', objectFit: 'contain', width: 'auto' }}
+                  />
+                </div>
+                <div style={{ alignItems: 'center', border: '8px solid #E5E7EB', borderRadius: '20px', display: 'flex', height: 'clamp(260px, 33vw, 410px)', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Image
+                    src="/img/connectnova/Extension_home.avif"
+                    alt="ConnectNova Chrome extension overview"
+                    width={600}
+                    height={1000}
+                    sizes="(max-width: 768px) 100vw, 30vw"
+                    style={{ display: 'block', height: '100%', maxWidth: '100%', objectFit: 'contain', width: 'auto' }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="Product at a glance"
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(72px, 9vw, 120px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p
+              style={{
+                ...fontStyle,
+                color: '#2459d3',
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '0.08em',
+                lineHeight: '18px',
+                margin: '0 0 12px',
+                textTransform: 'uppercase',
+              }}
+            >
+              01 — Product at a glance
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(36px, 5vw, 68px)',
+                lineHeight: 1.06,
+                marginBottom: '24px',
+                maxWidth: '980px',
+              }}
+            >
+              From LinkedIn search to a managed people journey
+            </h1>
+            <p
+              style={{
+                ...fontStyle,
+                color: 'rgba(10, 10, 10, 0.62)',
+                fontSize: 'clamp(17px, 1.7vw, 22px)',
+                fontWeight: 300,
+                lineHeight: 1.55,
+                margin: '0 0 24px',
+                maxWidth: '860px',
+              }}
+            >
+              ConnectNova helps recruiters and sales teams find, evaluate, contact, and manage the right people within one connected workflow.
+            </p>
+
+            <p
+              style={{
+                ...fontStyle,
+                color: 'rgba(10, 10, 10, 0.62)',
+                fontSize: '17px',
+                fontWeight: 300,
+                lineHeight: 1.65,
+                margin: '0 0 32px',
+                maxWidth: '820px',
+              }}
+            >
+              ConnectNova is made up of two tightly coupled products — a <strong style={{ color: textColor.strong, fontWeight: 500 }}>Chrome extension</strong> that lives inside LinkedIn, and a <strong style={{ color: textColor.strong, fontWeight: 500 }}>web dashboard</strong> for managing, ranking, and reviewing candidates.
+            </p>
+
+            <div
+              style={{
+                alignItems: 'center',
+                background: '#F8F9FB',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                borderRadius: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '10px',
+                justifyContent: 'center',
+                marginBottom: 'clamp(48px, 7vw, 80px)',
+                padding: '14px',
+              }}
+              aria-label="Platform overview — Dashboard and Chrome Extension"
+            >
+              <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '4px', width: '100%' }}>
+                <div style={{ background: '#FFFFFF', border: '1px solid rgba(0, 0, 0, 0.08)', borderRadius: '999px', display: 'inline-flex', gap: '6px', padding: '4px' }}>
+                  {[
+                    { key: 'ranking' as const, label: 'Ranking MVP' },
+                    { key: 'outreach' as const, label: 'With outreach' },
+                  ].map(({ key, label }) => {
+                    const active = overviewDashboardMode === key;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setOverviewDashboardMode(key)}
+                        style={{
+                          ...fontStyle,
+                          background: active ? '#0052CC' : 'transparent',
+                          border: '1px solid transparent',
+                          borderRadius: '999px',
+                          color: active ? '#FFFFFF' : 'rgba(0, 0, 0, 0.7)',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          lineHeight: '18px',
+                          padding: '6px 12px',
+                          transition: 'all 160ms ease',
+                        }}
+                        aria-pressed={active}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="grid w-full grid-cols-1 gap-5 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)]" style={{ alignItems: 'start' }}>
+                <div style={{ alignItems: 'center', border: '8px solid #E5E7EB', borderRadius: '20px', display: 'flex', height: 'clamp(260px, 33vw, 410px)', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Image
+                    src={overviewDashboardMode === 'outreach' ? '/img/connectnova/DashboardLayout.avif' : '/img/connectnova/Dashboard.avif'}
+                    alt={overviewDashboardMode === 'outreach' ? 'ConnectNova dashboard overview with outreach workflow' : 'ConnectNova dashboard overview ranking MVP'}
+                    width={1600}
+                    height={1000}
+                    sizes="(max-width: 768px) 100vw, 70vw"
+                    style={{ display: 'block', height: '100%', maxWidth: '100%', objectFit: 'contain', width: 'auto' }}
+                  />
+                </div>
+                <div style={{ alignItems: 'center', border: '8px solid #E5E7EB', borderRadius: '20px', display: 'flex', height: 'clamp(260px, 33vw, 410px)', justifyContent: 'center', overflow: 'hidden' }}>
+                  <Image
+                    src="/img/connectnova/Extension_home.avif"
+                    alt="ConnectNova Chrome extension overview"
+                    width={600}
+                    height={1000}
+                    sizes="(max-width: 768px) 100vw, 30vw"
+                    style={{ display: 'block', height: '100%', maxWidth: '100%', objectFit: 'contain', width: 'auto' }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                alignItems: 'center',
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 'clamp(18px, 4vw, 44px)',
+                marginBottom: 'clamp(44px, 6vw, 64px)',
+              }}
+            >
+              {[
+                { status: 'shipped', label: 'Shipped', detail: 'Designed and delivered' },
+                { status: 'progress', label: 'In progress', detail: 'Currently being designed or developed' },
+                { status: 'planned', label: 'Planned', detail: 'Part of the long-term product vision' },
+              ].map((legend) => (
+                <div key={legend.status} style={{ alignItems: 'center', display: 'flex', gap: '10px' }}>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      background:
+                        legend.status === 'shipped'
+                          ? '#2459d3'
+                          : legend.status === 'progress'
+                            ? 'linear-gradient(90deg, #2459d3 50%, transparent 50%)'
+                            : 'transparent',
+                      border: '1px solid #2459d3',
+                      borderRadius: '50%',
+                      height: '10px',
+                      width: '10px',
+                    }}
+                  />
+                  <span>
+                    <strong
+                      style={{
+                        ...fontStyle,
+                        color: textColor.strong,
+                        fontSize: '10px',
+                        fontWeight: 500,
+                        letterSpacing: '0.07em',
+                        marginRight: '6px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {legend.label}
+                    </strong>
+                    <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '10px', fontWeight: 300 }}>
+                      — {legend.detail}
+                    </span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div
+              aria-label="ConnectNova product journey and delivery status"
+              style={{
+                borderBottom: '1px solid rgba(10, 10, 10, 0.14)',
+                borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                overflowX: 'auto',
+              }}
+            >
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(260px, 1fr))', minWidth: '1040px' }}>
+                {[
+                  {
+                    phase: 'Source',
+                    title: 'Find the right people on LinkedIn',
+                    body: 'ConnectNova enhances the LinkedIn workflow so users can identify and collect relevant candidates or contacts without rebuilding their search in another platform.',
+                    capabilities: [
+                      { status: 'shipped', label: 'Chrome Extension' },
+                      { status: 'shipped', label: 'Collect profiles from LinkedIn' },
+                      { status: 'shipped', label: 'Save profiles into a Project' },
+                      { status: 'planned', label: 'AI re-ranking of LinkedIn search results' },
+                      { status: 'planned', label: 'Surface the strongest matches first' },
+                    ],
+                  },
+                  {
+                    phase: 'Qualify',
+                    title: 'Understand who is worth pursuing',
+                    body: 'Users organize people around a specific Project, generate evaluation criteria, and compare profiles within a consistent decision framework.',
+                    capabilities: [
+                      { status: 'shipped', label: 'Project-based organization' },
+                      { status: 'shipped', label: 'AI-generated evaluation criteria' },
+                      { status: 'shipped', label: 'Editable criteria' },
+                      { status: 'shipped', label: 'Profile evaluation' },
+                      { status: 'shipped', label: 'Ranking and review' },
+                      { status: 'shipped', label: 'Profile detail panel' },
+                    ],
+                  },
+                  {
+                    phase: 'Engage',
+                    title: 'Turn selected people into outreach',
+                    body: 'Qualified candidates or contacts can move into structured outreach workflows for personalized messaging and follow-ups.',
+                    capabilities: [
+                      { status: 'progress', label: 'Campaigns' },
+                      { status: 'progress', label: 'Leads' },
+                      { status: 'progress', label: 'Messaging Sequences' },
+                      { status: 'progress', label: 'Multi-step outreach' },
+                      { status: 'progress', label: 'Campaign performance views' },
+                    ],
+                  },
+                  {
+                    phase: 'Manage',
+                    title: 'Track every person toward an outcome',
+                    body: 'The long-term platform will help teams record where each person stands and manage their progress beyond the initial outreach.',
+                    capabilities: [
+                      { status: 'planned', label: 'Pipeline stages' },
+                      { status: 'planned', label: 'Contact and response status' },
+                      { status: 'planned', label: 'Progress tracking' },
+                      { status: 'planned', label: 'Follow-up status' },
+                      { status: 'planned', label: 'Final outcomes' },
+                    ],
+                  },
+                ].map((stage, index) => (
+                  <article
+                    key={stage.phase}
+                    style={{
+                      borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      minHeight: '570px',
+                      padding: 'clamp(32px, 4vw, 48px)',
+                    }}
+                  >
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(36, 89, 211, 0.72)',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        letterSpacing: '0.09em',
+                        lineHeight: '17px',
+                        margin: '0 0 44px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {String(index + 1).padStart(2, '0')} — {stage.phase}
+                    </p>
+                    <h2
+                      style={{
+                        ...fontStyle,
+                        color: textColor.strong,
+                        fontSize: 'clamp(24px, 2.5vw, 32px)',
+                        fontWeight: 500,
+                        lineHeight: 1.16,
+                        margin: '0 0 20px',
+                      }}
+                    >
+                      {stage.title}
+                    </h2>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(10, 10, 10, 0.58)',
+                        fontSize: '14px',
+                        fontWeight: 300,
+                        lineHeight: 1.65,
+                        margin: '0 0 34px',
+                      }}
+                    >
+                      {stage.body}
+                    </p>
+                    <div
+                      style={{
+                        borderTop: '1px solid rgba(10, 10, 10, 0.1)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '12px',
+                        marginTop: 'auto',
+                        paddingTop: '22px',
+                      }}
+                    >
+                      {stage.capabilities.map((capability) => (
+                        <div key={capability.label} style={{ alignItems: 'flex-start', display: 'flex', gap: '10px' }}>
+                          <span
+                            aria-hidden="true"
+                            style={{
+                              background:
+                                capability.status === 'shipped'
+                                  ? '#2459d3'
+                                  : capability.status === 'progress'
+                                    ? 'linear-gradient(90deg, #2459d3 50%, transparent 50%)'
+                                    : 'transparent',
+                              border: '1px solid #2459d3',
+                              borderRadius: '50%',
+                              flexShrink: 0,
+                              height: '9px',
+                              marginTop: '4px',
+                              width: '9px',
+                            }}
+                          />
+                          <span
+                            style={{
+                              ...fontStyle,
+                              color: 'rgba(10, 10, 10, 0.56)',
+                              fontSize: '12px',
+                              fontWeight: 400,
+                              lineHeight: '17px',
+                            }}
+                          >
+                            {capability.label}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <p
+              style={{
+                ...fontStyle,
+                color: 'rgba(10, 10, 10, 0.5)',
+                fontSize: '14px',
+                fontWeight: 300,
+                lineHeight: 1.65,
+                margin: '32px 0 clamp(52px, 7vw, 76px)',
+                maxWidth: '920px',
+              }}
+            >
+              Recruiting and sales teams may use different stage names, but both need to understand what has happened, where each person stands, and what should happen next.
+            </p>
+
+            <div style={{ overflowX: 'auto' }}>
+              <div
+                style={{
+                  alignItems: 'center',
+                  borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, minmax(150px, 1fr)) 110px',
+                  minWidth: '760px',
+                  paddingTop: '24px',
+                }}
+              >
+                {['Source', 'Qualify', 'Engage', 'Manage', 'Outcome'].map((node, index, nodes) => (
+                  <div key={node} style={{ alignItems: 'center', display: 'flex' }}>
+                    <span
+                      style={{
+                        ...fontStyle,
+                        color: node === 'Outcome' ? '#2459d3' : textColor.strong,
+                        fontSize: node === 'Outcome' ? '11px' : '13px',
+                        fontWeight: 500,
+                        letterSpacing: '0.07em',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {node}
+                    </span>
+                    {index < nodes.length - 1 && (
+                      <span aria-hidden="true" style={{ color: 'rgba(36, 89, 211, 0.5)', marginLeft: 'auto', marginRight: '18px' }}>
+                        →
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p
+              style={{
+                ...fontStyle,
+                color: textColor.strong,
+                fontSize: 'clamp(24px, 3.2vw, 40px)',
+                fontWeight: 400,
+                lineHeight: 1.25,
+                margin: 'clamp(48px, 6vw, 72px) 0 0',
+                maxWidth: '1120px',
+              }}
+            >
+              Source finds the right people. Qualify helps users decide. Engage starts the conversation.{' '}
+              <span style={{ color: '#2459d3' }}>Manage preserves progress toward an outcome.</span>
+            </p>
+
+            <div
+              hidden
+              className="grid grid-cols-1 md:grid-cols-3"
+              style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}
+            >
+              {[
+                {
+                  eyebrow: '01 — The problem',
+                  title: 'Too many profiles, too little signal',
+                  body: 'LinkedIn surfaced hundreds of possible matches, but users still had to review, compare, and manage people manually.',
+                },
+                {
+                  eyebrow: '02 — The core experience',
+                  title: 'AI surfaces the strongest matches first',
+                  body: 'ConnectNova evaluates each profile against the user’s goal and re-ranks the search by fit.',
+                },
+                {
+                  eyebrow: '03 — The complete workflow',
+                  title: 'From search result to managed relationship',
+                  body: 'Users can evaluate people, save them into Projects, run personalized outreach, and track every candidate or lead through a stage-based pipeline.',
+                },
+              ].map((item, index) => (
+                <article
+                  key={item.title}
+                  className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''}
+                  style={{ minHeight: '300px', padding: 'clamp(28px, 4vw, 48px)' }}
+                >
+                  <p
+                    aria-hidden="true"
+                    style={{
+                      ...fontStyle,
+                      color: 'rgba(36, 89, 211, 0.52)',
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      letterSpacing: '0.08em',
+                      lineHeight: '18px',
+                      margin: '0 0 48px',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {item.eyebrow}
+                  </p>
+                  <h2
+                    style={{
+                      ...fontStyle,
+                      color: index === 1 ? '#2459d3' : textColor.strong,
+                      fontSize: 'clamp(20px, 2vw, 27px)',
+                      fontWeight: 500,
+                      lineHeight: 1.2,
+                      margin: '0 0 18px',
+                    }}
+                  >
+                    {item.title}
+                  </h2>
+                  <p
+                    style={{
+                      ...fontStyle,
+                      color: 'rgba(10, 10, 10, 0.66)',
+                      fontSize: '16px',
+                      fontWeight: 300,
+                      lineHeight: 1.65,
+                      margin: 0,
+                    }}
+                  >
+                    {item.body}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(64px, 8vw, 96px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.46)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 20px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Product workflow
+              </p>
+              <h2
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(30px, 4vw, 50px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.1,
+                  margin: '0 0 clamp(40px, 5vw, 56px)',
+                  maxWidth: '860px',
+                }}
+              >
+                From LinkedIn search to a managed people pipeline
+              </h2>
+              <div
+                aria-label="Source, qualify, engage, and manage workflow"
+                style={{
+                  borderBottom: '1px solid rgba(10, 10, 10, 0.14)',
+                  borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                  overflowX: 'auto',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, minmax(220px, 1fr))',
+                    minWidth: '920px',
+                  }}
+                >
+                  {[
+                    {
+                      phase: 'Source',
+                      title: 'Find relevant people',
+                      body: 'Search on LinkedIn while AI brings the strongest matches to the top.',
+                      capabilities: ['LinkedIn search', 'AI re-ranking', 'Top matches'],
+                    },
+                    {
+                      phase: 'Qualify',
+                      title: 'Understand who fits',
+                      body: 'Review profile evidence, compare relevance, and save the right people into Projects.',
+                      capabilities: ['AI evaluation', 'Profile evidence', 'Save to Project'],
+                    },
+                    {
+                      phase: 'Engage',
+                      title: 'Start the conversation',
+                      body: 'Add candidates or leads to Campaigns and manage personalized outreach and follow-ups.',
+                      capabilities: ['Campaigns', 'Personalization', 'Follow-ups'],
+                    },
+                    {
+                      phase: 'Manage',
+                      title: 'Track every person to an outcome',
+                      body: 'Move people through pipeline stages, record activity, assign next actions, and maintain team visibility.',
+                      capabilities: ['Pipeline stages', 'Activities', 'Next actions'],
+                    },
+                  ].map((stage, index, stages) => (
+                    <div
+                      key={stage.phase}
+                      style={{
+                        borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0,
+                        backgroundColor: index === stages.length - 1 ? 'rgba(36, 89, 211, 0.055)' : '#FFFFFF',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        minHeight: '390px',
+                        padding: '36px clamp(24px, 3vw, 36px)',
+                        position: 'relative',
+                      }}
+                    >
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: index === stages.length - 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.48)',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          letterSpacing: '0.09em',
+                          lineHeight: '18px',
+                          margin: '0 0 44px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {String(index + 1).padStart(2, '0')} — {stage.phase}
+                      </p>
+                      <h3
+                        style={{
+                          ...fontStyle,
+                          color: index === stages.length - 1 ? '#2459d3' : textColor.strong,
+                          fontSize: 'clamp(22px, 2.2vw, 30px)',
+                          fontWeight: 500,
+                          lineHeight: 1.15,
+                          margin: '0 0 18px',
+                        }}
+                      >
+                        {stage.title}
+                      </h3>
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: 'rgba(10, 10, 10, 0.58)',
+                          fontSize: '14px',
+                          fontWeight: 300,
+                          lineHeight: 1.6,
+                          margin: '0 0 32px',
+                        }}
+                      >
+                        {stage.body}
+                      </p>
+                      <div
+                        style={{
+                          borderTop: '1px solid rgba(10, 10, 10, 0.1)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '8px',
+                          marginTop: 'auto',
+                          paddingTop: '20px',
+                        }}
+                      >
+                        {stage.capabilities.map((capability) => (
+                          <span
+                            key={capability}
+                            style={{
+                              ...fontStyle,
+                              color: index === stages.length - 1 ? 'rgba(36, 89, 211, 0.78)' : 'rgba(10, 10, 10, 0.5)',
+                              fontSize: '12px',
+                              fontWeight: 400,
+                              lineHeight: '18px',
+                            }}
+                          >
+                            {capability}
+                          </span>
+                        ))}
+                      </div>
+                      {index < stages.length - 1 && (
+                        <span
+                          aria-hidden="true"
+                          style={{
+                            alignItems: 'center',
+                            backgroundColor: '#FFFFFF',
+                            color: 'rgba(10, 10, 10, 0.38)',
+                            display: 'flex',
+                            fontSize: '20px',
+                            height: '32px',
+                            justifyContent: 'center',
+                            position: 'absolute',
+                            right: '-16px',
+                            top: '29px',
+                            width: '32px',
+                            zIndex: 1,
+                          }}
+                        >
+                          →
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.58)',
+                  fontSize: 'clamp(17px, 1.8vw, 22px)',
+                  fontWeight: 300,
+                  lineHeight: 1.55,
+                  margin: 'clamp(36px, 5vw, 52px) auto 0',
+                  maxWidth: '780px',
+                  textAlign: 'center',
+                }}
+              >
+                Search results become prioritized people, active conversations, and finally managed outcomes.
+              </p>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="The Challenge"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(80px, 10vw, 144px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p
+              style={{
+                ...fontStyle,
+                color: '#2459d3',
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '0.1em',
+                lineHeight: '18px',
+                margin: '0 0 16px',
+                textTransform: 'uppercase',
+              }}
+            >
+              01 — The challenge
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(44px, 5.5vw, 72px)',
+                lineHeight: 1.06,
+                marginBottom: '28px',
+                maxWidth: '1100px',
+              }}
+            >
+              Finding people was not the real problem
+            </h1>
+            <p
+              style={{
+                ...fontStyle,
+                color: 'rgba(10, 10, 10, 0.66)',
+                fontSize: 'clamp(18px, 1.8vw, 23px)',
+                fontWeight: 300,
+                lineHeight: 1.55,
+                margin: '0 0 24px',
+                maxWidth: '920px',
+              }}
+            >
+              Recruiters and sales teams used LinkedIn to discover potential candidates and contacts, but the work did not stay there. They moved between sourcing tools, enrichment platforms, and spreadsheets to collect information, compare profiles, and organize the people worth pursuing.
+            </p>
+
+            <div
+              className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_auto]"
+              style={{ alignItems: 'end', marginBottom: 'clamp(64px, 8vw, 96px)' }}
+            >
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.58)',
+                  fontSize: '17px',
+                  fontWeight: 300,
+                  lineHeight: 1.65,
+                  margin: 0,
+                  maxWidth: '780px',
+                }}
+              >
+                A single search could involve around 500 profiles, turning evaluation into a repetitive and fragmented process.
+              </p>
+              <div style={{ minWidth: '260px', textAlign: 'left' }}>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: '#2459d3',
+                    fontSize: 'clamp(96px, 12vw, 148px)',
+                    fontVariantNumeric: 'tabular-nums',
+                    fontWeight: 300,
+                    letterSpacing: '-0.07em',
+                    lineHeight: 0.78,
+                    margin: '0 0 24px',
+                  }}
+                >
+                  ~500
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '13px', fontWeight: 500, lineHeight: '18px', margin: 0, textTransform: 'uppercase' }}>
+                  profiles in one search
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+              {[
+                {
+                  label: 'Recruiting workflow',
+                  steps: [
+                    {
+                      title: 'Find candidates',
+                      body: 'Search across LinkedIn and LinkedIn Recruiter to identify potentially relevant profiles.',
+                      tools: 'LinkedIn · Recruiter',
+                    },
+                    {
+                      title: 'Collect information',
+                      body: 'Open profiles individually and gather the experience, skills, and background needed for evaluation.',
+                      tools: 'Profile review · Separate tools',
+                    },
+                    {
+                      title: 'Organize profiles',
+                      body: 'Move selected candidates into spreadsheets or other tools to create a working shortlist.',
+                      tools: 'Spreadsheets · Working lists',
+                    },
+                    {
+                      title: 'Compare and decide',
+                      body: 'Review candidates across disconnected sources before deciding who should move forward.',
+                      tools: 'Manual comparison · Team judgment',
+                    },
+                  ],
+                },
+                {
+                  label: 'Sales workflow',
+                  steps: [
+                    {
+                      title: 'Find contacts',
+                      body: 'Use LinkedIn and Sales Navigator to identify relevant prospects and decision-makers.',
+                      tools: 'LinkedIn · Sales Navigator',
+                    },
+                    {
+                      title: 'Enrich information',
+                      body: 'Gather additional role, company, and contact information through separate tools.',
+                      tools: 'Profile data · Enrichment tools',
+                    },
+                    {
+                      title: 'Organize leads',
+                      body: 'Transfer promising contacts into spreadsheets or working lists for further review.',
+                      tools: 'Spreadsheets · Working lists',
+                    },
+                    {
+                      title: 'Compare and prioritize',
+                      body: 'Assess which contacts best matched the target profile before taking the next step.',
+                      tools: 'Manual comparison · Target criteria',
+                    },
+                  ],
+                },
+              ].map((workflow, workflowIndex) => (
+                <article
+                  key={workflow.label}
+                  className={workflowIndex > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''}
+                  style={{ padding: 'clamp(36px, 5vw, 60px)' }}
+                >
+                  <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.09em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>
+                    {workflow.label}
+                  </p>
+                  <div>
+                    {workflow.steps.map((step, index) => (
+                      <div
+                        key={step.title}
+                        style={{
+                          borderTop: index > 0 ? '1px dashed rgba(10, 10, 10, 0.18)' : 0,
+                          padding: index > 0 ? '28px 0 0' : 0,
+                          marginTop: index > 0 ? '28px' : 0,
+                          position: 'relative',
+                        }}
+                      >
+                        <div className="grid grid-cols-[36px_1fr] gap-4">
+                          <span style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.62)', fontSize: '11px', fontVariantNumeric: 'tabular-nums', lineHeight: '18px' }}>
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <div>
+                            <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(20px, 2vw, 27px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 10px' }}>
+                              {step.title}
+                            </h2>
+                            <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '14px', fontWeight: 300, lineHeight: 1.6, margin: '0 0 12px' }}>
+                              {step.body}
+                            </p>
+                            <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.36)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.04em', lineHeight: '16px', textTransform: 'uppercase' }}>
+                              {step.tools}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 'clamp(72px, 9vw, 112px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                Shared friction
+              </p>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', overflowX: 'auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(210px, 1fr))', minWidth: '840px' }}>
+                  {[
+                    { title: 'Repetitive profile review', body: 'Users repeatedly opened and checked profiles one by one.' },
+                    { title: 'Fragmented information', body: 'Profile data, evaluation context, and working lists lived in different tools.' },
+                    { title: 'Manual organization', body: 'Relevant people had to be copied, grouped, and maintained outside LinkedIn.' },
+                    { title: 'Difficult prioritization', body: 'Without one workspace, comparing and ranking people required additional manual effort.' },
+                  ].map((friction, index) => (
+                    <article key={friction.title} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '230px', padding: '34px 28px' }}>
+                      <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.62)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 30px', textTransform: 'uppercase' }}>
+                        {String(index + 1).padStart(2, '0')}
+                      </p>
+                      <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '20px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 14px' }}>{friction.title}</h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{friction.body}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.2vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1120px' }}>
+                The challenge was not access to people. It was turning hundreds of scattered profiles into a{' '}
+                <span style={{ color: '#2459d3' }}>clear, prioritized decision.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '900px' }}>
+                Recruiters searched for candidates and sales teams searched for contacts, but both faced the same fragmented workflow.
+              </p>
+            </div>
+
+            <div
+              hidden
+              className="grid grid-cols-1 md:grid-cols-[minmax(220px,4fr)_minmax(0,8fr)]"
+              style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}
+            >
+              <div
+                className="border-b border-black/15 md:border-b-0 md:border-r"
+                style={{ padding: 'clamp(36px, 5vw, 64px) clamp(24px, 4vw, 48px) clamp(40px, 6vw, 72px) 0' }}
+              >
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: '#2459d3',
+                    fontSize: 'clamp(104px, 13vw, 156px)',
+                    fontVariantNumeric: 'tabular-nums',
+                    fontWeight: 300,
+                    letterSpacing: '-0.07em',
+                    lineHeight: 0.85,
+                    margin: '0 0 28px',
+                  }}
+                >
+                  ~500
+                </p>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: textColor.strong,
+                    fontSize: 'clamp(20px, 2vw, 28px)',
+                    fontWeight: 500,
+                    lineHeight: 1.2,
+                    margin: '0 0 24px',
+                    maxWidth: '260px',
+                  }}
+                >
+                  profiles in a single search
+                </p>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: 'rgba(10, 10, 10, 0.54)',
+                    fontSize: '14px',
+                    fontWeight: 300,
+                    lineHeight: 1.65,
+                    margin: 0,
+                    maxWidth: '320px',
+                  }}
+                >
+                  Every result still required manual review before users could decide whether the person matched a role or target customer profile.
+                </p>
+              </div>
+
+              <div style={{ padding: 'clamp(36px, 5vw, 64px) 0 clamp(40px, 6vw, 72px) clamp(24px, 5vw, 64px)' }}>
+                <h2
+                  style={{
+                    ...fontStyle,
+                    color: textColor.strong,
+                    fontSize: 'clamp(24px, 2.5vw, 34px)',
+                    fontWeight: 500,
+                    lineHeight: 1.2,
+                    margin: '0 0 clamp(40px, 5vw, 56px)',
+                  }}
+                >
+                  Every search triggered the same manual loop
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2">
+                  {[
+                    {
+                      eyebrow: '01 — Review',
+                      title: 'Open profiles one by one',
+                      body: 'Users inspected experience, skills, roles, and company context across multiple profiles.',
+                    },
+                    {
+                      eyebrow: '02 — Qualify',
+                      title: 'Compare fit from memory',
+                      body: 'They compared each person against job requirements or target customer criteria without a consistent evaluation framework.',
+                    },
+                    {
+                      eyebrow: '03 — Organize',
+                      title: 'Move matches into another tool',
+                      body: 'Relevant profiles were copied into spreadsheets, ATS platforms, CRM tools, notes, or separate lists.',
+                    },
+                    {
+                      eyebrow: '04 — Track',
+                      title: 'Track progress manually',
+                      body: 'After outreach, users still had to record replies, follow-ups, ownership, and the current stage of every candidate or lead.',
+                    },
+                  ].map((step, index) => (
+                    <div
+                      key={step.title}
+                      className={
+                        index === 0
+                          ? ''
+                          : index === 1
+                            ? 'border-t border-black/15 pt-8 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0'
+                            : index === 2
+                              ? 'border-t border-black/15 pt-8 sm:mt-10'
+                              : 'border-t border-black/15 pt-8 sm:mt-10 sm:border-l sm:pl-8'
+                      }
+                      style={{ paddingRight: index % 2 === 0 ? 'clamp(20px, 3vw, 36px)' : 0 }}
+                    >
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: 'rgba(36, 89, 211, 0.7)',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          letterSpacing: '0.08em',
+                          lineHeight: '18px',
+                          margin: '0 0 20px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {step.eyebrow}
+                      </p>
+                      <h3
+                        style={{
+                          ...fontStyle,
+                          color: textColor.strong,
+                          fontSize: 'clamp(20px, 2vw, 27px)',
+                          fontWeight: 500,
+                          lineHeight: 1.2,
+                          margin: '0 0 18px',
+                        }}
+                      >
+                        {step.title}
+                      </h3>
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: 'rgba(10, 10, 10, 0.58)',
+                          fontSize: '15px',
+                          fontWeight: 300,
+                          lineHeight: 1.6,
+                          margin: 0,
+                        }}
+                      >
+                        {step.body}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <div style={{ marginBottom: 'clamp(44px, 6vw, 64px)', textAlign: 'center' }}>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: 'rgba(10, 10, 10, 0.44)',
+                    fontSize: '11px',
+                    fontWeight: 500,
+                    letterSpacing: '0.1em',
+                    lineHeight: '18px',
+                    margin: '0 0 14px',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  A fragmented journey
+                </p>
+                <h2
+                  style={{
+                    ...fontStyle,
+                    color: textColor.strong,
+                    fontSize: 'clamp(30px, 3.5vw, 46px)',
+                    fontWeight: 400,
+                    lineHeight: 1.15,
+                    margin: 0,
+                  }}
+                >
+                  One person, four disconnected stages
+                </h2>
+              </div>
+
+              <div style={{ overflowX: 'auto', paddingBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gap: '84px',
+                    gridTemplateColumns: 'repeat(4, minmax(180px, 1fr))',
+                    minWidth: '980px',
+                  }}
+                >
+                  {[
+                    {
+                      phase: 'Discover',
+                      title: 'Find potential people',
+                      details: ['LinkedIn Search', 'Recruiter', 'Sales Navigator'],
+                      breakLabel: 'Context lost',
+                    },
+                    {
+                      phase: 'Qualify',
+                      title: 'Decide who is relevant',
+                      details: ['Manual profile review', 'Job requirements', 'Target customer criteria'],
+                      breakLabel: 'Manual handoff',
+                    },
+                    {
+                      phase: 'Engage',
+                      title: 'Start and continue outreach',
+                      details: ['Messages', 'Sequences', 'Follow-ups'],
+                      breakLabel: 'Status becomes outdated',
+                    },
+                    {
+                      phase: 'Manage',
+                      title: 'Track progress toward an outcome',
+                      details: ['Current stage', 'Next action', 'Final outcome'],
+                      breakLabel: null,
+                    },
+                  ].map((stage) => (
+                    <div
+                      key={stage.phase}
+                      style={{
+                        borderTop: '1px solid rgba(10, 10, 10, 0.16)',
+                        minHeight: '250px',
+                        paddingTop: '30px',
+                        position: 'relative',
+                      }}
+                    >
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: '#2459d3',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          letterSpacing: '0.09em',
+                          lineHeight: '18px',
+                          margin: '0 0 30px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {stage.phase}
+                      </p>
+                      <h3
+                        style={{
+                          ...fontStyle,
+                          color: textColor.strong,
+                          fontSize: 'clamp(20px, 2vw, 27px)',
+                          fontWeight: 500,
+                          lineHeight: 1.2,
+                          margin: '0 0 24px',
+                        }}
+                      >
+                        {stage.title}
+                      </h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {stage.details.map((detail) => (
+                          <span
+                            key={detail}
+                            style={{
+                              ...fontStyle,
+                              color: 'rgba(10, 10, 10, 0.5)',
+                              fontSize: '13px',
+                              fontWeight: 300,
+                              lineHeight: '20px',
+                            }}
+                          >
+                            {detail}
+                          </span>
+                        ))}
+                      </div>
+                      {stage.breakLabel && (
+                        <div
+                          aria-hidden="true"
+                          style={{
+                            alignItems: 'center',
+                            display: 'flex',
+                            height: '42px',
+                            justifyContent: 'center',
+                            left: '100%',
+                            position: 'absolute',
+                            top: '-21px',
+                            width: '84px',
+                          }}
+                        >
+                          <span
+                            style={{
+                              borderTop: '1px dashed rgba(10, 10, 10, 0.32)',
+                              left: 0,
+                              position: 'absolute',
+                              right: 0,
+                              top: '20px',
+                            }}
+                          />
+                          <span
+                            style={{
+                              ...fontStyle,
+                              backgroundColor: '#FAFAFA',
+                              color: 'rgba(10, 10, 10, 0.42)',
+                              fontSize: '9px',
+                              fontWeight: 500,
+                              letterSpacing: '0.04em',
+                              lineHeight: '14px',
+                              padding: '0 6px',
+                              position: 'relative',
+                              textAlign: 'center',
+                              textTransform: 'uppercase',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {stage.breakLabel}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                marginTop: 'clamp(80px, 10vw, 120px)',
+                maxWidth: '1100px',
+                paddingTop: 'clamp(52px, 7vw, 80px)',
+              }}
+            >
+              <p
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.2vw, 54px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.12,
+                  margin: '0 0 24px',
+                }}
+              >
+                How could one product support two different sourcing contexts{' '}
+                <span style={{ color: '#2459d3' }}>without creating two separate workflows?</span>
+              </p>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.5)',
+                  fontSize: '16px',
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}
+              >
+                LinkedIn gave users access to people, but no connected way to collect, evaluate, prioritize, and manage them.
+              </p>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="Understanding the Shared Workflow"
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p
+              style={{
+                ...fontStyle,
+                color: '#2459d3',
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '0.1em',
+                lineHeight: '18px',
+                margin: '0 0 16px',
+                textTransform: 'uppercase',
+              }}
+            >
+              03 — Understanding the shared workflow
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(44px, 5.5vw, 68px)',
+                lineHeight: 1.06,
+                marginBottom: '28px',
+                maxWidth: '980px',
+              }}
+            >
+              Different goals, the same underlying task
+            </h1>
+            <p
+              style={{
+                ...fontStyle,
+                color: 'rgba(10, 10, 10, 0.64)',
+                fontSize: 'clamp(18px, 1.8vw, 22px)',
+                fontWeight: 300,
+                lineHeight: 1.6,
+                margin: '0 0 clamp(64px, 8vw, 96px)',
+                maxWidth: '960px',
+              }}
+            >
+              Recruiters searched for candidates, while sales professionals searched for contacts. Their terminology and evaluation criteria differed, but workflow mapping revealed that both groups followed a similar process for turning LinkedIn profiles into people worth pursuing.
+            </p>
+
+            <div
+              style={{
+                borderBottom: '1px solid rgba(10, 10, 10, 0.14)',
+                borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                overflowX: 'auto',
+              }}
+            >
+              <div style={{ minWidth: '1080px' }}>
+                {[
+                  {
+                    audience: 'Recruiting',
+                    stages: [
+                      {
+                        phase: 'Discover',
+                        title: 'Find potential candidates',
+                        body: 'Search LinkedIn or LinkedIn Recruiter using role, experience, skills, and location filters.',
+                        context: 'LinkedIn · Recruiter',
+                      },
+                      {
+                        phase: 'Collect',
+                        title: 'Save relevant profiles',
+                        body: 'Gather promising candidates and organize them around a specific role or client requirement.',
+                        context: 'Role · Client context',
+                      },
+                      {
+                        phase: 'Evaluate',
+                        title: 'Assess candidate fit',
+                        body: 'Compare each profile against the experience, skills, and background required for the opportunity.',
+                        context: 'Hiring criteria',
+                      },
+                      {
+                        phase: 'Prioritize',
+                        title: 'Decide who to review first',
+                        body: 'Create a focused list of candidates who appear most relevant and worth progressing.',
+                        context: 'Focused shortlist',
+                      },
+                    ],
+                  },
+                  {
+                    audience: 'Sales',
+                    stages: [
+                      {
+                        phase: 'Discover',
+                        title: 'Find potential contacts',
+                        body: 'Search LinkedIn or Sales Navigator using role, company, industry, and location filters.',
+                        context: 'LinkedIn · Sales Navigator',
+                      },
+                      {
+                        phase: 'Collect',
+                        title: 'Save relevant profiles',
+                        body: 'Gather promising contacts and organize them around a specific prospecting goal.',
+                        context: 'Prospecting context',
+                      },
+                      {
+                        phase: 'Evaluate',
+                        title: 'Assess contact relevance',
+                        body: 'Compare each profile against the target role, company, or ideal customer criteria.',
+                        context: 'ICP criteria',
+                      },
+                      {
+                        phase: 'Prioritize',
+                        title: 'Decide who to pursue first',
+                        body: 'Create a focused list of contacts who appear most relevant and worth approaching.',
+                        context: 'Focused contact list',
+                      },
+                    ],
+                  },
+                ].map((workflow, workflowIndex) => (
+                  <div
+                    key={workflow.audience}
+                    style={{
+                      borderTop: workflowIndex > 0 ? '1px solid rgba(10, 10, 10, 0.14)' : 0,
+                      display: 'grid',
+                      gridTemplateColumns: '150px repeat(4, minmax(220px, 1fr))',
+                    }}
+                  >
+                    <div
+                      style={{
+                        alignItems: 'flex-start',
+                        backgroundColor: workflowIndex === 0 ? 'rgba(36, 89, 211, 0.055)' : '#FAFAFA',
+                        display: 'flex',
+                        padding: '42px 28px',
+                      }}
+                    >
+                      <p style={{ ...fontStyle, color: workflowIndex === 0 ? '#2459d3' : 'rgba(10, 10, 10, 0.54)', fontSize: '12px', fontWeight: 500, letterSpacing: '0.09em', lineHeight: '18px', margin: 0, textTransform: 'uppercase' }}>
+                        {workflow.audience}
+                      </p>
+                    </div>
+                    {workflow.stages.map((stage, index) => (
+                      <article
+                        key={stage.phase}
+                        style={{
+                          borderLeft: '1px solid rgba(10, 10, 10, 0.1)',
+                          minHeight: '330px',
+                          padding: '42px 28px',
+                        }}
+                      >
+                        <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.7)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '16px', margin: '0 0 36px', textTransform: 'uppercase' }}>
+                          {String(index + 1).padStart(2, '0')} — {stage.phase}
+                        </p>
+                        <h2 style={{ ...fontStyle, color: stage.phase === 'Prioritize' ? '#2459d3' : textColor.strong, fontSize: '22px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 16px' }}>
+                          {stage.title}
+                        </h2>
+                        <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: '0 0 24px' }}>
+                          {stage.body}
+                        </p>
+                        <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.08)', color: 'rgba(10, 10, 10, 0.36)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.05em', lineHeight: '15px', margin: 0, paddingTop: '14px', textTransform: 'uppercase' }}>
+                          {stage.context}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                The shared workflow
+              </p>
+              <div style={{ overflowX: 'auto' }}>
+                <div
+                  style={{
+                    alignItems: 'center',
+                    borderBottom: '1px solid rgba(10, 10, 10, 0.14)',
+                    borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, minmax(180px, 1fr))',
+                    minWidth: '720px',
+                    padding: '30px 0',
+                  }}
+                >
+                  {['Discover', 'Collect', 'Evaluate', 'Prioritize'].map((stage, index, stages) => (
+                    <div key={stage} style={{ alignItems: 'center', display: 'flex', padding: '0 24px' }}>
+                      <span style={{ ...fontStyle, color: '#2459d3', fontSize: 'clamp(18px, 2vw, 25px)', fontWeight: 500, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                        {stage}
+                      </span>
+                      {index < stages.length - 1 && <span aria-hidden="true" style={{ color: 'rgba(36, 89, 211, 0.42)', marginLeft: 'auto' }}>→</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2" style={{ marginTop: '32px' }}>
+                <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(28px, 3.4vw, 44px)', fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.15, margin: 0 }}>
+                  Different criteria, one common structure
+                </h2>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                  Recruiters evaluated candidates against hiring requirements. Sales teams evaluated contacts against prospecting criteria. In both cases, users needed to identify relevant people, preserve their context, compare them consistently, and decide who deserved attention first.
+                </p>
+              </div>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: 'rgba(36, 89, 211, 0.055)',
+                borderBottom: '1px solid rgba(36, 89, 211, 0.14)',
+                borderTop: '1px solid rgba(36, 89, 211, 0.14)',
+                marginTop: 'clamp(80px, 10vw, 120px)',
+                padding: 'clamp(44px, 7vw, 72px)',
+              }}
+            >
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 22px', textTransform: 'uppercase' }}>
+                Key insight
+              </p>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(32px, 4.1vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.14, margin: '0 0 24px', maxWidth: '1120px' }}>
+                The product did not need two separate workflows. It needed one flexible structure that could adapt to{' '}
+                <span style={{ color: '#2459d3' }}>different goals and evaluation criteria.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                This insight led to Project becoming the shared container for profiles, context, and evaluation.
+              </p>
+            </div>
+
+            <div
+              hidden
+              style={{
+                backgroundColor: 'rgba(36, 89, 211, 0.055)',
+                borderBottom: '1px solid rgba(36, 89, 211, 0.14)',
+                borderTop: '1px solid rgba(36, 89, 211, 0.14)',
+                padding: 'clamp(48px, 7vw, 76px) clamp(28px, 6vw, 80px)',
+              }}
+            >
+              <p
+                style={{
+                  ...fontStyle,
+                  color: '#2459d3',
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 24px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                How might we
+              </p>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(32px, 4.1vw, 52px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.14,
+                  margin: '0 0 26px',
+                  maxWidth: '1160px',
+                }}
+              >
+                How might we help users find the strongest matches first—and manage every person from discovery to outcome?
+              </p>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.54)',
+                  fontSize: '16px',
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                  margin: 0,
+                  maxWidth: '850px',
+                }}
+              >
+                This required connecting search relevance, evaluation context, outreach activity, and pipeline status in one workflow.
+              </p>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(72px, 9vw, 112px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.44)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 20px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Four design constraints
+              </p>
+              <div
+                className="grid grid-cols-1 md:grid-cols-2"
+                style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}
+              >
+                {[
+                  {
+                    eyebrow: '01 — Enhance, not replace',
+                    title: 'Fit into the existing LinkedIn workflow',
+                    body: 'Users already relied on LinkedIn, Sales Navigator, or LinkedIn Recruiter to search for people. The experience needed to improve the workflow they understood rather than require them to rebuild searches in another tool.',
+                    keywords: ['Familiar workflow', 'Lower adoption cost', 'In-context actions'],
+                  },
+                  {
+                    eyebrow: '02 — Contextual relevance',
+                    title: 'Define fit around the user’s goal',
+                    body: 'A profile was not universally relevant. Fit depended on the role, client brief, target account, or outreach objective behind each search.',
+                    keywords: ['Project context', 'Editable criteria', 'Goal-based ranking'],
+                  },
+                  {
+                    eyebrow: '03 — Continuous context',
+                    title: 'Keep decisions connected from search to pipeline',
+                    body: 'Saving a profile was not enough. Users needed to retain why the person was relevant, how they were evaluated, whether they had been contacted, and what should happen next.',
+                    keywords: ['Shared context', 'Activity history', 'Next action'],
+                  },
+                  {
+                    eyebrow: '04 — Human control',
+                    title: 'Make AI useful without turning it into a black box',
+                    body: 'AI could reduce the time required to review profiles, but users still needed to understand the criteria, inspect the evidence, and adjust the final judgment.',
+                    keywords: ['Explainable scoring', 'Editable criteria', 'Human judgment'],
+                  },
+                ].map((constraint, index) => (
+                  <article
+                    key={constraint.title}
+                    className={
+                      index === 0
+                        ? ''
+                        : index === 1
+                          ? 'border-t border-black/15 md:border-l md:border-t-0'
+                          : index === 2
+                            ? 'border-t border-black/15'
+                            : 'border-t border-black/15 md:border-l'
+                    }
+                    style={{ display: 'flex', flexDirection: 'column', minHeight: '360px', padding: 'clamp(32px, 5vw, 56px)' }}
+                  >
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(36, 89, 211, 0.72)',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        letterSpacing: '0.08em',
+                        lineHeight: '18px',
+                        margin: '0 0 42px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {constraint.eyebrow}
+                    </p>
+                    <h2
+                      style={{
+                        ...fontStyle,
+                        color: textColor.strong,
+                        fontSize: 'clamp(24px, 2.5vw, 32px)',
+                        fontWeight: 500,
+                        lineHeight: 1.18,
+                        margin: '0 0 20px',
+                        maxWidth: '520px',
+                      }}
+                    >
+                      {constraint.title}
+                    </h2>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(10, 10, 10, 0.6)',
+                        fontSize: '16px',
+                        fontWeight: 300,
+                        lineHeight: 1.65,
+                        margin: '0 0 36px',
+                        maxWidth: '580px',
+                      }}
+                    >
+                      {constraint.body}
+                    </p>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        borderTop: '1px solid rgba(10, 10, 10, 0.1)',
+                        color: 'rgba(10, 10, 10, 0.44)',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        letterSpacing: '0.04em',
+                        lineHeight: 1.7,
+                        margin: 'auto 0 0',
+                        paddingTop: '20px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {constraint.keywords.join(' · ')}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(88px, 11vw, 136px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: '#2459d3',
+                  fontSize: '12px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 16px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                The product framework
+              </p>
+              <h2
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.4vw, 56px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.1,
+                  margin: '0 0 clamp(48px, 6vw, 72px)',
+                }}
+              >
+                One workflow from search to outcome
+              </h2>
+              <div style={{ overflowX: 'auto', paddingBottom: '8px' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, minmax(220px, 1fr)) 120px',
+                    minWidth: '1080px',
+                  }}
+                >
+                  {[
+                    {
+                      phase: 'Source',
+                      action: 'Find the right people',
+                      body: 'AI re-ranks LinkedIn search results and brings the strongest matches to the top.',
+                    },
+                    {
+                      phase: 'Qualify',
+                      action: 'Understand who fits',
+                      body: 'Users review criteria, supporting evidence, and save relevant people into Projects.',
+                    },
+                    {
+                      phase: 'Engage',
+                      action: 'Start and continue outreach',
+                      body: 'Selected candidates or leads move into Campaigns for personalized messages and follow-ups.',
+                    },
+                    {
+                      phase: 'Manage',
+                      action: 'Track progress through the pipeline',
+                      body: 'Teams record activities, ownership, current stage, next actions, and final outcomes.',
+                    },
+                  ].map((stage, index, stages) => (
+                    <article
+                      key={stage.phase}
+                      style={{
+                        borderTop: `2px solid ${index === stages.length - 1 ? '#2459d3' : 'rgba(36, 89, 211, 0.34)'}`,
+                        minHeight: '300px',
+                        padding: '32px clamp(24px, 3vw, 38px) 36px 0',
+                        position: 'relative',
+                      }}
+                    >
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: index === stages.length - 1 ? '#2459d3' : 'rgba(36, 89, 211, 0.7)',
+                          fontSize: '12px',
+                          fontWeight: 500,
+                          letterSpacing: '0.09em',
+                          lineHeight: '18px',
+                          margin: '0 0 34px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {stage.phase}
+                      </p>
+                      <h3
+                        style={{
+                          ...fontStyle,
+                          color: index === stages.length - 1 ? '#2459d3' : textColor.strong,
+                          fontSize: 'clamp(22px, 2.2vw, 29px)',
+                          fontWeight: 500,
+                          lineHeight: 1.18,
+                          margin: '0 0 20px',
+                          maxWidth: '240px',
+                        }}
+                      >
+                        {stage.action}
+                      </h3>
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: 'rgba(10, 10, 10, 0.55)',
+                          fontSize: '14px',
+                          fontWeight: 300,
+                          lineHeight: 1.6,
+                          margin: 0,
+                          maxWidth: '250px',
+                        }}
+                      >
+                        {stage.body}
+                      </p>
+                      <span
+                        aria-hidden="true"
+                        style={{
+                          alignItems: 'center',
+                          backgroundColor: '#FFFFFF',
+                          color: index === stages.length - 1 ? '#2459d3' : 'rgba(36, 89, 211, 0.5)',
+                          display: 'flex',
+                          fontSize: '20px',
+                          height: '32px',
+                          justifyContent: 'center',
+                          position: 'absolute',
+                          right: '12px',
+                          top: '-17px',
+                          width: '32px',
+                        }}
+                      >
+                        →
+                      </span>
+                    </article>
+                  ))}
+                  <div
+                    style={{
+                      alignItems: 'flex-start',
+                      borderTop: '2px solid #2459d3',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      padding: '32px 0 0 22px',
+                    }}
+                  >
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: '#2459d3',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        letterSpacing: '0.09em',
+                        lineHeight: '18px',
+                        margin: '0 0 18px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      Outcome
+                    </p>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(10, 10, 10, 0.44)',
+                        fontSize: '11px',
+                        fontWeight: 300,
+                        lineHeight: 1.7,
+                        margin: 0,
+                      }}
+                    >
+                      Hired<br />
+                      Placed<br />
+                      Converted<br />
+                      Closed
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="The Pivotal Product Decision"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p
+              style={{
+                ...fontStyle,
+                color: '#2459d3',
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '0.1em',
+                lineHeight: '18px',
+                margin: '0 0 16px',
+                textTransform: 'uppercase',
+              }}
+            >
+              02 — The pivotal product decision
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(44px, 5.5vw, 68px)',
+                lineHeight: 1.06,
+                marginBottom: '28px',
+                maxWidth: '1050px',
+              }}
+            >
+              Introducing Project changed the product from a ranking tool into a reusable workspace
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '960px' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.64)',
+                  fontSize: 'clamp(18px, 1.8vw, 22px)',
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                  margin: '0 0 16px',
+                }}
+              >
+                The original request was to collect LinkedIn profiles and produce an AI-ranked shortlist. I pushed back on this one-shot model because users managed multiple goals across multiple LinkedIn search sessions.
+              </p>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.64)',
+                  fontSize: 'clamp(18px, 1.8vw, 22px)',
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}
+              >
+                I introduced Project as a persistent container for each sourcing goal—creating the foundation for ranking, review, outreach, notes, and longer-term people management.
+              </p>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: 'rgba(36, 89, 211, 0.055)',
+                borderBottom: '1px solid rgba(36, 89, 211, 0.14)',
+                borderTop: '1px solid rgba(36, 89, 211, 0.14)',
+                padding: 'clamp(44px, 7vw, 72px)',
+              }}
+            >
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 22px', textTransform: 'uppercase' }}>
+                Core insight
+              </p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(32px, 4.1vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.14, margin: '0 0 24px', maxWidth: '1080px' }}>
+                A profile only became meaningful within a specific goal.
+              </h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '16px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 32px', maxWidth: '960px' }}>
+                The same person could be relevant to one hiring brief or prospecting task, but less relevant to another. Saving a profile alone could not explain why it mattered or how it should be evaluated.
+              </p>
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  'Why was this person collected?',
+                  'What requirements applied?',
+                  'How did they compare with others?',
+                  'Were they worth prioritizing?',
+                ].map((question) => (
+                  <p key={question} style={{ ...fontStyle, backgroundColor: 'rgba(255, 255, 255, 0.72)', color: 'rgba(10, 10, 10, 0.54)', fontSize: '12px', fontWeight: 400, lineHeight: 1.55, margin: 0, padding: '18px' }}>
+                    {question}
+                  </p>
+                ))}
+              </div>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '14px', fontWeight: 500, lineHeight: 1.6, margin: '30px 0 0' }}>
+                A Project preserved this context around every group of profiles.
+              </p>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(72px, 9vw, 112px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                Project connected three things
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  {
+                    name: 'Goal',
+                    question: 'Why are we looking for people?',
+                    body: 'A Project represented a specific hiring, client, or prospecting objective.',
+                    examples: ['Senior Product Designer', 'Fintech engineering candidates', 'SaaS decision-makers in Germany'],
+                  },
+                  {
+                    name: 'People',
+                    question: 'Who has been collected for this goal?',
+                    body: 'Profiles saved through the Chrome Extension were organized inside the relevant Project instead of becoming an isolated list of bookmarks.',
+                    examples: ['Saved LinkedIn profiles', 'Shared Project context'],
+                  },
+                  {
+                    name: 'Evaluation',
+                    question: 'How should these people be compared?',
+                    body: 'Each Project contained its own AI-generated and user-editable evaluation criteria, allowing people to be assessed against the same goal.',
+                    examples: ['Project-specific criteria', 'Consistent ranking'],
+                  },
+                ].map((item, index) => (
+                  <article key={item.name} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ display: 'flex', flexDirection: 'column', minHeight: '390px', padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>
+                      {String(index + 1).padStart(2, '0')} — {item.name}
+                    </p>
+                    <h2 style={{ ...fontStyle, color: index === 0 ? '#2459d3' : textColor.strong, fontSize: 'clamp(23px, 2.4vw, 31px)', fontWeight: 500, lineHeight: 1.18, margin: '0 0 20px' }}>
+                      {item.question}
+                    </h2>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 30px' }}>
+                      {item.body}
+                    </p>
+                    <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', display: 'flex', flexDirection: 'column', gap: '6px', marginTop: 'auto', paddingTop: '18px' }}>
+                      {item.examples.map((example) => (
+                        <span key={example} style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '11px', lineHeight: '17px' }}>{example}</span>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div data-case-nav-label="Simplifying the Information Architecture" style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid rgba(10, 10, 10, 0.12)', borderTop: '1px solid rgba(10, 10, 10, 0.12)', marginTop: 'clamp(80px, 10vw, 128px)', padding: 'clamp(40px, 6vw, 64px)' }}>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 18px', textTransform: 'uppercase' }}>
+                03 — Simplifying the information architecture
+              </p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 22px' }}>
+                Reducing the experience from three layers to two
+              </h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 clamp(40px, 6vw, 60px)', maxWidth: '900px' }}>
+                The earlier structure separated the Project list, profile list, and profile detail into different levels. Users had to move back and forth while comparing people and reviewing evaluation results.
+              </p>
+              {[
+                { label: 'Before', nodes: ['Project list', 'Profile list', 'Profile detail'], note: 'Three separate navigation layers' },
+                { label: 'After', nodes: ['Project list', 'Project workspace'], note: 'People · Ranking · Evaluation · Profile detail' },
+              ].map((model, rowIndex) => (
+                <div key={model.label} className="grid grid-cols-1 gap-5 border-t border-black/15 py-7 md:grid-cols-[110px_1fr_310px]" style={{ alignItems: 'center' }}>
+                  <p style={{ ...fontStyle, color: rowIndex === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.46)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase' }}>{model.label}</p>
+                  <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {model.nodes.map((node, index) => (
+                      <span key={node} style={{ alignItems: 'center', display: 'inline-flex', gap: '10px' }}>
+                        <span style={{ ...fontStyle, backgroundColor: rowIndex === 1 && index === 1 ? 'rgba(36, 89, 211, 0.08)' : '#FAFAFA', border: rowIndex === 1 && index === 1 ? '1px solid rgba(36, 89, 211, 0.25)' : '1px solid rgba(10, 10, 10, 0.12)', color: rowIndex === 1 && index === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.58)', fontSize: '12px', fontWeight: 500, lineHeight: '18px', padding: '10px 14px' }}>{node}</span>
+                        {index < model.nodes.length - 1 && <span aria-hidden="true" style={{ color: 'rgba(10, 10, 10, 0.3)' }}>→</span>}
+                      </span>
+                    ))}
+                  </div>
+                  <p style={{ ...fontStyle, color: rowIndex === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.42)', fontSize: '11px', lineHeight: 1.5, margin: 0 }}>{model.note}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                Project workspace
+              </p>
+              <div style={{ border: '1px solid rgba(10, 10, 10, 0.12)', padding: 'clamp(16px, 3vw, 28px)' }}>
+                <AIRankingViewMock fontStyle={fontStyle} />
+              </div>
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '18px' }}>
+                {['Profiles organized by goal', 'Evaluation within the Project', 'Details without leaving the workspace'].map((annotation) => (
+                  <p key={annotation} style={{ ...fontStyle, backgroundColor: '#FAFAFA', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>
+                    {annotation}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                One model for two use cases
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  { title: 'Recruiting Project', body: 'Create Projects around roles or client briefs.', details: ['Role or client brief', 'Candidate criteria', 'Hiring context'] },
+                  { title: 'Sales Project', body: 'Create Projects around target profiles or prospecting goals.', details: ['Target profile or sales goal', 'Contact criteria', 'Prospecting context'] },
+                ].map((useCase, index) => (
+                  <article key={useCase.title} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ padding: 'clamp(36px, 5vw, 56px)' }}>
+                    <h2 style={{ ...fontStyle, color: index === 0 ? '#2459d3' : textColor.strong, fontSize: 'clamp(24px, 2.6vw, 34px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 18px' }}>{useCase.title}</h2>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '15px', fontWeight: 300, lineHeight: 1.6, margin: '0 0 26px' }}>{useCase.body}</p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.04em', lineHeight: 1.8, margin: 0, textTransform: 'uppercase' }}>{useCase.details.join(' · ')}</p>
+                  </article>
+                ))}
+              </div>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(190px, 1fr))', overflowX: 'auto' }}>
+                {[
+                  ['Context stayed attached', 'Profiles remained connected to the goal and criteria that explained why they were collected.'],
+                  ['Comparison became easier', 'Users reviewed multiple people within one Project instead of switching between pages.'],
+                  ['One model for both teams', 'Recruiting and sales reused the same core logic with different terminology and criteria.'],
+                  ['The product could scale', 'New sourcing use cases could extend the shared structure consistently.'],
+                ].map(([title, body], index) => (
+                  <div key={title} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minWidth: '190px', padding: '28px' }}>
+                    <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '16px', fontWeight: 500, lineHeight: 1.25, margin: '0 0 12px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.2vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1120px' }}>
+                Project became the bridge between collecting a profile and{' '}<span style={{ color: '#2459d3' }}>making a decision about it.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '900px' }}>
+                It gave every saved person a clear purpose, a shared evaluation framework, and a place within the wider sourcing workflow.
+              </p>
+            </div>
+
+            <div hidden>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.42)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 20px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                The shared object model
+              </p>
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-[3fr_6fr_3fr]" style={{ alignItems: 'stretch' }}>
+                <aside
+                  style={{
+                    border: '1px solid rgba(10, 10, 10, 0.12)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '520px',
+                    padding: 'clamp(28px, 3vw, 40px)',
+                  }}
+                >
+                  <p
+                    style={{
+                      ...fontStyle,
+                      color: 'rgba(10, 10, 10, 0.46)',
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      letterSpacing: '0.09em',
+                      lineHeight: '18px',
+                      margin: '0 0 40px',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Search context
+                  </p>
+                  <h2
+                    style={{
+                      ...fontStyle,
+                      color: textColor.strong,
+                      fontSize: 'clamp(24px, 2.4vw, 32px)',
+                      fontWeight: 500,
+                      lineHeight: 1.18,
+                      margin: '0 0 20px',
+                    }}
+                  >
+                    The goal defined what “fit” meant.
+                  </h2>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '24px' }}>
+                    {['Job brief', 'Client requirement', 'Ideal customer profile', 'Search criteria'].map((item) => (
+                      <span
+                        key={item}
+                        style={{
+                          ...fontStyle,
+                          borderTop: '1px solid rgba(10, 10, 10, 0.08)',
+                          color: 'rgba(10, 10, 10, 0.54)',
+                          fontSize: '13px',
+                          fontWeight: 300,
+                          lineHeight: '20px',
+                          paddingTop: '10px',
+                        }}
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                  <p
+                    style={{
+                      ...fontStyle,
+                      color: '#2459d3',
+                      fontSize: '12px',
+                      fontWeight: 500,
+                      lineHeight: '18px',
+                      margin: 'auto 0 0',
+                      paddingTop: '36px',
+                      textAlign: 'right',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    Context flows into Project →
+                  </p>
+                </aside>
+
+                <div
+                  style={{
+                    backgroundColor: 'rgba(36, 89, 211, 0.06)',
+                    border: '1px solid rgba(36, 89, 211, 0.34)',
+                    minHeight: '520px',
+                    padding: 'clamp(28px, 4vw, 52px)',
+                  }}
+                >
+                  <div style={{ marginBottom: 'clamp(40px, 5vw, 56px)' }}>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: '#2459d3',
+                        fontSize: '13px',
+                        fontWeight: 500,
+                        letterSpacing: '0.1em',
+                        lineHeight: '18px',
+                        margin: '0 0 14px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      Project
+                    </p>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(10, 10, 10, 0.6)',
+                        fontSize: '15px',
+                        fontWeight: 300,
+                        lineHeight: 1.6,
+                        margin: 0,
+                        maxWidth: '620px',
+                      }}
+                    >
+                      The shared workspace for evaluating and managing people around one goal.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+                    {[
+                      {
+                        eyebrow: '01 — People',
+                        title: 'A reusable person profile collected from LinkedIn.',
+                        details: ['Profile', 'Experience', 'Company', 'Contact data', 'Notes'],
+                      },
+                      {
+                        eyebrow: '02 — Evaluation',
+                        title: 'A contextual judgment of how well this person matched the current Project.',
+                        details: ['Fit score', 'Criteria', 'Evidence', 'AI reasoning', 'User edits'],
+                      },
+                      {
+                        eyebrow: '03 — Pipeline',
+                        title: 'The person’s current progress and next action within the Project.',
+                        details: ['Current stage', 'Owner', 'Last activity', 'Next action', 'Outcome'],
+                      },
+                    ].map((object) => (
+                      <div
+                        key={object.eyebrow}
+                        style={{
+                          backgroundColor: '#FFFFFF',
+                          border: '1px solid rgba(36, 89, 211, 0.14)',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          minHeight: '300px',
+                          padding: '24px',
+                        }}
+                      >
+                        <p
+                          style={{
+                            ...fontStyle,
+                            color: 'rgba(36, 89, 211, 0.72)',
+                            fontSize: '11px',
+                            fontWeight: 500,
+                            letterSpacing: '0.07em',
+                            lineHeight: '17px',
+                            margin: '0 0 28px',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {object.eyebrow}
+                        </p>
+                        <h3
+                          style={{
+                            ...fontStyle,
+                            color: textColor.strong,
+                            fontSize: '18px',
+                            fontWeight: 500,
+                            lineHeight: 1.3,
+                            margin: '0 0 26px',
+                          }}
+                        >
+                          {object.title}
+                        </h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginTop: 'auto' }}>
+                          {object.details.map((detail) => (
+                            <span
+                              key={detail}
+                              style={{
+                                ...fontStyle,
+                                color: 'rgba(10, 10, 10, 0.48)',
+                                fontSize: '12px',
+                                fontWeight: 300,
+                                lineHeight: '18px',
+                              }}
+                            >
+                              {detail}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <aside style={{ display: 'grid', gap: '24px', gridTemplateRows: '1fr auto' }}>
+                  <div
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      border: '1px solid rgba(10, 10, 10, 0.12)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      minHeight: '360px',
+                      padding: 'clamp(28px, 3vw, 40px)',
+                    }}
+                  >
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: '#2459d3',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        letterSpacing: '0.09em',
+                        lineHeight: '18px',
+                        margin: '0 0 32px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      Campaign
+                    </p>
+                    <h2
+                      style={{
+                        ...fontStyle,
+                        color: textColor.strong,
+                        fontSize: 'clamp(22px, 2.2vw, 29px)',
+                        fontWeight: 500,
+                        lineHeight: 1.2,
+                        margin: '0 0 26px',
+                      }}
+                    >
+                      Organised how selected people were contacted.
+                    </h2>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {['Message sequence', 'Personalisation', 'Schedule', 'Follow-up', 'Reply tracking'].map((item) => (
+                        <span
+                          key={item}
+                          style={{
+                            ...fontStyle,
+                            color: 'rgba(10, 10, 10, 0.5)',
+                            fontSize: '12px',
+                            fontWeight: 300,
+                            lineHeight: '18px',
+                          }}
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        borderTop: '1px dashed rgba(36, 89, 211, 0.3)',
+                        color: '#2459d3',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        lineHeight: 1.5,
+                        margin: 'auto 0 0',
+                        paddingTop: '18px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      ← Replies and follow-ups update Pipeline progress
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      border: '1px solid rgba(36, 89, 211, 0.24)',
+                      padding: '24px',
+                    }}
+                  >
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: '#2459d3',
+                        fontSize: '11px',
+                        fontWeight: 500,
+                        letterSpacing: '0.08em',
+                        lineHeight: '17px',
+                        margin: '0 0 10px',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      Outcome
+                    </p>
+                    <p
+                      style={{
+                        ...fontStyle,
+                        color: 'rgba(10, 10, 10, 0.52)',
+                        fontSize: '12px',
+                        fontWeight: 300,
+                        lineHeight: 1.6,
+                        margin: 0,
+                      }}
+                    >
+                      Hired · Placed · Converted · Closed · Not proceeding
+                    </p>
+                  </div>
+                </aside>
+              </div>
+            </div>
+
+            <div
+              hidden
+              style={{
+                borderBottom: '1px solid rgba(36, 89, 211, 0.18)',
+                borderTop: '1px solid rgba(36, 89, 211, 0.18)',
+                marginTop: 'clamp(80px, 10vw, 128px)',
+                padding: 'clamp(48px, 7vw, 80px) 0',
+              }}
+            >
+              <p
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.4vw, 54px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.12,
+                  margin: 0,
+                  maxWidth: '1120px',
+                }}
+              >
+                Fit was not a fixed property of a person. It was a relationship between a person and a{' '}
+                <span style={{ color: '#2459d3' }}>Project.</span>
+              </p>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(72px, 9vw, 112px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.42)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 20px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Five connected objects
+              </p>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', overflowX: 'auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(230px, 1fr))', minWidth: '1150px' }}>
+                  {[
+                    {
+                      name: 'Project',
+                      title: 'Defines the goal',
+                      body: 'Stores the role, client brief, target profile, evaluation criteria, team, and workflow context.',
+                      principle: 'The same person could belong to multiple Projects for different reasons.',
+                    },
+                    {
+                      name: 'Person',
+                      title: 'Represents who is being managed',
+                      body: 'Candidate and lead were different business labels for the same reusable person profile.',
+                      principle: 'Profile data stayed consistent while business context changed by Project.',
+                    },
+                    {
+                      name: 'Evaluation',
+                      title: 'Explains why the person fits',
+                      body: 'Connects a person with a specific Project through criteria, score, and supporting evidence.',
+                      principle: 'Fit was a relationship between a person and a goal.',
+                    },
+                    {
+                      name: 'Campaign',
+                      title: 'Defines how outreach happens',
+                      body: 'Turns selected people into personalised messaging, scheduled follow-ups, and trackable conversations.',
+                      principle: 'Campaigns use Project and profile context instead of rebuilding the audience.',
+                    },
+                    {
+                      name: 'Pipeline',
+                      title: 'Records what happens next',
+                      body: 'Captures current status, ownership, activities, next action, and final outcome.',
+                      principle: 'Outreach was an activity within the journey—not the end of it.',
+                    },
+                  ].map((object, index) => (
+                    <article
+                      key={object.name}
+                      style={{
+                        borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        minHeight: '380px',
+                        padding: '36px 28px',
+                      }}
+                    >
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: 'rgba(36, 89, 211, 0.72)',
+                          fontSize: '11px',
+                          fontWeight: 500,
+                          letterSpacing: '0.08em',
+                          lineHeight: '17px',
+                          margin: '0 0 38px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {String(index + 1).padStart(2, '0')} — {object.name}
+                      </p>
+                      <h3
+                        style={{
+                          ...fontStyle,
+                          color: textColor.strong,
+                          fontSize: '22px',
+                          fontWeight: 500,
+                          lineHeight: 1.2,
+                          margin: '0 0 18px',
+                        }}
+                      >
+                        {object.title}
+                      </h3>
+                      <p
+                        style={{
+                          ...fontStyle,
+                          color: 'rgba(10, 10, 10, 0.56)',
+                          fontSize: '14px',
+                          fontWeight: 300,
+                          lineHeight: 1.6,
+                          margin: '0 0 28px',
+                        }}
+                      >
+                        {object.body}
+                      </p>
+                      <p
+                        style={{
+                          ...fontStyle,
+                          borderTop: '1px solid rgba(10, 10, 10, 0.1)',
+                          color: index === 2 ? '#2459d3' : 'rgba(10, 10, 10, 0.46)',
+                          fontSize: '12px',
+                          fontWeight: index === 2 ? 500 : 400,
+                          lineHeight: 1.55,
+                          margin: 'auto 0 0',
+                          paddingTop: '18px',
+                        }}
+                      >
+                        {object.principle}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.42)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 28px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                One model, configurable stages
+              </p>
+              {[
+                {
+                  label: 'Recruiting pipeline',
+                  stages: ['Sourced', 'Qualified', 'Contacted', 'Replied', 'Submitted', 'Interviewing', 'Placed'],
+                },
+                {
+                  label: 'Sales pipeline',
+                  stages: ['Identified', 'Qualified', 'Contacted', 'Replied', 'Meeting', 'Opportunity', 'Converted'],
+                },
+              ].map((pipeline) => (
+                <div
+                  key={pipeline.label}
+                  className="grid grid-cols-1 gap-5 border-t border-black/15 py-7 lg:grid-cols-[190px_1fr]"
+                >
+                  <p
+                    style={{
+                      ...fontStyle,
+                      color: textColor.strong,
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      lineHeight: '22px',
+                      margin: 0,
+                    }}
+                  >
+                    {pipeline.label}
+                  </p>
+                  <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {pipeline.stages.map((stage, index) => (
+                      <span key={stage} style={{ alignItems: 'center', display: 'inline-flex', gap: '8px' }}>
+                        <span
+                          style={{
+                            ...fontStyle,
+                            border: '1px solid rgba(10, 10, 10, 0.12)',
+                            borderRadius: '999px',
+                            color: 'rgba(10, 10, 10, 0.58)',
+                            fontSize: '11px',
+                            fontWeight: 400,
+                            lineHeight: '18px',
+                            padding: '5px 10px',
+                          }}
+                        >
+                          {stage}
+                        </span>
+                        {index < pipeline.stages.length - 1 && (
+                          <span aria-hidden="true" style={{ color: 'rgba(10, 10, 10, 0.28)', fontSize: '14px' }}>
+                            →
+                          </span>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <p
+                style={{
+                  ...fontStyle,
+                  borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                  color: 'rgba(10, 10, 10, 0.54)',
+                  fontSize: '15px',
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                  margin: 0,
+                  paddingTop: '24px',
+                }}
+              >
+                Different labels, the same underlying logic: stage, activity, ownership, next action, and outcome.
+              </p>
+            </div>
+
+            <p
+              hidden
+              style={{
+                ...fontStyle,
+                color: textColor.strong,
+                fontSize: 'clamp(26px, 3.4vw, 42px)',
+                fontWeight: 400,
+                lineHeight: 1.2,
+                margin: 'clamp(80px, 10vw, 120px) 0 0',
+                maxWidth: '1100px',
+              }}
+            >
+              Project defined the context. Evaluation determined priority. Campaign initiated action.{' '}
+              <span style={{ color: '#2459d3' }}>Pipeline preserved progress.</span>
+            </p>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="04.1 / Collect Without Leaving LinkedIn"
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p
+              style={{
+                ...fontStyle,
+                color: '#2459d3',
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '0.1em',
+                lineHeight: '18px',
+                margin: '0 0 16px',
+                textTransform: 'uppercase',
+              }}
+            >
+              04.1 — Collect without leaving LinkedIn
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(44px, 5.5vw, 68px)',
+                lineHeight: 1.06,
+                marginBottom: '28px',
+                maxWidth: '1050px',
+              }}
+            >
+              Bringing profile collection into the user’s existing workflow
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '920px' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 16px' }}>
+                Recruiters and sales professionals already discovered people on LinkedIn. The problem began when they needed to preserve a promising profile: information had to be copied, reorganized, and connected to the correct task in another tool.
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                I designed a Chrome Extension that allowed users to collect a profile and place it into the right Project without leaving LinkedIn.
+              </p>
+            </div>
+
+            <div style={{ backgroundColor: '#F7F9FD', border: '1px solid rgba(36, 89, 211, 0.12)', padding: 'clamp(32px, 6vw, 72px)' }}>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.4vw, 56px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 22px', maxWidth: '940px' }}>
+                Save the profile while the context is still clear
+              </h2>
+              <div style={{ marginBottom: 'clamp(48px, 7vw, 76px)', maxWidth: '900px' }}>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 8px' }}>
+                  Instead of treating collection as a separate administrative task, ConnectNova brought the action directly into the LinkedIn profile page.
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                  Users could choose where the person belonged, save the available profile information, and continue browsing without interrupting their search.
+                </p>
+              </div>
+
+              <div style={{ backgroundColor: '#F8F9FB', border: '1px solid rgba(10, 10, 10, 0.1)', padding: '14px' }}>
+                <Image
+                  src="/img/connectnova/Extension.avif"
+                  alt="ConnectNova Chrome extension embedded in LinkedIn"
+                  width={1600}
+                  height={1000}
+                  sizes="(max-width: 1400px) 100vw, 1400px"
+                  style={{ display: 'block', height: 'auto', width: '100%' }}
+                />
+              </div>
+
+              <div hidden style={{ backgroundColor: '#E9EDF3', border: '1px solid rgba(10, 10, 10, 0.1)', overflow: 'hidden' }}>
+                <div style={{ alignItems: 'center', backgroundColor: '#FFFFFF', borderBottom: '1px solid rgba(10, 10, 10, 0.1)', display: 'flex', gap: '8px', height: '42px', padding: '0 16px' }}>
+                  {['#ff6b62', '#f6bf4f', '#64c466'].map((color) => (
+                    <span key={color} style={{ backgroundColor: color, borderRadius: '50%', height: '8px', width: '8px' }} />
+                  ))}
+                  <span style={{ ...fontStyle, backgroundColor: '#F4F5F7', borderRadius: '6px', color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', lineHeight: '20px', marginLeft: '12px', maxWidth: '520px', padding: '0 12px', width: '55%' }}>
+                    linkedin.com/in/alex-morgan
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_0.9fr]">
+                  <div style={{ backgroundColor: '#F3F5F7', minHeight: '590px', padding: 'clamp(24px, 4vw, 44px)' }}>
+                    <div style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.08)', minHeight: '500px', padding: 'clamp(28px, 4vw, 48px)' }}>
+                      <div style={{ alignItems: 'center', display: 'flex', gap: '20px', marginBottom: '34px' }}>
+                        <div style={{ alignItems: 'center', backgroundColor: '#DCE5F2', borderRadius: '50%', color: '#2459d3', display: 'flex', flex: '0 0 auto', fontSize: '18px', fontWeight: 500, height: '76px', justifyContent: 'center', width: '76px' }}>AM</div>
+                        <div>
+                          <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '24px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 8px' }}>Alex Morgan</h3>
+                          <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '13px', lineHeight: 1.5, margin: 0 }}>Senior Product Recruiter · SaaS &amp; AI</p>
+                        </div>
+                      </div>
+                      {[
+                        ['About', 'Building product and engineering teams for high-growth technology companies.'],
+                        ['Experience', 'Senior Product Recruiter · Enterprise SaaS'],
+                        ['Background', 'Talent acquisition · Technical hiring · Team scaling'],
+                      ].map(([label, body]) => (
+                        <div key={label} style={{ borderTop: '1px solid rgba(10, 10, 10, 0.09)', padding: '22px 0' }}>
+                          <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 8px', textTransform: 'uppercase' }}>{label}</p>
+                          <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '12px', lineHeight: 1.6, margin: 0 }}>{body}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <aside style={{ backgroundColor: '#FFFFFF', borderLeft: '1px solid rgba(10, 10, 10, 0.1)', display: 'flex', flexDirection: 'column', minHeight: '590px', padding: 'clamp(24px, 4vw, 38px)' }}>
+                    <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 32px', textTransform: 'uppercase' }}>ConnectNova Extension</p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 10px', textTransform: 'uppercase' }}>Selected profile</p>
+                    <div style={{ alignItems: 'center', borderBottom: '1px solid rgba(10, 10, 10, 0.1)', display: 'flex', gap: '12px', marginBottom: '28px', paddingBottom: '22px' }}>
+                      <div style={{ alignItems: 'center', backgroundColor: '#EEF2F8', borderRadius: '50%', color: '#2459d3', display: 'flex', fontSize: '10px', fontWeight: 500, height: '38px', justifyContent: 'center', width: '38px' }}>AM</div>
+                      <div>
+                        <p style={{ ...fontStyle, color: textColor.strong, fontSize: '13px', fontWeight: 500, margin: '0 0 4px' }}>Alex Morgan</p>
+                        <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '10px', margin: 0 }}>Senior Product Recruiter</p>
+                      </div>
+                    </div>
+                    <label style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 10px', textTransform: 'uppercase' }}>Choose Project</label>
+                    <div style={{ ...fontStyle, alignItems: 'center', border: '1px solid rgba(10, 10, 10, 0.14)', color: textColor.strong, display: 'flex', fontSize: '12px', justifyContent: 'space-between', lineHeight: '20px', marginBottom: '18px', padding: '12px 14px' }}>
+                      Senior Product Recruiter · AI SaaS <span style={{ color: 'rgba(10, 10, 10, 0.34)' }}>⌄</span>
+                    </div>
+                    <div style={{ backgroundColor: '#F7F9FD', border: '1px solid rgba(36, 89, 211, 0.12)', marginBottom: '20px', padding: '14px' }}>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.06em', margin: '0 0 8px', textTransform: 'uppercase' }}>Ready to collect</p>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '10px', lineHeight: 1.55, margin: 0 }}>Profile information and LinkedIn source will be saved to the selected Project.</p>
+                    </div>
+                    <button type="button" style={{ ...fontStyle, backgroundColor: '#2459d3', border: 0, borderRadius: '6px', color: '#FFFFFF', cursor: 'default', fontSize: '12px', fontWeight: 500, lineHeight: '20px', padding: '11px 16px', width: '100%' }}>Collect profile</button>
+                    <div style={{ backgroundColor: 'rgba(36, 89, 211, 0.06)', border: '1px solid rgba(36, 89, 211, 0.18)', marginTop: '16px', padding: '14px' }}>
+                      <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, margin: '0 0 5px' }}>Profile collected</p>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.46)', fontSize: '10px', lineHeight: 1.5, margin: 0 }}>Saved to Senior Product Recruiter · AI SaaS</p>
+                    </div>
+                  </aside>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Collect in context', 'Save to the right Project', 'Clear success feedback'].map((annotation) => (
+                  <p key={annotation} style={{ ...fontStyle, backgroundColor: '#F7F9FD', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>{annotation}</p>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>How the collection flow worked</p>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', display: 'grid', gridTemplateColumns: 'repeat(5, minmax(210px, 1fr))', overflowX: 'auto' }}>
+                {[
+                  ['Open the Extension', 'Start from the LinkedIn profile', 'Open ConnectNova while reviewing a candidate or contact.'],
+                  ['Choose a Project', 'Connect the profile to a goal', 'Select an existing Project or create a new one before saving.'],
+                  ['Review the information', 'Confirm what will be collected', 'Verify the person and Project context before completing the action.'],
+                  ['Collect the profile', 'Save without switching tools', 'Add the profile directly to the selected Project in ConnectNova.'],
+                  ['Receive confirmation', 'Make the result visible', 'A clear success state confirms where the person was stored.'],
+                ].map(([eyebrow, title, body], index) => (
+                  <article key={eyebrow} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '330px', padding: 'clamp(28px, 4vw, 42px) 26px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.07em', lineHeight: '17px', margin: '0 0 38px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {eyebrow}</p>
+                    <h3 style={{ ...fontStyle, color: index === 1 ? '#2459d3' : textColor.strong, fontSize: '20px', fontWeight: 500, lineHeight: 1.22, margin: '0 0 18px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '12px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(72px, 9vw, 112px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Why these decisions mattered</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Keep collection in context', 'Users could act at the moment they identified a relevant person instead of postponing the task until they returned to another platform.'],
+                  ['Ask for the Project before saving', 'Selecting a Project during collection ensured that every saved profile entered ConnectNova with a clear purpose.'],
+                  ['Confirm the outcome immediately', 'Visible feedback showed whether the action succeeded and where the profile had been stored.'],
+                ].map(([title, body], index) => (
+                  <article key={title} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <h3 style={{ ...fontStyle, color: index === 1 ? '#2459d3' : textColor.strong, fontSize: 'clamp(21px, 2.2vw, 28px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 18px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '14px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#F7F9FD', borderBottom: '1px solid rgba(36, 89, 211, 0.14)', borderTop: '1px solid rgba(36, 89, 211, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', padding: 'clamp(44px, 7vw, 72px)' }}>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 20px', textTransform: 'uppercase' }}>Validation</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 clamp(40px, 6vw, 60px)', maxWidth: '900px' }}>A clearer collection flow improved task completion</h2>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                {[
+                  ['76% → 93%', 'Collection completion rate', 'Task completion increased after clarifying the Project selection and save flow.'],
+                  ['72% → 87%', 'Save rate after collection', 'Task completion increased after improving action feedback and the post-save state.'],
+                ].map(([value, label, body]) => (
+                  <article key={value} style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', paddingTop: '28px' }}>
+                    <p style={{ ...fontStyle, color: '#2459d3', fontSize: 'clamp(48px, 6vw, 68px)', fontWeight: 500, letterSpacing: '-0.05em', lineHeight: 1, margin: '0 0 18px' }}>{value}</p>
+                    <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '16px', fontWeight: 500, lineHeight: 1.4, margin: '0 0 10px' }}>{label}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+              <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', lineHeight: 1.6, margin: '36px 0 0', paddingTop: '18px' }}>
+                Results from usability testing. Participant count and test round to be added from the original research record.
+              </p>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.2vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1080px' }}>
+                Collection became part of sourcing—<span style={{ color: '#2459d3' }}>not a separate task after it.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '900px' }}>
+                Users could move a promising LinkedIn profile into a structured Project while preserving the context behind the decision.
+              </p>
+            </div>
+
+            <div hidden>
+
+            <div
+              style={{
+                backgroundColor: '#F7F9FD',
+                border: '1px solid rgba(36, 89, 211, 0.12)',
+                padding: 'clamp(32px, 6vw, 72px)',
+              }}
+            >
+              <h2
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.4vw, 56px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.1,
+                  margin: '0 0 22px',
+                  maxWidth: '940px',
+                }}
+              >
+                Keep the search. Change what users see first.
+              </h2>
+              <div style={{ marginBottom: 'clamp(48px, 7vw, 76px)', maxWidth: '900px' }}>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: 'rgba(10, 10, 10, 0.62)',
+                    fontSize: '17px',
+                    fontWeight: 300,
+                    lineHeight: 1.65,
+                    margin: '0 0 8px',
+                  }}
+                >
+                  ConnectNova evaluated profiles against the user’s Project criteria and re-ranked the existing LinkedIn results by fit.
+                </p>
+                <p
+                  style={{
+                    ...fontStyle,
+                    color: 'rgba(10, 10, 10, 0.62)',
+                    fontSize: '17px',
+                    fontWeight: 300,
+                    lineHeight: 1.65,
+                    margin: 0,
+                  }}
+                >
+                  Instead of opening profiles in LinkedIn’s default order, users could begin with the strongest candidates or contacts.
+                </p>
+              </div>
+
+              <div style={{ backgroundColor: '#E9EDF3', border: '1px solid rgba(10, 10, 10, 0.1)', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    alignItems: 'center',
+                    backgroundColor: '#FFFFFF',
+                    borderBottom: '1px solid rgba(10, 10, 10, 0.1)',
+                    display: 'flex',
+                    gap: '8px',
+                    height: '42px',
+                    padding: '0 16px',
+                  }}
+                >
+                  {['#ff6b62', '#f6bf4f', '#64c466'].map((color) => (
+                    <span key={color} style={{ backgroundColor: color, borderRadius: '50%', height: '8px', width: '8px' }} />
+                  ))}
+                  <span
+                    style={{
+                      ...fontStyle,
+                      backgroundColor: '#F4F5F7',
+                      borderRadius: '6px',
+                      color: 'rgba(10, 10, 10, 0.38)',
+                      fontSize: '10px',
+                      lineHeight: '20px',
+                      marginLeft: '12px',
+                      maxWidth: '520px',
+                      padding: '0 12px',
+                      width: '55%',
+                    }}
+                  >
+                    linkedin.com/search/results/people
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-[1.65fr_0.8fr]">
+                  <div style={{ backgroundColor: '#F3F5F7', minHeight: '610px', padding: 'clamp(24px, 4vw, 44px)' }}>
+                    <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '28px' }}>
+                      <span
+                        style={{
+                          ...fontStyle,
+                          color: '#0A66C2',
+                          fontSize: '18px',
+                          fontWeight: 600,
+                          marginRight: '8px',
+                        }}
+                      >
+                        in
+                      </span>
+                      {['People', 'Locations', 'Current company', 'All filters'].map((filter) => (
+                        <span
+                          key={filter}
+                          style={{
+                            ...fontStyle,
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid rgba(10, 10, 10, 0.13)',
+                            borderRadius: '999px',
+                            color: 'rgba(10, 10, 10, 0.58)',
+                            fontSize: '10px',
+                            lineHeight: '18px',
+                            padding: '4px 10px',
+                          }}
+                        >
+                          {filter}
+                        </span>
+                      ))}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {[
+                        {
+                          initials: 'AM',
+                          name: 'Alex Morgan',
+                          role: 'Senior Product Recruiter · SaaS & AI',
+                          detail: '8+ years in talent acquisition · San Francisco Bay Area',
+                          score: '94',
+                          evidence: 'Strong domain, role, and industry alignment',
+                        },
+                        {
+                          initials: 'OC',
+                          name: 'Olivia Chen',
+                          role: 'Talent Acquisition Lead · Enterprise Software',
+                          detail: 'Technical hiring · Scaling teams · United States',
+                          score: '91',
+                          evidence: 'Relevant experience and company background',
+                        },
+                        {
+                          initials: 'MS',
+                          name: 'Marco Silva',
+                          role: 'Growth Recruiter · B2B Technology',
+                          detail: 'Recruiting operations · Global sourcing · Remote',
+                          score: '87',
+                          evidence: 'Matches most Project criteria',
+                        },
+                      ].map((profile, index) => (
+                        <div
+                          key={profile.name}
+                          className="grid grid-cols-[44px_1fr_auto] gap-4"
+                          style={{
+                            alignItems: 'start',
+                            backgroundColor: '#FFFFFF',
+                            border: index === 0 ? '1px solid rgba(36, 89, 211, 0.34)' : '1px solid rgba(10, 10, 10, 0.08)',
+                            padding: '20px',
+                          }}
+                        >
+                          <span
+                            style={{
+                              ...fontStyle,
+                              alignItems: 'center',
+                              backgroundColor: index === 0 ? 'rgba(36, 89, 211, 0.12)' : '#EEF1F5',
+                              borderRadius: '50%',
+                              color: index === 0 ? '#2459d3' : 'rgba(10, 10, 10, 0.48)',
+                              display: 'flex',
+                              fontSize: '11px',
+                              fontWeight: 500,
+                              height: '44px',
+                              justifyContent: 'center',
+                              width: '44px',
+                            }}
+                          >
+                            {profile.initials}
+                          </span>
+                          <div>
+                            <p style={{ ...fontStyle, color: textColor.strong, fontSize: '14px', fontWeight: 500, lineHeight: '20px', margin: '0 0 4px' }}>
+                              {profile.name}
+                            </p>
+                            <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '11px', lineHeight: '17px', margin: '0 0 8px' }}>
+                              {profile.role}
+                            </p>
+                            <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '10px', lineHeight: '16px', margin: '0 0 12px' }}>
+                              {profile.detail}
+                            </p>
+                            <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '10px', lineHeight: '16px', margin: 0 }}>
+                              {profile.evidence}
+                            </p>
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <span
+                              style={{
+                                ...fontStyle,
+                                color: '#2459d3',
+                                display: 'block',
+                                fontSize: '26px',
+                                fontWeight: 500,
+                                lineHeight: 1,
+                              }}
+                            >
+                              {profile.score}
+                            </span>
+                            <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.34)', fontSize: '8px', textTransform: 'uppercase' }}>
+                              Fit score
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <aside
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      borderLeft: '1px solid rgba(10, 10, 10, 0.1)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      minHeight: '610px',
+                      padding: 'clamp(24px, 4vw, 40px)',
+                    }}
+                  >
+                    <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 28px', textTransform: 'uppercase' }}>
+                      ConnectNova
+                    </p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 8px', textTransform: 'uppercase' }}>
+                      Selected Project
+                    </p>
+                    <p style={{ ...fontStyle, color: textColor.strong, fontSize: '17px', fontWeight: 500, lineHeight: 1.3, margin: '0 0 28px' }}>
+                      Senior Product Recruiter · AI SaaS
+                    </p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 12px', textTransform: 'uppercase' }}>
+                      Evaluation criteria
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '28px' }}>
+                      {['8+ years recruiting experience', 'B2B SaaS or AI background', 'Technical hiring expertise'].map((criterion) => (
+                        <div
+                          key={criterion}
+                          style={{
+                            ...fontStyle,
+                            backgroundColor: '#F6F8FC',
+                            border: '1px solid rgba(36, 89, 211, 0.1)',
+                            color: 'rgba(10, 10, 10, 0.58)',
+                            fontSize: '10px',
+                            lineHeight: '16px',
+                            padding: '10px 12px',
+                          }}
+                        >
+                          {criterion}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ backgroundColor: 'rgba(36, 89, 211, 0.055)', border: '1px solid rgba(36, 89, 211, 0.15)', padding: '16px' }}>
+                      <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, margin: '0 0 8px' }}>94 · Strong fit</p>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '10px', lineHeight: 1.55, margin: 0 }}>
+                        Evidence connects the score to profile experience, role history, and company context.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      style={{
+                        ...fontStyle,
+                        backgroundColor: '#2459d3',
+                        border: 0,
+                        borderRadius: '6px',
+                        color: '#FFFFFF',
+                        cursor: 'default',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        lineHeight: '20px',
+                        marginTop: 'auto',
+                        padding: '11px 16px',
+                        width: '100%',
+                      }}
+                    >
+                      Save to Project
+                    </button>
+                  </aside>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Re-ranked by fit', 'Evidence behind the score', 'Save with Project context'].map((annotation) => (
+                  <p
+                    key={annotation}
+                    style={{
+                      ...fontStyle,
+                      backgroundColor: '#F7F9FD',
+                      color: '#2459d3',
+                      fontSize: '11px',
+                      fontWeight: 500,
+                      letterSpacing: '0.06em',
+                      lineHeight: '18px',
+                      margin: 0,
+                      padding: '16px 18px',
+                      textAlign: 'center',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {annotation}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.42)',
+                  fontSize: '11px',
+                  fontWeight: 500,
+                  letterSpacing: '0.1em',
+                  lineHeight: '18px',
+                  margin: '0 0 24px',
+                  textTransform: 'uppercase',
+                }}
+              >
+                How the experience worked
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  {
+                    eyebrow: '01 — Define the goal',
+                    title: 'Tell ConnectNova who you are looking for',
+                    body: 'Users selected an existing Project or created a new one using a job brief, client requirement, or ideal customer profile.',
+                    note: 'The Project established the context used to evaluate every profile in the search.',
+                  },
+                  {
+                    eyebrow: '02 — Generate the criteria',
+                    title: 'Turn the goal into a clear definition of fit',
+                    body: 'ConnectNova translated the Project brief into evaluation criteria such as experience, skills, role, industry, company background, and other relevant signals.',
+                    note: 'Users could review and edit the criteria before applying them to the search.',
+                  },
+                  {
+                    eyebrow: '03 — Evaluate the results',
+                    title: 'Assess every profile against the same goal',
+                    body: 'AI reviewed the information available in each LinkedIn profile and evaluated how well the person matched the Project criteria.',
+                    note: 'Each result included an overall fit score, criteria-level results, and supporting profile evidence.',
+                  },
+                ].map((step, index) => (
+                  <article
+                    key={step.title}
+                    className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''}
+                    style={{ display: 'flex', flexDirection: 'column', minHeight: '390px', padding: 'clamp(32px, 5vw, 52px)' }}
+                  >
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>
+                      {step.eyebrow}
+                    </p>
+                    <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(23px, 2.4vw, 31px)', fontWeight: 500, lineHeight: 1.18, margin: '0 0 20px' }}>
+                      {step.title}
+                    </h2>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 28px' }}>
+                      {step.body}
+                    </p>
+                    <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.42)', fontSize: '12px', fontWeight: 400, lineHeight: 1.55, margin: 'auto 0 0', paddingTop: '18px' }}>
+                      {step.note}
+                    </p>
+                  </article>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  {
+                    eyebrow: '04 — Re-rank by fit',
+                    title: 'Bring the strongest matches to the top',
+                    body: 'ConnectNova reordered the search so that the most relevant candidates or contacts appeared first.',
+                    note: 'Users could focus on high-potential profiles instead of reviewing the list in LinkedIn’s default order.',
+                  },
+                  {
+                    eyebrow: '05 — Save without losing context',
+                    title: 'Move promising people directly into the Project',
+                    body: 'Users could save a profile from LinkedIn while retaining its evaluation, Project context, and source information.',
+                    note: 'The person entered the managed workflow without requiring users to copy information into another tool.',
+                  },
+                ].map((step, index) => (
+                  <article
+                    key={step.title}
+                    className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''}
+                    style={{ display: 'flex', flexDirection: 'column', minHeight: '340px', padding: 'clamp(32px, 5vw, 52px)' }}
+                  >
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>
+                      {step.eyebrow}
+                    </p>
+                    <h2 style={{ ...fontStyle, color: index === 0 ? '#2459d3' : textColor.strong, fontSize: 'clamp(23px, 2.4vw, 31px)', fontWeight: 500, lineHeight: 1.18, margin: '0 0 20px' }}>
+                      {step.title}
+                    </h2>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 28px' }}>
+                      {step.body}
+                    </p>
+                    <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.42)', fontSize: '12px', fontWeight: 400, lineHeight: 1.55, margin: 'auto 0 0', paddingTop: '18px' }}>
+                      {step.note}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                marginTop: 'clamp(80px, 10vw, 120px)',
+                paddingTop: 'clamp(52px, 7vw, 80px)',
+              }}
+            >
+              <p
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.2vw, 52px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.12,
+                  margin: '0 0 24px',
+                  maxWidth: '1080px',
+                }}
+              >
+                ConnectNova did not replace LinkedIn search. It made the results{' '}
+                <span style={{ color: '#2459d3' }}>more relevant to the user’s actual goal.</span>
+              </p>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: 'rgba(10, 10, 10, 0.5)',
+                  fontSize: '16px',
+                  fontWeight: 300,
+                  lineHeight: 1.6,
+                  margin: 0,
+                  maxWidth: '820px',
+                }}
+              >
+                The workflow stayed familiar, while AI reduced the effort required to identify who deserved attention first.
+              </p>
+            </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="04.2 / Visible and Editable AI Criteria"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p
+              style={{
+                ...fontStyle,
+                color: '#2459d3',
+                fontSize: '12px',
+                fontWeight: 500,
+                letterSpacing: '0.1em',
+                lineHeight: '18px',
+                margin: '0 0 16px',
+                textTransform: 'uppercase',
+              }}
+            >
+              04.2 — Make AI criteria visible and editable
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(44px, 5.5vw, 68px)',
+                lineHeight: 1.06,
+                marginBottom: '28px',
+                maxWidth: '1080px',
+              }}
+            >
+              Helping users start faster without giving up control
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '920px' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 16px' }}>
+                Recruiters and sales professionals evaluated people against different goals, but defining a consistent set of criteria for every Project required time and judgment.
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                ConnectNova used AI to generate an initial evaluation framework from the Project context. Users could review and edit the criteria before applying them to collected profiles.
+              </p>
+            </div>
+
+            <div style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.1)', padding: 'clamp(32px, 6vw, 72px)' }}>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.4vw, 56px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 22px', maxWidth: '980px' }}>
+                AI created the starting point. <span style={{ color: '#2459d3' }}>Users shaped the final framework.</span>
+              </h2>
+              <div style={{ marginBottom: 'clamp(48px, 7vw, 76px)', maxWidth: '920px' }}>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 8px' }}>
+                  Instead of presenting users with an unexplained score, ConnectNova first generated a visible set of evaluation criteria.
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                  This gave users a structured way to compare people while allowing them to adapt the framework to a specific role, client, or prospecting goal.
+                </p>
+              </div>
+
+              <div style={{ backgroundColor: '#F8F9FB', border: '1px solid rgba(10, 10, 10, 0.1)', padding: '14px' }}>
+                <Image
+                  src="/img/connectnova/Rerank.avif"
+                  alt="ConnectNova ranking and editable evaluation criteria workflow"
+                  width={1600}
+                  height={1000}
+                  sizes="(max-width: 1400px) 100vw, 1400px"
+                  style={{ display: 'block', height: 'auto', width: '100%' }}
+                />
+              </div>
+
+              <div hidden className="grid grid-cols-1 lg:grid-cols-[0.55fr_1fr]" style={{ border: '1px solid rgba(10, 10, 10, 0.1)' }}>
+                <div style={{ backgroundColor: '#F5F7FA', borderRight: '1px solid rgba(10, 10, 10, 0.1)', minHeight: '560px', padding: 'clamp(28px, 4vw, 46px)' }}>
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 34px', textTransform: 'uppercase' }}>Project context</p>
+                  <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '24px', fontWeight: 500, lineHeight: 1.25, margin: '0 0 12px' }}>Senior Product Recruiter</h3>
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', lineHeight: 1.6, margin: '0 0 34px' }}>Find an experienced product recruiter for a fast-growing enterprise AI company.</p>
+                  {[
+                    ['Goal', 'Hire for a senior recruiting role'],
+                    ['Industry', 'AI · B2B SaaS'],
+                    ['Experience', '8+ years preferred'],
+                    ['Profiles', '24 people collected'],
+                  ].map(([label, value]) => (
+                    <div key={label} style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', padding: '18px 0' }}>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.36)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.06em', margin: '0 0 7px', textTransform: 'uppercase' }}>{label}</p>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.6)', fontSize: '12px', lineHeight: 1.5, margin: 0 }}>{value}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ backgroundColor: '#FFFFFF', minHeight: '560px', padding: 'clamp(28px, 4vw, 46px)' }}>
+                  <div style={{ alignItems: 'flex-start', display: 'flex', flexWrap: 'wrap', gap: '18px', justifyContent: 'space-between', marginBottom: '30px' }}>
+                    <div>
+                      <p style={{ ...fontStyle, color: '#2459d3', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 10px', textTransform: 'uppercase' }}>AI-generated criteria</p>
+                      <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '24px', fontWeight: 500, lineHeight: 1.2, margin: 0 }}>Review before applying</h3>
+                    </div>
+                    <span style={{ ...fontStyle, backgroundColor: 'rgba(36, 89, 211, 0.07)', color: '#2459d3', fontSize: '10px', fontWeight: 500, padding: '8px 10px', textTransform: 'uppercase' }}>4 criteria generated</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {[
+                      ['Relevant recruiting experience', '40%', '8+ years across product and technical recruiting'],
+                      ['AI or B2B SaaS background', '25%', 'Experience in the target industry or business model'],
+                      ['Enterprise team scaling', '20%', 'Evidence of hiring within scaling organizations'],
+                      ['Stakeholder partnership', '15%', 'Experience working with senior hiring managers'],
+                    ].map(([title, weight, detail], index) => (
+                      <div key={title} style={{ alignItems: 'center', backgroundColor: index === 0 ? 'rgba(36, 89, 211, 0.045)' : '#FAFAFA', border: index === 0 ? '1px solid rgba(36, 89, 211, 0.18)' : '1px solid rgba(10, 10, 10, 0.09)', display: 'grid', gap: '14px', gridTemplateColumns: '1fr auto', padding: '16px' }}>
+                        <div>
+                          <p style={{ ...fontStyle, color: textColor.strong, fontSize: '12px', fontWeight: 500, lineHeight: 1.45, margin: '0 0 4px' }}>{title}</p>
+                          <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '10px', lineHeight: 1.5, margin: 0 }}>{detail}</p>
+                        </div>
+                        <div style={{ alignItems: 'center', display: 'flex', gap: '10px' }}>
+                          <span style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500 }}>{weight}</span>
+                          <button type="button" style={{ ...fontStyle, backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.12)', color: 'rgba(10, 10, 10, 0.52)', cursor: 'default', fontSize: '10px', padding: '6px 9px' }}>Edit</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button type="button" style={{ ...fontStyle, backgroundColor: '#2459d3', border: 0, borderRadius: '6px', color: '#FFFFFF', cursor: 'default', fontSize: '12px', fontWeight: 500, lineHeight: '20px', marginTop: '22px', padding: '11px 18px', width: '100%' }}>Apply framework</button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Generated from Project context', 'Visible before evaluation', 'Editable by the user'].map((annotation) => (
+                  <p key={annotation} style={{ ...fontStyle, backgroundColor: '#FFFFFF', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>{annotation}</p>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>How the framework worked</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Generate', 'Turn the Project context into evaluation criteria', 'ConnectNova generated an initial set of criteria so users did not need to build the framework from a blank state.'],
+                  ['Review and edit', 'Adapt the criteria to the user’s judgment', 'Users could review and edit the AI output before applying it across profiles.'],
+                  ['Apply consistently', 'Evaluate people against the same Project goal', 'The selected criteria helped users compare and prioritize people within the Project consistently.'],
+                ].map(([eyebrow, title, body], index) => (
+                  <article key={eyebrow} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ display: 'flex', flexDirection: 'column', minHeight: '370px', padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {eyebrow}</p>
+                    <h3 style={{ ...fontStyle, color: index === 1 ? '#2459d3' : textColor.strong, fontSize: 'clamp(22px, 2.3vw, 30px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 20px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '14px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(72px, 9vw, 112px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Design principles</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Visible before applied', 'Generated criteria were shown before becoming part of the evaluation process.'],
+                  ['Editable by the user', 'Users could refine the framework instead of accepting AI output as fixed.'],
+                  ['Specific to each Project', 'Criteria changed with each hiring, client, or prospecting goal.'],
+                ].map(([title, body], index) => (
+                  <div key={title} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ padding: '30px clamp(26px, 4vw, 42px)' }}>
+                    <h3 style={{ ...fontStyle, color: index === 1 ? '#2459d3' : textColor.strong, fontSize: '18px', fontWeight: 500, lineHeight: 1.25, margin: '0 0 12px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid rgba(36, 89, 211, 0.14)', borderTop: '1px solid rgba(36, 89, 211, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', padding: 'clamp(44px, 7vw, 72px)' }}>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 20px', textTransform: 'uppercase' }}>Adoption</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 clamp(40px, 6vw, 60px)', maxWidth: '900px' }}>Users treated AI as a useful starting point</h2>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                {[
+                  ['84%', 'Adopted AI-generated evaluation criteria', 'Most users kept at least part of the framework generated by ConnectNova.'],
+                  ['31%', 'Edited the generated criteria', 'A meaningful share of users adjusted the framework to reflect their own judgment and context.'],
+                ].map(([value, label, body]) => (
+                  <article key={value} style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', paddingTop: '28px' }}>
+                    <p style={{ ...fontStyle, color: '#2459d3', fontSize: 'clamp(56px, 7vw, 76px)', fontWeight: 500, letterSpacing: '-0.05em', lineHeight: 1, margin: '0 0 18px' }}>{value}</p>
+                    <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '16px', fontWeight: 500, lineHeight: 1.4, margin: '0 0 10px' }}>{label}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(20px, 2.4vw, 28px)', fontWeight: 400, lineHeight: 1.35, margin: 'clamp(40px, 6vw, 60px) 0 0', maxWidth: '980px' }}>
+                The adoption rate showed that AI reduced setup effort, while the edit rate confirmed that users still needed control over the final evaluation framework.
+              </p>
+              <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', lineHeight: 1.6, margin: '32px 0 0', paddingTop: '18px' }}>
+                Product usage results. Sample size, testing method, and measurement period to be added from the original research record.
+              </p>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.2vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1120px' }}>
+                AI did not make the final decision. It helped users define a clearer and more consistent way to <span style={{ color: '#2459d3' }}>make it.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '900px' }}>
+                The generated framework reduced the effort required to start, while editing kept the evaluation aligned with each Project’s real requirements.
+              </p>
+            </div>
+
+            <div hidden>
+
+            <div
+              style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid rgba(10, 10, 10, 0.1)',
+                padding: 'clamp(32px, 6vw, 72px)',
+              }}
+            >
+              <h2
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.4vw, 56px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.1,
+                  margin: '0 0 22px',
+                  maxWidth: '940px',
+                }}
+              >
+                A score showed priority. Evidence explained why.
+              </h2>
+              <div style={{ marginBottom: 'clamp(48px, 7vw, 76px)', maxWidth: '920px' }}>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 8px' }}>
+                  ConnectNova broke each profile’s overall fit into visible evaluation criteria and connected every judgment to supporting information from the LinkedIn profile.
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                  Users could quickly scan the result, investigate the reasoning, and make the final decision themselves.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-[7fr_5fr]" style={{ border: '1px solid rgba(10, 10, 10, 0.1)' }}>
+                <div style={{ backgroundColor: '#F7F8FA', minHeight: '640px', padding: 'clamp(28px, 4vw, 48px)' }}>
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 32px', textTransform: 'uppercase' }}>
+                    Profile information
+                  </p>
+                  <div style={{ alignItems: 'center', display: 'flex', gap: '18px', marginBottom: '36px' }}>
+                    <span
+                      style={{
+                        ...fontStyle,
+                        alignItems: 'center',
+                        backgroundColor: 'rgba(36, 89, 211, 0.12)',
+                        borderRadius: '50%',
+                        color: '#2459d3',
+                        display: 'flex',
+                        fontSize: '16px',
+                        fontWeight: 500,
+                        height: '64px',
+                        justifyContent: 'center',
+                        width: '64px',
+                      }}
+                    >
+                      AM
+                    </span>
+                    <div>
+                      <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '24px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 6px' }}>
+                        Alex Morgan
+                      </h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '14px', lineHeight: '21px', margin: 0 }}>
+                        Senior Product Recruiter · AI and B2B SaaS
+                      </p>
+                    </div>
+                  </div>
+
+                  <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', paddingTop: '28px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 18px', textTransform: 'uppercase' }}>
+                      Experience
+                    </p>
+                    {[
+                      {
+                        role: 'Senior Product Recruiter',
+                        company: 'Aperture AI',
+                        duration: '2021 — Present',
+                        detail: 'Led technical and product hiring for a scaling enterprise AI organization.',
+                        highlighted: true,
+                      },
+                      {
+                        role: 'Talent Acquisition Partner',
+                        company: 'Northstar SaaS',
+                        duration: '2017 — 2021',
+                        detail: 'Built recruiting programs across product, engineering, and go-to-market teams.',
+                        highlighted: false,
+                      },
+                    ].map((experience) => (
+                      <div
+                        key={experience.company}
+                        style={{
+                          backgroundColor: experience.highlighted ? 'rgba(36, 89, 211, 0.055)' : 'transparent',
+                          borderLeft: experience.highlighted ? '2px solid #2459d3' : '2px solid rgba(10, 10, 10, 0.1)',
+                          marginBottom: '16px',
+                          padding: '16px 18px',
+                        }}
+                      >
+                        <div style={{ alignItems: 'baseline', display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'space-between' }}>
+                          <p style={{ ...fontStyle, color: textColor.strong, fontSize: '14px', fontWeight: 500, lineHeight: '21px', margin: 0 }}>
+                            {experience.role} · {experience.company}
+                          </p>
+                          <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px' }}>{experience.duration}</span>
+                        </div>
+                        <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '12px', lineHeight: 1.6, margin: '8px 0 0' }}>
+                          {experience.detail}
+                        </p>
+                        {experience.highlighted && (
+                          <span style={{ ...fontStyle, color: '#2459d3', display: 'inline-block', fontSize: '9px', fontWeight: 500, letterSpacing: '0.05em', marginTop: '10px', textTransform: 'uppercase' }}>
+                            Evidence used in evaluation
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', marginTop: '24px', paddingTop: '24px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 14px', textTransform: 'uppercase' }}>
+                      Skills and context
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {['Technical recruiting', 'Product hiring', 'AI industry', 'B2B SaaS', 'Team scaling'].map((skill) => (
+                        <span
+                          key={skill}
+                          style={{
+                            ...fontStyle,
+                            backgroundColor: skill === 'AI industry' || skill === 'B2B SaaS' ? 'rgba(36, 89, 211, 0.08)' : '#FFFFFF',
+                            border: '1px solid rgba(10, 10, 10, 0.1)',
+                            borderRadius: '999px',
+                            color: skill === 'AI industry' || skill === 'B2B SaaS' ? '#2459d3' : 'rgba(10, 10, 10, 0.52)',
+                            fontSize: '10px',
+                            lineHeight: '17px',
+                            padding: '5px 10px',
+                          }}
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <aside style={{ backgroundColor: '#FFFFFF', borderLeft: '1px solid rgba(10, 10, 10, 0.1)', minHeight: '640px', padding: 'clamp(28px, 4vw, 48px)' }}>
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 28px', textTransform: 'uppercase' }}>
+                    Overall fit
+                  </p>
+                  <div style={{ alignItems: 'flex-end', display: 'flex', gap: '12px', marginBottom: '34px' }}>
+                    <span style={{ ...fontStyle, color: '#2459d3', fontSize: 'clamp(64px, 8vw, 96px)', fontWeight: 300, letterSpacing: '-0.06em', lineHeight: 0.8 }}>
+                      88
+                    </span>
+                    <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '13px', fontWeight: 500, lineHeight: '20px' }}>
+                      Strong match
+                    </span>
+                  </div>
+                  <p style={{ ...fontStyle, backgroundColor: 'rgba(36, 89, 211, 0.055)', color: '#2459d3', fontSize: '10px', fontWeight: 500, lineHeight: '16px', margin: '0 0 32px', padding: '10px 12px', textTransform: 'uppercase' }}>
+                    Project-specific score
+                  </p>
+
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 14px', textTransform: 'uppercase' }}>
+                    Criteria breakdown
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {[
+                      {
+                        status: 'Match',
+                        title: 'Relevant recruiting experience',
+                        score: '36 / 40',
+                        evidence: '8+ years across product and technical hiring roles.',
+                        color: '#1a7f5a',
+                      },
+                      {
+                        status: 'Match',
+                        title: 'AI or B2B SaaS background',
+                        score: '28 / 30',
+                        evidence: 'Current and previous roles both support the target industry context.',
+                        color: '#1a7f5a',
+                      },
+                      {
+                        status: 'Partial',
+                        title: 'Enterprise team scaling',
+                        score: '24 / 30',
+                        evidence: 'Strong scaling experience; enterprise scope is less explicit.',
+                        color: '#b26a00',
+                      },
+                    ].map((criterion) => (
+                      <div key={criterion.title} style={{ border: '1px solid rgba(10, 10, 10, 0.1)', padding: '14px' }}>
+                        <div style={{ alignItems: 'center', display: 'flex', gap: '8px', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ ...fontStyle, color: criterion.color, fontSize: '9px', fontWeight: 500, textTransform: 'uppercase' }}>{criterion.status}</span>
+                          <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '9px', fontVariantNumeric: 'tabular-nums' }}>{criterion.score}</span>
+                        </div>
+                        <p style={{ ...fontStyle, color: textColor.strong, fontSize: '12px', fontWeight: 500, lineHeight: '18px', margin: '0 0 8px' }}>
+                          {criterion.title}
+                        </p>
+                        <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.48)', fontSize: '10px', lineHeight: 1.5, margin: 0 }}>
+                          {criterion.evidence}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </aside>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Project-specific score', 'Criteria-level breakdown', 'Evidence from the profile'].map((annotation) => (
+                  <p
+                    key={annotation}
+                    style={{
+                      ...fontStyle,
+                      backgroundColor: '#FFFFFF',
+                      color: '#2459d3',
+                      fontSize: '11px',
+                      fontWeight: 500,
+                      letterSpacing: '0.06em',
+                      lineHeight: '18px',
+                      margin: 0,
+                      padding: '16px 18px',
+                      textAlign: 'center',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {annotation}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                Three levels of explanation
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  {
+                    eyebrow: '01 — Overall fit',
+                    title: 'Know who deserves attention first',
+                    body: 'A clear fit indicator showed the profile’s overall relevance to the current Project—not a permanent rating attached to the person.',
+                  },
+                  {
+                    eyebrow: '02 — Criteria breakdown',
+                    title: 'See where the profile matched—or fell short',
+                    body: 'Project-specific criteria made profiles comparable through the same framework instead of memory and intuition.',
+                  },
+                  {
+                    eyebrow: '03 — Supporting evidence',
+                    title: 'Trace every judgment back to the profile',
+                    body: 'Experience, roles, skills, and company context made the AI assessment easier to verify.',
+                  },
+                ].map((level, index) => (
+                  <article
+                    key={level.title}
+                    className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''}
+                    style={{ minHeight: '300px', padding: 'clamp(32px, 5vw, 52px)' }}
+                  >
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>
+                      {level.eyebrow}
+                    </p>
+                    <h2 style={{ ...fontStyle, color: index === 2 ? '#2459d3' : textColor.strong, fontSize: 'clamp(23px, 2.4vw, 31px)', fontWeight: 500, lineHeight: 1.18, margin: '0 0 20px' }}>
+                      {level.title}
+                    </h2>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                      {level.body}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div
+              style={{
+                backgroundColor: 'rgba(36, 89, 211, 0.05)',
+                borderBottom: '1px solid rgba(36, 89, 211, 0.14)',
+                borderTop: '1px solid rgba(36, 89, 211, 0.14)',
+                marginTop: 'clamp(80px, 10vw, 128px)',
+                padding: 'clamp(44px, 7vw, 72px)',
+              }}
+            >
+              <h2
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(32px, 4vw, 50px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.12,
+                  margin: '0 0 22px',
+                  maxWidth: '980px',
+                }}
+              >
+                AI created a starting point—not the final judgment.
+              </h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '16px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 clamp(48px, 7vw, 72px)', maxWidth: '940px' }}>
+                Before evaluating profiles, ConnectNova generated criteria from the Project brief. Users could review the framework and adapt it to the way their team actually made decisions.
+              </p>
+
+              <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+                <div style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(36, 89, 211, 0.14)', padding: 'clamp(28px, 4vw, 44px)' }}>
+                  <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 32px', textTransform: 'uppercase' }}>
+                    Criteria editor
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {[
+                      { title: 'Relevant recruiting experience', weight: '40%' },
+                      { title: 'AI or B2B SaaS background', weight: '30%' },
+                      { title: 'Enterprise team scaling', weight: '20%' },
+                      { title: 'Location and availability', weight: '10%' },
+                    ].map((criterion) => (
+                      <div
+                        key={criterion.title}
+                        className="grid grid-cols-[1fr_auto_auto] gap-3"
+                        style={{ alignItems: 'center', border: '1px solid rgba(10, 10, 10, 0.1)', padding: '14px' }}
+                      >
+                        <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.66)', fontSize: '12px', fontWeight: 400, lineHeight: '18px' }}>
+                          {criterion.title}
+                        </span>
+                        <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '10px', fontVariantNumeric: 'tabular-nums' }}>
+                          {criterion.weight}
+                        </span>
+                        <span style={{ ...fontStyle, color: '#2459d3', fontSize: '10px', fontWeight: 500, textTransform: 'uppercase' }}>Edit</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '18px' }}>
+                    {['+ Add criterion', 'Auto-balance'].map((action) => (
+                      <span
+                        key={action}
+                        style={{
+                          ...fontStyle,
+                          border: '1px solid rgba(36, 89, 211, 0.2)',
+                          color: '#2459d3',
+                          fontSize: '10px',
+                          fontWeight: 500,
+                          lineHeight: '17px',
+                          padding: '7px 10px',
+                        }}
+                      >
+                        {action}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 32px', textTransform: 'uppercase' }}>
+                    User control
+                  </p>
+                  <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                    {[
+                      'Edit the wording of a criterion',
+                      'Add missing requirements',
+                      'Remove irrelevant criteria',
+                      'Adjust the relative importance',
+                      'Review the evidence behind each result',
+                      'Make a final decision independently of the AI score',
+                    ].map((action, index) => (
+                      <div
+                        key={action}
+                        className="grid grid-cols-[32px_1fr] gap-3"
+                        style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.1)', padding: '15px 0' }}
+                      >
+                        <span style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.62)', fontSize: '10px', fontVariantNumeric: 'tabular-nums', lineHeight: '20px' }}>
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: '14px', fontWeight: 400, lineHeight: '20px' }}>
+                          {action}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <div style={{ overflowX: 'auto' }}>
+                <div
+                  style={{
+                    borderBottom: '1px solid rgba(10, 10, 10, 0.14)',
+                    borderTop: '1px solid rgba(10, 10, 10, 0.14)',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, minmax(220px, 1fr))',
+                    minWidth: '880px',
+                  }}
+                >
+                  {[
+                    { phase: 'Generate', title: 'Create criteria from the Project goal', body: 'AI translated the brief into an initial evaluation framework.' },
+                    { phase: 'Refine', title: 'Adapt criteria to the team’s judgment', body: 'Users reviewed and edited the framework before applying it.' },
+                    { phase: 'Evaluate', title: 'Assess every person consistently', body: 'Each profile was compared against the same Project-specific criteria.' },
+                    { phase: 'Decide', title: 'Keep the user in control', body: 'AI informed prioritisation; the user chose the final action.' },
+                  ].map((step, index, steps) => (
+                    <article
+                      key={step.phase}
+                      style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '240px', padding: '32px', position: 'relative' }}
+                    >
+                      <p style={{ ...fontStyle, color: index === steps.length - 1 ? '#2459d3' : 'rgba(36, 89, 211, 0.68)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 32px', textTransform: 'uppercase' }}>
+                        {String(index + 1).padStart(2, '0')} — {step.phase}
+                      </p>
+                      <h3 style={{ ...fontStyle, color: index === steps.length - 1 ? '#2459d3' : textColor.strong, fontSize: '22px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 16px' }}>
+                        {step.title}
+                      </h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                        {step.body}
+                      </p>
+                      {index < steps.length - 1 && (
+                        <span aria-hidden="true" style={{ ...fontStyle, backgroundColor: '#FAFAFA', color: 'rgba(36, 89, 211, 0.48)', fontSize: '20px', padding: '4px', position: 'absolute', right: '-15px', top: '25px', zIndex: 1 }}>
+                          →
+                        </span>
+                      )}
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p
+                style={{
+                  ...fontStyle,
+                  color: textColor.strong,
+                  fontSize: 'clamp(34px, 4.2vw, 52px)',
+                  fontWeight: 400,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.12,
+                  margin: '0 0 24px',
+                  maxWidth: '1080px',
+                }}
+              >
+                AI accelerated the first review without replacing{' '}
+                <span style={{ color: '#2459d3' }}>professional judgment.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                The score helped users prioritise. The criteria and evidence helped them decide.
+              </p>
+            </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="04.3 / Manage, Rank, Decide"
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p style={{ ...fontStyle, color: '#2459d3', fontSize: '12px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 16px', textTransform: 'uppercase' }}>
+              04.3 — Manage, rank, decide
+            </p>
+            <h1
+              style={{
+                ...headingLevel1Style,
+                fontSize: 'clamp(44px, 5.5vw, 68px)',
+                lineHeight: 1.06,
+                marginBottom: '28px',
+                maxWidth: '1080px',
+              }}
+            >
+              Bringing profiles, evaluation, and comparison into one workspace
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '980px' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 12px' }}>
+                After collecting profiles and defining the evaluation criteria, users needed a clear way to review people within each Project.
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                The web dashboard brought the people list, AI evaluation results, and profile details into one workspace, helping users compare profiles and decide who deserved attention first.
+              </p>
+            </div>
+
+            <div style={{ backgroundColor: '#F7F9FD', border: '1px solid rgba(36, 89, 211, 0.12)', padding: 'clamp(32px, 6vw, 72px)' }}>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.4vw, 56px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 22px', maxWidth: '980px' }}>
+                Manage the list without losing the individual context.
+              </h2>
+              <div style={{ marginBottom: 'clamp(48px, 7vw, 76px)', maxWidth: '920px' }}>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 8px' }}>
+                  Users could scan the ranked list at a high level, then open a Profile Panel to review one person in more detail without leaving the Project.
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                  This reduced repeated movement between separate list and detail pages while comparing multiple people.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-[7fr_3fr]" style={{ alignItems: 'start' }}>
+                <AIRankingViewMock fontStyle={fontStyle} defaultTab="rankings" />
+                <ProfilePanelSlideMock fontStyle={fontStyle} />
+              </div>
+
+              <div hidden className="grid grid-cols-1 lg:grid-cols-[7fr_3fr]" style={{ border: '1px solid rgba(10, 10, 10, 0.1)' }}>
+                <div style={{ backgroundColor: '#FFFFFF', minHeight: '620px', overflow: 'hidden' }}>
+                  <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.1)', padding: '24px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 8px', textTransform: 'uppercase' }}>Project workspace</p>
+                    <div style={{ alignItems: 'flex-end', display: 'flex', flexWrap: 'wrap', gap: '14px', justifyContent: 'space-between' }}>
+                      <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '20px', fontWeight: 500, lineHeight: 1.2, margin: 0 }}>Senior Product Recruiter · AI SaaS</h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '10px', margin: 0 }}>24 people · Ranked by Project fit</p>
+                    </div>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <div style={{ minWidth: '660px' }}>
+                      <div style={{ ...fontStyle, backgroundColor: '#F6F7F9', color: 'rgba(10, 10, 10, 0.38)', display: 'grid', fontSize: '9px', fontWeight: 500, gridTemplateColumns: '52px minmax(230px,1.4fr) 86px minmax(210px,1fr)', letterSpacing: '0.05em', padding: '12px 18px', textTransform: 'uppercase' }}>
+                        <span>Rank</span><span>Person</span><span>Fit</span><span>Evaluation overview</span>
+                      </div>
+                      {[
+                        { rank: '01', name: 'Alex Morgan', role: 'Senior Product Recruiter · Aperture AI', fit: '92', evaluation: 'Strong experience · AI SaaS · Enterprise scaling', active: true },
+                        { rank: '02', name: 'Olivia Chen', role: 'TA Lead · Enterprise Software', fit: '87', evaluation: 'Strong experience · SaaS · Partial AI exposure', active: false },
+                        { rank: '03', name: 'Marco Silva', role: 'Growth Recruiter · B2B Technology', fit: '81', evaluation: 'Relevant role · B2B SaaS · Scaling experience', active: false },
+                        { rank: '04', name: 'Priya Nair', role: 'Recruiting Partner · Fintech', fit: '76', evaluation: 'Relevant role · Enterprise · Different industry', active: false },
+                        { rank: '05', name: 'Sarah Chen', role: 'Technical Sourcer · AI Platform', fit: '71', evaluation: 'AI exposure · Technical sourcing · Less senior', active: false },
+                      ].map((person) => (
+                        <div key={person.name} style={{ ...fontStyle, alignItems: 'center', backgroundColor: person.active ? 'rgba(36, 89, 211, 0.055)' : '#FFFFFF', borderBottom: '1px solid rgba(10, 10, 10, 0.07)', borderLeft: person.active ? '2px solid #2459d3' : '2px solid transparent', color: 'rgba(10, 10, 10, 0.54)', display: 'grid', fontSize: '10px', gridTemplateColumns: '52px minmax(230px,1.4fr) 86px minmax(210px,1fr)', minHeight: '84px', padding: '12px 16px' }}>
+                          <span style={{ color: 'rgba(10, 10, 10, 0.3)' }}>{person.rank}</span>
+                          <span>
+                            <strong style={{ color: textColor.strong, display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '5px' }}>{person.name}</strong>
+                            <span style={{ color: 'rgba(10, 10, 10, 0.42)', fontSize: '9px' }}>{person.role}</span>
+                          </span>
+                          <strong style={{ color: '#2459d3', fontSize: '20px', fontWeight: 500 }}>{person.fit}</strong>
+                          <span style={{ color: 'rgba(10, 10, 10, 0.48)', lineHeight: 1.55 }}>{person.evaluation}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <aside style={{ backgroundColor: '#FFFFFF', borderLeft: '1px solid rgba(10, 10, 10, 0.1)', display: 'flex', flexDirection: 'column', minHeight: '620px', padding: 'clamp(26px, 4vw, 40px)' }}>
+                  <p style={{ ...fontStyle, color: '#2459d3', fontSize: '9px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 28px', textTransform: 'uppercase' }}>Profile Panel</p>
+                  <div style={{ alignItems: 'center', display: 'flex', gap: '14px', marginBottom: '30px' }}>
+                    <span style={{ ...fontStyle, alignItems: 'center', backgroundColor: 'rgba(36, 89, 211, 0.12)', borderRadius: '50%', color: '#2459d3', display: 'flex', fontSize: '12px', fontWeight: 500, height: '48px', justifyContent: 'center', width: '48px' }}>AM</span>
+                    <div>
+                      <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '18px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 4px' }}>Alex Morgan</h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.48)', fontSize: '10px', lineHeight: '16px', margin: 0 }}>Senior Product Recruiter · Aperture AI</p>
+                    </div>
+                  </div>
+                  <div style={{ alignItems: 'center', backgroundColor: 'rgba(36, 89, 211, 0.055)', border: '1px solid rgba(36, 89, 211, 0.14)', display: 'flex', justifyContent: 'space-between', marginBottom: '24px', padding: '14px' }}>
+                    <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '10px', textTransform: 'uppercase' }}>Project fit</span>
+                    <strong style={{ ...fontStyle, color: '#2459d3', fontSize: '24px', fontWeight: 500 }}>92</strong>
+                  </div>
+                  {[
+                    ['Profile information', '8+ years across product and technical recruiting roles.'],
+                    ['Evaluation details', 'Strong match across recruiting experience, industry context, and team scaling.'],
+                    ['Supporting context', 'Current and previous roles support the Project-specific criteria.'],
+                  ].map(([label, body]) => (
+                    <div key={label} style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', padding: '20px 0' }}>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 10px', textTransform: 'uppercase' }}>{label}</p>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '10px', lineHeight: 1.6, margin: 0 }}>{body}</p>
+                    </div>
+                  ))}
+                </aside>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Ranked within the Project', 'Evaluation visible in the list', 'Details without leaving the workspace'].map((annotation) => (
+                  <p key={annotation} style={{ ...fontStyle, backgroundColor: '#F7F9FD', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>{annotation}</p>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Three layers of the workspace</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Ranked list', 'Surface the most relevant people first', 'Profiles were organized within the current Project and ranked using its evaluation framework.'],
+                  ['Evaluation overview', 'Compare people using the same criteria', 'The list surfaced each person’s result so profiles could be compared within the Project.'],
+                  ['Profile Panel', 'Inspect a person without leaving the list', 'Selecting a profile revealed detailed information and evaluation context while preserving list position.'],
+                ].map(([eyebrow, title, body], index) => (
+                  <article key={eyebrow} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ display: 'flex', flexDirection: 'column', minHeight: '370px', padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {eyebrow}</p>
+                    <h3 style={{ ...fontStyle, color: index === 2 ? '#2459d3' : textColor.strong, fontSize: 'clamp(22px, 2.3vw, 30px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 20px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '14px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>How users reviewed people</p>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(220px, 1fr))', overflowX: 'auto' }}>
+                {[
+                  ['Scan', 'Review the Project at a glance', 'Scan the people list, ranking, and evaluation results.'],
+                  ['Compare', 'Identify stronger and weaker matches', 'Compare multiple people against the same Project goal.'],
+                  ['Inspect', 'Open the Profile Panel for detail', 'Examine one person without navigating away from the list.'],
+                  ['Prioritize', 'Decide who deserves attention', 'Focus further review on the people most relevant to the Project.'],
+                ].map(([action, title, body], index) => (
+                  <article key={action} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '280px', padding: '36px 30px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.7)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 36px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {action}</p>
+                    <h3 style={{ ...fontStyle, color: index === 3 ? '#2459d3' : textColor.strong, fontSize: '22px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 18px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ backgroundColor: '#FAFAFA', borderBottom: '1px solid rgba(10, 10, 10, 0.12)', borderTop: '1px solid rgba(10, 10, 10, 0.12)', marginTop: 'clamp(80px, 10vw, 128px)', padding: 'clamp(40px, 6vw, 64px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 18px', textTransform: 'uppercase' }}>Keeping list and detail in the same context</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px' }}>Reducing the experience from three layers to two</h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '14px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 clamp(40px, 6vw, 58px)', maxWidth: '900px' }}>The earlier structure separated profile list and detail across navigation levels. The Project workspace kept comparison and detailed review in one environment.</p>
+              {[
+                { label: 'Before', nodes: ['Project list', 'Profile list', 'Profile detail'], note: 'Three separate navigation levels' },
+                { label: 'After', nodes: ['Project list', 'Project workspace'], note: 'People list · Ranking · Evaluation · Profile Panel' },
+              ].map((model, rowIndex) => (
+                <div key={model.label} className="grid grid-cols-1 gap-5 border-t border-black/15 py-7 md:grid-cols-[110px_1fr_330px]" style={{ alignItems: 'center' }}>
+                  <p style={{ ...fontStyle, color: rowIndex === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.46)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase' }}>{model.label}</p>
+                  <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {model.nodes.map((node, index) => (
+                      <span key={node} style={{ alignItems: 'center', display: 'inline-flex', gap: '10px' }}>
+                        <span style={{ ...fontStyle, backgroundColor: rowIndex === 1 && index === 1 ? 'rgba(36, 89, 211, 0.08)' : '#FFFFFF', border: rowIndex === 1 && index === 1 ? '1px solid rgba(36, 89, 211, 0.25)' : '1px solid rgba(10, 10, 10, 0.12)', color: rowIndex === 1 && index === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.58)', fontSize: '12px', fontWeight: 500, lineHeight: '18px', padding: '10px 14px' }}>{node}</span>
+                        {index < model.nodes.length - 1 && <span aria-hidden="true" style={{ color: 'rgba(10, 10, 10, 0.3)' }}>→</span>}
+                      </span>
+                    ))}
+                  </div>
+                  <p style={{ ...fontStyle, color: rowIndex === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.42)', fontSize: '11px', lineHeight: 1.5, margin: 0 }}>{model.note}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(36px, 4.4vw, 54px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1100px' }}>
+                The dashboard turned a collection of saved profiles into a <span style={{ color: '#2459d3' }}>prioritized working list.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '880px' }}>
+                Users could move between overview and detail without losing the Project context behind each evaluation.
+              </p>
+            </div>
+
+            <div hidden>
+
+            <div style={{ backgroundColor: '#F7F9FD', border: '1px solid rgba(36, 89, 211, 0.12)', padding: 'clamp(32px, 6vw, 72px)' }}>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.4vw, 56px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 22px', maxWidth: '980px' }}>
+                Project preserved the context behind every profile.
+              </h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.6)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 clamp(48px, 7vw, 76px)', maxWidth: '980px' }}>
+                A saved profile retained its source, AI evaluation, notes, current stage, and next action. Users could move from reviewing a LinkedIn result to managing the person without rebuilding the context in a spreadsheet, ATS, or CRM.
+              </p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-[8fr_4fr]" style={{ border: '1px solid rgba(10, 10, 10, 0.1)' }}>
+                <div style={{ backgroundColor: '#FFFFFF', minHeight: '620px', overflow: 'hidden' }}>
+                  <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.1)', padding: '24px' }}>
+                    <div style={{ alignItems: 'flex-start', display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'space-between' }}>
+                      <div>
+                        <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 8px', textTransform: 'uppercase' }}>
+                          Project workspace
+                        </p>
+                        <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '20px', fontWeight: 500, lineHeight: 1.2, margin: 0 }}>
+                          Senior Product Recruiter · AI SaaS
+                        </h3>
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
+                        {['All stages', 'Fit: High to low', 'Owner', 'Next action'].map((filter) => (
+                          <span key={filter} style={{ ...fontStyle, border: '1px solid rgba(10, 10, 10, 0.12)', borderRadius: '999px', color: 'rgba(10, 10, 10, 0.5)', fontSize: '9px', lineHeight: '16px', padding: '5px 9px' }}>
+                            {filter}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ overflowX: 'auto' }}>
+                    <div style={{ minWidth: '700px' }}>
+                      <div
+                        style={{
+                          ...fontStyle,
+                          backgroundColor: '#F6F7F9',
+                          color: 'rgba(10, 10, 10, 0.38)',
+                          display: 'grid',
+                          fontSize: '9px',
+                          fontWeight: 500,
+                          gridTemplateColumns: '42px minmax(210px,1.5fr) 64px 110px 90px 120px',
+                          letterSpacing: '0.05em',
+                          padding: '12px 18px',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        <span>#</span><span>Person</span><span>Fit</span><span>Stage</span><span>Owner</span><span>Next action</span>
+                      </div>
+                      {[
+                        { rank: '01', name: 'Alex Morgan', role: 'Senior Product Recruiter · Aperture AI', fit: '92', stage: 'Qualified', owner: 'Mei', action: 'Review evidence', active: true },
+                        { rank: '02', name: 'Olivia Chen', role: 'TA Lead · Enterprise Software', fit: '87', stage: 'Contacted', owner: 'Jordan', action: 'Follow up Friday', active: false },
+                        { rank: '03', name: 'Marco Silva', role: 'Growth Recruiter · B2B Tech', fit: '81', stage: 'Sourced', owner: 'Mei', action: 'Qualify profile', active: false },
+                        { rank: '04', name: 'Priya Nair', role: 'Recruiting Partner · Fintech', fit: '76', stage: 'Replied', owner: 'Alex', action: 'Schedule call', active: false },
+                        { rank: '05', name: 'Sarah Chen', role: 'Technical Sourcer · AI Platform', fit: '71', stage: 'Sourced', owner: '—', action: 'Assign owner', active: false },
+                      ].map((person) => (
+                        <div
+                          key={person.name}
+                          style={{
+                            ...fontStyle,
+                            alignItems: 'center',
+                            backgroundColor: person.active ? 'rgba(36, 89, 211, 0.055)' : '#FFFFFF',
+                            borderBottom: '1px solid rgba(10, 10, 10, 0.07)',
+                            borderLeft: person.active ? '2px solid #2459d3' : '2px solid transparent',
+                            color: 'rgba(10, 10, 10, 0.54)',
+                            display: 'grid',
+                            fontSize: '10px',
+                            gridTemplateColumns: '42px minmax(210px,1.5fr) 64px 110px 90px 120px',
+                            minHeight: '76px',
+                            padding: '12px 16px',
+                          }}
+                        >
+                          <span style={{ color: 'rgba(10, 10, 10, 0.3)' }}>{person.rank}</span>
+                          <span>
+                            <strong style={{ color: textColor.strong, display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '4px' }}>{person.name}</strong>
+                            <span style={{ color: 'rgba(10, 10, 10, 0.42)', fontSize: '9px' }}>{person.role}</span>
+                          </span>
+                          <strong style={{ color: '#2459d3', fontSize: '17px', fontWeight: 500 }}>{person.fit}</strong>
+                          <span style={{ backgroundColor: 'rgba(36, 89, 211, 0.07)', color: '#2459d3', justifySelf: 'start', padding: '5px 8px' }}>{person.stage}</span>
+                          <span>{person.owner}</span>
+                          <span>{person.action}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <aside style={{ backgroundColor: '#FFFFFF', borderLeft: '1px solid rgba(10, 10, 10, 0.1)', display: 'flex', flexDirection: 'column', minHeight: '620px', padding: 'clamp(26px, 4vw, 42px)' }}>
+                  <div style={{ alignItems: 'center', display: 'flex', gap: '14px', marginBottom: '30px' }}>
+                    <span style={{ ...fontStyle, alignItems: 'center', backgroundColor: 'rgba(36, 89, 211, 0.12)', borderRadius: '50%', color: '#2459d3', display: 'flex', fontSize: '12px', fontWeight: 500, height: '48px', justifyContent: 'center', width: '48px' }}>AM</span>
+                    <div>
+                      <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '18px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 4px' }}>Alex Morgan</h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.48)', fontSize: '10px', lineHeight: '16px', margin: 0 }}>Senior Product Recruiter · Aperture AI</p>
+                    </div>
+                  </div>
+                  <div style={{ alignItems: 'center', backgroundColor: 'rgba(36, 89, 211, 0.055)', border: '1px solid rgba(36, 89, 211, 0.14)', display: 'flex', justifyContent: 'space-between', marginBottom: '20px', padding: '14px' }}>
+                    <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '10px', textTransform: 'uppercase' }}>Project fit</span>
+                    <strong style={{ ...fontStyle, color: '#2459d3', fontSize: '24px', fontWeight: 500 }}>92</strong>
+                  </div>
+                  <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', paddingTop: '20px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 12px', textTransform: 'uppercase' }}>Evaluation evidence</p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '11px', lineHeight: 1.55, margin: '0 0 20px' }}>8+ years in product and technical recruiting with direct AI and enterprise SaaS experience.</p>
+                  </div>
+                  <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', paddingTop: '20px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.07em', margin: '0 0 10px', textTransform: 'uppercase' }}>Notes and activity</p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '10px', lineHeight: 1.55, margin: '0 0 8px' }}>Mei · Reviewed evidence and marked as qualified.</p>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', lineHeight: 1.5, margin: 0 }}>Today, 10:42</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2" style={{ marginTop: 'auto', paddingTop: '28px' }}>
+                    <span style={{ ...fontStyle, border: '1px solid rgba(10, 10, 10, 0.14)', color: 'rgba(10, 10, 10, 0.58)', fontSize: '10px', fontWeight: 500, padding: '10px', textAlign: 'center' }}>Stage · Qualified</span>
+                    <span style={{ ...fontStyle, backgroundColor: '#2459d3', color: '#FFFFFF', fontSize: '10px', fontWeight: 500, padding: '10px', textAlign: 'center' }}>Add to Campaign</span>
+                  </div>
+                </aside>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Ranked within the Project', 'Details without leaving the list', 'Stage and next action in context'].map((annotation) => (
+                  <p key={annotation} style={{ ...fontStyle, backgroundColor: '#F7F9FD', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>
+                    {annotation}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                Three parts of the Project workspace
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  {
+                    eyebrow: '01 — Prioritized people',
+                    title: 'Start with the strongest matches',
+                    body: 'People were listed by relevance to the current Project, allowing users to compare fit and focus on the most promising candidates or leads first.',
+                    note: 'Ranking remained specific to the Project because the same person could have different relevance in another context.',
+                  },
+                  {
+                    eyebrow: '02 — Profile context',
+                    title: 'Review the person without leaving the workspace',
+                    body: 'Selecting a person opened a detail panel containing profile information, evaluation breakdown, notes, and activity history.',
+                    note: 'Users could investigate a profile and return to the list without losing filters, ranking, or position.',
+                  },
+                  {
+                    eyebrow: '03 — Pipeline progress',
+                    title: 'Record where every person stood',
+                    body: 'Each person had a current stage, ownership, latest activity, and next action within the Project.',
+                    note: 'The Project became a living pipeline rather than a static collection of saved profiles.',
+                  },
+                ].map((area, index) => (
+                  <article key={area.title} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ display: 'flex', flexDirection: 'column', minHeight: '390px', padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>{area.eyebrow}</p>
+                    <h2 style={{ ...fontStyle, color: index === 2 ? '#2459d3' : textColor.strong, fontSize: 'clamp(23px, 2.4vw, 31px)', fontWeight: 500, lineHeight: 1.18, margin: '0 0 20px' }}>{area.title}</h2>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.58)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 28px' }}>{area.body}</p>
+                    <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.42)', fontSize: '12px', fontWeight: 400, lineHeight: 1.55, margin: 'auto 0 0', paddingTop: '18px' }}>{area.note}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#FAFAFA', borderBottom: '1px solid rgba(10, 10, 10, 0.12)', borderTop: '1px solid rgba(10, 10, 10, 0.12)', marginTop: 'clamp(80px, 10vw, 128px)', padding: 'clamp(40px, 6vw, 64px)' }}>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 clamp(44px, 6vw, 64px)' }}>
+                Reducing navigation from three layers to two
+              </h2>
+              {[
+                { label: 'Before', nodes: ['Project list', 'Profile list', 'Profile detail'], note: 'Context changed across three separate pages.' },
+                { label: 'After', nodes: ['Project list', 'Project workspace'], note: 'Ranking · Detail · Evaluation · Pipeline' },
+              ].map((model, rowIndex) => (
+                <div key={model.label} className="grid grid-cols-1 gap-5 border-t border-black/15 py-7 md:grid-cols-[110px_1fr_280px]" style={{ alignItems: 'center' }}>
+                  <p style={{ ...fontStyle, color: rowIndex === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.46)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: 0, textTransform: 'uppercase' }}>{model.label}</p>
+                  <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {model.nodes.map((node, index) => (
+                      <span key={node} style={{ alignItems: 'center', display: 'inline-flex', gap: '10px' }}>
+                        <span style={{ ...fontStyle, backgroundColor: rowIndex === 1 && index === 1 ? 'rgba(36, 89, 211, 0.08)' : '#FFFFFF', border: rowIndex === 1 && index === 1 ? '1px solid rgba(36, 89, 211, 0.25)' : '1px solid rgba(10, 10, 10, 0.12)', color: rowIndex === 1 && index === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.58)', fontSize: '12px', fontWeight: 500, lineHeight: '18px', padding: '10px 14px' }}>{node}</span>
+                        {index < model.nodes.length - 1 && <span aria-hidden="true" style={{ color: 'rgba(10, 10, 10, 0.3)' }}>→</span>}
+                      </span>
+                    ))}
+                  </div>
+                  <p style={{ ...fontStyle, color: rowIndex === 1 ? '#2459d3' : 'rgba(10, 10, 10, 0.42)', fontSize: '11px', lineHeight: 1.5, margin: 0 }}>{model.note}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>
+                How users managed people
+              </p>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', overflowX: 'auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(220px, 1fr))', minWidth: '880px' }}>
+                  {[
+                    { action: 'Compare', title: 'Review people against the same goal', body: 'Scan fit, criteria, stage, and key profile details across the Project list.' },
+                    { action: 'Inspect', title: 'Open details without losing the list', body: 'Use a side panel to reveal profile and evaluation information in context.' },
+                    { action: 'Update', title: 'Keep progress visible to the team', body: 'Change stage, add notes, assign ownership, and define the next action.' },
+                    { action: 'Select', title: 'Move the right people toward outreach', body: 'Send qualified candidates or leads to a Campaign without recreating the audience.' },
+                  ].map((item, index) => (
+                    <article key={item.action} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '280px', padding: '36px 30px' }}>
+                      <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.7)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 36px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {item.action}</p>
+                      <h3 style={{ ...fontStyle, color: index === 3 ? '#2459d3' : textColor.strong, fontSize: '22px', fontWeight: 500, lineHeight: 1.2, margin: '0 0 18px' }}>{item.title}</h3>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '13px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{item.body}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 28px', textTransform: 'uppercase' }}>
+                One model, different pipelines
+              </p>
+              {[
+                { label: 'Recruiting', stages: ['Sourced', 'Qualified', 'Contacted', 'Replied', 'Submitted', 'Interviewing', 'Placed'] },
+                { label: 'Sales', stages: ['Identified', 'Qualified', 'Contacted', 'Replied', 'Meeting', 'Opportunity', 'Converted'] },
+              ].map((pipeline) => (
+                <div key={pipeline.label} className="grid grid-cols-1 gap-5 border-t border-black/15 py-7 lg:grid-cols-[150px_1fr]">
+                  <p style={{ ...fontStyle, color: textColor.strong, fontSize: '14px', fontWeight: 500, lineHeight: '22px', margin: 0 }}>{pipeline.label}</p>
+                  <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {pipeline.stages.map((stage, index) => (
+                      <span key={stage} style={{ alignItems: 'center', display: 'inline-flex', gap: '8px' }}>
+                        <span style={{ ...fontStyle, border: '1px solid rgba(10, 10, 10, 0.12)', borderRadius: '999px', color: 'rgba(10, 10, 10, 0.58)', fontSize: '11px', fontWeight: 400, lineHeight: '18px', padding: '5px 10px' }}>{stage}</span>
+                        {index < pipeline.stages.length - 1 && <span aria-hidden="true" style={{ color: 'rgba(10, 10, 10, 0.28)', fontSize: '14px' }}>→</span>}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.14)', color: 'rgba(10, 10, 10, 0.5)', fontSize: '14px', fontWeight: 300, lineHeight: 1.6, margin: 0, paddingTop: '24px' }}>
+                The stage labels could change by workflow, while the underlying model remained consistent: status, activity, ownership, next action, and outcome.
+              </p>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.2vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1080px' }}>
+                Project turned a search result into a{' '}<span style={{ color: '#2459d3' }}>managed relationship.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '840px' }}>
+                It preserved why the person was relevant, what had already happened, and what the team needed to do next.
+              </p>
+            </div>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="Building and Shipping in Six Weeks"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p style={{ ...fontStyle, color: '#2459d3', fontSize: '12px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 16px', textTransform: 'uppercase' }}>
+              05 — Building and shipping in six weeks
+            </p>
+            <h1 style={{ ...headingLevel1Style, fontSize: 'clamp(44px, 5.5vw, 68px)', lineHeight: 1.06, marginBottom: '28px', maxWidth: '1080px' }}>
+              Creating enough structure to move fast without creating chaos
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '920px' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 16px' }}>
+                With only six weeks to design the MVP, the challenge was not simply producing screens quickly. The Chrome Extension and web dashboard also needed to feel like one product and remain practical for engineering to build.
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                I created a lightweight design foundation using Figma Variables, design tokens, and reusable components. This allowed the team to move quickly without treating every new screen as a separate design problem.
+              </p>
+            </div>
+
+            <div style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.1)', padding: 'clamp(32px, 6vw, 72px)' }}>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.4vw, 56px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 22px', maxWidth: '980px' }}>
+                Build the system alongside the product
+              </h2>
+              <div style={{ marginBottom: 'clamp(48px, 7vw, 76px)', maxWidth: '940px' }}>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 8px' }}>
+                  Instead of waiting until the interface was complete, I established the core visual rules and reusable patterns while designing the MVP.
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.62)', fontSize: '17px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>
+                  The goal was not a comprehensive design system. It was the minimum structure required for consistent and efficient delivery.
+                </p>
+              </div>
+
+              <div hidden style={{ border: '1px solid rgba(10, 10, 10, 0.1)', overflow: 'hidden' }}>
+                <DesignSystemComponentsMock fontStyle={fontStyle} />
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2" style={{ border: '1px solid rgba(10, 10, 10, 0.1)' }}>
+                <div style={{ backgroundColor: '#F5F7FA', borderRight: '1px solid rgba(10, 10, 10, 0.1)', minHeight: '540px', padding: 'clamp(28px, 4vw, 46px)' }}>
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 34px', textTransform: 'uppercase' }}>Figma Variables</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {[
+                      ['Color', 'Brand / Primary', '#2459D3'],
+                      ['Typography', 'Text / Strong', 'Inter 500'],
+                      ['Spacing', 'Space / 06', '24 px'],
+                      ['Radius', 'Radius / Medium', '6 px'],
+                      ['State', 'Action / Selected', 'Primary 08%'],
+                    ].map(([group, name, value], index) => (
+                      <div key={name} style={{ alignItems: 'center', backgroundColor: '#FFFFFF', border: index === 0 ? '1px solid rgba(36, 89, 211, 0.2)' : '1px solid rgba(10, 10, 10, 0.09)', display: 'grid', gap: '12px', gridTemplateColumns: '80px 1fr auto', padding: '15px' }}>
+                        <span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.36)', fontSize: '9px', fontWeight: 500, textTransform: 'uppercase' }}>{group}</span>
+                        <span style={{ ...fontStyle, color: textColor.strong, fontSize: '11px', fontWeight: 500 }}>{name}</span>
+                        <span style={{ ...fontStyle, color: index === 0 ? '#2459d3' : 'rgba(10, 10, 10, 0.48)', fontSize: '10px' }}>{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', lineHeight: 1.6, margin: '26px 0 0' }}>Recurring visual decisions stayed visible and reusable as the product expanded.</p>
+                </div>
+
+                <div style={{ backgroundColor: '#FFFFFF', minHeight: '540px', padding: 'clamp(28px, 4vw, 46px)' }}>
+                  <p style={{ ...fontStyle, color: '#2459d3', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 34px', textTransform: 'uppercase' }}>Design tokens</p>
+                  <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '28px' }}>
+                    {[
+                      ['Semantic color', ['#2459D3', '#EAF0FC', '#0A0A0A', '#FAFAFA']],
+                      ['Spacing scale', ['4', '8', '16', '24']],
+                      ['Type scale', ['12', '16', '24', '48']],
+                      ['Corner radius', ['2', '4', '6', '999']],
+                    ].map(([label, values], index) => (
+                      <div key={label as string} style={{ border: '1px solid rgba(10, 10, 10, 0.09)', minHeight: '150px', padding: '18px' }}>
+                        <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.06em', margin: '0 0 22px', textTransform: 'uppercase' }}>{label as string}</p>
+                        <div style={{ alignItems: 'flex-end', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                          {(values as string[]).map((value, valueIndex) => (
+                            index === 0 ? (
+                              <span key={value} title={value} style={{ backgroundColor: value, border: '1px solid rgba(10, 10, 10, 0.1)', height: '28px', width: '28px' }} />
+                            ) : (
+                              <span key={value} style={{ ...fontStyle, alignItems: 'center', backgroundColor: index === 1 ? 'rgba(36, 89, 211, 0.07)' : '#F5F6F8', border: '1px solid rgba(10, 10, 10, 0.08)', color: 'rgba(10, 10, 10, 0.52)', display: 'flex', fontSize: index === 2 ? `${10 + valueIndex * 2}px` : '9px', height: index === 3 ? `${20 + valueIndex * 4}px` : '30px', justifyContent: 'center', minWidth: '30px', padding: '0 7px' }}>{value}</span>
+                            )
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.1)', paddingTop: '22px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.06em', margin: '0 0 14px', textTransform: 'uppercase' }}>Component states</p>
+                    <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                      <button type="button" style={{ ...fontStyle, backgroundColor: '#2459d3', border: 0, borderRadius: '6px', color: '#FFFFFF', cursor: 'default', fontSize: '10px', padding: '9px 14px' }}>Default</button>
+                      <button type="button" style={{ ...fontStyle, backgroundColor: '#1E4BB5', border: 0, borderRadius: '6px', color: '#FFFFFF', cursor: 'default', fontSize: '10px', padding: '9px 14px' }}>Active</button>
+                      <button type="button" disabled style={{ ...fontStyle, backgroundColor: '#E7E9ED', border: 0, borderRadius: '6px', color: 'rgba(10, 10, 10, 0.34)', fontSize: '10px', padding: '9px 14px' }}>Disabled</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Shared visual rules', 'Reusable values', 'Consistent states'].map((annotation) => (
+                  <p key={annotation} style={{ ...fontStyle, backgroundColor: '#FFFFFF', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>{annotation}</p>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Three parts of the foundation</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  { eyebrow: 'Variables and tokens', title: 'Create one source of truth', body: 'Figma Variables and design tokens defined recurring decisions across the Extension and web platform.', details: ['Semantic colors', 'Text styles', 'Spacing', 'Radius', 'State values'] },
+                  { eyebrow: 'Reusable components', title: 'Design repeated patterns once', body: 'Frequently used interface elements became reusable components instead of being redesigned for each screen.', details: ['Buttons', 'Inputs', 'Navigation', 'Profile rows', 'Feedback states'] },
+                  { eyebrow: 'Design and development alignment', title: 'Make implementation decisions visible early', body: 'Design and engineering shared reusable rules, component states, and recurring product patterns.', details: ['Shared rules', 'Visible states', 'Reusable behavior'] },
+                ].map((item, index) => (
+                  <article key={item.eyebrow} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ display: 'flex', flexDirection: 'column', minHeight: '410px', padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {item.eyebrow}</p>
+                    <h3 style={{ ...fontStyle, color: index === 2 ? '#2459d3' : textColor.strong, fontSize: 'clamp(22px, 2.3vw, 30px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 20px' }}>{item.title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '14px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 28px' }}>{item.body}</p>
+                    <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.4)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.04em', lineHeight: 1.8, margin: 'auto 0 0', paddingTop: '18px', textTransform: 'uppercase' }}>{item.details.join(' · ')}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>One system across two surfaces</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 22px', maxWidth: '900px' }}>One visual language, adapted to different contexts</h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.52)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 clamp(40px, 6vw, 58px)', maxWidth: '900px' }}>The Chrome Extension and web dashboard had different space and interaction constraints, but still needed to feel like parts of the same product.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Chrome Extension', 'Compact and task-focused', ['Limited horizontal space', 'Short collection flow', 'Clear primary action', 'Immediate feedback']],
+                  ['Web Dashboard', 'Information-dense and comparative', ['Larger workspace', 'Profile lists and rankings', 'Evaluation content', 'Detail panels']],
+                ].map(([surface, title, details], index) => (
+                  <article key={surface as string} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ minHeight: '320px', padding: 'clamp(36px, 5vw, 56px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 34px', textTransform: 'uppercase' }}>{surface as string}</p>
+                    <h3 style={{ ...fontStyle, color: index === 0 ? '#2459d3' : textColor.strong, fontSize: 'clamp(24px, 2.6vw, 34px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 24px' }}>{title as string}</h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {(details as string[]).map((detail) => <span key={detail} style={{ ...fontStyle, border: '1px solid rgba(10, 10, 10, 0.1)', color: 'rgba(10, 10, 10, 0.5)', fontSize: '10px', padding: '7px 10px' }}>{detail}</span>)}
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <p style={{ ...fontStyle, borderBottom: '1px solid rgba(10, 10, 10, 0.14)', color: '#2459d3', fontSize: '12px', fontWeight: 500, letterSpacing: '0.05em', lineHeight: 1.7, margin: 0, padding: '22px', textAlign: 'center', textTransform: 'uppercase' }}>Shared foundation · Color · Typography · Controls · States · Profile patterns</p>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(36px, 4.4vw, 54px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1140px' }}>
+                The design system was part of the MVP delivery strategy—<span style={{ color: '#2459d3' }}>not a separate project.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '920px' }}>
+                A lightweight foundation helped the team maintain consistency across two product surfaces while continuing to design and build in parallel.
+              </p>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="Extending into Outreach"
+        style={{
+          backgroundColor: '#FFFFFF',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p style={{ ...fontStyle, color: '#2459d3', fontSize: '12px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 16px', textTransform: 'uppercase' }}>
+              06 — Extending into outreach
+            </p>
+            <span style={{ ...fontStyle, backgroundColor: 'rgba(36, 89, 211, 0.045)', border: '1px solid rgba(36, 89, 211, 0.28)', color: '#2459d3', display: 'inline-block', fontSize: '10px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', marginBottom: '22px', padding: '6px 10px', textTransform: 'uppercase' }}>
+              Ongoing
+            </span>
+            <h1 style={{ ...headingLevel1Style, fontSize: 'clamp(44px, 5.5vw, 68px)', lineHeight: 1.06, marginBottom: '28px', maxWidth: '1080px' }}>
+              Turning prioritized people into structured outreach
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '940px' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 16px' }}>
+                After users collected, evaluated, and ranked people, the next step was to contact the strongest candidates or leads.
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                I began extending ConnectNova beyond sourcing and evaluation through an outreach module built around Campaigns, Leads, and messaging Sequences. This work was still ongoing and had not yet been fully delivered or validated.
+              </p>
+            </div>
+
+            <div style={{ backgroundColor: '#F7F9FD', borderBottom: '1px solid rgba(36, 89, 211, 0.14)', borderTop: '1px solid rgba(36, 89, 211, 0.14)', padding: 'clamp(40px, 6vw, 64px)' }}>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 20px', textTransform: 'uppercase' }}>Ongoing exploration</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 20px', maxWidth: '980px' }}>
+                Move from deciding who matters to preparing how to reach them
+              </h2>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 clamp(40px, 6vw, 58px)', maxWidth: '940px' }}>
+                Selected profiles could move into a structured messaging workflow without rebuilding the audience or losing the Project context already collected.
+              </p>
+              <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-[1fr_auto_1fr]">
+                {[
+                  { label: 'Project / ranked people', items: ['Selected profiles', 'Evaluation context', 'Prioritized people'], accent: false },
+                  { label: 'Outreach module', items: ['Campaigns', 'Leads', 'Sequences'], accent: true },
+                ].map((group, index) => (
+                  <div key={group.label} style={{ display: 'contents' }}>
+                    {index === 1 && <div aria-hidden="true" style={{ ...fontStyle, alignItems: 'center', color: '#2459d3', display: 'flex', fontSize: '28px', justifyContent: 'center', padding: '12px' }}>→</div>}
+                    <div style={{ backgroundColor: group.accent ? 'rgba(36, 89, 211, 0.055)' : '#FFFFFF', border: group.accent ? '1px solid rgba(36, 89, 211, 0.2)' : '1px solid rgba(10, 10, 10, 0.1)', padding: 'clamp(28px, 4vw, 42px)' }}>
+                      <p style={{ ...fontStyle, color: group.accent ? '#2459d3' : 'rgba(10, 10, 10, 0.4)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 28px', textTransform: 'uppercase' }}>{group.label}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {group.items.map((item) => <span key={item} style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: group.accent ? '#2459d3' : 'rgba(10, 10, 10, 0.56)', fontSize: '13px', fontWeight: 500, paddingTop: '12px' }}>{item}</span>)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Three parts of the outreach model</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Campaigns', 'Organize outreach around a shared objective', 'Group selected people and prepare a coordinated recruiting or sales outreach effort.'],
+                  ['Leads', 'Bring selected people into the outreach workflow', 'Connect people already reviewed in Projects with the next stage of the workflow.'],
+                  ['Sequences', 'Structure messages into reusable steps', 'Prepare a clear, repeatable series of outreach messages instead of writing each independently.'],
+                ].map(([module, title, body], index) => (
+                  <article key={module} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ display: 'flex', flexDirection: 'column', minHeight: '360px', padding: 'clamp(32px, 5vw, 52px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 42px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {module}</p>
+                    <h3 style={{ ...fontStyle, color: index === 2 ? '#2459d3' : textColor.strong, fontSize: 'clamp(22px, 2.3vw, 30px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 20px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '14px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#F7F9FD', border: '1px solid rgba(36, 89, 211, 0.12)', marginTop: 'clamp(80px, 10vw, 128px)', padding: 'clamp(32px, 6vw, 72px)' }}>
+              <div className="grid grid-cols-1">
+                <div hidden style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.1)', padding: '10px' }}>
+                  <Image
+                    src="/img/connectnova/outreach%20.avif"
+                    alt="ConnectNova outreach campaign and lead design exploration"
+                    width={1600}
+                    height={1000}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    style={{ display: 'block', height: 'auto', width: '100%' }}
+                  />
+                </div>
+                <div style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.1)', padding: 'clamp(10px, 2vw, 20px)' }}>
+                  <Image
+                    src="/img/connectnova/Workflow.avif"
+                    alt="ConnectNova outreach platform information architecture"
+                    width={2000}
+                    height={1250}
+                    sizes="100vw"
+                    style={{ display: 'block', height: 'auto', width: '100%' }}
+                  />
+                </div>
+              </div>
+
+              <div hidden className="grid grid-cols-1 lg:grid-cols-2" style={{ border: '1px solid rgba(10, 10, 10, 0.1)' }}>
+                <div style={{ backgroundColor: '#FFFFFF', borderRight: '1px solid rgba(10, 10, 10, 0.1)', minHeight: '580px' }}>
+                  <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.1)', padding: '24px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '9px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 8px', textTransform: 'uppercase' }}>Campaign / Lead screen</p>
+                    <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '20px', fontWeight: 500, margin: 0 }}>AI Product Recruiter Outreach</h3>
+                  </div>
+                  <div style={{ padding: '24px' }}>
+                    <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', marginBottom: '22px' }}>
+                      <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.4)', fontSize: '10px', fontWeight: 500, letterSpacing: '0.07em', margin: 0, textTransform: 'uppercase' }}>Selected Leads · 3</p>
+                      <span style={{ ...fontStyle, backgroundColor: 'rgba(36, 89, 211, 0.07)', color: '#2459d3', fontSize: '9px', padding: '6px 9px' }}>Project context connected</span>
+                    </div>
+                    {[
+                      ['Alex Morgan', 'Senior Product Recruiter', '92'],
+                      ['Olivia Chen', 'Talent Acquisition Lead', '87'],
+                      ['Marco Silva', 'Growth Recruiter', '81'],
+                    ].map(([name, role, score], index) => (
+                      <div key={name} style={{ alignItems: 'center', backgroundColor: index === 0 ? 'rgba(36, 89, 211, 0.045)' : '#FFFFFF', border: index === 0 ? '1px solid rgba(36, 89, 211, 0.18)' : '1px solid rgba(10, 10, 10, 0.09)', display: 'grid', gap: '12px', gridTemplateColumns: '38px 1fr auto', marginBottom: '10px', padding: '15px' }}>
+                        <span style={{ ...fontStyle, alignItems: 'center', backgroundColor: '#EEF2F8', borderRadius: '50%', color: '#2459d3', display: 'flex', fontSize: '9px', fontWeight: 500, height: '34px', justifyContent: 'center', width: '34px' }}>{name.split(' ').map((part) => part[0]).join('')}</span>
+                        <span><strong style={{ ...fontStyle, color: textColor.strong, display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '4px' }}>{name}</strong><span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '9px' }}>{role}</span></span>
+                        <span style={{ ...fontStyle, color: '#2459d3', fontSize: '17px', fontWeight: 500 }}>{score}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ backgroundColor: '#FFFFFF', minHeight: '580px', padding: 'clamp(24px, 4vw, 38px)' }}>
+                  <div style={{ alignItems: 'flex-start', display: 'flex', justifyContent: 'space-between', marginBottom: '28px' }}>
+                    <div><p style={{ ...fontStyle, color: '#2459d3', fontSize: '9px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 8px', textTransform: 'uppercase' }}>Sequence builder</p><h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '20px', fontWeight: 500, margin: 0 }}>Initial outreach</h3></div>
+                    <span style={{ ...fontStyle, border: '1px solid rgba(36, 89, 211, 0.24)', color: '#2459d3', fontSize: '9px', padding: '6px 9px', textTransform: 'uppercase' }}>Ongoing</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      ['01', 'Connection message', 'Personalized introduction using Project and profile context'],
+                      ['02', 'First follow-up', 'Continue the conversation with a role or objective summary'],
+                      ['03', 'Final follow-up', 'Close the sequence with a concise next step'],
+                    ].map(([number, title, body], index) => (
+                      <div key={number} style={{ backgroundColor: index === 0 ? 'rgba(36, 89, 211, 0.045)' : '#FAFAFA', border: index === 0 ? '1px solid rgba(36, 89, 211, 0.18)' : '1px solid rgba(10, 10, 10, 0.09)', display: 'grid', gap: '14px', gridTemplateColumns: '34px 1fr', padding: '17px' }}>
+                        <span style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500 }}>{number}</span>
+                        <span><strong style={{ ...fontStyle, color: textColor.strong, display: 'block', fontSize: '12px', fontWeight: 500, marginBottom: '6px' }}>{title}</strong><span style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.44)', fontSize: '10px', lineHeight: 1.5 }}>{body}</span></span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-px bg-black/10 sm:grid-cols-3" style={{ marginTop: '24px' }}>
+                {['Group people into Campaigns', 'Manage selected Leads', 'Organize outreach into Sequence steps'].map((annotation) => <p key={annotation} style={{ ...fontStyle, backgroundColor: '#F7F9FD', color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.06em', lineHeight: '18px', margin: 0, padding: '16px 18px', textAlign: 'center', textTransform: 'uppercase' }}>{annotation}</p>)}
+              </div>
+
+              <div style={{ marginTop: 'clamp(48px, 7vw, 72px)' }}>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 12px', textTransform: 'uppercase' }}>
+                  Sequence editing canvas
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.56)', fontSize: '15px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 24px', maxWidth: '900px' }}>
+                  Users can visually build and edit a Sequence by adding nodes and connecting steps. This original interactive prototype focuses on component organization and a first-pass interaction experience.
+                </p>
+                <div style={{ backgroundColor: '#FFFFFF', border: '1px solid rgba(10, 10, 10, 0.1)', height: 'min(620px, 72svh)', overflow: 'hidden' }}>
+                  <iframe
+                    title="ConnectNova outreach sequence prototype"
+                    style={{ border: 0, display: 'block', height: '100%', width: '100%' }}
+                    src="https://embed.figma.com/proto/e7hxbnwajw3R2vy3S79kQU/ConnectNova?node-id=379-1216&viewport=238%2C698%2C0.44&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=379%3A1216&page-id=373%3A1205&embed-host=share"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div hidden style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Design direction</p>
+              <div className="grid grid-cols-1 md:grid-cols-3" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  ['Familiar patterns', 'Reuse established structures for Campaign creation, Lead management, and Sequence building.'],
+                  ['Connected workflow', 'Extend sourcing and evaluation instead of introducing a separate product.'],
+                  ['Focused MVP', 'Define the essential structure before expanding into advanced outreach capabilities.'],
+                ].map(([title, body], index) => (
+                  <div key={title} className={index > 0 ? 'border-t border-black/15 md:border-l md:border-t-0' : ''} style={{ padding: '30px clamp(26px, 4vw, 42px)' }}>
+                    <h3 style={{ ...fontStyle, color: index === 1 ? '#2459d3' : textColor.strong, fontSize: '18px', fontWeight: 500, lineHeight: 1.25, margin: '0 0 12px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ backgroundColor: '#FAFAFA', borderBottom: '1px solid rgba(10, 10, 10, 0.12)', borderTop: '1px solid rgba(10, 10, 10, 0.12)', marginTop: 'clamp(72px, 9vw, 112px)', padding: 'clamp(40px, 6vw, 64px)' }}>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 30px', textTransform: 'uppercase' }}>Ongoing status</p>
+              <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+                {[
+                  ['Designed or being explored', ['Campaign structure', 'Lead management views', 'Sequence creation', 'Multi-step message organization', 'Core outreach navigation']],
+                  ['Not yet presented as validated outcomes', ['Final workflow and implementation', 'Usability or product-performance results', 'Advanced outreach capabilities', 'Pipeline capabilities outside the completed MVP']],
+                ].map(([title, items], index) => (
+                  <div key={title as string} style={{ borderTop: index === 0 ? '2px solid rgba(36, 89, 211, 0.55)' : '1px solid rgba(10, 10, 10, 0.16)', paddingTop: '24px' }}>
+                    <h3 style={{ ...fontStyle, color: index === 0 ? '#2459d3' : textColor.strong, fontSize: '18px', fontWeight: 500, margin: '0 0 22px' }}>{title as string}</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>{(items as string[]).map((item) => <span key={item} style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', lineHeight: 1.5 }}>— {item}</span>)}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(36px, 4.4vw, 54px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 24px', maxWidth: '1160px' }}>
+                Outreach was the next extension of the workflow—<span style={{ color: '#2459d3' }}>not part of the validated core MVP yet.</span>
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '16px', fontWeight: 300, lineHeight: 1.6, margin: 0, maxWidth: '920px' }}>
+                The exploration showed how ConnectNova could move from helping users decide who to prioritize toward helping them prepare structured outreach.
+              </p>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
+
+      <section
+        hidden
+        className="w-screen"
+        data-case-nav-label="Results and Reflection"
+        style={{
+          backgroundColor: '#FAFAFA',
+          marginLeft: 'calc(-50vw + 50%)',
+          marginRight: 'calc(-50vw + 50%)',
+          padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        }}
+      >
+        <ScrollAnimatedSection>
+          <div style={{ margin: '0 auto', maxWidth: '1400px' }}>
+            <p style={{ ...fontStyle, color: '#2459d3', fontSize: '12px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 16px', textTransform: 'uppercase' }}>
+              07 — Results and reflection
+            </p>
+            <h1 style={{ ...headingLevel1Style, fontSize: 'clamp(44px, 5.5vw, 68px)', lineHeight: 1.06, marginBottom: '28px', maxWidth: '1080px' }}>
+              What the MVP validated—and what still needed work
+            </h1>
+            <div style={{ marginBottom: 'clamp(72px, 9vw, 112px)', maxWidth: '940px' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: '0 0 16px' }}>
+                The six-week MVP demonstrated that ConnectNova could connect LinkedIn profile collection, Project-based organization, and AI-assisted evaluation into one coherent workflow.
+              </p>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.64)', fontSize: 'clamp(18px, 1.8vw, 22px)', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>
+                The results showed improvements in the core collection and evaluation experience, while also revealing where the product needed clearer measurement, broader validation, and continued development.
+              </p>
+            </div>
+
+            <div>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 18px', textTransform: 'uppercase' }}>Results</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 clamp(40px, 6vw, 58px)' }}>A more effective core workflow</h2>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(230px, 1fr))', overflowX: 'auto' }}>
+                {[
+                  ['76% → 93%', 'Collection completion rate', 'The redesigned collection flow improved successful task completion.'],
+                  ['72% → 87%', 'Save rate after collection', 'Clearer save feedback improved completion after profiles were collected.'],
+                  ['84%', 'Adopted AI-generated evaluation criteria', 'Most users retained at least part of the framework created by ConnectNova.'],
+                  ['31%', 'Edited the generated criteria', 'Users treated AI as a starting point and adapted it to their own requirements.'],
+                ].map(([value, label, body], index) => (
+                  <article key={value} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '330px', minWidth: 0, overflow: 'hidden', padding: 'clamp(30px, 4vw, 44px) clamp(20px, 2vw, 28px)' }}>
+                    <p style={{ ...fontStyle, color: '#2459d3', fontSize: index < 2 ? 'clamp(30px, 2.5vw, 42px)' : 'clamp(48px, 4.5vw, 66px)', fontWeight: 500, letterSpacing: index < 2 ? '-0.065em' : '-0.05em', lineHeight: 1, margin: '0 0 26px', maxWidth: '100%', whiteSpace: 'nowrap' }}>{value}</p>
+                    <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '15px', fontWeight: 500, lineHeight: 1.4, margin: '0 0 14px' }}>{label}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+              <div style={{ backgroundColor: 'rgba(36, 89, 211, 0.055)', borderBottom: '1px solid rgba(36, 89, 211, 0.14)', padding: 'clamp(30px, 5vw, 52px)' }}>
+                <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(22px, 2.7vw, 34px)', fontWeight: 400, letterSpacing: '-0.015em', lineHeight: 1.35, margin: '0 0 16px', maxWidth: '1120px' }}>
+                  The strongest signal was not only that users accepted AI-generated criteria, but that they also felt able to <span style={{ color: '#2459d3' }}>modify them.</span>
+                </p>
+                <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '13px', fontWeight: 300, lineHeight: 1.65, margin: 0, maxWidth: '940px' }}>This supported making the evaluation framework visible and editable instead of presenting users with a fixed AI judgment.</p>
+              </div>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.38)', fontSize: '10px', lineHeight: 1.6, margin: '18px 0 0' }}>Data note: Exact task definitions, sample size, testing method, and measurement period must be added from the original research records before publishing.</p>
+            </div>
+
+            <div hidden style={{ backgroundColor: '#F1F2F4', marginTop: 'clamp(80px, 10vw, 128px)', padding: 'clamp(40px, 6vw, 64px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 18px', textTransform: 'uppercase' }}>Limitations</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(28px, 3.4vw, 44px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.15, margin: '0 0 clamp(38px, 5vw, 54px)' }}>What the current results did not prove</h2>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.12)', borderTop: '1px solid rgba(10, 10, 10, 0.12)', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(220px, 1fr))', overflowX: 'auto' }}>
+                {[
+                  ['Limited validation scope', 'Results focused on collection and evaluation, not the complete vision across sourcing, outreach, and people management.'],
+                  ['Incomplete metric definitions', 'The exported case study did not include full task names, sample size, or testing conditions.'],
+                  ['Outreach remained ongoing', 'Campaigns, Leads, and Sequences had not yet produced validated usability or product-performance outcomes.'],
+                  ['Re-ranking evidence still needed', 'The case contained stronger evidence for collection and evaluation than full AI re-ranking performance.'],
+                ].map(([title, body], index) => (
+                  <article key={title} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '230px', padding: '30px 26px' }}>
+                    <h3 style={{ ...fontStyle, color: textColor.strong, fontSize: '17px', fontWeight: 500, lineHeight: 1.3, margin: '0 0 14px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', fontWeight: 300, lineHeight: 1.65, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 128px)' }}>
+              <p style={{ ...fontStyle, color: '#2459d3', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 18px', textTransform: 'uppercase' }}>Reflection</p>
+              <h2 style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(30px, 3.8vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.12, margin: '0 0 clamp(40px, 6vw, 58px)' }}>What the project changed in my practice</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2" style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)' }}>
+                {[
+                  { eyebrow: 'Code as a design medium', title: 'Prototype close to the final experience', learning: 'Working in code reduced translation between interaction decisions and implementation.', next: 'The closer the prototype is to real behavior, the faster the team can evaluate product decisions.' },
+                  { eyebrow: 'Workflow before IA', title: 'Map the real job before shaping navigation', learning: 'The strongest architecture decisions came from understanding how sourcing continued beyond one search session.', next: 'Information architecture should follow the user’s work—not the first feature request.' },
+                  { eyebrow: 'Same job, different context', title: 'Design one flexible model for shared behavior', learning: 'Recruiting and sales used different language but followed the same underlying people workflow.', next: 'Shared product objects can support different contexts without splitting the experience.' },
+                  { eyebrow: 'Beyond the brief', title: 'Challenge short-term requests when the model is too narrow', learning: 'Introducing Project changed the product from a one-shot ranking tool into a reusable workspace.', next: 'A designer’s role includes identifying the structure the product will need next.' },
+                  { eyebrow: 'Foundations create speed', title: 'Build reusable rules while building the product', learning: 'Tokens and components helped two product surfaces stay coherent within six weeks.', next: 'Speed came from good foundations, not from treating every screen as an exception.' },
+                ].map((item, index) => (
+                  <article key={item.eyebrow} className={`${index % 2 === 1 ? 'md:border-l md:border-black/15' : ''} ${index > 1 ? 'border-t border-black/15' : index === 1 ? 'border-t border-black/15 md:border-t-0' : ''}`} style={{ minHeight: '390px', padding: 'clamp(34px, 5vw, 54px)' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.72)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', lineHeight: '17px', margin: '0 0 36px', textTransform: 'uppercase' }}>{String(index + 1).padStart(2, '0')} — {item.eyebrow}</p>
+                    <h3 style={{ ...fontStyle, color: index === 3 ? '#2459d3' : textColor.strong, fontSize: 'clamp(23px, 2.5vw, 32px)', fontWeight: 500, lineHeight: 1.2, margin: '0 0 18px' }}>{item.title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.54)', fontSize: '13px', fontWeight: 300, lineHeight: 1.65, margin: '0 0 24px' }}>{item.learning}</p>
+                    <p style={{ ...fontStyle, borderTop: '1px solid rgba(10, 10, 10, 0.1)', color: index === 3 ? '#2459d3' : 'rgba(10, 10, 10, 0.44)', fontSize: '12px', lineHeight: 1.6, margin: 0, paddingTop: '18px' }}>{item.next}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: 'clamp(80px, 10vw, 120px)' }}>
+              <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.42)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 24px', textTransform: 'uppercase' }}>Next steps</p>
+              <div style={{ borderBottom: '1px solid rgba(10, 10, 10, 0.14)', borderTop: '1px solid rgba(10, 10, 10, 0.14)', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(220px, 1fr))', overflowX: 'auto' }}>
+                {[
+                  ['Structured user testing', 'Validate the connected workflow with repeated, task-based studies.'],
+                  ['Outreach automation', 'Test how Campaigns and Sequences extend the Project context.'],
+                  ['Pipeline tracking', 'Explore status, progress, and outcomes after outreach.'],
+                  ['Team collaboration', 'Define shared ownership, visibility, and coordinated follow-up.'],
+                ].map(([title, body], index) => (
+                  <article key={title} style={{ borderLeft: index > 0 ? '1px solid rgba(10, 10, 10, 0.1)' : 0, minHeight: '240px', padding: '32px 26px' }}>
+                    <p style={{ ...fontStyle, color: 'rgba(36, 89, 211, 0.7)', fontSize: '11px', fontWeight: 500, letterSpacing: '0.08em', margin: '0 0 30px' }}>{String(index + 1).padStart(2, '0')}</p>
+                    <h3 style={{ ...fontStyle, color: index === 3 ? '#2459d3' : textColor.strong, fontSize: '19px', fontWeight: 500, lineHeight: 1.25, margin: '0 0 14px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, color: 'rgba(10, 10, 10, 0.5)', fontSize: '12px', fontWeight: 300, lineHeight: 1.6, margin: 0 }}>{body}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(10, 10, 10, 0.14)', marginTop: 'clamp(80px, 10vw, 120px)', paddingTop: 'clamp(52px, 7vw, 80px)' }}>
+              <p style={{ ...fontStyle, color: textColor.strong, fontSize: 'clamp(34px, 4.2vw, 52px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.14, margin: 0, maxWidth: '1200px' }}>
+                The MVP validated a <span style={{ color: '#2459d3' }}>connected foundation</span> for collecting, organizing, and evaluating people—but the complete workflow still required <span style={{ color: '#2459d3' }}>broader validation</span> and continued development.
+              </p>
+            </div>
+          </div>
+        </ScrollAnimatedSection>
+      </section>
 
       {/* Process Section —— 四步线性叙事：Discovery → Product decision → IA → Design system。
           视觉策略：
@@ -1786,6 +6799,7 @@ export default function ConnectnovaProjectPage() {
           · Step 3 用纯 CSS "三层 vs 两层" IA 对比图作为分区 centerpiece，其它三步配统一样式的占位图
           · 整块顶部一条 hairline，作为 Hero 与正文内容切换的信号 */}
       <section
+        hidden
         className="w-screen"
         data-case-nav-label="Design Process"
         style={{
@@ -1933,8 +6947,9 @@ export default function ConnectnovaProjectPage() {
                 用浅灰 #FAFAFA 与上（Hero，白）、下（UX research，白）区分节奏；
                 内部三个小节用"编号眉题 + H2"的杂志排版节奏，避免与 UX research 的标题层级撞车。 */}
             <section
+              hidden
+              aria-hidden="true"
               className="w-screen"
-              data-case-nav-label="Problem"
               style={{
                 backgroundColor: '#FAFAFA',
                 marginLeft: 'calc(-50vw + 50%)',
@@ -3227,6 +8242,7 @@ export default function ConnectnovaProjectPage() {
           · Extension 占位图用 mock LinkedIn 顶栏"装"一下，兑现"嵌入 LinkedIn"的语义
           · Dashboard 的 4 个功能用 2x2 feature grid 作为 Solution 的视觉 centerpiece */}
       <section
+        hidden
         className="w-screen"
         data-case-nav-label="Solution"
         style={{
@@ -3383,7 +8399,7 @@ export default function ConnectnovaProjectPage() {
                     <img
                       src={
                         overviewDashboardMode === 'outreach'
-                          ? '/img/connectnova/DashboardLayout.avif?v=20260508-2'
+                          ? '/img/connectnova/DashboardLayout.avif'
                           : '/img/connectnova/Dashboard.avif'
                       }
                       alt={
@@ -4773,6 +9789,7 @@ export default function ConnectnovaProjectPage() {
           · 眉题系统从 "NN · label" 升级为大号 thin 罗马数字 + 竖线 + 小 tracked caps 标签
           · kicker 首次全部使用 italic medium —— 作为 Reflection 独有的排印 signature */}
       <section
+        hidden
         className="w-screen"
         data-case-nav-label="Reflection"
         style={{

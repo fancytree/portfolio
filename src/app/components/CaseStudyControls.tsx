@@ -49,7 +49,9 @@ function getProjectContentSections() {
   const root = document.querySelector<HTMLElement>('.mei-project-page');
   if (!root) return [];
 
-  const labeledSections = Array.from(root.querySelectorAll<HTMLElement>('[data-case-nav-label]'));
+  const labeledSections = Array.from(root.querySelectorAll<HTMLElement>('[data-case-nav-label]')).filter(
+    (section) => !section.closest('[hidden]')
+  );
   if (labeledSections.length > 1) {
     return labeledSections;
   }
