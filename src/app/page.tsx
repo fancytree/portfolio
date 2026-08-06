@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { AudioWaveform, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
+import HeroFish from './components/HeroFish';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -562,15 +563,18 @@ export default function Home() {
           负 marginTop 抵消 Layout 的 pt-12（导航栏高度），让 hero 顶到视口顶部，
           导航栏悬浮在 hero 上方（半透明 + 模糊），而不是与 hero 之间留白 */}
       <section
-        className="mei-section-screen flex w-screen flex-col bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
+        className="mei-section-screen relative flex w-screen flex-col overflow-hidden bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
         style={{ ...fullBleed, marginTop: '-48px', height: '100vh' }}
       >
-        <div className="text-[13px] leading-relaxed text-[#0a0a0a]/70 sm:text-[15px]" style={fontMono}>
+        {/* 背景：一条粒子构成的鱼在画面里巡游（纯 canvas，无 3D 依赖） */}
+        <HeroFish className="pointer-events-none absolute inset-0 z-0 block" />
+
+        <div className="relative z-10 text-[13px] leading-relaxed text-[#0a0a0a]/70 sm:text-[15px]" style={fontMono}>
           <p>const experience = &quot;7+ years&quot;;</p>
           <p>const passion = Infinity;</p>
         </div>
 
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center text-[#0a0a0a]">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-3 text-center text-[#0a0a0a]">
           <div className="flex flex-wrap items-baseline justify-center gap-3 sm:gap-4">
             <span className="text-[16px] tracking-wide sm:text-[20px]" style={fontBody}>
               I AM A(AN)
@@ -606,7 +610,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
+        <div className="relative z-10 flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
           <p style={fontBody}>Based in Milan, IT</p>
           <div className="flex items-center gap-1.5" style={fontBody}>
             <span>Scroll Down</span>
