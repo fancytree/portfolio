@@ -111,12 +111,7 @@ function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; act
   const router = useRouter();
 
   const handleBackClick = () => {
-    if (window.history.length > 1) {
-      router.back();
-      return;
-    }
-
-    router.push('/');
+    router.push('/#work');
   };
 
   return (
@@ -162,7 +157,7 @@ function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; act
           textAlign: 'left',
         }}
       >
-        ← Back
+        ← Back to Work
       </button>
 
       <nav
@@ -232,52 +227,9 @@ function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; act
 }
 
 function CaseStudyTldrButton({ visible, onOpen }: { visible: boolean; onOpen: () => void }) {
-  return (
-    <button
-      type="button"
-      className="mei-case-study-tldr-button"
-      data-visible={visible}
-      onClick={onOpen}
-      aria-label="Open abbreviated case study"
-      style={{
-        position: 'fixed',
-        bottom: '22px',
-        zIndex: 45,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '10px',
-        overflow: 'hidden',
-        border: '1px solid rgb(10 10 10 / 0.72)',
-        borderRadius: '999px',
-        background: 'rgb(243 241 234 / 0.72)',
-        backdropFilter: 'blur(14px)',
-        color: '#0a0a0a',
-        cursor: 'pointer',
-        fontFamily: fontFamily.sans,
-        fontSize: '14px',
-        fontWeight: 400,
-        lineHeight: '20px',
-        opacity: visible ? 1 : 0,
-        padding: '9px 16px',
-        pointerEvents: visible ? 'auto' : 'none',
-        transition:
-          'opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease',
-      }}
-    >
-      <span
-        className="mei-case-study-tldr-dot"
-        aria-hidden
-        style={{
-          display: 'inline-block',
-          height: '6px',
-          width: '6px',
-          borderRadius: '999px',
-          background: 'currentColor',
-        }}
-      />
-      <span className="mei-case-study-tldr-label">TL;DR</span>
-    </button>
-  );
+  void visible;
+  void onOpen;
+  return null;
 }
 
 function CaseStudyTldrModal({ open, onClose, points }: { open: boolean; onClose: () => void; points: CaseStudyTldrPoint[] }) {

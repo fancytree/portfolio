@@ -8,12 +8,7 @@ export default function CaseStudyBackButton() {
   const fontStyle = { fontFamily: fontFamily.sans };
 
   const handleBackClick = () => {
-    if (window.history.length > 1) {
-      router.back();
-      return;
-    }
-
-    router.push('/');
+    router.push('/#work');
   };
 
   return (
@@ -40,7 +35,7 @@ export default function CaseStudyBackButton() {
         e.currentTarget.style.color = 'rgb(10 10 10 / 0.58)';
       }}
     >
-      ← Back
+      ← Back to Work
     </button>
   );
 }

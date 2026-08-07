@@ -514,18 +514,6 @@ const experienceItems = [
     body: 'Lead UX strategy and interaction design across the Nova AI ecosystem: ConnectNova, JobNova, and CrackInterview.',
   },
   {
-    period: 'May 2026 - Present',
-    role: 'Product Designer & Full-Stack Engineer',
-    company: 'DEF Beauty',
-    body: 'Own the research, design, and full-stack rebuild of a wholesale order-management platform, simplifying ordering from 5 steps to 3.',
-  },
-  {
-    period: 'Jul - Sep 2024',
-    role: 'Interaction Designer',
-    company: 'CRRC Rolling Stock Research Institute',
-    body: 'Researched subway maintenance workflows on site and redesigned information structure for high-stakes technical decisions.',
-  },
-  {
     period: 'Dec 2019 - Jun 2022',
     role: 'User Research Specialist',
     company: 'Beijing Smart Walnut Education',
