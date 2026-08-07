@@ -16,6 +16,7 @@ type CaseStudyTldrPoint = {
 };
 
 type CaseStudyControlsProps = {
+  navLabels?: string[];
   tldrPoints?: CaseStudyTldrPoint[];
 };
 
@@ -50,7 +51,7 @@ function getProjectContentSections() {
   if (!root) return [];
 
   const labeledSections = Array.from(root.querySelectorAll<HTMLElement>('[data-case-nav-label]')).filter(
-    (section) => !section.closest('[hidden]')
+    (section) => !section.closest('[hidden], [aria-hidden="true"], .hidden')
   );
   if (labeledSections.length > 1) {
     return labeledSections;
@@ -393,7 +394,7 @@ function CaseStudyTldrModal({ open, onClose, points }: { open: boolean; onClose:
   );
 }
 
-export default function CaseStudyControls({ tldrPoints }: CaseStudyControlsProps) {
+export default function CaseStudyControls({ navLabels, tldrPoints }: CaseStudyControlsProps) {
   const [visible, setVisible] = useState(false);
   const [activeId, setActiveId] = useState('');
   const [navItems, setNavItems] = useState<CaseStudyNavItem[]>([]);
@@ -405,11 +406,13 @@ export default function CaseStudyControls({ tldrPoints }: CaseStudyControlsProps
     const prepareSections = () => {
       const contentSections = getProjectContentSections();
 
+      const allowedLabels = navLabels?.map(normalizeLabel);
       const nextItems = contentSections
         .map((section, index) => {
           const heading = section.querySelector('h1, h2');
           const label = normalizeLabel(section.dataset.caseNavLabel ?? heading?.textContent ?? '');
           if (!label) return null;
+          if (allowedLabels?.length && !allowedLabels.includes(label)) return null;
 
           if (!section.id) {
             section.id = slugify(label, index);
@@ -429,7 +432,7 @@ export default function CaseStudyControls({ tldrPoints }: CaseStudyControlsProps
 
     prepareSections();
     window.setTimeout(prepareSections, 300);
-  }, []);
+  }, [navLabels]);
 
   useEffect(() => {
     const handleScroll = () => {

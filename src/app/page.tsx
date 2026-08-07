@@ -260,7 +260,7 @@ const productProjects: Project[] = [
     description:
       'Designed a 0-to-1 AI job-search system that helps users complete relevant applications faster without giving up trust or control.',
     image: '/img/Jobnova.avif',
-    href: '/projects/jobnova-ai-platform',
+    href: '/projects/jobnova-ai-platform-v2',
   },
   {
     title: 'MemQ',
