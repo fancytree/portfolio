@@ -1875,7 +1875,7 @@ function KeyInterfacesSection() {
  <figure className="m-0 w-full overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
  {item.visual === 'states' ? (
  <div className="bg-white p-4 sm:p-6">
- <AutoApplyStateSwitcher stateIds={['pending-approval', 'queued', 'progress', 'submitted', 'failed']} />
+ <AutoApplyStateSwitcher />
  </div>
  ) : (
  <Image src={item.image} alt={item.alt} width={1400} height={950} className="h-auto w-full" unoptimized />
@@ -3932,9 +3932,7 @@ function AutoApplyDesignDecisionSection() {
  AI executes only when predefined conditions are satisfied. Approval, queue position, processing, submission, and failure remain visible.
  </p>
  </div>
- <AutoApplyStateSwitcher
- stateIds={['pending-approval', 'queued', 'progress', 'submitted', 'failed']}
- />
+ <AutoApplyStateSwitcher />
  </section>
 
  <section className="flex flex-col gap-6" aria-labelledby="exceptions-title">
@@ -4242,7 +4240,7 @@ function EdgeCasesSection() {
  The UI kept automation visible while it was queued, running, waiting, submitted, or failed.
  </h3>
  </div>
- <AutoApplyStateSwitcher stateIds={['pending-approval', 'queued', 'progress', 'submitted', 'failed']} />
+ <AutoApplyStateSwitcher />
  </section>
 
  <section className="flex flex-col gap-6" aria-labelledby="edge-scenarios-title">

@@ -36,6 +36,8 @@ type StateConfig = {
   id: StateId;
   tabLabel: string;
   tabIcon: LucideIcon;
+  filterLabel?: string;
+  filterCount?: string;
   tag: string;
   tagColor: string;
   tagBackground: string;
@@ -83,78 +85,8 @@ const sharedJob = {
 
 const states: StateConfig[] = [
   {
-    ...sharedJob,
-    id: 'submitted',
-    tabLabel: 'State 1: Auto-Submitted',
-    tabIcon: CircleCheck,
-    tag: 'Applied',
-    tagColor: '#4caf50',
-    tagBackground: 'rgba(76,175,80,0.12)',
-    scoreAsset: `${assetRoot}/score-submitted.svg`,
-    footer: 'Your application was automatically submitted.',
-    action: 'View Application',
-    utilityActions: true,
-    descriptionTitle: 'Submitted automatically',
-    description:
-      'The application met every Auto Apply rule and was submitted without requiring another action. Users can open the completed application and review exactly what was sent.',
-  },
-  {
-    ...sharedJob,
-    id: 'queued',
-    tabLabel: 'State 2: Queued',
-    tabIcon: AlarmClock,
-    tag: 'Queued',
-    tagColor: '#7c5cff',
-    tagBackground: 'rgba(124,92,255,0.12)',
-    scoreAsset: `${assetRoot}/score-queued.svg`,
-    footer: 'Your application is in line and will be submitted automatically. #3 in queue',
-    action: 'Move to Front',
-    utilityActions: true,
-    descriptionTitle: 'Waiting in the submission queue',
-    description:
-      'The application is ready, but another submission is being processed first. Its queue position stays visible, and users can move it forward or remove it before submission begins.',
-  },
-  {
-    ...sharedJob,
-    id: 'progress',
-    tabLabel: 'State 3: In Progress',
-    tabIcon: LoaderCircle,
-    tag: 'Applying…',
-    tagColor: '#68910d',
-    tagBackground: 'rgba(173,245,0,0.12)',
-    scoreAsset: `${assetRoot}/score-progress.svg`,
-    footer: "We're filling out and submitting your application right now.",
-    utilityActions: true,
-    descriptionTitle: 'Submission in progress',
-    description:
-      'JobNova is actively completing and submitting the application. The state makes the background activity visible so users know the application is being handled, not stalled.',
-  },
-  {
-    ...sharedJob,
-    id: 'failed',
-    tabLabel: 'State 4: Failed',
-    tabIcon: CircleX,
-    tag: 'Failed',
-    tagColor: '#f44336',
-    tagBackground: 'rgba(244,67,54,0.12)',
-    scoreAsset: `${assetRoot}/score-failed.svg`,
-    banner: {
-      icon: 'alert',
-      text: 'Something went wrong while submitting.',
-      action: 'Click to see error details',
-      color: '#f44336',
-      background: 'rgba(244,67,54,0.12)',
-    },
-    footer: 'Something went wrong while submitting. Please apply manually on the company site.',
-    action: 'Apply Now',
-    utilityActions: true,
-    descriptionTitle: 'Automation could not complete',
-    description:
-      'A submission error interrupted the automated flow. The failure is surfaced clearly, with access to error details and a manual application path so the opportunity is not lost.',
-  },
-  {
     id: 'manual',
-    tabLabel: 'State 5: Manual Apply',
+    tabLabel: 'Manual',
     tabIcon: MousePointer2,
     tag: 'Manual',
     tagColor: '#0e0e0e',
@@ -178,32 +110,11 @@ const states: StateConfig[] = [
   },
   {
     ...sharedJob,
-    id: 'pending-auto',
-    tabLabel: 'State 6: Pending (Auto 24h)',
-    tabIcon: TimerReset,
-    tag: 'Waiting for approval',
-    tagColor: '#d99400',
-    tagBackground: 'rgba(255,183,0,0.12)',
-    scoreAsset: `${assetRoot}/score-pending-auto.svg`,
-    banner: {
-      icon: 'timer',
-      text: 'Auto-submits in: 23:47:12',
-      action: 'Approve now to skip wait',
-      color: '#d99400',
-      background: 'rgba(255,183,0,0.12)',
-    },
-    footer: 'Your application was automatically submitted.',
-    action: 'Approve Now',
-    utilityActions: true,
-    descriptionTitle: 'Review window before auto-submit',
-    description:
-      'The application is complete and enters a 24-hour review window. Users may approve it immediately, edit their decision, or let JobNova submit automatically when the timer ends.',
-  },
-  {
-    ...sharedJob,
     id: 'pending-approval',
-    tabLabel: 'State 7: Pending (Must Approve)',
+    tabLabel: 'Approval Required',
     tabIcon: ShieldCheck,
+    filterLabel: 'Approval Required',
+    filterCount: '1,623',
     tag: 'Approval Required',
     tagColor: '#2196f3',
     tagBackground: 'rgba(33,150,243,0.12)',
@@ -221,6 +132,107 @@ const states: StateConfig[] = [
     descriptionTitle: 'Explicit approval is required',
     description:
       'This application will never be submitted automatically. JobNova waits for a deliberate approval, keeping the user in control when the role or application rules require confirmation.',
+  },
+  {
+    ...sharedJob,
+    id: 'failed',
+    tabLabel: 'Failed',
+    tabIcon: CircleX,
+    filterLabel: 'Failed',
+    filterCount: '23',
+    tag: 'Failed',
+    tagColor: '#f44336',
+    tagBackground: 'rgba(244,67,54,0.12)',
+    scoreAsset: `${assetRoot}/score-failed.svg`,
+    banner: {
+      icon: 'alert',
+      text: 'Something went wrong while submitting.',
+      action: 'Click to see error details',
+      color: '#f44336',
+      background: 'rgba(244,67,54,0.12)',
+    },
+    footer: 'Something went wrong while submitting. Please apply manually on the company site.',
+    action: 'Apply Now',
+    utilityActions: true,
+    descriptionTitle: 'Automation could not complete',
+    description:
+      'A submission error interrupted the automated flow. The failure is surfaced clearly, with access to error details and a manual application path so the opportunity is not lost.',
+  },
+  {
+    ...sharedJob,
+    id: 'queued',
+    tabLabel: 'Queued',
+    tabIcon: AlarmClock,
+    filterLabel: 'Queued',
+    filterCount: '64',
+    tag: 'Queued',
+    tagColor: '#7c5cff',
+    tagBackground: 'rgba(124,92,255,0.12)',
+    scoreAsset: `${assetRoot}/score-queued.svg`,
+    footer: 'Your application is in line and will be submitted automatically. #3 in queue',
+    action: 'Move to Front',
+    utilityActions: true,
+    descriptionTitle: 'Waiting in the submission queue',
+    description:
+      'The application is ready, but another submission is being processed first. Its queue position stays visible, and users can move it forward or remove it before submission begins.',
+  },
+  {
+    ...sharedJob,
+    id: 'progress',
+    tabLabel: 'Applying…',
+    tabIcon: LoaderCircle,
+    filterLabel: 'Applying…',
+    filterCount: '35',
+    tag: 'Applying…',
+    tagColor: '#68910d',
+    tagBackground: 'rgba(173,245,0,0.12)',
+    scoreAsset: `${assetRoot}/score-progress.svg`,
+    footer: "We're filling out and submitting your application right now.",
+    utilityActions: true,
+    descriptionTitle: 'Submission in progress',
+    description:
+      'JobNova is actively completing and submitting the application. The state makes the background activity visible so users know the application is being handled, not stalled.',
+  },
+  {
+    ...sharedJob,
+    id: 'submitted',
+    tabLabel: 'Applied',
+    tabIcon: CircleCheck,
+    filterLabel: 'Applied',
+    filterCount: '1,623',
+    tag: 'Applied',
+    tagColor: '#4caf50',
+    tagBackground: 'rgba(76,175,80,0.12)',
+    scoreAsset: `${assetRoot}/score-submitted.svg`,
+    footer: 'Your application was automatically submitted.',
+    action: 'View Application',
+    utilityActions: true,
+    descriptionTitle: 'Submitted automatically',
+    description:
+      'The application met every Auto Apply rule and was submitted without requiring another action. Users can open the completed application and review exactly what was sent.',
+  },
+  {
+    ...sharedJob,
+    id: 'pending-auto',
+    tabLabel: 'Waiting for approve',
+    tabIcon: TimerReset,
+    tag: 'Waiting for approve',
+    tagColor: '#d99400',
+    tagBackground: 'rgba(255,183,0,0.12)',
+    scoreAsset: `${assetRoot}/score-pending-auto.svg`,
+    banner: {
+      icon: 'timer',
+      text: 'Auto-submits in: 23:47:12',
+      action: 'Approve now to skip wait',
+      color: '#d99400',
+      background: 'rgba(255,183,0,0.12)',
+    },
+    footer: 'Your application was automatically submitted.',
+    action: 'Approve Now',
+    utilityActions: true,
+    descriptionTitle: 'Review window before auto-submit',
+    description:
+      'The application is complete and enters a 24-hour review window. Users may approve it immediately, edit their decision, or let JobNova submit automatically when the timer ends.',
   },
 ];
 
@@ -291,11 +303,11 @@ function StatusBanner({ banner }: { banner: NonNullable<StateConfig['banner']> }
   const BannerIcon = banner.icon === 'timer' ? TimerReset : banner.icon === 'shield' ? ShieldCheck : CircleX;
   return (
     <div
-      className="flex min-h-[26px] w-full items-center justify-between rounded-[2px] px-2 text-[10px] font-normal"
+      className="flex min-h-[30px] w-full items-center justify-between rounded-md px-3 py-1.5 text-[12px] font-normal"
       style={{ color: banner.color, background: banner.background }}
     >
-      <span className="flex items-center gap-1">
-        <BannerIcon className="size-3" strokeWidth={1.6} aria-hidden />
+      <span className="flex items-center gap-1.5">
+        <BannerIcon className="size-4 shrink-0" strokeWidth={1.6} aria-hidden />
         {banner.text}
       </span>
       <span>{banner.action}</span>
@@ -305,7 +317,7 @@ function StatusBanner({ banner }: { banner: NonNullable<StateConfig['banner']> }
 
 function JobCard({ state }: { state: StateConfig }) {
   return (
-    <article className="flex w-[826px] flex-col gap-3 overflow-hidden rounded-[12px] border border-[#f2f2f3] bg-white px-5 pb-3 pt-4 text-[#0e1401] shadow-[0_8px_18px_rgba(14,20,1,0.06)]">
+    <article className="flex w-full flex-col gap-3 overflow-hidden rounded-[12px] border border-[#f2f2f3] bg-white px-5 pb-3 pt-4 text-[#0e1401] shadow-[0_8px_18px_rgba(14,20,1,0.06)]">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <span
@@ -408,7 +420,7 @@ export default function AutoApplyStateSwitcher({ stateIds }: { stateIds?: StateI
     stateIds
       ?.map((id) => states.find((state) => state.id === id))
       .filter((state): state is StateConfig => Boolean(state)) ?? states;
-  const [activeId, setActiveId] = useState<StateId>(stateIds?.[0] ?? 'submitted');
+  const [activeId, setActiveId] = useState<StateId>(visibleStates[0]?.id ?? 'manual');
   const activeState = visibleStates.find((state) => state.id === activeId) ?? visibleStates[0];
 
   return (
@@ -448,29 +460,26 @@ export default function AutoApplyStateSwitcher({ stateIds }: { stateIds?: StateI
         id="auto-apply-state-panel"
         role="tabpanel"
         aria-labelledby={`auto-apply-tab-${activeState.id}`}
-        className="grid h-[576px] min-w-0 grid-cols-[minmax(0,1fr)] items-start gap-6 lg:h-[246px] lg:grid-cols-[595px_1fr] lg:gap-8"
+        className="flex min-w-0 flex-col gap-5"
       >
-        <div className="relative left-1/2 min-w-0 w-screen -translate-x-1/2 overflow-x-auto lg:static lg:w-[595px] lg:translate-x-0 lg:overflow-visible">
-          <div className="h-[340px] w-[826px] pb-8 lg:hidden">
+        <div className="relative left-1/2 min-w-0 w-screen -translate-x-1/2 overflow-x-auto lg:static lg:w-full lg:translate-x-0">
+          <div className="w-[826px] pb-2 lg:w-full">
             <JobCard state={activeState} />
-          </div>
-          <div className="hidden h-[246px] w-[595px] lg:block">
-            <div className="origin-top-left scale-[0.72]">
-              <JobCard state={activeState} />
-            </div>
           </div>
         </div>
 
-        <aside className="flex h-[212px] min-w-0 flex-col border-t border-[#e9e9e9] pt-4 lg:h-[246px] lg:border-l lg:border-t-0 lg:pl-6 lg:pt-1">
+        <aside className="grid min-w-0 gap-3 border-t border-[#e9e9e9] pt-4 lg:grid-cols-[180px_1fr] lg:items-start">
           <p className="m-0 text-[11px] font-normal uppercase tracking-[0.08em]" style={{ color: activeState.tagColor }}>
             {activeState.tag}
           </p>
-          <h5 className="m-0 mt-3 text-[18px] font-medium leading-[1.35] text-[#0e1401]">
-            {activeState.descriptionTitle}
-          </h5>
-          <p className="m-0 mt-3 text-[13px] font-light leading-[1.65] text-[#0e1401]/68">
-            {activeState.description}
-          </p>
+          <div>
+            <h5 className="m-0 text-[18px] font-medium leading-[1.35] text-[#0e1401]">
+              {activeState.descriptionTitle}
+            </h5>
+            <p className="m-0 mt-2 max-w-[680px] text-[13px] font-light leading-[1.65] text-[#0e1401]/68">
+              {activeState.description}
+            </p>
+          </div>
         </aside>
       </div>
     </div>
