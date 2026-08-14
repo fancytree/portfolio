@@ -92,7 +92,7 @@ export const PORTFOLIO_COPY = {
   agentComputes: 'AGENT COMPUTES',
   agentComputesBody: 'Demand forecast · order window · expected arrival · quantities.',
   addProductManually: 'Add product manually',
-  /** 补货计划表左下展示用按钮（无加行逻辑） */
+  /** 补货计划表左下、对话快捷按钮第一位（仅展示，无加行逻辑） */
   addProductLine: '+ Add product',
   importDocument: 'Import a document',
   opening:

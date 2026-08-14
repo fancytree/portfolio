@@ -134,11 +134,17 @@ function suggestionsFor(state: DemoState): string[] {
       return [PORTFOLIO_COPY.kickoffPlan];
     }
     if (state.confirmationUploaded) {
-      return state.approved
+      const next = state.approved
         ? [PORTFOLIO_COPY.markOrdered, PORTFOLIO_COPY.viewSupplierRules]
         : [PORTFOLIO_COPY.approve, PORTFOLIO_COPY.viewSupplierRules];
+      return [PORTFOLIO_COPY.addProductLine, ...next];
     }
-    return [PORTFOLIO_COPY.exportRequest, PORTFOLIO_COPY.uploadConfirmation, PORTFOLIO_COPY.viewSupplierRules];
+    return [
+      PORTFOLIO_COPY.addProductLine,
+      PORTFOLIO_COPY.exportRequest,
+      PORTFOLIO_COPY.uploadConfirmation,
+      PORTFOLIO_COPY.viewSupplierRules,
+    ];
   }
   if (stage === 'approval') {
     return state.approved
@@ -493,6 +499,9 @@ export default function ProcurementAgentPortfolio() {
     if (!prompt) return;
     if (thinkingLockedRef.current) return;
     const lower = prompt.toLowerCase();
+
+    // 展示用芯片：不触发加行或对话
+    if (prompt === PORTFOLIO_COPY.addProductLine) return;
 
     // 第二 stage 开场：芯片或手动发送都走同一套发送 → 加载动效
     if (state.stage === 'replenishment' && !state.planGenerated) {
