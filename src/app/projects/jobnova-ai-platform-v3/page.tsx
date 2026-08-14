@@ -2822,7 +2822,11 @@ export default function JobnovaAIPlatformPage() {
               </div>
 
               <div className="w-full bg-[#f3f1ea] p-4 sm:p-6 lg:p-8">
-                <figure className="relative m-0 w-full overflow-hidden" aria-label="JobNova design system">
+                <figure
+                  className="relative m-0 w-full overflow-hidden"
+                  style={{ maxHeight: 'min(170vh, 1900px)' }}
+                  aria-label="JobNova design system"
+                >
                   <Image
                     src="/img/jobnova/design system.avif"
                     alt="JobNova design system covering colors, typography, spacing, components, icons, cards, filters, and application states."
@@ -2831,6 +2835,25 @@ export default function JobnovaAIPlatformPage() {
                     sizes="(min-width: 1280px) 916px, calc(100vw - 80px)"
                     className="block h-auto w-full"
                   />
+                  {/* 仅底部模糊，暗示下方还有未完全展开的内容 */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 overflow-hidden"
+                    style={{
+                      WebkitMaskImage: 'linear-gradient(to bottom, transparent 72%, black 100%)',
+                      maskImage: 'linear-gradient(to bottom, transparent 72%, black 100%)',
+                    }}
+                  >
+                    <Image
+                      src="/img/jobnova/design system.avif"
+                      alt=""
+                      width={4126}
+                      height={8493}
+                      sizes="(min-width: 1280px) 916px, calc(100vw - 80px)"
+                      className="block h-auto w-full"
+                      style={{ filter: 'blur(18px)', transform: 'scale(1.04)', transformOrigin: 'top center' }}
+                    />
+                  </div>
                 </figure>
               </div>
             </div>
