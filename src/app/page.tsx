@@ -243,6 +243,18 @@ type Project = {
 
 const productProjects: Project[] = [
   {
+    title: 'Procurement Agent',
+    category: 'Product / UX / AX Designer',
+    time: '2026',
+    tags: ['Agentic Experience Design', 'B2B Procurement', 'Agent Workflow'],
+    description:
+      'A three-stage transformation for an Italian B2B beauty wholesaler: disconnected manual work, structured purchasing operations, and evidence-backed Agent collaboration, with human ordering authority preserved throughout.',
+    image: '/img/procurement-agent/cover.png',
+    imageFit: 'cover',
+    imageBackground: '#161616',
+    href: '/projects/procurement-agent',
+  },
+  {
     title: 'ConnectNova',
     category: 'Founding Designer',
     time: '2026 – Present',
@@ -514,13 +526,19 @@ const experienceItems = [
     body: 'Lead UX strategy and interaction design across the Nova AI ecosystem: ConnectNova, JobNova, and CrackInterview.',
   },
   {
-    period: 'Dec 2019 - Jun 2022',
+    period: '2026 - Present',
+    role: 'Independent Designer',
+    company: 'River Studio',
+    body: 'Design and ship AI products solo, end-to-end — MemQ (an iOS study app live on the App Store), Mono (a personal finance AI agent), and client work rebuilding a distributor’s ordering platform.',
+  },
+  {
+    period: 'Jun 2020 - Jun 2022',
     role: 'User Research Specialist',
     company: 'Beijing Smart Walnut Education',
     body: 'Led personas, journey mapping, NPS analysis, and product research that improved engagement by 15% and optimized 50+ learning paths.',
   },
   {
-    period: 'Nov 2017 - Dec 2019',
+    period: 'Oct 2017 - Jun 2020',
     role: 'UX Designer',
     company: 'Sohu Inc.',
     body: 'Defined interaction standards across product teams and independently designed a social product from zero to 3,000+ daily active users.',
