@@ -34,9 +34,11 @@ type CaseStudyHeroProps = {
   visualObjectFit?: 'cover' | 'contain';
   visualImageScale?: number;
   visualTransformOrigin?: string;
+  visualTranslateY?: string;
   visualBackground?: string;
   visualHeight?: string;
   visualNavTone?: 'light';
+  accentColor?: string;
   compactTypography?: boolean;
   wideDetails?: boolean;
 };
@@ -57,9 +59,11 @@ export default function CaseStudyHero({
   visualObjectFit = 'cover',
   visualImageScale = 1,
   visualTransformOrigin = 'center',
+  visualTranslateY = '0',
   visualBackground,
   visualHeight,
   visualNavTone,
+  accentColor = '#ed5b2b',
   compactTypography = false,
   wideDetails = false,
 }: CaseStudyHeroProps) {
@@ -121,7 +125,7 @@ export default function CaseStudyHero({
               style={{
                 objectFit: visualObjectFit,
                 objectPosition: visualObjectPosition,
-                transform: `scale(${visualImageScale})`,
+                transform: `translateY(${visualTranslateY}) scale(${visualImageScale})`,
                 transformOrigin: visualTransformOrigin,
               }}
             />
@@ -218,7 +222,7 @@ export default function CaseStudyHero({
               <p
                 style={{
                   ...fontStyle,
-                  color: '#ed5b2b',
+                  color: accentColor,
                   fontSize: '12px',
                   fontWeight: 500,
                   letterSpacing: '0.02em',
@@ -282,7 +286,7 @@ export default function CaseStudyHero({
                   <p
                     style={{
                       ...fontStyle,
-                      color: '#ed5b2b',
+                      color: accentColor,
                       fontSize: '12px',
                       fontWeight: 500,
                       letterSpacing: '0.02em',

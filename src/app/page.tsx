@@ -237,6 +237,7 @@ type Project = {
   image: string;
   imageFit?: 'cover' | 'contain';
   imageScale?: number;
+  imageTranslateY?: string;
   imageBackground?: string;
   href: string;
 };
@@ -249,8 +250,10 @@ const productProjects: Project[] = [
     tags: ['Agentic Experience Design', 'B2B Procurement', 'Agent Workflow'],
     description:
       'A three-stage transformation for an Italian B2B beauty wholesaler: disconnected manual work, structured purchasing operations, and evidence-backed Agent collaboration, with human ordering authority preserved throughout.',
-    image: '/img/procurement-agent/cover.png',
+    image: '/img/procurement-agent/Procurement Agent.avif',
     imageFit: 'cover',
+    imageScale: 1.55,
+    imageTranslateY: '8%',
     imageBackground: '#161616',
     href: '/projects/procurement-agent',
   },
@@ -386,7 +389,7 @@ const researchProjects: Project[] = [
 const workGroups = [
   {
     label: 'Product',
-    items: ['JobNova', 'ConnectNova', 'MemQ', 'Mono', 'Beikemama'].flatMap((title) =>
+    items: ['Procurement Agent', 'JobNova', 'ConnectNova', 'MemQ', 'Mono', 'Beikemama'].flatMap((title) =>
       productProjects.filter((project) => project.title === title)
     ),
   },
@@ -696,8 +699,9 @@ export default function Home() {
                                   alt=""
                                   className={`h-full w-full ${project.imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
                                   style={{
-                                    transform: `scale(${project.imageScale ?? 1})`,
-                                    transformOrigin: 'center',
+                                    objectPosition: 'center',
+                                    transform: `translateY(${project.imageTranslateY ?? '0'}) scale(${project.imageScale ?? 1})`,
+                                    transformOrigin: project.imageTranslateY ? 'center top' : 'center',
                                   }}
                                 />
                               </div>

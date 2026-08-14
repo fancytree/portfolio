@@ -18,6 +18,7 @@ type CaseStudyTldrPoint = {
 type CaseStudyControlsProps = {
   navLabels?: string[];
   tldrPoints?: CaseStudyTldrPoint[];
+  accentColor?: string;
 };
 
 function normalizeLabel(text: string) {
@@ -107,7 +108,7 @@ function scrollToTarget(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; activeId: string; items: CaseStudyNavItem[] }) {
+function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible: boolean; activeId: string; items: CaseStudyNavItem[]; accentColor: string }) {
   const router = useRouter();
 
   const handleBackClick = () => {
@@ -174,7 +175,7 @@ function CaseStudyQuickNav({ visible, activeId, items }: { visible: boolean; act
         {items.map((item) => {
           const isActive = item.id === activeId;
           const idleColor = 'rgb(10 10 10 / 0.62)';
-          const activeColor = '#ed5b2b';
+          const activeColor = accentColor;
 
           return (
             <button
@@ -232,7 +233,7 @@ function CaseStudyTldrButton({ visible, onOpen }: { visible: boolean; onOpen: ()
   return null;
 }
 
-function CaseStudyTldrModal({ open, onClose, points }: { open: boolean; onClose: () => void; points: CaseStudyTldrPoint[] }) {
+function CaseStudyTldrModal({ open, onClose, points, accentColor }: { open: boolean; onClose: () => void; points: CaseStudyTldrPoint[]; accentColor: string }) {
   if (!open) return null;
 
   return (
@@ -317,7 +318,7 @@ function CaseStudyTldrModal({ open, onClose, points }: { open: boolean; onClose:
               <h3
                 style={{
                   fontFamily: fontFamily.display,
-                  color: '#ed5b2b',
+                  color: accentColor,
                   fontSize: '22px',
                   fontWeight: 500,
                   lineHeight: '24px',
@@ -346,7 +347,7 @@ function CaseStudyTldrModal({ open, onClose, points }: { open: boolean; onClose:
   );
 }
 
-export default function CaseStudyControls({ navLabels, tldrPoints }: CaseStudyControlsProps) {
+export default function CaseStudyControls({ navLabels, tldrPoints, accentColor = '#ed5b2b' }: CaseStudyControlsProps) {
   const [visible, setVisible] = useState(false);
   const [activeId, setActiveId] = useState('');
   const [navItems, setNavItems] = useState<CaseStudyNavItem[]>([]);
@@ -377,7 +378,7 @@ export default function CaseStudyControls({ navLabels, tldrPoints }: CaseStudyCo
         })
         .filter((item): item is CaseStudyNavItem => Boolean(item));
 
-      setNavItems(nextItems.slice(0, 16));
+      setNavItems(nextItems);
       setPageTitle(normalizeLabel(document.querySelector('h1')?.textContent ?? 'This project'));
       setPageDescription(normalizeLabel(document.querySelector('.mei-project-page p')?.textContent ?? ''));
     };
@@ -454,9 +455,9 @@ export default function CaseStudyControls({ navLabels, tldrPoints }: CaseStudyCo
 
   return (
     <>
-      <CaseStudyQuickNav visible={visible} activeId={activeId} items={navItems} />
+      <CaseStudyQuickNav visible={visible} activeId={activeId} items={navItems} accentColor={accentColor} />
       <CaseStudyTldrButton visible={visible} onOpen={() => setOpen(true)} />
-      <CaseStudyTldrModal open={open} onClose={() => setOpen(false)} points={modalPoints} />
+      <CaseStudyTldrModal open={open} onClose={() => setOpen(false)} points={modalPoints} accentColor={accentColor} />
     </>
   );
 }

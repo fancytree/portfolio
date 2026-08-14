@@ -11,9 +11,10 @@ export default function CustomerServiceSystemPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#6444DC" />
       {/* Hero / Overview */}
       <CaseStudyHero
+        accentColor="#6444DC"
         title="Integrated Chat and Customer Service System"
         subtitle="A multi-role customer service platform for users, promoters, support agents, and admin workflows."
         tags={['SaaS', 'Dashboard UX', 'Service System', 'Chat', 'Multi-role']}

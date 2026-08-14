@@ -1,0 +1,1478 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/noto-sans-sc";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter Variable", Inter, "Noto Sans SC Variable", "Noto Sans SC",
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-payment-cash: var(--payment-cash);
+  --color-payment-bank-transfer: var(--payment-bank-transfer);
+  --color-payment-check: var(--payment-check);
+  --color-payment-card: var(--payment-card);
+  --color-payment-post-office: var(--payment-post-office);
+  --color-payment-alipay: var(--payment-alipay);
+  --color-payment-wechat-pay: var(--payment-wechat-pay);
+  --color-payment-balance: var(--payment-balance);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* 状态 info 浅底（badge / 开单搜索栏等） */
+  --color-status-info-subtle: color-mix(in oklch, var(--primary) 12%, transparent);
+  --color-status-info-subtle-border: color-mix(in oklch, var(--primary) 22%, transparent);
+  /* 实色而非透明混色：用在不同深浅背景上时（侧边栏白底 / 开单页灰底）会显色不一致 */
+  --color-status-info-surface: #e8f1ff;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Woblo token 阴影：仅覆盖 lg/xl（新值是常规柔和阴影，风险低）；
+     sm/md 源文件给出的是白色描边环 / 内嵌发丝线等特定元素的抓取值，
+     直接套用会让全站已有的 26/16 处 shadow-sm/shadow-md 变成异常观感，故不覆盖，保留 Tailwind 默认。
+     xs 目前全站零使用，新增无风险，供后续按需选用。 */
+  --shadow-xs: 0 0 0 1px rgb(255 255 255);
+  --shadow-lg: 0 4px 4px 0 rgb(0 0 0 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+  /* 全局叠层顺序：半屏 < Dialog < 浮层下拉 < 全屏预览 */
+  --z-index-side-panel: 100;
+  --z-index-dialog-overlay: 200;
+  --z-index-dialog: 201;
+  --z-index-floating: 250;
+  --z-index-lightbox: 10000;
+}
+
+/*
+ * DEF ERP — shadcn radix-lyra preset (b1Zh6ud3g)
+ * 语义色见 @layer base :root；页面请使用 @/components/ui/* 组件
+ */
+
+/* 下拉箭头 SVG（主题变量见 @layer base :root） */
+:root {
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  /* 底栏统一高度：开单汇总+操作区 ≈ sidebar 用户区，使分割线水平对齐 */
+  --app-bottom-panel-pad-y: 0.625rem;
+  --app-bottom-panel-amounts-height: calc(0.8125rem + 2rem);
+  --app-bottom-panel-actions-block: calc(0.5rem + 1px + 0.5rem + 2.25rem);
+  --app-bottom-panel-height: calc(
+    var(--app-bottom-panel-pad-y) * 2 + var(--app-bottom-panel-amounts-height) +
+      var(--app-bottom-panel-actions-block)
+  );
+  /* 与 Sidebar w-52 一致，供右侧主工作区全宽底栏定位 */
+  --app-sidebar-width: 13rem;
+}
+
+@layer components {
+  /* 列表页筛选栏：子控件 h-9 由 FilterBarContext 提升；容器仅做最小布局约束 */
+  .def-list-filter-bar {
+    @apply min-w-0;
+  }
+
+  /* 列表搜索框：清空按钮黑色；激活态仅加深边框、无投影 */
+  .list-search-input [type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    margin-right: 2px;
+    cursor: pointer;
+    background: center / contain no-repeat
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' stroke='%2318181b' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+
+  .dark .list-search-input [type='search']::-webkit-search-cancel-button {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' stroke='%23fafafa' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  }
+
+  /* 销售开单页分区（克制层次：底色 → 卡片区 → 工作区 → 底栏） */
+  .sales-order-page {
+    /* 抵消 main 的 px/pt，铺满右侧工作区；勿用 -mb-8，否则底栏会溢出视口 */
+    @apply -mx-4 -mt-3 flex h-0 min-h-0 flex-1 flex-col overflow-hidden bg-muted/35;
+  }
+
+  .sales-order-zone-header {
+    @apply shrink-0 border-b border-border bg-card px-4 pt-4 pb-2;
+  }
+
+  .sales-order-zone-header-row {
+    @apply flex flex-wrap items-end justify-between gap-x-3 gap-y-2;
+  }
+
+  .sales-order-zone-toolbar {
+    @apply shrink-0 bg-status-info-surface px-4 py-2.5;
+  }
+
+  .sales-order-zone-toolbar-row {
+    @apply flex h-9 min-w-0 items-center gap-2;
+  }
+
+  .sales-order-zone-toolbar-search {
+    @apply relative min-w-48 max-w-[36rem] flex-1;
+  }
+
+  .sales-order-zone-toolbar-action {
+    @apply h-9 shrink-0 gap-1.5 border-0 bg-card px-4 text-sm font-medium text-foreground shadow-none hover:bg-card hover:text-foreground focus-visible:border-transparent;
+  }
+
+  .sales-order-zone-toolbar .group\/input-group {
+    @apply h-9 w-full border-border bg-card;
+  }
+
+  .sales-order-zone-toolbar [data-slot='input-group-addon'] {
+    @apply px-2 py-1.5;
+  }
+
+  .sales-order-zone-toolbar [data-slot='input-group-control'] {
+    @apply pr-3 text-sm placeholder:font-normal placeholder:text-muted-foreground;
+  }
+
+  .sales-order-zone-body {
+    @apply flex flex-1 min-h-0 flex-col overflow-hidden bg-background;
+  }
+
+  .sales-order-zone-body-scroll {
+    @apply min-h-0 flex-1 overflow-x-auto overflow-y-auto overscroll-y-contain;
+  }
+
+  /* 无商品时：空状态在添加区内垂直水平居中 */
+  .sales-order-zone-body-scroll:has(.sales-order-empty) {
+    @apply flex overflow-hidden;
+  }
+
+  .sales-order-field-label {
+    @apply text-[10px] font-medium uppercase tracking-wide text-muted-foreground;
+  }
+
+  /* 客户附加信息：固定高度（与 TierBadge md 对齐）+ 单行横向滚动 */
+  .sales-order-customer-insight-slot {
+    @apply flex h-8 shrink-0 items-center;
+  }
+
+  .sales-order-customer-insight-inner {
+    @apply flex h-8 w-full min-w-0 flex-nowrap items-center gap-x-4 overflow-x-auto text-xs text-muted-foreground;
+    scrollbar-width: thin;
+  }
+
+  .sales-order-table-head {
+    @apply sticky top-0 z-10 border-b border-border bg-muted/70 backdrop-blur-sm;
+  }
+
+  .sales-order-table-head th {
+    @apply text-[11px] font-semibold uppercase tracking-wide text-muted-foreground;
+  }
+
+  .sales-order-empty {
+    @apply flex w-full flex-1 flex-col items-center justify-center gap-2 px-4 text-center;
+  }
+
+  .sales-order-empty-icon {
+    @apply mb-1 flex size-11 items-center justify-center rounded-full border border-border/80 bg-muted/60 text-muted-foreground;
+  }
+
+  /* 销售开单底部汇总栏（Figma 22:440） */
+  .sales-order-footer {
+    @apply flex shrink-0 flex-col gap-2 border-t border-border bg-card px-4 pb-2 pt-[9px];
+  }
+
+  .sales-order-footer-summary {
+    @apply flex min-w-0 items-start justify-between;
+  }
+
+  .sales-order-footer-meta {
+    @apply flex shrink-0 flex-col justify-center self-stretch border-r border-border pr-[13px];
+  }
+
+  .sales-order-footer-meta-chips {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .sales-order-footer-chip {
+    @apply inline-flex items-center gap-1 whitespace-nowrap border border-border/60 bg-muted/30 px-[11px] py-[7px] text-sm text-muted-foreground;
+  }
+
+  .sales-order-footer-chip-value {
+    @apply font-semibold tabular-nums text-foreground;
+  }
+
+  .sales-order-footer-amounts {
+    @apply min-w-0 flex-1 pl-3;
+  }
+
+  .sales-order-footer-amounts-row {
+    @apply flex items-center justify-between gap-4;
+  }
+
+  .sales-order-footer-total-block {
+    @apply flex min-h-[49px] flex-col justify-between self-stretch;
+  }
+
+  .sales-order-footer-side-cols {
+    @apply flex shrink-0 items-center gap-6;
+  }
+
+  .sales-order-footer-side-col {
+    @apply flex min-h-[49px] flex-col items-end justify-between gap-1;
+  }
+
+  /* Sidebar 底部用户区：紧凑高度，与 Figma 一致（非开单底栏同高） */
+  .sidebar-user-panel {
+    @apply mt-auto flex shrink-0 items-center bg-card px-4 pt-[13px] pb-3;
+  }
+
+  /* 主工作区固定底栏：铺满右侧整列，按钮区内边距与 main px-4 对齐 */
+  .app-right-panel-footer {
+    @apply w-full shrink-0 border-t border-border bg-background px-4 py-3;
+  }
+
+  /* 供应商编辑等：底部操作栏贯穿右侧工作区（不含 Sidebar） */
+  .app-right-panel-global-footer {
+    @apply fixed bottom-0 right-0 z-50 border-t border-border bg-background/95 px-4 py-3 backdrop-blur;
+    left: var(--app-sidebar-width);
+  }
+
+  /* 固定底栏页面的可滚动主内容区 */
+  .app-sticky-page-scroll {
+    @apply min-h-0 flex-1 overflow-y-auto overscroll-y-contain pb-3;
+  }
+
+  .sales-order-footer-actions-meta {
+    @apply justify-start border-r-0;
+  }
+
+  .sales-order-footer-amounts-grid {
+    @apply grid w-full gap-x-4;
+    grid-template-columns: minmax(0, 1fr) 5.5rem 5.5rem;
+    grid-template-rows: auto 2rem;
+    row-gap: 0;
+    align-items: center;
+  }
+
+  .sales-order-footer-amounts-grid > .sales-order-footer-col-label {
+    @apply pb-0.5 self-end leading-none;
+  }
+
+  .sales-order-footer-amounts-grid > .sales-order-footer-col-value {
+    @apply h-8 self-center;
+  }
+
+  .sales-order-footer-amount-total-row {
+    @apply flex min-w-0 items-center gap-2;
+  }
+
+  .sales-order-footer-amount-tax-breakdown {
+    @apply whitespace-nowrap text-[10px] leading-[10px] tabular-nums text-muted-foreground;
+  }
+
+  .sales-order-footer-amount-total {
+    @apply text-2xl font-bold tabular-nums leading-5 tracking-[-0.5px] text-foreground;
+  }
+
+  .sales-order-footer-amount-discount {
+    @apply text-base font-semibold tabular-nums leading-4 text-muted-foreground/60;
+  }
+
+  .sales-order-footer-amount-input {
+    @apply h-8 w-[88px] rounded-none border border-input bg-card px-2 text-right text-sm font-semibold tabular-nums leading-none placeholder:text-muted-foreground/50 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
+    color: var(--foreground);
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+  }
+
+  /* 开单表格行内数字输入：强制前景色，避免 webkit / RHF 不同步时文字不可见 */
+  .sales-order-line-input {
+    color: var(--foreground);
+    -webkit-text-fill-color: var(--foreground);
+    caret-color: var(--foreground);
+    background-color: var(--card);
+  }
+
+  .sales-order-footer-grid-align-start {
+    @apply justify-self-start text-left;
+  }
+
+  .sales-order-footer-grid-align-end {
+    @apply justify-self-end text-right w-full;
+  }
+
+  .sales-order-footer-col {
+    @apply flex flex-col;
+  }
+
+  .sales-order-footer-col-start {
+    @apply items-start text-left shrink-0;
+  }
+
+  .sales-order-footer-col-end {
+    @apply items-end text-right w-[8rem];
+  }
+
+  .sales-order-footer-col-label {
+    @apply text-[11px] leading-none text-muted-foreground;
+  }
+
+  .sales-order-footer-col-value {
+    @apply h-8 flex items-center;
+  }
+
+  .sales-order-footer-col-hint {
+    @apply min-h-0 text-[10px] leading-none text-muted-foreground;
+  }
+
+  .sales-order-footer-notes-input {
+    @apply h-9 min-w-[12rem] max-w-2xl flex-1 rounded-md border border-input bg-transparent px-2.5 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
+  }
+
+  .sales-order-footer-label {
+    @apply text-xs leading-4 text-muted-foreground;
+  }
+
+  .sales-order-footer-actions {
+    @apply flex min-w-0 flex-nowrap items-center gap-3 border-t border-border pt-[9px];
+  }
+
+  .sales-order-footer-actions-right {
+    @apply ml-auto flex shrink-0 items-center gap-3;
+  }
+
+  /* 状态色软底（badge / tag / 横幅） */
+  .bg-status-success-subtle {
+    background-color: color-mix(in oklch, var(--success) 12%, transparent);
+  }
+  .border-status-success-subtle {
+    border-color: color-mix(in oklch, var(--success) 24%, transparent);
+  }
+  .text-status-success {
+    color: var(--success);
+  }
+  .bg-status-warning-subtle {
+    background-color: color-mix(in oklch, var(--warning) 14%, transparent);
+  }
+  .border-status-warning-subtle {
+    border-color: color-mix(in oklch, var(--warning) 26%, transparent);
+  }
+  .text-status-warning {
+    color: var(--warning);
+  }
+  .bg-status-danger-subtle {
+    background-color: color-mix(in oklch, var(--destructive) 12%, transparent);
+  }
+  .border-status-danger-subtle {
+    border-color: color-mix(in oklch, var(--destructive) 22%, transparent);
+  }
+
+  /* 主内容区唯一滚动容器（py-6 含上下 24px 边距） */
+  .app-main-scroll {
+    @apply flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain;
+    scrollbar-gutter: stable;
+  }
+
+  /* Tab 页面根容器：默认随内容增高；固定底栏页再 flex-1 撑满高度链 */
+  .app-main-outlet {
+    @apply min-h-min pb-3;
+  }
+
+  .app-tab-pane {
+    @apply flex w-full min-h-0 flex-col;
+  }
+
+  html[data-active-sticky-page-footer] .app-tab-pane {
+    @apply flex-1;
+  }
+
+  /* 固定底栏页（仅当前激活 Tab）：主区域不滚动；保留 main 水平 padding，由页内 -mx-4 抵消 */
+  html[data-active-sticky-page-footer] .app-main-scroll {
+    @apply overflow-hidden;
+    scrollbar-gutter: auto;
+  }
+
+  html[data-active-sticky-page-footer] .app-main-outlet {
+    @apply flex min-h-0 flex-1 flex-col;
+  }
+
+  /* 商品销售 / 换货销售：底栏贴齐视口，去掉 main 底部留白 */
+  html[data-sales-workspace-page] .app-main-outlet {
+    @apply pb-0;
+  }
+
+  /* 表头列筛选下拉（TableHeadFilter） */
+  [data-slot="table-head-filter"] {
+    @apply min-w-[4.5rem] text-left;
+  }
+
+  .def-table-head-filter-trigger {
+    @apply inline-flex max-w-full items-center gap-0.5 rounded-none text-sm font-medium text-muted-foreground transition-colors;
+    @apply hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring/50;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .def-table-head-filter-trigger[data-filter-active] {
+    @apply text-primary;
+  }
+
+  .def-table-head-filter-menu {
+    width: auto !important;
+    min-width: 6.5rem;
+    max-width: 14rem;
+  }
+
+  /* 列表日期范围触发器（Ant Design DatePicker ranged 布局） */
+  .list-date-range-picker {
+    @apply flex h-8 w-[17.5rem] min-w-[17.5rem] shrink-0 items-center rounded-none border border-input bg-card px-3 text-sm transition-colors hover:bg-muted/40;
+  }
+
+  /* 弹层打开时描边变蓝，呼应参考站聚焦态 */
+  .list-date-range-picker--open {
+    @apply border-ring ring-1 ring-ring/50;
+  }
+
+  /* 弹层左侧快捷预设列 */
+  .list-date-range-picker__presets {
+    @apply flex w-28 shrink-0 flex-col gap-0.5 border-r border-border p-2;
+  }
+
+  .list-date-range-picker__preset-item {
+    @apply rounded-none px-2.5 py-2 text-left text-sm text-foreground transition-colors hover:bg-muted;
+  }
+
+  .list-date-range-picker__preset-item--active {
+    @apply bg-primary/10 font-medium text-primary hover:bg-primary/10;
+  }
+
+  .list-date-range-picker__segment {
+    @apply flex min-w-[5.25rem] flex-1 items-center py-px;
+  }
+
+  /* 占位：Character/Disabled & Placeholder .25 */
+  .list-date-range-picker__text[data-date-part='placeholder'] {
+    @apply w-full min-w-0 truncate text-left text-sm font-normal leading-[22px] text-muted-foreground/70;
+  }
+
+  /* 已选：Character/Title .85 — 不截断，完整显示 YYYY-MM-DD */
+  .list-date-range-picker__text[data-date-part='value'] {
+    @apply whitespace-nowrap text-left text-sm font-normal leading-[22px] tabular-nums text-foreground;
+  }
+
+  .list-date-range-picker__suffix {
+    @apply flex shrink-0 items-center pl-1;
+  }
+
+  .list-date-range-picker__suffix-icon {
+    @apply size-3.5 text-muted-foreground;
+  }
+
+  .list-date-range-popover {
+    @apply overflow-hidden rounded-none border-border bg-popover shadow-lg;
+  }
+
+  .list-date-range-calendar {
+    @apply p-3;
+  }
+
+  .list-date-range-calendar[data-slot='calendar'] {
+    --cell-size: 2rem;
+    @apply w-full min-w-[31rem];
+  }
+
+  .list-date-range-calendar .rdp-months {
+    @apply w-full gap-2;
+  }
+
+  .list-date-range-calendar .rdp-month {
+    @apply relative min-w-0 flex-1 gap-2;
+  }
+
+  .list-date-range-calendar .rdp-button_previous {
+    @apply absolute top-0 left-0 z-10 h-8 w-8;
+  }
+
+  .list-date-range-calendar .rdp-button_next {
+    @apply absolute top-0 right-0 z-10 h-8 w-8;
+  }
+
+  .list-date-range-calendar .rdp-dropdowns {
+    @apply inline-flex h-8 w-auto flex-nowrap items-center justify-center gap-1 whitespace-nowrap;
+  }
+
+  .list-date-range-calendar .rdp-dropdown_root {
+    @apply h-8 max-w-none shrink-0 rounded-none border-border shadow-none;
+  }
+
+  .list-date-range-calendar .rdp-caption_label {
+    @apply h-8 max-w-none shrink-0 whitespace-nowrap rounded-none px-2 text-sm font-medium;
+  }
+
+  .list-date-range-calendar .rdp-week {
+    @apply mt-1;
+  }
+
+  /* 日历标题年月快速选择（参考站：点标题弹年份/月份网格） */
+  .calendar-quick-picker-trigger {
+    @apply flex h-8 items-center justify-center rounded-none px-2 text-sm font-medium text-foreground transition-colors hover:bg-muted;
+  }
+
+  .calendar-quick-picker-popover {
+    @apply overflow-hidden rounded-none bg-popover shadow-lg;
+  }
+
+  .calendar-quick-picker-header {
+    @apply flex items-center justify-between border-b border-border px-2 py-2;
+  }
+
+  .calendar-quick-picker-header-label {
+    @apply rounded-none px-2 py-1 text-sm font-semibold text-foreground hover:bg-muted;
+  }
+
+  .calendar-quick-picker-nav {
+    @apply flex size-7 shrink-0 items-center justify-center rounded-none text-muted-foreground transition-colors hover:bg-muted hover:text-foreground;
+  }
+
+  .calendar-quick-picker-grid {
+    @apply grid grid-cols-3 gap-1 p-2;
+  }
+
+  .calendar-quick-picker-cell {
+    @apply rounded-none py-2 text-center text-sm text-foreground transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-40;
+  }
+
+  .calendar-quick-picker-cell[data-outside] {
+    @apply text-muted-foreground/60;
+  }
+
+  .calendar-quick-picker-cell[data-active] {
+    @apply bg-primary text-primary-foreground hover:bg-primary;
+  }
+
+  .list-date-range-picker__actions {
+    @apply flex items-center justify-end gap-2 border-t border-border bg-muted/20 px-3 py-2;
+  }
+
+  .list-date-range-picker__actions > span {
+    @apply min-w-0 truncate;
+  }
+
+  /* 下拉 + around 导航：各月标题仅预留本侧箭头空间 */
+  [data-slot='calendar'][data-nav-layout='around'] .rdp-month:first-child .rdp-month_caption {
+    @apply pl-(--cell-size) pr-0;
+  }
+
+  [data-slot='calendar'][data-nav-layout='around'] .rdp-month:last-child .rdp-month_caption {
+    @apply pr-(--cell-size) pl-0;
+  }
+
+  [data-slot='calendar'][data-nav-layout='around'] .rdp-month:only-child .rdp-month_caption {
+    @apply px-(--cell-size);
+  }
+
+  /* 品类级联选择器（ProductCategorySelect）：多列联动，参考站风格 */
+  .category-cascade-col {
+    @apply flex max-h-80 w-52 shrink-0 flex-col overflow-y-auto border-r border-border py-1 last:border-r-0;
+  }
+
+  .category-cascade-row {
+    @apply flex w-full items-center gap-2 px-3 py-2.5 text-left text-sm text-foreground transition-colors hover:bg-muted;
+  }
+
+  .category-cascade-row--active {
+    @apply bg-status-info-surface text-primary;
+  }
+
+  .category-cascade-row--selected {
+    @apply font-medium text-primary;
+  }
+
+  .category-cascade-radio {
+    @apply size-4 shrink-0 rounded-full border border-input;
+  }
+
+  .category-cascade-radio--checked {
+    @apply border-primary bg-primary;
+  }
+
+  /* 多选三态勾选框：未选=空框，全选=蓝底对勾，半选=蓝底横杠。
+     用 ::after 画符号，不依赖 ui/checkbox（那个只有对勾、没有半选态） */
+  .category-cascade-check {
+    @apply relative size-4 shrink-0 rounded-none border border-input bg-card;
+  }
+
+  .category-cascade-check--checked,
+  .category-cascade-check--indeterminate {
+    @apply border-primary bg-primary;
+  }
+
+  .category-cascade-check--checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--primary-foreground);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .category-cascade-check--indeterminate::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+    background-color: var(--primary-foreground);
+  }
+
+  /* 客户账户半屏：浅灰底分段 Tab */
+  .customer-account-panel-tabs__bar {
+    @apply w-full min-w-0 self-stretch rounded-none;
+  }
+
+  .customer-account-panel-tabs__list {
+    @apply gap-1 rounded-none border-0 !bg-muted p-1 text-muted-foreground shadow-none;
+  }
+
+  .customer-account-panel-tabs__trigger {
+    @apply rounded-none border-0 !bg-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground shadow-none;
+    @apply hover:!bg-background/70 hover:text-foreground;
+  }
+
+  .customer-account-panel-tabs__trigger[data-state='active'],
+  .customer-account-panel-tabs__trigger[data-active] {
+    @apply !bg-primary !text-primary-foreground shadow-sm;
+    @apply hover:!bg-primary hover:!text-primary-foreground;
+  }
+
+  .customer-account-panel-tabs__trigger [data-slot='tabs-badge'] {
+    @apply ml-0.5 inline-flex h-5 min-w-5 items-center justify-center bg-foreground/10 px-1.5 text-center text-xs leading-none tabular-nums text-muted-foreground;
+  }
+
+  .customer-account-panel-tabs__trigger[data-state='active'] [data-slot='tabs-badge'],
+  .customer-account-panel-tabs__trigger[data-active] [data-slot='tabs-badge'] {
+    @apply bg-primary-foreground text-primary;
+  }
+
+  /* 通用 Table 网格线：外框由 `.def-table-scroll-frame` 承担，单元格负责行/列分隔 */
+  .def-table[data-grid-lines="columns"] thead th,
+  .def-table[data-grid-lines="columns"] tbody td,
+  .def-table[data-grid-lines="all"] thead th,
+  .def-table[data-grid-lines="all"] tbody td {
+    @apply border-r border-border/50;
+  }
+
+  .def-table[data-grid-lines="columns"] thead th:last-child,
+  .def-table[data-grid-lines="columns"] tbody td:last-child,
+  .def-table[data-grid-lines="all"] thead th:last-child,
+  .def-table[data-grid-lines="all"] tbody td:last-child {
+    @apply border-r-0;
+  }
+
+  .def-table[data-grid-lines="columns"] thead th:has(+ th.sticky-col-trail),
+  .def-table[data-grid-lines="columns"] tbody td:has(+ td.sticky-col-trail),
+  .def-table[data-grid-lines="all"] thead th:has(+ th.sticky-col-trail),
+  .def-table[data-grid-lines="all"] tbody td:has(+ td.sticky-col-trail) {
+    @apply border-r-0;
+  }
+
+  .def-table[data-grid-lines="rows"] tbody td,
+  .def-table[data-grid-lines="all"] tbody td {
+    @apply border-b border-border/50;
+  }
+
+  .def-table[data-grid-lines="rows"] tbody tr:last-child td,
+  .def-table[data-grid-lines="all"] tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  /* 通用宽表固定表头：保留单 table 横向滚动，避免表头/表体横向视差 */
+  .def-table[data-sticky-header] thead th {
+    position: sticky;
+    top: var(--def-table-sticky-top, 0px);
+    z-index: 3;
+    @apply bg-background;
+  }
+
+  .def-table-sticky-header-proxy {
+    position: sticky;
+    top: var(--def-table-sticky-top, 0px);
+    z-index: 25;
+    height: var(--def-table-header-h, 2.5rem);
+    overflow: hidden;
+  }
+
+  .def-table-sticky-header-proxy-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    pointer-events: auto;
+    @apply border-b border-border/50 bg-background;
+  }
+
+  .def-table-sticky-header-proxy .def-table {
+    width: 100%;
+  }
+
+  .def-table-sticky-header-proxy + .def-table-scroll-frame .def-table[data-sticky-header] > thead {
+    display: none;
+  }
+
+  .def-table-sticky-header-proxy + .def-table-scroll-frame .def-table[data-sticky-header] thead th {
+    top: var(--def-table-sticky-top, 0px);
+  }
+
+  /* 业务列表宽表：横向滚动 + 左侧/右侧固定列（Table stickyLayout + data-sticky-leads） */
+  .def-data-table,
+  .sales-orders-table {
+    --sticky-lead-1-w: 11.5rem;
+    --sticky-lead-2-w: 10rem;
+    --sticky-lead-3-w: 10rem;
+    --sticky-trail-w: 5.5rem;
+    /* 兼容旧变量名 */
+    --so-col-order-w: var(--sticky-lead-1-w);
+    --so-col-customer-w: var(--sticky-lead-2-w);
+    --so-col-actions-w: var(--sticky-trail-w);
+  }
+
+  .def-data-table thead th.sticky-col-lead-1,
+  .def-data-table tbody td.sticky-col-lead-1 {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    width: var(--sticky-lead-1-w);
+    min-width: var(--sticky-lead-1-w);
+    max-width: var(--sticky-lead-1-w);
+    --sticky-scroll-shadow: 0 0 transparent;
+    box-shadow: var(--sticky-scroll-shadow);
+    background-clip: padding-box;
+    @apply bg-card;
+  }
+
+  .def-data-table thead th.sticky-col-lead-1 {
+    z-index: 6;
+    @apply bg-background;
+  }
+
+  .def-data-table thead th.sticky-col-lead-2,
+  .def-data-table tbody td.sticky-col-lead-2 {
+    position: sticky;
+    left: var(--sticky-lead-1-w);
+    z-index: 2;
+    width: var(--sticky-lead-2-w);
+    min-width: var(--sticky-lead-2-w);
+    max-width: var(--sticky-lead-2-w);
+    --sticky-scroll-shadow: 0 0 transparent;
+    box-shadow: var(--sticky-scroll-shadow);
+    background-clip: padding-box;
+    @apply bg-card;
+  }
+
+  .def-data-table thead th.sticky-col-lead-2 {
+    z-index: 6;
+    @apply bg-background;
+  }
+
+  .def-data-table thead th.sticky-col-lead-3,
+  .def-data-table tbody td.sticky-col-lead-3 {
+    position: sticky;
+    left: calc(var(--sticky-lead-1-w) + var(--sticky-lead-2-w));
+    z-index: 2;
+    width: var(--sticky-lead-3-w);
+    min-width: var(--sticky-lead-3-w);
+    max-width: var(--sticky-lead-3-w);
+    --sticky-scroll-shadow: 0 0 transparent;
+    box-shadow: var(--sticky-scroll-shadow);
+    background-clip: padding-box;
+    @apply bg-card;
+  }
+
+  .def-data-table thead th.sticky-col-lead-3 {
+    z-index: 6;
+    @apply bg-background;
+  }
+
+  .def-table-scroll-frame[data-scroll-start-shadow] .def-data-table[data-sticky-leads="1"] thead th.sticky-col-lead-1,
+  .def-table-scroll-frame[data-scroll-start-shadow] .def-data-table[data-sticky-leads="1"] tbody td.sticky-col-lead-1 {
+    --sticky-scroll-shadow: 4px 0 8px -4px rgb(0 0 0 / 0.08);
+  }
+
+  .def-table-scroll-frame[data-scroll-start-shadow] .def-data-table[data-sticky-leads="2"] thead th.sticky-col-lead-2,
+  .def-table-scroll-frame[data-scroll-start-shadow] .def-data-table[data-sticky-leads="2"] tbody td.sticky-col-lead-2 {
+    --sticky-scroll-shadow: 4px 0 8px -4px rgb(0 0 0 / 0.08);
+  }
+
+  .def-table-scroll-frame[data-scroll-start-shadow] .def-data-table[data-sticky-leads="3"] thead th.sticky-col-lead-3,
+  .def-table-scroll-frame[data-scroll-start-shadow] .def-data-table[data-sticky-leads="3"] tbody td.sticky-col-lead-3 {
+    --sticky-scroll-shadow: 4px 0 8px -4px rgb(0 0 0 / 0.08);
+  }
+
+  .def-data-table thead th.sticky-col-trail,
+  .def-data-table tbody td.sticky-col-trail {
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    width: var(--sticky-trail-w);
+    min-width: var(--sticky-trail-w);
+    max-width: var(--sticky-trail-w);
+    --sticky-scroll-shadow: 0 0 transparent;
+    box-shadow: var(--sticky-scroll-shadow);
+    border-left: 1px solid var(--border) !important;
+    border-right: 0;
+    background-clip: padding-box;
+    @apply bg-card;
+  }
+
+  .def-table-shell[data-scroll-end-shadow] .def-data-table thead th.sticky-col-trail,
+  .def-table-shell[data-scroll-end-shadow] .def-data-table tbody td.sticky-col-trail {
+    --sticky-scroll-shadow: -4px 0 8px -4px rgb(0 0 0 / 0.08);
+  }
+
+  .def-data-table thead th.sticky-col-trail {
+    z-index: 6;
+    @apply bg-background;
+  }
+
+  .def-data-table tbody tr:hover td.sticky-col-lead-1,
+  .def-data-table tbody tr:hover td.sticky-col-lead-2,
+  .def-data-table tbody tr:hover td.sticky-col-lead-3,
+  .def-data-table tbody tr:hover td.sticky-col-trail {
+    @apply bg-background;
+  }
+
+  /* 通用业务列表（采购/客户等） */
+  .def-data-table.data-list-table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 72rem;
+    --sticky-lead-1-w: 9.5rem;
+    --sticky-lead-2-w: 11rem;
+    --sticky-trail-w: 5rem;
+  }
+
+  .def-data-table.data-list-table[data-sticky-leads="3"] {
+    --sticky-lead-1-w: 9.5rem;
+    --sticky-lead-2-w: 10rem;
+    --sticky-lead-3-w: 9.5rem;
+  }
+
+  .def-data-table.po-items-table {
+    table-layout: fixed;
+  }
+
+  .def-data-table.customers-list-table {
+    --sticky-lead-1-w: 3.25rem;
+    --sticky-lead-2-w: 7.5rem;
+    --sticky-lead-3-w: 6rem;
+    --sticky-trail-w: 9rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 76rem;
+  }
+
+  .def-data-table.customers-list-table col.cl-col-avatar {
+    width: var(--sticky-lead-1-w);
+  }
+  .def-data-table.customers-list-table col.cl-col-account {
+    width: var(--sticky-lead-2-w);
+  }
+  .def-data-table.customers-list-table col.cl-col-name {
+    width: var(--sticky-lead-3-w);
+  }
+  .def-data-table.customers-list-table col.cl-col-company {
+    width: 11rem;
+  }
+  .def-data-table.customers-list-table th.cl-col-company,
+  .def-data-table.customers-list-table td.cl-col-company {
+    overflow: hidden;
+    max-width: 11rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-tier {
+    width: 5.5rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-discount {
+    width: 8rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-piva {
+    width: 8rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-spent {
+    width: 7.5rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-terms {
+    width: 5rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-sales {
+    width: 6.5rem;
+  }
+  .def-data-table.customers-list-table col.cl-col-actions {
+    width: var(--sticky-trail-w);
+  }
+
+  /* 销售单列表：固定列宽 */
+  .def-data-table.sales-orders-list-table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 93.5rem;
+  }
+
+  .def-data-table.sales-orders-list-table col.so-col-order {
+    width: var(--sticky-lead-1-w);
+  }
+  .def-data-table.sales-orders-list-table col.so-col-customer {
+    width: var(--sticky-lead-2-w);
+  }
+  .def-data-table.sales-orders-list-table col.so-col-branch {
+    width: 4rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-amount {
+    width: 7rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-employee {
+    width: 6.5rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-payment {
+    width: 8.5rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-status {
+    width: 5.5rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-paid {
+    width: 4.5rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-invoice {
+    width: 5.5rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-created {
+    width: 9.5rem;
+  }
+  .def-data-table.sales-orders-list-table col.so-col-actions {
+    width: var(--sticky-trail-w);
+  }
+
+  /* 退货单列表：固定列宽 + 三列左侧 sticky */
+  .def-data-table.sales-returns-list-table {
+    --sticky-lead-1-w: 8rem;
+    --sticky-lead-2-w: 8.5rem;
+    --sticky-lead-3-w: 10rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 70.5rem;
+  }
+
+  .def-data-table.sales-returns-list-table col.sr-col-return-no {
+    width: var(--sticky-lead-1-w);
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-order-no {
+    width: var(--sticky-lead-2-w);
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-customer {
+    width: var(--sticky-lead-3-w);
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-reason {
+    width: 8.5rem;
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-disposal {
+    width: 5rem;
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-refund {
+    width: 7.5rem;
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-amount {
+    width: 7rem;
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-employee {
+    width: 6.5rem;
+  }
+  .def-data-table.sales-returns-list-table col.sr-col-created {
+    width: 9.5rem;
+  }
+
+  /* 发票列表：固定列宽，排序/筛选时表头不跳动 */
+  .def-data-table.finance-invoices-list-table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 74rem;
+  }
+
+  .def-data-table.finance-invoices-list-table col.inv-col-status {
+    width: 5rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-invoice-no {
+    width: 8rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-invoice-date {
+    width: 7rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-customer {
+    width: 12rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-type {
+    width: 7.5rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-order-count {
+    width: 4.5rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-amount {
+    width: 7.5rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-operator {
+    width: 6.5rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-created {
+    width: 9.5rem;
+  }
+  .def-data-table.finance-invoices-list-table col.inv-col-actions {
+    width: 9rem;
+  }
+
+  .def-data-table.finance-invoices-list-table th.inv-col-customer,
+  .def-data-table.finance-invoices-list-table td.inv-col-customer,
+  .def-data-table.finance-invoices-list-table th.inv-col-type,
+  .def-data-table.finance-invoices-list-table td.inv-col-type,
+  .def-data-table.finance-invoices-list-table th.inv-col-operator,
+  .def-data-table.finance-invoices-list-table td.inv-col-operator {
+    overflow: hidden;
+  }
+
+  .def-data-table.finance-invoices-list-table [data-slot="table-head-filter"].inv-col-operator {
+    max-width: 6.5rem;
+  }
+
+  .def-data-table.finance-invoices-list-table [data-slot="table-head-filter"].inv-col-operator .def-table-head-filter-trigger {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* 待开票订单列表 */
+  .def-data-table.finance-pending-invoices-list-table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 62rem;
+  }
+
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-order-date {
+    width: 6.5rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-order-no {
+    width: 9rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-customer {
+    width: 11rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-target {
+    width: 11rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-goods {
+    width: 7.5rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-shipping {
+    width: 6rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-total {
+    width: 7.5rem;
+  }
+  .def-data-table.finance-pending-invoices-list-table col.pi-col-actions {
+    width: 5.5rem;
+  }
+
+  .def-data-table.finance-pending-invoices-list-table th.pi-col-customer,
+  .def-data-table.finance-pending-invoices-list-table td.pi-col-customer,
+  .def-data-table.finance-pending-invoices-list-table th.pi-col-target,
+  .def-data-table.finance-pending-invoices-list-table td.pi-col-target {
+    overflow: hidden;
+  }
+
+  /* 库存总览：固定列宽 + SKU / 商品原编码 / 商品 三列 sticky（其余列宽写在各 <col> 上）
+     ⚠️ 这三列的实际宽度由下面三个变量决定，会覆盖 colgroup 里的 w-28/w-32/w-96
+        ——改列宽必须同时改这里，否则表头与表体列位会错开。
+     min-width = 各列之和：7+8+24+7+5+5+5+6+6+5+10 = 88rem */
+  .def-data-table.inventory-list-table {
+    --sticky-lead-1-w: 7rem;
+    --sticky-lead-2-w: 8rem;
+    --sticky-lead-3-w: 24rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 88rem;
+  }
+
+  /* 入库记录：沿用库存总览的表格框架；入库单号、采购单固定，操作列固定。 */
+  .def-data-table.inbound-record-list-table {
+    --sticky-lead-1-w: 9rem;
+    --sticky-lead-2-w: 9rem;
+    --sticky-trail-w: 8rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 85rem;
+  }
+
+  /* 报损单列表：固定列宽 + 单号 sticky */
+  .def-data-table.loss-records-list-table {
+    --sticky-lead-1-w: 8rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 43rem;
+  }
+
+  .def-data-table.loss-records-list-table col.lr-col-loss-no {
+    width: var(--sticky-lead-1-w);
+  }
+  .def-data-table.loss-records-list-table col.lr-col-sku-count {
+    width: 5rem;
+  }
+  .def-data-table.loss-records-list-table col.lr-col-amount {
+    width: 7rem;
+  }
+  .def-data-table.loss-records-list-table col.lr-col-loss-date {
+    width: 7rem;
+  }
+  .def-data-table.loss-records-list-table col.lr-col-employee {
+    width: 6.5rem;
+  }
+  .def-data-table.loss-records-list-table col.lr-col-confirmed {
+    width: 9.5rem;
+  }
+
+  /* 商品列表：列宽约束；无 sticky，仅内容超出容器时横向滚动 */
+  .product-list-table {
+    table-layout: fixed;
+    width: 100%;
+    min-width: 48rem;
+  }
+
+  .product-list-table col.pl-col-thumb {
+    width: 3.5rem;
+  }
+  .product-list-table col.pl-col-name {
+    width: 16rem;
+  }
+  .product-list-table col.pl-col-brand {
+    width: 6rem;
+  }
+  .product-list-table col.pl-col-category {
+    width: 8rem;
+  }
+  .product-list-table col.pl-col-sku {
+    width: 4rem;
+  }
+  .product-list-table col.pl-col-iva {
+    width: 3.5rem;
+  }
+  .product-list-table col.pl-col-stock {
+    width: 6rem;
+  }
+  .product-list-table col.pl-col-status {
+    width: 5.5rem;
+  }
+  .product-list-table col.pl-col-actions {
+    width: 11rem;
+  }
+
+  /* 商品详情 SKU 规格：固定图片 / SKU 编码 / SKU 名称三列 */
+  .def-data-table.product-sku-specs-table {
+    --sticky-lead-1-w: 4.5rem;
+    --sticky-lead-2-w: 7.25rem;
+    --sticky-lead-3-w: 7.5rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 70rem;
+  }
+
+  .def-data-table.product-sku-specs-table col.pds-col-image {
+    width: var(--sticky-lead-1-w);
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-code {
+    width: var(--sticky-lead-2-w);
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-spec {
+    width: var(--sticky-lead-3-w);
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-name {
+    width: 11rem;
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-product-code {
+    width: 9rem;
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-pack-unit {
+    width: 11rem;
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-pack-price {
+    width: 5.5rem;
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-pack-barcode {
+    width: 9rem;
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-stock {
+    width: 7.5rem;
+  }
+  .def-data-table.product-sku-specs-table col.pds-col-status {
+    width: 4.5rem;
+  }
+  .def-data-table.product-sku-specs-table th,
+  .def-data-table.product-sku-specs-table td {
+    padding-block: 0.375rem;
+    padding-inline: 0.5rem;
+  }
+  .def-data-table.product-sku-specs-table th {
+    font-size: 0.75rem;
+  }
+
+  /* 商品销售统计列表 */
+  .def-data-table.product-sales-stats-list-table {
+    --sticky-lead-1-w: 17rem;
+    --sticky-lead-2-w: 7.5rem;
+    table-layout: fixed;
+    width: 100%;
+    min-width: 63rem;
+  }
+
+  /* 首尾列内边距对齐（与列表页 px-4 一致） */
+  .def-data-table.product-sales-stats-list-table thead th:first-child,
+  .def-data-table.product-sales-stats-list-table tbody td:first-child {
+    padding-left: 1rem;
+  }
+
+  .def-data-table.product-sales-stats-list-table thead th:last-child,
+  .def-data-table.product-sales-stats-list-table tbody td:last-child {
+    padding-right: 1rem;
+  }
+
+  .def-data-table.product-sales-stats-list-table col.pss-col-rank {
+    width: 3rem;
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-product {
+    width: var(--sticky-lead-1-w);
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-unit {
+    width: 5.5rem;
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-brand {
+    width: 6rem;
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-sku {
+    width: var(--sticky-lead-2-w);
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-qty {
+    width: 4rem;
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-revenue {
+    width: auto;
+    min-width: 7rem;
+  }
+  .def-data-table.product-sales-stats-list-table col.pss-col-orders {
+    width: 4rem;
+  }
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #root {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  body {
+    @apply antialiased text-xs bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  /* 原生 select：隐藏系统箭头（排除 ui/native-select，该组件自带 Lucide 图标） */
+  select:not([multiple]):not([size]):not([data-slot='native-select']) {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: var(--select-chevron);
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem 1.25rem;
+    padding-inline-end: 2.5rem !important;
+  }
+
+  select:not([multiple]):not([size]):not([data-slot='native-select']):disabled {
+    background-image: var(--select-chevron);
+  }
+
+  /* 全站金额/数量数字输入：隐藏浏览器步进器 */
+  input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .theme {
+    --font-sans: 'Inter Variable', sans-serif;
+    --font-heading: var(--font-sans);
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-sans);
+    letter-spacing: 0.02em;
+  }
+  :root {
+    /* ── 基础色（唯一定义处）── Woblo token 重皮肤：primary 蓝 #197afa / neutral 灰阶 / 状态三色 */
+    --background: #f5f6fa;
+    --foreground: #2f3137;
+    --muted: #eeeff1;
+    --muted-foreground: #666c7c;
+    --border: #cccfd7;
+    --ring: #197afa;
+    --primary: #197afa;
+    --primary-foreground: #ffffff;
+    --destructive: #eb4242;
+    --destructive-foreground: #ffffff;
+    /* 状态色（badge / tag / 提醒）：仅 success + warning，info 用 primary，danger 用 destructive */
+    --success: #00a85f;
+    --success-foreground: #ffffff;
+    --warning: #fe8a4f;
+    --warning-foreground: #5e2508;
+  /* Surface 别名：card / popover / accent / secondary 复用基础色 */
+    --card: #ffffff;
+    --card-foreground: var(--foreground);
+    --popover: #ffffff;
+    --popover-foreground: var(--foreground);
+    --accent: var(--muted);
+    --accent-foreground: var(--foreground);
+    --secondary: var(--muted);
+    --secondary-foreground: var(--foreground);
+  /* Border 别名 */
+    --input: var(--border);
+    --chart-1: oklch(0.809 0.105 251.813);
+    --chart-2: oklch(0.623 0.214 259.815);
+    --chart-3: oklch(0.546 0.245 262.881);
+    --chart-4: oklch(0.488 0.243 264.376);
+    --chart-5: oklch(0.424 0.199 265.638);
+    /* 收款方式饼图 / 明细色点（8 色相区分，与 chart-1..5 蓝紫系解耦） */
+    --payment-cash: oklch(0.56 0.16 145);
+    --payment-bank-transfer: oklch(0.54 0.18 250);
+    --payment-check: oklch(0.58 0.14 300);
+    --payment-card: oklch(0.5 0.2 268);
+    --payment-post-office: oklch(0.62 0.17 58);
+    --payment-alipay: oklch(0.56 0.16 235);
+    --payment-wechat-pay: oklch(0.58 0.17 158);
+    --payment-balance: oklch(0.5 0.1 305);
+    --radius: 0.5rem;
+    --sidebar: var(--muted);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--muted);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+  }
+  .dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --border: oklch(1 0 0 / 10%);
+    --ring: #3d91ff;
+    --primary: #3d91ff;
+    --primary-foreground: oklch(0.97 0.014 254.604);
+    --destructive: #eb4242;
+    --destructive-foreground: oklch(0.985 0 0);
+    --success: #4fc580;
+    --success-foreground: #002507;
+    --warning: #feae85;
+    --warning-foreground: #5e2508;
+    /* dark：card 略高于 background；popover 与 card 同色 */
+    --card: oklch(0.205 0 0);
+    --card-foreground: var(--foreground);
+    --popover: var(--card);
+    --popover-foreground: var(--foreground);
+    --accent: var(--muted);
+    --accent-foreground: var(--foreground);
+    --secondary: var(--muted);
+    --secondary-foreground: var(--foreground);
+    /* dark：input 边框略亮于 border，保留独立值 */
+    --input: oklch(1 0 0 / 15%);
+    --chart-1: oklch(0.809 0.105 251.813);
+    --chart-2: oklch(0.623 0.214 259.815);
+    --chart-3: oklch(0.546 0.245 262.881);
+    --chart-4: oklch(0.488 0.243 264.376);
+    --chart-5: oklch(0.424 0.199 265.638);
+    --payment-cash: oklch(0.7 0.14 145);
+    --payment-bank-transfer: oklch(0.68 0.16 250);
+    --payment-check: oklch(0.72 0.12 300);
+    --payment-card: oklch(0.66 0.18 268);
+    --payment-post-office: oklch(0.76 0.15 58);
+    --payment-alipay: oklch(0.7 0.14 235);
+    --payment-wechat-pay: oklch(0.72 0.15 158);
+    --payment-balance: oklch(0.66 0.09 305);
+    --sidebar: var(--muted);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--muted);
+    --sidebar-accent-foreground: var(--foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+  }
+  /* preset 全局边框 / outline */
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    font-family: var(--font-sans);
+    @apply font-sans;
+  }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

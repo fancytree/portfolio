@@ -12,9 +12,10 @@ export default function BeikemamaProjectPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#FF7876" />
       {/* Hero / Overview */}
       <CaseStudyHero
+        accentColor="#FF7876"
         title="Beikemama"
         subtitle="A live social product for pregnant women and families with children aged 0-6, combining real-time streams, expert Q&A, and parent-child activities."
         tags={['Mobile App', 'Community', 'Parenting', 'Live Q&A', 'UX/UI']}

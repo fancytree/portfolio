@@ -325,8 +325,9 @@ export default function JobnovaProjectPage() {
 
   return (
     <div className="mei-project-page w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#6B9400" />
       <CaseStudyHero
+        accentColor="#6B9400"
         title="Jobnova AI Career Platform"
         subtitle="An AI-native job search platform focused on fit reasoning, resume tailoring, and faster application workflows."
         tags={['AI Product', 'Web UX', 'UX Research', 'Design System', 'Career Tech']}

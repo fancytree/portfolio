@@ -89,9 +89,10 @@ export default function MonoProjectPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FAFAFA' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#10A37F" />
       {/* Hero Section */}
       <CaseStudyHero
+        accentColor="#10A37F"
         title="Mono"
         subtitle="A personal finance agent built on the A2UI protocol, turning natural language into deterministic financial interface views."
         tags={['AI Product', 'Generative UI', 'Finance', 'Protocol Design', 'Web UX']}

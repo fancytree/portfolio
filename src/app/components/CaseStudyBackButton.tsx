@@ -3,9 +3,17 @@
 import { useRouter } from 'next/navigation';
 import { fontFamily } from '@/lib/design-tokens';
 
-export default function CaseStudyBackButton() {
+type CaseStudyBackButtonProps = {
+  /** 'light' renders the idle label in a light color for use on dark hero backgrounds. Defaults to the original dark-on-light look. */
+  tone?: 'light';
+  /** Hover color override. Defaults to the original JobNova-era orange so existing pages are unaffected. */
+  hoverColor?: string;
+};
+
+export default function CaseStudyBackButton({ tone, hoverColor = '#ed5b2b' }: CaseStudyBackButtonProps = {}) {
   const router = useRouter();
   const fontStyle = { fontFamily: fontFamily.sans };
+  const idleColor = tone === 'light' ? 'rgb(255 255 255 / 0.62)' : 'rgb(10 10 10 / 0.58)';
 
   const handleBackClick = () => {
     router.push('/#work');
@@ -19,7 +27,7 @@ export default function CaseStudyBackButton() {
         ...fontStyle,
         background: 'transparent',
         border: 0,
-        color: 'rgb(10 10 10 / 0.58)',
+        color: idleColor,
         cursor: 'pointer',
         display: 'inline-flex',
         fontSize: '13px',
@@ -29,10 +37,10 @@ export default function CaseStudyBackButton() {
         transition: 'color 0.24s ease',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.color = '#ed5b2b';
+        e.currentTarget.style.color = hoverColor;
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.color = 'rgb(10 10 10 / 0.58)';
+        e.currentTarget.style.color = idleColor;
       }}
     >
       ← Back to Work

@@ -15,9 +15,10 @@ export default function MilanoPartecipaProjectPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#FF694B" />
       {/* Hero / Overview */}
       <CaseStudyHero
+        accentColor="#FF694B"
         title="Milano Partecipa"
         subtitle="A civic participation platform redesign for the Municipality of Milan, focused on accessibility, usability, and inclusive engagement."
         tags={['Civic Tech', 'Service Design', 'Information Architecture', 'Accessibility', 'UX Research']}

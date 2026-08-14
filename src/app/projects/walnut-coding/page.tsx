@@ -774,11 +774,12 @@ export default function WalnutCodingPage() {
 
   return (
     <div className="mei-project-page" style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor={C.walnut} />
       {/* ---------------------------------------------------------- */}
       {/* HERO                                                        */}
       {/* ---------------------------------------------------------- */}
       <CaseStudyHero
+        accentColor={C.walnut}
         title="Walnut Coding"
         subtitle="A UX research case study on post-trial parent decision-making for children's coding education."
         visualSrc="/img/walnut-coding-hero.webp"

@@ -159,12 +159,13 @@ export default function MemQProjectPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FAFAFA' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#1A8A72" />
 
       {/* ─────────────────────────────────────────
           1. HERO
       ───────────────────────────────────────── */}
       <CaseStudyHero
+        accentColor="#1A8A72"
         title="MemQ"
         subtitle="An iOS study app that turns AI conversations into lasting knowledge through generated cards and spaced repetition."
         tags={['iOS Product', 'AI Learning', 'Full-stack', 'SwiftUI', 'Spaced Repetition']}

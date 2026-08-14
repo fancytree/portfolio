@@ -1877,8 +1877,9 @@ export default function ConnectnovaProjectPage() {
 
   return (
     <div className="mei-project-page w-full min-w-0" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#2459d3" />
       <CaseStudyHero
+        accentColor="#2459d3"
         title="ConnectNova AI Sourcing Platform"
         subtitle="An AI-powered LinkedIn sourcing tool that re-ranks search results by fit and surfaces the best candidates and contacts first."
         tags={['AI Search', 'Chrome Extension', 'B2B SaaS', 'Recruiting & Sales', 'Workflow Design']}

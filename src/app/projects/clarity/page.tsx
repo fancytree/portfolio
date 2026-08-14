@@ -11,9 +11,10 @@ export default function ClarityProjectPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#5C77F6" />
       {/* Hero / Overview */}
       <CaseStudyHero
+        accentColor="#5C77F6"
         title="Clarity"
         subtitle="A menopause support system combining a mobile app and portable tracking device for symptom, emotion, and health insight tracking."
         tags={['Health Tech', 'Mobile App', 'Wearable', 'Service Design', 'UX Research']}

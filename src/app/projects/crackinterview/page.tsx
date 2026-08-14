@@ -11,9 +11,10 @@ export default function CrackInterviewPage() {
 
   return (
     <div className="mei-project-page w-full" style={{ backgroundColor: '#FFFFFF' }}>
-      <CaseStudyControls />
+      <CaseStudyControls accentColor="#007BFF" />
       {/* Hero / Overview */}
       <CaseStudyHero
+        accentColor="#007BFF"
         title="CrackInterview.AI"
         subtitle="An AI-powered mock interview platform that helps candidates practice, improve, and prepare for technical job interviews."
         tags={['AI Product', 'Career Tech', 'Web UX', 'Interview Prep', 'UX/UI']}

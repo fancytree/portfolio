@@ -994,14 +994,46 @@ function FocusedCaseSetupSection() {
  </article>
  ))}
  </div>
- <div className="grid gap-5 border-l border-[#ed5b2b] py-1 pl-5 lg:grid-cols-[1fr_360px] lg:items-end">
+ </section>
+
+ <section className="flex flex-col gap-6" aria-labelledby="overview-persona-title">
+ <div>
+ <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+ User context
+ </p>
+ <h2 id="overview-persona-title" className="m-0 mt-3 max-w-[760px] text-[clamp(30px,4.2vw,54px)] font-normal leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+ Two job-search modes shaped the product direction.
+ </h2>
+ <p className="m-0 mt-4 max-w-[720px] text-[14px] font-light leading-[1.6] text-[#0a0a0a]/62" style={bodyStyle}>
+ We used personas as pressure tests for the MVP: one user needed help creating enough relevant coverage, while the other needed precision, timing, and control over how her experience was represented.
+ </p>
+ </div>
+
+ <div className="flex flex-col gap-10">
+ {personas.map((persona, index) => (
+ <article
+ key={persona.id}
+ className={`grid gap-6 lg:grid-cols-[260px_260px_minmax(0,1fr)] lg:items-end ${
+ index === 1 ? 'lg:pl-[72px]' : ''
+ }`}
+ >
+ <PersonaPhotoCard persona={persona} />
+ <PersonaQuoteCard persona={persona} />
+ <p className="m-0 max-w-[330px] text-[14px] font-light leading-[1.65] text-[#0a0a0a]/68" style={bodyStyle}>
+ {persona.description}
+ </p>
+ </article>
+ ))}
+ </div>
+ </section>
+
+ <section className="grid gap-5 border-l border-[#ed5b2b] py-1 pl-5 lg:grid-cols-[1fr_360px] lg:items-end" aria-label="Opportunity defined from problem and personas">
  <p className="m-0 max-w-[760px] text-[18px] font-normal leading-[1.45] text-[#0a0a0a]" style={bodyStyle}>
  The opportunity was to help users find relevant roles earlier, act on more of them, and preserve enough quality and context for those applications to turn into interviews.
  </p>
  <p className="m-0 text-[12px] font-light leading-[1.55] text-[#0a0a0a]/52" style={bodyStyle}>
  JobNova connected Discover → Match → Customize → Apply → Track → Interview Prep into one continuous workflow.
  </p>
- </div>
  </section>
 
  <section className="flex flex-col gap-5" aria-labelledby="overview-process-title">
@@ -5088,6 +5120,7 @@ export default function JobnovaAIPlatformPage() {
  return (
  <div className="mei-project-page w-full">
  <CaseStudyControls
+ accentColor="#ed5b2b"
  navLabels={[
  '01 / From Problem to Product',
  '02 / Why Auto Apply',
@@ -5098,6 +5131,7 @@ export default function JobnovaAIPlatformPage() {
  tldrPoints={tldrPoints}
  />
  <CaseStudyHero
+ accentColor="#ed5b2b"
  title="JobNova AI Job Search Platform"
  subtitle="Designing a 0–1 AI job-search platform that helps users discover, prepare, submit, and track more relevant applications."
  tags={['0-to-1 AI SaaS', 'Product Strategy', 'UX Research', 'AI Workflow', 'Design System']}

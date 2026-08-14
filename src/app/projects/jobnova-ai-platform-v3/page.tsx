@@ -2455,8 +2455,9 @@ function TrackingDesignDecisionSection() {
 export default function JobnovaAIPlatformPage() {
   return (
     <div className="mei-project-page w-full">
-      <CaseStudyControls tldrPoints={tldrPoints} />
+      <CaseStudyControls tldrPoints={tldrPoints} accentColor="#ed5b2b" />
       <CaseStudyHero
+        accentColor="#ed5b2b"
         title="JobNova AI Job Search Platform"
         subtitle="Designing a 0-to-1 AI job-search system that helps users complete relevant applications faster without giving up trust or control."
         tags={['0-to-1 AI SaaS', 'Product Strategy', 'UX Research', 'AI Workflow', 'Design System']}
