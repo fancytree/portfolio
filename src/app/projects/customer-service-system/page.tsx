@@ -25,7 +25,7 @@ export default function CustomerServiceSystemPage() {
           { label: 'Team', value: ['Solo designer,', 'Engineering team'] },
           { label: 'Tool', value: ['Figma,', 'Information architecture,', 'Dashboard prototype'] },
           { label: 'Company', value: ['Client project'] },
-          { label: 'Year', value: ['2022 · 4 weeks'] },
+          { label: 'Year', value: ['2024'] },
         ]}
       />
 

@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { AudioWaveform, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
+import { AudioWaveform, ArrowUpRight, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
 import HeroFish from './components/HeroFish';
+import WorkProjectRows from './components/WorkProjectRows';
+import { productProjects, researchProjects, sortProjectsByTimeDesc } from '@/lib/work-projects';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -228,172 +230,16 @@ const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-fraunces)' };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
-type Project = {
-  title: string;
-  category: string;
-  time: string;
-  tags: string[];
-  description: string;
-  image: string;
-  imageFit?: 'cover' | 'contain';
-  imageScale?: number;
-  imageTranslateY?: string;
-  imageBackground?: string;
-  href: string;
-};
-
-const productProjects: Project[] = [
-  {
-    title: 'Procurement Agent',
-    category: 'Product / UX / AX Designer',
-    time: '2026',
-    tags: ['Agentic Experience Design', 'B2B Procurement', 'Agent Workflow'],
-    description:
-      'A three-stage transformation for an Italian B2B beauty wholesaler: disconnected manual work, structured purchasing operations, and evidence-backed Agent collaboration, with human ordering authority preserved throughout.',
-    image: '/img/procurement-agent/Procurement Agent.avif',
-    imageFit: 'cover',
-    imageScale: 1.55,
-    imageTranslateY: '8%',
-    imageBackground: '#161616',
-    href: '/projects/procurement-agent',
-  },
-  {
-    title: 'ConnectNova',
-    category: 'Founding Designer',
-    time: '2026 – Present',
-    tags: ['AI Recruiting', 'SaaS Platform', 'End-to-end Workflow'],
-    description:
-      'Led product direction, UX strategy, and interaction design for a two-part recruiting workflow: a LinkedIn Chrome extension for sourcing and a dashboard for candidate ranking, review, and outreach.',
-    image: '/img/Connectnova.avif',
-    href: '/projects/connectnova',
-  },
-  {
-    title: 'JobNova',
-    category: 'Lead Designer',
-    time: '2025 – Present',
-    tags: ['AI Job Search', '0-to-1 Product', 'Trust & Automation'],
-    description:
-      'Designed a 0-to-1 AI job-search system that helps users complete relevant applications faster without giving up trust or control.',
-    image: '/img/Jobnova.avif',
-    href: '/projects/jobnova-ai-platform-v3',
-  },
-  {
-    title: 'MemQ',
-    category: 'Indie iOS Designer',
-    time: '2026 · 8 weeks',
-    tags: ['AI Learning', 'iOS Product', 'Built & Shipped'],
-    description:
-      'Independently designed, developed, and launched an iOS learning app that turns captured knowledge into quizzes and review loops, helping learners retain what they ask AI.',
-    image: '/img/MemQ.avif',
-    href: '/projects/memq',
-  },
-  {
-    title: 'Beikemama',
-    category: 'UX/UI Designer',
-    time: '2020 · 8 weeks',
-    tags: ['Parenting Community', 'Mobile Product', 'Live Q&A'],
-    description:
-      'Designed a live parenting community for pregnant women and young families, connecting expert Q&A, social support, and parent-child activities into a warmer mobile experience.',
-    image: '/img/Beikemama/Beikemama.avif',
-    imageFit: 'contain',
-    imageScale: 0.76,
-    imageBackground:
-      'radial-gradient(circle at 18% 18%, rgb(255 224 164 / 0.82), transparent 42%), radial-gradient(circle at 84% 24%, rgb(255 112 124 / 0.42), transparent 40%), radial-gradient(circle at 74% 88%, rgb(112 204 196 / 0.42), transparent 44%), linear-gradient(135deg, #fff8f3 0%, #ffe9e8 52%, #effaf7 100%)',
-    href: '/projects/beikemama',
-  },
-  {
-    title: 'Mono',
-    category: 'AI Builder',
-    time: '2026 · 4 weeks',
-    tags: ['AI Agent', 'FinTech', 'Generative UI'],
-    description:
-      'Intent-driven financial agent that turns natural language into structured UI states for clearer, more actionable money insights.',
-    image: '/img/mono_cover.avif',
-    href: '/projects/mono',
-  },
-  {
-    title: 'CrackInterview.AI',
-    category: 'AI Builder',
-    time: '2025 · 8 weeks',
-    tags: ['AI Interviewing', 'EdTech', 'Conversational UX'],
-    description:
-      'AI mock interview platform that gives technical candidates structured practice, adaptive conversations, and clearer feedback loops.',
-    image: '/img/CrackInterview_cover.avif',
-    href: '/projects/crackinterview',
-  },
-  {
-    title: 'Customer Service System',
-    category: 'Creative Coder',
-    time: '2022 · 4 weeks',
-    tags: ['Enterprise UX', 'Multi-role System', 'Service Workflow'],
-    description:
-      'Multi-role customer support system mapping messaging, escalation, and admin workflows across users, promoters, agents, and operators.',
-    image: '/img/customer-service-system_cover.avif',
-    href: '/projects/customer-service-system',
-  },
-  {
-    title: 'This Portfolio',
-    category: 'Creative Coder',
-    time: '2026 – Ongoing',
-    tags: ['Creative Coding', 'Motion Design', 'AI-assisted Build'],
-    description:
-      'A living interface experiment blending motion, interaction, AI-assisted iteration, and portfolio storytelling into one evolving system.',
-    image: '/meiwave.gif',
-    href: '/',
-  },
-];
-
-const researchProjects: Project[] = [
-  {
-    title: 'Walnut Coding',
-    category: 'UX Researcher',
-    time: '2020',
-    tags: ['UX Research', 'Parent Decision', 'Conversion Journey'],
-    description:
-      'Investigated why parents hesitate after trial coding classes and translated hesitation patterns into clearer evidence, comparison, and decision-support opportunities.',
-    image: '/img/walnut-coding-cover-v2.webp',
-    href: '/projects/walnut-coding',
-  },
-  {
-    title: 'Parent Sharing Behavior',
-    category: 'UX Researcher',
-    time: '2022',
-    tags: ['UX Research', 'Sharing Behavior', 'Referral Design'],
-    description:
-      'Studied why high-value parents hesitate to share publicly, reframing referral design around social comfort, private trust, and parent-controlled expression.',
-    image: '/img/walnut-sharing-cover-v2.webp',
-    href: '/projects/walnut-sharing',
-  },
-  {
-    title: 'Milano Partecipa',
-    category: 'Researcher',
-    time: '2023 · 16 weeks',
-    tags: ['UX Research', 'Civic Tech', 'Service Design'],
-    description:
-      'Civic participation research and service design for improving access, awareness, and everyday engagement with local decision-making.',
-    image: '/img/Milano%20Partecipa.avif',
-    href: '/projects/milano-partecipa',
-  },
-  {
-    title: 'Clarity',
-    category: 'Researcher',
-    time: '2024 · 15 weeks',
-    tags: ['UX Research', 'Digital Health', 'Clinical Workflow'],
-    description:
-      'Digital health product work for menopause symptom tracking, personal insights, and clearer communication between patients and clinicians.',
-    image: '/img/Clarity.avif',
-    href: '/projects/clarity',
-  },
-];
-
 const workGroups = [
   {
     label: 'Product',
-    items: ['Procurement Agent', 'JobNova', 'ConnectNova', 'MemQ', 'Mono', 'Beikemama'].flatMap((title) =>
-      productProjects.filter((project) => project.title === title)
+    items: sortProjectsByTimeDesc(
+      ['Procurement Agent', 'JobNova', 'Beikemama'].flatMap((title) =>
+        productProjects.filter((project) => project.title === title)
+      )
     ),
   },
-  { label: 'Research', items: researchProjects.slice(0, 2) },
+  { label: 'Research', items: sortProjectsByTimeDesc(researchProjects) },
 ];
 
 type ToolItem =
@@ -656,68 +502,23 @@ export default function Home() {
                     {group.label}
                   </p>
                   <div className="flex-1 divide-y divide-[#cccccc]">
-                    {group.items.map((project, projectIndex) => (
-                      <Link
-                        key={project.title}
-                        href={project.href}
-                        className="mei-interactive-row group flex flex-col gap-2 py-6 first:pt-0"
-                        style={{ transitionDelay: `${projectIndex * 24}ms` }}
-                      >
-                        <div className="flex items-start justify-between gap-4">
-                          <h3 className="text-[22px] text-[#0a0a0a] md:text-[24px]" style={fontDisplay}>
-                            {project.title}
-                          </h3>
-                          <span
-                            className="whitespace-nowrap text-[15px] font-light text-[#0a0a0a]/60 md:text-[18px]"
-                            style={fontBody}
-                          >
-                            {project.category}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="rounded-full bg-[#ed5b2b] px-3 py-1 text-[13px] text-white"
-                              style={fontBody}
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        {/* 默认收起，hover 时展开项目图、时间和简介（CSS grid-rows 技巧，自动过渡到内容真实高度） */}
-                        <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr]">
-                          <div className="overflow-hidden">
-                            <div className="flex flex-col gap-5 pt-8 md:flex-row md:items-start md:gap-9">
-                              <div
-                                className="h-[220px] w-full shrink-0 overflow-hidden md:h-[239px] md:w-[360px]"
-                                style={{ background: project.imageBackground ?? '#cccccc' }}
-                              >
-                                <img
-                                  src={project.image}
-                                  alt=""
-                                  className={`h-full w-full ${project.imageFit === 'contain' ? 'object-contain' : 'object-cover'}`}
-                                  style={{
-                                    objectPosition: 'center',
-                                    transform: `translateY(${project.imageTranslateY ?? '0'}) scale(${project.imageScale ?? 1})`,
-                                    transformOrigin: project.imageTranslateY ? 'center top' : 'center',
-                                  }}
-                                />
-                              </div>
-                              <div className="flex min-w-0 flex-1 flex-col justify-center gap-5 pt-1 md:min-h-[194px]">
-                                <p className="text-[15px] text-[#ed5b2b] md:text-[16px]" style={fontBody}>
-                                  {project.time}
-                                </p>
-                                <p className="text-[15px] font-light text-[#0a0a0a] md:text-[16px]" style={fontBody}>
-                                  {project.description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
+                    <WorkProjectRows items={group.items} />
+                    {group.label === 'Product' ? (
+                      <div className="pt-6">
+                        <Link
+                          href="/works"
+                          className="mei-view-all-work-link group inline-flex items-center gap-2.5 rounded-full border border-[#0a0a0a]/72 px-4 py-2.5 text-[14px]"
+                          style={fontBody}
+                        >
+                          <span className="relative z-10">View all works</span>
+                          <ArrowUpRight
+                            aria-hidden
+                            strokeWidth={1.6}
+                            className="mei-view-all-work-icon relative z-10 size-4 shrink-0"
+                          />
+                        </Link>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </Reveal>
