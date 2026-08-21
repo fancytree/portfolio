@@ -2,7 +2,7 @@
  * Knowledge base for the Procurement Agent demo's "ask about this project" assistant.
  *
  * PROJECT_CASE_STUDY is extracted from the live case study page
- * (src/app/projects/procurement-agent/page.tsx) — keep it in sync when that page changes.
+ * (src/app/projects/procurement-agent/page.tsx) - keep it in sync when that page changes.
  *
  * AUTHOR_NOTES is for details that are NOT on the public page: implementation specifics,
  * trade-offs considered and rejected, tooling, timelines. Edit that block freely.
@@ -12,7 +12,7 @@ export const PROJECT_CASE_STUDY = `
 # AI Procurement Agent for DEF Beauty Supply
 
 One-line: Designing an evidence-backed procurement agent that helps buyers decide what to
-purchase, how much to order, and why — while keeping critical decisions under human control.
+purchase, how much to order, and why - while keeping critical decisions under human control.
 
 Tags: B2B SaaS, Enterprise UX, AX Design, Agent Workflow, Data Architecture
 Year: 2026. Company: DEF Beauty Supply (B2B beauty wholesaler serving professional customers in Italy).
@@ -43,12 +43,12 @@ by one → stock-in.
 Problems: Excel broke data traceability; quantity decisions stayed manual; supplier messages
 lost purchase context; purchase and fulfillment had no shared record; receiving was re-entered
 by hand.
-Three root issues: (1) Fragmented data — sales, stock, supplier communication and receiving
-lived in different tools. (2) No lifecycle — the system recorded stock-in but not purchase
-intent or fulfillment state. (3) Manual reconciliation — confirmation, DDT and received
+Three root issues: (1) Fragmented data - sales, stock, supplier communication and receiving
+lived in different tools. (2) No lifecycle - the system recorded stock-in but not purchase
+intent or fulfillment state. (3) Manual reconciliation - confirmation, DDT and received
 quantities had to be compared by hand.
 
-## 04 Phase 1 — making procurement structured and traceable
+## 04 Phase 1 - making procurement structured and traceable
 Before AI could participate, procurement needed a shared object model, explicit states and
 traceable evidence.
 - Object model: every receiving event belongs to a purchase lifecycle.
@@ -63,7 +63,7 @@ Remaining gap: the workflow was digital, but deciding what and how much to buy w
 
 ## 05 The turning point
 Procurement team feedback after Phase 1: "Now I don't need to switch between Excel and the
-system anymore. But the part that takes the most time is still the same — I still have to
+system anymore. But the part that takes the most time is still the same - I still have to
 decide what to buy and how much."
 Before Phase 1 the buyer did: find data + organize data + calculate + apply supplier rules +
 make judgment + create order. After Phase 1 the system retrieved data and organized workflow,
@@ -94,23 +94,23 @@ Maturity path: Manual operations → Structured data → Traceable states → Hi
 Agent-readable context → Procurement Agent.
 
 ## 09 How the Agent participates
-Three responsibilities: (1) interpret the buyer's goal — what does "one month of supply" mean
+Three responsibilities: (1) interpret the buyer's goal - what does "one month of supply" mean
 here; (2) build and calculate the plan from sales, stock, incoming inventory and supplier
-constraints; (3) surface exceptions for human action — price changes, shortages, payment risk,
+constraints; (3) surface exceptions for human action - price changes, shortages, payment risk,
 approval needs.
 AX design principle: Agency = interpreted intent + deterministic calculation + visible evidence
 + reversible edits + explicit human gates.
 
-## 10 Designing the Agent — responsibility architecture
+## 10 Designing the Agent - responsibility architecture
 "The LLM interprets. The engine calculates. The buyer decides."
 - LLM: understand intent, clarify missing context, choose tools, explain results, identify
   exceptions.
-- Deterministic engine: quantity is computed, not generated — calculate demand, apply coverage
+- Deterministic engine: quantity is computed, not generated - calculate demand, apply coverage
   period, account for lead time, subtract current and incoming inventory, apply MOQ and supplier
   constraints, check business thresholds.
 - Buyer: review, edit, approve, place order.
 Rationale: quantity affects cash, inventory risk and supplier commitments, so the
-recommendation must be reproducible from business inputs — not generated probabilistically.
+recommendation must be reproducible from business inputs - not generated probabilistically.
 
 ## 11 Executable agent workflow
 Properties: stateful (carries purchase context), resumable (continues after approval,
@@ -122,9 +122,9 @@ data → 05 calculate (deterministic) → 06 propose (editable plan) → 07 huma
 reviews, edits, talks to supplier) → 08 verify documents (confirmation / DDT / quantity /
 price differences) → 09 record order (human records the confirmed order).
 Implementation note: LangGraph manages the stateful workflow, tool execution, human approval
-gates and task recovery — from prototype through production.
+gates and task recovery - from prototype through production.
 
-## 12 Human gate — the Agent cannot place an order
+## 12 Human gate - the Agent cannot place an order
 Formal ordering creates external financial and supplier commitments. The Agent prepares and
 verifies the decision; the commitment stays human-owned.
 Agent can: generate a purchase recommendation, prepare supplier-facing files, compare
@@ -138,7 +138,7 @@ uncertainty without false precision), DecisionTrace (keep inputs, rules, changes
 inspectable), Human Gate (pause before irreversible purchasing actions), Approval (bind
 authorization to the final quantity and price).
 
-## 13 End-to-end scenario — "Create a one-month purchase plan for MNP"
+## 13 End-to-end scenario - "Create a one-month purchase plan for MNP"
 One MNP SKU carries the story: the Agent suggests 24 units, the buyer edits to 36, and every
 later supplier and receiving event stays attached to that decision.
 Detail: SKU "Bonding Primer 8ml", supplier code 431001, supplier MNP (Mesauda Nail Pro).
@@ -161,7 +161,7 @@ Agent recommendation 24 → Buyer override 36 (reason: upcoming MNP promotion) �
 (propose higher promotional coverage for this SKU). This is a learning candidate, not an
 automatic memory update.
 
-## Information architecture — Procurement Workspace
+## Information architecture - Procurement Workspace
 01 All orders (cards across draft, placed, received, cancelled); 02 Purchase plan (editable
 optimal proposal grouped by SPU); 03 Document check (confirmation, DDT and actual receipt
 differences); 04 Supplier memory (rules, lead-time performance, confirmed habits);
@@ -173,7 +173,7 @@ Core agent components (8): KnowledgeBadge (source and freshness), ConfidenceIndi
 wrong), ApprovalGate (blocks unauthorized progress), DecisionTrace (why this recommendation
 exists), LearningCandidateCard (review before memory update), AgentActionFooter (human action
 at the right moment).
-Consistency rule: business status, Agent state and human responsibility are different layers —
+Consistency rule: business status, Agent state and human responsibility are different layers -
 and never share one ambiguous color.
 
 ## 16 Agent UX iterations
@@ -198,7 +198,7 @@ Would measure after production use: recommendation acceptance, time to recommend
 discrepancy detection, override reasons, high-risk interception, learning quality.
 
 ## 18 Results
-A functional Agent-ready procurement MVP — from screen concept to a coded workflow with
+A functional Agent-ready procurement MVP - from screen concept to a coded workflow with
 explicit data contracts, tool boundaries, document reconciliation and a preserved human
 ordering gate.
 Capabilities: one traceable procurement lifecycle; one reproducible recommendation model; one
@@ -216,7 +216,7 @@ Final reflection: the hardest part of Agent design was not deciding what the AI 
 deciding what evidence it needed, when it should stop, and who remained accountable.
 
 ## About this demo itself
-The demo on the right is a scripted, front-end-only replica of the real interface — it runs
+The demo on the right is a scripted, front-end-only replica of the real interface - it runs
 without a backend so the workflow can be explored from the portfolio. Its business state
 machine (quantities, approvals, ordering, receiving) is scripted, not model-generated. Only
 this "ask about the project" conversation is powered by a live model.
@@ -227,6 +227,6 @@ this "ask about the project" conversation is powered by a live model.
  * Mei: add implementation specifics, rejected alternatives, tooling and process notes here.
  */
 export const AUTHOR_NOTES = `
-(Nothing added yet — when this is empty, the assistant relies on the case study above and says
+(Nothing added yet - when this is empty, the assistant relies on the case study above and says
 plainly when something is not documented.)
 `.trim();

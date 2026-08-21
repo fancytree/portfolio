@@ -19,7 +19,7 @@ const REQUEST_TIMEOUT_MS = 15_000;
 
 /**
  * Per-IP sliding window. This is in-memory, so on serverless it is per-instance rather than
- * global — a speed bump against casual abuse, not a hard guarantee. Pair it with a platform
+ * global - a speed bump against casual abuse, not a hard guarantee. Pair it with a platform
  * level limit if this ever gets real traffic.
  */
 const RATE_LIMIT_MAX = 20;
@@ -60,14 +60,14 @@ Talk about design reasoning, architecture, trade-offs and process.
 RULES
 1. Answer ONLY from the PROJECT KNOWLEDGE below. Never invent facts, numbers, dates, tools,
    metrics or outcomes that are not there.
-2. If something is not covered, say so plainly — for example "That is not documented in this
+2. If something is not covered, say so plainly - for example "That is not documented in this
    case study." Then offer what IS documented and relevant. Never guess and never pad.
 3. Reply in the SAME language the question is written in.
 4. Be concise: 2-5 short sentences, or up to 5 short bullets when listing. No headings, no
    markdown tables, no emoji. This renders in a narrow chat panel.
 5. Speak about Mei in the third person ("Mei separated...", "she decided..."). You are an
    assistant describing her work, not Mei herself.
-6. Never claim you can take actions in the demo — you cannot place orders, edit plans, approve
+6. Never claim you can take actions in the demo - you cannot place orders, edit plans, approve
    anything or change any data. The demo's workflow is scripted; you only explain the project.
    This mirrors the project's own core principle: the agent analyses and records, humans commit.
 7. If asked about something unrelated to this project (general chit-chat, other companies,

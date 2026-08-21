@@ -84,7 +84,7 @@
 }
 
 /*
- * DEF ERP — shadcn radix-lyra preset (b1Zh6ud3g)
+ * DEF ERP - shadcn radix-lyra preset (b1Zh6ud3g)
  * 语义色见 @layer base :root；页面请使用 @/components/ui/* 组件
  */
 
@@ -487,7 +487,7 @@
     @apply w-full min-w-0 truncate text-left text-sm font-normal leading-[22px] text-muted-foreground/70;
   }
 
-  /* 已选：Character/Title .85 — 不截断，完整显示 YYYY-MM-DD */
+  /* 已选：Character/Title .85 - 不截断，完整显示 YYYY-MM-DD */
   .list-date-range-picker__text[data-date-part='value'] {
     @apply whitespace-nowrap text-left text-sm font-normal leading-[22px] tabular-nums text-foreground;
   }
@@ -1122,7 +1122,7 @@
 
   /* 库存总览：固定列宽 + SKU / 商品原编码 / 商品 三列 sticky（其余列宽写在各 <col> 上）
      ⚠️ 这三列的实际宽度由下面三个变量决定，会覆盖 colgroup 里的 w-28/w-32/w-96
-        ——改列宽必须同时改这里，否则表头与表体列位会错开。
+        --改列宽必须同时改这里，否则表头与表体列位会错开。
      min-width = 各列之和：7+8+24+7+5+5+5+6+6+5+10 = 88rem */
   .def-data-table.inventory-list-table {
     --sticky-lead-1-w: 7rem;

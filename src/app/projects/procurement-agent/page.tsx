@@ -3,14 +3,19 @@ import Image from 'next/image';
 import CaseStudyBackButton from '../../components/CaseStudyBackButton';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import CaseStudyHero from '../../components/CaseStudyHero';
+import AgentReadyContextDiagram from './AgentReadyContextDiagram';
+import EcosystemDiagram from './EcosystemDiagram';
 import Phase1ScreenshotSwitcher from './Phase1ScreenshotSwitcher';
 import ProcurementDemoEmbed from './ProcurementDemoEmbed';
+import ProcurementDecisionDiagram from './ProcurementDecisionDiagram';
+import ProcurementLearningLoop from './ProcurementLearningLoop';
+import ResponsibilityArchitectureDiagram from './ResponsibilityArchitectureDiagram';
 import { fontFamily } from '@/lib/design-tokens';
 
 export const metadata: Metadata = {
   title: 'AI Procurement Agent for DEF Beauty Supply | Mei Chai',
   description:
-    'Designing an evidence-backed procurement agent that helps buyers decide what to purchase, how much to order, and why—while keeping critical decisions under human control.',
+    'Designing an evidence-backed procurement agent that helps buyers decide what to purchase, how much to order, and why while keeping critical decisions under human control.',
 };
 
 const tldrPoints = [
@@ -50,169 +55,21 @@ const bodyStyle = {
   fontFamily: fontFamily.sans,
 } as const;
 
-type StageProcess = { label: string; body: string };
-type StageData = {
-  tag: string;
-  tagBg: string;
-  tagColor: string;
-  title: string;
-  body: string;
-  processLabel: string;
-  processes: StageProcess[];
-  calloutLabel: string;
-  calloutBody: string;
-  cardBg: string;
-  cardTextColor: string;
-  processBg: string;
-  processTextColor: string;
-  calloutBg: string;
-  calloutLabelColor: string;
-};
-
-const evolutionStages: StageData[] = [
-  {
-    tag: 'STAGE 01 · MANUAL',
-    tagBg: '#ffffff',
-    tagColor: '#8a6500',
-    title: 'Procurement and receiving were separate manual tasks.',
-    body: 'The platform stored inventory, but it could not create or track a purchase order.',
-    processLabel: 'HOW WORK HAPPENED',
-    processes: [
-      { label: 'Download data', body: 'Export sales and inventory files' },
-      { label: 'Build an Excel view', body: 'Merge, compare and calculate manually' },
-      { label: 'Write the purchase need', body: 'Type products and quantities by hand' },
-      { label: 'Receive outside the order', body: 'Count delivered goods with no PO trail' },
-      { label: 'Search every item', body: 'Find each SKU and enter stock one by one' },
-    ],
-    calloutLabel: 'SYSTEM GAP',
-    calloutBody: 'No shared order state, no document reconciliation, no operational trace.',
-    cardBg: '#f6f0df',
-    cardTextColor: '#161616',
-    processBg: '#ffffff',
-    processTextColor: '#161616',
-    calloutBg: '#ede2c6',
-    calloutLabelColor: '#8a6500',
-  },
-  {
-    tag: 'PHASE 1 · DESIGN RESULT',
-    tagBg: '#e9eef8',
-    tagColor: accent,
-    title: 'A traceable purchase workspace.',
-    body: 'Purchase need, supplier confirmation, shipment, receiving, and inventory now share one business context.',
-    processLabel: 'WHAT THE PLATFORM ADDED',
-    processes: [
-      { label: 'Purchase request', body: 'Create SKU lines, quantity and estimate' },
-      { label: 'Approval and PO', body: 'Move from request to tracked order' },
-      { label: 'Document capture', body: 'Upload confirmation; use OCR to import' },
-      { label: 'Partial receiving', body: 'Track ordered, received and remaining' },
-      { label: 'Variance handling', body: 'Record shortages, overages and anomalies' },
-    ],
-    calloutLabel: 'REMAINING GAP',
-    calloutBody: 'The workflow was digital, but deciding what and how much to buy remained manual.',
-    cardBg: '#f4f4f4',
-    cardTextColor: '#161616',
-    processBg: '#ffffff',
-    processTextColor: '#161616',
-    calloutBg: '#e9eef8',
-    calloutLabelColor: accent,
-  },
-  {
-    tag: 'STAGE 03 · AI AGENT',
-    tagBg: accent,
-    tagColor: '#ffffff',
-    title: 'The system helps form and monitor the decision.',
-    body: 'Conversation captures intent; tools read evidence and create one editable optimal plan.',
-    processLabel: 'TARGET EXPERIENCE',
-    processes: [
-      { label: 'Express the goal', body: 'Supplier + desired sales coverage' },
-      { label: 'Read and calculate', body: 'Sales, stock, lead time, seasonality, rules' },
-      { label: 'Edit one proposal', body: 'Review SPU-grouped items and evidence' },
-      { label: 'Verify documents', body: 'Export, upload confirmation, detect changes' },
-      { label: 'Track and learn', body: 'Monitor fulfilment and govern memory signals' },
-    ],
-    calloutLabel: 'AUTHORITY BOUNDARY',
-    calloutBody: 'The Agent never places the formal supplier order. A person records it after acting externally.',
-    cardBg: '#161616',
-    cardTextColor: '#ffffff',
-    processBg: '#292929',
-    processTextColor: '#ffffff',
-    calloutBg: accent,
-    calloutLabelColor: '#ffffff',
-  },
-];
-
-function EvolutionStageCard({ stage, compact = false }: { stage: StageData; compact?: boolean }) {
+function ChapterTitle({ children, inverse = false }: { children: string; inverse?: boolean }) {
   return (
-    <div className="flex w-full flex-col gap-[18px] p-6" style={{ background: stage.cardBg }}>
-      <span
-        className="inline-flex w-fit items-center px-[10px] py-[6px] text-[10px] font-bold"
-        style={{ ...bodyStyle, background: stage.tagBg, color: stage.tagColor }}
-      >
-        {stage.tag}
-      </span>
-      <p className="m-0 text-[22px] font-bold leading-[1.2]" style={{ ...bodyStyle, color: stage.cardTextColor }}>
-        {stage.title}
-      </p>
-      <p
-        className="m-0 text-[13px] font-normal leading-[19px]"
-        style={{ ...bodyStyle, color: stage.cardTextColor, opacity: stage.cardBg === '#161616' ? 0.85 : 0.75 }}
-      >
-        {stage.body}
-      </p>
-      {!compact && (
-        <>
-          <p
-            className="m-0 text-[10px] font-bold uppercase"
-            style={{ ...bodyStyle, color: stage.cardBg === '#161616' ? '#afafaf' : '#777' }}
-          >
-            {stage.processLabel}
-          </p>
-          <div className="flex flex-col gap-2">
-            {stage.processes.map((process, index) => (
-              <div key={process.label} className="flex gap-3 px-3 py-[10px]" style={{ background: stage.processBg }}>
-                <p
-                  className="m-0 shrink-0 text-[10px] font-bold"
-                  style={{ ...bodyStyle, color: stage.cardBg === '#161616' ? '#cfcfcf' : '#3b3b3b' }}
-                >
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <div className="flex flex-col gap-[3px]">
-                  <p className="m-0 text-[11px] font-bold" style={{ ...bodyStyle, color: stage.processTextColor }}>
-                    {process.label}
-                  </p>
-                  <p
-                    className="m-0 text-[9px] font-normal"
-                    style={{ ...bodyStyle, color: stage.cardBg === '#161616' ? '#cfcfcf' : '#3b3b3b' }}
-                  >
-                    {process.body}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-      <div className="flex flex-col gap-[7px] py-[13px] pl-[14px]" style={{ background: stage.calloutBg }}>
-        <p className="m-0 text-[10px] font-bold" style={{ ...bodyStyle, color: stage.calloutLabelColor }}>
-          {stage.calloutLabel}
-        </p>
-        <p
-          className="m-0 max-w-[250px] text-[12px] font-bold leading-[16px]"
-          style={{ ...bodyStyle, color: stage.cardBg === '#161616' ? '#ffffff' : '#161616' }}
-        >
-          {stage.calloutBody}
-        </p>
-      </div>
-    </div>
+    <p
+      className="m-0 text-[12px] font-bold uppercase tracking-[0.06em]"
+      style={{ ...bodyStyle, color: inverse ? '#7fa2ff' : accent }}
+    >
+      {children}
+    </p>
   );
 }
 
 function ThreeStageEvolution() {
   return (
     <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="04 / Phase 1">
-      <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-        04 — Phase 1
-      </p>
+      <ChapterTitle>04 / Phase 1</ChapterTitle>
       <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
         Making procurement structured and traceable
       </h2>
@@ -221,36 +78,30 @@ function ThreeStageEvolution() {
         Before AI could participate, procurement first needed a shared object model, explicit states, and traceable evidence.
       </p>
 
-      <div className="bg-[#e9eef8] px-[clamp(22px,3vw,32px)] py-6">
-        <p className="m-0 text-[clamp(22px,2.8vw,30px)] font-bold leading-[1.35] text-[#161616]" style={bodyStyle}>
-          Phase 1 turned procurement from a set of records into a stateful lifecycle.
-        </p>
-      </div>
-
-      <div className="grid gap-px bg-[#d8d8d8] lg:grid-cols-3">
-        <article className="flex min-h-[300px] flex-col gap-5 bg-[#f4f4f4] p-[clamp(22px,3vw,30px)]">
+      <div className="grid border-y border-[#cfcfcf] lg:grid-cols-3">
+        <article className="flex flex-col gap-5 border-b border-[#cfcfcf] py-[clamp(26px,4vw,40px)] lg:border-b-0 lg:pr-[clamp(24px,3vw,36px)]">
           <p className="m-0 text-[11px] font-bold text-[#2155e8]" style={bodyStyle}>01 · OBJECT MODEL</p>
           <h3 className="m-0 text-[21px] font-bold leading-[1.3] text-[#161616]" style={bodyStyle}>Every receiving event belongs to a purchase lifecycle.</h3>
           <p className="m-0 text-[14px] font-normal leading-[1.55] text-[#555]" style={bodyStyle}>
             Instead of isolated inventory changes, receiving remains connected to the purchase that created it.
           </p>
-          <div className="mt-auto flex flex-col gap-2">
+          <div className="mt-auto flex flex-col gap-2 border-l border-[#2155e8] pl-4">
             {['Purchase', 'Confirmation', 'DDT', 'Receiving', 'Inventory'].map((stage, index, stages) => (
-              <div key={stage} className="flex flex-col items-start">
-                <div className="w-full border border-[#d8d8d8] bg-white px-3 py-2 text-[12px] font-bold text-[#161616]" style={bodyStyle}>{stage}</div>
-                {index < stages.length - 1 && <span className="ml-4 h-3 border-l border-[#2155e8]" aria-hidden />}
-              </div>
+              <p key={stage} className="m-0 flex items-center gap-2 text-[12px] font-bold text-[#161616]" style={bodyStyle}>
+                <span>{stage}</span>
+                {index < stages.length - 1 && <span className="text-[#2155e8]" aria-hidden>↓</span>}
+              </p>
             ))}
           </div>
         </article>
 
-        <article className="flex min-h-[300px] flex-col gap-5 bg-[#f4f4f4] p-[clamp(22px,3vw,30px)]">
+        <article className="flex flex-col gap-5 border-b border-[#cfcfcf] py-[clamp(26px,4vw,40px)] lg:border-b-0 lg:border-l lg:px-[clamp(24px,3vw,36px)]">
           <p className="m-0 text-[11px] font-bold text-[#2155e8]" style={bodyStyle}>02 · STATE MODEL</p>
           <h3 className="m-0 text-[21px] font-bold leading-[1.3] text-[#161616]" style={bodyStyle}>Each purchase moves through explicit, recoverable states.</h3>
           <div className="mt-auto flex flex-wrap items-center gap-x-2 gap-y-3">
             {['Draft', 'Awaiting supplier', 'Confirmed', 'Ordered', 'Partially received', 'Completed'].map((state, index, states) => (
               <div key={state} className="flex items-center gap-2">
-                <span className="border border-[#d8d8d8] bg-white px-3 py-2 text-[11px] font-bold text-[#3b3b3b]" style={bodyStyle}>{state}</span>
+                <span className="text-[12px] font-bold text-[#3b3b3b]" style={bodyStyle}>{state}</span>
                 {index < states.length - 1 && (
                   <span className="text-[15px] font-bold text-[#2155e8]" aria-hidden>→</span>
                 )}
@@ -259,48 +110,30 @@ function ThreeStageEvolution() {
           </div>
         </article>
 
-        <article className="flex min-h-[300px] flex-col gap-5 bg-[#161616] p-[clamp(22px,3vw,30px)]">
-          <p className="m-0 text-[11px] font-bold text-[#7fa2ff]" style={bodyStyle}>03 · EVIDENCE MODEL</p>
-          <h3 className="m-0 text-[21px] font-bold leading-[1.3] text-white" style={bodyStyle}>Confirmation, DDT, and actual receiving remain linked instead of overwriting each other.</h3>
-          <p className="m-0 text-[14px] font-normal leading-[1.55] text-[#d8d8d8]" style={bodyStyle}>
+        <article className="flex flex-col gap-5 border-[#cfcfcf] py-[clamp(26px,4vw,40px)] lg:border-l lg:pl-[clamp(24px,3vw,36px)]">
+          <p className="m-0 text-[11px] font-bold text-[#2155e8]" style={bodyStyle}>03 · EVIDENCE MODEL</p>
+          <h3 className="m-0 text-[21px] font-bold leading-[1.3] text-[#161616]" style={bodyStyle}>Confirmation, DDT, and actual receiving remain linked instead of overwriting each other.</h3>
+          <p className="m-0 text-[14px] font-normal leading-[1.55] text-[#555]" style={bodyStyle}>
             This makes discrepancies visible rather than hidden in the final stock value.
           </p>
-          <div className="mt-auto flex flex-col gap-2">
+          <div className="mt-auto flex flex-col gap-2 border-l border-[#2155e8] pl-4">
             {['Purchase request', 'Supplier confirmation', 'DDT', 'Actual receiving'].map((evidence, index, evidenceList) => (
-              <div key={evidence} className="flex flex-col items-start">
-                <div className="w-full border border-white/20 bg-[#202020] px-3 py-2 text-[12px] font-bold text-white" style={bodyStyle}>{evidence}</div>
-                {index < evidenceList.length - 1 && <span className="ml-4 h-3 border-l border-[#7fa2ff]" aria-hidden />}
-              </div>
+              <p key={evidence} className="m-0 flex items-center gap-2 text-[12px] font-bold text-[#161616]" style={bodyStyle}>
+                <span>{evidence}</span>
+                {index < evidenceList.length - 1 && <span className="text-[#2155e8]" aria-hidden>↓</span>}
+              </p>
             ))}
           </div>
         </article>
       </div>
 
-      <div className="border border-[#d8d8d8] bg-white p-[clamp(22px,3vw,32px)]">
-        <p className="m-0 mb-5 text-[11px] font-bold uppercase tracking-[0.04em] text-[#777]" style={bodyStyle}>Evidence comparison</p>
-        <div className="grid gap-px bg-[#d8d8d8] sm:grid-cols-5">
-          {[
-            { label: 'Requested', value: '10' },
-            { label: 'Confirmed', value: '8' },
-            { label: 'DDT', value: '8' },
-            { label: 'Received', value: '11' },
-            { label: 'Variance', value: '+3', highlighted: true },
-          ].map((item) => (
-            <div key={item.label} className="flex min-h-[110px] flex-col justify-between p-4" style={{ background: item.highlighted ? '#2155e8' : '#f4f4f4' }}>
-              <p className="m-0 text-[10px] font-bold uppercase" style={{ ...bodyStyle, color: item.highlighted ? 'rgb(255 255 255 / 0.75)' : '#777' }}>{item.label}</p>
-              <p className="m-0 text-[30px] font-bold" style={{ ...bodyStyle, color: item.highlighted ? '#ffffff' : '#161616' }}>{item.value}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <DesignResultStructuredOperations />
 
-      <div className="flex flex-col gap-3 bg-[#2155e8] px-[clamp(22px,3vw,32px)] py-6 sm:flex-row sm:items-center sm:gap-7">
-        <p className="m-0 shrink-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>
+      <div className="flex flex-col gap-3 border-t border-[#2155e8] pt-6 sm:flex-row sm:items-baseline sm:gap-7">
+        <p className="m-0 shrink-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>
           Phase 1 outcome
         </p>
-        <p className="m-0 max-w-[900px] text-[19px] font-bold leading-[1.45] text-white" style={bodyStyle}>
+        <p className="m-0 max-w-[900px] text-[19px] font-bold leading-[1.45] text-[#161616]" style={bodyStyle}>
           Buyers could finally complete and trace the full procurement lifecycle inside one system.
         </p>
       </div>
@@ -308,43 +141,11 @@ function ThreeStageEvolution() {
   );
 }
 
-function StatChip({
-  index,
-  label,
-  body,
-  highlighted,
-}: {
-  index: string;
-  label: string;
-  body: string;
-  highlighted?: boolean;
-}) {
-  return (
-    <div
-      className="flex min-h-[92px] flex-col gap-2 p-5"
-      style={{ background: highlighted ? accent : '#f4f4f4' }}
-    >
-      <p className="m-0 text-[12px] font-bold" style={{ ...bodyStyle, color: highlighted ? '#ffffff' : accent }}>
-        {index}
-      </p>
-      <p
-        className="m-0 text-[11px] font-bold uppercase tracking-wide"
-        style={{ ...bodyStyle, color: highlighted ? '#ffffff' : '#161616' }}
-      >
-        {label}
-      </p>
-      <p className="m-0 text-[13px] font-normal" style={{ ...bodyStyle, color: highlighted ? 'rgb(255 255 255 / 0.85)' : '#3b3b3b' }}>
-        {body}
-      </p>
-    </div>
-  );
-}
-
 function DesignResultStructuredOperations() {
   return (
     <div className="flex flex-col gap-5">
-      <p className="m-0 text-[11px] font-bold uppercase tracking-[0.04em]" style={{ ...bodyStyle, color: accent }}>
-        Phase 1 — Making Procurement Structured
+      <p className="m-0 max-w-[900px] text-[clamp(21px,2.6vw,28px)] font-bold leading-[1.4]" style={{ ...bodyStyle, color: accent }}>
+        Procurement evolved from a set of records into a stateful lifecycle.
       </p>
       <Phase1ScreenshotSwitcher />
     </div>
@@ -363,28 +164,33 @@ function ProcurementTurningPoint() {
 
   return (
     <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="05 / The Turning Point">
+      <ChapterTitle inverse>05 / The Turning Point</ChapterTitle>
       <div className="flex max-w-[920px] flex-col gap-6">
-        <p className="m-0 text-[12px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
-          05 — The Turning Point
-        </p>
-        <h2 className="m-0 text-[clamp(36px,5.5vw,68px)] font-bold leading-[1.02] tracking-[-0.035em] text-white" style={bodyStyle}>
+        <h2 className="m-0 text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
           I had digitized the workflow,
           <br />
           <span className="text-[#7fa2ff]">but I had not reduced the cognitive work.</span>
         </h2>
       </div>
 
-      <blockquote className="m-0 max-w-[900px] border-l-2 border-[#ed5b2b] py-2 pl-6">
-        <p className="m-0 text-[clamp(18px,2.4vw,26px)] font-normal leading-[1.5] text-white" style={bodyStyle}>
-          “Now I don&apos;t need to switch between Excel and the system anymore. But the part that takes the most time is still the same—I still have to decide what to buy and how much.”
+      <blockquote className="relative m-0 max-w-[900px] py-3 pl-[clamp(48px,7vw,78px)]">
+        <span
+          className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none text-[#7fa2ff]"
+          style={bodyStyle}
+          aria-hidden
+        >
+          “
+        </span>
+        <p className="m-0 text-[clamp(17px,2vw,22px)] font-normal leading-[1.55] text-white" style={bodyStyle}>
+          Now I don&apos;t need to switch between Excel and the system anymore. But the part that takes the most time is still the same. I still have to decide what to buy and how much.
         </p>
         <footer className="mt-4 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
           Procurement team feedback after Phase 1
         </footer>
       </blockquote>
 
-      <div className="grid gap-px bg-white/20 lg:grid-cols-2">
-        <article className="bg-[#202020] p-[clamp(22px,3vw,34px)]">
+      <div className="grid border-y border-white/20 lg:grid-cols-2">
+        <article className="py-[clamp(26px,4vw,40px)] lg:pr-[clamp(24px,4vw,48px)]">
           <p className="m-0 mb-6 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
             Before Phase 1
           </p>
@@ -399,14 +205,17 @@ function ProcurementTurningPoint() {
           </div>
         </article>
 
-        <article className="bg-[#202020] p-[clamp(22px,3vw,34px)]">
+        <article className="border-t border-white/20 py-[clamp(26px,4vw,40px)] lg:border-l lg:border-t-0 lg:pl-[clamp(24px,4vw,48px)]">
           <p className="m-0 mb-6 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
             After Phase 1
           </p>
           <div className="flex flex-col gap-3">
             <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>System now</p>
             {['Retrieves data', 'Organizes workflow'].map((task) => (
-              <div key={task} className="border border-[#2155e8] bg-[#172348] px-4 py-3 text-[15px] font-bold text-white" style={bodyStyle}>{task}</div>
+              <div key={task} className="flex items-center gap-3 border-t border-white/15 py-3 text-[15px] font-bold text-white first:border-t-0" style={bodyStyle}>
+                <span className="size-1.5 rounded-full bg-[#7fa2ff]" aria-hidden />
+                {task}
+              </div>
             ))}
           </div>
 
@@ -417,19 +226,22 @@ function ProcurementTurningPoint() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#ff916d]" style={bodyStyle}>Buyer still</p>
+            <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#ed5b2b]" style={bodyStyle}>Buyer still</p>
             {['Calculate', 'Apply supplier rules', 'Make judgment'].map((task) => (
-              <div key={task} className="border border-[#ed5b2b] bg-[#2a1d19] px-4 py-3 text-[15px] font-bold text-white" style={bodyStyle}>{task}</div>
+              <div key={task} className="flex items-center gap-3 border-t border-white/15 py-3 text-[15px] font-bold text-white first:border-t-0" style={bodyStyle}>
+                <span className="size-1.5 rounded-full bg-[#ed5b2b]" aria-hidden />
+                {task}
+              </div>
             ))}
           </div>
         </article>
       </div>
 
-      <div className="border-t border-white/20 pt-9">
-        <p className="m-0 max-w-[1000px] text-[clamp(34px,5vw,62px)] font-bold leading-[1.05] tracking-[-0.035em] text-white" style={bodyStyle}>
+      <div>
+        <p className="m-0 max-w-[820px] text-[clamp(23px,3vw,36px)] font-bold leading-[1.16] tracking-[-0.018em] text-white" style={bodyStyle}>
           The interface problem had been solved.
           <br />
-          <span className="text-[#ed5b2b]">The decision problem had not.</span>
+          <span className="text-[#7fa2ff]">The decision problem had not.</span>
         </p>
       </div>
     </div>
@@ -439,10 +251,7 @@ function ProcurementTurningPoint() {
 function DesignResultEvidenceBackedAgency() {
   return (
     <div className="flex flex-col gap-10" data-case-nav-label="06 / Reframing the Problem">
-      <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-        06 — Reframing the Problem
-      </p>
-
+      <ChapterTitle>06 / Reframing the Problem</ChapterTitle>
       <div className="flex max-w-[940px] flex-col gap-5">
         <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
           The real bottleneck was procurement judgment
@@ -452,35 +261,28 @@ function DesignResultEvidenceBackedAgency() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-px bg-[#d8d8d8] sm:grid-cols-3 lg:grid-cols-6">
-        {['Experience', 'Sales', 'Inventory', 'Supplier rules', 'Lead time', 'Seasonality'].map((input) => (
-          <div key={input} className="flex min-h-[105px] items-end bg-[#f4f4f4] p-4 text-[13px] font-bold text-[#161616]" style={bodyStyle}>{input}</div>
-        ))}
-      </div>
+      <ProcurementDecisionDiagram />
 
       <div className="mt-[clamp(72px,10vw,128px)] flex max-w-[920px] flex-col gap-5" data-case-nav-label="07 / Why an Agent?">
-        <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-          07 — Why an Agent?
-        </p>
+        <ChapterTitle>07 / Why an Agent?</ChapterTitle>
         <h2 className="m-0 text-[clamp(30px,4.3vw,48px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-          Why not just another dashboard?
+          Why not another dashboard?
         </h2>
         <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          A dashboard could expose data, but it could not dynamically interpret a purchasing goal, gather the right context, resolve missing inputs, coordinate calculations, and decide what required human attention.
+          A dashboard could show the six inputs, but the buyer would still have to reconcile them, apply supplier rules, and calculate the order.
         </p>
-        <div className="flex max-w-[820px] flex-col gap-2">
-          <p className="m-0 text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            The need was not simply to see more information.
-          </p>
-          <p className="m-0 text-[20px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
-            It was to turn a goal into a reviewable purchasing plan.
-          </p>
-        </div>
       </div>
 
-      <blockquote className="m-0 border-l-[5px] bg-[#e9eef8] px-[clamp(22px,3vw,32px)] py-[clamp(22px,3vw,30px)]" style={{ borderColor: accent }}>
-        <p className="m-0 text-[clamp(22px,3vw,34px)] font-bold leading-[1.35] text-[#161616]" style={bodyStyle}>
-          “Don&apos;t just give me the data. Help me calculate a reasonable purchasing plan from it.”
+      <blockquote className="relative m-0 max-w-[920px] py-3 pl-[clamp(48px,7vw,78px)]">
+        <span
+          className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none"
+          style={{ ...bodyStyle, color: accent }}
+          aria-hidden
+        >
+          “
+        </span>
+        <p className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
+          Don&apos;t just give me the data. Help me calculate a reasonable purchasing plan from it.
         </p>
       </blockquote>
 
@@ -531,7 +333,7 @@ function DesignResultEvidenceBackedAgency() {
         <div className="h-px bg-[#d8d8d8]" />
         <div className="flex flex-col gap-3">
           <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>HMW</p>
-          <h2 className="m-0 max-w-[950px] text-[clamp(28px,4vw,46px)] font-bold leading-[1.15] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
+          <h2 className="m-0 max-w-[900px] text-[clamp(23px,3.2vw,36px)] font-bold leading-[1.22] tracking-[-0.018em] text-[#161616]" style={bodyStyle}>
             How might we reduce the buyer&apos;s{' '}
             <span style={{ color: accent }}>cognitive workload</span>
             {' '}without removing their{' '}
@@ -540,113 +342,41 @@ function DesignResultEvidenceBackedAgency() {
         </div>
       </div>
 
-      <div className="mt-[clamp(72px,10vw,128px)] flex flex-col gap-6 bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="08 / Making the System Agent-ready">
-        <p className="m-0 text-[12px] font-bold uppercase leading-none text-[#7fa2ff]" style={bodyStyle}>
-          08 — Making the System Agent-ready
-        </p>
+      <div className="mt-[clamp(72px,10vw,128px)] flex flex-col gap-8 bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="08 / Agent-ready System">
+        <ChapterTitle inverse>08 / Agent-ready System</ChapterTitle>
         <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
-          The Agent needed a context layer—not just access to tables.
+          The Agent needed structured context and a defined role.
         </h2>
-        <p className="m-0 max-w-[880px] text-[20px] font-bold leading-[1.5] text-white" style={bodyStyle}>
-          Before designing the Agent, I first had to redesign the business system it would reason over.
+        <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
+          Operational records were the foundation. Supplier constraints, historical evidence, and human authority made those records usable for decisions.
         </p>
 
-        <div className="grid gap-px bg-white/20 lg:grid-cols-2">
-          <div className="bg-[#202020] p-5">
-            <p className="m-0 text-[10px] font-bold uppercase tracking-[0.04em] text-[#9f9f9f]" style={bodyStyle}>What the system already knew</p>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              {['Sales', 'Inventory', 'Purchase', 'Receiving'].map((context) => (
-                <div key={context} className="border border-white/15 px-3 py-3 text-[12px] font-bold text-white" style={bodyStyle}>{context}</div>
-              ))}
-            </div>
-          </div>
-          <div className="bg-[#202020] p-5">
-            <p className="m-0 text-[10px] font-bold uppercase tracking-[0.04em] text-[#7fa2ff]" style={bodyStyle}>What the Agent also needed</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {['Supplier rules', 'Lead-time history', 'MOQ', 'Price changes', 'Seasonality', 'Promotions', 'Delivery reliability', 'User overrides'].map((context) => (
-                <span key={context} className="border border-[#526cae] bg-[#27304a] px-3 py-2 text-[11px] font-bold text-white" style={bodyStyle}>{context}</span>
-              ))}
-            </div>
-          </div>
-        </div>
+        <AgentReadyContextDiagram />
 
-        <div className="mx-auto flex w-full max-w-[1080px] flex-col gap-4">
-          <p className="m-0 text-center text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
-            From operational records to Agent-readable business context
-          </p>
-          <div className="grid grid-cols-2 gap-px bg-white/20 sm:grid-cols-3 lg:grid-cols-6">
+        <div>
+          <p className="m-0 mb-4 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>How the Agent participates</p>
+          <div className="grid border-y border-white/20 md:grid-cols-3">
             {[
-              {
-                title: 'Manual Operations',
-                body: 'Human reconstructs context.',
-              },
-              {
-                title: 'Structured Data',
-                body: 'Core business objects are connected.',
-              },
-              {
-                title: 'Traceable States',
-                body: 'Purchases preserve status and history.',
-              },
-              {
-                title: 'Historical Evidence',
-                body: 'Past decisions and outcomes become queryable.',
-              },
-              {
-                title: 'Agent-readable Context',
-                body: 'Rules, evidence, and decision signals become usable by the Agent.',
-              },
-              {
-                title: 'Procurement Agent',
-                body: 'The system can now reason across the purchasing lifecycle.',
-              },
-            ].map((stage, index, stages) => (
-              <div
-                key={stage.title}
-                className="relative flex min-h-[210px] flex-col justify-between gap-6 border px-4 py-4"
-                style={{ background: index === stages.length - 1 ? accent : '#202020', borderColor: index === stages.length - 1 ? accent : 'rgb(255 255 255 / 0.2)' }}
-              >
-                <span className="text-[10px] font-bold" style={{ ...bodyStyle, color: index === stages.length - 1 ? 'rgb(255 255 255 / 0.72)' : '#7fa2ff' }}>{String(index + 1).padStart(2, '0')}</span>
+              { title: 'Interpret intent', body: 'Understand the buyer&apos;s goal.' },
+              { title: 'Calculate from evidence', body: 'Apply data and supplier rules.' },
+              { title: 'Surface exceptions', body: 'Pause when human judgment is required.' },
+            ].map((responsibility, index) => (
+              <div key={responsibility.title} className="flex min-h-[132px] flex-col gap-4 border-b border-white/20 py-5 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0">
+                <span className="text-[10px] font-bold text-[#777]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</span>
                 <div className="flex flex-col gap-2">
-                  <span className="text-[13px] font-bold leading-[1.35] text-white" style={bodyStyle}>{stage.title}</span>
-                  <span className="text-[11px] font-normal leading-[1.5]" style={{ ...bodyStyle, color: index === stages.length - 1 ? 'rgb(255 255 255 / 0.82)' : '#b8b8b8' }}>{stage.body}</span>
+                  <p className="m-0 text-[15px] font-bold text-white" style={bodyStyle}>{responsibility.title}</p>
+                  <p className="m-0 text-[12px] font-normal leading-[1.5] text-[#b8b8b8]" style={bodyStyle}>{responsibility.body}</p>
                 </div>
-                {index < stages.length - 1 && (
-                  <span className="absolute -right-[8px] top-1/2 z-10 hidden -translate-y-1/2 text-[17px] font-bold text-[#7fa2ff] lg:block" aria-hidden>→</span>
-                )}
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="mt-[clamp(72px,10vw,128px)] flex flex-col gap-10" data-case-nav-label="09 / How the Agent Participates">
-        <div className="flex max-w-[940px] flex-col gap-5">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            09 — How the Agent Participates
-          </p>
-          <h3 className="m-0 max-w-[900px] text-[clamp(24px,3.2vw,34px)] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>
-            The Agent does not replace the workflow. It changes how a decision is formed.
-          </h3>
-          <p className="m-0 max-w-[860px] text-[16px] font-normal leading-[1.55] text-[#3b3b3b]" style={bodyStyle}>
-            I designed agency around three responsibilities: interpret the buyer&apos;s goal, build the recommendation from evidence, and surface exceptions that require human action.
+        <div className="border-t border-[#7fa2ff] pt-6">
+          <p className="m-0 text-[18px] font-bold leading-[1.5] text-white" style={bodyStyle}>
+            Interpret intent. Calculate deterministically. Show evidence. Stop for human approval.
           </p>
         </div>
-
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <StatChip index="01" label="Interpret the goal" body="What does one month of supply mean in this context?" />
-        <StatChip index="02" label="Build and calculate the plan" body="Retrieve sales, stock, incoming inventory, and supplier constraints." highlighted />
-        <StatChip index="03" label="Surface exceptions for human action" body="Flag price changes, shortages, payment risk, and approval needs." />
-      </div>
-
-      <div className="flex flex-col gap-5 bg-[#2155e8] p-[clamp(28px,4vw,46px)]">
-        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.06em] text-white/70" style={bodyStyle}>
-          AX Design Principle
-        </p>
-        <p className="m-0 max-w-[1000px] text-[clamp(25px,3.5vw,40px)] font-bold leading-[1.2] tracking-[-0.02em] text-white" style={bodyStyle}>
-          Agency = interpreted intent + deterministic calculation + visible evidence + reversible edits + explicit human gates.
-        </p>
-      </div>
       </div>
     </div>
   );
@@ -668,7 +398,7 @@ const agentUxIterations = [
       'Used the left workspace as a live purchasing canvas while the Agent coordinated work on the right.',
       'Exposed the current Agent stage with expandable execution details.',
     ],
-    principle: 'Conversation should initiate and structure real work—not merely explain the interface.',
+    principle: 'Conversation should initiate and structure real work, not merely explain the interface.',
   },
   {
     index: '02',
@@ -695,7 +425,7 @@ const agentUxIterations = [
     initial: 'Early interactions implied that the Agent or platform could complete the supplier order.',
     learning: 'Formal ordering happens externally through email, WhatsApp, or supplier channels. It creates real financial and supplier commitments, so the business would not delegate it to an Agent.',
     changes: [
-      'Defined a strict boundary: the Agent can analyse, prepare, compare, and verify—but cannot place the formal order.',
+      'Defined a strict boundary: the Agent can analyse, prepare, compare, and verify, but cannot place the formal order.',
       'Added export of supplier-facing purchase requests in the supplier’s language.',
       'Removed prices from exported supplier documents.',
       'Allowed supplier confirmations to be uploaded before the order was recorded as placed.',
@@ -722,7 +452,7 @@ const agentUxIterations = [
       'Preserved each supplier confirmation version as separate evidence.',
       'Allowed edits continuously until the order was formally placed.',
     ],
-    principle: 'Escalation should emerge from evidence and risk—not from a parallel workflow created too early.',
+    principle: 'Escalation should emerge from evidence and risk, not from a parallel workflow created too early.',
   },
   {
     index: '05',
@@ -734,7 +464,7 @@ const agentUxIterations = [
     changes: [
       'Compared ordered, DDT, and actually received quantities for every SKU.',
       'Kept actual received quantity manually editable because it depends on physical counting.',
-      'Removed the redundant stock-in quantity—the accepted actual quantity becomes the inventory update.',
+      'Removed the redundant stock-in quantity. The accepted actual quantity becomes the inventory update.',
       'Added Do not stock in / Return for damaged, incorrect, or unwanted goods.',
       'Supported partial deliveries and remaining unshipped quantities.',
       'Allowed DDT upload both before and at receiving.',
@@ -743,17 +473,15 @@ const agentUxIterations = [
       'Recorded overrides and final outcomes as learning candidates.',
       'Required human confirmation before high-impact supplier rules entered long-term Agent memory.',
     ],
-    principle: 'Learning should come from the gap between recommendation, human decision, and real-world outcome—not from edits alone.',
+    principle: 'Learning should come from the gap between recommendation, human decision, and real-world outcome, not from edits alone.',
   },
 ];
 
 function AgentUxIterationsSection() {
   return (
     <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
-      <div className="flex flex-col gap-9" data-case-nav-label="15 / Agent UX Iterations">
-        <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-          15 — Agent UX Iterations
-        </p>
+      <div className="flex flex-col gap-9" data-case-nav-label="13 / Agent UX Iterations">
+        <ChapterTitle>13 / Agent UX Iterations</ChapterTitle>
         <div className="flex max-w-[980px] flex-col gap-5">
           <h2 className="m-0 text-[clamp(26px,3.6vw,40px)] font-bold leading-[1.15] text-[#161616]" style={bodyStyle}>
             The Agent became useful as its role became more specific.
@@ -797,10 +525,10 @@ function AgentUxIterationsSection() {
                     ))}
                   </div>
                 </div>
-                <blockquote className="m-0 border-l-[5px] border-[#2155e8] bg-[#161616] px-[clamp(20px,3vw,28px)] py-5 lg:col-span-2">
+                <div className="m-0 bg-[#161616] px-[clamp(20px,3vw,28px)] py-5 lg:col-span-2">
                   <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Design principle</p>
                   <p className="m-0 mt-3 text-[18px] font-bold leading-[1.5] text-white" style={bodyStyle}>{iteration.principle}</p>
-                </blockquote>
+                </div>
               </div>
             </details>
           ))}
@@ -808,9 +536,21 @@ function AgentUxIterationsSection() {
 
         <div className="bg-[#2155e8] p-[clamp(24px,4vw,40px)]">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>Iteration outcome</p>
-          <p className="m-0 mt-4 max-w-[1040px] text-[clamp(22px,3vw,34px)] font-bold leading-[1.3] text-white" style={bodyStyle}>
-            The experience evolved from “a chatbot beside a purchase form” into a stateful Agent that captures intent, produces one evidence-backed recommendation, supports reversible edits, pauses at human authority boundaries, reconciles real-world outcomes, and learns only from verified evidence.
-          </p>
+          <h3 className="m-0 mt-4 max-w-[880px] text-[clamp(24px,3.2vw,34px)] font-bold leading-[1.2] tracking-[-0.02em] text-white" style={bodyStyle}>
+            The Agent moved from explaining the workflow to coordinating it.
+          </h3>
+          <div className="mt-8 grid border-t border-white/30 md:grid-cols-3">
+            {[
+              { label: 'Initiate', body: 'Turn buyer intent into one evidence-backed recommendation.' },
+              { label: 'Control', body: 'Keep edits reversible and pause before human commitments.' },
+              { label: 'Learn', body: 'Reconcile actual outcomes and learn only after review.' },
+            ].map((outcome) => (
+              <div key={outcome.label} className="border-b border-white/30 py-5 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0">
+                <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>{outcome.label}</p>
+                <p className="m-0 mt-3 text-[15px] font-bold leading-[1.5] text-white" style={bodyStyle}>{outcome.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -821,7 +561,8 @@ const demoUrl = '/demos/procurement-agent/index.html';
 
 function InteractiveDemo() {
   return (
-    <div data-case-nav-label="00 / Interactive Demo">
+    <div className="flex flex-col gap-5" data-case-nav-label="00 / Interactive Demo">
+      <ChapterTitle>00 / Interactive Demo</ChapterTitle>
       <div className="hidden md:block">
         <ProcurementDemoEmbed src={demoUrl} title="Procurement Agent interactive demo" />
       </div>
@@ -859,16 +600,16 @@ export default function ProcurementAgentPage() {
       <CaseStudyHero
         accentColor={accent}
         title="AI Procurement Agent for DEF Beauty Supply"
-        subtitle="Designing an evidence-backed procurement agent that helps buyers decide what to purchase, how much to order, and why—while keeping critical decisions under human control."
+        subtitle="Evidence-backed purchasing decisions, with deterministic calculations, visible reasoning, and human control at every commitment."
         tags={['B2B SaaS', 'Enterprise UX', 'AX Design', 'Agent Workflow', 'Data Architecture']}
         aboutLabel="About DEF Beauty Supply"
-        about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts sales, inventory, procurement, receiving, and finance workflows were spread across disconnected systems and manual workarounds.\n\nI redesigned the core operational platform, then focused this case study on procurement—where a structured workflow became the foundation for an AI decision-support agent.'}
+        about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts purchasing work was fragmented across software, documents, messages, and spreadsheets. I redesigned the procurement lifecycle first, then built an AI decision-support layer on top of that traceable foundation.'}
         meta={[
           {
             label: 'Role',
             value: [
               'UX / AX Designer',
-              'End-to-end ownership across business research, workflow redesign, data modeling, Agent architecture, interaction design, LangGraph prototyping, and implementation.',
+              'End-to-end ownership across research, workflow and data modeling, Agent architecture, interaction design, LangGraph prototyping, and implementation.',
             ],
           },
           {
@@ -887,14 +628,15 @@ export default function ProcurementAgentPage() {
         visualAlt="DEF Beauty Supply purchase workspace with supplier purchase orders and an AI procurement agent panel."
         visualObjectPosition="center bottom"
         visualObjectFit="contain"
-        visualImageScale={1.52}
+        visualImageScale={1.42}
         visualTransformOrigin="center top"
-        visualTranslateY="10%"
+        visualTranslateY="5%"
         visualBackground="radial-gradient(circle at 78% 22%, rgb(83 118 255 / 0.3), transparent 28%), radial-gradient(circle at 18% 82%, rgb(33 85 232 / 0.22), transparent 34%), linear-gradient(135deg, #0b1020 0%, #111b38 48%, #071020 100%)"
-        visualHeight="clamp(320px, 48vw, 620px)"
         visualNavTone="light"
         compactTypography
+        titleFontSize="clamp(26px, 2.6vw, 40px)"
         wideDetails
+        tagRadius="0"
       />
 
       {/* overflow-x visible here so the demo stage can expand past the content column */}
@@ -902,9 +644,7 @@ export default function ProcurementAgentPage() {
         <InteractiveDemo />
 
         <div className="flex max-w-[1080px] flex-col gap-8" data-case-nav-label="01 / Context">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            01 — Context
-          </p>
+          <ChapterTitle>01 / Context</ChapterTitle>
           <h2 className="m-0 max-w-[950px] text-[clamp(32px,4.6vw,52px)] font-bold leading-[1.08] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
             Rebuilding a fragmented B2B beauty supply platform
           </h2>
@@ -922,47 +662,38 @@ export default function ProcurementAgentPage() {
 
       <section className="overflow-x-clip bg-white" style={sectionStyle}>
         <div className="flex max-w-[1080px] flex-col gap-9" data-case-nav-label="02 / Why I focused on procurement">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            02 — Why I focused on procurement
-          </p>
+          <ChapterTitle>02 / Why I focused on procurement</ChapterTitle>
+          <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
+            Where the procurement lifecycle broke
+          </h2>
 
-          <div className="bg-[#f4f4f4] p-[clamp(20px,3vw,30px)]">
-            <p className="m-0 mb-5 text-[11px] font-bold uppercase tracking-[0.04em]" style={{ ...bodyStyle, color: accent }}>
-              Business ecosystem
-            </p>
-            <div className="grid grid-cols-2 gap-px bg-[#d8d8d8] sm:grid-cols-4 lg:grid-cols-7">
-              {['Customer', 'WeChat Store', 'Sales Order', 'Inventory', 'Procurement', 'Receiving', 'Finance'].map((step, index, steps) => (
-                <div
-                  key={step}
-                  className="relative flex min-h-[78px] items-end justify-between gap-2 px-3 py-3"
-                  style={{ background: step === 'Procurement' ? accent : '#ffffff' }}
-                >
-                  <span className="text-[11px] font-bold leading-[1.3]" style={{ ...bodyStyle, color: step === 'Procurement' ? '#ffffff' : '#161616' }}>{step}</span>
-                  {step === 'Procurement' && <span className="text-[8px] font-bold uppercase text-white/70" style={bodyStyle}>Focus</span>}
-                  {index < steps.length - 1 && (
-                    <span className="absolute -right-[7px] top-1/2 z-10 hidden -translate-y-1/2 text-[15px] font-bold text-[#2155e8] lg:block" aria-hidden>→</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <p className="m-0 bg-[#e9eef8] px-[clamp(22px,3vw,32px)] py-5 text-[19px] font-bold leading-[1.45] text-[#161616]" style={bodyStyle}>
+          <p className="m-0 max-w-[900px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
             The business was not running on one system, but across several disconnected systems and manual workarounds.
           </p>
 
-          <p className="m-0 max-w-[1020px] border-l-[5px] px-[clamp(20px,3vw,30px)] py-2 text-[clamp(24px,3.4vw,38px)] font-bold leading-[1.25] tracking-[-0.02em] text-[#161616]" style={{ ...bodyStyle, borderColor: accent }}>
-            The platform could record inventory, but not the decision process that created it.
-          </p>
+          <div>
+            <EcosystemDiagram />
+          </div>
+
+          <blockquote className="relative m-0 max-w-[920px] py-3 pl-[clamp(48px,7vw,78px)]">
+            <span
+              className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none"
+              style={{ ...bodyStyle, color: accent }}
+              aria-hidden
+            >
+              “
+            </span>
+            <p className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
+              The platform could record inventory, but not the decision process that created it.
+            </p>
+          </blockquote>
         </div>
       </section>
 
       <section className="overflow-x-clip bg-white" style={sectionStyle}>
         <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Original Workflow">
+          <ChapterTitle>03 / Original Workflow</ChapterTitle>
           <div className="flex max-w-[820px] flex-col gap-5">
-            <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-              03 — Original Workflow
-            </p>
             <h2 className="m-0 text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
               Procurement existed across systems, not inside one
             </h2>
@@ -1012,20 +743,20 @@ export default function ProcurementAgentPage() {
                   ].map((item) => (
                     <div key={item.sentence}>
                       <span
-                        className="absolute top-0 w-px bg-[#ed5b2b]"
+                        className="absolute top-0 w-px bg-[#2155e8]"
                         style={{ left: item.left, height: `${item.top}px` }}
                         aria-hidden
                       />
                       <span
-                        className="absolute top-0 size-[7px] -translate-x-1/2 rounded-full bg-[#ed5b2b]"
+                        className="absolute top-0 size-[7px] -translate-x-1/2 rounded-full bg-[#2155e8]"
                         style={{ left: item.left }}
                         aria-hidden
                       />
                       <article
                         className="absolute flex min-h-[56px] w-[168px] -translate-x-1/2 items-center border px-3 py-2"
                         style={{
-                          background: item.primary ? '#ed5b2b' : '#2a1d19',
-                          borderColor: '#ed5b2b',
+                          background: item.primary ? '#2155e8' : '#172348',
+                          borderColor: '#2155e8',
                           left: item.left,
                           top: `${item.top}px`,
                         }}
@@ -1040,9 +771,8 @@ export default function ProcurementAgentPage() {
 
               </div>
             </div>
-          </div>
 
-          <div className="grid gap-px bg-[#ed5b2b] md:grid-cols-3">
+            <div className="mt-8 grid gap-px border-t border-[#2155e8] bg-[#2155e8] md:grid-cols-[1.1fr_0.9fr_1.2fr]">
             {[
               {
                 label: 'Fragmented data',
@@ -1057,8 +787,8 @@ export default function ProcurementAgentPage() {
                 body: 'Confirmation, DDT and received quantities had to be compared by hand.',
               },
             ].map((problem, index) => (
-              <article key={problem.label} className="flex min-h-[210px] flex-col gap-4 bg-[#161616] p-[clamp(22px,3vw,30px)]">
-                <p className="m-0 text-[11px] font-bold text-[#ff916d]" style={bodyStyle}>
+              <article key={problem.label} className="flex min-h-[180px] flex-col gap-4 bg-[#161616] p-[clamp(22px,3vw,30px)]">
+                <p className="m-0 text-[11px] font-bold text-[#7fa2ff]" style={bodyStyle}>
                   {String(index + 1).padStart(2, '0')}
                 </p>
                 <h3 className="m-0 text-[clamp(20px,2.2vw,26px)] font-bold leading-[1.25] text-white" style={bodyStyle}>
@@ -1069,16 +799,24 @@ export default function ProcurementAgentPage() {
                 </p>
               </article>
             ))}
+            </div>
           </div>
 
-          <div className="flex flex-col gap-4 border-l-[5px] bg-[#e9eef8] px-[clamp(22px,3vw,32px)] py-[clamp(22px,3vw,30px)]" style={{ borderColor: accent }}>
-            <p className="m-0 max-w-[920px] text-[19px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
+          <blockquote className="relative m-0 flex max-w-[960px] flex-col gap-3 py-3 pl-[clamp(48px,7vw,78px)]">
+            <span
+              className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none"
+              style={{ ...bodyStyle, color: accent }}
+              aria-hidden
+            >
+              “
+            </span>
+            <p className="m-0 max-w-[880px] text-[clamp(17px,1.8vw,20px)] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
               Procurement data existed at every step, but the system could not connect those records into one decision and fulfillment lifecycle.
             </p>
-            <p className="m-0 max-w-[920px] text-[clamp(22px,2.8vw,30px)] font-bold leading-[1.35]" style={{ ...bodyStyle, color: accent }}>
+            <p className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
               So before introducing AI, I first rebuilt procurement as a structured, traceable lifecycle.
             </p>
-          </div>
+          </blockquote>
         </div>
       </section>
 
@@ -1095,10 +833,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
-        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="10 / Designing the Procurement Agent">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            10 — Designing the Procurement Agent
-          </p>
+        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="09 / Designing the Procurement Agent">
+          <ChapterTitle>09 / Designing the Procurement Agent</ChapterTitle>
           <h2 className="m-0 max-w-[940px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
             The LLM interprets. The engine calculates. The buyer decides.
           </h2>
@@ -1106,74 +842,20 @@ export default function ProcurementAgentPage() {
             I separated probabilistic interpretation from deterministic quantity calculation, risk checking, and human authorization so every recommendation remained explainable and controllable.
           </p>
 
-          <div className="bg-[#161616] p-[clamp(22px,4vw,44px)]">
-            <p className="m-0 mb-6 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
-              Responsibility architecture
-            </p>
-            <div className="grid gap-4 lg:grid-cols-3">
-              {[
-                {
-                  role: 'LLM',
-                  statement: 'Interpret and coordinate',
-                  responsibilities: ['Understand intent', 'Clarify missing context', 'Choose tools', 'Explain results', 'Identify exceptions'],
-                  background: '#202020',
-                  border: 'rgb(255 255 255 / 0.2)',
-                  accentColor: '#7fa2ff',
-                },
-                {
-                  role: 'Deterministic Engine',
-                  statement: 'Quantity is computed, not generated.',
-                  responsibilities: [
-                    'Calculate demand',
-                    'Apply coverage period',
-                    'Account for lead time',
-                    'Subtract current and incoming inventory',
-                    'Apply MOQ and supplier constraints',
-                    'Check business thresholds',
-                  ],
-                  background: '#2155e8',
-                  border: '#2155e8',
-                  accentColor: 'rgb(255 255 255 / 0.72)',
-                },
-                {
-                  role: 'Buyer',
-                  statement: 'Own the purchasing decision',
-                  responsibilities: ['Review', 'Edit', 'Approve', 'Place order'],
-                  background: '#2a1d19',
-                  border: '#ed5b2b',
-                  accentColor: '#ff916d',
-                },
-              ].map((layer, index, layers) => (
-                <article key={layer.role} className="relative flex min-h-[320px] flex-col border p-[clamp(20px,3vw,28px)]" style={{ background: layer.background, borderColor: layer.border }}>
-                  <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: layer.accentColor }}>{layer.role}</p>
-                  <h3 className="m-0 mt-5 text-[clamp(22px,2.6vw,30px)] font-bold leading-[1.15] tracking-[-0.02em] text-white" style={bodyStyle}>{layer.statement}</h3>
-                  <div className="mt-auto flex flex-col gap-px bg-white/20">
-                    {layer.responsibilities.map((responsibility) => (
-                      <p key={responsibility} className="m-0 bg-black/15 px-4 py-3 text-[13px] font-bold text-white" style={bodyStyle}>{responsibility}</p>
-                    ))}
-                  </div>
-                  {index < layers.length - 1 && (
-                    <span className="absolute -right-[18px] top-1/2 z-10 hidden -translate-y-1/2 text-[22px] font-bold text-[#7fa2ff] lg:block" aria-hidden>→</span>
-                  )}
-                </article>
-              ))}
-            </div>
-          </div>
+          <ResponsibilityArchitectureDiagram />
 
           <div className="border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,32px)] py-6">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>Rationale</p>
             <p className="m-0 mt-3 max-w-[960px] text-[18px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
-              Quantity affects cash, inventory risk, and supplier commitments, so the recommendation must be reproducible from business inputs—not generated probabilistically.
+              Quantity affects cash, inventory risk, and supplier commitments, so the recommendation must be reproducible from business inputs, not generated probabilistically.
             </p>
           </div>
         </div>
       </section>
 
       <section className="overflow-x-clip bg-white" style={sectionStyle}>
-        <div className="flex flex-col gap-9" data-case-nav-label="11 / Executable Agent Workflow">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            11 — Executable Agent Workflow
-          </p>
+        <div className="flex flex-col gap-9" data-case-nav-label="10 / Executable Agent Workflow">
+          <ChapterTitle>10 / Executable Agent Workflow</ChapterTitle>
           <h2 className="m-0 max-w-[980px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             From a natural-language request to a human-recorded order.
           </h2>
@@ -1200,18 +882,16 @@ export default function ProcurementAgentPage() {
               Implementation note
             </p>
             <p className="m-0 mt-2 text-[15px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
-              LangGraph manages the stateful workflow, tool execution, human approval gates and task recovery—from prototype through production.
+              LangGraph manages the stateful workflow, tool execution, human approval gates and task recovery from prototype through production.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="overflow-x-clip bg-[#f5e8e7]" style={sectionStyle}>
-        <div className="flex flex-col gap-10" data-case-nav-label="12 / Human Gate">
+      <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
+        <div className="flex flex-col gap-10" data-case-nav-label="11 / Human Gate">
+          <ChapterTitle>11 / Human Gate</ChapterTitle>
           <div className="flex flex-col gap-[18px]">
-            <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: '#9c2e2e' }}>
-              12 — Human Gate
-            </p>
             <h2 className="m-0 max-w-[620px] text-[clamp(28px,4vw,40px)] font-bold leading-[1.13] text-[#161616]" style={bodyStyle}>
               The Agent cannot place an order.
             </h2>
@@ -1220,7 +900,7 @@ export default function ProcurementAgentPage() {
             </p>
           </div>
 
-          <div className="grid gap-px bg-[#d8b9b6] lg:grid-cols-3">
+          <div className="grid gap-px bg-[#b8c6ea] lg:grid-cols-[0.9fr_1.15fr_0.95fr]">
             {[
               {
                 label: 'Agent can',
@@ -1244,7 +924,7 @@ export default function ProcurementAgentPage() {
                   'Recording the official order',
                 ],
                 background: '#161616',
-                labelColor: '#ff916d',
+                labelColor: '#9cb3ff',
               },
               {
                 label: 'Approval examples',
@@ -1255,7 +935,7 @@ export default function ProcurementAgentPage() {
                   'Significant price or quantity changes',
                 ],
                 background: '#ffffff',
-                labelColor: '#9c2e2e',
+                labelColor: accent,
               },
             ].map((boundary) => (
               <article key={boundary.label} className="flex min-h-[300px] flex-col gap-5 p-[clamp(20px,3vw,28px)]" style={{ background: boundary.background }}>
@@ -1277,7 +957,7 @@ export default function ProcurementAgentPage() {
             ))}
           </div>
 
-          <div className="grid gap-px bg-[#d8b9b6] sm:grid-cols-5">
+          <div className="grid gap-px bg-[#b8c6ea] sm:grid-cols-5">
             {[
               { label: 'Evidence', body: 'Show the source behind every recommendation.' },
               { label: 'Confidence', body: 'Signal uncertainty without false precision.' },
@@ -1286,7 +966,7 @@ export default function ProcurementAgentPage() {
               { label: 'Approval', body: 'Bind authorization to the final quantity and price.' },
             ].map((principle) => (
               <div key={principle.label} className="flex min-h-[150px] flex-col gap-3 bg-white p-4">
-                <p className="m-0 text-[12px] font-bold text-[#9c2e2e]" style={bodyStyle}>{principle.label}</p>
+                <p className="m-0 text-[12px] font-bold text-[#2155e8]" style={bodyStyle}>{principle.label}</p>
                 <p className="m-0 text-[12px] font-normal leading-[1.5] text-[#555]" style={bodyStyle}>{principle.body}</p>
               </div>
             ))}
@@ -1294,109 +974,44 @@ export default function ProcurementAgentPage() {
         </div>
       </section>
 
-      <section className="overflow-x-clip bg-[#161616]" style={sectionStyle}>
-        <div className="flex flex-col gap-9" data-case-nav-label="13 / Closing the Loop">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none text-[#7fa2ff]" style={bodyStyle}>
-            13 — Closing the Loop
-          </p>
+      <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
+        <div className="flex flex-col gap-9 bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="12 / Closing the Loop">
+          <ChapterTitle inverse>12 / Closing the Loop</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-white" style={bodyStyle}>
-            A recommendation only becomes useful when its outcome returns to the system.
+            Every outcome becomes evidence for the next purchasing decision.
           </h2>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
-            The purchase plan remains connected to supplier commitment, delivery evidence and the goods actually received—so the system can explain what changed after approval.
+            The lifecycle connects recommendation, supplier commitment, delivery, receiving, and the resulting variance.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 border border-white/20 bg-[#202020] px-5 py-4">
-            <span className="text-[11px] font-bold text-[#7fa2ff]" style={bodyStyle}>MNP · SKU 431001</span>
-            <span className="text-[13px] font-bold text-white" style={bodyStyle}>Agent 24</span>
-            <span className="text-[#7fa2ff]" aria-hidden>→</span>
-            <span className="text-[13px] font-bold text-white" style={bodyStyle}>Buyer 36</span>
-          </div>
+          <ProcurementLearningLoop />
 
-          <div className="grid gap-px bg-[#4a4a4a] md:grid-cols-5">
-            {[
-              { label: 'Supplier Confirmation', value: '30', body: 'Supplier commits below the buyer request.' },
-              { label: 'DDT', value: '30', body: 'Shipment document matches the confirmation.' },
-              { label: 'Receiving', value: '33', body: 'Warehouse records the physical quantity.' },
-              { label: 'Variance', value: '+3', body: 'Received compared with the DDT.' },
-              { label: 'Outcome', value: 'Over-delivered', body: 'The discrepancy becomes future evidence.' },
-            ].map((step, index) => (
-              <div key={step.label} className="relative flex min-h-[170px] flex-col gap-4 bg-[#202020] p-5">
-                <p className="m-0 text-[11px] font-bold text-[#7fa2ff]" style={bodyStyle}>
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <p className="m-0 text-[16px] font-bold leading-[1.25] text-white" style={bodyStyle}>
-                  {step.label}
-                </p>
-                <p className="m-0 text-[clamp(22px,2.8vw,30px)] font-bold leading-none text-white" style={bodyStyle}>
-                  {step.value}
-                </p>
-                <p className="m-0 text-[12px] font-normal leading-[1.5] text-[#bdbdbd]" style={bodyStyle}>
-                  {step.body}
-                </p>
-                {index < 4 && (
-                  <span className="absolute -right-[7px] top-1/2 z-10 hidden -translate-y-1/2 text-[18px] font-bold text-[#7fa2ff] md:block">
-                    →
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <p className="m-0 max-w-[920px] text-[20px] font-bold leading-[1.4] text-white" style={bodyStyle}>
-            The lifecycle I created in Phase 1 became the evidence layer the Agent needed in Phase 2.
+          <p className="m-0 max-w-[920px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
+            Learn keeps the recommendation, buyer override, reason, and real-world outcome as separate evidence. It then creates a learning candidate for human review before any supplier rule or planning assumption is added to Agent memory.
           </p>
+
+          <div className="border-l-[4px] border-[#7fa2ff] pl-5">
+            <p className="m-0 max-w-[920px] text-[20px] font-bold leading-[1.4] text-white" style={bodyStyle}>
+              Corrections become governed learning signals, not instant memory updates.
+            </p>
+          </div>
         </div>
-      </section>
-
-      <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
-        <div className="flex flex-col gap-9" data-case-nav-label="14 / Learning">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            14 — Learning
-          </p>
-          <h2 className="m-0 max-w-[900px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
-            Corrections become governed learning signals—not instant truth.
-          </h2>
-          <p className="m-0 max-w-[900px] text-[17px] font-normal leading-[1.53] text-[#3b3b3b]" style={bodyStyle}>
-            The system preserves the buyer&apos;s correction, the reason behind it, and the later business outcome as separate evidence.
-          </p>
-
-          <div className="grid gap-px bg-[#d6d6d6] sm:grid-cols-4">
-            {[
-              { label: 'Agent recommendation', value: '24', body: 'Calculated from sales, stock, and lead time.' },
-              { label: 'Buyer override', value: '36', body: 'Reason: upcoming MNP promotion.' },
-              { label: 'Outcome evidence', value: 'Validated', body: 'Actual sell-through supports the higher quantity.' },
-              { label: 'Learning candidate', value: 'Review', body: 'Propose higher promotional coverage for this SKU.' },
-            ].map((step, index) => (
-              <div key={step.label} className="relative flex min-h-[180px] flex-col gap-3 bg-white p-5">
-                <p className="m-0 text-[11px] font-bold" style={{ ...bodyStyle, color: accent }}>
-                  {String(index + 1).padStart(2, '0')}
-                </p>
-                <p className="m-0 text-[15px] font-bold text-[#161616]" style={bodyStyle}>{step.label}</p>
-                <p className="m-0 text-[clamp(22px,2.6vw,30px)] font-bold leading-none" style={{ ...bodyStyle, color: accent }}>{step.value}</p>
-                <p className="m-0 mt-auto text-[12px] font-normal leading-[1.5] text-[#555]" style={bodyStyle}>{step.body}</p>
-                {index < 3 && <span className="absolute -right-[7px] top-1/2 z-10 hidden -translate-y-1/2 text-[18px] font-bold text-[#2155e8] sm:block" aria-hidden>→</span>}
-              </div>
-            ))}
-          </div>
-
-          <p className="m-0 border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,30px)] py-5 text-[19px] font-bold leading-[1.45] text-[#161616]" style={bodyStyle}>
-            This becomes a learning candidate, not an automatic memory update.
-          </p>
-
+        <div className="mt-[clamp(32px,5vw,56px)] flex flex-col gap-6">
           <p className="m-0 text-[11px] font-bold text-[#777]" style={bodyStyle}>
             SUPPORTING WORKSPACE + SEMANTIC SYSTEM
           </p>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,500px)_1fr]">
-            <div className="flex flex-col gap-[18px] bg-white p-6">
-              <p className="m-0 text-[11px] font-bold text-[#777]" style={bodyStyle}>
-                INFORMATION ARCHITECTURE
-              </p>
-              <p className="m-0 text-[24px] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>
-                Procurement Workspace
-              </p>
-              <div className="flex flex-col gap-2">
+          <div className="grid border-y border-[#cfcfcf] lg:grid-cols-[0.92fr_1.08fr]">
+            <article className="py-[clamp(28px,4vw,40px)] lg:pr-[clamp(28px,4vw,48px)]">
+              <div className="mb-6 flex flex-col gap-2">
+                <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
+                  Information architecture
+                </p>
+                <h3 className="m-0 text-[clamp(22px,2.8vw,28px)] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>
+                  Procurement Workspace
+                </h3>
+              </div>
+              <div className="flex flex-col">
                 {[
                   { label: 'ALL ORDERS', body: 'Cards across draft, placed, received and cancelled' },
                   { label: 'PURCHASE PLAN', body: 'Editable optimal proposal grouped by SPU', highlighted: true },
@@ -1407,49 +1022,49 @@ export default function ProcurementAgentPage() {
                 ].map((item, index) => (
                   <div
                     key={item.label}
-                    className="flex gap-[14px] py-3 pl-[14px]"
-                    style={{ background: item.highlighted ? '#e9eef8' : '#f4f4f4' }}
+                    className="flex gap-4 border-t border-[#d8d8d8] px-3 py-[14px]"
+                    style={{ background: item.highlighted ? '#e9eef8' : 'transparent', borderLeft: item.highlighted ? `3px solid ${accent}` : '3px solid transparent' }}
                   >
-                    <p className="m-0 shrink-0 text-[10px] font-bold" style={{ ...bodyStyle, color: item.highlighted ? accent : '#777' }}>
+                    <p className="m-0 w-6 shrink-0 text-[10px] font-bold" style={{ ...bodyStyle, color: item.highlighted ? accent : '#777' }}>
                       {String(index + 1).padStart(2, '0')}
                     </p>
-                    <div className="flex flex-col gap-[3px]">
-                      <p className="m-0 text-[11px] font-bold text-[#161616]" style={bodyStyle}>
+                    <div className="flex flex-col gap-1">
+                      <p className="m-0 text-[12px] font-bold text-[#161616]" style={bodyStyle}>
                         {item.label}
                       </p>
-                      <p className="m-0 text-[10px] font-normal text-[#3b3b3b]" style={bodyStyle}>
+                      <p className="m-0 text-[11px] font-normal leading-[1.45] text-[#555]" style={bodyStyle}>
                         {item.body}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </article>
 
-            <div className="flex flex-col gap-[18px] bg-white p-6">
-              <p className="m-0 text-[11px] font-bold text-[#777]" style={bodyStyle}>
-                AGENT STATE SEMANTICS
+            <article className="border-t border-[#cfcfcf] py-[clamp(28px,4vw,40px)] lg:border-l lg:border-t-0 lg:pl-[clamp(28px,4vw,48px)]">
+              <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
+                Agent state semantics
               </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+              <div className="mt-5 flex flex-wrap gap-2">
                 {[
                   { label: 'RULE', bg: '#e9eef8', color: accent },
-                  { label: 'OBSERVATION', bg: '#f4f4f4', color: '#3b3b3b' },
+                  { label: 'OBSERVATION', bg: '#e5e5e5', color: '#3b3b3b' },
                   { label: 'SUGGESTION', bg: '#e8f3ec', color: '#208a4b' },
                   { label: 'RISK', bg: '#f5e8e7', color: '#9c2e2e' },
                   { label: 'APPROVAL', bg: '#f6f0df', color: '#8a6500' },
                 ].map((token) => (
-                  <div key={token.label} className="flex min-h-[54px] items-center px-[10px]" style={{ background: token.bg }}>
-                    <p className="m-0 text-[9px] font-bold" style={{ ...bodyStyle, color: token.color }}>
+                  <div key={token.label} className="flex h-8 items-center px-3" style={{ background: token.bg }}>
+                    <p className="m-0 text-[9px] font-bold tracking-[0.02em]" style={{ ...bodyStyle, color: token.color }}>
                       {token.label}
                     </p>
                   </div>
                 ))}
               </div>
 
-              <p className="m-0 text-[11px] font-bold text-[#777]" style={bodyStyle}>
-                CORE AGENT COMPONENTS
+              <p className="m-0 mt-8 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
+                Core Agent components
               </p>
-              <div className="grid grid-cols-1 gap-[10px] sm:grid-cols-2">
+              <div className="mt-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
                 {[
                   { name: 'KnowledgeBadge', body: 'Source and freshness' },
                   { name: 'ConfidenceIndicator', body: 'Certainty without false precision' },
@@ -1460,25 +1075,25 @@ export default function ProcurementAgentPage() {
                   { name: 'LearningCandidateCard', body: 'Review before memory update' },
                   { name: 'AgentActionFooter', body: 'Human action at the right moment' },
                 ].map((component) => (
-                  <div key={component.name} className="flex min-h-[58px] flex-col gap-1 bg-[#f4f4f4] pl-3 pt-[9px]">
-                    <p className="m-0 text-[11px] font-bold text-[#161616]" style={bodyStyle}>
+                  <div key={component.name} className="flex min-h-[64px] flex-col gap-1 border-t border-[#d8d8d8] py-3">
+                    <p className="m-0 text-[12px] font-bold text-[#161616]" style={bodyStyle}>
                       {component.name}
                     </p>
-                    <p className="m-0 text-[10px] font-normal text-[#777]" style={bodyStyle}>
+                    <p className="m-0 text-[11px] font-normal leading-[1.4] text-[#777]" style={bodyStyle}>
                       {component.body}
                     </p>
                   </div>
                 ))}
               </div>
-            </div>
+            </article>
           </div>
 
-          <div className="flex flex-col gap-3 bg-[#161616] px-[22px] py-6 sm:flex-row sm:items-center sm:gap-6">
-            <p className="m-0 shrink-0 text-[11px] font-bold" style={{ ...bodyStyle, color: '#7fa2ff' }}>
+          <div className="flex flex-col gap-3 border-l-[4px] border-[#2155e8] bg-white px-5 py-5 sm:flex-row sm:items-baseline sm:gap-6">
+            <p className="m-0 shrink-0 text-[10px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>
               CONSISTENCY RULE
             </p>
-            <p className="m-0 text-[19px] font-bold leading-[25px] text-white" style={bodyStyle}>
-              Business status, Agent state and human responsibility are different layers—and never share one ambiguous color.
+            <p className="m-0 max-w-[900px] text-[17px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
+              Business status, Agent state and human responsibility are different layers and never share one ambiguous color.
             </p>
           </div>
         </div>
@@ -1487,10 +1102,8 @@ export default function ProcurementAgentPage() {
       <AgentUxIterationsSection />
 
       <section className="overflow-x-clip bg-white" style={sectionStyle}>
-        <div className="flex flex-col gap-9" data-case-nav-label="16 / Validation">
-          <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-            16 — Validation
-          </p>
+        <div className="flex flex-col gap-9" data-case-nav-label="14 / Validation">
+          <ChapterTitle>14 / Validation</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             Validate safety and comprehension before speed.
           </h2>
@@ -1584,11 +1197,9 @@ export default function ProcurementAgentPage() {
         </div>
       </section>
 
-      <section className="overflow-x-clip bg-[#161616]" style={sectionStyle}>
-        <div className="flex max-w-[1080px] flex-col gap-6" data-case-nav-label="17 / Results & Measurement">
-            <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: '#7fa2ff' }}>
-              17 — Results &amp; Measurement
-            </p>
+      <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
+        <div className="flex max-w-[1080px] flex-col gap-6 bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="15 / Results & Measurement">
+            <ChapterTitle inverse>15 / Results & Measurement</ChapterTitle>
             <h2 className="m-0 max-w-[520px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.14] text-white" style={bodyStyle}>
               A functional Agent-ready procurement MVP.
             </h2>
@@ -1638,10 +1249,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section className="overflow-x-clip bg-white" style={sectionStyle}>
-          <div className="flex max-w-[900px] flex-col gap-[22px]" data-case-nav-label="18 / Reflection">
-            <p className="m-0 text-[12px] font-bold uppercase leading-none" style={{ ...bodyStyle, color: accent }}>
-              18 — Reflection
-            </p>
+          <div className="flex max-w-[900px] flex-col gap-[22px]" data-case-nav-label="16 / Reflection">
+            <ChapterTitle>16 / Reflection</ChapterTitle>
             <h2 className="m-0 max-w-[760px] text-[clamp(30px,4vw,44px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
               Designing an Agent meant redesigning the system it reasons over.
             </h2>
@@ -1653,8 +1262,8 @@ export default function ProcurementAgentPage() {
                 I ended up redesigning the data model, business states, decision logic, evidence relationships, and responsibility boundaries that made AI trustworthy enough to participate at all.
               </p>
             </div>
-            <div className="mt-auto border-l-[5px] border-[#ed5b2b] bg-[#f4f4f4] px-5 py-5">
-              <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#9c2e2e]" style={bodyStyle}>
+            <div className="mt-auto border-l-[5px] border-[#2155e8] bg-[#f4f4f4] px-5 py-5">
+              <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
                 Final reflection
               </p>
               <p className="m-0 mt-3 max-w-[760px] text-[18px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>

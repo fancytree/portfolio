@@ -136,12 +136,12 @@ export default function ProcurementDemoEmbed({ src, title }: { src: string; titl
             maxWidth: 'var(--demo-viewport-width)',
             // Peak height leaves the 48px header plus a 12px gap above and below.
             height: 'calc(560px + (100svh - 72px - 560px) * var(--demo-progress))',
-            borderRadius: 'calc(16px - 16px * var(--demo-progress))',
+            borderRadius: 0,
             boxShadow:
               '0 calc(22px * (1 - var(--demo-progress))) calc(58px * (1 - var(--demo-progress))) rgb(10 10 10 / calc(0.15 * (1 - var(--demo-progress))))',
           } as React.CSSProperties}
         >
-          <iframe title={title} src={src} loading="lazy" className="block h-full w-full border-0" />
+          <iframe title={title} src={src} loading="lazy" className="block h-full w-full border-0 bg-white" />
         </div>
       </div>
     </div>

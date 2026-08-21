@@ -344,7 +344,7 @@ export default function PortfolioAgentPanel({
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-[#2f6bff] opacity-60" />
                 <span className="relative inline-flex size-1.5 rounded-full bg-[#2f6bff]" />
               </span>
-              Sample request ready — click Send to begin
+              Sample request ready - click Send to begin
             </p>
           ) : null}
           {/* 组合输入区：上文本、下附件+发送 */}

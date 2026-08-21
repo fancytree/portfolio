@@ -116,7 +116,7 @@ export const CONFIRMED_LINES: DemoLine[] = [
     qty: 0,
     confirmedPrice: null,
     risk: 'missing',
-    alert: 'Missing on confirmation — possible stockout',
+    alert: 'Missing on confirmation - possible stockout',
   },
   { ...BASE_LINES[5], confirmedPrice: 10.2, risk: 'price' },
   { ...BASE_LINES[6], confirmedPrice: 6.5, risk: 'price' },
@@ -388,7 +388,7 @@ export function summarizeOpenRemainder(lines: ReceivingLine[]): {
     const pcs = untouched.reduce((sum, line) => sum + line.ordered, 0);
     const skuList = untouched.map((line) => line.sku).join(', ');
     bullets.push(
-      `${untouched.length} SKUs still fully open (${skuList}) · ${pcs} pcs — expect on a later batch.`,
+      `${untouched.length} SKUs still fully open (${skuList}) · ${pcs} pcs - expect on a later batch.`,
     );
   }
 
@@ -444,13 +444,13 @@ export function buildDdtMatchReport(state: DemoState, ddtLabel: string): DdtMatc
     bullets.push(
       missingOnDdt.length === 1
         ? `${skuList} · not on this DDT (still open ${openPcs}).`
-        : `${missingOnDdt.length} SKUs not on this DDT (${skuList}) · open ${openPcs} pcs — expect on a later batch.`,
+        : `${missingOnDdt.length} SKUs not on this DDT (${skuList}) · open ${openPcs} pcs - expect on a later batch.`,
     );
   }
   for (const line of giftLines) {
     if (line.disposition === 'hold') {
       bullets.push(
-        `${line.sku} · supplier promo / gift on DDT (${line.ddt} pcs) — on hold until you accept or return it.`,
+        `${line.sku} · supplier promo / gift on DDT (${line.ddt} pcs) - on hold until you accept or return it.`,
       );
     } else {
       bullets.push(
@@ -460,7 +460,7 @@ export function buildDdtMatchReport(state: DemoState, ddtLabel: string): DdtMatc
   }
   for (const line of holdLines) {
     if (giftLines.some((g) => g.sku === line.sku)) continue;
-    bullets.push(`${line.sku} · on hold — accept as gift or return before Confirm.`);
+    bullets.push(`${line.sku} · on hold - accept as gift or return before Confirm.`);
   }
 
   if (bullets.length === 1) {
@@ -615,18 +615,18 @@ export const MNP_SUPPLIER_RULES = {
 export const DEMO_COVERAGE_DAYS = 30;
 
 export const OUTCOME_ROWS: OutcomeRow[] = [
-  { sku: '370102', name: 'Reinforced bonder 14 ml', ordered: 90, sold: 88, remaining: 14, note: 'Qty cut on confirmation; demand held — coverage looked right' },
+  { sku: '370102', name: 'Reinforced bonder 14 ml', ordered: 90, sold: 88, remaining: 14, note: 'Qty cut on confirmation; demand held - coverage looked right' },
   { sku: '370108', name: 'Reinforced bonder 8 ml', ordered: 48, sold: 41, remaining: 9, note: 'Steady sell-through; slight buffer left' },
-  { sku: '431001', name: 'Classic bonder 8 ml', ordered: 60, sold: 44, remaining: 4, note: 'Short-shipped vs DDT — under-supply, not over-order' },
+  { sku: '431001', name: 'Classic bonder 8 ml', ordered: 60, sold: 44, remaining: 4, note: 'Short-shipped vs DDT - under-supply, not over-order' },
   { sku: '431015', name: 'Classic bonder 15 ml', ordered: 36, sold: 29, remaining: 8, note: 'On track vs 30d coverage' },
   { sku: '400214', name: 'Functional treatment 100 ml', ordered: 24, sold: 19, remaining: 6, note: 'On track; sister SKU 400213 was missing on confirmation' },
   { sku: '420050', name: 'Care treatment 50 ml', ordered: 36, sold: 28, remaining: 10, note: 'Healthy velocity after arrival' },
   { sku: '420106', name: 'Care treatment 100 ml', ordered: 36, sold: 22, remaining: 14, note: 'Mild over-order vs post-arrival demand' },
-  { sku: '510001', name: 'Top coat Gloss', ordered: 60, sold: 52, remaining: 11, note: 'Fast mover — coverage held' },
+  { sku: '510001', name: 'Top coat Gloss', ordered: 60, sold: 52, remaining: 11, note: 'Fast mover - coverage held' },
   { sku: '510002', name: 'Top coat Matte', ordered: 18, sold: 11, remaining: 7, note: 'Slower sell-through after arrival' },
   { sku: '880101', name: 'Color gel Red Passion', ordered: 48, sold: 40, remaining: 10, note: 'On track vs coverage' },
   { sku: '880102', name: 'Color gel Nude Rose', ordered: 36, sold: 31, remaining: 7, note: 'On track vs coverage' },
-  { sku: '880103', name: 'Color gel Black Onyx', ordered: 24, sold: 16, remaining: 9, note: 'A bit soft vs plan — watch next cycle' },
+  { sku: '880103', name: 'Color gel Black Onyx', ordered: 24, sold: 16, remaining: 9, note: 'A bit soft vs plan - watch next cycle' },
 ];
 
 const OUTCOME_BY_SKU = new Map(OUTCOME_ROWS.map((row) => [row.sku, row]));
@@ -1436,7 +1436,7 @@ export function buildPartialIntake(prompt: string) {
       ? 'Replenish low-stock MNP SKUs'
       : coverageDays
         ? `Cover ${coverageDays} days of sales after arrival`
-        : 'Replenish MNP — coverage not set',
+        : 'Replenish MNP - coverage not set',
     estimatedArrival: coverageDays ? '2026-08-21' : 'Pending coverage',
     scope: 'Velocity-filtered MNP assortment',
     constraints: 'Not confirmed',
@@ -1468,7 +1468,7 @@ export function jumpToStage(stage: DemoStageId): DemoState {
       return appendMessages(withStatus, [
         {
           role: 'agent',
-          text: 'Draft ready for MNP · 30-day coverage. Quantities come from sales, stock, inbound, and MNP lead-time median. Edit freely — this is not an order.',
+          text: 'Draft ready for MNP · 30-day coverage. Quantities come from sales, stock, inbound, and MNP lead-time median. Edit freely - this is not an order.',
         },
       ]);
     }
@@ -1488,7 +1488,7 @@ export function jumpToStage(stage: DemoStageId): DemoState {
         { role: 'agent', text: PORTFOLIO_COPY.confirmationDiff },
         {
           role: 'agent',
-          text: 'Approval activation rules fired (price/qty/missing-extra/new SKU/prepayment). Submitted for approval — open Owner approval when ready to Approve proposal, then Mark as ordered.',
+          text: 'Approval activation rules fired (price/qty/missing-extra/new SKU/prepayment). Submitted for approval - open Owner approval when ready to Approve proposal, then Mark as ordered.',
         },
       ]);
     }
@@ -1545,7 +1545,7 @@ export function jumpToStage(stage: DemoStageId): DemoState {
         [
           {
             role: 'agent',
-            text: 'PO is fully received. Full order is on the canvas — tap Review this order and we’ll start with forecast questions (over/under order, arrival vs ETA) before any candidates.',
+            text: 'PO is fully received. Full order is on the canvas - tap Review this order and we’ll start with forecast questions (over/under order, arrival vs ETA) before any candidates.',
           },
         ],
       );

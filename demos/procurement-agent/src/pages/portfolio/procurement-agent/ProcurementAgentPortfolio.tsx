@@ -451,7 +451,7 @@ export default function ProcurementAgentPortfolio() {
             setState((prev) => appendMessages(prev, [
               {
                 role: 'agent',
-                text: 'Draft ready. Quantities come from a deterministic planner — edit freely, then export the supplier request (no prices). This is still not an order.',
+                text: 'Draft ready. Quantities come from a deterministic planner - edit freely, then export the supplier request (no prices). This is still not an order.',
               },
             ]));
           }, prefersReducedMotion() ? 180 : 420);
@@ -629,7 +629,7 @@ export default function ProcurementAgentPortfolio() {
           if (!outcome) {
             return `${line.sku} · no post-arrival sales (gift/return / not stocked)`;
           }
-          return `${line.sku} · ordered ${line.ordered} · sold ${outcome.sold} in ${coverage}d after stock-in · left ${outcome.remaining} — ${outcome.note}`;
+          return `${line.sku} · ordered ${line.ordered} · sold ${outcome.sold} in ${coverage}d after stock-in · left ${outcome.remaining} - ${outcome.note}`;
         });
         replyAsAgent(`SPU ${code} · sell-through in the ${coverage}d coverage window after first stock-in.`, {
           userText: prompt,
@@ -692,14 +692,14 @@ export default function ProcurementAgentPortfolio() {
         label: 'Summarizing your forecast feedback…',
         bullets: [
           over
-            ? 'Qty signal: over-order risk on parts of the mix — I’ll tighten coverage on slow movers next cycle.'
+            ? 'Qty signal: over-order risk on parts of the mix - I’ll tighten coverage on slow movers next cycle.'
             : under
-              ? 'Qty signal: under-order risk — I’ll allow more buffer on fast movers next cycle.'
+              ? 'Qty signal: under-order risk - I’ll allow more buffer on fast movers next cycle.'
               : 'Qty signal: noted from your write-up for the next coverage suggestion.',
           late
-            ? 'ETA signal: arrival ran late vs plan — I’ll refresh lead-time median / p90 for MNP.'
+            ? 'ETA signal: arrival ran late vs plan - I’ll refresh lead-time median / p90 for MNP.'
             : early
-              ? 'ETA signal: arrival was early — useful, but I won’t overfit one cycle.'
+              ? 'ETA signal: arrival was early - useful, but I won’t overfit one cycle.'
               : onTime
                 ? 'ETA signal: arrival looked on time enough vs ETA.'
                 : 'ETA signal: noted from your write-up for the next lead-time assumption.',
@@ -742,7 +742,7 @@ export default function ProcurementAgentPortfolio() {
         replyAsAgent('Confirm is blocked by hold lines.', {
           userText: prompt,
           label: 'Checking receiving holds…',
-          bullets: held.map((line) => `${line.sku} · on hold — accept as gift or return first.`),
+          bullets: held.map((line) => `${line.sku} · on hold - accept as gift or return first.`),
           actions: held.flatMap((line) => [
             {
               id: `accept-block-${line.sku}`,
@@ -773,7 +773,7 @@ export default function ProcurementAgentPortfolio() {
             label: 'Confirming counted receipt…',
             bullets: [
               'Receiving progress is fully received.',
-              'Use Review this order — we’ll start with forecast questions (qty / ETA).',
+              'Use Review this order - we’ll start with forecast questions (qty / ETA).',
             ],
             actions: [{
               id: 'review-order',
@@ -978,7 +978,7 @@ export default function ProcurementAgentPortfolio() {
             label: 'Comparing DDT vs order…',
             bullets: [
               `Ordered open ${open}; this DDT only shows ${line.ddt} (−${gap}).`,
-              'Actual defaults to DDT — change Actual or tell me if warehouse count differs.',
+              'Actual defaults to DDT - change Actual or tell me if warehouse count differs.',
               'After Confirm, use Handle remaining / next DDT for the open remainder.',
             ],
             actions: [
@@ -1115,7 +1115,7 @@ export default function ProcurementAgentPortfolio() {
       return;
     }
 
-    // 直接 Approve（补货计划）或 Owner 页 Approve — 文案同为 Approve
+    // 直接 Approve（补货计划）或 Owner 页 Approve - 文案同为 Approve
     if (
       prompt === PORTFOLIO_COPY.approveDirect
       || prompt === PORTFOLIO_COPY.approve
@@ -1134,13 +1134,13 @@ export default function ProcurementAgentPortfolio() {
         at: new Date().toISOString().slice(0, 16).replace('T', ' '),
         actor: 'Buyer',
         text: asOwner
-          ? 'Owner approved the commercial proposal on the current confirmation. Order not placed — still requires Mark as ordered after external purchase.'
-          : 'Buyer approved directly on the replenishment plan. Order not placed — Mark as ordered remains a separate step.',
+          ? 'Owner approved the commercial proposal on the current confirmation. Order not placed - still requires Mark as ordered after external purchase.'
+          : 'Buyer approved directly on the replenishment plan. Order not placed - Mark as ordered remains a separate step.',
       });
       replyAsAgent(
         asOwner
           ? 'Approved as owner. This is not an order. Mark as ordered when the external purchase is done.'
-          : 'Approved directly on the plan. Staying here — Mark as ordered is now available. Approve ≠ order.',
+          : 'Approved directly on the plan. Staying here - Mark as ordered is now available. Approve ≠ order.',
         {
           userText: prompt,
           patch: {
@@ -1165,7 +1165,7 @@ export default function ProcurementAgentPortfolio() {
       || lower.includes('re-upload invoice')
     ) {
       if (!state.orderRecorded) {
-        replyAsAgent('Mark as ordered first — invoice upload is available after the PO is recorded as ordered.', {
+        replyAsAgent('Mark as ordered first - invoice upload is available after the PO is recorded as ordered.', {
           userText: prompt,
           label: 'Checking order stage…',
         });
@@ -1192,7 +1192,7 @@ export default function ProcurementAgentPortfolio() {
           : PORTFOLIO_COPY.confirmationSameFile,
         PORTFOLIO_COPY.confirmationDiff,
         fired.length > 0
-          ? `Activation rules fired (${fired.length}). Use Approve to choose direct approve or push to Owner — Mark as ordered unlocks after Approve.`
+          ? `Activation rules fired (${fired.length}). Use Approve to choose direct approve or push to Owner - Mark as ordered unlocks after Approve.`
           : 'No activation rules fired. Use Approve (direct or push to Owner). Mark as ordered unlocks after Approve.',
       ].join('\n\n');
       replyAsAgent(agentText, {
@@ -1226,7 +1226,7 @@ export default function ProcurementAgentPortfolio() {
     ) {
       if (!state.confirmationUploaded) {
         replyAsAgent(
-          'Upload the final supplier confirmation first — it is the evidence for recording an external order.',
+          'Upload the final supplier confirmation first - it is the evidence for recording an external order.',
           { userText: prompt, label: 'Checking confirmation evidence…' },
         );
         return;
@@ -1255,7 +1255,7 @@ export default function ProcurementAgentPortfolio() {
         }));
         setGuideOpen(true);
         replyAsAgent(
-          `Order recorded as placed outside the platform · ${orderMeta.orderAt.replace('T', ' ')} · by ${orderMeta.orderedBy} · ETA ${orderMeta.expectedArrival}. I will not contact the supplier. Next: two-shipment receiving on PO-2026-0842 — upload DDT-1292, confirm, Handle remaining (wait next batch), then DDT-1301.`,
+          `Order recorded as placed outside the platform · ${orderMeta.orderAt.replace('T', ' ')} · by ${orderMeta.orderedBy} · ETA ${orderMeta.expectedArrival}. I will not contact the supplier. Next: two-shipment receiving on PO-2026-0842 - upload DDT-1292, confirm, Handle remaining (wait next batch), then DDT-1301.`,
           {
             userText: prompt,
             patch: {
@@ -1274,7 +1274,7 @@ export default function ProcurementAgentPortfolio() {
 
     if (lower.includes('export') || prompt === PORTFOLIO_COPY.exportRequest) {
       replyAsAgent(
-        'Use Export request on the plan. The file includes supplier codes, names, and quantities only — no prices — and is downloaded, not sent.',
+        'Use Export request on the plan. The file includes supplier codes, names, and quantities only - no prices - and is downloaded, not sent.',
         { userText: prompt, label: 'Checking export rules…' },
       );
       return;
@@ -1291,7 +1291,7 @@ export default function ProcurementAgentPortfolio() {
             `• Coverage target drives suggested ${skuMatch.recommended}; current qty ${skuMatch.qty}`,
             `• Lead-time median for MNP is applied so arrival covers the window`,
             skuMatch.alert ? `• Note: ${skuMatch.alert}` : '• No planner alert on this SKU',
-            'You can edit qty or delete the line — I will not place the order.',
+            'You can edit qty or delete the line - I will not place the order.',
           ].join('\n'),
           { userText: prompt, label: 'Explaining SKU recommendation…' },
         );
@@ -1306,7 +1306,7 @@ export default function ProcurementAgentPortfolio() {
             `${spuMatch.productName} (${siblings.length} SKUs):`,
             `• Group sales 30d ${sales} · suggested total qty ${qty}`,
             `• Variants kept when velocity or pack size differs`,
-            '• Quantities are planner output — edit or delete freely before export',
+            '• Quantities are planner output - edit or delete freely before export',
           ].join('\n'),
           { userText: prompt, label: 'Explaining SPU recommendation…' },
         );
@@ -1488,7 +1488,7 @@ export default function ProcurementAgentPortfolio() {
               onExport={(format) => {
                 setState((prev) => upsertExportAttachment(prev, format));
                 replyAsAgent(
-                  `${PORTFOLIO_COPY.exportDone(format)}. Saved under Attachments — downloaded only, not sent.`,
+                  `${PORTFOLIO_COPY.exportDone(format)}. Saved under Attachments - downloaded only, not sent.`,
                   { label: 'Preparing export package…' },
                 );
               }}
@@ -1517,7 +1517,7 @@ export default function ProcurementAgentPortfolio() {
               onMarkOrdered={(meta: MarkOrderMeta) => {
                 if (!state.confirmationUploaded) {
                   replyAsAgent(
-                    'Upload the final supplier confirmation first — it is the evidence for recording an external order.',
+                    'Upload the final supplier confirmation first - it is the evidence for recording an external order.',
                     { label: 'Checking confirmation evidence…' },
                   );
                   return;
@@ -1538,7 +1538,7 @@ export default function ProcurementAgentPortfolio() {
                 }));
                 setGuideOpen(true);
                 replyAsAgent(
-                  `Order recorded as placed outside the platform · ${meta.orderAt.replace('T', ' ')} · by ${meta.orderedBy} · ETA ${meta.expectedArrival}. I will not contact the supplier. Next: two-shipment receiving on PO-2026-0842 — upload DDT-1292, confirm, Handle remaining (wait next batch), then DDT-1301.`,
+                  `Order recorded as placed outside the platform · ${meta.orderAt.replace('T', ' ')} · by ${meta.orderedBy} · ETA ${meta.expectedArrival}. I will not contact the supplier. Next: two-shipment receiving on PO-2026-0842 - upload DDT-1292, confirm, Handle remaining (wait next batch), then DDT-1301.`,
                   {
                     userText: PORTFOLIO_COPY.markOrdered,
                     patch: {

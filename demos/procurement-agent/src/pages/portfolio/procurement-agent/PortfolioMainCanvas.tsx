@@ -821,7 +821,7 @@ const INTAKE_FLOW_STEPS = [
     stage: 'intake' as DemoStageId,
     agentForbidden: false,
     askPrompt: PORTFOLIO_COPY.workflowAskIntake,
-    summary: 'Start with a goal in chat — no form to fill first.',
+    summary: 'Start with a goal in chat - no form to fill first.',
     agentDoes: 'Asks for supplier, coverage days, and constraints.',
     humanDoes: 'Answers in chat (or picks a quick suggestion).',
   },
@@ -876,7 +876,7 @@ const INTAKE_FLOW_STEPS = [
     stage: 'retrospective' as DemoStageId,
     agentForbidden: false,
     askPrompt: PORTFOLIO_COPY.workflowAskReview,
-    summary: 'Close the loop — what to improve next time.',
+    summary: 'Close the loop - what to improve next time.',
     agentDoes: 'Summarizes forecast vs actual and open issues.',
     humanDoes: 'Confirms learnings for the next cycle.',
   },
@@ -1091,7 +1091,7 @@ function IntakeWorkflowDiagram({
                         {/* Stage 节点 */}
                         <button
                           type="button"
-                          title={`${item.label} — click to inspect`}
+                          title={`${item.label} - click to inspect`}
                           aria-label={`Step ${item.step}: ${item.label}`}
                           aria-current={selected ? 'step' : undefined}
                           onClick={() => selectStep(item.step)}
@@ -1237,7 +1237,7 @@ function IntakeWorkflowDiagram({
                 ) : (
                   <BotIcon className="size-3.5" aria-hidden />
                 )}
-                {active.agentForbidden ? 'Agent — blocked' : 'Agent does'}
+                {active.agentForbidden ? 'Agent - blocked' : 'Agent does'}
               </p>
               <p className="mt-1.5 text-[13px] leading-relaxed text-[#1a1d26]">{active.agentDoes}</p>
             </div>
@@ -1303,7 +1303,7 @@ function IntakeView({
             {([
               ['Supplier', draft.supplier],
               ['Objective', draft.objective],
-              ['Coverage', draft.coverageDays ? `${draft.coverageDays} days` : 'Missing — ask agent'],
+              ['Coverage', draft.coverageDays ? `${draft.coverageDays} days` : 'Missing - ask agent'],
               ['Expected arrival', draft.estimatedArrival],
               ['Scope', draft.scope],
               ['Constraints', draft.constraints],
@@ -1551,7 +1551,7 @@ function EstQtyCell({
   onUpdateEstQty: (sku: string, qty: number) => void;
 }) {
   if (line.risk === 'extra') {
-    return <span className="text-[12px] tabular-nums text-[#8b93a7]">—</span>;
+    return <span className="text-[12px] tabular-nums text-[#8b93a7]">-</span>;
   }
 
   if (editable) {
@@ -1597,7 +1597,7 @@ function ConfQtyCell({
         type="number"
         min={0}
         value={line.risk === 'missing' && line.qty === 0 ? '' : line.qty}
-        placeholder="—"
+        placeholder="-"
         className={cn(
           'ml-auto h-8 w-[68px] rounded-lg text-right text-[13px] tabular-nums',
           changed && 'border-[#ffd7b8] bg-[#fffaf5]',
@@ -1608,7 +1608,7 @@ function ConfQtyCell({
   }
 
   if (line.risk === 'missing' && line.qty === 0) {
-    return <span className="text-[12px] tabular-nums text-[#8b93a7]">—</span>;
+    return <span className="text-[12px] tabular-nums text-[#8b93a7]">-</span>;
   }
 
   return (
@@ -1632,7 +1632,7 @@ function EstPriceCell({
   onUpdateEstPrice: (sku: string, price: number) => void;
 }) {
   if (line.risk === 'extra') {
-    return <span className="text-[12px] tabular-nums text-[#8b93a7]">—</span>;
+    return <span className="text-[12px] tabular-nums text-[#8b93a7]">-</span>;
   }
 
   if (editable) {
@@ -1685,7 +1685,7 @@ function ConfPriceCell({
         min={0}
         step="0.01"
         value={line.confirmedPrice ?? ''}
-        placeholder="—"
+        placeholder="-"
         className={cn(
           'ml-auto h-8 w-[84px] rounded-lg text-right text-[13px] tabular-nums',
           changed && 'border-[#ffd7b8] bg-[#fffaf5]',
@@ -1704,7 +1704,7 @@ function ConfPriceCell({
   }
 
   if (line.risk === 'missing' || line.confirmedPrice == null) {
-    return <span className="text-[12px] tabular-nums text-[#8b93a7]">—</span>;
+    return <span className="text-[12px] tabular-nums text-[#8b93a7]">-</span>;
   }
 
   return (
@@ -1747,7 +1747,7 @@ function NoteCell({
     notes.push(line.alert);
   }
   if (notes.length === 0) {
-    return <span className="text-[11px] text-[#8b93a7]">—</span>;
+    return <span className="text-[11px] text-[#8b93a7]">-</span>;
   }
   const primary = notes[0];
   // Missing 用危险红，价差/数量差仍用暖橙，突出缺货优先级
@@ -2032,8 +2032,8 @@ function LineTable({
                   <TableCell align="right" className="px-3 py-2.5 text-[12px] tabular-nums text-[#5c6478]">
                     {agg.sales}
                   </TableCell>
-                  <TableCell align="right" className="px-3 py-2.5 text-[11px] text-[#8b93a7]">—</TableCell>
-                  <TableCell align="right" className="px-3 py-2.5 text-[11px] text-[#8b93a7]">—</TableCell>
+                  <TableCell align="right" className="px-3 py-2.5 text-[11px] text-[#8b93a7]">-</TableCell>
+                  <TableCell align="right" className="px-3 py-2.5 text-[11px] text-[#8b93a7]">-</TableCell>
                   <TableCell align="right" className="px-3 py-2.5 text-[12px] font-semibold tabular-nums">
                     €{agg.subtotal.toFixed(2)}
                   </TableCell>
@@ -2043,7 +2043,7 @@ function LineTable({
                     ) : hasGap ? (
                       <span className="font-medium text-[#b35b1f]">Gaps in SKUs</span>
                     ) : (
-                      '—'
+                      '-'
                     )}
                   </TableCell>
                   {showActions ? (
@@ -2127,7 +2127,7 @@ function LineTable({
                           />
                         </TableCell>
                         <TableCell align="right" className="px-3 py-3 align-top text-[13px] font-semibold tabular-nums">
-                          {line.risk === 'missing' ? '—' : `€${lineSubtotal(line).toFixed(2)}`}
+                          {line.risk === 'missing' ? '-' : `€${lineSubtotal(line).toFixed(2)}`}
                         </TableCell>
                         <TableCell className="px-3 py-3 align-top whitespace-normal">
                           <NoteCell line={line} onAskAgent={onAskAgent} />
@@ -2229,7 +2229,7 @@ function ExportDialog({
             </div>
           ))}
           <p className="border-t border-[#eef0f4] px-3 py-2 text-[10px] text-[#8b93a7]">
-            {`Preview · ${lines.length} SKUs · code, name, qty only — no prices`}
+            {`Preview · ${lines.length} SKUs · code, name, qty only - no prices`}
           </p>
         </div>
         <DialogFooter>
@@ -2996,7 +2996,7 @@ function ReceivingNoteCell({
   }
 
   if (notes.length === 0) {
-    return <span className="text-[11px] text-[#8b93a7]">—</span>;
+    return <span className="text-[11px] text-[#8b93a7]">-</span>;
   }
 
   const warm = shortVsOrder || overVsOrder || shortVsDdt || overVsDdt || line.disposition !== 'receive';
@@ -3194,8 +3194,8 @@ function ReceivingWorkspaceView({
         remainingDecision ? `Remaining: ${PORTFOLIO_COPY.remainingOptions[remainingDecision].title}` : null,
       ].filter(Boolean).join(' · ');
 
-  const orderAtLabel = orderAt ? orderAt.replace('T', ' ').slice(0, 16) : '—';
-  const expectedLabel = expectedArrival || '—';
+  const orderAtLabel = orderAt ? orderAt.replace('T', ' ').slice(0, 16) : '-';
+  const expectedLabel = expectedArrival || '-';
   const groups = useMemo(() => groupReceivingLinesBySpu(lines), [lines]);
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
@@ -3204,7 +3204,7 @@ function ReceivingWorkspaceView({
     if (!isRetrospective || groups.length === 0) return;
     setExpanded(new Set(groups.map((group) => group.key)));
   }, [isRetrospective, groups]);
-  /** 本批 DDT 未到货（仍有 open qty）— 与 DDT vs 下单用不同色 */
+  /** 本批 DDT 未到货（仍有 open qty）- 与 DDT vs 下单用不同色 */
   const isMissingOnDdt = (line: ReceivingLine) => (
     currentDdtReady && line.ordered > 0 && line.ddt === 0 && line.stocked < line.ordered
   );
@@ -3548,19 +3548,19 @@ function ReceivingWorkspaceView({
                         return (
                           <Fragment key={`${group.key}-${col.key}-agg`}>
                             <span className="text-right text-[12px] font-semibold tabular-nums">
-                              {values?.ddt || '—'}
+                              {values?.ddt || '-'}
                             </span>
                             <span className="text-right text-[12px] font-semibold tabular-nums">
-                              {values?.actual || '—'}
+                              {values?.actual || '-'}
                             </span>
                           </Fragment>
                         );
                       })}
-                      <span className="text-[11px] text-[#8b93a7]">—</span>
+                      <span className="text-[11px] text-[#8b93a7]">-</span>
                       <span className="text-right text-[12px] font-semibold tabular-nums">{agg.stocked}</span>
                       {isRetrospective ? (
                         <span className="text-right text-[12px] font-semibold tabular-nums">
-                          {agg.soldKnown ? agg.sold : '—'}
+                          {agg.soldKnown ? agg.sold : '-'}
                         </span>
                       ) : null}
                       {showNotesCol ? (
@@ -3574,8 +3574,8 @@ function ReceivingWorkspaceView({
                           {isRetrospective
                             ? (agg.notes[0]
                               ? (group.items.length > 1 ? `${agg.notes.length} SKU notes` : agg.notes[0])
-                              : '—')
-                            : (groupHasWarm || groupHasMissing ? 'Gaps in SKUs' : '—')}
+                              : '-')
+                            : (groupHasWarm || groupHasMissing ? 'Gaps in SKUs' : '-')}
                         </span>
                       ) : null}
                       {isRetrospective ? (
@@ -3655,7 +3655,7 @@ function ReceivingWorkspaceView({
                                     ddtVsOrderGap && 'font-semibold text-[#b35b1f]',
                                   )}
                                   >
-                                    {values.ddt || '—'}
+                                    {values.ddt || '-'}
                                   </span>
                                   {values.editable ? (
                                     <Input
@@ -3672,7 +3672,7 @@ function ReceivingWorkspaceView({
                                     />
                                   ) : (
                                     <span className="text-right tabular-nums text-[13px]">
-                                      {values.actual == null ? '—' : values.actual}
+                                      {values.actual == null ? '-' : values.actual}
                                     </span>
                                   )}
                                 </Fragment>
@@ -3687,7 +3687,7 @@ function ReceivingWorkspaceView({
                                 const outcome = outcomeForReceivingLine(line);
                                 return (
                                   <span className="text-right tabular-nums text-[13px]">
-                                    {outcome ? outcome.sold : '—'}
+                                    {outcome ? outcome.sold : '-'}
                                   </span>
                                 );
                               })()
@@ -3697,7 +3697,7 @@ function ReceivingWorkspaceView({
                                 (() => {
                                   const outcome = outcomeForReceivingLine(line);
                                   if (!outcome?.note) {
-                                    return <span className="text-[11px] text-[#8b93a7]">—</span>;
+                                    return <span className="text-[11px] text-[#8b93a7]">-</span>;
                                   }
                                   return (
                                     <p className="text-[11px] leading-snug text-[#5c6478]">
@@ -3839,7 +3839,7 @@ function ReceivingWorkspaceView({
                 title: PORTFOLIO_COPY.receivingPoSectionOrder,
                 rows: [
                   [PORTFOLIO_COPY.receivingPoFieldOrderDate, orderAtLabel],
-                  [PORTFOLIO_COPY.receivingPoFieldOperator, orderedBy || '—'],
+                  [PORTFOLIO_COPY.receivingPoFieldOperator, orderedBy || '-'],
                   [PORTFOLIO_COPY.receivingPoFieldExpectedArrival, expectedLabel],
                   [
                     PORTFOLIO_COPY.receivingPoFieldPayment,
@@ -3874,13 +3874,13 @@ function ReceivingWorkspaceView({
                     PORTFOLIO_COPY.receivingPoFieldInvoice,
                     invoiceUploaded
                       ? (attachments.find((item) => item.kind === 'invoice')?.fileName ?? 'Uploaded')
-                      : '—',
+                      : '-',
                   ],
                   [
                     PORTFOLIO_COPY.receivingPoFieldRemaining,
                     remainingDecision
                       ? PORTFOLIO_COPY.remainingOptions[remainingDecision].title
-                      : '—',
+                      : '-',
                   ],
                 ],
               },

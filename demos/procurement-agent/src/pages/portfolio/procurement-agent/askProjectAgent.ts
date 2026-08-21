@@ -4,7 +4,7 @@ import type { DemoChatMessage } from './portfolioDemoTypes';
  * Live "ask about this project" endpoint.
  *
  * The demo is a static bundle served from the portfolio's own /demos/ path, so this is a
- * same-origin call — no key ever reaches the browser. When embedded anywhere else, or when the
+ * same-origin call - no key ever reaches the browser. When embedded anywhere else, or when the
  * endpoint is unavailable, callers fall back to the scripted reply.
  */
 const ENDPOINT = '/api/procurement-agent';
@@ -53,7 +53,7 @@ export async function askProjectAgent(
 
 /** Shown when the live model cannot be reached and there is no scripted answer to fall back to. */
 export const AGENT_UNAVAILABLE =
-  "I can't reach the live model right now. You can still walk the workflow on the left — every stage in this demo runs from a script.";
+  "I can't reach the live model right now. You can still walk the workflow on the left - every stage in this demo runs from a script.";
 
 export const AGENT_RATE_LIMITED =
-  "You've reached the question limit for this session. The workflow on the left still works — every stage runs from a script.";
+  "You've reached the question limit for this session. The workflow on the left still works - every stage runs from a script.";

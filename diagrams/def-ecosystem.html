@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DEF Beauty Supply platform ecosystem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400&family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #ffffff;
+      --color-ink:     #161616;
+      --color-muted:   #555555;
+      --color-soft:    #777777;
+      --color-accent:  #2155e8;  /* case accent */
+      --font-sans:     'Inter', system-ui, sans-serif;
+      --font-serif:    'Fraunces', Georgia, serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--color-muted);
+      max-width: 62ch;
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 900px; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Diagram Design</p>
+    <h1>DEF Beauty Supply — platform ecosystem</h1>
+    <p class="subtitle">One B2B wholesale loop: demand enters through the store, an inventory gap drives procurement, and received goods return to inventory carrying their variance. The Agent reads that context and recommends — the buyer still owns the order.</p>
+
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="def-ecosystem-title def-ecosystem-desc">
+      <title id="def-ecosystem-title">DEF Beauty Supply platform ecosystem</title>
+      <desc id="def-ecosystem-desc">Architecture diagram of the DEF Beauty Supply B2B wholesale platform. Customer demand arrives through a WeChat storefront and becomes sales orders that draw down inventory; an inventory gap drives procurement, which places the order with an external supplier at a human gate; received goods and their variance flow back into inventory while finance reconciles the invoice; a procurement agent reads platform context and recommends purchase quantities without placing orders itself.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#555555"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2155e8"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#ed5b2b"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#ffffff"/>
+
+      <!-- ===== ZONES (drawn first) ===== -->
+      <rect x="32" y="96" width="400" height="144" rx="8" fill="rgba(22,22,22,0.02)" stroke="rgba(22,22,22,0.10)" stroke-width="0.8"/>
+      <rect x="48" y="100" width="72" height="12" rx="2" fill="#ffffff"/>
+      <text x="84" y="108" fill="rgba(22,22,22,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">DEMAND SIDE</text>
+
+      <rect x="464" y="96" width="464" height="496" rx="8" fill="rgba(22,22,22,0.02)" stroke="rgba(22,22,22,0.10)" stroke-width="0.8"/>
+      <rect x="480" y="100" width="88" height="12" rx="2" fill="#ffffff"/>
+      <text x="524" y="108" fill="rgba(22,22,22,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CORE PLATFORM</text>
+
+      <!-- ===== ARROWS (before boxes) ===== -->
+      <!-- 1. Customer -> WeChat Store (label removed: obvious from layout) -->
+      <line x1="192" y1="168" x2="240" y2="168" stroke="#555555" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- 2. WeChat Store -> Sales Order -->
+      <line x1="400" y1="168" x2="496" y2="168" stroke="#ed5b2b" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <rect x="432" y="148" width="32" height="12" rx="2" fill="#ffffff"/>
+      <text x="448" y="156" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SYNC</text>
+
+      <!-- 3. Sales Order -> Inventory -->
+      <line x1="560" y1="208" x2="560" y2="304" stroke="#555555" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="568" y="248" width="48" height="12" rx="2" fill="#ffffff"/>
+      <text x="592" y="256" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DEMAND</text>
+
+      <!-- 4. Inventory -> Procurement -->
+      <line x1="560" y1="384" x2="560" y2="480" stroke="#555555" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="496" y="424" width="56" height="12" rx="2" fill="#ffffff"/>
+      <text x="524" y="432" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">STOCK GAP</text>
+
+      <!-- 5. Procurement -> Supplier (human gate) -->
+      <path d="M 576,560 V 656 Q 576,664 584,664 H 976" fill="none" stroke="#ed5b2b" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <rect x="744" y="644" width="64" height="12" rx="2" fill="#ffffff"/>
+      <text x="776" y="652" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">HUMAN GATE</text>
+
+      <!-- 6. Supplier -> Receiving -->
+      <path d="M 1056,624 V 528 Q 1056,520 1048,520 H 896" fill="none" stroke="#ed5b2b" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <rect x="944" y="500" width="64" height="12" rx="2" fill="#ffffff"/>
+      <text x="976" y="508" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DDT · GOODS</text>
+
+      <!-- 7. Receiving -> Inventory (the loop closes) -->
+      <path d="M 736,504 H 704 Q 696,504 696,496 V 264 Q 696,256 688,256 H 616 Q 608,256 608,264 V 304" fill="none" stroke="#555555" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="608" y="440" width="80" height="12" rx="2" fill="#ffffff"/>
+      <text x="648" y="448" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">STOCK-IN ±VAR</text>
+
+      <!-- 8. Receiving -> Finance -->
+      <line x1="816" y1="480" x2="816" y2="384" stroke="#555555" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="824" y="424" width="48" height="12" rx="2" fill="#ffffff"/>
+      <text x="848" y="432" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">INVOICE</text>
+
+      <!-- 10. Inventory -> Agent (context read) -->
+      <line x1="496" y1="344" x2="360" y2="344" stroke="#555555" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <rect x="404" y="324" width="48" height="12" rx="2" fill="#ffffff"/>
+      <text x="428" y="332" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CONTEXT</text>
+
+      <!-- 11. Agent -> Procurement -->
+      <path d="M 260,384 V 512 Q 260,520 268,520 H 496" fill="none" stroke="#555555" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="348" y="500" width="64" height="12" rx="2" fill="#ffffff"/>
+      <text x="380" y="508" fill="#777777" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RECOMMENDS</text>
+
+      <!-- ===== NODES ===== -->
+      <!-- Customer (external) -->
+      <rect x="48" y="128" width="144" height="80" rx="6" fill="#ffffff"/>
+      <rect x="48" y="128" width="144" height="80" rx="6" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" stroke-width="1"/>
+      <rect x="60" y="136" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.24)" stroke-width="0.8"/>
+      <text x="76" y="144" fill="rgba(22,22,22,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+      <text x="120" y="176" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Customer</text>
+      <text x="120" y="192" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">pro salons</text>
+
+      <!-- WeChat Store (external) -->
+      <rect x="240" y="128" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="240" y="128" width="160" height="80" rx="6" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" stroke-width="1"/>
+      <rect x="252" y="136" width="52" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.24)" stroke-width="0.8"/>
+      <text x="278" y="144" fill="rgba(22,22,22,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CHANNEL</text>
+      <text x="320" y="176" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">WeChat Store</text>
+      <text x="320" y="192" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">storefront</text>
+
+      <!-- Sales Order -->
+      <rect x="496" y="128" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="496" y="128" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" stroke-width="1"/>
+      <rect x="508" y="136" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" stroke-width="0.8"/>
+      <text x="524" y="144" fill="rgba(22,22,22,0.70)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CORE</text>
+      <text x="576" y="176" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Sales Order</text>
+      <text x="576" y="192" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">demand</text>
+
+      <!-- Inventory -->
+      <rect x="496" y="304" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="496" y="304" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" stroke-width="1"/>
+      <rect x="508" y="312" width="40" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" stroke-width="0.8"/>
+      <text x="528" y="320" fill="rgba(22,22,22,0.70)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STORE</text>
+      <text x="576" y="352" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Inventory</text>
+      <text x="576" y="368" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">stock · incoming</text>
+
+      <!-- Finance -->
+      <rect x="736" y="304" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="736" y="304" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" stroke-width="1"/>
+      <rect x="748" y="312" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" stroke-width="0.8"/>
+      <text x="764" y="320" fill="rgba(22,22,22,0.70)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CORE</text>
+      <text x="816" y="352" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Finance</text>
+      <text x="816" y="368" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">invoice · cash</text>
+
+      <!-- Procurement (FOCAL) -->
+      <rect x="496" y="480" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="496" y="480" width="160" height="80" rx="6" fill="#e9eef8" stroke="#2155e8" stroke-width="1"/>
+      <rect x="508" y="488" width="40" height="12" rx="2" fill="transparent" stroke="rgba(33,85,232,0.40)" stroke-width="0.8"/>
+      <text x="528" y="496" fill="#2155e8" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">FOCUS</text>
+      <text x="576" y="528" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Procurement</text>
+      <text x="576" y="544" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">lifecycle · states</text>
+
+      <!-- Receiving -->
+      <rect x="736" y="480" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="736" y="480" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" stroke-width="1"/>
+      <rect x="748" y="488" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" stroke-width="0.8"/>
+      <text x="764" y="496" fill="rgba(22,22,22,0.70)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CORE</text>
+      <text x="816" y="528" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Receiving</text>
+      <text x="816" y="544" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">ddt · variance</text>
+
+      <!-- Supplier (external) -->
+      <rect x="976" y="624" width="160" height="80" rx="6" fill="#ffffff"/>
+      <rect x="976" y="624" width="160" height="80" rx="6" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" stroke-width="1"/>
+      <rect x="988" y="632" width="56" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.24)" stroke-width="0.8"/>
+      <text x="1016" y="640" fill="rgba(22,22,22,0.55)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">EXTERNAL</text>
+      <text x="1056" y="672" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Supplier</text>
+      <text x="1056" y="688" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">moq · lead time</text>
+
+      <!-- Procurement Agent (FOCAL) -->
+      <rect x="160" y="304" width="200" height="80" rx="6" fill="#ffffff"/>
+      <rect x="160" y="304" width="200" height="80" rx="6" fill="#e9eef8" stroke="#2155e8" stroke-width="1"/>
+      <rect x="172" y="312" width="40" height="12" rx="2" fill="transparent" stroke="rgba(33,85,232,0.40)" stroke-width="0.8"/>
+      <text x="192" y="320" fill="#2155e8" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">AGENT</text>
+      <text x="260" y="352" fill="#161616" font-size="12" font-weight="600" font-family="'Inter', sans-serif" text-anchor="middle">Procurement Agent</text>
+      <text x="260" y="368" fill="#555555" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">llm · engine · gates</text>
+
+      <!-- ===== LEGEND ===== -->
+      <line x1="32" y1="744" x2="1168" y2="744" stroke="rgba(22,22,22,0.10)" stroke-width="0.8"/>
+      <text x="32" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+
+      <rect x="112" y="760" width="12" height="10" rx="2" fill="#e9eef8" stroke="#2155e8" stroke-width="1"/>
+      <text x="132" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace">Focal</text>
+
+      <rect x="288" y="760" width="12" height="10" rx="2" fill="#ffffff" stroke="#161616" stroke-width="1"/>
+      <text x="308" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace">Platform module</text>
+
+      <rect x="464" y="760" width="12" height="10" rx="2" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" stroke-width="1"/>
+      <text x="484" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace">External party</text>
+
+      <line x1="640" y1="764" x2="660" y2="764" stroke="#555555" stroke-width="1.2"/>
+      <text x="668" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace">Internal flow</text>
+
+      <line x1="816" y1="764" x2="836" y2="764" stroke="#ed5b2b" stroke-width="1.2"/>
+      <text x="844" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace">External exchange</text>
+
+      <line x1="992" y1="764" x2="1012" y2="764" stroke="#555555" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="1020" y="768" fill="#555555" font-size="8" font-family="'Geist Mono', monospace">Agent context read</text>
+    </svg>
+  </div>
+</body>
+</html>

@@ -40,7 +40,9 @@ type CaseStudyHeroProps = {
   visualNavTone?: 'light';
   accentColor?: string;
   compactTypography?: boolean;
+  titleFontSize?: string;
   wideDetails?: boolean;
+  tagRadius?: string;
 };
 
 export default function CaseStudyHero({
@@ -65,7 +67,9 @@ export default function CaseStudyHero({
   visualNavTone,
   accentColor = '#ed5b2b',
   compactTypography = false,
+  titleFontSize,
   wideDetails = false,
+  tagRadius = '999px',
 }: CaseStudyHeroProps) {
   const fontStyle = { fontFamily: fontFamily.sans };
 
@@ -79,7 +83,7 @@ export default function CaseStudyHero({
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
         marginTop: '-48px',
-        minHeight: '100svh',
+        minHeight: '100dvh',
         padding: 0,
       }}
     >
@@ -165,7 +169,7 @@ export default function CaseStudyHero({
               style={{
                 ...fontStyle,
                 color: '#0a0a0a',
-                fontSize: compactTypography ? 'clamp(29px, 3vw, 46px)' : 'clamp(32px, 3.5vw, 54px)',
+                fontSize: titleFontSize ?? (compactTypography ? 'clamp(29px, 3vw, 46px)' : 'clamp(32px, 3.5vw, 54px)'),
                 fontWeight: 400,
                 lineHeight: compactTypography ? 1.12 : 1.08,
                 margin: '0 0 10px',
@@ -194,7 +198,7 @@ export default function CaseStudyHero({
                     ...fontStyle,
                     alignItems: 'center',
                     background: 'rgb(243 241 234 / 0.86)',
-                    borderRadius: '999px',
+                    borderRadius: tagRadius,
                     color: 'rgb(10 10 10 / 0.58)',
                     display: 'inline-flex',
                     fontSize: '11px',

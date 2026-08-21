@@ -1,5 +1,5 @@
 // ============================================================
-// SelectField — 业务层下拉选择（基于 shadcn / Radix Select）
+// SelectField - 业务层下拉选择（基于 shadcn / Radix Select）
 // ============================================================
 
 import type { ReactNode } from 'react';

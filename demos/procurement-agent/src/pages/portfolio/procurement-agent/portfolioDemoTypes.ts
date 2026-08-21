@@ -47,7 +47,7 @@ export type DemoChatMessage = {
   /** status 卡片：plan=补货四阶段；think=普通思考 */
   mode?: DemoStatusMode;
   progress?: DemoProgress;
-  /** think 模式当前步骤 0–2 */
+  /** think 模式当前步骤 0-2 */
   thinkStep?: number;
 };
 

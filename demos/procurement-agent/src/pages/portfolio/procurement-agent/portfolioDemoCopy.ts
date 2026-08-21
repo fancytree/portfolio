@@ -16,7 +16,7 @@ export const COACH_STEPS = [
     id: 'upload-confirmation',
     target: 'upload-confirmation',
     title: 'Upload confirmation',
-    body: 'Upload the supplier confirmation. The agent diffs it against this plan — prices, quantities, and missing SKUs.',
+    body: 'Upload the supplier confirmation. The agent diffs it against this plan - prices, quantities, and missing SKUs.',
     visibleOn: ['replenishment'] as const satisfies readonly DemoStageId[],
     when: { confirmationUploaded: false },
   },
@@ -24,7 +24,7 @@ export const COACH_STEPS = [
     id: 'approve-plan',
     target: 'approve-plan',
     title: 'Approve',
-    body: 'Review the confirmation diffs, then Approve — directly or push to Owner.',
+    body: 'Review the confirmation diffs, then Approve - directly or push to Owner.',
     visibleOn: ['replenishment'] as const satisfies readonly DemoStageId[],
     when: { confirmationUploaded: true, approved: false, orderRecorded: false },
   },
@@ -32,7 +32,7 @@ export const COACH_STEPS = [
     id: 'review-order',
     target: 'review-order',
     title: 'Review this order',
-    body: 'Receiving is fully closed. Review forecast quality with the agent — over/under order, and arrival vs ETA.',
+    body: 'Receiving is fully closed. Review forecast quality with the agent - over/under order, and arrival vs ETA.',
     visibleOn: ['retrospective'] as const satisfies readonly DemoStageId[],
     when: { reviewDone: false },
   },
@@ -57,7 +57,7 @@ export const COACH_STEPS = [
 export const PORTFOLIO_COPY = {
   guide: 'Guide',
   guideOn: 'Guide on',
-  topTitle: 'DEF ERP — Procurement',
+  topTitle: 'DEF ERP - Procurement',
   demoBadge: 'Demo data · not connected to live transactions',
   stageLabel: 'STAGE',
   agentTitle: 'Procurement agent',
@@ -71,7 +71,7 @@ export const PORTFOLIO_COPY = {
   attachFile: 'Attach file',
   attachFileHint: 'PDF, images, or spreadsheets',
   composerHint: 'Enter to send · Shift+Enter for new line',
-  safety: 'Agent analyzes and records — humans place the order.',
+  safety: 'Agent analyzes and records - humans place the order.',
   reset: 'Reset',
 
   /** 对齐 PoDetail：供应商名 + 采购单 */
@@ -96,21 +96,21 @@ export const PORTFOLIO_COPY = {
   addProductLine: '+ Add product',
   importDocument: 'Import a document',
   opening:
-    "Ask me anything about how this procurement agent was designed — the decisions, the trade-offs, or why the workflow works this way. You can also drive the workflow itself from the left.",
+    "Ask me anything about how this procurement agent was designed - the decisions, the trade-offs, or why the workflow works this way. You can also drive the workflow itself from the left.",
   suggestLow: 'Why can the agent never place the order?',
   /** Still drives the scripted business flow; no longer offered as a default suggestion. */
   kickoffPlan: 'Plan MNP for the next 30 days',
   suggestPlan: 'Why is the quantity calculated, not generated?',
   /** Intake 流程图：点步骤时发到 Agent 的问句 */
-  workflowAskIntake: 'Walk me through Intake — what do I provide vs what you compute?',
+  workflowAskIntake: 'Walk me through Intake - what do I provide vs what you compute?',
   workflowAskPlan: 'How does the Plan step work after intake?',
   workflowAskApprove: 'Who approves, and what happens if I push to Owner?',
-  workflowAskOrder: 'Explain the Order step — who places the supplier order?',
+  workflowAskOrder: 'Explain the Order step - who places the supplier order?',
   workflowAskReceive: 'What do you do at Receive when DDT/invoice arrives?',
-  workflowAskReview: 'What is Review for — how do we close the loop?',
-  clarifyCoverage: 'How many days of sales should this order cover after arrival — 30 or 60?',
+  workflowAskReview: 'What is Review for - how do we close the loop?',
+  clarifyCoverage: 'How many days of sales should this order cover after arrival - 30 or 60?',
   askConstraints: 'Any budget cap, must-include, or exclude SKUs? If not, say “no extra constraints”.',
-  generatePlan: 'No extra constraints — generate the plan',
+  generatePlan: 'No extra constraints - generate the plan',
   placeOrderForMe: 'Just place the order for me',
 
   /** 对齐 PoDetail：供应商名 + 采购单 */
@@ -126,7 +126,7 @@ export const PORTFOLIO_COPY = {
   approveDirect: 'Approve directly',
   approveDirectHint: 'Approve on this plan now as the buyer. Mark as ordered appears after Approve.',
   approvePushOwner: 'Push to Owner',
-  approvePushOwnerHint: 'Send to the Owner approval page. The owner Approves there — then Mark as ordered unlocks.',
+  approvePushOwnerHint: 'Send to the Owner approval page. The owner Approves there - then Mark as ordered unlocks.',
   markOrdered: 'Mark as ordered',
   recordOrdered: 'Mark as ordered',
   markOrderedDialogTitle: 'Mark as ordered',
@@ -142,7 +142,7 @@ export const PORTFOLIO_COPY = {
   markOrderedConfirm: 'Confirm mark as ordered',
   exportRequest: 'Export request',
   exportTitle: 'Export supplier request',
-  exportHint: 'Downloaded only — not sent to supplier. No prices included.',
+  exportHint: 'Downloaded only - not sent to supplier. No prices included.',
   exportLang: 'MNP · document language Italiano (it-IT)',
   exportExcel: 'Excel · .xlsx',
   exportPdf: 'PDF · .pdf',
@@ -155,7 +155,7 @@ export const PORTFOLIO_COPY = {
   attachmentsDownload: 'Download',
   attachmentsDelete: 'Delete',
   attachmentsPreviewTitle: 'Attachment preview',
-  attachmentsPreviewHint: 'Demo preview — file is not fetched from live storage.',
+  attachmentsPreviewHint: 'Demo preview - file is not fetched from live storage.',
   attachmentsDownloaded: (name: string) => `${name} downloaded (demo)`,
   attachmentsDeleted: (name: string) => `${name} removed from this order`,
   /** 附件角标：标明最终批准的确认单，不用 Current */
@@ -178,12 +178,12 @@ export const PORTFOLIO_COPY = {
   reuploadInvoice: 'Upload invoice',
   invoiceFileDemo: 'FT_MNP_2026-0842.pdf',
   invoiceUploadedNote: (fileName: string) =>
-    `Invoice recorded (${fileName}). Listed under Attachments — demo only, no OCR/price overwrite.`,
+    `Invoice recorded (${fileName}). Listed under Attachments - demo only, no OCR/price overwrite.`,
 
   negotiationLogTitle: 'Negotiation log',
   negotiationLogMeta: 'A new entry is recorded only when the uploaded confirmation differs from the previous one',
   viewNegotiationLog: 'Negotiation log',
-  negotiationLogEmpty: 'No negotiation entries yet. Upload a confirmation — a different file creates a new record.',
+  negotiationLogEmpty: 'No negotiation entries yet. Upload a confirmation - a different file creates a new record.',
   negotiationLogNoCurrent: 'No current confirmation bound. Upload a confirmation first.',
   negotiationAdd: 'Add note to current confirmation',
   negotiationPlaceholder: 'e.g. Supplier confirmed 400213 stockout; accept qty cut on 431001…',
@@ -217,24 +217,24 @@ export const PORTFOLIO_COPY = {
 
   approvalTitle: 'Owner approval',
   approvalOwnerBadge: 'Owner view',
-  approvalOwnerMeta: 'Commercial decision only — Approve ≠ place order',
+  approvalOwnerMeta: 'Commercial decision only - Approve ≠ place order',
   approvalStatus: 'Awaiting your approval',
   approvedStatus: 'Approved · not ordered',
   approvalInvalidatedStatus: 'Approval invalidated',
   approvalIdleStatus: 'Not pushed yet',
   approvePlan: 'Approve',
   approvalNote:
-    'You are approving as the owner. This accepts the commercial proposal bound to the current confirmation — it does not place the supplier order.',
+    'You are approving as the owner. This accepts the commercial proposal bound to the current confirmation - it does not place the supplier order.',
   approvalRulesTitle: 'Approval activation rules',
   approvalRulesHint:
     'Agent flags approval when any activation rule fires. Buyers can Approve directly or push to Owner.',
   approvalDetectedBanner:
     'Agent detected approval may be needed. Use Approve to choose: approve directly, or push to Owner.',
-  approvalManualBanner: 'Pushed to Owner. Open Owner approval when ready — or Mark as ordered from the plan if already decided.',
+  approvalManualBanner: 'Pushed to Owner. Open Owner approval when ready - or Mark as ordered from the plan if already decided.',
   approvalSubmittedBanner:
-    'Pushed to Owner. Stay on this plan — Mark as ordered appears only after Approve.',
+    'Pushed to Owner. Stay on this plan - Mark as ordered appears only after Approve.',
   approvalInvalidatedBanner:
-    'A different confirmation was uploaded after approval — previous approval is invalidated. Approve again or push to Owner.',
+    'A different confirmation was uploaded after approval - previous approval is invalidated. Approve again or push to Owner.',
   approvalSourceAgent: 'Triggered by Agent (activation rules)',
   approvalSourceManual: 'Pushed by buyer',
   approvalSourceMixed: 'Rules fired · pushed to Owner',
@@ -315,15 +315,15 @@ export const PORTFOLIO_COPY = {
   receivingNoteOverVsDdt: (extra: number, ddt: number, counted: number) =>
     `Over ${extra} vs DDT (${ddt}→${counted})`,
   receivingNoteMissing: (open: number) => `Not on this DDT (open ${open})`,
-  receivingNoteHold: 'On hold — accept as gift or return',
-  receivingNoteReturn: 'Marked return — will not stock-in',
+  receivingNoteHold: 'On hold - accept as gift or return',
+  receivingNoteReturn: 'Marked return - will not stock-in',
   uploadDdt: 'Upload DDT',
   /** 已上传当前批次 DDT 的完成态（对齐 reviewOrderDone 的写法） */
   uploadDdtDone: 'DDT uploaded',
   /** DDT 上传后预填：把实点与 DDT 的差异一次说清，发送即改表 */
   reportActualsPrefill: (parts: string[]) => `Warehouse counted ${parts.join(', ')}`,
   reportActualsPart: (sku: string, qty: number) => `${qty} for ${sku}`,
-  reportActualsHint: 'Counted quantities differ from the DDT — send to update the sheet.',
+  reportActualsHint: 'Counted quantities differ from the DDT - send to update the sheet.',
   actualsUpdatedTitle: (count: number) =>
     `Updated Actual on ${count} line${count === 1 ? '' : 's'}. Stock-in will use Actual, not DDT.`,
   actualsUpdatedLine: (sku: string, ddt: number, qty: number) => {
@@ -346,7 +346,7 @@ export const PORTFOLIO_COPY = {
   ddtMatchTitle: (label: string, batchNo: number) =>
     `${label} matched to the count sheet (batch ${batchNo}).`,
   ddtMatchStockInNote:
-    'Actual defaults to DDT qty. Edit Actual or tell me if warehouse count differs — stock-in uses Actual.',
+    'Actual defaults to DDT qty. Edit Actual or tell me if warehouse count differs - stock-in uses Actual.',
   holdUnresolved: 'Resolve held lines before confirming receipt',
   holdBannerTitle: 'Hold blocking Confirm receipt',
   holdBannerBody: (sku: string, name: string) =>
@@ -375,7 +375,7 @@ export const PORTFOLIO_COPY = {
     },
     return_no_stock: {
       title: 'Return / do not stock',
-      description: 'Overage, wrong goods, damage, or refuse — exclude from inventory and close the PO.',
+      description: 'Overage, wrong goods, damage, or refuse - exclude from inventory and close the PO.',
       result: 'After save: PO moves to received / closed; return reason is recorded.',
     },
   },
@@ -394,7 +394,7 @@ export const PORTFOLIO_COPY = {
   dismissLearning: 'Dismiss',
   /** 复盘对话：提问后预填输入框，用户自由反馈，无 Recommended chips */
   reviewOrderIntro:
-    'Receiving is fully closed. Before I write anything down, I need your read on the forecast signals that matter for the next buy — reply in the input below (I drafted a starting answer you can edit).',
+    'Receiving is fully closed. Before I write anything down, I need your read on the forecast signals that matter for the next buy - reply in the input below (I drafted a starting answer you can edit).',
   reviewOrderAskBullets: [
     'Did we over-order or under-order vs real demand after arrival?',
     'Was supplier arrival timing close to the ETA we planned?',
@@ -404,7 +404,7 @@ export const PORTFOLIO_COPY = {
   // NEW-024 是 DDT 赠品/退回线，不参与超订复盘示例
   reviewOrderDraft:
     'Qty: a bit over on slower movers (510002 / 420106); 370102 was about right. ETA: first batch on time, second a few days late vs plan. For next MNP buy I’d keep 30d coverage but watch lead-time p90.',
-  reviewFeedbackTitle: 'Thanks — I’ve got your retrospective feedback.',
+  reviewFeedbackTitle: 'Thanks - I’ve got your retrospective feedback.',
   reviewFeedbackRemembered:
     'I’ve remembered this for my training. Next time I plan an MNP buy, I’ll weigh over/under-order and ETA accuracy before suggesting coverage or lead-time assumptions. Nothing becomes a live supplier rule until a human publishes it.',
 
@@ -423,14 +423,14 @@ export const PORTFOLIO_COPY = {
 
   /** Intake 流程图：Agent 对每步的解释（点步骤时对话） */
   workflowReplyIntake:
-    'Intake is conversational — no form first. You tell me supplier, coverage window, and any constraint; I ask only what’s missing, then extract a goal card on the canvas.',
+    'Intake is conversational - no form first. You tell me supplier, coverage window, and any constraint; I ask only what’s missing, then extract a goal card on the canvas.',
   workflowReplyIntakeBullets: [
     'You: answer in chat (or send a sample request like “Plan MNP for the next 30 days”).',
     'Me: clarify coverage / constraints, then hand off into Plan.',
     'Tip: click other steps on the flow to ask me about them anytime.',
   ],
   workflowReplyPlan:
-    'Plan is where I turn the goal into an editable draft PO — forecast quantities, order window, and expected arrival — still human-editable before any approval.',
+    'Plan is where I turn the goal into an editable draft PO - forecast quantities, order window, and expected arrival - still human-editable before any approval.',
   workflowReplyPlanBullets: [
     'Me: compute demand signals and line quantities against MNP rules.',
     'You: edit qty / SKUs, then Approve (or push to Owner).',
@@ -444,18 +444,18 @@ export const PORTFOLIO_COPY = {
     'Approval never places the supplier order.',
   ],
   workflowReplyOrder:
-    'Order is human-only. I never contact the supplier or place the PO for you — I only record what you mark after you order externally.',
+    'Order is human-only. I never contact the supplier or place the PO for you - I only record what you mark after you order externally.',
   workflowReplyOrderBullets: [
     'You: order outside the platform, then Mark as ordered (time, operator, expected arrival).',
     'Me: keep evidence, confirmation diffs, and the audit trail.',
     'If you ask me to “just place the order”, I’ll refuse and explain this boundary.',
   ],
   workflowReplyReceive:
-    'Receive is matching reality to the plan — DDT / invoice vs ordered lines, including gifts and qty gaps.',
+    'Receive is matching reality to the plan - DDT / invoice vs ordered lines, including gifts and qty gaps.',
   workflowReplyReceiveBullets: [
     'Me: flag short/over, missing lines, gifts, and holds.',
     'You: confirm receipt batches and resolve dispositions.',
-    'Stock-in only after you confirm — I don’t auto-receive.',
+    'Stock-in only after you confirm - I don’t auto-receive.',
   ],
   workflowReplyReview:
     'Review closes the loop: forecast vs actual sell-through after stock-in, so the next buy is sharper.',
@@ -466,9 +466,9 @@ export const PORTFOLIO_COPY = {
   ],
 
   confirmationDiff:
-    'I compared the platform PO with the supplier confirmation:\n• Missing: 400213 Functional treatment 50 ml\n• Qty: 370102 96→90 · 431001 72→60 · 510002 24→18\n• Price: confirmation above Est. across the board (e.g. 370102 €5.40→€6.20 · 420106 €7.10→€7.90 · color gels €6.20→€7.00) — Conf. goods total is higher despite qty cuts\nGaps are highlighted on the plan table. Approval activation rules fired — Submit for approval on this page (does not leave the plan).',
+    'I compared the platform PO with the supplier confirmation:\n• Missing: 400213 Functional treatment 50 ml\n• Qty: 370102 96→90 · 431001 72→60 · 510002 24→18\n• Price: confirmation above Est. across the board (e.g. 370102 €5.40→€6.20 · 420106 €7.10→€7.90 · color gels €6.20→€7.00) - Conf. goods total is higher despite qty cuts\nGaps are highlighted on the plan table. Approval activation rules fired - Submit for approval on this page (does not leave the plan).',
   confirmationSameFile:
-    'Same confirmation file as the current upload — negotiation log was not duplicated. Diffs and attachments stay bound to this file.',
+    'Same confirmation file as the current upload - negotiation log was not duplicated. Diffs and attachments stay bound to this file.',
   confirmationDifferentRecorded: (fileName: string) =>
     `Different confirmation detected (${fileName}). Negotiation log recorded a new entry. If a prior approval existed, it is invalidated.`,
 } as const;

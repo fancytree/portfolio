@@ -111,11 +111,12 @@ body.no-scroll {
     pointer-events: none;
     transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
     transition:
-      width 0.26s cubic-bezier(0.22, 1, 0.36, 1),
-      height 0.26s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.2s ease,
-      background-color 0.2s ease,
-      box-shadow 0.2s ease,
+      width 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.24s ease,
+      background-color 0.24s ease,
+      box-shadow 0.3s ease,
       opacity 0.16s ease;
     will-change: transform, width, height, opacity;
   }
@@ -133,22 +134,28 @@ body.no-scroll {
   }
 
   .mei-custom-cursor[data-variant='pill'][data-has-label='true'] {
-    width: auto;
-    min-width: 58px;
+    width: 92px;
     padding: 0 11px;
   }
 
   .mei-custom-cursor__label {
     max-width: 90px;
+    filter: blur(2px);
     overflow: hidden;
     opacity: 0;
+    transform: translateY(2px) scale(0.94);
     text-overflow: ellipsis;
-    transition: opacity 0.16s ease;
+    transition:
+      opacity 0.16s ease 0.06s,
+      transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) 0.04s,
+      filter 0.18s ease 0.04s;
     white-space: nowrap;
   }
 
   .mei-custom-cursor[data-variant='pill'][data-has-label='true'] .mei-custom-cursor__label {
+    filter: blur(0);
     opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
