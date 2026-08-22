@@ -394,8 +394,8 @@ const experienceItems = [
   },
 ];
 
-const skills = ['User Research', 'Product Strategy', 'Interaction Design', 'Information Architecture', 'AI UX'];
-const toolkit = ['Figma', 'ProtoPie', 'Cursor', 'Dify & Coze', 'ComfyUI'];
+const skills = ['User Research', 'Product Strategy', 'Interaction Design', 'Information Architecture', 'AI UX', 'Design Systems', 'Data Visualization', 'Prototyping'];
+const toolkit = ['Figma', 'Cursor', 'Claude Code', 'Maze', 'ProtoPie', 'n8n', 'Arduino', 'TouchDesigner'];
 const contactEmail = 'mei.chai@mail.polimi.it';
 
 export default function Home() {
