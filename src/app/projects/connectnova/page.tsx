@@ -429,10 +429,14 @@ function AIRankingViewMock({
   fontStyle,
   defaultTab = 'rankings',
   enableProfilePanel = false,
+  frameHeight,
+  defaultProfileCandidateName,
 }: {
   fontStyle: { fontFamily: string };
   defaultTab?: 'rankings' | 'pool';
   enableProfilePanel?: boolean;
+  frameHeight?: string;
+  defaultProfileCandidateName?: string;
 }) {
   // 对齐截图主色（ConnectNova 系蓝）
   const primary = '#0052CC';
@@ -440,8 +444,8 @@ function AIRankingViewMock({
   const [hasEntered, setHasEntered] = useState(false);
   const [activeTab, setActiveTab] = useState<'rankings' | 'pool'>(defaultTab);
   const [expandedCandidateName, setExpandedCandidateName] = useState<string | null>(null);
-  const [profileCandidateName, setProfileCandidateName] = useState<string | null>(null);
-  const [profilePanelVisible, setProfilePanelVisible] = useState(false);
+  const [profileCandidateName, setProfileCandidateName] = useState<string | null>(defaultProfileCandidateName ?? null);
+  const [profilePanelVisible, setProfilePanelVisible] = useState(Boolean(defaultProfileCandidateName));
   const profilePanelTimerRef = useRef<number | null>(null);
 
   type RationaleSegment = { text: string; bold?: boolean };
@@ -651,7 +655,7 @@ function AIRankingViewMock({
   return (
     <div
       className={`relative flex flex-col overflow-hidden bg-slate-50 ${connectNovaSolutionMockFrameClassName}`}
-      style={fontStyle}
+      style={{ ...fontStyle, ...(frameHeight ? { height: frameHeight } : {}) }}
       aria-label="AI Ranking mock view"
     >
       {/* 页头：与截图一致（返回、标题+编辑、统计、右上操作） */}
@@ -1333,6 +1337,8 @@ function ProfilePanelSlideMock({
       className={`${panelOnly ? 'block' : 'grid'} min-h-0 bg-slate-50 ${connectNovaProfilePanelMockFrameClassName}`}
       style={{
         ...fontStyle,
+        border: panelOnly ? 0 : undefined,
+        borderRadius: panelOnly ? 0 : undefined,
         gridTemplateColumns: panelOnly
           ? undefined
           : gridOpen
@@ -1910,11 +1916,11 @@ I led the 0–1 design of the Chrome extension and web platform.`}
       />
 
       <ConnectnovaNarrative
-        informationArchitectureVisual={<AIRankingViewMock fontStyle={fontStyle} enableProfilePanel />}
+        informationArchitectureVisual={<AIRankingViewMock fontStyle={fontStyle} enableProfilePanel frameHeight="min(440px, 52svh)" />}
         designComponentsVisual={<DesignSystemComponentsMock fontStyle={fontStyle} />}
         manageWorkspaceVisual={
           <div className="[&>*]:!h-full" style={{ height: 'min(540px, 62svh)' }}>
-            <AIRankingViewMock fontStyle={fontStyle} defaultTab="rankings" enableProfilePanel />
+            <AIRankingViewMock fontStyle={fontStyle} defaultTab="rankings" enableProfilePanel defaultProfileCandidateName="Samik Mathur" />
           </div>
         }
       />

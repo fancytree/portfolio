@@ -152,7 +152,7 @@ function DesignResultStructuredOperations() {
   );
 }
 
-function ProcurementTurningPoint() {
+function ResponsibilityShiftDiagram() {
   const beforeTasks = [
     'Find data',
     'Organize data',
@@ -162,6 +162,82 @@ function ProcurementTurningPoint() {
     'Create order',
   ];
 
+  return (
+    <div className="w-full overflow-x-auto" aria-label="Phase 1 responsibility shift diagram">
+      <svg
+        className="h-auto min-w-[820px] w-full"
+        viewBox="0 0 1080 500"
+        role="img"
+        aria-labelledby="phase-one-responsibility-title phase-one-responsibility-desc"
+        style={bodyStyle}
+      >
+        <title id="phase-one-responsibility-title">Responsibility shift after Phase 1</title>
+        <desc id="phase-one-responsibility-desc">Before Phase 1, the buyer carried the full procurement workflow. After Phase 1, the system retrieved data and organized workflow while calculation, supplier rules, judgment, and formal ordering remained human responsibilities.</desc>
+        <defs>
+          <marker id="phase-one-arrow-muted" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="rgba(255,255,255,0.42)" />
+          </marker>
+          <marker id="phase-one-arrow-blue" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#7fa2ff" />
+          </marker>
+          <marker id="phase-one-arrow-orange" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#ed5b2b" />
+          </marker>
+        </defs>
+
+        <text x="40" y="32" fill="#afafaf" fontSize="12" fontWeight="700" letterSpacing="1.2">BEFORE PHASE 1</text>
+        <text x="664" y="32" fill="#afafaf" fontSize="12" fontWeight="700" letterSpacing="1.2">AFTER PHASE 1</text>
+
+        <path d="M360 248 H432" fill="none" stroke="rgba(255,255,255,0.32)" strokeWidth="1.2" markerEnd="url(#phase-one-arrow-muted)" />
+        <path d="M576 248 H616" fill="none" stroke="rgba(255,255,255,0.32)" strokeWidth="1.2" />
+        <path d="M616 248 V144 H664" fill="none" stroke="#7fa2ff" strokeWidth="1.2" markerEnd="url(#phase-one-arrow-blue)" />
+        <path d="M616 248 V360 H664" fill="none" stroke="#ed5b2b" strokeWidth="1.2" markerEnd="url(#phase-one-arrow-orange)" />
+        <circle cx="616" cy="248" r="4" fill="#161616" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" />
+
+        <rect x="40" y="72" width="320" height="384" rx="8" fill="#202020" stroke="rgba(255,255,255,0.18)" />
+        <text x="64" y="108" fill="#afafaf" fontSize="8" fontWeight="700" letterSpacing="1.2">BUYER OWNED</text>
+        <text x="64" y="140" fill="#ffffff" fontSize="20" fontWeight="700">The full workflow</text>
+        <line x1="64" y1="160" x2="336" y2="160" stroke="rgba(255,255,255,0.14)" />
+        {beforeTasks.map((task, index) => {
+          const y = 192 + index * 40;
+          return (
+            <g key={task}>
+              <text x="64" y={y} fill="#777777" fontSize="8" fontWeight="700">{String(index + 1).padStart(2, '0')}</text>
+              <text x="96" y={y} fill="#ffffff" fontSize="12" fontWeight="600">{task}</text>
+              {index < beforeTasks.length - 1 && <line x1="64" y1={y + 16} x2="336" y2={y + 16} stroke="rgba(255,255,255,0.08)" />}
+            </g>
+          );
+        })}
+
+        <rect x="432" y="216" width="144" height="64" rx="8" fill="#161616" stroke="rgba(255,255,255,0.28)" />
+        <text x="504" y="240" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="700" letterSpacing="1.2">PHASE 1</text>
+        <text x="504" y="260" textAnchor="middle" fill="#777777" fontSize="8" fontWeight="600">Records connected</text>
+
+        <rect x="664" y="72" width="376" height="148" rx="8" fill="rgba(127,162,255,0.12)" stroke="#7fa2ff" strokeWidth="1.2" />
+        <text x="688" y="104" fill="#7fa2ff" fontSize="8" fontWeight="700" letterSpacing="1.2">SYSTEM NOW</text>
+        <text x="688" y="132" fill="#ffffff" fontSize="16" fontWeight="700">Operational work moves to the system</text>
+        <rect x="688" y="156" width="144" height="40" rx="6" fill="rgba(127,162,255,0.12)" stroke="rgba(127,162,255,0.46)" />
+        <text x="760" y="180" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Retrieve data</text>
+        <rect x="840" y="156" width="176" height="40" rx="6" fill="rgba(127,162,255,0.12)" stroke="rgba(127,162,255,0.46)" />
+        <text x="928" y="180" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Organize workflow</text>
+
+        <rect x="664" y="264" width="376" height="192" rx="8" fill="rgba(237,91,43,0.10)" stroke="#ed5b2b" strokeWidth="1.2" />
+        <text x="688" y="296" fill="#ed5b2b" fontSize="8" fontWeight="700" letterSpacing="1.2">BUYER STILL</text>
+        <text x="688" y="324" fill="#ffffff" fontSize="16" fontWeight="700">Decision authority stays human</text>
+        <rect x="688" y="344" width="104" height="40" rx="6" fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
+        <text x="740" y="368" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Calculate</text>
+        <rect x="804" y="344" width="192" height="40" rx="6" fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
+        <text x="900" y="368" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Apply supplier rules</text>
+        <rect x="688" y="396" width="152" height="40" rx="6" fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
+        <text x="764" y="420" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Make judgment</text>
+        <text x="856" y="412" fill="#afafaf" fontSize="8" fontWeight="700" letterSpacing="0.8">FINAL AUTHORITY</text>
+        <text x="856" y="432" fill="#ffffff" fontSize="12" fontWeight="600">Place formal order</text>
+      </svg>
+    </div>
+  );
+}
+
+function ProcurementTurningPoint() {
   return (
     <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="05 / The Turning Point">
       <ChapterTitle inverse>05 / The Turning Point</ChapterTitle>
@@ -189,53 +265,7 @@ function ProcurementTurningPoint() {
         </footer>
       </blockquote>
 
-      <div className="grid border-y border-white/20 lg:grid-cols-2">
-        <article className="py-[clamp(26px,4vw,40px)] lg:pr-[clamp(24px,4vw,48px)]">
-          <p className="m-0 mb-6 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
-            Before Phase 1
-          </p>
-          <div className="flex flex-col">
-            {beforeTasks.map((task, index) => (
-              <div key={task} className="flex items-center gap-4 border-t border-white/15 py-4 first:border-t-0 first:pt-0">
-                <span className="text-[10px] font-bold text-[#777]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</span>
-                <span className="text-[16px] font-bold text-white" style={bodyStyle}>{task}</span>
-                {index < beforeTasks.length - 1 && <span className="ml-auto text-[14px] text-[#777]" aria-hidden>+</span>}
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="border-t border-white/20 py-[clamp(26px,4vw,40px)] lg:border-l lg:border-t-0 lg:pl-[clamp(24px,4vw,48px)]">
-          <p className="m-0 mb-6 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
-            After Phase 1
-          </p>
-          <div className="flex flex-col gap-3">
-            <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>System now</p>
-            {['Retrieves data', 'Organizes workflow'].map((task) => (
-              <div key={task} className="flex items-center gap-3 border-t border-white/15 py-3 text-[15px] font-bold text-white first:border-t-0" style={bodyStyle}>
-                <span className="size-1.5 rounded-full bg-[#7fa2ff]" aria-hidden />
-                {task}
-              </div>
-            ))}
-          </div>
-
-          <div className="my-7 flex items-center gap-4" aria-label="But buyers still perform the decision work">
-            <span className="h-px flex-1 bg-white/20" />
-            <span className="bg-[#ed5b2b] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.06em] text-white" style={bodyStyle}>But</span>
-            <span className="h-px flex-1 bg-white/20" />
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#ed5b2b]" style={bodyStyle}>Buyer still</p>
-            {['Calculate', 'Apply supplier rules', 'Make judgment'].map((task) => (
-              <div key={task} className="flex items-center gap-3 border-t border-white/15 py-3 text-[15px] font-bold text-white first:border-t-0" style={bodyStyle}>
-                <span className="size-1.5 rounded-full bg-[#ed5b2b]" aria-hidden />
-                {task}
-              </div>
-            ))}
-          </div>
-        </article>
-      </div>
+      <ResponsibilityShiftDiagram />
 
       <div>
         <p className="m-0 max-w-[820px] text-[clamp(23px,3vw,36px)] font-bold leading-[1.16] tracking-[-0.018em] text-white" style={bodyStyle}>
@@ -558,6 +588,132 @@ function AgentUxIterationsSection() {
 }
 
 const demoUrl = '/demos/procurement-agent/index.html';
+
+function ProcurementWorkspaceTreeDiagram() {
+  const leaves = [
+    { x: 32, title: 'All orders', note: 'Lifecycle portfolio' },
+    { x: 200, title: 'Purchase plan', note: 'Editable proposal', focal: true },
+    { x: 368, title: 'Document check', note: 'Confirmation to receipt' },
+    { x: 536, title: 'Supplier memory', note: 'Rules and performance' },
+    { x: 744, title: 'Approval', note: 'High-impact gate' },
+    { x: 912, title: 'Learning review', note: 'Governed memory' },
+  ];
+
+  return (
+    <figure className="m-0 flex flex-col gap-5">
+      <figcaption className="flex flex-col gap-2">
+        <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Information architecture</p>
+        <h3 className="m-0 text-[clamp(22px,2.8vw,28px)] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>Procurement Workspace</h3>
+      </figcaption>
+      <div className="w-full overflow-x-auto">
+        <svg className="h-auto min-w-[820px] w-full" viewBox="0 0 1080 404" role="img" aria-labelledby="workspace-tree-title workspace-tree-desc" style={bodyStyle}>
+          <title id="workspace-tree-title">Procurement Workspace information architecture</title>
+          <desc id="workspace-tree-desc">A hierarchy showing the Procurement Workspace branching into planning and execution areas plus governance and learning areas.</desc>
+
+          <path d="M540 80 V112" fill="none" stroke="#777777" />
+          <path d="M360 112 H800" fill="none" stroke="#777777" />
+          <path d="M360 112 V136 M800 112 V136" fill="none" stroke="#777777" />
+          <path d="M360 192 V232 M104 232 H608" fill="none" stroke="#777777" />
+          <path d="M104 232 V280 M272 232 V280 M440 232 V280 M608 232 V280" fill="none" stroke="#777777" />
+          <path d="M800 192 V232 H984" fill="none" stroke="#777777" />
+          <path d="M816 232 V280 M984 232 V280" fill="none" stroke="#777777" />
+
+          <rect x="420" y="24" width="240" height="56" rx="8" fill="#161616" stroke="#161616" />
+          <text x="540" y="48" textAnchor="middle" fill="#ffffff" fontSize="8" fontWeight="700" letterSpacing="1.2">ROOT WORKSPACE</text>
+          <text x="540" y="68" textAnchor="middle" fill="#ffffff" fontSize="16" fontWeight="700">Procurement Workspace</text>
+
+          <rect x="240" y="136" width="240" height="56" rx="8" fill="#f4f4f4" stroke="#777777" />
+          <text x="360" y="160" textAnchor="middle" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">OPERATE</text>
+          <text x="360" y="180" textAnchor="middle" fill="#161616" fontSize="16" fontWeight="700">Plan and execute</text>
+          <rect x="680" y="136" width="240" height="56" rx="8" fill="#f4f4f4" stroke="#777777" />
+          <text x="800" y="160" textAnchor="middle" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">CONTROL</text>
+          <text x="800" y="180" textAnchor="middle" fill="#161616" fontSize="16" fontWeight="700">Govern and learn</text>
+
+          {leaves.map((leaf) => (
+            <g key={leaf.title}>
+              <rect x={leaf.x} y="280" width="144" height="88" rx="8" fill={leaf.focal ? '#e9eef8' : '#ffffff'} stroke={leaf.focal ? '#2155e8' : '#cfcfcf'} strokeWidth={leaf.focal ? 1.2 : 1} />
+              <text x={leaf.x + 16} y="312" fill={leaf.focal ? '#2155e8' : '#161616'} fontSize="12" fontWeight="700">{leaf.title}</text>
+              <text x={leaf.x + 16} y="340" fill="#777777" fontSize="8" fontWeight="600">{leaf.note}</text>
+            </g>
+          ))}
+        </svg>
+      </div>
+    </figure>
+  );
+}
+
+function AgentSemanticLayersDiagram() {
+  return (
+    <figure className="m-0 flex flex-col gap-5">
+      <figcaption className="flex flex-col gap-2">
+        <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Agent state semantics</p>
+        <h3 className="m-0 text-[clamp(22px,2.8vw,28px)] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>From state language to governed interaction</h3>
+      </figcaption>
+      <div className="w-full overflow-x-auto">
+        <svg className="h-auto min-w-[820px] w-full" viewBox="0 0 1080 500" role="img" aria-labelledby="semantic-layers-title semantic-layers-desc" style={bodyStyle}>
+          <title id="semantic-layers-title">Agent semantic system layers</title>
+          <desc id="semantic-layers-desc">Four layers connect semantic states to evidence, risk, action, approval, and learning components in the Procurement Agent.</desc>
+          <defs>
+            <marker id="semantic-layer-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#777777" />
+            </marker>
+          </defs>
+
+          <path d="M48 64 V440" fill="none" stroke="#777777" markerEnd="url(#semantic-layer-arrow)" />
+          <text x="28" y="56" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="0.8">STATE</text>
+          <text x="16" y="468" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="0.8">BEHAVIOR</text>
+
+          <rect x="80" y="40" width="960" height="92" rx="8" fill="#ffffff" stroke="#cfcfcf" />
+          <text x="104" y="72" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L1</text>
+          <text x="152" y="80" fill="#161616" fontSize="16" fontWeight="700">Semantic states</text>
+          {[
+            { x: 432, w: 88, label: 'RULE', fill: '#e9eef8', color: '#2155e8' },
+            { x: 528, w: 136, label: 'OBSERVATION', fill: '#e5e5e5', color: '#3b3b3b' },
+            { x: 672, w: 120, label: 'SUGGESTION', fill: '#e8f3ec', color: '#208a4b' },
+            { x: 800, w: 72, label: 'RISK', fill: '#f5e8e7', color: '#9c2e2e' },
+            { x: 880, w: 112, label: 'APPROVAL', fill: '#f6f0df', color: '#8a6500' },
+          ].map((state) => (
+            <g key={state.label}>
+              <rect x={state.x} y="64" width={state.w} height="40" rx="6" fill={state.fill} />
+              <text x={state.x + state.w / 2} y="88" textAnchor="middle" fill={state.color} fontSize="8" fontWeight="700" letterSpacing="0.4">{state.label}</text>
+            </g>
+          ))}
+
+          <rect x="80" y="148" width="960" height="92" rx="8" fill="#f4f4f4" stroke="#cfcfcf" />
+          <text x="104" y="180" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L2</text>
+          <text x="152" y="188" fill="#161616" fontSize="16" fontWeight="700">Evidence and explanation</text>
+          {[
+            { x: 416, w: 136, label: 'KnowledgeBadge' },
+            { x: 560, w: 120, label: 'EvidenceLink' },
+            { x: 688, w: 160, label: 'ConfidenceIndicator' },
+            { x: 856, w: 136, label: 'DecisionTrace' },
+          ].map((item) => (
+            <g key={item.label}>
+              <rect x={item.x} y="172" width={item.w} height="40" rx="6" fill="#ffffff" stroke="#d8d8d8" />
+              <text x={item.x + item.w / 2} y="196" textAnchor="middle" fill="#161616" fontSize="8" fontWeight="700">{item.label}</text>
+            </g>
+          ))}
+
+          <rect x="80" y="256" width="960" height="92" rx="8" fill="#ffffff" stroke="#cfcfcf" />
+          <text x="104" y="288" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L3</text>
+          <text x="152" y="296" fill="#161616" fontSize="16" fontWeight="700">Risk and action</text>
+          <rect x="584" y="280" width="136" height="40" rx="6" fill="#f5e8e7" stroke="#d8b8b5" />
+          <text x="652" y="304" textAnchor="middle" fill="#9c2e2e" fontSize="8" fontWeight="700">RiskBanner</text>
+          <rect x="736" y="280" width="176" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8" />
+          <text x="824" y="304" textAnchor="middle" fill="#161616" fontSize="8" fontWeight="700">AgentActionFooter</text>
+
+          <rect x="80" y="364" width="960" height="92" rx="8" fill="#f4f4f4" stroke="#cfcfcf" />
+          <text x="104" y="396" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L4</text>
+          <text x="152" y="404" fill="#161616" fontSize="16" fontWeight="700">Governance and learning</text>
+          <rect x="560" y="388" width="144" height="40" rx="6" fill="#f6f0df" stroke="#d8c99d" />
+          <text x="632" y="412" textAnchor="middle" fill="#8a6500" fontSize="8" fontWeight="700">ApprovalGate</text>
+          <rect x="720" y="388" width="216" height="40" rx="6" fill="#e9eef8" stroke="#b8c6ea" />
+          <text x="828" y="412" textAnchor="middle" fill="#2155e8" fontSize="8" fontWeight="700">LearningCandidateCard</text>
+        </svg>
+      </div>
+    </figure>
+  );
+}
 
 function InteractiveDemo() {
   return (
@@ -1001,91 +1157,9 @@ export default function ProcurementAgentPage() {
             SUPPORTING WORKSPACE + SEMANTIC SYSTEM
           </p>
 
-          <div className="grid border-y border-[#cfcfcf] lg:grid-cols-[0.92fr_1.08fr]">
-            <article className="py-[clamp(28px,4vw,40px)] lg:pr-[clamp(28px,4vw,48px)]">
-              <div className="mb-6 flex flex-col gap-2">
-                <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
-                  Information architecture
-                </p>
-                <h3 className="m-0 text-[clamp(22px,2.8vw,28px)] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>
-                  Procurement Workspace
-                </h3>
-              </div>
-              <div className="flex flex-col">
-                {[
-                  { label: 'ALL ORDERS', body: 'Cards across draft, placed, received and cancelled' },
-                  { label: 'PURCHASE PLAN', body: 'Editable optimal proposal grouped by SPU', highlighted: true },
-                  { label: 'DOCUMENT CHECK', body: 'Confirmation, DDT and actual receipt differences' },
-                  { label: 'SUPPLIER MEMORY', body: 'Rules, lead-time performance and confirmed habits' },
-                  { label: 'APPROVAL', body: 'High-impact SKU flags and final negotiated plan' },
-                  { label: 'LEARNING REVIEW', body: 'Outcome evidence and governed memory candidates' },
-                ].map((item, index) => (
-                  <div
-                    key={item.label}
-                    className="flex gap-4 border-t border-[#d8d8d8] px-3 py-[14px]"
-                    style={{ background: item.highlighted ? '#e9eef8' : 'transparent', borderLeft: item.highlighted ? `3px solid ${accent}` : '3px solid transparent' }}
-                  >
-                    <p className="m-0 w-6 shrink-0 text-[10px] font-bold" style={{ ...bodyStyle, color: item.highlighted ? accent : '#777' }}>
-                      {String(index + 1).padStart(2, '0')}
-                    </p>
-                    <div className="flex flex-col gap-1">
-                      <p className="m-0 text-[12px] font-bold text-[#161616]" style={bodyStyle}>
-                        {item.label}
-                      </p>
-                      <p className="m-0 text-[11px] font-normal leading-[1.45] text-[#555]" style={bodyStyle}>
-                        {item.body}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="border-t border-[#cfcfcf] py-[clamp(28px,4vw,40px)] lg:border-l lg:border-t-0 lg:pl-[clamp(28px,4vw,48px)]">
-              <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
-                Agent state semantics
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {[
-                  { label: 'RULE', bg: '#e9eef8', color: accent },
-                  { label: 'OBSERVATION', bg: '#e5e5e5', color: '#3b3b3b' },
-                  { label: 'SUGGESTION', bg: '#e8f3ec', color: '#208a4b' },
-                  { label: 'RISK', bg: '#f5e8e7', color: '#9c2e2e' },
-                  { label: 'APPROVAL', bg: '#f6f0df', color: '#8a6500' },
-                ].map((token) => (
-                  <div key={token.label} className="flex h-8 items-center px-3" style={{ background: token.bg }}>
-                    <p className="m-0 text-[9px] font-bold tracking-[0.02em]" style={{ ...bodyStyle, color: token.color }}>
-                      {token.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <p className="m-0 mt-8 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
-                Core Agent components
-              </p>
-              <div className="mt-4 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-                {[
-                  { name: 'KnowledgeBadge', body: 'Source and freshness' },
-                  { name: 'ConfidenceIndicator', body: 'Certainty without false precision' },
-                  { name: 'EvidenceLink', body: 'Inspectable proof' },
-                  { name: 'RiskBanner', body: 'What can go wrong' },
-                  { name: 'ApprovalGate', body: 'Blocks unauthorized progress' },
-                  { name: 'DecisionTrace', body: 'Why this recommendation exists' },
-                  { name: 'LearningCandidateCard', body: 'Review before memory update' },
-                  { name: 'AgentActionFooter', body: 'Human action at the right moment' },
-                ].map((component) => (
-                  <div key={component.name} className="flex min-h-[64px] flex-col gap-1 border-t border-[#d8d8d8] py-3">
-                    <p className="m-0 text-[12px] font-bold text-[#161616]" style={bodyStyle}>
-                      {component.name}
-                    </p>
-                    <p className="m-0 text-[11px] font-normal leading-[1.4] text-[#777]" style={bodyStyle}>
-                      {component.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </article>
+          <div className="flex flex-col gap-[clamp(56px,8vw,96px)] border-y border-[#cfcfcf] py-[clamp(32px,5vw,56px)]">
+            <ProcurementWorkspaceTreeDiagram />
+            <AgentSemanticLayersDiagram />
           </div>
 
           <div className="flex flex-col gap-3 border-l-[4px] border-[#2155e8] bg-white px-5 py-5 sm:flex-row sm:items-baseline sm:gap-6">

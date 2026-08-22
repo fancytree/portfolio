@@ -63,7 +63,7 @@ export default function Phase1ScreenshotSwitcher() {
       className="m-0 flex flex-col gap-4"
       aria-label="Phase 1 product screenshots"
     >
-      <div className="grid max-w-[320px] grid-cols-2 gap-3" role="tablist" aria-label="Phase 1 views">
+      <div className="inline-flex w-fit gap-1 rounded-full border border-[#e2e2e2] bg-white p-1" role="tablist" aria-label="Phase 1 views">
         {shots.map((shot, index) => {
           const selected = index === active;
           return (
@@ -72,28 +72,15 @@ export default function Phase1ScreenshotSwitcher() {
               type="button"
               role="tab"
               aria-selected={selected}
-              className="group relative flex min-h-10 items-center justify-between border-b px-1 py-1.5 text-left transition-[background-color,border-color,color,transform] duration-200 hover:border-[#2155e8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2155e8] active:translate-y-px"
+              className="flex min-h-9 items-center justify-center rounded-full border-0 px-4 py-2 text-left transition-[background-color,color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2155e8] active:scale-[0.98]"
               style={{
-                background: 'transparent',
-                borderColor: selected ? '#2155e8' : '#cfcfcf',
+                ...bodyStyle,
+                background: selected ? '#2155e8' : 'transparent',
+                color: selected ? '#FFFFFF' : '#666666',
               }}
               onClick={() => go(index)}
             >
-              <span className="flex items-center">
-                <span
-                  className="text-[12px] font-bold tracking-[-0.01em]"
-                  style={{ ...bodyStyle, color: selected ? '#161616' : '#666' }}
-                >
-                  {shot.label}
-                </span>
-              </span>
-              <span className="flex items-center">
-                <span
-                  className="size-1 rounded-full transition-colors"
-                  style={{ background: selected ? '#2155e8' : '#cfcfcf' }}
-                  aria-hidden
-                />
-              </span>
+              <span className="whitespace-nowrap text-[12px] font-semibold tracking-[-0.01em]">{shot.label}</span>
             </button>
           );
         })}
