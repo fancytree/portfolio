@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { useFullscreen } from '@/lib/useFullscreen';
 import { DEMO_CLOSE_MESSAGE } from '@/lib/demoMessages';
@@ -9,13 +9,36 @@ type Props = {
   title: string;
   blurb: string;
   src: string;
-  /** Scales the demo down inside the card so a full desktop layout stays legible. */
-  previewScale?: number;
 };
 
-export default function HomeDemoCard({ title, blurb, src, previewScale = 0.62 }: Props) {
+/**
+ * The preview renders the demo at a real desktop viewport and scales that down
+ * to the card. Sizing the iframe as a percentage of the card instead would tie
+ * the viewport to the card's width, so the app would lay itself out for a narrow
+ * screen and the preview would read as zoomed-in and cropped.
+ *
+ * 1024 rather than a wider desktop width: it clears the md breakpoint both demos
+ * use for their full layout, without shrinking the miniature so far that nothing
+ * in it is legible.
+ */
+const PREVIEW_VIEWPORT_WIDTH = 1024;
+const PREVIEW_VIEWPORT_HEIGHT = 720;
+
+export default function HomeDemoCard({ title, blurb, src }: Props) {
   const frameRef = useRef<HTMLDivElement | null>(null);
+  const [previewScale, setPreviewScale] = useState(0);
   const { isFullscreen, supported, toggle } = useFullscreen(frameRef);
+
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(() => {
+      const width = el.clientWidth;
+      if (width > 0) setPreviewScale(width / PREVIEW_VIEWPORT_WIDTH);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // The demo's mock browser chrome has a working close button, but it lives in
   // an iframe and cannot exit a fullscreen this page owns — it asks us instead.
@@ -32,9 +55,12 @@ export default function HomeDemoCard({ title, blurb, src, previewScale = 0.62 }:
 
   return (
     <figure className="m-0 flex min-w-0 flex-col gap-4">
+      {/* The card is a scaled-down window, so its height comes from the window's
+          aspect rather than a fixed px height that would crop it. */}
       <div
         ref={frameRef}
         className="mei-demo-frame relative overflow-hidden rounded-[14px] border border-[#0a0a0a]/12 bg-[#f5f7fb]"
+        style={isFullscreen ? undefined : { aspectRatio: `${PREVIEW_VIEWPORT_WIDTH} / ${PREVIEW_VIEWPORT_HEIGHT}` }}
       >
         <iframe
           title={`${title} demo`}
@@ -42,11 +68,11 @@ export default function HomeDemoCard({ title, blurb, src, previewScale = 0.62 }:
           loading="lazy"
           className="mei-demo-frame__stage block border-0"
           style={
-            isFullscreen
+            isFullscreen || previewScale === 0
               ? { height: '100%', width: '100%' }
               : {
-                  height: `${100 / previewScale}%`,
-                  width: `${100 / previewScale}%`,
+                  height: `${PREVIEW_VIEWPORT_HEIGHT}px`,
+                  width: `${PREVIEW_VIEWPORT_WIDTH}px`,
                   transform: `scale(${previewScale})`,
                   transformOrigin: 'top left',
                 }

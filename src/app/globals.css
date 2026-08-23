@@ -1859,16 +1859,12 @@ body.no-scroll {
 }
 
 /* ── Homepage live demo cards ─────────────────────────────────── */
-.mei-demo-frame {
-  height: 300px;
-}
-
-@media (min-width: 768px) {
-  .mei-demo-frame { height: 340px; }
-}
+/* Height comes from the aspect ratio the component sets, so the card always
+   shows the whole scaled window instead of a cropped band of it. */
 
 /* Fullscreen: fill the screen and repaint the UA's default black backdrop. */
 .mei-demo-frame:fullscreen {
+  aspect-ratio: auto;
   height: 100%;
   width: 100%;
   border: 0;
