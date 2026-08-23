@@ -140,7 +140,9 @@
   height: 100%;
   border: 0;
   border-radius: 0;
-  background: var(--cn-surface-subtle);
+  /* Literal, not a --cn-* token: the frame holds an iframe and sits outside
+     .cn-demo-scope, so it only needs to cover the UA's black backdrop. */
+  background: #eef0f4;
 }
 
 @media (max-width: 900px) {

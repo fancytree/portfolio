@@ -6,6 +6,7 @@ import { AudioWaveform, ArrowUpRight, ChartSpline, Copy, FileText, Mail, Plus, S
 import HeroFish from './components/HeroFish';
 import WorkProjectRows from './components/WorkProjectRows';
 import { productProjects, researchProjects, sortProjectsByTimeDesc } from '@/lib/work-projects';
+import HomeDemoCard from './components/HomeDemoCard';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -524,6 +525,31 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+
+          <Reveal delay={workGroups.length * 70}>
+            <div className="flex flex-col gap-6 pt-16 md:flex-row md:gap-16 md:pt-24">
+              <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontBody}>
+                Demos
+              </p>
+              <div className="flex-1">
+                <p className="max-w-[560px] text-[16px] font-light text-[#0a0a0a]/58 md:text-[18px]" style={fontBody}>
+                  Two interfaces you can actually drive. Open either one fullscreen.
+                </p>
+                <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
+                  <HomeDemoCard
+                    title="Procurement Agent"
+                    blurb="An agent workspace for purchase planning — review a proposal, check documents, and approve."
+                    src="/demos/procurement-agent/index.html"
+                  />
+                  <HomeDemoCard
+                    title="ConnectNova Sequence Builder"
+                    blurb="Build an outreach sequence on the canvas, walk a complete flow, or inspect execution results."
+                    src="/demos/connectnova-sequence"
+                  />
+                </div>
+              </div>
+            </div>
+          </Reveal>
         </div>
 
       </MotionSection>

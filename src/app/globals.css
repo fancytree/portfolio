@@ -1857,3 +1857,34 @@ body.no-scroll {
   border-color: rgba(0, 74, 198, 0.2);
   background: rgba(0, 74, 198, 0.015);
 }
+
+/* ── Homepage live demo cards ─────────────────────────────────── */
+.mei-demo-frame {
+  height: 300px;
+}
+
+@media (min-width: 768px) {
+  .mei-demo-frame { height: 340px; }
+}
+
+/* Fullscreen: fill the screen and repaint the UA's default black backdrop. */
+.mei-demo-frame:fullscreen {
+  height: 100%;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+}
+
+.mei-demo-frame__cta {
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0) 42%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.mei-demo-frame__cta:is(:hover, :focus-visible) { opacity: 1; }
+
+/* Touch and reduced-motion users never get the hover, so keep the cue visible. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .mei-demo-frame__cta { opacity: 1; }
+}

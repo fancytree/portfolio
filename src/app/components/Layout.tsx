@@ -4,6 +4,7 @@
 // 使用方法：在页面中用 <Layout>...</Layout> 包裹内容
 
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import CustomCursor from "./CustomCursor";
@@ -17,6 +18,7 @@ export default function Layout({ children }: LayoutProps) {
   // 滚动到底部时空白让出，正文上滑“露出”固定在底部的 footer。
   const footerRef = useRef<HTMLDivElement>(null);
   const [footerHeight, setFooterHeight] = useState(0);
+  const pathname = usePathname();
 
   useLayoutEffect(() => {
     const el = footerRef.current;
@@ -27,6 +29,12 @@ export default function Layout({ children }: LayoutProps) {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // /demos/* 是给 iframe 嵌入和全屏体验用的裸舞台：
+  // 导航、footer、居中容器都会挤占 demo 的空间，这里一律不渲染。
+  if (pathname?.startsWith("/demos/")) {
+    return <>{children}</>;
+  }
 
   return (
     // 外层容器：全屏高度，背景色和基础字体

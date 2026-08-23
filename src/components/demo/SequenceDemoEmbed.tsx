@@ -1,74 +1,36 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import dynamic from 'next/dynamic';
+import { useEffect, useRef } from 'react';
 import { Maximize2, Minimize2 } from 'lucide-react';
-
-const SequenceDemoWorkspace = dynamic(
-  () => import('@/components/demo/SequenceDemoWorkspace').then((m) => m.SequenceDemoWorkspace),
-  { ssr: false },
-);
+import { useFullscreen } from '@/lib/useFullscreen';
+import { DEMO_CLOSE_MESSAGE } from '@/lib/demoMessages';
 
 const blue = '#2459D3';
 const muted = 'rgba(10, 10, 10, 0.58)';
 
 /**
- * Case-study embed for the sequence demo: a fullscreen affordance plus the
- * workspace itself. The canvas is cramped at the width of a prose column, so
- * the hint points at fullscreen before the reader starts poking at it.
+ * Case-study embed for the sequence demo. It runs in an iframe so the case
+ * study does not carry three React Flow canvases in its own bundle, and so it
+ * gets the same mock browser chrome the homepage cards show.
+ *
+ * Unlike those cards this one stays interactive inline — it is the centrepiece
+ * of the section, not a thumbnail.
  */
 export default function SequenceDemoEmbed() {
   const frameRef = useRef<HTMLDivElement | null>(null);
-  const cursorWasEnabledRef = useRef(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [supported, setSupported] = useState(true);
+  const { isFullscreen, supported, toggle } = useFullscreen(frameRef);
 
+  // The chrome's close button lives inside the iframe and cannot exit a
+  // fullscreen this page owns, so it asks us to do it.
   useEffect(() => {
-    setSupported(typeof document !== 'undefined' && document.fullscreenEnabled);
-  }, []);
-
-  useEffect(() => {
-    // The site draws its own cursor from a fixed element at body level and hides
-    // the native one. That element is outside the fullscreen subtree, so in
-    // fullscreen the reader would be left with no cursor at all — suspend the
-    // custom cursor for as long as the demo owns the screen.
-    const CURSOR_CLASS = 'mei-custom-cursor-enabled';
-    const onChange = () => {
-      const entered = document.fullscreenElement === frameRef.current;
-      setIsFullscreen(entered);
-      const root = document.documentElement;
-      if (entered) {
-        cursorWasEnabledRef.current = root.classList.contains(CURSOR_CLASS);
-        root.classList.remove(CURSOR_CLASS);
-      } else if (cursorWasEnabledRef.current) {
-        root.classList.add(CURSOR_CLASS);
-        cursorWasEnabledRef.current = false;
-      }
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if ((event.data as { type?: string } | null)?.type !== DEMO_CLOSE_MESSAGE) return;
+      if (document.fullscreenElement !== frameRef.current) return;
+      void document.exitFullscreen();
     };
-    document.addEventListener('fullscreenchange', onChange);
-    return () => {
-      document.removeEventListener('fullscreenchange', onChange);
-      if (cursorWasEnabledRef.current) {
-        document.documentElement.classList.add(CURSOR_CLASS);
-        cursorWasEnabledRef.current = false;
-      }
-    };
-  }, []);
-
-  const toggle = useCallback(async () => {
-    const el = frameRef.current;
-    if (!el) return;
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else {
-        await el.requestFullscreen();
-      }
-    } catch {
-      // Fullscreen can be refused (permissions policy, unsupported browser).
-      // The demo stays usable inline, so there is nothing to recover from.
-      setSupported(false);
-    }
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
   }, []);
 
   return (
@@ -115,38 +77,15 @@ export default function SequenceDemoEmbed() {
 
       <div
         ref={frameRef}
-        className="cn-demo-scope cn-demo-frame"
-        style={{ background: '#F5F9FF', border: '1px solid rgba(10,10,10,0.12)' }}
+        className="cn-demo-frame"
+        style={{ background: '#eef0f4', border: '1px solid rgba(10,10,10,0.12)' }}
       >
-        <SequenceDemoWorkspace />
-        {isFullscreen ? (
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label="Exit fullscreen"
-            style={{
-              alignItems: 'center',
-              background: 'rgba(255, 255, 255, 0.92)',
-              border: '1px solid rgba(10, 10, 10, 0.12)',
-              borderRadius: '8px',
-              color: 'rgba(10, 10, 10, 0.7)',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              fontSize: '13px',
-              fontWeight: 500,
-              gap: '8px',
-              lineHeight: 1,
-              padding: '9px 14px',
-              position: 'absolute',
-              right: '16px',
-              top: '16px',
-              zIndex: 60,
-            }}
-          >
-            <Minimize2 size={15} />
-            Exit fullscreen
-          </button>
-        ) : null}
+        <iframe
+          title="ConnectNova sequence builder demo"
+          src="/demos/connectnova-sequence"
+          loading="lazy"
+          style={{ border: 0, display: 'block', height: '100%', width: '100%' }}
+        />
       </div>
     </>
   );

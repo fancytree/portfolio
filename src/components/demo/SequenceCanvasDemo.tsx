@@ -1884,9 +1884,12 @@ function SequenceCanvasDemoInner({
   // When embedded (e.g. in a case study page) the canvas can mount before its
   // container has its final size, so the one-shot fitView above lands on a
   // stale measurement and the graph overflows. Refit whenever the box resizes.
+  // Deliberately not gated on hasWorkflowNode: an empty canvas is just the Add
+  // button, and it has to stay centred when the box changes size — going
+  // fullscreen otherwise left it wherever the smaller viewport had put it.
   useEffect(() => {
     const el = canvasContainerRef.current
-    if (!el || !hasWorkflowNode) return
+    if (!el) return
     let frame = 0
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(frame)
@@ -1900,7 +1903,7 @@ function SequenceCanvasDemoInner({
       cancelAnimationFrame(frame)
       observer.disconnect()
     }
-  }, [fitView, hasWorkflowNode])
+  }, [fitView])
 
   const selectedNode = useMemo(() => (selectedId ? findNode(workflow, selectedId) : null), [workflow, selectedId])
   const showConfig = Boolean(selectedNode && MESSAGE_NODE_TYPES.has(selectedNode.type))
