@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import SequenceDemoEmbed from '@/components/demo/SequenceDemoEmbed';
 
 const blue = '#2459D3';
 const ink = '#0A0A0A';
@@ -464,6 +465,12 @@ export default function ConnectnovaNarrative({
               style={{ border: 0, display: 'block', height: '100%', width: '100%' }}
             />
           </div>
+        </div>
+        <div style={{ marginTop: 'clamp(56px,7vw,80px)' }}>
+          <Eyebrow>Live coded demo</Eyebrow>
+          <h2 style={{ color: ink, fontSize: 'clamp(30px,3.8vw,48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.18, margin: '0 0 18px', maxWidth: '900px' }}>Build and inspect a real sequence</h2>
+          <p style={{ color: muted, fontSize: '15px', lineHeight: 1.65, margin: '0 0 26px', maxWidth: '900px' }}>The shipped interface, running here in the case study. Build a workflow from scratch, walk through a complete outreach example, or inspect execution results at every step.</p>
+          <SequenceDemoEmbed />
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2" style={{ marginTop: '56px' }}>{[
           ['Designed or being explored', ['Campaign structure', 'Lead management views', 'Sequence creation', 'Multi-step message organization', 'Core outreach navigation']],

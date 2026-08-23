@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import "./connectnova-demo.css";
+
+/* Dark variant is class-based, not media-based. The embedded ConnectNova demo
+   is a light-only design whose `dark:` utilities resolve --input to transparent;
+   under prefers-color-scheme:dark that erased its input borders and fills.
+   Portfolio itself uses no `dark:` utilities, so gating on .dark is safe. */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
   font-family: "MeiNunito";
@@ -39,6 +46,26 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* shadcn utilities — variables resolve only inside .cn-scope */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
 }
 
 html {

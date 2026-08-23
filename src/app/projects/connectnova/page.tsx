@@ -19,6 +19,12 @@ const connectNovaProfilePanelMockFrameClassName =
 
 const CASE_STUDY_CONTENT_WIDTH = '980px';
 
+const CONNECTNOVA_SEQUENCE_DEMO_URL =
+  process.env.NEXT_PUBLIC_CONNECTNOVA_SEQUENCE_DEMO_URL ||
+  (process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000/sequence-demo'
+    : 'https://connectnova.ai/sequence-demo');
+
 // 自定义 hook：检测元素是否进入视口并触发动画
 function useScrollAnimation(initialDelay: number = 0) {
   const [isVisible, setIsVisible] = useState(false);
@@ -9669,6 +9675,95 @@ I led the 0–1 design of the Chrome extension and web platform.`}
                 }}
               >
                 Sequence editing canvas — users can visually build and edit a Sequence by adding nodes and connecting steps. This interactive prototype focuses on component organization and a first-pass interaction experience.
+              </div>
+
+              <div style={{ width: '100%', margin: '0 0 56px' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    justifyContent: 'space-between',
+                    gap: '20px',
+                    marginBottom: '16px',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        ...fontStyle,
+                        fontSize: '11px',
+                        lineHeight: '16px',
+                        fontWeight: 500,
+                        letterSpacing: '0.12em',
+                        textTransform: 'uppercase',
+                        color: 'oklch(0.556 0 0)',
+                        marginBottom: '8px',
+                      }}
+                    >
+                      Live coded prototype
+                    </div>
+                    <h3
+                      style={{
+                        ...fontStyle,
+                        color: 'rgb(0, 0, 0)',
+                        fontSize: '22px',
+                        fontWeight: 500,
+                        lineHeight: '30px',
+                        margin: 0,
+                      }}
+                    >
+                      Build and inspect a real outreach sequence
+                    </h3>
+                  </div>
+                  <a
+                    href={CONNECTNOVA_SEQUENCE_DEMO_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      ...fontStyle,
+                      color: '#0052CC',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      lineHeight: '20px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    Open full screen ↗
+                  </a>
+                </div>
+                <div
+                  style={{
+                    width: '100%',
+                    borderRadius: '14px',
+                    overflow: 'hidden',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    backgroundColor: '#F5F9FF',
+                  }}
+                >
+                  <iframe
+                    title="Interactive ConnectNova sequence builder demo"
+                    style={{ border: 0, width: '100%', height: '680px', display: 'block' }}
+                    src={CONNECTNOVA_SEQUENCE_DEMO_URL}
+                    loading="lazy"
+                    allow="fullscreen"
+                  />
+                </div>
+              </div>
+
+              <div
+                style={{
+                  ...fontStyle,
+                  fontSize: '11px',
+                  lineHeight: '16px',
+                  fontWeight: 500,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: 'oklch(0.556 0 0)',
+                  marginBottom: '12px',
+                }}
+              >
+                Original Figma prototype
               </div>
               <div
                 style={{

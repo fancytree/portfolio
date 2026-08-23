@@ -1,0 +1,152 @@
+/* ConnectNova sequence demo — tokens scoped to .cn-demo-scope so they never leak
+   into the portfolio's own design system. */
+
+.cn-demo-scope {
+  --cn-blue-50: #f5f9ff;
+  --cn-blue-100: #d5e3fc;
+  --cn-blue-200: #adc7f9;
+  --cn-blue-700: #004ac6;
+  --cn-blue-800: #003da8;
+  --cn-blue-900: #0d1c2e;
+  --cn-teal-600: #006a61;
+  --cn-teal-100: #ccfbf1;
+  --cn-violet-600: #6a1edb;
+  --cn-violet-100: #ede9fe;
+  --cn-amber-600: #b45309;
+  --cn-amber-100: #fef3c7;
+  --cn-gray-100: #f2f2f3;
+  --cn-gray-200: #ececf0;
+  --cn-gray-300: #e8e8e8;
+  --cn-gray-400: #cbced4;
+  --cn-gray-500: #717182;
+  --cn-red-600: #d4183d;
+  --cn-red-50: #fef2f2;
+  --cn-red-200: #fecaca;
+  --cn-white: #ffffff;
+  --cn-black: #000000;
+
+  --cn-surface: var(--cn-white);
+  --cn-surface-subtle: var(--cn-blue-50);
+  --cn-surface-dark: var(--cn-blue-900);
+  --cn-canvas-dot: color-mix(in srgb, var(--cn-gray-500) 34%, var(--cn-gray-400));
+  --cn-overlay-focus: color-mix(in srgb, var(--cn-surface-dark) 8%, transparent);
+  --cn-overlay-focus-blur: 2px;
+
+  --cn-primary: var(--cn-blue-700);
+  --cn-primary-hover: var(--cn-blue-800);
+  --cn-primary-foreground: var(--cn-white);
+  --cn-primary-container: var(--cn-blue-100);
+  --cn-secondary: var(--cn-teal-600);
+  --cn-secondary-container: var(--cn-teal-100);
+  --cn-foreground: var(--cn-blue-900);
+  --cn-foreground-60: rgba(13, 28, 46, 0.6);
+  --cn-foreground-40: rgba(13, 28, 46, 0.4);
+  --cn-foreground-muted: var(--cn-gray-500);
+  --cn-destructive: var(--cn-red-600);
+  --cn-destructive-bg: var(--cn-red-50);
+  --cn-destructive-border: var(--cn-red-200);
+  --cn-success: #00b42a;
+  --cn-outline: rgba(13, 28, 46, 0.1);
+  --cn-focus-ring: var(--cn-blue-200);
+
+  /* Resting border for large fields. --cn-outline (10%) reads as invisible on a
+     tall textarea, so composer-sized inputs get a stronger neutral edge. */
+  --cn-field-border: var(--cn-gray-400);
+  --cn-field-border-hover: color-mix(in srgb, var(--cn-primary) 45%, var(--cn-gray-400));
+
+  --cn-chip-blue-bg: var(--cn-blue-100);
+  --cn-chip-blue-fg: var(--cn-blue-700);
+  --cn-chip-violet-bg: var(--cn-violet-100);
+  --cn-chip-violet-fg: var(--cn-violet-600);
+  --cn-chip-teal-bg: var(--cn-teal-100);
+  --cn-chip-teal-fg: var(--cn-teal-600);
+  --cn-chip-amber-bg: var(--cn-amber-100);
+  --cn-chip-amber-fg: var(--cn-amber-600);
+
+  --cn-radius-sm: 4px;
+  --cn-radius-md: 6px;
+  --cn-radius-lg: 8px;
+  --cn-radius-xl: 10px;
+  --cn-radius-2xl: 14px;
+  --cn-radius-btn: 12px;
+  --cn-radius-full: 9999px;
+
+  --cn-shadow-xs: none;
+  --cn-shadow-sm: none;
+  --cn-shadow-md: none;
+  --cn-shadow-lg: none;
+  --cn-shadow-xl: none;
+  --cn-shadow-popover: 0 12px 32px rgb(15 23 42 / 0.16), 0 2px 8px rgb(15 23 42 / 0.08);
+
+  --cn-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cn-duration-fast: 150ms;
+  --cn-duration-results-count: 900ms;
+  --cn-duration-results-edge: 1200ms;
+  --cn-duration-results-live-step: 2400ms;
+
+  /* shadcn compatibility layer */
+  --background: var(--cn-surface);
+  --foreground: var(--cn-foreground);
+  --card: var(--cn-surface);
+  --card-foreground: var(--cn-foreground);
+  --popover: var(--cn-surface);
+  --popover-foreground: var(--cn-foreground);
+  --primary: var(--cn-primary);
+  --primary-foreground: var(--cn-primary-foreground);
+  --secondary: var(--cn-surface-subtle);
+  --secondary-foreground: var(--cn-foreground);
+  --muted: var(--cn-gray-200);
+  --muted-foreground: var(--cn-foreground-muted);
+  --accent: var(--cn-primary-container);
+  --accent-foreground: var(--cn-primary);
+  --destructive: var(--cn-destructive);
+  --destructive-foreground: var(--cn-primary-foreground);
+  --border: var(--cn-outline);
+  --input: transparent;
+  --input-background: var(--cn-surface-subtle);
+  --ring: var(--cn-focus-ring);
+
+  color: var(--cn-foreground);
+  font-family: var(--font-inter, Inter), Inter, system-ui, -apple-system, sans-serif;
+}
+
+.cn-demo-scope .cn-execution-edge {
+  animation: cn-execution-edge-flow var(--cn-duration-results-edge) linear infinite;
+}
+
+@keyframes cn-execution-edge-flow {
+  0% { opacity: 0.45; stroke-dashoffset: 16; }
+  30% { opacity: 1; }
+  100% { opacity: 0.65; stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cn-demo-scope .cn-execution-edge { animation: none !important; }
+}
+
+/* Demo frame — fixed px height. Viewport units are avoided here because the
+   frame uses overflow:hidden; if a vh/svh unit ever resolves to 0 the whole
+   demo collapses to an invisible sliver. */
+.cn-demo-frame {
+  position: relative;
+  height: 660px;
+  overflow: hidden;
+}
+
+/* Fullscreen: fill the screen and repaint the UA's default black backdrop.
+   The canvas refits itself via its ResizeObserver. */
+.cn-demo-frame:fullscreen {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: var(--cn-surface-subtle);
+}
+
+@media (max-width: 900px) {
+  .cn-demo-frame { height: 560px; }
+}
+
+@media (max-width: 640px) {
+  .cn-demo-frame { height: 480px; }
+}
