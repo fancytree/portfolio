@@ -126,6 +126,18 @@ function ThreeStageEvolution() {
         </article>
       </div>
 
+      <div className="flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
+        <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
+          Document reconciliation
+        </p>
+        <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+          The redesigned platform already used AI, but not as an Agent. It read three document types — purchase-request files (Excel), supplier order confirmations, and DDT (Documento di Trasporto, the delivery note that arrives with the goods) — and flagged mismatches.
+        </p>
+        <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+          When the supplier confirmation differed from the purchase request (stockouts, errors, partial fulfillment), or when the DDT differed from the confirmation, the system surfaced the discrepancy as visual highlighting in the table and a reminder column. This was document reconciliation, not conversational UI. It caught file mismatches; it did not participate in purchasing decisions.
+        </p>
+      </div>
+
       <DesignResultStructuredOperations />
 
       <div className="flex flex-col gap-3 border-t border-[#2155e8] pt-6 sm:flex-row sm:items-baseline sm:gap-7">
@@ -841,7 +853,7 @@ export default function ProcurementAgentPage() {
               “
             </span>
             <p className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
-              The platform could record inventory, but not the decision process that created it.
+              Every stage had data. No stage could see the full picture.
             </p>
           </blockquote>
         </div>
