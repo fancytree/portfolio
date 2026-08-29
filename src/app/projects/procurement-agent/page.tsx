@@ -246,6 +246,9 @@ function ProcurementTurningPoint() {
           <br />
           <span className="text-[#7fa2ff]">but I had not reduced the cognitive work.</span>
         </h2>
+        <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
+          The system could record inventory, but not the decision process that created it. Purchase and fulfillment were now structured and traceable, yet buyers still carried the full judgment work.
+        </p>
       </div>
 
       <blockquote className="relative m-0 max-w-[900px] py-3 pl-[clamp(48px,7vw,78px)]">
