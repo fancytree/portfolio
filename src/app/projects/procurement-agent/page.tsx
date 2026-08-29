@@ -397,7 +397,7 @@ function DesignResultEvidenceBackedAgency() {
           </div>
         </div>
 
-        <div className="border-t border-[#7fa2ff] pt-6">
+        <div className="pt-6">
           <p className="m-0 text-[18px] font-bold leading-[1.5] text-white" style={bodyStyle}>
             Interpret intent. Calculate deterministically. Show evidence. Stop for human approval.
           </p>
