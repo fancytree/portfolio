@@ -128,13 +128,13 @@ function ThreeStageEvolution() {
 
       <div className="flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
-          Document reconciliation
+          AI as tool
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          The redesigned platform already used AI, but not as an Agent. It read three document types — purchase-request files (Excel), supplier order confirmations, and DDT (Documento di Trasporto, the delivery note that arrives with the goods) — and flagged mismatches.
+          Phase 1 already used AI, but only as a tool. It read three document types — purchase-request files (Excel), supplier order confirmations, and DDT (Documento di Trasporto, the delivery note) — and flagged mismatches between them.
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          When the supplier confirmation differed from the purchase request (stockouts, errors, partial fulfillment), or when the DDT differed from the confirmation, the system surfaced the discrepancy as visual highlighting in the table and a reminder column. This was document reconciliation, not conversational UI. It caught file mismatches; it did not participate in purchasing decisions.
+          When the supplier confirmation differed from the purchase request, or when the DDT differed from the confirmation, the system surfaced the discrepancy as visual highlighting in the table and a reminder column. It caught document inconsistencies. It did not decide what to buy or how much. That is exactly why Phase 1 had not reduced the cognitive work.
         </p>
       </div>
 
@@ -259,7 +259,7 @@ function ProcurementTurningPoint() {
           <span className="text-[#7fa2ff]">but I had not reduced the cognitive work.</span>
         </h2>
         <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
-          The system could record inventory, but not the decision process that created it. Purchase and fulfillment were now structured and traceable, yet buyers still carried the full judgment work.
+          The system could record inventory, but not the decision process that created it. AI already caught document discrepancies, yet buyers still carried the full judgment work: deciding what to buy, how much, and when.
         </p>
       </div>
 
