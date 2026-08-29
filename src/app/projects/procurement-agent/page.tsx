@@ -153,14 +153,7 @@ function ThreeStageEvolution() {
 }
 
 function DesignResultStructuredOperations() {
-  return (
-    <div className="flex flex-col gap-5">
-      <p className="m-0 max-w-[900px] text-[clamp(21px,2.6vw,28px)] font-bold leading-[1.4]" style={{ ...bodyStyle, color: accent }}>
-        Procurement evolved from a set of records into a stateful lifecycle.
-      </p>
-      <Phase1ScreenshotSwitcher />
-    </div>
-  );
+  return <Phase1ScreenshotSwitcher />;
 }
 
 function ResponsibilityShiftDiagram() {
