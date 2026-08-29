@@ -74,8 +74,7 @@ function ThreeStageEvolution() {
         Making procurement structured and traceable
       </h2>
       <p className="m-0 max-w-[840px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-        <strong className="font-bold text-[#161616]">Can the system represent how procurement actually works?</strong>{' '}
-        Before AI could participate, procurement first needed a shared object model, explicit states, and traceable evidence.
+        Procurement needed a shared object model, explicit states, and traceable evidence so purchase and fulfillment could operate as one connected lifecycle.
       </p>
 
       <div className="grid border-y border-[#cfcfcf] lg:grid-cols-3">
@@ -809,8 +808,7 @@ export default function ProcurementAgentPage() {
               DEF Beauty Supply&apos;s sales, inventory, procurement, receiving, and finance workflows were spread across disconnected software, documents, messaging, and manual workarounds.
             </p>
             <p className="m-0 text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-              I redesigned the core business architecture across sales, inventory, procurement, and receiving. This case study focuses on procurement because improving the workflow exposed a deeper problem:{' '}
-              <strong className="font-bold text-[#161616]">the system could record inventory, but not the decision process that created it.</strong>
+              I redesigned the core business architecture across sales, inventory, procurement, and receiving. This case study focuses on procurement.
             </p>
           </div>
         </div>
@@ -970,7 +968,7 @@ export default function ProcurementAgentPage() {
               Procurement data existed at every step, but the system could not connect those records into one decision and fulfillment lifecycle.
             </p>
             <p className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
-              So before introducing AI, I first rebuilt procurement as a structured, traceable lifecycle.
+              So I rebuilt procurement as a structured, traceable lifecycle.
             </p>
           </blockquote>
         </div>
@@ -1326,14 +1324,11 @@ export default function ProcurementAgentPage() {
           <div className="flex max-w-[900px] flex-col gap-[22px]" data-case-nav-label="16 / Reflection">
             <ChapterTitle>16 / Reflection</ChapterTitle>
             <h2 className="m-0 max-w-[760px] text-[clamp(30px,4vw,44px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
-              Designing an Agent meant redesigning the system it reasons over.
+              The hardest design question was not what the Agent could do.
             </h2>
             <div className="flex max-w-[760px] flex-col gap-3">
               <p className="m-0 text-[16px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-                I started by asking where AI could reduce work.
-              </p>
-              <p className="m-0 text-[16px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-                I ended up redesigning the data model, business states, decision logic, evidence relationships, and responsibility boundaries that made AI trustworthy enough to participate at all.
+                Throughout this work, the most challenging decisions were not about capabilities or automation. They were about boundaries: what evidence the Agent needed to support a recommendation, when it should pause instead of continuing, and who remained accountable when the formal order was placed.
               </p>
             </div>
             <div className="mt-auto border-l-[5px] border-[#2155e8] bg-[#f4f4f4] px-5 py-5">
