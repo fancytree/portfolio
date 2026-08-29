@@ -139,15 +139,6 @@ function ThreeStageEvolution() {
       </div>
 
       <DesignResultStructuredOperations />
-
-      <div className="flex flex-col gap-3 border-t border-[#2155e8] pt-6 sm:flex-row sm:items-baseline sm:gap-7">
-        <p className="m-0 shrink-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>
-          Phase 1 outcome
-        </p>
-        <p className="m-0 max-w-[900px] text-[19px] font-bold leading-[1.45] text-[#161616]" style={bodyStyle}>
-          Buyers could finally complete and trace the full procurement lifecycle inside one system.
-        </p>
-      </div>
     </div>
   );
 }
