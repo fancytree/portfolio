@@ -131,10 +131,10 @@ function ThreeStageEvolution() {
           AI as tool
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Phase 1 already used AI, but only as a tool. It read three document types — purchase-request files (Excel), supplier order confirmations, and DDT (Documento di Trasporto, the delivery note) — and flagged mismatches between them.
+          Phase 1 already used AI, but <strong className="font-bold text-[#161616]">only as a tool</strong>. It read purchase-request Excel, supplier confirmations, and DDT, and flagged mismatches.
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          When the supplier confirmation differed from the purchase request, or when the DDT differed from the confirmation, the system surfaced the discrepancy as visual highlighting in the table and a reminder column. It caught document inconsistencies. It did not decide what to buy or how much. That is exactly why Phase 1 had not reduced the cognitive work.
+          Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. It caught document inconsistencies. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much</strong> — which is why Phase 1 had not reduced the cognitive work.
         </p>
       </div>
 
