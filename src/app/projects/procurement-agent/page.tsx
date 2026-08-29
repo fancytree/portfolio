@@ -1151,7 +1151,7 @@ export default function ProcurementAgentPage() {
             SUPPORTING WORKSPACE + SEMANTIC SYSTEM
           </p>
 
-          <div className="flex flex-col gap-[clamp(56px,8vw,96px)] border-y border-[#cfcfcf] py-[clamp(32px,5vw,56px)]">
+          <div className="flex flex-col gap-[clamp(56px,8vw,96px)] border-t border-[#cfcfcf] py-[clamp(32px,5vw,56px)]">
             <ProcurementWorkspaceTreeDiagram />
             <AgentSemanticLayersDiagram />
           </div>
