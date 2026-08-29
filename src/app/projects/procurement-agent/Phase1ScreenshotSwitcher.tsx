@@ -15,15 +15,15 @@ const shots = [
     id: 'purchase-order',
     src: '/img/procurement-agent/Phase 1-01.png',
     label: 'Purchase order',
-    description: 'A shared purchase record connects estimated quantities, supplier confirmation, pricing, and order status.',
-    alt: 'Purchase order workspace: draft PO with estimated quantities, empty confirmation columns, and Upload confirmation',
+    description: 'A shared purchase record connects estimated quantities, supplier confirmation, pricing, and order status. AI flags confirmation discrepancies visually in the table.',
+    alt: 'Purchase order workspace: draft PO with estimated quantities, supplier confirmation columns with visual discrepancy highlighting, and Upload confirmation action',
   },
   {
     id: 'goods-receipt',
     src: '/img/procurement-agent/Phase 1-02.png?v=2',
     label: 'Goods receipt',
-    description: 'Receiving keeps ordered, DDT, and actual quantities visible together so discrepancies remain traceable.',
-    alt: 'Goods receipt workspace: ordered, DDT, and actual quantities on the same purchase order, with Confirm receipt as the primary action',
+    description: 'Receiving keeps ordered, DDT, and actual quantities visible together so discrepancies remain traceable. AI highlights mismatches between DDT and confirmation.',
+    alt: 'Goods receipt workspace: ordered, DDT, and actual quantities on the same purchase order with visual discrepancy highlighting, and Confirm receipt as the primary action',
   },
 ] as const;
 
