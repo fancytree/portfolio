@@ -22,8 +22,8 @@ export const productProjects: WorkProject[] = [
       'A three-stage transformation for an Italian B2B beauty wholesaler: disconnected manual work, structured purchasing operations, and evidence-backed Agent collaboration, with human ordering authority preserved throughout.',
     image: '/img/procurement-agent/Procurement Agent.avif',
     imageFit: 'cover',
-    imageScale: 1.55,
-    imageTranslateY: '8%',
+    imageScale: 1.68,
+    imageTranslateY: '0%',
     imageBackground: '#161616',
     href: '/projects/procurement-agent',
   },
@@ -78,7 +78,12 @@ export const productProjects: WorkProject[] = [
     tags: ['AI Agent', 'FinTech', 'Generative UI'],
     description:
       'Intent-driven financial agent that turns natural language into structured UI states for clearer, more actionable money insights.',
-    image: '/img/mono_cover.avif',
+    image: '/img/Mono/mono-cover-cutout.png',
+    imageFit: 'contain',
+    imageScale: 1.02,
+    imageTranslateY: '7%',
+    imageBackground:
+      'radial-gradient(circle at 18% 76%, rgb(16 163 127 / 0.24), transparent 34%), radial-gradient(circle at 82% 18%, rgb(118 197 173 / 0.18), transparent 30%), linear-gradient(135deg, #f4f8f5 0%, #dce8e1 52%, #edf3ef 100%)',
     href: '/projects/mono',
   },
   {

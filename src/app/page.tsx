@@ -234,10 +234,8 @@ const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 const workGroups = [
   {
     label: 'Product',
-    items: sortProjectsByTimeDesc(
-      ['Procurement Agent', 'JobNova', 'Beikemama'].flatMap((title) =>
-        productProjects.filter((project) => project.title === title)
-      )
+    items: ['Procurement Agent', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
+      productProjects.filter((project) => project.title === title)
     ),
   },
   { label: 'Research', items: sortProjectsByTimeDesc(researchProjects) },

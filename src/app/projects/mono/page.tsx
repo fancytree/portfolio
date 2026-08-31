@@ -96,6 +96,15 @@ export default function MonoProjectPage() {
         title="Mono"
         subtitle="A personal finance agent built on the A2UI protocol, turning natural language into deterministic financial interface views."
         tags={['AI Product', 'Generative UI', 'Finance', 'Protocol Design', 'Web UX']}
+        visualSrc="/img/Mono/mono-cover-cutout.png"
+        visualAlt="Mono financial agent shown on a graphite laptop with floating budget, expense, and spending overview cards"
+        visualObjectFit="contain"
+        visualObjectPosition="center bottom"
+        visualImageScale={0.96}
+        visualTransformOrigin="center bottom"
+        visualTranslateY="3%"
+        visualBackground="radial-gradient(circle at 18% 76%, rgb(16 163 127 / 0.24), transparent 34%), radial-gradient(circle at 82% 18%, rgb(118 197 173 / 0.18), transparent 30%), linear-gradient(135deg, #f4f8f5 0%, #dce8e1 52%, #edf3ef 100%)"
+        visualHeight="clamp(300px, 38vw, 540px)"
         aboutLabel="About Mono"
         about="Mono bridges LLM intent and deterministic UI output. Instead of returning only text, it renders contextual financial cards, charts, and forms that match the user's request, making conversational finance feel actionable and inspectable."
         liveSiteHref="https://mono.riverstudio.cc/"
