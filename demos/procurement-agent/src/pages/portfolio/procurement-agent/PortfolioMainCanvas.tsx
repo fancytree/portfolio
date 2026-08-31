@@ -26,6 +26,7 @@ import {
   LineChartIcon,
   Loader2Icon,
   MessageSquareTextIcon,
+  MessageSquarePlusIcon,
   PackageCheckIcon,
   PaperclipIcon,
   PauseIcon,
@@ -33,6 +34,7 @@ import {
   PlayIcon,
   ScaleIcon,
   ShoppingCartIcon,
+  Trash2Icon,
   UserIcon,
   XIcon,
 } from 'lucide-react';
@@ -922,7 +924,7 @@ function IntakeWorkflowDiagram({
   };
 
   return (
-    <>
+    <div className="flex min-h-[calc(100dvh-68px)] flex-col md:min-h-[calc(100dvh-76px)]">
       <style>{`
         @keyframes portfolio-flow-dash {
           to { stroke-dashoffset: -24; }
@@ -1264,7 +1266,7 @@ function IntakeWorkflowDiagram({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -1518,23 +1520,25 @@ function ActionLinks({
   return (
     <TableCell
       align="right"
-      className={dataListStickyCol('trail', cn(dense ? 'px-2 py-2.5' : 'px-2 py-3 align-top', stickyBg))}
+      className={dataListStickyCol('trail', cn(dense ? 'px-2 py-2.5' : 'px-2 py-3 align-middle', stickyBg))}
       onClick={(event) => event.stopPropagation()}
     >
-      <div className="flex flex-col items-end gap-0.5">
+      <div className="flex items-center justify-end gap-1.5">
         <button
           type="button"
-          className="cursor-pointer text-[11px] font-medium text-[#2f6bff] hover:underline"
+          className="inline-flex h-7 cursor-pointer items-center text-[11px] font-medium text-[#2f6bff] hover:underline"
           onClick={onWhy}
         >
           Why
         </button>
         <button
           type="button"
-          className="cursor-pointer text-[11px] font-medium text-[#c23b3b] hover:underline"
+          title="Delete"
+          aria-label="Delete"
+          className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#c23b3b] transition-colors hover:bg-[#fdecec]"
           onClick={onDelete}
         >
-          Delete
+          <Trash2Icon className="size-3.5" aria-hidden />
         </button>
       </div>
     </TableCell>
@@ -1727,13 +1731,13 @@ function NoteCell({
 }) {
   const notes: string[] = [];
   const isMissing = line.risk === 'missing';
-  if (isMissing) notes.push('Missing on confirmation');
+  if (isMissing) notes.push('Missing');
   if (line.risk === 'extra') notes.push('Supplier-added SKU');
   // 加行/缺货本身已说明问题，不再叠 Price/Qty differs
   if (line.risk !== 'extra' && line.risk !== 'missing') {
     if (priceDiffers(line) && line.confirmedPrice != null) {
       const delta = line.confirmedPrice - line.estimatedPrice;
-      notes.push(`Price ${delta >= 0 ? '+' : ''}€${delta.toFixed(2)} (€${line.estimatedPrice.toFixed(2)}→€${line.confirmedPrice.toFixed(2)})`);
+      notes.push(`Price ${delta >= 0 ? '+' : ''}€${delta.toFixed(2)}`);
     } else if (line.risk === 'price') {
       notes.push('Price differs');
     }
@@ -1772,6 +1776,14 @@ function NoteCell({
   );
 }
 
+function skuDisplayName(line: Pick<DemoLine, 'nameIt' | 'variant'>): string {
+  const name = line.nameIt.trim();
+  const variant = line.variant.trim();
+  return variant && name.toLowerCase().endsWith(variant.toLowerCase())
+    ? name.slice(0, -variant.length).trim()
+    : name;
+}
+
 /**
  * 对齐生产 PoItemsTable：SPU 手风琴 + 横向滚动 + 前两列固定。
  */
@@ -1781,6 +1793,8 @@ const PLAN_ROW_START_MS = 80;
 function LineTable({
   lines,
   editable,
+  editableEstQty = false,
+  editableEstPrice = false,
   stickyOffsetTop = 0,
   revealRows = false,
   onUpdateEstQty,
@@ -1793,6 +1807,8 @@ function LineTable({
 }: {
   lines: DemoLine[];
   editable: boolean;
+  editableEstQty?: boolean;
+  editableEstPrice?: boolean;
   /** 上方吸顶操作栏高度，表格 meta / 列头叠在其下 */
   stickyOffsetTop?: number;
   /** 计划生成后：表头先出现，SPU 行再逐条淡入 */
@@ -2039,7 +2055,7 @@ function LineTable({
                   </TableCell>
                   <TableCell className="px-3 py-2.5 text-[11px] whitespace-normal text-[#8b93a7]">
                     {hasMissing ? (
-                      <span className="font-semibold text-[#c23b3b]">Missing on confirmation</span>
+                      <span className="font-semibold text-[#c23b3b]">Missing SKU</span>
                     ) : hasGap ? (
                       <span className="font-medium text-[#b35b1f]">Gaps in SKUs</span>
                     ) : (
@@ -2087,49 +2103,49 @@ function LineTable({
                             <span className="mx-1.5 text-[#c5cad6]">·</span>
                             {line.variant}
                           </p>
-                          <p className="mt-0.5 truncate text-[11px] text-[#8b93a7]">{line.nameIt}</p>
+                          <p className="mt-0.5 truncate text-[11px] text-[#8b93a7]">{skuDisplayName(line)}</p>
                         </TableCell>
                         <TableCell
                           align="right"
-                          className={dataListStickyCol('lead2', cn('px-3 py-3 align-top', stickyBg))}
+                          className={dataListStickyCol('lead2', cn('px-3 py-3 align-middle', stickyBg))}
                         >
                           <EstQtyCell
                             line={line}
-                            editable={editable}
+                            editable={editable || editableEstQty}
                             onUpdateEstQty={onUpdateEstQty}
                           />
                         </TableCell>
-                        <TableCell align="right" className="px-3 py-3 align-top">
+                        <TableCell align="right" className="px-3 py-3 align-middle">
                           <ConfQtyCell
                             line={line}
                             editable={editable}
                             onUpdateConfQty={onUpdateConfQty}
                           />
                         </TableCell>
-                        <TableCell align="right" className="px-3 py-3 align-top tabular-nums text-[#3d4455]">
+                        <TableCell align="right" className="px-3 py-3 align-middle tabular-nums text-[#3d4455]">
                           {line.stock}
                         </TableCell>
-                        <TableCell align="right" className="px-3 py-3 align-top tabular-nums text-[#3d4455]">
+                        <TableCell align="right" className="px-3 py-3 align-middle tabular-nums text-[#3d4455]">
                           {line.sales30}
                         </TableCell>
-                        <TableCell align="right" className="px-3 py-3 align-top">
+                        <TableCell align="right" className="px-3 py-3 align-middle">
                           <EstPriceCell
                             line={line}
-                            editable={editable}
+                            editable={editable || editableEstPrice}
                             onUpdateEstPrice={onUpdateEstPrice}
                           />
                         </TableCell>
-                        <TableCell align="right" className="px-3 py-3 align-top">
+                        <TableCell align="right" className="px-3 py-3 align-middle">
                           <ConfPriceCell
                             line={line}
                             editable={editable}
                             onUpdateConfPrice={onUpdateConfPrice}
                           />
                         </TableCell>
-                        <TableCell align="right" className="px-3 py-3 align-top text-[13px] font-semibold tabular-nums">
+                        <TableCell align="right" className="px-3 py-3 align-middle text-[13px] font-semibold tabular-nums">
                           {line.risk === 'missing' ? '-' : `€${lineSubtotal(line).toFixed(2)}`}
                         </TableCell>
-                        <TableCell className="px-3 py-3 align-top whitespace-normal">
+                        <TableCell className="px-3 py-3 align-middle whitespace-normal">
                           <NoteCell line={line} onAskAgent={onAskAgent} />
                         </TableCell>
                         {showActions ? (
@@ -2474,9 +2490,9 @@ function ReplenishmentView({
   onApproveDirect,
   onPushToOwner,
   onApproveClick,
-  onAddNegotiationNote,
   onMarkOrdered,
   onAskAgent,
+  onAddNegotiationNote,
   title,
   onRenameTitle,
 }: {
@@ -2507,9 +2523,9 @@ function ReplenishmentView({
   onApproveDirect: () => void;
   onPushToOwner: () => void;
   onApproveClick?: () => void;
-  onAddNegotiationNote: (text: string) => void;
   onMarkOrdered: (meta: MarkOrderMeta) => void;
   onAskAgent: (text: string) => void;
+  onAddNegotiationNote: (text: string) => void;
   onRenameTitle: (title: string) => void;
 }) {
   const [exportOpen, setExportOpen] = useState(false);
@@ -2687,8 +2703,10 @@ function NegotiationLogSheet({
   approved: boolean;
   onAdd: (text: string) => void;
 }) {
-  const [draft, setDraft] = useState('');
   const current = rounds.find((round) => round.isCurrent) ?? null;
+  const orderedRounds = [...rounds].sort((a, b) => b.uploadedAt.localeCompare(a.uploadedAt));
+  const [noteTarget, setNoteTarget] = useState<string | null>(null);
+  const [draft, setDraft] = useState('');
   const noteCount = rounds.reduce((sum, round) => sum + round.notes.length, 0);
   const boundLabel = current
     ? (approved
@@ -2717,7 +2735,7 @@ function NegotiationLogSheet({
               {PORTFOLIO_COPY.negotiationLogEmpty}
             </p>
           ) : (
-            rounds.map((round) => (
+            orderedRounds.map((round) => (
               <section
                 key={round.id}
                 className={cn(
@@ -2733,13 +2751,29 @@ function NegotiationLogSheet({
                       {round.source} · {round.uploadedAt}
                     </p>
                   </div>
-                  <SoftBadge tone={round.isCurrent ? 'blue' : 'neutral'}>
-                    {round.isCurrent
-                      ? (approved
-                        ? PORTFOLIO_COPY.negotiationBadgeApproved
-                        : PORTFOLIO_COPY.negotiationBadgeAwaiting)
-                      : PORTFOLIO_COPY.negotiationBadgeHistory}
-                  </SoftBadge>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {!locked ? (
+                      <button
+                        type="button"
+                        title="Add note"
+                        aria-label={`Add note to ${round.versionLabel}`}
+                        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-lg text-[#5c6478] transition-colors hover:bg-[#eef4ff] hover:text-[#2f6bff]"
+                        onClick={() => {
+                          setNoteTarget((target) => (target === round.id ? null : round.id));
+                          setDraft('');
+                        }}
+                      >
+                        <MessageSquarePlusIcon className="size-4" aria-hidden />
+                      </button>
+                    ) : null}
+                    <SoftBadge tone={round.isCurrent ? 'blue' : 'neutral'}>
+                      {round.isCurrent
+                        ? (approved
+                          ? PORTFOLIO_COPY.negotiationBadgeApproved
+                          : PORTFOLIO_COPY.negotiationBadgeAwaiting)
+                        : PORTFOLIO_COPY.negotiationBadgeHistory}
+                    </SoftBadge>
+                  </div>
                 </header>
                 <div className="space-y-2 px-3.5 py-3">
                   {round.notes.length === 0 ? (
@@ -2763,43 +2797,44 @@ function NegotiationLogSheet({
                       </div>
                     ))
                   )}
+                  {noteTarget === round.id ? (
+                    <div className="flex items-center gap-2 border-t border-[#eef0f4] pt-2">
+                      <Input
+                        value={draft}
+                        onChange={(event) => setDraft(event.target.value)}
+                        placeholder="Add a note…"
+                        className="h-9 rounded-lg text-[12px]"
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' && draft.trim()) {
+                            onAdd(draft.trim());
+                            setDraft('');
+                            setNoteTarget(null);
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        className="h-9 shrink-0 rounded-lg bg-[#2f6bff] px-3 text-[12px] hover:bg-[#2458d9]"
+                        disabled={!draft.trim()}
+                        onClick={() => {
+                          if (!draft.trim()) return;
+                          onAdd(draft.trim());
+                          setDraft('');
+                          setNoteTarget(null);
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
               </section>
             ))
           )}
         </div>
 
-        {!locked && current ? (
-          <div className="shrink-0 space-y-2 border-t border-[#eef0f4] bg-white px-4 py-3">
-            <p className="text-[11px] text-[#8b93a7]">
-              Adding to <span className="font-mono text-[#5c6478]">{current.fileName}</span>
-            </p>
-            <Input
-              value={draft}
-              onChange={(event) => setDraft(event.target.value)}
-              placeholder={PORTFOLIO_COPY.negotiationPlaceholder}
-              className="h-10 rounded-xl text-[13px]"
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' && draft.trim()) {
-                  onAdd(draft.trim());
-                  setDraft('');
-                }
-              }}
-            />
-            <Button
-              type="button"
-              className="h-10 w-full rounded-xl bg-[#2f6bff] hover:bg-[#2458d9]"
-              disabled={!draft.trim()}
-              onClick={() => {
-                if (!draft.trim()) return;
-                onAdd(draft.trim());
-                setDraft('');
-              }}
-            >
-              {PORTFOLIO_COPY.negotiationAdd}
-            </Button>
-          </div>
-        ) : !locked ? (
+        {!locked ? (
           <div className="shrink-0 border-t border-[#eef0f4] px-4 py-3 text-[12px] text-[#8b93a7]">
             {PORTFOLIO_COPY.negotiationLogNoCurrent}
           </div>
@@ -2811,6 +2846,7 @@ function NegotiationLogSheet({
 
 function ApprovalView({
   lines,
+  exportFormat,
   approved,
   orderRecorded,
   confirmationUploaded,
@@ -2822,12 +2858,16 @@ function ApprovalView({
   onUploadConfirmation,
   onUploadInvoice,
   onDownloadAttachment,
-  onAddNegotiationNote,
   onAskAgent,
+  onAddNegotiationNote,
+  onUpdateEstQty,
+  onUpdateEstPrice,
+  onExport,
   title,
   onRenameTitle,
 }: {
   lines: DemoLine[];
+  exportFormat: 'xlsx' | 'pdf' | null;
   approved: boolean;
   orderRecorded: boolean;
   confirmationUploaded: boolean;
@@ -2839,8 +2879,11 @@ function ApprovalView({
   onUploadConfirmation: () => void;
   onUploadInvoice: () => void;
   onDownloadAttachment: (attachment: OrderAttachment) => void;
-  onAddNegotiationNote: (text: string) => void;
   onAskAgent: (text: string) => void;
+  onAddNegotiationNote: (text: string) => void;
+  onUpdateEstQty: (sku: string, qty: number) => void;
+  onUpdateEstPrice: (sku: string, price: number) => void;
+  onExport: (format: 'xlsx' | 'pdf') => void;
   title: string;
   onRenameTitle: (title: string) => void;
 }) {
@@ -2848,6 +2891,7 @@ function ApprovalView({
   const [attachmentsOpen, setAttachmentsOpen] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
   const [markOrderedOpen, setMarkOrderedOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
   const actionBar = useActionBarStickyHeight();
   const invoiceUploaded = hasInvoiceAttachment(attachments);
 
@@ -2865,6 +2909,16 @@ function ApprovalView({
           <ViewNegotiationLogButton count={confirmationRounds.length} onClick={() => setLogOpen(true)} />
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-10 rounded-xl"
+            disabled={orderRecorded}
+            onClick={() => setExportOpen(true)}
+          >
+            <DownloadIcon className="size-3.5" />
+            {exportFormat ? 'Re-export request' : PORTFOLIO_COPY.exportRequest}
+          </Button>
           <Button
             type="button"
             variant="outline"
@@ -2915,16 +2969,24 @@ function ApprovalView({
         <LineTable
           lines={lines}
           editable={false}
+          editableEstQty={!orderRecorded}
+          editableEstPrice={!orderRecorded}
           stickyOffsetTop={actionBar.stickTop}
-          onUpdateEstQty={() => undefined}
+          onUpdateEstQty={onUpdateEstQty}
           onUpdateConfQty={() => undefined}
-          onUpdateEstPrice={() => undefined}
+          onUpdateEstPrice={onUpdateEstPrice}
           onUpdateConfPrice={() => undefined}
           onDeleteSku={() => undefined}
           onDeleteSpu={() => undefined}
           onAskAgent={onAskAgent}
         />
+        {exportFormat ? (
+          <div className="rounded-2xl border border-[#b7e4c7] bg-[#e5f6ee] px-4 py-3 text-[12px] text-[#1f8a57]">
+            {PORTFOLIO_COPY.exportDone(exportFormat)} · also listed under Attachments
+          </div>
+        ) : null}
       </div>
+      <ExportDialog open={exportOpen} lines={lines} onOpenChange={setExportOpen} onExport={onExport} />
       <AttachmentsSheet
         open={attachmentsOpen}
         onOpenChange={setAttachmentsOpen}
@@ -3633,7 +3695,7 @@ function ReceivingWorkspaceView({
                                 ) : null}
                               </p>
                               <p className="mt-0.5 truncate text-[11px] text-[#8b93a7]">
-                                {line.nameIt}
+                                {skuDisplayName(line)}
                               </p>
                             </div>
                             <span className={cn(
@@ -4017,9 +4079,9 @@ export default function PortfolioMainCanvas(props: Props) {
         onApproveDirect={props.onApproveDirect}
         onPushToOwner={props.onPushToOwner}
         onApproveClick={props.onApproveClick}
-        onAddNegotiationNote={props.onAddNegotiationNote}
         onMarkOrdered={props.onMarkOrdered}
         onAskAgent={props.onAskAgent}
+        onAddNegotiationNote={props.onAddNegotiationNote}
         onRenameTitle={onRenameTitle}
       />
     );
@@ -4028,6 +4090,7 @@ export default function PortfolioMainCanvas(props: Props) {
     return (
       <ApprovalView
         lines={state.lines}
+        exportFormat={state.exportFormat}
         approved={state.approved}
         orderRecorded={state.orderRecorded}
         confirmationUploaded={state.confirmationUploaded}
@@ -4040,8 +4103,11 @@ export default function PortfolioMainCanvas(props: Props) {
         onUploadConfirmation={props.onUploadConfirmation}
         onUploadInvoice={props.onUploadInvoice}
         onDownloadAttachment={props.onDownloadAttachment}
-        onAddNegotiationNote={props.onAddNegotiationNote}
         onAskAgent={props.onAskAgent}
+        onAddNegotiationNote={props.onAddNegotiationNote}
+        onUpdateEstQty={props.onUpdateEstQty}
+        onUpdateEstPrice={props.onUpdateEstPrice}
+        onExport={props.onExport}
         onRenameTitle={onRenameTitle}
       />
     );

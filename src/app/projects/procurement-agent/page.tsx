@@ -11,6 +11,7 @@ import ProcurementDecisionDiagram from './ProcurementDecisionDiagram';
 import ProcurementLearningLoop from './ProcurementLearningLoop';
 import ResponsibilityArchitectureDiagram from './ResponsibilityArchitectureDiagram';
 import { fontFamily } from '@/lib/design-tokens';
+import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
 
 export const metadata: Metadata = {
   title: 'AI Procurement Agent for DEF Beauty Supply | Mei Chai',
@@ -583,8 +584,6 @@ function AgentUxIterationsSection() {
   );
 }
 
-const demoUrl = '/demos/procurement-agent/index.html';
-
 function ProcurementWorkspaceTreeDiagram() {
   const leaves = [
     { x: 32, title: 'All orders', note: 'Lifecycle portfolio' },
@@ -716,7 +715,7 @@ function InteractiveDemo() {
     <div className="flex flex-col gap-5" data-case-nav-label="00 / Interactive Demo">
       <ChapterTitle>00 / Interactive Demo</ChapterTitle>
       <div className="hidden md:block">
-        <ProcurementDemoEmbed src={demoUrl} title="Procurement Agent interactive demo" />
+        <ProcurementDemoEmbed src={PROCUREMENT_AGENT_DEMO_URL} title="Procurement Agent interactive demo" />
       </div>
 
       {/* The workspace is a desktop ERP layout; on phones link out instead of embedding it */}
@@ -732,7 +731,7 @@ function InteractiveDemo() {
           The demo needs a desktop-sized window to lay out its three panes.
         </p>
         <a
-          href={demoUrl}
+          href={PROCUREMENT_AGENT_DEMO_URL}
           target="_blank"
           rel="noreferrer"
           className="text-[13px] font-bold underline underline-offset-4"

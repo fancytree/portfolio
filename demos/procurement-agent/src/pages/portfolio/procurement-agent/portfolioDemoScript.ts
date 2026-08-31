@@ -105,12 +105,12 @@ export const BASE_LINES: DemoLine[] = [
   }),
 ];
 
-/** 确认单行：不含赠品（赠品仅出现在 DDT / 收货）；确认价整体高于估价，总价仍上浮（即便有缺货/减量） */
+/** 确认单行：不含赠品（赠品仅出现在 DDT / 收货）；只保留少量有意义的差异，避免整表都是异常。 */
 export const CONFIRMED_LINES: DemoLine[] = [
   { ...BASE_LINES[0], qty: 90, confirmedPrice: 6.2, risk: 'price' },
-  { ...BASE_LINES[1], confirmedPrice: 5.4, risk: 'price' },
-  { ...BASE_LINES[2], qty: 60, confirmedPrice: 4.8, risk: 'qty' },
-  { ...BASE_LINES[3], confirmedPrice: 6.2, risk: 'price' },
+  { ...BASE_LINES[1], confirmedPrice: BASE_LINES[1].estimatedPrice },
+  { ...BASE_LINES[2], qty: 60, confirmedPrice: BASE_LINES[2].estimatedPrice, risk: 'qty' },
+  { ...BASE_LINES[3], confirmedPrice: BASE_LINES[3].estimatedPrice },
   {
     ...BASE_LINES[4],
     qty: 0,
@@ -118,14 +118,14 @@ export const CONFIRMED_LINES: DemoLine[] = [
     risk: 'missing',
     alert: 'Missing on confirmation - possible stockout',
   },
-  { ...BASE_LINES[5], confirmedPrice: 10.2, risk: 'price' },
-  { ...BASE_LINES[6], confirmedPrice: 6.5, risk: 'price' },
+  { ...BASE_LINES[5], confirmedPrice: BASE_LINES[5].estimatedPrice },
+  { ...BASE_LINES[6], confirmedPrice: BASE_LINES[6].estimatedPrice },
   { ...BASE_LINES[7], confirmedPrice: 7.9, risk: 'price' },
-  { ...BASE_LINES[8], confirmedPrice: 5.1, risk: 'price' },
-  { ...BASE_LINES[9], qty: 18, confirmedPrice: 5.1, risk: 'qty' },
-  { ...BASE_LINES[10], confirmedPrice: 7.0, risk: 'price' },
-  { ...BASE_LINES[11], confirmedPrice: 7.0, risk: 'price' },
-  { ...BASE_LINES[12], confirmedPrice: 7.0, risk: 'price' },
+  { ...BASE_LINES[8], confirmedPrice: BASE_LINES[8].estimatedPrice },
+  { ...BASE_LINES[9], qty: 18, confirmedPrice: BASE_LINES[9].estimatedPrice, risk: 'qty' },
+  { ...BASE_LINES[10], confirmedPrice: BASE_LINES[10].estimatedPrice },
+  { ...BASE_LINES[11], confirmedPrice: BASE_LINES[11].estimatedPrice },
+  { ...BASE_LINES[12], confirmedPrice: BASE_LINES[12].estimatedPrice },
 ];
 
 /** 整单 SKU 目录（两次分批到货 Demo） */

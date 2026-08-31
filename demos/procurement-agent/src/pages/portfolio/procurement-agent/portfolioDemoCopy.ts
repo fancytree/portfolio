@@ -466,7 +466,7 @@ export const PORTFOLIO_COPY = {
   ],
 
   confirmationDiff:
-    'I compared the platform PO with the supplier confirmation:\n• Missing: 400213 Functional treatment 50 ml\n• Qty: 370102 96→90 · 431001 72→60 · 510002 24→18\n• Price: confirmation above Est. across the board (e.g. 370102 €5.40→€6.20 · 420106 €7.10→€7.90 · color gels €6.20→€7.00) - Conf. goods total is higher despite qty cuts\nGaps are highlighted on the plan table. Approval activation rules fired - Submit for approval on this page (does not leave the plan).',
+    'I compared the platform PO with the supplier confirmation:\n• Missing: 400213 Functional treatment 50 ml\n• Qty: 370102 96→90 · 431001 72→60 · 510002 24→18\n• Price: 370102 and 420106 are above estimate; the remaining confirmed prices match the plan\nGaps are highlighted on the plan table. Approval activation rules fired - Submit for approval on this page (does not leave the plan).',
   confirmationSameFile:
     'Same confirmation file as the current upload - negotiation log was not duplicated. Diffs and attachments stay bound to this file.',
   confirmationDifferentRecorded: (fileName: string) =>

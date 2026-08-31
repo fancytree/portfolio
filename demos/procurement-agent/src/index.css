@@ -801,6 +801,8 @@
     max-width: var(--sticky-lead-2-w);
     --sticky-scroll-shadow: 0 0 transparent;
     box-shadow: var(--sticky-scroll-shadow);
+    /* 与右侧 Actions 固定列保持同样的边界提示，横向滚动时明确分隔固定区。 */
+    border-right: 1px solid var(--border) !important;
     background-clip: padding-box;
     @apply bg-card;
   }

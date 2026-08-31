@@ -6,6 +6,7 @@ import { AudioWaveform, ArrowUpRight, ChartSpline, Copy, FileText, Mail, Plus, S
 import HeroFish from './components/HeroFish';
 import WorkProjectRows from './components/WorkProjectRows';
 import { productProjects, researchProjects, sortProjectsByTimeDesc } from '@/lib/work-projects';
+import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
 import HomeDemoCard from './components/HomeDemoCard';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
@@ -537,7 +538,7 @@ export default function Home() {
                   <HomeDemoCard
                     title="Procurement Agent"
                     blurb="An agent workspace for purchase planning — review a proposal, check documents, and approve."
-                    src="/demos/procurement-agent/index.html"
+                    src={PROCUREMENT_AGENT_DEMO_URL}
                   />
                   <HomeDemoCard
                     title="ConnectNova Sequence Builder"
