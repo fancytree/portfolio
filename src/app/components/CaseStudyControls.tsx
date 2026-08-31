@@ -146,7 +146,7 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
           alignSelf: 'flex-start',
           border: 0,
           background: 'transparent',
-          color: 'rgb(10 10 10 / 0.55)',
+          color: 'var(--case-muted, #686868)',
           cursor: 'pointer',
           display: 'inline-flex',
           alignItems: 'center',
@@ -174,7 +174,7 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
       >
         {items.map((item) => {
           const isActive = item.id === activeId;
-          const idleColor = 'rgb(10 10 10 / 0.62)';
+          const idleColor = 'var(--case-muted, #686868)';
           const activeColor = accentColor;
 
           return (
@@ -213,7 +213,7 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
                   display: 'inline-block',
                   width: '14px',
                   height: '1px',
-                  backgroundColor: isActive ? activeColor : 'rgb(10 10 10 / 0.18)',
+                  backgroundColor: isActive ? activeColor : 'var(--case-rule, rgb(23 23 23 / 0.16))',
                   opacity: isActive ? 1 : 0,
                   transition: 'background-color 0.2s ease, opacity 0.2s ease',
                 }}
@@ -260,10 +260,10 @@ function CaseStudyTldrModal({ open, onClose, points, accentColor }: { open: bool
           maxHeight: 'min(720px, calc(100dvh - 48px))',
           overflow: 'auto',
           overscrollBehavior: 'contain',
-          border: '1px solid #cccccc',
+          border: '1px solid var(--case-rule, #d2d2d2)',
           borderRadius: '8px',
-          background: '#f3f1ea',
-          color: '#0a0a0a',
+          background: 'var(--case-surface, #f4f4f1)',
+          color: 'var(--case-ink, #171717)',
           padding: 0,
           boxShadow: '0 24px 80px rgb(0 0 0 / 0.18)',
         }}
@@ -281,7 +281,7 @@ function CaseStudyTldrModal({ open, onClose, points, accentColor }: { open: bool
             justifyContent: 'space-between',
             gap: '24px',
             padding: '18px 28px',
-            background: '#f3f1ea',
+            background: 'var(--case-surface, #f4f4f1)',
             borderRadius: '8px 8px 0 0',
           }}
         >
@@ -311,7 +311,7 @@ function CaseStudyTldrModal({ open, onClose, points, accentColor }: { open: bool
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '8px',
-                borderBottom: index === points.length - 1 ? 0 : '1px solid #cccccc',
+                borderBottom: index === points.length - 1 ? 0 : '1px solid var(--case-rule, #d2d2d2)',
                 padding: index === 0 ? '0 0 18px' : '18px 0',
               }}
             >
@@ -330,7 +330,7 @@ function CaseStudyTldrModal({ open, onClose, points, accentColor }: { open: bool
               <p
                 style={{
                   fontFamily: fontFamily.sans,
-                  color: 'rgb(10 10 10 / 0.78)',
+                  color: 'var(--case-copy, #3f3f3f)',
                   fontSize: '15px',
                   fontWeight: 300,
                   lineHeight: '24px',
@@ -354,6 +354,16 @@ export default function CaseStudyControls({ navLabels, tldrPoints, accentColor =
   const [pageTitle, setPageTitle] = useState('This project');
   const [pageDescription, setPageDescription] = useState('');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const root = document.querySelector<HTMLElement>('.mei-project-page');
+    if (!root) return;
+
+    root.style.setProperty('--case-accent', accentColor);
+    return () => {
+      root.style.removeProperty('--case-accent');
+    };
+  }, [accentColor]);
 
   useEffect(() => {
     const prepareSections = () => {

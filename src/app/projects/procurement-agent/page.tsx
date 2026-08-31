@@ -48,7 +48,7 @@ const tldrPoints = [
 const accent = '#2155e8';
 
 const sectionStyle = {
-  padding: 'clamp(56px, 7vw, 88px) clamp(24px, 5vw, 64px)',
+  padding: 'var(--case-space-section) clamp(24px, 5vw, 64px)',
 } as const;
 
 const bodyStyle = {
@@ -58,7 +58,8 @@ const bodyStyle = {
 function ChapterTitle({ children, inverse = false }: { children: string; inverse?: boolean }) {
   return (
     <p
-      className="m-0 text-[12px] font-bold uppercase tracking-[0.06em]"
+      data-case-type="eyebrow"
+      className="case-study-eyebrow m-0"
       style={{ ...bodyStyle, color: inverse ? '#7fa2ff' : accent }}
     >
       {children}
@@ -70,10 +71,10 @@ function ThreeStageEvolution() {
   return (
     <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="04 / Phase 1">
       <ChapterTitle>04 / Phase 1</ChapterTitle>
-      <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
+      <h2 className="case-study-section-title m-0 max-w-[900px]" style={bodyStyle}>
         Making procurement structured and traceable
       </h2>
-      <p className="m-0 max-w-[840px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+      <p className="case-study-lead m-0 max-w-[840px]" style={bodyStyle}>
         Procurement needed a shared object model, explicit states, and traceable evidence so purchase and fulfillment could operate as one connected lifecycle.
       </p>
 
@@ -252,7 +253,7 @@ function ProcurementTurningPoint() {
         >
           “
         </span>
-        <p className="m-0 text-[clamp(17px,2vw,22px)] font-normal leading-[1.55] text-white" style={bodyStyle}>
+        <p data-case-type="quote-compact" className="m-0 text-[clamp(17px,2vw,22px)] font-normal leading-[1.55] text-white" style={bodyStyle}>
           Now I don&apos;t need to switch between Excel and the system anymore. But the part that takes the most time is still the same. I still have to decide what to buy and how much.
         </p>
         <footer className="mt-4 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
@@ -306,7 +307,7 @@ function DesignResultEvidenceBackedAgency() {
         >
           “
         </span>
-        <p className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
+        <p data-case-type="quote-compact" className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
           Don&apos;t just give me the data. Help me calculate a reasonable purchasing plan from it.
         </p>
       </blockquote>
@@ -833,7 +834,7 @@ export default function ProcurementAgentPage() {
             >
               “
             </span>
-            <p className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
+            <p data-case-type="quote-compact" className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
               Every stage had data. No stage could see the full picture.
             </p>
           </blockquote>
@@ -963,7 +964,7 @@ export default function ProcurementAgentPage() {
             <p className="m-0 max-w-[880px] text-[clamp(17px,1.8vw,20px)] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
               Procurement data existed at every step, but the system could not connect those records into one decision and fulfillment lifecycle.
             </p>
-            <p className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
+            <p data-case-type="quote-compact" className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
               So I rebuilt procurement as a structured, traceable lifecycle.
             </p>
           </blockquote>

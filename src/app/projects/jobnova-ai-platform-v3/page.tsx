@@ -742,7 +742,7 @@ const reflectionLearnings = [
 ];
 
 const sectionStyle = {
-  padding: 'clamp(56px, 7vw, 88px) clamp(24px, 5vw, 64px)',
+  padding: 'var(--case-space-section) clamp(24px, 5vw, 64px)',
 } as const;
 
 const bodyStyle = {
@@ -750,7 +750,7 @@ const bodyStyle = {
 } as const;
 
 const displayStyle = {
-  fontFamily: fontFamily.display,
+  fontFamily: fontFamily.sans,
 } as const;
 
 function FlowDiagram({ items, label }: { items: string[]; label: string }) {
@@ -1172,6 +1172,7 @@ function MatchingDesignDecisionSection() {
           </div>
           <div>
             <h3
+              data-case-type="display"
               id="matching-decision-title"
               className="m-0 max-w-[760px] text-[clamp(38px,5.4vw,72px)] font-normal leading-[0.98] tracking-[-0.035em] text-[#0a0a0a]"
               style={displayStyle}
@@ -1223,7 +1224,7 @@ function MatchingDesignDecisionSection() {
                 </div>
               ))}
             </div>
-            <p className="m-0 mt-7 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
+            <p data-case-type="body" className="m-0 mt-7 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
               Trust comes from understanding, not prediction accuracy alone.
             </p>
           </article>
@@ -1235,6 +1236,7 @@ function MatchingDesignDecisionSection() {
               3. Design Decision
             </p>
             <h4
+              data-case-type="display"
               id="matching-core-decision"
               className="m-0 mt-3 text-[clamp(30px,4vw,50px)] font-normal leading-[1.08] tracking-[-0.025em] text-[#0a0a0a]"
               style={displayStyle}
@@ -1287,7 +1289,7 @@ function MatchingDesignDecisionSection() {
             <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
               4. Design Principles
             </p>
-            <h4 id="matching-principles-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
+            <h4 data-case-type="small-title" id="matching-principles-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
               Three principles translated explainability into interaction rules.
             </h4>
           </div>
@@ -1319,7 +1321,7 @@ function MatchingDesignDecisionSection() {
           <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
             5. Translating the Decision into the Experience
           </p>
-          <h4 className="m-0 mt-3 max-w-[760px] text-[clamp(30px,4vw,52px)] font-normal leading-[1.06] tracking-[-0.025em] text-[#0a0a0a]" style={displayStyle}>
+          <h4 data-case-type="display" className="m-0 mt-3 max-w-[760px] text-[clamp(30px,4vw,52px)] font-normal leading-[1.06] tracking-[-0.025em] text-[#0a0a0a]" style={displayStyle}>
             The interface made evidence available at the moment each decision required it.
           </h4>
         </header>
@@ -1379,7 +1381,7 @@ function MatchingDesignDecisionSection() {
             <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
               C. Skill Gap
             </p>
-            <h4 id="skill-gap-title" className="m-0 mt-3 text-[26px] font-normal leading-[1.15] text-[#0a0a0a]" style={displayStyle}>
+            <h4 data-case-type="title" id="skill-gap-title" className="m-0 mt-3 text-[26px] font-normal leading-[1.15] text-[#0a0a0a]" style={displayStyle}>
               Make uncertainty visible
             </h4>
             <p className="m-0 mt-5 max-w-[360px] text-[15px] font-normal leading-[1.55] text-[#0a0a0a]" style={bodyStyle}>
@@ -1415,7 +1417,7 @@ function MatchingDesignDecisionSection() {
             <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
               6. Outcome
             </p>
-            <h4 id="matching-outcome-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
+            <h4 data-case-type="small-title" id="matching-outcome-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
               Feature-level signals, not whole-product metrics
             </h4>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -1447,7 +1449,7 @@ function MatchingDesignDecisionSection() {
           <p className="m-0 text-[10px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
             7. Key Takeaway
           </p>
-          <p className="m-0 mt-5 max-w-[900px] text-[clamp(24px,3.5vw,46px)] font-normal leading-[1.12] tracking-[-0.025em] text-[#0a0a0a]" style={displayStyle}>
+          <p data-case-type="quote" className="m-0 mt-5 max-w-[900px] text-[clamp(24px,3.5vw,46px)] font-normal leading-[1.12] tracking-[-0.025em] text-[#0a0a0a]" style={displayStyle}>
             Helping users understand a recommendation was ultimately more valuable than making the recommendation appear more intelligent.
           </p>
         </blockquote>
@@ -1515,6 +1517,7 @@ function ResumeDesignDecisionSection() {
         </div>
         <div>
           <h3
+            data-case-type="display"
             id="resume-decision-title"
             className="m-0 max-w-[760px] text-[clamp(36px,5vw,64px)] font-normal leading-[0.99] tracking-[-0.035em] text-[#0a0a0a]"
             style={displayStyle}
@@ -1561,7 +1564,7 @@ function ResumeDesignDecisionSection() {
               </span>
             ))}
           </div>
-          <p className="m-0 mt-7 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
+          <p data-case-type="body" className="m-0 mt-7 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
             Transparency mattered more than automation during content creation.
           </p>
         </article>
@@ -1573,6 +1576,7 @@ function ResumeDesignDecisionSection() {
             3. Design Decision
           </p>
           <h4
+            data-case-type="display"
             id="resume-core-decision"
             className="m-0 mt-3 text-[clamp(30px,4vw,50px)] font-normal leading-[1.08] tracking-[-0.025em] text-[#0a0a0a]"
             style={displayStyle}
@@ -1633,7 +1637,7 @@ function ResumeDesignDecisionSection() {
           <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
             5. Translating the Decision into the Experience
           </p>
-          <h4 id="resume-experience-title" className="m-0 mt-2 text-[22px] font-normal text-[#0a0a0a]" style={bodyStyle}>
+          <h4 data-case-type="small-title" id="resume-experience-title" className="m-0 mt-2 text-[22px] font-normal text-[#0a0a0a]" style={bodyStyle}>
             Three mechanisms preserved ownership without slowing the user down.
           </h4>
         </div>
@@ -1683,7 +1687,7 @@ function ResumeDesignDecisionSection() {
           <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
             6. Outcome
           </p>
-          <h4 id="resume-outcome-title" className="m-0 mt-2 text-[19px] font-normal text-[#0a0a0a]" style={bodyStyle}>
+          <h4 data-case-type="small-title" id="resume-outcome-title" className="m-0 mt-2 text-[19px] font-normal text-[#0a0a0a]" style={bodyStyle}>
             Resume-specific validation signals
           </h4>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -1712,7 +1716,7 @@ function ResumeDesignDecisionSection() {
         <p className="m-0 text-[10px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
           7. Key Takeaway
         </p>
-        <p className="m-0 mt-4 max-w-[900px] text-[clamp(22px,3vw,38px)] font-normal leading-[1.16] tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
+        <p data-case-type="quote" className="m-0 mt-4 max-w-[900px] text-[clamp(22px,3vw,38px)] font-normal leading-[1.16] tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
           AI became a writing partner rather than an automatic author, allowing users to move faster without giving up ownership of their professional story.
         </p>
       </blockquote>
@@ -1778,6 +1782,7 @@ function AutoApplyDesignDecisionSection() {
           </div>
           <div>
             <h3
+              data-case-type="display"
               id="autonomy-decision-title"
               className="m-0 max-w-[780px] text-[clamp(40px,5.8vw,78px)] font-normal leading-[0.96] tracking-[-0.04em] text-[#0a0a0a]"
               style={displayStyle}
@@ -1821,7 +1826,7 @@ function AutoApplyDesignDecisionSection() {
                 </span>
               ))}
             </div>
-            <p className="m-0 mt-7 text-[22px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
+            <p data-case-type="body" className="m-0 mt-7 text-[22px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
               Users didn’t want the same level of automation—they wanted different levels of control.
             </p>
           </article>
@@ -1833,6 +1838,7 @@ function AutoApplyDesignDecisionSection() {
               3. Design Decision
             </p>
             <h4
+              data-case-type="display"
               id="autonomy-core-decision"
               className="m-0 mt-3 text-[clamp(34px,4.8vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]"
               style={displayStyle}
@@ -1909,7 +1915,7 @@ function AutoApplyDesignDecisionSection() {
           <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
             5. Translating the Decision into the Experience
           </p>
-          <h4 className="m-0 mt-3 max-w-[800px] text-[clamp(32px,4.4vw,56px)] font-normal leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+          <h4 data-case-type="display" className="m-0 mt-3 max-w-[800px] text-[clamp(32px,4.4vw,56px)] font-normal leading-[1.05] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
             AI earns the right to act by following the boundaries a user defines.
           </h4>
         </header>
@@ -1920,7 +1926,7 @@ function AutoApplyDesignDecisionSection() {
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
                 A. Define the Rules
               </p>
-              <h5 id="define-rules-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.2] text-[#0a0a0a]" style={displayStyle}>
+              <h5 data-case-type="small-title" id="define-rules-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.2] text-[#0a0a0a]" style={displayStyle}>
                 Permission before action
               </h5>
               <p className="m-0 mt-4 text-[14px] font-normal leading-[1.55] text-[#0a0a0a]" style={bodyStyle}>
@@ -1958,7 +1964,7 @@ function AutoApplyDesignDecisionSection() {
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
                 B. Execute Within Boundaries
               </p>
-              <h5 id="execute-boundaries-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.2] text-[#0a0a0a]" style={displayStyle}>
+              <h5 data-case-type="small-title" id="execute-boundaries-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.2] text-[#0a0a0a]" style={displayStyle}>
                 Visible system action
               </h5>
             </div>
@@ -1977,7 +1983,7 @@ function AutoApplyDesignDecisionSection() {
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
                 C. Handle Exceptions Gracefully
               </p>
-              <h5 id="exceptions-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.2] text-[#0a0a0a]" style={displayStyle}>
+              <h5 data-case-type="small-title" id="exceptions-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.2] text-[#0a0a0a]" style={displayStyle}>
                 Recovery is part of the flow
               </h5>
             </div>
@@ -2010,7 +2016,7 @@ function AutoApplyDesignDecisionSection() {
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#aefd48]" style={bodyStyle}>
                 6. From Design to Implementation
               </p>
-              <h5 id="implementation-title" className="m-0 mt-3 text-[25px] font-normal leading-[1.2] text-white" style={displayStyle}>
+              <h5 data-case-type="small-title" id="implementation-title" className="m-0 mt-3 text-[25px] font-normal leading-[1.2] text-white" style={displayStyle}>
                 Translating UX into product rules
               </h5>
             </div>
@@ -2051,7 +2057,7 @@ function AutoApplyDesignDecisionSection() {
             <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
               7. Outcome
             </p>
-            <h5 id="auto-apply-outcome-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
+            <h5 data-case-type="small-title" id="auto-apply-outcome-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
               Autonomy-specific validation signals
             </h5>
             <div className="mt-5 flex flex-wrap gap-2">
@@ -2083,7 +2089,7 @@ function AutoApplyDesignDecisionSection() {
           <p className="m-0 text-[10px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
             8. Key Takeaway
           </p>
-          <p className="m-0 mt-5 max-w-[920px] text-[clamp(26px,3.8vw,50px)] font-normal leading-[1.1] tracking-[-0.025em] text-[#0a0a0a]" style={displayStyle}>
+          <p data-case-type="quote" className="m-0 mt-5 max-w-[920px] text-[clamp(26px,3.8vw,50px)] font-normal leading-[1.1] tracking-[-0.025em] text-[#0a0a0a]" style={displayStyle}>
             The most valuable design decision was not increasing automation, but allowing users to define when automation was appropriate.
           </p>
         </blockquote>
@@ -2150,6 +2156,7 @@ function TrackingDesignDecisionSection() {
         </div>
         <div>
           <h3
+            data-case-type="display"
             id="tracking-decision-title"
             className="m-0 max-w-[780px] text-[clamp(36px,5vw,64px)] font-normal leading-[0.99] tracking-[-0.035em] text-[#0a0a0a]"
             style={displayStyle}
@@ -2193,7 +2200,7 @@ function TrackingDesignDecisionSection() {
               </span>
             ))}
           </div>
-          <p className="m-0 mt-7 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
+          <p data-case-type="body" className="m-0 mt-7 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={displayStyle}>
             Users wanted confidence after automation, not just confirmation that it had started.
           </p>
         </article>
@@ -2205,6 +2212,7 @@ function TrackingDesignDecisionSection() {
             3. Design Decision
           </p>
           <h4
+            data-case-type="display"
             id="tracking-core-decision"
             className="m-0 mt-3 text-[clamp(30px,4vw,50px)] font-normal leading-[1.08] tracking-[-0.025em] text-[#0a0a0a]"
             style={displayStyle}
@@ -2279,6 +2287,7 @@ function TrackingDesignDecisionSection() {
             5. Translating the Decision into the Experience
           </p>
           <h4
+            data-case-type="display"
             id="tracking-experience-title"
             className="m-0 mt-3 max-w-[760px] text-[clamp(30px,4vw,50px)] font-normal leading-[1.08] tracking-[-0.025em] text-[#0a0a0a]"
             style={displayStyle}
@@ -2293,7 +2302,7 @@ function TrackingDesignDecisionSection() {
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
                 A. Application Timeline
               </p>
-              <h5 id="application-timeline-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={displayStyle}>
+              <h5 data-case-type="small-title" id="application-timeline-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={displayStyle}>
                 Progress stays legible
               </h5>
             </div>
@@ -2371,7 +2380,7 @@ function TrackingDesignDecisionSection() {
           <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
             6. Outcome
           </p>
-          <h5 id="tracking-outcome-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
+          <h5 data-case-type="small-title" id="tracking-outcome-title" className="m-0 mt-2 text-[20px] font-normal text-[#0a0a0a]" style={bodyStyle}>
             Accountability-specific validation signals
           </h5>
           <div className="mt-5 flex flex-wrap gap-2">
@@ -2403,7 +2412,7 @@ function TrackingDesignDecisionSection() {
         <p className="m-0 text-[10px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
           7. Key Takeaway
         </p>
-        <p className="m-0 mt-4 max-w-[920px] text-[clamp(22px,3vw,40px)] font-normal leading-[1.15] tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
+        <p data-case-type="quote" className="m-0 mt-4 max-w-[920px] text-[clamp(22px,3vw,40px)] font-normal leading-[1.15] tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
           Automation becomes trustworthy only when users can understand what happened, what is happening, and what needs their attention next.
         </p>
       </blockquote>
@@ -2414,7 +2423,7 @@ function TrackingDesignDecisionSection() {
             <p className="m-0 text-[10px] font-light uppercase tracking-[0.14em] text-[#aefd48]" style={bodyStyle}>
               Human–AI Collaboration Model
             </p>
-            <h4 id="collaboration-model-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.15] text-white" style={displayStyle}>
+          <h4 data-case-type="small-title" id="collaboration-model-title" className="m-0 mt-3 text-[24px] font-normal leading-[1.15] text-white" style={displayStyle}>
               Four decisions, one trust model
             </h4>
           </div>
@@ -2454,7 +2463,7 @@ function TrackingDesignDecisionSection() {
 
 export default function JobnovaAIPlatformPage() {
   return (
-    <div className="mei-project-page w-full">
+    <div className="jobnova-case-study mei-project-page w-full">
       <CaseStudyControls tldrPoints={tldrPoints} accentColor="#ed5b2b" />
       <CaseStudyHero
         accentColor="#ed5b2b"
@@ -2508,15 +2517,15 @@ export default function JobnovaAIPlatformPage() {
           <div className="flex flex-col gap-14 md:gap-20">
             <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="01 / Problem">
               <div className="flex flex-col gap-5">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                   01 / Problem
                 </p>
-                <h2 className="m-0 max-w-[900px] text-[clamp(36px,5.4vw,72px)] font-normal leading-[0.98] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
+                <h2 data-case-type="display" className="m-0 max-w-[900px] text-[clamp(36px,5.4vw,72px)] font-normal leading-[0.98] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
                   AI tools optimized job-search tasks.
                   <br />
                   <span className="text-[#ed5b2b]">The journey stayed fragmented.</span>
                 </h2>
-                <p className="m-0 max-w-[760px] text-[16px] font-light leading-7 text-[#0a0a0a]/68" style={bodyStyle}>
+                <p data-case-type="lead" className="m-0 max-w-[760px] text-[16px] font-light leading-7 text-[#0a0a0a]/68" style={bodyStyle}>
                   Existing tools helped users write, score, autofill, or track pieces of the process. But users still had to stitch together discovery, evaluation, application, and follow-up across disconnected products.
                 </p>
               </div>
@@ -2525,18 +2534,18 @@ export default function JobnovaAIPlatformPage() {
 
               <div className="grid gap-5 md:grid-cols-[1fr_1fr]">
                 <article className="bg-[#f3f1ea] p-6">
-                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                  <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
                     Product opportunity
                   </p>
-                  <p className="m-0 mt-4 text-[24px] font-normal leading-[1.18] tracking-[-0.018em] text-[#0a0a0a]" style={displayStyle}>
+                  <p data-case-type="title" className="m-0 mt-4 text-[24px] font-normal leading-[1.18] tracking-[-0.018em] text-[#0a0a0a]" style={displayStyle}>
                     Not another AI feature, but one continuous application workflow.
                   </p>
                 </article>
                 <article className="bg-[#10100f] p-6 text-white">
-                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#aefd48]" style={bodyStyle}>
+                  <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#aefd48]" style={bodyStyle}>
                     HMW
                   </p>
-                  <p className="m-0 mt-4 text-[24px] font-normal leading-[1.18] tracking-[-0.018em] text-white" style={displayStyle}>
+                  <p data-case-type="quote" className="m-0 mt-4 text-[24px] font-normal leading-[1.18] tracking-[-0.018em] text-white" style={displayStyle}>
                     How might we help users complete the entire application journey with AI, while keeping them in control of important decisions?
                   </p>
                 </article>
@@ -2545,15 +2554,15 @@ export default function JobnovaAIPlatformPage() {
 
             <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="02 / Research">
               <div className="flex flex-col gap-4">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                   02 / Research
                 </p>
-                <h2 className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   Speed was not the real barrier.
                   <br />
                   <span className="text-[#ed5b2b]">Control was.</span>
                 </h2>
-                <p className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                <p data-case-type="lead" className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                   Users already used AI to move faster. The hesitation appeared when AI became harder to inspect, edit, approve, or undo.
                 </p>
               </div>
@@ -2577,10 +2586,10 @@ export default function JobnovaAIPlatformPage() {
                     <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
                       {String(index + 1).padStart(2, '0')}
                     </p>
-                    <h3 className="m-0 mt-8 text-[21px] font-normal leading-[1.2] tracking-[-0.01em] text-[#0a0a0a]" style={displayStyle}>
+                    <h3 data-case-type="small-title" className="m-0 mt-8 text-[21px] font-normal leading-[1.2] tracking-[-0.01em] text-[#0a0a0a]" style={displayStyle}>
                       {insight.title}
                     </h3>
-                    <p className="m-0 mt-4 text-[13px] font-light leading-[1.65] text-[#0a0a0a]/64" style={bodyStyle}>
+                    <p data-case-type="caption" className="m-0 mt-4 text-[13px] font-light leading-[1.65] text-[#0a0a0a]/64" style={bodyStyle}>
                       {insight.body}
                     </p>
                   </article>
@@ -2592,7 +2601,7 @@ export default function JobnovaAIPlatformPage() {
                   <DesktopProcessTimeline />
                   <MobileProcessTimeline />
                 </div>
-                <p className="m-0 bg-white py-2 text-[18px] font-normal leading-[1.45] text-[#0a0a0a]" style={bodyStyle}>
+                <p data-case-type="body" className="m-0 bg-white py-2 text-[18px] font-normal leading-[1.45] text-[#0a0a0a]" style={bodyStyle}>
                   So the product goal shifted from maximizing automation to designing <span className="text-[#ed5b2b]">controlled automation</span>.
                 </p>
               </div>
@@ -2600,10 +2609,10 @@ export default function JobnovaAIPlatformPage() {
 
             <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="03 / Strategy">
               <div className="flex flex-col gap-4">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                   03 / Strategy
                 </p>
-                <h2 className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   We reduced the product to four moments that had to work together.
                 </h2>
               </div>
@@ -2614,13 +2623,13 @@ export default function JobnovaAIPlatformPage() {
                     <p className="m-0 text-[11px] font-light text-[#aefd48]" style={bodyStyle}>
                       {String(index + 1).padStart(2, '0')}
                     </p>
-                    <h3 className="m-0 mt-8 text-[28px] font-normal leading-none tracking-[-0.02em] text-white" style={displayStyle}>
+                    <h3 data-case-type="title" className="m-0 mt-8 text-[28px] font-normal leading-none tracking-[-0.02em] text-white" style={displayStyle}>
                       {step.title}
                     </h3>
-                    <p className="m-0 mt-4 text-[13px] font-light uppercase tracking-[0.12em] text-white/42" style={bodyStyle}>
+                    <p data-case-type="eyebrow" className="m-0 mt-4 text-[13px] font-light uppercase tracking-[0.12em] text-white/42" style={bodyStyle}>
                       {step.action}
                     </p>
-                    <p className="m-0 mt-5 text-[13px] font-light leading-[1.6] text-white/68" style={bodyStyle}>
+                    <p data-case-type="caption" className="m-0 mt-5 text-[13px] font-light leading-[1.6] text-white/68" style={bodyStyle}>
                       {step.body}
                     </p>
                   </article>
@@ -2630,10 +2639,10 @@ export default function JobnovaAIPlatformPage() {
 
             <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="04 / Framework">
               <div className="flex flex-col gap-4">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                   04 / Framework
                 </p>
-                <h2 className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   One workflow, four levels of AI responsibility.
                 </h2>
               </div>
@@ -2649,14 +2658,14 @@ export default function JobnovaAIPlatformPage() {
                     <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
                       {String(index + 1).padStart(2, '0')}
                     </p>
-                    <h3 className="m-0 text-[24px] font-normal leading-none tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
+                    <h3 data-case-type="small-title" className="m-0 text-[24px] font-normal leading-none tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
                       {moment}
                     </h3>
                     <div className="grid gap-2 md:grid-cols-[150px_1fr] md:items-baseline">
-                      <p className="m-0 text-[15px] font-normal leading-6 text-[#ed5b2b]" style={bodyStyle}>
+                      <p data-case-type="small-title" className="m-0 text-[15px] font-normal leading-6 text-[#ed5b2b]" style={bodyStyle}>
                         {responsibility}
                       </p>
-                      <p className="m-0 text-[14px] font-light leading-6 text-[#0a0a0a]/66" style={bodyStyle}>
+                      <p data-case-type="caption" className="m-0 text-[14px] font-light leading-6 text-[#0a0a0a]/66" style={bodyStyle}>
                         {behavior}
                       </p>
                     </div>
@@ -2668,13 +2677,13 @@ export default function JobnovaAIPlatformPage() {
             <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="05 / Explain" aria-labelledby="jobnova-v3-explain-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
-                  <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                     05 / Explain
                   </p>
-                  <h2 id="jobnova-v3-explain-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                  <h2 data-case-type="display" id="jobnova-v3-explain-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     Explain before asking for trust.
                   </h2>
-                  <p className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                     Users didn’t need a higher Match Score. They needed to understand why the score existed and decide whether they agreed with it.
                   </p>
                   <div className="grid gap-3 md:grid-cols-3">
@@ -2684,10 +2693,10 @@ export default function JobnovaAIPlatformPage() {
                       ['Evidence', '68% of registered users completed their first job match.'],
                     ].map(([label, body]) => (
                       <div key={label} className="min-h-[150px] bg-[#f3f1ea] p-4">
-                        <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                        <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
                           {label}
                         </p>
-                        <p className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
+                        <p data-case-type="caption" className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
                           {body}
                         </p>
                       </div>
@@ -2701,15 +2710,15 @@ export default function JobnovaAIPlatformPage() {
             <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="06 / Collaborate" aria-labelledby="jobnova-v3-collaborate-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
-                  <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                     06 / Collaborate
                   </p>
-                  <h2 id="jobnova-v3-collaborate-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                  <h2 data-case-type="display" id="jobnova-v3-collaborate-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     AI drafts.
                     <br />
                     Users author.
                   </h2>
-                  <p className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                     Resume editing became a collaboration model: AI suggested changes, every edit stayed visible, and users made the final decision before submission.
                   </p>
                   <div className="grid gap-3 md:grid-cols-3">
@@ -2722,10 +2731,10 @@ export default function JobnovaAIPlatformPage() {
                         <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
                           {String(index + 1).padStart(2, '0')}
                         </p>
-                        <h3 className="m-0 mt-3 text-[15px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
+                        <h3 data-case-type="small-title" className="m-0 mt-3 text-[15px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
                           {title}
                         </h3>
-                        <p className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
+                        <p data-case-type="caption" className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
                           {body}
                         </p>
                       </div>
@@ -2739,13 +2748,13 @@ export default function JobnovaAIPlatformPage() {
             <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="07 / Act" aria-labelledby="jobnova-v3-act-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
-                  <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                     07 / Act
                   </p>
-                  <h2 id="jobnova-v3-act-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                  <h2 data-case-type="display" id="jobnova-v3-act-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     Automation is a permission system, not a switch.
                   </h2>
-                  <p className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                     AI earns the right to act by following the boundaries a user defines.
                   </p>
                   <div className="grid gap-3 md:grid-cols-3">
@@ -2755,10 +2764,10 @@ export default function JobnovaAIPlatformPage() {
                       ['After', 'Every action remains visible and recoverable.'],
                     ].map(([label, body]) => (
                       <div key={label} className="min-h-[150px] bg-[#f3f1ea] p-4">
-                        <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                        <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
                           {label}
                         </p>
-                        <p className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
+                        <p data-case-type="caption" className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
                           {body}
                         </p>
                       </div>
@@ -2775,13 +2784,13 @@ export default function JobnovaAIPlatformPage() {
             <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="08 / Account" aria-labelledby="jobnova-v3-account-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
-                  <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                     08 / Account
                   </p>
-                  <h2 id="jobnova-v3-account-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                  <h2 data-case-type="display" id="jobnova-v3-account-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     Every automated action should leave a trace.
                   </h2>
-                  <p className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                     Automation becomes trustworthy only when users can understand what happened, what is happening, and what needs their attention next.
                   </p>
                   <div className="grid gap-3 md:grid-cols-3">
@@ -2794,10 +2803,10 @@ export default function JobnovaAIPlatformPage() {
                         <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
                           {String(index + 1).padStart(2, '0')}
                         </p>
-                        <h3 className="m-0 mt-3 text-[15px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
+                        <h3 data-case-type="small-title" className="m-0 mt-3 text-[15px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
                           {title}
                         </h3>
-                        <p className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
+                        <p data-case-type="caption" className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
                           {body}
                         </p>
                       </div>
@@ -2810,13 +2819,13 @@ export default function JobnovaAIPlatformPage() {
 
             <div className="flex max-w-[980px] flex-col gap-8" data-case-nav-label="09 / Product Rules">
               <div className="flex flex-col gap-4">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                   09 / Product Rules
                 </p>
-                <h2 className="m-0 max-w-[820px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                <h2 data-case-type="display" className="m-0 max-w-[820px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   From screens to product rules.
                 </h2>
-                <p className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                <p data-case-type="lead" className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                   I translated the trust model into reusable states, components, and interaction rules so Match, Customize, Apply, and Track behaved consistently.
                 </p>
               </div>
@@ -2860,10 +2869,10 @@ export default function JobnovaAIPlatformPage() {
 
             <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="10 / Outcome">
               <div className="flex flex-col gap-4">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
                   10 / Outcome
                 </p>
-                <h2 className="m-0 max-w-[880px] text-[clamp(32px,4.8vw,64px)] font-normal leading-[1.02] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
+                <h2 data-case-type="display" className="m-0 max-w-[880px] text-[clamp(32px,4.8vw,64px)] font-normal leading-[1.02] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
                   The goal was never maximum automation.
                   <br />
                   <span className="text-[#ed5b2b]">It was automation people could understand, configure, and hold accountable.</span>
@@ -2873,16 +2882,16 @@ export default function JobnovaAIPlatformPage() {
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 {resultMetrics.map((metric) => (
                   <article key={metric.label} className="flex min-h-[260px] flex-col bg-[#f3f1ea] p-5">
-                    <p className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
+                    <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
                       {metric.label}
                     </p>
-                    <p className="m-0 mt-7 text-[26px] font-normal leading-[28px] text-[#0a0a0a]" style={displayStyle}>
+                    <p data-case-type="title" className="m-0 mt-7 text-[26px] font-normal leading-[28px] text-[#0a0a0a]" style={displayStyle}>
                       {metric.value}
                     </p>
-                    <h3 className="m-0 mt-4 text-[15px] font-normal leading-5 text-[#0a0a0a]" style={bodyStyle}>
+                    <h3 data-case-type="small-title" className="m-0 mt-4 text-[15px] font-normal leading-5 text-[#0a0a0a]" style={bodyStyle}>
                       {metric.title}
                     </h3>
-                    <p className="m-0 mt-3 text-[13px] font-light leading-[20.15px] text-[#0a0a0a]/62" style={bodyStyle}>
+                    <p data-case-type="caption" className="m-0 mt-3 text-[13px] font-light leading-[20.15px] text-[#0a0a0a]/62" style={bodyStyle}>
                       {metric.body}
                     </p>
                   </article>
@@ -2890,7 +2899,7 @@ export default function JobnovaAIPlatformPage() {
               </div>
 
               <section aria-labelledby="jobnova-v3-learnings-title">
-                <h3 id="jobnova-v3-learnings-title" className="m-0 mb-5 text-[20px] font-normal leading-[1.3] text-[#0a0a0a]" style={bodyStyle}>
+                <h3 data-case-type="title" id="jobnova-v3-learnings-title" className="m-0 mb-5 text-[20px] font-normal leading-[1.3] text-[#0a0a0a]" style={bodyStyle}>
                   Three learnings I will carry forward
                 </h3>
                 <div className="grid gap-4 md:grid-cols-3">
@@ -2903,10 +2912,10 @@ export default function JobnovaAIPlatformPage() {
                       <p className="m-0 text-[11px] font-light text-[#aefd48]" style={bodyStyle}>
                         {String(index + 1).padStart(2, '0')}
                       </p>
-                      <h4 className="m-0 mt-8 text-[21px] font-normal leading-[1.2] text-white" style={displayStyle}>
+                      <h4 data-case-type="small-title" className="m-0 mt-8 text-[21px] font-normal leading-[1.2] text-white" style={displayStyle}>
                         {title}
                       </h4>
-                      <p className="m-0 mt-4 text-[13px] font-light leading-[1.6] text-white/65" style={bodyStyle}>
+                      <p data-case-type="caption" className="m-0 mt-4 text-[13px] font-light leading-[1.6] text-white/65" style={bodyStyle}>
                         {body}
                       </p>
                     </article>

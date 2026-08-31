@@ -104,7 +104,7 @@ function useIsMobile() {
 function FullBleed({
   children,
   bg = C.paper,
-  pad = '96px 24px',
+  pad = 'var(--case-space-section) 24px',
 }: {
   children: React.ReactNode;
   bg?: string;
@@ -160,13 +160,14 @@ function Eyebrow({ index, label, color = C.walnut }: { index: string; label: str
 function H2({ children }: { children: React.ReactNode }) {
   return (
     <h2
+      data-case-type="display"
       style={{
         fontFamily: sans,
-        fontSize: 'clamp(26px, 3.4vw, 38px)',
-        lineHeight: 1.18,
-        fontWeight: 500,
-        letterSpacing: '-0.01em',
-        color: C.ink,
+        fontSize: 'var(--case-type-section)',
+        lineHeight: 1.08,
+        fontWeight: 400,
+        letterSpacing: '-0.025em',
+        color: 'var(--case-ink)',
         margin: '0 0 18px',
         maxWidth: '760px',
       }}
@@ -179,12 +180,13 @@ function H2({ children }: { children: React.ReactNode }) {
 function Lead({ children, max = 720 }: { children: React.ReactNode; max?: number }) {
   return (
     <p
+      data-case-type="lead"
       style={{
         fontFamily: sans,
-        fontSize: '18px',
-        lineHeight: 1.62,
+        fontSize: 'var(--case-type-lead)',
+        lineHeight: 1.6,
         fontWeight: 300,
-        color: C.inkSoft,
+        color: 'var(--case-copy)',
         margin: '0 0 8px',
         maxWidth: max,
       }}
@@ -773,7 +775,7 @@ export default function WalnutCodingPage() {
   const isMobile = useIsMobile();
 
   return (
-    <div className="mei-project-page" style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
+    <div className="mei-project-page walnut-coding-case" style={{ backgroundColor: C.paper, fontFamily: sans, color: C.ink }}>
       <CaseStudyControls accentColor={C.walnut} />
       {/* ---------------------------------------------------------- */}
       {/* HERO                                                        */}

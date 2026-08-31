@@ -78,8 +78,8 @@ export default function CaseStudyHero({
       id="case-study-top"
       className="mei-case-study-hero w-screen"
       style={{
-        backgroundColor: '#FFFFFF',
-        color: '#0a0a0a',
+        backgroundColor: 'var(--case-bg, #fcfcfb)',
+        color: 'var(--case-ink, #171717)',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
         marginTop: '-48px',
@@ -166,10 +166,11 @@ export default function CaseStudyHero({
 
           <div style={{ marginBottom: 'clamp(42px, 7vh, 72px)' }}>
             <h1
+              data-case-type="hero"
               style={{
                 ...fontStyle,
-                color: '#0a0a0a',
-                fontSize: titleFontSize ?? (compactTypography ? 'clamp(29px, 3vw, 46px)' : 'clamp(32px, 3.5vw, 54px)'),
+                color: 'var(--case-ink, #171717)',
+                fontSize: titleFontSize ?? (compactTypography ? 'clamp(30px, 3vw, 44px)' : 'clamp(32px, 3.5vw, 50px)'),
                 fontWeight: 400,
                 lineHeight: compactTypography ? 1.12 : 1.08,
                 margin: '0 0 10px',
@@ -178,10 +179,11 @@ export default function CaseStudyHero({
               {title}
             </h1>
             <p
+              data-case-type="lead"
               style={{
                 ...fontStyle,
-                color: 'rgb(10 10 10 / 0.64)',
-                fontSize: compactTypography ? 'clamp(14px, 1.1vw, 18px)' : 'clamp(15px, 1.25vw, 20px)',
+                color: 'var(--case-muted, #686868)',
+                fontSize: 'var(--case-type-body, clamp(16px, 1.1vw, 18px))',
                 fontWeight: 300,
                 lineHeight: 1.45,
                 margin: '0 0 14px',

@@ -23,10 +23,10 @@ function Section({ children, hidden, label, tone = 'white' }: SectionProps) {
       className="w-screen"
       data-case-nav-label={label}
       style={{
-        backgroundColor: tone === 'soft' ? '#F7F9FC' : '#FFFFFF',
+        backgroundColor: tone === 'soft' ? 'var(--case-surface)' : 'var(--case-bg)',
         marginLeft: 'calc(-50vw + 50%)',
         marginRight: 'calc(-50vw + 50%)',
-        padding: 'clamp(88px, 11vw, 152px) clamp(24px, 6vw, 96px)',
+        padding: 'var(--case-space-section) clamp(24px, 6vw, 96px)',
       }}
     >
       <div style={{ margin: '0 auto', maxWidth: '1200px' }}>{children}</div>
@@ -36,7 +36,7 @@ function Section({ children, hidden, label, tone = 'white' }: SectionProps) {
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p style={{ color: blue, fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', lineHeight: '18px', margin: '0 0 18px', textTransform: 'uppercase' }}>
+    <p data-case-type="eyebrow" className="case-study-eyebrow" style={{ margin: '0 0 18px' }}>
       {children}
     </p>
   );
@@ -44,7 +44,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 function Title({ children, width = '940px' }: { children: React.ReactNode; width?: string }) {
   return (
-    <h1 style={{ color: ink, fontSize: 'clamp(30px, 4.2vw, 48px)', fontWeight: 400, letterSpacing: '-0.025em', lineHeight: 1.1, margin: '0 0 24px', maxWidth: width }}>
+    <h1 data-case-type="display" className="case-study-section-title" style={{ margin: '0 0 24px', maxWidth: width }}>
       {children}
     </h1>
   );
@@ -52,7 +52,7 @@ function Title({ children, width = '940px' }: { children: React.ReactNode; width
 
 function Body({ children, width = '840px' }: { children: React.ReactNode; width?: string }) {
   return (
-    <div style={{ color: muted, fontSize: 'clamp(17px, 1.7vw, 21px)', fontWeight: 300, lineHeight: 1.65, maxWidth: width }}>
+    <div data-case-type="lead" className="case-study-lead" style={{ maxWidth: width }}>
       {children}
     </div>
   );
