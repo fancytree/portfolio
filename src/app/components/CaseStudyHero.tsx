@@ -69,7 +69,7 @@ export default function CaseStudyHero({
   compactTypography = false,
   titleFontSize,
   wideDetails = false,
-  tagRadius = '999px',
+  tagRadius = 'var(--case-radius-full, 999px)',
 }: CaseStudyHeroProps) {
   const fontStyle = { fontFamily: fontFamily.sans };
 
@@ -263,7 +263,7 @@ export default function CaseStudyHero({
                     ...fontStyle,
                     alignItems: 'center',
                     border: '1px solid rgb(10 10 10 / 0.72)',
-                    borderRadius: '999px',
+                    borderRadius: 'var(--case-radius-full, 999px)',
                     display: 'inline-flex',
                     fontSize: '14px',
                     fontWeight: 400,

@@ -128,7 +128,7 @@ function ThreeStageEvolution() {
         </article>
       </div>
 
-      <div className="flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
+      <div className="case-radius-lg flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
           AI as tool
         </p>
@@ -313,7 +313,7 @@ function DesignResultEvidenceBackedAgency() {
         </p>
       </blockquote>
 
-      <div className="bg-[#161616] p-[clamp(22px,3vw,32px)]">
+      <div className="case-radius-lg overflow-hidden bg-[#161616] p-[clamp(22px,3vw,32px)]">
         <p className="m-0 mb-5 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
           What required an Agent
         </p>
@@ -352,7 +352,7 @@ function DesignResultEvidenceBackedAgency() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 border border-[#d8d8d8] bg-white p-[clamp(22px,4vw,40px)]">
+      <div className="case-radius-lg flex flex-col gap-6 border border-[#d8d8d8] bg-white p-[clamp(22px,4vw,40px)]">
         <div className="flex flex-col gap-2 opacity-55">
           <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Not</p>
           <p className="m-0 text-[17px] font-bold text-[#555] line-through" style={bodyStyle}>How can AI automate procurement?</p>
@@ -369,7 +369,7 @@ function DesignResultEvidenceBackedAgency() {
         </div>
       </div>
 
-      <div className="mt-[clamp(72px,10vw,128px)] flex flex-col gap-8 bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="08 / Agent-ready System">
+      <div className="case-radius-lg mt-[clamp(72px,10vw,128px)] flex flex-col gap-8 bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="08 / Agent-ready System">
         <ChapterTitle inverse>08 / Agent-ready System</ChapterTitle>
         <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
           The Agent needed structured context and a defined role.
@@ -523,7 +523,7 @@ function AgentUxIterationsSection() {
 
         <div className="flex flex-col gap-3">
           {agentUxIterations.map((iteration) => (
-            <details key={iteration.index} className="group border border-[#d8d8d8] bg-white open:border-[#2155e8]">
+            <details key={iteration.index} className="case-radius-lg group overflow-hidden border border-[#d8d8d8] bg-white open:border-[#2155e8]">
               <summary className="grid cursor-pointer list-none gap-4 p-[clamp(18px,3vw,26px)] sm:grid-cols-[44px_minmax(220px,0.8fr)_1fr_24px] sm:items-center">
                 <span className="text-[11px] font-bold text-[#777]" style={bodyStyle}>{iteration.index}</span>
                 <span className="flex items-center gap-3 text-[15px] font-bold text-[#161616]" style={bodyStyle}>
@@ -561,7 +561,7 @@ function AgentUxIterationsSection() {
           ))}
         </div>
 
-        <div className="bg-[#2155e8] p-[clamp(24px,4vw,40px)]">
+        <div className="case-radius-lg bg-[#2155e8] p-[clamp(24px,4vw,40px)]">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>Iteration outcome</p>
           <h3 className="m-0 mt-4 max-w-[880px] text-[clamp(24px,3.2vw,34px)] font-bold leading-[1.2] tracking-[-0.02em] text-white" style={bodyStyle}>
             The Agent moved from explaining the workflow to coordinating it.
@@ -1013,7 +1013,7 @@ export default function ProcurementAgentPage() {
             This was not a static flow. The Agent workflow preserves state, resumes after external work, uses system tools, and pauses whenever human action is required.
           </p>
 
-          <div className="grid grid-cols-2 gap-px bg-[#d8d8d8] lg:grid-cols-4">
+          <div className="case-radius-lg grid grid-cols-2 gap-px overflow-hidden bg-[#d8d8d8] lg:grid-cols-4">
             {[
               { label: 'Stateful', body: 'Carry the purchase context across the task.' },
               { label: 'Resumable', body: 'Continue after approval, clarification, or external supplier response.' },
@@ -1050,7 +1050,7 @@ export default function ProcurementAgentPage() {
             </p>
           </div>
 
-          <div className="grid gap-px bg-[#b8c6ea] lg:grid-cols-[0.9fr_1.15fr_0.95fr]">
+          <div className="case-radius-lg grid gap-px overflow-hidden bg-[#b8c6ea] lg:grid-cols-[0.9fr_1.15fr_0.95fr]">
             {[
               {
                 label: 'Agent can',
@@ -1107,7 +1107,7 @@ export default function ProcurementAgentPage() {
             ))}
           </div>
 
-          <div className="grid gap-px bg-[#b8c6ea] sm:grid-cols-5">
+          <div className="case-radius-lg grid gap-px overflow-hidden bg-[#b8c6ea] sm:grid-cols-5">
             {[
               { label: 'Evidence', body: 'Show the source behind every recommendation.' },
               { label: 'Confidence', body: 'Signal uncertainty without false precision.' },
@@ -1176,7 +1176,7 @@ export default function ProcurementAgentPage() {
             Validate safety and comprehension before speed.
           </h2>
 
-          <div className="grid gap-px bg-[#d8d8d8] lg:grid-cols-2">
+          <div className="case-radius-lg grid gap-px overflow-hidden bg-[#d8d8d8] lg:grid-cols-2">
             <article className="bg-[#161616] p-[clamp(22px,3vw,32px)]">
               <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
                 What I already validated

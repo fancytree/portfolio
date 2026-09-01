@@ -136,7 +136,7 @@ export default function ProcurementDemoEmbed({ src, title }: { src: string; titl
             maxWidth: 'var(--demo-viewport-width)',
             // Peak height leaves the 48px header plus a 12px gap above and below.
             height: 'calc(560px + (100svh - 72px - 560px) * var(--demo-progress))',
-            borderRadius: 0,
+            borderRadius: 'calc(var(--case-radius-xl, 24px) * (1 - var(--demo-progress)))',
             boxShadow:
               '0 calc(22px * (1 - var(--demo-progress))) calc(58px * (1 - var(--demo-progress))) rgb(10 10 10 / calc(0.15 * (1 - var(--demo-progress))))',
           } as React.CSSProperties}

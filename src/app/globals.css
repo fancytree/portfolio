@@ -1234,6 +1234,12 @@ body.no-scroll {
   --case-type-lead: clamp(17px, 1.45vw, 20px);
   --case-type-body: clamp(16px, 1.1vw, 18px);
   --case-type-caption: 13px;
+  /* Shared case-study radius scale. Keep cards and media on one coherent system. */
+  --case-radius-sm: 8px;
+  --case-radius-md: 12px;
+  --case-radius-lg: 16px;
+  --case-radius-xl: 24px;
+  --case-radius-full: 999px;
   background: var(--case-bg) !important;
   color: var(--case-ink);
   font-family: var(--mei-font-primary) !important;
@@ -1444,6 +1450,12 @@ body.no-scroll {
 .case-study-section-space {
   padding-block: var(--case-space-section) !important;
 }
+
+.case-radius-sm { border-radius: var(--case-radius-sm, 8px); }
+.case-radius-md { border-radius: var(--case-radius-md, 12px); }
+.case-radius-lg { border-radius: var(--case-radius-lg, 16px); }
+.case-radius-xl { border-radius: var(--case-radius-xl, 24px); }
+.case-radius-full { border-radius: var(--case-radius-full, 999px); }
 
 .mei-project-page > section:not(.mei-case-study-hero) > div {
   width: 100%;

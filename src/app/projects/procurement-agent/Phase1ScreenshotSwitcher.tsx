@@ -63,7 +63,7 @@ export default function Phase1ScreenshotSwitcher() {
       className="m-0 flex flex-col gap-4"
       aria-label="Phase 1 product screenshots"
     >
-      <div className="inline-flex w-fit gap-1 rounded-full border border-[#e2e2e2] bg-white p-1" role="tablist" aria-label="Phase 1 views">
+      <div className="inline-flex w-fit gap-1 case-radius-full border border-[#e2e2e2] bg-white p-1" role="tablist" aria-label="Phase 1 views">
         {shots.map((shot, index) => {
           const selected = index === active;
           return (
@@ -72,7 +72,7 @@ export default function Phase1ScreenshotSwitcher() {
               type="button"
               role="tab"
               aria-selected={selected}
-              className="flex min-h-9 items-center justify-center rounded-full border-0 px-4 py-2 text-left transition-[background-color,color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2155e8] active:scale-[0.98]"
+              className="flex min-h-9 items-center justify-center case-radius-full border-0 px-4 py-2 text-left transition-[background-color,color,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2155e8] active:scale-[0.98]"
               style={{
                 ...bodyStyle,
                 background: selected ? '#2155e8' : 'transparent',
@@ -88,7 +88,7 @@ export default function Phase1ScreenshotSwitcher() {
 
       <button
         type="button"
-        className="relative block min-h-0 w-full flex-1 cursor-zoom-in overflow-hidden border border-[#d8d8d8] bg-[#eef1f6] p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2155e8]"
+        className="case-radius-xl relative block min-h-0 w-full flex-1 cursor-zoom-in overflow-hidden border border-[#d8d8d8] bg-[#eef1f6] p-0 text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2155e8]"
         data-cursor="pill"
         data-cursor-label="View large"
         onKeyDown={(event) => {
@@ -160,7 +160,7 @@ export default function Phase1ScreenshotSwitcher() {
 
           <button
             type="button"
-            className="absolute left-4 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/90 text-[#161616] shadow-[0_8px_30px_rgb(0_0_0/0.22)] backdrop-blur-md transition-[background-color,box-shadow,transform] duration-200 hover:scale-[1.06] hover:bg-white hover:shadow-[0_10px_36px_rgb(0_0_0/0.3)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white sm:left-6 sm:size-12"
+            className="absolute left-4 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center case-radius-full border border-white/70 bg-white/90 text-[#161616] shadow-[0_8px_30px_rgb(0_0_0/0.22)] backdrop-blur-md transition-[background-color,box-shadow,transform] duration-200 hover:scale-[1.06] hover:bg-white hover:shadow-[0_10px_36px_rgb(0_0_0/0.3)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white sm:left-6 sm:size-12"
             data-cursor="pill"
             data-cursor-label="Previous"
             onClick={() => go(active - 1)}
@@ -170,7 +170,7 @@ export default function Phase1ScreenshotSwitcher() {
           </button>
           <button
             type="button"
-            className="absolute right-4 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/70 bg-white/90 text-[#161616] shadow-[0_8px_30px_rgb(0_0_0/0.22)] backdrop-blur-md transition-[background-color,box-shadow,transform] duration-200 hover:scale-[1.06] hover:bg-white hover:shadow-[0_10px_36px_rgb(0_0_0/0.3)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white sm:right-6 sm:size-12"
+            className="absolute right-4 top-1/2 z-10 flex size-11 -translate-y-1/2 items-center justify-center case-radius-full border border-white/70 bg-white/90 text-[#161616] shadow-[0_8px_30px_rgb(0_0_0/0.22)] backdrop-blur-md transition-[background-color,box-shadow,transform] duration-200 hover:scale-[1.06] hover:bg-white hover:shadow-[0_10px_36px_rgb(0_0_0/0.3)] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white sm:right-6 sm:size-12"
             data-cursor="pill"
             data-cursor-label="Next"
             onClick={() => go(active + 1)}
