@@ -184,19 +184,21 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
               onClick={() => scrollToTarget(item.id)}
               style={{
                 fontFamily: fontFamily.sans,
-                width: 'fit-content',
+                width: '100%',
+                maxWidth: '100%',
                 border: 0,
                 background: 'transparent',
                 color: isActive ? activeColor : idleColor,
                 cursor: 'pointer',
                 display: 'inline-flex',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 gap: '8px',
                 fontSize: '14px',
                 fontWeight: 300,
                 lineHeight: '20px',
                 padding: '2px 0',
                 textAlign: 'left',
+                whiteSpace: 'normal',
                 transition: 'color 0.2s ease',
               }}
               aria-current={isActive ? 'true' : undefined}
@@ -211,14 +213,16 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
                 aria-hidden
                 style={{
                   display: 'inline-block',
+                  flexShrink: 0,
                   width: '14px',
                   height: '1px',
+                  marginTop: '10px',
                   backgroundColor: isActive ? activeColor : 'var(--case-rule, rgb(23 23 23 / 0.16))',
                   opacity: isActive ? 1 : 0,
                   transition: 'background-color 0.2s ease, opacity 0.2s ease',
                 }}
               />
-              {item.label}
+              <span style={{ minWidth: 0 }}>{item.label}</span>
             </button>
           );
         })}
@@ -383,7 +387,7 @@ export default function CaseStudyControls({ navLabels, tldrPoints, accentColor =
 
           return {
             id: section.id,
-            label: label.length > 36 ? `${label.slice(0, 36).trim()}...` : label,
+            label: label.length > 56 ? `${label.slice(0, 56).trim()}...` : label,
           };
         })
         .filter((item): item is CaseStudyNavItem => Boolean(item));

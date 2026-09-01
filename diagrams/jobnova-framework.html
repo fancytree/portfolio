@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Four levels of AI responsibility across one workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:#f3f1ea;color:#0a0a0a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:3rem 2rem}
+.frame{max-width:1120px;width:100%}
+figure{margin:0;border:1px solid #cccccc;border-radius:16px;background:#fff;overflow:hidden}
+.body{padding:1.75rem} svg{width:100%;min-width:860px;display:block}</style></head>
+<body><div class="frame"><figure><div class="body">
+      <svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="jn-fw-title jn-fw-desc">
+        <title id="jn-fw-title">Four levels of AI responsibility across one workflow</title>
+        <desc id="jn-fw-desc">Swimlane diagram of the JobNova workflow. Four stages run left to right — Match, Customize, Apply and Track — each carrying a level of AI responsibility: explain, collaborate, act and account. The upper lane shows what the AI does at each stage and the lower lane what the user does. At Match, Customize and Track the AI hands evidence, a draft or a trace down to the user; at Apply the direction reverses, because the user defines the boundaries before the AI is allowed to submit.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(10,10,10,0.42)"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#ed5b2b"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#ffffff"/>
+
+        <line x1="32" y1="88" x2="1160" y2="88" stroke="rgba(10,10,10,0.12)" stroke-width="0.8"/>
+        <line x1="32" y1="252" x2="1160" y2="252" stroke="rgba(10,10,10,0.12)" stroke-width="0.8"/>
+        <text x="32" y="156" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" letter-spacing="0.14em">AI</text>
+        <text x="32" y="324" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" letter-spacing="0.14em">USER</text>
+
+        <text x="284" y="32" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">01 · EXPLAIN</text>
+        <text x="284" y="64" fill="#0a0a0a" font-size="24" font-family="'Inter', sans-serif" text-anchor="middle">Match</text>
+        <line x1="284" y1="192" x2="284" y2="280" stroke="rgba(10,10,10,0.42)" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="292" y="224" width="72" height="16" rx="2" fill="#ffffff"/>
+        <text x="328" y="236" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">EVIDENCE</text>
+        <rect x="176" y="112" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="176" y="112" width="216" height="80" rx="8" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="284" y="144" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Shows why a role</text>
+        <text x="284" y="168" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">is recommended</text>
+        <rect x="176" y="280" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="176" y="280" width="216" height="80" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="284" y="312" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Decides whether</text>
+        <text x="284" y="336" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">to act</text>
+
+        <text x="540" y="32" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">02 · COLLABORATE</text>
+        <text x="540" y="64" fill="#0a0a0a" font-size="24" font-family="'Inter', sans-serif" text-anchor="middle">Customize</text>
+        <line x1="540" y1="192" x2="540" y2="280" stroke="rgba(10,10,10,0.42)" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="548" y="224" width="48" height="16" rx="2" fill="#ffffff"/>
+        <text x="572" y="236" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DRAFT</text>
+        <rect x="432" y="112" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="432" y="112" width="216" height="80" rx="8" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="540" y="144" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Drafts and improves</text>
+        <text x="540" y="168" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">materials</text>
+        <rect x="432" y="280" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="432" y="280" width="216" height="80" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="540" y="312" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Keeps authorship</text>
+        <text x="540" y="336" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">of the result</text>
+
+        <text x="796" y="32" fill="#ed5b2b" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">03 · ACT</text>
+        <text x="796" y="64" fill="#0a0a0a" font-size="24" font-family="'Inter', sans-serif" text-anchor="middle">Apply</text>
+        <line x1="796" y1="280" x2="796" y2="192" stroke="#ed5b2b" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <rect x="804" y="224" width="88" height="16" rx="2" fill="#ffffff"/>
+        <text x="848" y="236" fill="#ed5b2b" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BOUNDARIES</text>
+        <rect x="688" y="112" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="688" y="112" width="216" height="80" rx="8" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="796" y="144" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Submits within</text>
+        <text x="796" y="168" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">the limits set</text>
+        <rect x="688" y="280" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="688" y="280" width="216" height="80" rx="8" fill="rgba(237,91,43,0.08)" stroke="#ed5b2b" stroke-width="1"/>
+        <text x="796" y="312" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Defines the</text>
+        <text x="796" y="336" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">boundaries first</text>
+
+        <text x="1052" y="32" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">04 · ACCOUNT</text>
+        <text x="1052" y="64" fill="#0a0a0a" font-size="24" font-family="'Inter', sans-serif" text-anchor="middle">Track</text>
+        <line x1="1052" y1="192" x2="1052" y2="280" stroke="rgba(10,10,10,0.42)" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="1060" y="224" width="48" height="16" rx="2" fill="#ffffff"/>
+        <text x="1084" y="236" fill="rgba(10,10,10,0.42)" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TRACE</text>
+        <rect x="944" y="112" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="944" y="112" width="216" height="80" rx="8" fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" stroke-width="1"/>
+        <text x="1052" y="144" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Logs every</text>
+        <text x="1052" y="168" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">automated action</text>
+        <rect x="944" y="280" width="216" height="80" rx="8" fill="#ffffff"/>
+        <rect x="944" y="280" width="216" height="80" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1"/>
+        <text x="1052" y="312" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">Inspects, reverses</text>
+        <text x="1052" y="336" fill="rgba(10,10,10,0.68)" font-size="16" font-family="'Inter', sans-serif" text-anchor="middle">and recovers</text>
+      </svg>
+</div></figure></div></body></html>

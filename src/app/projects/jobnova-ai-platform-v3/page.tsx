@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import CaseStudyBackButton from '../../components/CaseStudyBackButton';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import CaseStudyHero from '../../components/CaseStudyHero';
@@ -22,7 +22,7 @@ const tldrPoints = [
   {
     label: 'Shift',
     body:
-      'The project moved from a simple efficiency hypothesis - automate more applications - to a trust-centered product direction: help users complete more relevant applications faster while keeping control of critical career decisions.',
+      'The first bet stacked AI features onto a broken journey: match, explain, generate materials, training, and referrals. Research showed the missing job was Auto Apply, once agent workflows made that loop possible.',
   },
   {
     label: 'Solution',
@@ -43,9 +43,9 @@ const tldrPoints = [
 
 const quickStats = [
   { value: '1,240', label: 'Registered users' },
-  { value: '68%', label: 'Completed first job match' },
+  { value: '68.06%', label: '30-day onboarding completion' },
   { value: '54%', label: 'Used AI resume customization' },
-  { value: '31%', label: 'Enabled Auto Apply' },
+  { value: '19.39%', label: 'Enabled Auto Apply' },
   { value: '8,700+', label: 'Applications completed' },
 ];
 
@@ -189,15 +189,41 @@ const processLineAssets = [
   { src: '/img/jobnova/process-line-06.svg', width: 181 },
 ] as const;
 
-const beforeWorkflow = [
-  'Job boards',
-  'Resume editor',
-  'ChatGPT',
-  'Google Docs',
-  'ATS checker',
-  'Email',
-  'Spreadsheet',
-  'Application portal',
+const beforeWorkflow: string[][] = [
+  ["Job boards"],
+  ["Resume editor"],
+  ["ChatGPT"],
+  ["Google Docs /", "Notion / …"],
+  ["ATS checker"],
+  ["Application", "portal"],
+  ["Email"],
+  ["Spreadsheet"],
+];
+
+// Hand-tuned scatter — fixed, never random: this renders on the server too.
+const TOOL_POS = [
+  { x: 40, y: 80 },
+  { x: 176, y: 96 },
+  { x: 332, y: 72 },
+  { x: 468, y: 88 },
+  { x: 624, y: 68 },
+  { x: 752, y: 92 },
+  { x: 908, y: 76 },
+  { x: 1048, y: 100 },
+];
+
+// Bounce paths between tools, generated from TOOL_POS. Crossings are intentional.
+const TOOL_PATHS = [
+  "M 72,160 V 192 Q 72,200 80,200 H 184 Q 192,200 192,192 V 176",
+  "M 216,176 V 192 Q 216,200 224,200 H 348 Q 356,200 356,192 V 152",
+  "M 388,152 V 224 Q 388,232 380,232 H 248 Q 240,232 240,224 V 176",
+  "M 264,176 V 208 Q 264,216 272,216 H 492 Q 500,216 500,208 V 168",
+  "M 548,168 V 192 Q 548,200 556,200 H 640 Q 648,200 648,192 V 148",
+  "M 680,148 V 256 Q 680,264 672,264 H 428 Q 420,264 420,256 V 152",
+  "M 712,148 V 208 Q 712,216 720,216 H 776 Q 784,216 784,208 V 172",
+  "M 832,172 V 192 Q 832,200 840,200 H 932 Q 940,200 940,192 V 156",
+  "M 988,156 V 208 Q 988,216 996,216 H 1072 Q 1080,216 1080,208 V 180",
+  "M 1128,180 V 240 Q 1128,248 1120,248 H 128 Q 120,248 120,240 V 160",
 ];
 
 const jobnovaWorkflow = ['Match', 'Customize', 'Apply', 'Track'];
@@ -298,27 +324,6 @@ const reframingRows = [
   },
 ];
 
-const earlyProductLoop = ['Discover', 'Customize', 'Apply'];
-
-const initialAssumptions = [
-  {
-    title: 'Efficiency was the main blocker',
-    body: 'If search, resume tailoring, and form filling took less time, users would complete more applications.',
-  },
-  {
-    title: 'More applications meant more opportunity',
-    body: 'We assumed users would see higher application volume as clear product value.',
-  },
-  {
-    title: 'Users would delegate application execution',
-    body: 'If roles matched preset preferences, users might accept a high level of AI automation.',
-  },
-  {
-    title: 'Discover, customize, and apply could form the loop',
-    body: 'We assumed users needed less product support after an application was submitted.',
-  },
-];
-
 const marketWorkflowStages = [
   { stage: 'Discover Jobs', tools: ['LinkedIn', 'Indeed'] },
   { stage: 'Resume & ATS', tools: ['Teal', 'Rezi', 'Kickresume'] },
@@ -339,80 +344,6 @@ const principles = [
     title: 'Connect the entire workflow',
     body: 'Reduce context switching by bringing discovery, customization, application, and tracking into one experience.',
   },
-];
-
-const mvpCoreLoop = [
-  {
-    title: 'Match',
-    action: 'Decide',
-    body: 'Discover relevant opportunities and understand why each role is recommended.',
-    feature: 'Explainable Matching',
-  },
-  {
-    title: 'Customize',
-    action: 'Prepare',
-    body: 'Tailor application materials while keeping AI-generated changes visible and editable.',
-    feature: 'AI Resume Customization',
-  },
-  {
-    title: 'Apply',
-    action: 'Act',
-    body: 'Submit within user-defined rules, permissions, and review boundaries.',
-    feature: 'Controlled Auto Apply',
-  },
-  {
-    title: 'Track',
-    action: 'Account',
-    body: 'Record what was submitted, monitor status, and surface recruiter responses.',
-    feature: 'Application Tracking',
-  },
-] as const;
-
-const earlyMvpScope = [
-  'Job alerts',
-  'Resume AI',
-  'Cover letters',
-  'Auto Apply',
-  'Inbox',
-  'AI Agent',
-  'Networking',
-  'Interview prep',
-];
-
-const mvpIncluded = [
-  {
-    group: 'Foundation',
-    title: 'Profile & Preferences',
-    body: 'Career goals, experience, skills, location, and job preferences establish the rules used across the workflow.',
-  },
-  {
-    group: 'Core experience',
-    title: 'Explainable Job Matching',
-    body: 'Help users understand whether a role is worth applying for.',
-  },
-  {
-    group: 'Core experience',
-    title: 'AI Resume Customization',
-    body: 'Prepare role-specific materials without removing user control.',
-  },
-  {
-    group: 'Core experience',
-    title: 'Controlled Auto Apply',
-    body: 'Automate repetitive application steps within configurable boundaries.',
-  },
-  {
-    group: 'Core experience',
-    title: 'Application Tracking',
-    body: 'Make every application and outcome visible and traceable.',
-  },
-];
-
-const successCriteria = [
-  'Define job-search preferences',
-  'Understand why a role is recommended',
-  'Review and approve tailored materials',
-  'Choose how much autonomy to give the system',
-  'Submit and track an application successfully',
 ];
 
 const featureSections = [
@@ -438,8 +369,8 @@ const featureSections = [
     ],
     iteration: [
       ['V1', 'Only showed a combined match percentage.'],
-      ['Problem', 'Users could not understand what the number meant or whether it should drive action.'],
-      ['Final', 'Connected the score to skill gaps, recommendation reasons, and resume suggestions.'],
+      ['Killed', 'Put the full rationale on every job card. Scanning collapsed.'],
+      ['Shipped', 'Kept the score on the list; moved evidence into details.'],
     ],
     processEvidence:
       'Interview feedback showed that a score could help users sort roles, but could not explain whether an opportunity deserved their time.',
@@ -454,7 +385,8 @@ const featureSections = [
       'Skip or “not interested” rate',
       'Decision time before and after viewing explanations',
     ],
-    observedSignal: '68% of registered users completed their first job match.',
+    observedSignal:
+      'Putting the full rationale on every job card explained more and made the list unusable. The shipped list keeps the score for scanning; evidence lives in details.',
   },
   {
     label: 'AI Resume Customization',
@@ -478,8 +410,8 @@ const featureSections = [
     ],
     iteration: [
       ['V1', 'AI generated a complete new resume.'],
-      ['Problem', 'Users could not quickly see what changed or whether the content was accurate.'],
-      ['Final', 'Added change summary, keyword cues, highlighted edits, and two review modes.'],
+      ['Killed', 'A finished document hid every change. Users had to reread the whole thing.'],
+      ['Shipped', 'Overview first, then inspectable edits, with user approval before submit.'],
     ],
     processEvidence:
       'Research highlighted a new review burden: users had to reread the entire document to verify accuracy, tone, and invented details.',
@@ -527,8 +459,8 @@ const featureSections = [
     ],
     iteration: [
       ['V1', 'Auto Apply was designed as on or off.'],
-      ['Problem', 'Users could not control role quality, material use, or confirmation needs.'],
-      ['Final', 'Added matching strategy, autonomy level, material preferences, and notifications.'],
+      ['Broke', 'Login expiry, queues, and retries needed named states, not a boolean. Users also did not share one trust threshold.'],
+      ['Shipped', 'Kept the switch, wrapped it in matching strategy, autonomy, materials, and notifications.'],
     ],
     processEvidence:
       'Risk review revealed that users did not share one trust threshold: some wanted instant execution, while others needed time or explicit approval.',
@@ -545,7 +477,8 @@ const featureSections = [
       'Undo or incorrect-application report rate',
       'Retention difference between Auto Apply users and non-users',
     ],
-    observedSignal: '19.39% activated Auto Apply; final automated submission success reached 88.21%.',
+    observedSignal:
+      '51 of 263 new users enabled Auto Apply (19.39%). Among the 179 who finished onboarding, 28.5%. Submission success (88.21%) is execution, not trust.',
   },
   {
     label: 'Application Tracking',
@@ -585,7 +518,8 @@ const featureSections = [
       'Application detail revisit rate',
       'Unknown-status and manual-correction rate',
     ],
-    observedSignal: 'Inbox-classified outcomes recorded a 10.77% interview invitation rate among successful Auto Apply users.',
+    observedSignal:
+      '7 of 65 Inbox-classified Auto Apply users received interview invitations (10.77%). Small sample; directional only.',
   },
 ];
 
@@ -695,19 +629,19 @@ const resultMetrics = [
     label: 'Activation',
     value: '68.06%',
     title: '30-day onboarding completion',
-    body: '179 of 263 new users completed onboarding, uploaded a resume, and set job preferences.',
+    body: '179 of 263 new users uploaded a resume and set job preferences. This is setup completion, not “finished a first job match.”',
   },
   {
     label: 'Adoption',
     value: '19.39%',
     title: '30-day Auto Apply activation',
-    body: '51 of 263 new users enabled Auto Apply during the last 30 days.',
+    body: '51 of 263 new users enabled Auto Apply. Among the 179 who finished onboarding, that is 28.5%.',
   },
   {
     label: 'Reliability',
     value: '88.21%',
     title: 'Final application success rate',
-    body: '1,803 automated applications were successfully submitted during the last 30 days.',
+    body: '1,803 automated applications submitted in 30 days, after queues and retries. It measures execution, not user trust.',
   },
   {
     label: 'Speed',
@@ -719,7 +653,26 @@ const resultMetrics = [
     label: 'Outcome',
     value: '10.77%',
     title: 'Interview invitation rate',
-    body: '7 of 65 successful Auto Apply users received interview invitations, based on Inbox classification.',
+    body: '7 of 65 successful Auto Apply users. Inbox-classified, n=65. Directional only.',
+  },
+];
+
+const outcomeTradeoffs: { title: string; body: ReactNode }[] = [
+  {
+    title: '30-day onboarding completion',
+    body: (
+      <>
+        <strong>68.06%</strong> finished resume upload and job preferences (179 of 263). That is a setup experience, not an execution metric. Shortening and clarifying onboarding is how this number moves.
+      </>
+    ),
+  },
+  {
+    title: '30-day Auto Apply activation',
+    body: (
+      <>
+        <strong>19.39%</strong> enabled Auto Apply (51 of 263). Among those who finished onboarding, <strong>28.5%</strong>. Auto Apply setup is still too long. Reducing that friction is how this number moves.
+      </>
+    ),
   },
 ];
 
@@ -780,79 +733,274 @@ function FlowDiagram({ items, label }: { items: string[]; label: string }) {
   );
 }
 
-function WorkflowThesisDiagram() {
+function ResponsibilityFrameworkDiagram() {
+  // Each source sentence names both an AI action and a user action; the lanes just split them.
+  // "Apply" is the one stage where the user acts first — that reversal is the focal point.
+  const stages = [
+    { eyebrow: '01 · EXPLAIN', name: 'Match', ai: ['Shows why a role', 'is recommended'], user: ['Decides whether', 'to act'], handoff: 'EVIDENCE', labelW: 72, gate: false },
+    { eyebrow: '02 · COLLABORATE', name: 'Customize', ai: ['Drafts and improves', 'materials'], user: ['Keeps authorship', 'of the result'], handoff: 'DRAFT', labelW: 48, gate: false },
+    { eyebrow: '03 · ACT', name: 'Apply', ai: ['Submits within', 'the limits set'], user: ['Defines the', 'boundaries first'], handoff: 'BOUNDARIES', labelW: 88, gate: true },
+    { eyebrow: '04 · ACCOUNT', name: 'Track', ai: ['Logs every', 'automated action'], user: ['Inspects, reverses', 'and recovers'], handoff: 'TRACE', labelW: 48, gate: false },
+  ];
+  const COL_X = (i: number) => 176 + i * 256;
+  const COL_CX = (i: number) => 284 + i * 256;
+  const numberStyle = { fontFamily: fontFamily.mono } as const;
+
   return (
-    <figure className="m-0 overflow-hidden border border-[#cccccc]" aria-label="Fragmented job-search workflow compared with JobNova">
-      <div className="grid lg:grid-cols-[1.35fr_86px_1fr]">
-        <div className="bg-[#f3f1ea] p-5 sm:p-7">
-          <div className="flex items-start justify-between gap-6">
-            <div>
-              <p className="m-0 text-[11px] font-light uppercase tracking-[0.16em] text-[#0a0a0a]/42" style={bodyStyle}>
-                Before
-              </p>
-              <h3 className="m-0 mt-2 text-[18px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
-                One application, eight disconnected tools
-              </h3>
-            </div>
-            <span className="shrink-0 text-[11px] font-light text-[#0a0a0a]/40" style={bodyStyle}>
-              Fragmented
-            </span>
-          </div>
-          <div className="mt-7 grid grid-cols-2 gap-px overflow-hidden border border-[#d4d1c9] bg-[#d4d1c9] sm:grid-cols-4">
-            {beforeWorkflow.map((step, index) => (
-              <div key={step} className="relative flex min-h-[92px] flex-col justify-between bg-white p-3.5">
-                <span className="text-[10px] font-light text-[#0a0a0a]/34" style={bodyStyle}>
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <p className="m-0 text-[12px] font-light leading-[1.35] text-[#0a0a0a]/68" style={bodyStyle}>
-                  {step}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+    <figure className="case-radius-lg m-0 overflow-hidden border border-[#cccccc] bg-white">
+      <div className="overflow-x-auto p-5 sm:p-7">
+        <svg viewBox="0 0 1200 400" role="img" aria-labelledby="jn-fw-title jn-fw-desc" className="block w-full min-w-[860px]">
+          <title id="jn-fw-title">Four levels of AI responsibility across one workflow</title>
+          <desc id="jn-fw-desc">
+            Swimlane diagram of the JobNova workflow. Four stages run left to right — Match, Customize, Apply and Track —
+            each carrying a level of AI responsibility: explain, collaborate, act and account. The upper lane shows what
+            the AI does at each stage and the lower lane what the user does. At Match, Customize and Track the AI hands
+            evidence, a draft or a trace down to the user; at Apply the direction reverses, because the user defines the
+            boundaries before the AI is allowed to submit.
+          </desc>
+          <defs>
+            <marker id="jn-fw-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(10,10,10,0.42)" />
+            </marker>
+            <marker id="jn-fw-arrow-gate" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="#ed5b2b" />
+            </marker>
+          </defs>
 
-        <div className="flex min-h-[72px] items-center justify-center border-y border-[#cccccc] bg-white lg:border-x lg:border-y-0">
-          <div className="flex items-center gap-2 lg:flex-col">
-            <span className="text-[10px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
-              Reframed as
-            </span>
-            <span className="text-[20px] font-light text-[#ed5b2b] lg:rotate-0" aria-hidden>
-              -&gt;
-            </span>
-          </div>
-        </div>
+          <line x1="32" y1="88" x2="1160" y2="88" stroke="rgba(10,10,10,0.12)" strokeWidth={0.8} />
+          <line x1="32" y1="252" x2="1160" y2="252" stroke="rgba(10,10,10,0.12)" strokeWidth={0.8} />
+          <text x="32" y="156" fill="rgba(10,10,10,0.42)" fontSize="12" letterSpacing="0.14em" style={numberStyle}>AI</text>
+          <text x="32" y="324" fill="rgba(10,10,10,0.42)" fontSize="12" letterSpacing="0.14em" style={numberStyle}>USER</text>
 
-        <div className="flex flex-col justify-between bg-[#10100f] p-5 text-white sm:p-7">
-          <div>
-            <p className="m-0 text-[11px] font-light uppercase tracking-[0.16em] text-[#aefd48]" style={bodyStyle}>
-              JobNova
-            </p>
-            <h3 className="m-0 mt-2 max-w-[320px] text-[18px] font-normal leading-[1.35] text-white" style={bodyStyle}>
-              One continuous, governable workflow
-            </h3>
-          </div>
-          <div className="mt-7 flex flex-col border-y border-white/18">
-            {jobnovaWorkflow.map((step, index) => (
-              <div
-                key={step}
-                className={`flex min-h-[58px] items-center justify-between py-3 ${
-                  index < jobnovaWorkflow.length - 1 ? 'border-b border-white/18' : ''
-                }`}
-              >
-                <span className="text-[11px] font-light text-[#aefd48]" style={bodyStyle}>
+          {stages.map((stage, index) => {
+            const x = COL_X(index);
+            const cx = COL_CX(index);
+            const tone = stage.gate ? '#ed5b2b' : 'rgba(10,10,10,0.42)';
+            return (
+              <g key={stage.name}>
+                <text x={cx} y={32} fill={tone} fontSize="12" textAnchor="middle" letterSpacing="0.14em" style={numberStyle}>
+                  {stage.eyebrow}
+                </text>
+                <text x={cx} y={64} fill="#0a0a0a" fontSize="24" textAnchor="middle" style={bodyStyle}>
+                  {stage.name}
+                </text>
+
+                <line
+                  x1={cx}
+                  y1={stage.gate ? 280 : 192}
+                  x2={cx}
+                  y2={stage.gate ? 192 : 280}
+                  stroke={tone}
+                  strokeWidth={1.2}
+                  markerEnd={stage.gate ? 'url(#jn-fw-arrow-gate)' : 'url(#jn-fw-arrow)'}
+                />
+                <rect x={cx + 8} y={224} width={stage.labelW} height={16} rx={2} fill="#ffffff" />
+                <text x={cx + 8 + stage.labelW / 2} y={236} fill={tone} fontSize="12" textAnchor="middle" letterSpacing="0.06em" style={numberStyle}>
+                  {stage.handoff}
+                </text>
+
+                <rect x={x} y={112} width={216} height={80} rx={8} fill="#ffffff" />
+                <rect x={x} y={112} width={216} height={80} rx={8} fill="rgba(10,10,10,0.03)" stroke="rgba(10,10,10,0.30)" strokeWidth={1} />
+                {stage.ai.map((line, k) => (
+                  <text key={line} x={cx} y={144 + 24 * k} fill="rgba(10,10,10,0.68)" fontSize="16" textAnchor="middle" style={bodyStyle}>{line}</text>
+                ))}
+
+                <rect x={x} y={280} width={216} height={80} rx={8} fill="#ffffff" />
+                <rect x={x} y={280} width={216} height={80} rx={8} fill={stage.gate ? 'rgba(237,91,43,0.08)' : '#ffffff'} stroke={stage.gate ? '#ed5b2b' : '#0a0a0a'} strokeWidth={1} />
+                {stage.user.map((line, k) => (
+                  <text key={line} x={cx} y={312 + 24 * k} fill="rgba(10,10,10,0.68)" fontSize="16" textAnchor="middle" style={bodyStyle}>{line}</text>
+                ))}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+    </figure>
+  );
+}
+
+function ScopeStoryMap() {
+  return (
+    <figure className="case-radius-lg m-0 overflow-hidden border border-[#cccccc] bg-white">
+      <div className="overflow-x-auto p-5 sm:p-7">
+        <svg viewBox="0 0 992 496" role="img" aria-labelledby="jn-scope-title jn-scope-desc"
+                  className="block w-full min-w-[760px]">
+                <title id="jn-scope-title">MVP scope: what shipped and where we cut</title>
+                <desc id="jn-scope-desc">User story map of the JobNova MVP scope decision. Four activities run left to right in the order a job seeker experiences them: Match, Customize, Apply and Track, each above the user step that had to work. Above the release cut line, the MVP slice holds the four capabilities that shipped: explainable job matching, AI resume customization, controlled auto apply and application tracking. Below the line sit examples of what was cut: job alerts, cover letters, an AI assistant and inbox sync. Controlled auto apply is marked the riskiest story because it submits on the user&apos;s behalf.</desc>
+
+                <rect x="32" y="216" width="928" height="96" fill="rgba(10,10,10,0.02)"/>
+                <line x1="312" y1="112" x2="312" y2="400" stroke="rgba(10,10,10,0.10)" strokeWidth="0.8" strokeDasharray="4,4"/>
+                <line x1="516" y1="112" x2="516" y2="400" stroke="rgba(10,10,10,0.10)" strokeWidth="0.8" strokeDasharray="4,4"/>
+                <line x1="720" y1="112" x2="720" y2="400" stroke="rgba(10,10,10,0.10)" strokeWidth="0.8" strokeDasharray="4,4"/>
+
+                <rect x="120" y="40" width="180" height="64" rx="6" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.42)" strokeWidth="1"/>
+                <text x="210" y="72" fill="#0a0a0a" fontSize="20" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Match</text>
+                <text x="210" y="92" fill="rgba(10,10,10,0.42)" fontSize="12" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">ACTIVITY 1</text>
+                <rect x="120" y="120" width="180" height="36" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="210" y="144" fill="#0a0a0a" fontSize="12" fontFamily={fontFamily.sans} textAnchor="middle">See why a role fits</text>
+                <rect x="324" y="40" width="180" height="64" rx="6" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.42)" strokeWidth="1"/>
+                <text x="414" y="72" fill="#0a0a0a" fontSize="20" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Customize</text>
+                <text x="414" y="92" fill="rgba(10,10,10,0.42)" fontSize="12" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">ACTIVITY 2</text>
+                <rect x="324" y="120" width="180" height="36" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="414" y="144" fill="#0a0a0a" fontSize="12" fontFamily={fontFamily.sans} textAnchor="middle">Approve the changes</text>
+                <rect x="528" y="40" width="180" height="64" rx="6" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.42)" strokeWidth="1"/>
+                <text x="618" y="72" fill="#0a0a0a" fontSize="20" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Apply</text>
+                <text x="618" y="92" fill="rgba(10,10,10,0.42)" fontSize="12" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">ACTIVITY 3</text>
+                <rect x="528" y="120" width="180" height="36" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="618" y="144" fill="#0a0a0a" fontSize="12" fontFamily={fontFamily.sans} textAnchor="middle">Set the autonomy</text>
+                <rect x="732" y="40" width="180" height="64" rx="6" fill="rgba(10,10,10,0.05)" stroke="rgba(10,10,10,0.42)" strokeWidth="1"/>
+                <text x="822" y="72" fill="#0a0a0a" fontSize="20" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Track</text>
+                <text x="822" y="92" fill="rgba(10,10,10,0.42)" fontSize="12" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">ACTIVITY 4</text>
+                <rect x="732" y="120" width="180" height="36" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="822" y="144" fill="#0a0a0a" fontSize="12" fontFamily={fontFamily.sans} textAnchor="middle">Submit and track</text>
+                <rect x="120" y="164" width="180" height="36" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="210" y="188" fill="#0a0a0a" fontSize="12" fontFamily={fontFamily.sans} textAnchor="middle">Set preferences</text>
+
+                <rect x="120" y="232" width="180" height="64" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="210" y="260" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Explainable</text>
+                <text x="210" y="280" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Job Matching</text>
+                <rect x="324" y="232" width="180" height="64" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="414" y="260" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">AI Resume</text>
+                <text x="414" y="280" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Customization</text>
+                <rect x="528" y="232" width="180" height="64" rx="4" fill="rgba(237,91,43,0.08)" stroke="#ed5b2b" strokeWidth="1" strokeDasharray="4,4"/>
+                <text x="618" y="260" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Controlled</text>
+                <text x="618" y="280" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Auto Apply</text>
+                <rect x="528" y="216" width="28" height="12" rx="2" fill="transparent" stroke="rgba(237,91,43,0.40)" strokeWidth="0.8"/>
+                <text x="542" y="224" fill="#ed5b2b" fontSize="8" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">RISK</text>
+                <rect x="732" y="232" width="180" height="64" rx="4" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="822" y="260" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Application</text>
+                <text x="822" y="280" fill="#0a0a0a" fontSize="16" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Tracking</text>
+                <rect x="120" y="344" width="180" height="40" rx="4" fill="#ffffff" stroke="rgba(10,10,10,0.30)" strokeWidth="1"/>
+                <text x="210" y="368" fill="rgba(10,10,10,0.68)" fontSize="16" fontFamily={fontFamily.sans} textAnchor="middle">Job alerts</text>
+                <rect x="324" y="344" width="180" height="40" rx="4" fill="#ffffff" stroke="rgba(10,10,10,0.30)" strokeWidth="1"/>
+                <text x="414" y="368" fill="rgba(10,10,10,0.68)" fontSize="16" fontFamily={fontFamily.sans} textAnchor="middle">Cover letters</text>
+                <rect x="528" y="344" width="180" height="40" rx="4" fill="#ffffff" stroke="rgba(10,10,10,0.30)" strokeWidth="1"/>
+                <text x="618" y="368" fill="rgba(10,10,10,0.68)" fontSize="16" fontFamily={fontFamily.sans} textAnchor="middle">AI assistant</text>
+                <rect x="732" y="344" width="180" height="40" rx="4" fill="#ffffff" stroke="rgba(10,10,10,0.30)" strokeWidth="1"/>
+                <text x="822" y="368" fill="rgba(10,10,10,0.68)" fontSize="16" fontFamily={fontFamily.sans} textAnchor="middle">Inbox sync</text>
+
+                <text x="32" y="268" fill="rgba(10,10,10,0.42)" fontSize="12" fontFamily={fontFamily.mono} letterSpacing="0.14em">MVP</text>
+                <text x="32" y="368" fill="rgba(10,10,10,0.42)" fontSize="12" fontFamily={fontFamily.mono} letterSpacing="0.14em">CUT</text>
+
+                <line x1="32" y1="312" x2="960" y2="312" stroke="#ed5b2b" strokeWidth="1.5"/>
+                <rect x="828" y="320" width="132" height="16" rx="2" fill="#ffffff"/>
+                <text x="894" y="332" fill="#ed5b2b" fontSize="12" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">RELEASE CUT</text>
+
+                <line x1="32" y1="424" x2="960" y2="424" stroke="rgba(10,10,10,0.12)" strokeWidth="0.8"/>
+                <text x="32" y="452" fill="rgba(10,10,10,0.68)" fontSize="12" fontFamily={fontFamily.mono} letterSpacing="0.14em">LEGEND</text>
+                <rect x="140" y="442" width="20" height="12" rx="2" fill="#ffffff" stroke="#0a0a0a" strokeWidth="1"/>
+                <text x="172" y="452" fill="rgba(10,10,10,0.68)" fontSize="12" fontFamily={fontFamily.mono}>Shipped</text>
+                <rect x="360" y="442" width="20" height="12" rx="2" fill="rgba(237,91,43,0.08)" stroke="#ed5b2b" strokeWidth="1" strokeDasharray="4,4"/>
+                <text x="392" y="452" fill="rgba(10,10,10,0.68)" fontSize="12" fontFamily={fontFamily.mono}>Highest risk</text>
+                <line x1="612" y1="448" x2="636" y2="448" stroke="#ed5b2b" strokeWidth="1.5"/>
+                <text x="648" y="452" fill="rgba(10,10,10,0.68)" fontSize="12" fontFamily={fontFamily.mono}>Release cut</text>
+              </svg>
+      </div>
+    </figure>
+  );
+}
+
+function WorkflowThesisDiagram() {
+  // Layout constants — chips are evenly pitched, JobNova stages evenly quartered.
+  const STAGE_CX = (i: number) => 180 + i * 280;
+  const numberStyle = { fontFamily: fontFamily.mono } as const;
+
+  return (
+    <figure className="case-radius-lg m-0 overflow-hidden border border-[#cccccc] bg-white">
+      <div className="overflow-x-auto p-5 sm:p-7">
+        <svg
+          viewBox="0 0 1200 536"
+          role="img"
+          aria-labelledby="jn-thesis-title jn-thesis-desc"
+          className="block w-full min-w-[860px]"
+        >
+          <title id="jn-thesis-title">Eight disconnected tools versus one JobNova workflow</title>
+          <desc id="jn-thesis-desc">
+            Comparison diagram. The top row shows the eight separate products a job seeker uses to complete a single
+            application — job boards, resume editor, ChatGPT, Google Docs, ATS checker, application portal, email and a
+            spreadsheet — laid out as eight detached cards with seven manual handoffs between them where context is
+            re-entered by hand. Below, JobNova replaces the whole row with one continuous governed workflow of four
+            stages: Match, Customize, Apply and Track.
+          </desc>
+          <defs>
+            <marker id="jn-arrow-tangle" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(10,10,10,0.30)" />
+            </marker>
+            <marker id="jn-arrow-ondark" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(255,255,255,0.55)" />
+            </marker>
+          </defs>
+
+          {/* Lane 1 — today's toolchain, eight detached cards */}
+          <text x="40" y="32" fill="rgba(10,10,10,0.42)" fontSize="12" letterSpacing="0.14em" style={numberStyle}>
+            BEFORE
+          </text>
+          <text x="40" y="56" fill="#0a0a0a" fontSize="16" style={bodyStyle}>
+            One application, eight disconnected tools
+          </text>
+
+          {TOOL_PATHS.map((d) => (
+            <path key={d} d={d} fill="none" stroke="rgba(10,10,10,0.30)" strokeWidth={1} markerEnd="url(#jn-arrow-tangle)" />
+          ))}
+
+          {beforeWorkflow.map((lines, index) => {
+            const { x, y } = TOOL_POS[index];
+            return (
+              <g key={lines.join(' ')}>
+                <rect x={x} y={y} width={112} height={80} rx={8} fill="#ffffff" />
+                <rect x={x} y={y} width={112} height={80} rx={8} fill="#ffffff" stroke="rgba(10,10,10,0.20)" strokeWidth={1} />
+                <text x={x + 12} y={y + 24} fill="rgba(10,10,10,0.34)" fontSize="8" style={numberStyle}>
                   {String(index + 1).padStart(2, '0')}
-                </span>
-                <p className="m-0 text-[15px] font-light text-white" style={bodyStyle}>
-                  {step}
-                </p>
-                <span className="text-[13px] font-light text-white/35" aria-hidden>
-                  {index < jobnovaWorkflow.length - 1 ? '↓' : '✓'}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+                </text>
+                {lines.map((line, k) => (
+                  <text key={line} x={x + 12} y={y + 64 - 16 * (lines.length - 1 - k)} fill="rgba(10,10,10,0.68)" fontSize="12" style={bodyStyle}>
+                    {line}
+                  </text>
+                ))}
+              </g>
+            );
+          })}
+
+          {/* One bracket across the whole row — the handoffs are counted once, not decorated seven times */}
+          <line x1="40" y1="280" x2="1160" y2="280" stroke="rgba(237,91,43,0.55)" strokeWidth={1} />
+          <line x1="40" y1="280" x2="40" y2="272" stroke="rgba(237,91,43,0.55)" strokeWidth={1} />
+          <line x1="1160" y1="280" x2="1160" y2="272" stroke="rgba(237,91,43,0.55)" strokeWidth={1} />
+          <rect x="480" y="288" width="240" height="12" rx="2" fill="#ffffff" />
+          <text x="600" y="300" fill="#ed5b2b" fontSize="12" textAnchor="middle" letterSpacing="0.06em" style={numberStyle}>
+            CONTEXT RE-ENTERED AT EVERY HOP
+          </text>
+
+          {/* Lane 2 — JobNova, a single object with four stages */}
+          <text x="40" y="360" fill="#ed5b2b" fontSize="12" letterSpacing="0.14em" style={numberStyle}>
+            JOBNOVA
+          </text>
+          <text x="40" y="384" fill="#0a0a0a" fontSize="16" style={bodyStyle}>
+            One continuous, governable workflow
+          </text>
+          <rect x="40" y="408" width="1120" height="88" rx={8} fill="#10100f" />
+
+          {jobnovaWorkflow.map((stage, index) => (
+            <g key={stage}>
+              <text x={STAGE_CX(index)} y={440} fill="#aefd48" fontSize="8" textAnchor="middle" style={numberStyle}>
+                {String(index + 1).padStart(2, '0')}
+              </text>
+              <text x={STAGE_CX(index)} y={468} fill="#ffffff" fontSize="16" textAnchor="middle" style={bodyStyle}>
+                {stage}
+              </text>
+              {index < jobnovaWorkflow.length - 1 && (
+                <line
+                  x1={304 + index * 280}
+                  y1={452}
+                  x2={336 + index * 280}
+                  y2={452}
+                  stroke="rgba(255,255,255,0.55)"
+                  strokeWidth={1}
+                  markerEnd="url(#jn-arrow-ondark)"
+                />
+              )}
+            </g>
+          ))}
+        </svg>
       </div>
       <figcaption className="border-t border-[#cccccc] bg-white px-5 py-3 text-[11px] font-light leading-[1.5] text-[#0a0a0a]/48 sm:px-7" style={bodyStyle}>
         The product advantage was not another isolated AI feature. It was the orchestration layer connecting discovery, judgment, content, execution, and follow-up.
@@ -871,7 +1019,7 @@ function ExplorationPlaceholder({
   return (
     <figure className="m-0 grid gap-3 sm:grid-cols-2" aria-label={`${feature} early design exploration placeholders`}>
       {items.map(([label, description], index) => (
-        <div key={label} className="flex min-h-[286px] flex-col border border-dashed border-[#bdbdbd] bg-[#f3f1ea] p-4">
+        <div key={label} className="case-radius-lg flex min-h-[286px] flex-col overflow-hidden border border-dashed border-[#bdbdbd] bg-[#f3f1ea] p-4">
           <div className="flex items-center justify-between">
             <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
               {label}
@@ -880,7 +1028,7 @@ function ExplorationPlaceholder({
               Placeholder
             </span>
           </div>
-          <div className="my-5 flex flex-1 flex-col gap-2 border border-[#cccccc] bg-white p-3" aria-hidden>
+          <div className="case-radius-md my-5 flex flex-1 flex-col gap-2 border border-[#cccccc] bg-white p-3" aria-hidden>
             <div className="h-2.5 w-2/5 bg-[#dedbd3]" />
             <div className="h-5 w-3/4 bg-[#cbc7bd]" />
             <div className="mt-2 grid flex-1 grid-cols-[72px_1fr] gap-3">
@@ -905,7 +1053,7 @@ function PersonaPhotoCard({ persona }: { persona: (typeof personas)[number] }) {
   const isFirstTime = persona.id === 'first-time';
 
   return (
-    <div className="relative size-[260px] shrink-0 overflow-hidden rounded-[24px] bg-[#1b1b1b]">
+    <div className="relative size-[260px] shrink-0 overflow-hidden case-radius-xl bg-[#1b1b1b]">
       <Image
         src={persona.image}
         alt=""
@@ -930,7 +1078,7 @@ function PersonaPhotoCard({ persona }: { persona: (typeof personas)[number] }) {
         <p className="m-0 mt-2 text-[14px] font-medium leading-[1.25]">{persona.role}</p>
       </div>
       <div
-        className={`absolute rounded-[15px] border border-[#ed5b2b] bg-white/8 px-[6px] py-1 backdrop-blur-[6.75px] ${
+        className={`absolute case-radius-md border border-[#ed5b2b] bg-white/8 px-[6px] py-1 backdrop-blur-[6.75px] ${
           isFirstTime ? 'left-[109px] top-6' : 'left-[21px] top-7'
         }`}
       >
@@ -944,7 +1092,7 @@ function PersonaPhotoCard({ persona }: { persona: (typeof personas)[number] }) {
 
 function PersonaQuoteCard({ persona }: { persona: (typeof personas)[number] }) {
   return (
-    <div className="flex size-[260px] shrink-0 flex-col items-start justify-between rounded-[24px] border border-[#cccccc] px-6 py-7">
+    <div className="flex size-[260px] shrink-0 flex-col items-start justify-between case-radius-xl border border-[#cccccc] px-6 py-7">
       <p className="m-0 whitespace-pre-line text-[14px] font-normal leading-[1.4] text-[#ed5b2b]" style={bodyStyle}>
         {persona.pain}
       </p>
@@ -972,7 +1120,7 @@ function ProcessTouchpoints({ touchpoints }: { touchpoints: (typeof processStage
         {touchpoints.map((touchpoint) => (
           <div key={`${touchpoint.label}-${touchpoint.body}`} className="flex flex-col items-start gap-1">
             <span
-              className="inline-flex rounded-[24px] border px-[6px] py-[3px] text-[10px] font-normal leading-none"
+              className="inline-flex case-radius-full border px-[6px] py-[3px] text-[10px] font-normal leading-none"
               style={{ ...bodyStyle, borderColor: touchpoint.color, color: touchpoint.color }}
             >
               {touchpoint.label}
@@ -995,7 +1143,7 @@ function DesktopProcessTimeline() {
           {processStages.map((stage, index) => (
             <div key={stage.number} className="contents">
               <div
-                className={`flex size-9 shrink-0 items-center justify-center rounded-full bg-[#070707] text-[14px] font-normal leading-none text-white ${
+                className={`flex size-9 shrink-0 items-center justify-center case-radius-full bg-[#070707] text-[14px] font-normal leading-none text-white ${
                   stage.active ? '' : 'opacity-25'
                 }`}
                 style={bodyStyle}
@@ -1061,9 +1209,9 @@ function MobileProcessTimeline() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:hidden" aria-label="JobNova design process">
       {processStages.map((stage) => (
-        <article className={`border border-[#cccccc] p-5 ${stage.active ? '' : 'opacity-40'}`} key={stage.number}>
+        <article className={`case-radius-lg border border-[#cccccc] p-5 ${stage.active ? '' : 'opacity-40'}`} key={stage.number}>
           <div className="mb-6 flex items-center gap-3">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#070707] text-[14px] text-white" style={bodyStyle}>
+            <span className="flex size-9 shrink-0 items-center justify-center case-radius-full bg-[#070707] text-[14px] text-white" style={bodyStyle}>
               {stage.number}
             </span>
             <h3 className="m-0 text-[14px] font-medium leading-[1.3] text-black" style={bodyStyle}>
@@ -1107,7 +1255,7 @@ function DesignDecisionVisual({ index }: { index: number }) {
   return (
     <div className="flex w-full flex-col gap-5">
       {visuals.map((visual) => (
-        <figure key={visual.src} className="m-0 w-full rounded-[28px] bg-[#f3f1ea] p-3 sm:p-4">
+        <figure key={visual.src} className="m-0 w-full case-radius-xl bg-[#f3f1ea] p-3 sm:p-4">
           <Image
             src={visual.src}
             alt={visual.alt}
@@ -1248,7 +1396,7 @@ function MatchingDesignDecisionSection() {
             </p>
           </div>
 
-          <div className="overflow-hidden border border-[#cccccc]">
+          <div className="case-radius-lg overflow-hidden border border-[#cccccc]">
             <div className="grid grid-cols-2 border-b border-[#cccccc] bg-[#f3f1ea] px-5 py-3 text-[10px] font-light uppercase tracking-[0.12em] text-[#0a0a0a]/42" style={bodyStyle}>
               <p className="m-0">Before</p>
               <p className="m-0">After</p>
@@ -1270,7 +1418,7 @@ function MatchingDesignDecisionSection() {
             ))}
           </div>
 
-          <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
+          <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
             {feature.iteration.map(([stage, description]) => (
               <article key={stage} className="bg-white p-5">
                 <p className="m-0 text-[10px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
@@ -1340,7 +1488,7 @@ function MatchingDesignDecisionSection() {
               The list supports prioritization, not final decision-making.
             </p>
           </div>
-          <div className="overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
+          <div className="case-radius-lg overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
             <Image
               src="/img/jobnova/decision-match-list.png"
               alt="JobNova job list showing match score, key role information, salary, work mode, and saved state."
@@ -1365,7 +1513,7 @@ function MatchingDesignDecisionSection() {
               Detailed evidence helps users evaluate recommendations instead of trusting the score blindly.
             </p>
           </div>
-          <div className="overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
+          <div className="case-radius-lg overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
             <Image
               src="/img/jobnova/decision-match-detail.png"
               alt="JobNova job detail experience explaining fit, skills, role requirements, and resume suggestions."
@@ -1393,14 +1541,14 @@ function MatchingDesignDecisionSection() {
               ['Matching Skills', ['Interaction design', 'User research', 'Prototyping', 'Cross-functional work']],
               ['Missing Skills', ['Enterprise systems', 'Design leadership', 'Domain-specific tooling']],
             ].map(([label, items], index) => (
-              <article key={label as string} className={`p-5 ${index === 0 ? 'bg-[#aefd48]/12' : 'border border-[#ed5b2b]/40 bg-[#ed5b2b]/[0.04]'}`}>
+              <article key={label as string} className={`case-radius-lg p-5 ${index === 0 ? 'bg-[#aefd48]/12' : 'border border-[#ed5b2b]/40 bg-[#ed5b2b]/[0.04]'}`}>
                 <p className="m-0 text-[12px] font-normal text-[#0a0a0a]" style={bodyStyle}>
                   {label as string}
                 </p>
                 <div className="mt-5 flex flex-col gap-3">
                   {(items as string[]).map((item) => (
                     <div key={item} className="flex items-center gap-3">
-                      <span className={`size-1.5 rounded-full ${index === 0 ? 'bg-[#65a900]' : 'bg-[#ed5b2b]'}`} aria-hidden />
+                      <span className={`size-1.5 case-radius-full ${index === 0 ? 'bg-[#65a900]' : 'bg-[#ed5b2b]'}`} aria-hidden />
                       <p className="m-0 text-[13px] font-light text-[#0a0a0a]/68" style={bodyStyle}>
                         {item}
                       </p>
@@ -1424,7 +1572,7 @@ function MatchingDesignDecisionSection() {
               {feature.validation.map((metric) => (
                 <span
                   key={metric}
-                  className="border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
+                  className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
                   style={bodyStyle}
                 >
                   {metric}
@@ -1557,7 +1705,7 @@ function ResumeDesignDecisionSection() {
             {['Is this still my experience?', 'What exactly changed?', 'Can I trust these edits?'].map((question) => (
               <span
                 key={question}
-                className="border border-[#cccccc] bg-[#f3f1ea] px-3 py-2 text-[12px] font-light text-[#0a0a0a]/66"
+                className="case-radius-sm border border-[#cccccc] bg-[#f3f1ea] px-3 py-2 text-[12px] font-light text-[#0a0a0a]/66"
                 style={bodyStyle}
               >
                 {question}
@@ -1588,7 +1736,7 @@ function ResumeDesignDecisionSection() {
           </p>
         </div>
 
-        <div className="overflow-hidden border border-[#cccccc]">
+        <div className="case-radius-lg overflow-hidden border border-[#cccccc]">
           <div className="grid grid-cols-2 border-b border-[#cccccc] bg-[#f3f1ea] px-5 py-3 text-[10px] font-light uppercase tracking-[0.12em] text-[#0a0a0a]/42" style={bodyStyle}>
             <p className="m-0">Before</p>
             <p className="m-0">After</p>
@@ -1642,7 +1790,7 @@ function ResumeDesignDecisionSection() {
           </h4>
         </div>
 
-        <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
+        <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
           {experienceMechanisms.map((mechanism) => (
             <article key={mechanism.label} className="flex min-h-[284px] flex-col bg-white p-5">
               <p className="m-0 text-[10px] font-light uppercase tracking-[0.1em] text-[#ed5b2b]" style={bodyStyle}>
@@ -1669,7 +1817,7 @@ function ResumeDesignDecisionSection() {
           ))}
         </div>
 
-        <figure className="m-0 overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
+        <figure className="case-radius-lg m-0 overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
           <div className="max-h-[680px] overflow-hidden">
             <Image
               src="/img/jobnova/decision-resume.png"
@@ -1694,7 +1842,7 @@ function ResumeDesignDecisionSection() {
             {feature.validation.map((metric) => (
               <span
                 key={metric}
-                className="border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
+                className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
                 style={bodyStyle}
               >
                 {metric}
@@ -1819,7 +1967,7 @@ function AutoApplyDesignDecisionSection() {
               {['Full automation', 'Approve every application', 'Prepare materials only'].map((mode) => (
                 <span
                   key={mode}
-                  className="border border-[#cccccc] bg-[#f3f1ea] px-3 py-2 text-[12px] font-light text-[#0a0a0a]/66"
+                  className="case-radius-sm border border-[#cccccc] bg-[#f3f1ea] px-3 py-2 text-[12px] font-light text-[#0a0a0a]/66"
                   style={bodyStyle}
                 >
                   {mode}
@@ -1850,7 +1998,7 @@ function AutoApplyDesignDecisionSection() {
             </p>
           </div>
 
-          <div className="overflow-hidden border border-[#cccccc]">
+          <div className="case-radius-lg overflow-hidden border border-[#cccccc]">
             <div className="grid grid-cols-2 border-b border-[#cccccc] bg-[#f3f1ea] px-5 py-3 text-[10px] font-light uppercase tracking-[0.12em] text-[#0a0a0a]/42" style={bodyStyle}>
               <p className="m-0">Before</p>
               <p className="m-0">After</p>
@@ -1872,7 +2020,7 @@ function AutoApplyDesignDecisionSection() {
             ))}
           </div>
 
-          <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
+          <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
             {feature.iteration.map(([stage, description]) => (
               <article key={stage} className="bg-white p-5">
                 <p className="m-0 text-[10px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
@@ -1933,7 +2081,7 @@ function AutoApplyDesignDecisionSection() {
                 Users first define the conditions under which AI is allowed to act.
               </p>
             </div>
-            <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] sm:grid-cols-2">
+            <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] sm:grid-cols-2">
               {ruleGroups.map(([title, body]) => (
                 <article key={title} className="bg-white p-5">
                   <h6 className="m-0 text-[14px] font-normal text-[#0a0a0a]" style={bodyStyle}>
@@ -1946,7 +2094,7 @@ function AutoApplyDesignDecisionSection() {
               ))}
             </div>
           </div>
-          <div className="overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
+          <div className="case-radius-lg overflow-hidden bg-[#f3f1ea] p-4 sm:p-6">
             <Image
               src="/img/jobnova/decision-auto-apply-190-10788.png"
               alt="JobNova Auto Apply settings defining matching rules, autonomy, application materials, and notification preferences."
@@ -1991,7 +2139,7 @@ function AutoApplyDesignDecisionSection() {
               When automation could not continue, the system explained why and offered a clear recovery path.
             </p>
           </div>
-          <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] sm:grid-cols-2">
+          <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] sm:grid-cols-2">
             {exceptions.map(([title, body], index) => (
               <article key={title} className="min-h-[156px] bg-white p-5">
                 <div className="flex items-center justify-between">
@@ -2010,7 +2158,7 @@ function AutoApplyDesignDecisionSection() {
           </div>
         </section>
 
-        <section className="bg-[#10100f] p-6 text-white sm:p-8" aria-labelledby="implementation-title">
+        <section className="case-radius-lg bg-[#10100f] p-6 text-white sm:p-8" aria-labelledby="implementation-title">
           <div className="grid gap-8 lg:grid-cols-[250px_1fr]">
             <div>
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#aefd48]" style={bodyStyle}>
@@ -2064,7 +2212,7 @@ function AutoApplyDesignDecisionSection() {
               {outcomeMetrics.map((metric) => (
                 <span
                   key={metric}
-                  className="border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
+                  className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
                   style={bodyStyle}
                 >
                   {metric}
@@ -2193,7 +2341,7 @@ function TrackingDesignDecisionSection() {
             {['Did it go through?', 'Which resume was submitted?', 'Has anything changed?', 'Do I need to act?'].map((question) => (
               <span
                 key={question}
-                className="border border-[#cccccc] bg-[#f3f1ea] px-3 py-2 text-[12px] font-light text-[#0a0a0a]/66"
+                className="case-radius-sm border border-[#cccccc] bg-[#f3f1ea] px-3 py-2 text-[12px] font-light text-[#0a0a0a]/66"
                 style={bodyStyle}
               >
                 {question}
@@ -2224,7 +2372,7 @@ function TrackingDesignDecisionSection() {
           </p>
         </div>
 
-        <div className="overflow-hidden border border-[#cccccc]">
+        <div className="case-radius-lg overflow-hidden border border-[#cccccc]">
           <div className="grid grid-cols-2 border-b border-[#cccccc] bg-[#f3f1ea] px-5 py-3 text-[10px] font-light uppercase tracking-[0.12em] text-[#0a0a0a]/42" style={bodyStyle}>
             <p className="m-0">Before</p>
             <p className="m-0">After</p>
@@ -2246,7 +2394,7 @@ function TrackingDesignDecisionSection() {
           ))}
         </div>
 
-        <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
+        <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
           {feature.iteration.map(([stage, description]) => (
             <article key={stage} className="bg-white p-5">
               <p className="m-0 text-[10px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
@@ -2296,7 +2444,7 @@ function TrackingDesignDecisionSection() {
           </h4>
         </div>
 
-        <section className="border border-[#cccccc]" aria-labelledby="application-timeline-title">
+        <section className="case-radius-lg overflow-hidden border border-[#cccccc]" aria-labelledby="application-timeline-title">
           <div className="grid gap-4 border-b border-[#cccccc] px-5 py-5 md:grid-cols-[190px_1fr]">
             <div>
               <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#ed5b2b]" style={bodyStyle}>
@@ -2319,7 +2467,7 @@ function TrackingDesignDecisionSection() {
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className={`size-2 rounded-full ${index === 2 ? 'bg-[#ed5b2b]' : 'bg-[#0a0a0a]/28'}`} aria-hidden />
+                  <span className={`size-2 case-radius-full ${index === 2 ? 'bg-[#ed5b2b]' : 'bg-[#0a0a0a]/28'}`} aria-hidden />
                   <p className="m-0 text-[13px] font-normal text-[#0a0a0a]" style={bodyStyle}>
                     {state}
                   </p>
@@ -2342,7 +2490,7 @@ function TrackingDesignDecisionSection() {
                 Submitted resume, cover letter, date, match evidence, and the Auto Apply log remained reviewable after completion.
               </p>
             </figcaption>
-            <div className="flex h-[430px] items-start justify-center overflow-hidden bg-[#f3f1ea] p-3 sm:p-4">
+            <div className="case-radius-lg flex h-[430px] items-start justify-center overflow-hidden bg-[#f3f1ea] p-3 sm:p-4">
               <Image
                 src="/img/jobnova/decision-tracking-detail.png"
                 alt="JobNova application detail showing a chronological application timeline, submitted materials, status changes, and recruiter email."
@@ -2362,7 +2510,7 @@ function TrackingDesignDecisionSection() {
                 Interview invitations, failures, approvals, and material updates surfaced only when user attention was required.
               </p>
             </figcaption>
-            <div className="flex h-[430px] items-start justify-center overflow-hidden bg-[#f3f1ea] p-3 sm:p-4">
+            <div className="case-radius-lg flex h-[430px] items-start justify-center overflow-hidden bg-[#f3f1ea] p-3 sm:p-4">
               <Image
                 src="/img/jobnova/decision-tracking-top.png"
                 alt="JobNova inbox classifying application updates and highlighting messages that require the user to respond."
@@ -2387,7 +2535,7 @@ function TrackingDesignDecisionSection() {
             {outcomeMetrics.map((metric) => (
               <span
                 key={metric}
-                className="border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
+                className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
                 style={bodyStyle}
               >
                 {metric}
@@ -2417,7 +2565,7 @@ function TrackingDesignDecisionSection() {
         </p>
       </blockquote>
 
-      <section className="overflow-hidden bg-[#10100f] text-white" aria-labelledby="collaboration-model-title">
+      <section className="case-radius-lg overflow-hidden bg-[#10100f] text-white" aria-labelledby="collaboration-model-title">
         <div className="grid gap-5 border-b border-white/16 p-6 sm:p-8 lg:grid-cols-[230px_1fr]">
           <div>
             <p className="m-0 text-[10px] font-light uppercase tracking-[0.14em] text-[#aefd48]" style={bodyStyle}>
@@ -2471,7 +2619,7 @@ export default function JobnovaAIPlatformPage() {
         subtitle="Designing a 0-to-1 AI job-search system that helps users complete relevant applications faster without giving up trust or control."
         tags={['0-to-1 AI SaaS', 'Product Strategy', 'UX Research', 'AI Workflow', 'Design System']}
         aboutLabel="About JobNova"
-        about={'Most AI job-search products automate individual tasks.\n\nJobNova redesigns the entire application workflow—from discovering the right opportunities to completing trustworthy applications.'}
+        about={'Most AI job-search products automate individual tasks.\n\nJobNova redesigns the entire application workflow, from discovering the right opportunities to completing trustworthy applications.'}
         liveSiteHref="https://jobnova.ai/"
         meta={[
           { label: 'Role', value: ['Founding Designer', 'End to end product design from research to delivery'] },
@@ -2496,7 +2644,7 @@ export default function JobnovaAIPlatformPage() {
             ],
           },
           { label: 'Company', value: ['Nova AI'] },
-          { label: 'Year', value: ['2025 – Ongoing'] },
+          { label: 'Year', value: ['2025 - Ongoing'] },
         ]}
         visualLabel="JobNova product system"
         visualSrc="/img/jobnova/Jobnova.avif"
@@ -2506,7 +2654,7 @@ export default function JobnovaAIPlatformPage() {
         visualImageScale={0.9}
         visualTransformOrigin="center bottom"
         visualHeight="clamp(300px, 38vw, 540px)"
-        visualBackground="radial-gradient(circle at 76% 24%, rgb(174 255 72 / 0.24), transparent 27%), radial-gradient(circle at 20% 78%, rgb(166 139 255 / 0.2), transparent 30%), radial-gradient(circle at 52% 54%, rgb(57 91 129 / 0.3), transparent 42%), linear-gradient(135deg, #05070d 0%, #0b1220 48%, #07110f 100%)"
+        visualBackground="radial-gradient(circle at 76% 24%, rgb(174 255 72 / 0.24), transparent 27%), radial-gradient(circle at 20% 78%, rgb(237 91 43 / 0.2), transparent 30%), radial-gradient(circle at 52% 54%, rgb(57 91 129 / 0.3), transparent 42%), linear-gradient(135deg, #05070d 0%, #0b1220 48%, #07110f 100%)"
         visualNavTone="light"
         compactTypography
         wideDetails
@@ -2515,10 +2663,10 @@ export default function JobnovaAIPlatformPage() {
       <section className="overflow-x-clip" style={sectionStyle}>
         <div>
           <div className="flex flex-col gap-14 md:gap-20">
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="01 / Problem">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="01 / The fragmented journey">
               <div className="flex flex-col gap-5">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  01 / Problem
+                  01 / The fragmented journey
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[900px] text-[clamp(36px,5.4vw,72px)] font-normal leading-[0.98] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
                   AI tools optimized job-search tasks.
@@ -2531,231 +2679,235 @@ export default function JobnovaAIPlatformPage() {
               </div>
 
               <WorkflowThesisDiagram />
+            </div>
 
-              <div className="grid gap-5 md:grid-cols-[1fr_1fr]">
-                <article className="bg-[#f3f1ea] p-6">
-                  <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                    Product opportunity
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="02 / The first hypothesis">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3">
+                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                    02 / The first hypothesis
                   </p>
-                  <p data-case-type="title" className="m-0 mt-4 text-[24px] font-normal leading-[1.18] tracking-[-0.018em] text-[#0a0a0a]" style={displayStyle}>
-                    Not another AI feature, but one continuous application workflow.
+                  <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                    We assumed AI could replace pieces of the job-search journey.
+                  </h2>
+                </div>
+                <p className="m-0 max-w-[940px] text-[15px] font-light leading-6 text-[#0a0a0a]/72" style={bodyStyle}>
+                  The first bet was a stack of AI features:{' '}
+                  <span className="text-[#ed5b2b]">find matching jobs and explain why they matched, generate application materials, then add job training and referrals from our own resources</span>
+                  .
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-8">
+                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
+                  Version 1
+                </p>
+
+                <div className="flex flex-col gap-3">
+                  <p className="m-0 text-[14px] font-normal leading-[1.4] text-[#0a0a0a]" style={bodyStyle}>
+                    Job matching
+                  </p>
+                  <figure className="m-0 w-full case-radius-xl bg-[#f3f1ea] p-3 sm:p-4">
+                    <Image
+                      src="/img/jobnova/decision-match-list.png"
+                      alt="Version 1 job matching: job cards with match scores for scanning and prioritizing roles."
+                      width={1163}
+                      height={515}
+                      className="block h-auto w-full object-contain"
+                      sizes="(min-width: 1280px) 980px, calc(100vw - 48px)"
+                    />
+                  </figure>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <p className="m-0 text-[14px] font-normal leading-[1.4] text-[#0a0a0a]" style={bodyStyle}>
+                    Job details
+                  </p>
+                  <figure className="m-0 w-full case-radius-xl bg-[#f3f1ea] p-3 sm:p-4">
+                    <Image
+                      src="/img/jobnova/decision-match-detail.png"
+                      alt="Version 1 job matching: match score, explanation, and generate-resume action on a job detail page."
+                      width={1127}
+                      height={949}
+                      className="block h-auto w-full object-contain"
+                      sizes="(min-width: 1280px) 980px, calc(100vw - 48px)"
+                    />
+                  </figure>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <p className="m-0 text-[14px] font-normal leading-[1.4] text-[#0a0a0a]" style={bodyStyle}>
+                    Tailored resume
+                  </p>
+                  <figure className="m-0 w-full case-radius-xl bg-[#f3f1ea] p-3 sm:p-4">
+                    <Image
+                      src="/img/jobnova/decision-resume.png"
+                      alt="Version 1 resume customization: AI generates a tailored resume, then users review and edit the changes."
+                      width={1121}
+                      height={1258}
+                      className="block h-auto w-full object-contain"
+                      sizes="(min-width: 1280px) 980px, calc(100vw - 48px)"
+                    />
+                  </figure>
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <article className="case-radius-lg bg-[#f3f1ea] p-5">
+                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                    Version 1 outcome
+                  </p>
+                  <h3 data-case-type="small-title" className="m-0 mt-6 text-[21px] font-normal leading-[1.2] tracking-[-0.01em] text-[#0a0a0a]" style={displayStyle}>
+                    AI made parts of applying faster.
+                  </h3>
+                  <p data-case-type="caption" className="m-0 mt-4 text-[13px] font-light leading-[1.65] text-[#0a0a0a]/64" style={bodyStyle}>
+                    Users could see matched roles from multiple platforms in one place, generate tailored materials for a specific job, and find people to contact. AI raised the efficiency of those steps. They no longer had to hop between boards just to start.
                   </p>
                 </article>
-                <article className="bg-[#10100f] p-6 text-white">
-                  <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#aefd48]" style={bodyStyle}>
-                    HMW
+                <article className="case-radius-lg bg-[#f3f1ea] p-5">
+                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                    The problem
                   </p>
-                  <p data-case-type="quote" className="m-0 mt-4 text-[24px] font-normal leading-[1.18] tracking-[-0.018em] text-white" style={displayStyle}>
-                    How might we help users complete the entire application journey with AI, while keeping them in control of important decisions?
+                  <h3 data-case-type="small-title" className="m-0 mt-6 text-[21px] font-normal leading-[1.2] tracking-[-0.01em] text-[#0a0a0a]" style={displayStyle}>
+                    The journey still ran on manual work.
+                  </h3>
+                  <p data-case-type="caption" className="m-0 mt-4 text-[13px] font-light leading-[1.65] text-[#0a0a0a]/64" style={bodyStyle}>
+                    Users still had to judge which roles were worth applying to, submit each application themselves, and track every outcome one by one. Faster pieces did not remove the labor of the full process.
                   </p>
                 </article>
               </div>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="02 / Research">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="03 / What research showed">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  02 / Research
+                  03 / What research showed
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                  Speed was not the real barrier.
+                  Matching and writing were not the bottleneck.
                   <br />
-                  <span className="text-[#ed5b2b]">Control was.</span>
+                  <span className="text-[#ed5b2b]">Users needed applying to happen without them.</span>
                 </h2>
                 <p data-case-type="lead" className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
-                  Users already used AI to move faster. The hesitation appeared when AI became harder to inspect, edit, approve, or undo.
+                  Across 20+ interviews, faster matching and tailored materials still left the same labor in the user&apos;s hands: decide, submit, and track, one role at a time.
                 </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
-                {[
-                  {
-                    title: 'Visibility mattered more than speed',
-                    body: 'Users could generate materials quickly, but they slowed down when they could not see why AI recommended a role or changed a resume.',
-                  },
-                  {
-                    title: 'Trust changed by stakes',
-                    body: 'The closer AI got to deciding, editing, or submitting, the more users expected explanation and approval.',
-                  },
-                  {
-                    title: 'Delegation needed recovery',
-                    body: 'Users were willing to delegate when they could understand, adjust, or reverse AI work afterward.',
-                  },
-                ].map((insight, index) => (
-                  <article key={insight.title} className="min-h-[260px] bg-[#f3f1ea] p-5">
-                    <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
-                      {String(index + 1).padStart(2, '0')}
-                    </p>
-                    <h3 data-case-type="small-title" className="m-0 mt-8 text-[21px] font-normal leading-[1.2] tracking-[-0.01em] text-[#0a0a0a]" style={displayStyle}>
-                      {insight.title}
-                    </h3>
-                    <p data-case-type="caption" className="m-0 mt-4 text-[13px] font-light leading-[1.65] text-[#0a0a0a]/64" style={bodyStyle}>
-                      {insight.body}
-                    </p>
-                  </article>
-                ))}
-              </div>
+              <blockquote className="m-0 max-w-[820px] border-l border-[#ed5b2b] py-1 pl-5">
+                <p data-case-type="quote" className="m-0 text-[clamp(20px,2.4vw,28px)] font-normal leading-[1.3] tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
+                  “By the time I tailor everything, the best opportunities already feel out of reach.”
+                </p>
+                <footer className="mt-4 text-[11px] font-light uppercase tracking-[0.12em] text-[#0a0a0a]/45" style={bodyStyle}>
+                  Career transitioner, research interview
+                </footer>
+              </blockquote>
 
-              <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:items-end">
-                <div>
-                  <DesktopProcessTimeline />
-                  <MobileProcessTimeline />
-                </div>
-                <p data-case-type="body" className="m-0 bg-white py-2 text-[18px] font-normal leading-[1.45] text-[#0a0a0a]" style={bodyStyle}>
-                  So the product goal shifted from maximizing automation to designing <span className="text-[#ed5b2b]">controlled automation</span>.
+              <div className="flex max-w-[760px] flex-col gap-3">
+                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
+                  The product direction
+                </p>
+                <p data-case-type="body" className="m-0 text-[20px] font-normal leading-[1.45] text-[#0a0a0a]" style={bodyStyle}>
+                  Automate the application.{' '}
+                  <span className="text-[#ed5b2b]">Users should only need to focus on interviews.</span>
                 </p>
               </div>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="03 / Strategy">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="04 / One complete application journey">
+              <div className="flex flex-col gap-5">
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                  04 / One complete application journey
+                </p>
+                <h2
+                  data-case-type="display"
+                  className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]"
+                  style={displayStyle}
+                >
+                  Users would focus on interviews.
+                  <br />
+                  <span className="text-[#ed5b2b]">The product had to apply.</span>
+                </h2>
+                <p className="m-0 max-w-[760px] text-[16px] font-light leading-[1.6] text-[#0a0a0a]/72" style={bodyStyle}>
+                  That meant one complete application journey: match, customize, apply, and track. Auto Apply became the product that ran that loop, so users were no longer judging, submitting, and following up one role at a time.
+                </p>
+              </div>
+
+              <ScopeStoryMap />
+            </div>
+
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="05 / Four levels of AI responsibility">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  03 / Strategy
+                  05 / Four levels of AI responsibility
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                  We reduced the product to four moments that had to work together.
+                  The challenge was not whether to automate applying.
+                  <br />
+                  <span className="text-[#ed5b2b]">It was how to balance autonomy and control.</span>
                 </h2>
-              </div>
-
-              <div className="grid gap-px overflow-hidden bg-[#d8d8d8] md:grid-cols-4">
-                {mvpCoreLoop.map((step, index) => (
-                  <article key={step.title} className="min-h-[235px] bg-[#10100f] p-5 text-white">
-                    <p className="m-0 text-[11px] font-light text-[#aefd48]" style={bodyStyle}>
-                      {String(index + 1).padStart(2, '0')}
-                    </p>
-                    <h3 data-case-type="title" className="m-0 mt-8 text-[28px] font-normal leading-none tracking-[-0.02em] text-white" style={displayStyle}>
-                      {step.title}
-                    </h3>
-                    <p data-case-type="eyebrow" className="m-0 mt-4 text-[13px] font-light uppercase tracking-[0.12em] text-white/42" style={bodyStyle}>
-                      {step.action}
-                    </p>
-                    <p data-case-type="caption" className="m-0 mt-5 text-[13px] font-light leading-[1.6] text-white/68" style={bodyStyle}>
-                      {step.body}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="04 / Framework">
-              <div className="flex flex-col gap-4">
-                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  04 / Framework
+                <p data-case-type="lead" className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  Auto Apply would let users leave the forms. It would also send applications in their name. The product had to hold both at once, at every step of the loop.
                 </p>
-                <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                  One workflow, four levels of AI responsibility.
-                </h2>
               </div>
 
-              <div className="grid gap-4">
+              <div className="grid gap-4 md:grid-cols-2">
                 {[
-                  ['Match', 'Explain', 'Show why a role is recommended before asking users to act.'],
-                  ['Customize', 'Collaborate', 'Preserve authorship while AI drafts and improves materials.'],
-                  ['Apply', 'Act', 'Respect the boundaries users define before AI submits.'],
-                  ['Track', 'Account', 'Make every automated action visible, recoverable, and traceable.'],
-                ].map(([moment, responsibility, behavior], index) => (
-                  <article key={moment} className="grid gap-4 bg-[#f3f1ea] p-5 md:grid-cols-[120px_180px_1fr] md:items-center">
-                    <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
-                      {String(index + 1).padStart(2, '0')}
+                  {
+                    title: 'Autonomy',
+                    body: 'If users still judge, submit, and track one role at a time, Auto Apply is not doing the job. The system has to take the repetitive work so they can leave the forms.',
+                  },
+                  {
+                    title: 'Control',
+                    body: 'Applying on someone’s behalf is high-stakes. A submitted application cannot be taken back. Users need to set where AI may act before it sends, see what went out, and stop or tighten the rules so it does not keep going.',
+                  },
+                ].map((pole) => (
+                  <article key={pole.title} className="case-radius-lg bg-[#f3f1ea] p-5">
+                    <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                      {pole.title}
                     </p>
-                    <h3 data-case-type="small-title" className="m-0 text-[24px] font-normal leading-none tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
-                      {moment}
-                    </h3>
-                    <div className="grid gap-2 md:grid-cols-[150px_1fr] md:items-baseline">
-                      <p data-case-type="small-title" className="m-0 text-[15px] font-normal leading-6 text-[#ed5b2b]" style={bodyStyle}>
-                        {responsibility}
-                      </p>
-                      <p data-case-type="caption" className="m-0 text-[14px] font-light leading-6 text-[#0a0a0a]/66" style={bodyStyle}>
-                        {behavior}
-                      </p>
-                    </div>
+                    <p data-case-type="caption" className="m-0 mt-6 text-[15px] font-light leading-[1.65] text-[#0a0a0a]/68" style={bodyStyle}>
+                      {pole.body}
+                    </p>
                   </article>
                 ))}
               </div>
+
+              <p data-case-type="body" className="m-0 max-w-[760px] text-[20px] font-normal leading-[1.45] text-[#0a0a0a]" style={bodyStyle}>
+                That balance needed four moments of AI responsibility, not four separate features.
+              </p>
+
+              <p className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                Match, customize, apply, and track had to work as one loop. Each step changed how much the AI was allowed to do, and none of them could succeed alone.
+              </p>
+
+              <ResponsibilityFrameworkDiagram />
+
+              <div className="flex flex-col gap-4">
+                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
+                  How the work unfolded
+                </p>
+                <p className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  Once the workflow was named, this is how we designed it.
+                </p>
+                <DesktopProcessTimeline />
+                <MobileProcessTimeline />
+              </div>
             </div>
 
-            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="05 / Explain" aria-labelledby="jobnova-v3-explain-title">
+            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="06 / A permission system, not a switch" aria-labelledby="jobnova-v3-act-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
                   <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    05 / Explain
-                  </p>
-                  <h2 data-case-type="display" id="jobnova-v3-explain-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                    Explain before asking for trust.
-                  </h2>
-                  <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
-                    Users didn’t need a higher Match Score. They needed to understand why the score existed and decide whether they agreed with it.
-                  </p>
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {[
-                      ['Challenge', 'A single percentage helped users scan, but not evaluate.'],
-                      ['Design decision', 'Replace opaque recommendations with matched qualifications, missing skills, source details, and visible uncertainty.'],
-                      ['Evidence', '68% of registered users completed their first job match.'],
-                    ].map(([label, body]) => (
-                      <div key={label} className="min-h-[150px] bg-[#f3f1ea] p-4">
-                        <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                          {label}
-                        </p>
-                        <p data-case-type="caption" className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
-                          {body}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <DesignDecisionVisual index={0} />
-              </div>
-            </section>
-
-            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="06 / Collaborate" aria-labelledby="jobnova-v3-collaborate-title">
-              <div className="flex flex-col gap-8">
-                <div className="flex flex-col gap-5">
-                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    06 / Collaborate
-                  </p>
-                  <h2 data-case-type="display" id="jobnova-v3-collaborate-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                    AI drafts.
-                    <br />
-                    Users author.
-                  </h2>
-                  <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
-                    Resume editing became a collaboration model: AI suggested changes, every edit stayed visible, and users made the final decision before submission.
-                  </p>
-                  <div className="grid gap-3 md:grid-cols-3">
-                    {[
-                      ['Understand the scope first', 'Show what AI is about to change before editing starts.'],
-                      ['Keep modifications inspectable', 'Expose additions, removals, and rewritten claims instead of hiding them inside a final document.'],
-                      ['Let the user decide', 'Require user approval before tailored materials become submission-ready.'],
-                    ].map(([title, body], index) => (
-                      <div key={title} className="min-h-[150px] bg-[#f3f1ea] p-4">
-                        <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
-                          {String(index + 1).padStart(2, '0')}
-                        </p>
-                        <h3 data-case-type="small-title" className="m-0 mt-3 text-[15px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
-                          {title}
-                        </h3>
-                        <p data-case-type="caption" className="m-0 mt-2 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
-                          {body}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <DesignDecisionVisual index={1} />
-              </div>
-            </section>
-
-            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="07 / Act" aria-labelledby="jobnova-v3-act-title">
-              <div className="flex flex-col gap-8">
-                <div className="flex flex-col gap-5">
-                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    07 / Act
+                    06 / A permission system, not a switch
                   </p>
                   <h2 data-case-type="display" id="jobnova-v3-act-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                    Automation is a permission system, not a switch.
+                    Applying on someone’s behalf is the highest-stakes moment in the loop.
                   </h2>
                   <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
-                    AI earns the right to act by following the boundaries a user defines.
+                    Applying on someone’s behalf is the highest-stakes step. AI only acts inside boundaries the user has already set.
+                  </p>
+                  <p className="m-0 max-w-[760px] text-[13px] font-light leading-[1.6] text-[#0a0a0a]/58" style={bodyStyle}>
+                    The first spec was an on/off switch. It broke once login expiry, queues, and retries needed named states. We kept the switch and wrapped it in matching strategy, autonomy, materials, and notifications.
                   </p>
                   <div className="grid gap-3 md:grid-cols-3">
                     {[
@@ -2763,7 +2915,7 @@ export default function JobnovaAIPlatformPage() {
                       ['During', 'AI continues only when conditions are satisfied; exceptions require approval.'],
                       ['After', 'Every action remains visible and recoverable.'],
                     ].map(([label, body]) => (
-                      <div key={label} className="min-h-[150px] bg-[#f3f1ea] p-4">
+                      <div key={label} className="case-radius-lg min-h-[150px] bg-[#f3f1ea] p-4">
                         <p data-case-type="eyebrow" className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
                           {label}
                         </p>
@@ -2778,20 +2930,49 @@ export default function JobnovaAIPlatformPage() {
                   <DesignDecisionVisual index={2} />
                   <AutoApplyStateSwitcher />
                 </div>
+                <div className="case-radius-lg overflow-hidden border border-[#cccccc] p-5 sm:p-6">
+                  <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
+                    Trust is earned
+                  </p>
+                  <p data-case-type="title" className="m-0 mt-3 max-w-[820px] text-[18px] font-normal leading-[1.4] text-[#0a0a0a]" style={bodyStyle}>
+                    We wanted full autonomy. Users never want to be out of control.
+                  </p>
+                  <p className="m-0 mt-3 max-w-[820px] text-[15px] font-light leading-[1.6] text-[#0a0a0a]/68" style={bodyStyle}>
+                    We gave transparency and control first, so trust could build. Autonomy is what users grant after that, not something they hand over up front.
+                  </p>
+                  <div className="case-radius-md mt-6 grid gap-px overflow-hidden bg-[#cccccc] sm:grid-cols-2">
+                    {[
+                      ['Day one', '37%', 'turned on Apply without approval from the start'],
+                      ['Within a week', '82%', 'had moved to Apply without approval'],
+                    ].map(([when, value, body]) => (
+                      <div key={when} className="bg-white p-5">
+                        <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
+                          {when}
+                        </p>
+                        <p className="m-0 mt-6 text-[clamp(36px,4.4vw,48px)] font-normal leading-[1] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                          {value}
+                        </p>
+                        <p className="m-0 mt-4 max-w-[280px] text-[15px] font-light leading-[1.5] text-[#0a0a0a]/68" style={bodyStyle}>
+                          {body}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </section>
 
-            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="08 / Account" aria-labelledby="jobnova-v3-account-title">
+            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="07 / Every action leaves a trace" aria-labelledby="jobnova-v3-account-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
                   <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    08 / Account
+                    07 / Every action leaves a trace
                   </p>
                   <h2 data-case-type="display" id="jobnova-v3-account-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                    Every automated action should leave a trace.
+                    If an application disappears after send, the automation has failed.
                   </h2>
                   <p data-case-type="lead" className="m-0 text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
-                    Automation becomes trustworthy only when users can understand what happened, what is happening, and what needs their attention next.
+                    The loop is not complete at submission. Users still need to see what happened, what is happening, and what needs their attention next.
                   </p>
                   <div className="grid gap-3 md:grid-cols-3">
                     {[
@@ -2799,7 +2980,7 @@ export default function JobnovaAIPlatformPage() {
                       ['Status', 'What is happening now across applications and recruiter responses.'],
                       ['Attention', 'What requires user review, correction, or follow-up next.'],
                     ].map(([title, body], index) => (
-                      <div key={title} className="min-h-[150px] bg-[#f3f1ea] p-4">
+                      <div key={title} className="case-radius-lg min-h-[150px] bg-[#f3f1ea] p-4">
                         <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
                           {String(index + 1).padStart(2, '0')}
                         </p>
@@ -2817,20 +2998,20 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </section>
 
-            <div className="flex max-w-[980px] flex-col gap-8" data-case-nav-label="09 / Product Rules">
+            <div className="flex max-w-[980px] flex-col gap-8" data-case-nav-label="08 / From screens to product rules">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  09 / Product Rules
+                  08 / From screens to product rules
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[820px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
-                  From screens to product rules.
+                  The four moments had to feel like one product.
                 </h2>
                 <p data-case-type="lead" className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
                   I translated the trust model into reusable states, components, and interaction rules so Match, Customize, Apply, and Track behaved consistently.
                 </p>
               </div>
 
-              <div className="w-full bg-[#f3f1ea] p-4 sm:p-6 lg:p-8">
+              <div className="case-radius-xl w-full bg-[#f3f1ea] p-4 sm:p-6 lg:p-8">
                 <figure
                   className="relative m-0 w-full overflow-hidden"
                   style={{ maxHeight: 'min(170vh, 1900px)' }}
@@ -2867,21 +3048,24 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="10 / Outcome">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="09 / Results, debt, and learnings">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  10 / Outcome
+                  09 / Results, debt, and learnings
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[880px] text-[clamp(32px,4.8vw,64px)] font-normal leading-[1.02] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
                   The goal was never maximum automation.
                   <br />
                   <span className="text-[#ed5b2b]">It was automation people could understand, configure, and hold accountable.</span>
                 </h2>
+                <p data-case-type="lead" className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
+                  Launch numbers show activation and execution. They do not, by themselves, prove that users trusted Auto Apply.
+                </p>
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 {resultMetrics.map((metric) => (
-                  <article key={metric.label} className="flex min-h-[260px] flex-col bg-[#f3f1ea] p-5">
+                  <article key={metric.label} className="case-radius-lg flex flex-col bg-[#f3f1ea] p-5">
                     <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
                       {metric.label}
                     </p>
@@ -2891,12 +3075,33 @@ export default function JobnovaAIPlatformPage() {
                     <h3 data-case-type="small-title" className="m-0 mt-4 text-[15px] font-normal leading-5 text-[#0a0a0a]" style={bodyStyle}>
                       {metric.title}
                     </h3>
-                    <p data-case-type="caption" className="m-0 mt-3 text-[13px] font-light leading-[20.15px] text-[#0a0a0a]/62" style={bodyStyle}>
-                      {metric.body}
-                    </p>
                   </article>
                 ))}
               </div>
+
+              <section aria-labelledby="jobnova-v3-tradeoffs-title">
+                <h3 data-case-type="title" id="jobnova-v3-tradeoffs-title" className="m-0 mb-2 text-[20px] font-normal leading-[1.3] text-[#0a0a0a]" style={bodyStyle}>
+                  What experience can still raise
+                </h3>
+                <p className="m-0 mb-5 max-w-[720px] text-[14px] font-light leading-[1.55] text-[#0a0a0a]/68" style={bodyStyle}>
+                  Submission success and interview rate sit downstream. These two numbers can still move by making setup easier to finish.
+                </p>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {outcomeTradeoffs.map((item, index) => (
+                    <article key={item.title} className="case-radius-lg min-h-[200px] border border-[#cccccc] p-5">
+                      <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
+                        {String(index + 1).padStart(2, '0')}
+                      </p>
+                      <h4 data-case-type="small-title" className="m-0 mt-6 text-[18px] font-normal leading-[1.25] text-[#0a0a0a]" style={displayStyle}>
+                        {item.title}
+                      </h4>
+                      <p className="m-0 mt-3 text-[14px] font-light leading-[1.5] text-[#0a0a0a]/72 [&_strong]:font-semibold [&_strong]:text-[#0a0a0a]" style={bodyStyle}>
+                        {item.body}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </section>
 
               <section aria-labelledby="jobnova-v3-learnings-title">
                 <h3 data-case-type="title" id="jobnova-v3-learnings-title" className="m-0 mb-5 text-[20px] font-normal leading-[1.3] text-[#0a0a0a]" style={bodyStyle}>
@@ -2908,7 +3113,7 @@ export default function JobnovaAIPlatformPage() {
                     ['Make control configurable', 'Users decide where AI can act.'],
                     ['Design beyond execution', 'Automation needs history, recovery, and accountability.'],
                   ].map(([title, body], index) => (
-                    <article key={title} className="min-h-[180px] bg-[#10100f] p-5 text-white">
+                    <article key={title} className="case-radius-lg min-h-[180px] bg-[#10100f] p-5 text-white">
                       <p className="m-0 text-[11px] font-light text-[#aefd48]" style={bodyStyle}>
                         {String(index + 1).padStart(2, '0')}
                       </p>
@@ -3056,7 +3261,7 @@ export default function JobnovaAIPlatformPage() {
                       }`}
                     >
                       <div className="relative flex h-full min-h-[64px] items-center justify-center">
-                        <span className="relative z-10 flex size-8 items-center justify-center rounded-full border border-[#cccccc] bg-white text-[10px] font-light text-[#ed5b2b]" style={bodyStyle}>
+                        <span className="relative z-10 flex size-8 items-center justify-center case-radius-full border border-[#cccccc] bg-white text-[10px] font-light text-[#ed5b2b]" style={bodyStyle}>
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         {index < marketWorkflowStages.length - 1 ? (
@@ -3070,7 +3275,7 @@ export default function JobnovaAIPlatformPage() {
                         {item.tools.map((tool) => (
                           <span
                             key={tool}
-                            className="border border-[#cccccc] bg-[#f3f1ea] px-3.5 py-2 text-[12px] font-light text-[#0a0a0a]/68"
+                            className="case-radius-sm border border-[#cccccc] bg-[#f3f1ea] px-3.5 py-2 text-[12px] font-light text-[#0a0a0a]/68"
                             style={bodyStyle}
                           >
                             {tool}
@@ -3086,7 +3291,7 @@ export default function JobnovaAIPlatformPage() {
                 </p>
               </section>
 
-              <section className="bg-[#10100f] p-6 text-white sm:p-8 lg:p-10" aria-labelledby="jobnova-workflow-title">
+              <section className="case-radius-lg bg-[#10100f] p-6 text-white sm:p-8 lg:p-10" aria-labelledby="jobnova-workflow-title">
                 <div className="grid gap-10 lg:grid-cols-[220px_1fr] lg:items-end">
                   <div>
                     <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#aefd48]" style={bodyStyle}>
@@ -3173,99 +3378,6 @@ export default function JobnovaAIPlatformPage() {
               </section>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-12" data-case-nav-label="How We Worked">
-              <div className="flex flex-col gap-3">
-                <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  3. How We Worked
-                </p>
-                <h2 className="m-0 text-[22px] font-normal leading-none text-[#0a0a0a]" style={bodyStyle}>
-                  Design Process
-                </h2>
-              </div>
-
-              <div>
-                <DesktopProcessTimeline />
-                <MobileProcessTimeline />
-              </div>
-            </div>
-
-            <div className="flex max-w-[980px] flex-col gap-12" data-case-nav-label="Initial Hypothesis">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-3">
-                  <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    4. Initial Hypothesis
-                  </p>
-                  <h2 className="m-0 max-w-[900px] text-[22px] font-normal leading-[1.32] text-[#0a0a0a]" style={bodyStyle}>
-                    We first assumed the main barrier was repetitive work and application speed.
-                  </h2>
-                </div>
-                <p className="m-0 max-w-[940px] text-[15px] font-light leading-6 text-[#0a0a0a]/72" style={bodyStyle}>
-                  Based on desktop research and competitive analysis, the team believed if AI could{' '}
-                  <span className="text-[#ed5b2b]">
-                    discover relevant roles, tailor resumes to each job, and complete repeated application steps
-                  </span>
-                  , users could apply faster and miss fewer opportunities.
-                </p>
-              </div>
-
-              <div className="bg-[#f3f1ea] p-5">
-                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
-                  Early Product Loop
-                </p>
-                <div className="mt-4 flex flex-col items-center sm:flex-row sm:justify-between">
-                  {earlyProductLoop.map((step, index) => {
-                    const icon = [
-                      '/img/jobnova/hypothesis-discover.svg',
-                      '/img/jobnova/hypothesis-customize.svg',
-                      '/img/jobnova/hypothesis-apply.svg',
-                    ][index];
-
-                    return (
-                      <div key={step} className="contents">
-                        <div className="flex min-w-[112px] items-center justify-center gap-3 sm:justify-start">
-                          <Image src={icon} alt="" width={24} height={24} aria-hidden />
-                          <p className="m-0 text-[16px] font-normal leading-6 text-[#0a0a0a]" style={bodyStyle}>
-                            {step}
-                          </p>
-                        </div>
-                        {index < earlyProductLoop.length - 1 ? (
-                          <Image
-                            src="/img/jobnova/hypothesis-connector.svg"
-                            alt=""
-                            width={241}
-                            height={8}
-                            aria-hidden
-                            className="my-5 h-auto w-[56px] rotate-90 sm:mx-4 sm:my-0 sm:w-full sm:max-w-[241px] sm:rotate-0"
-                          />
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
-                  Assumptions to Validate
-                </p>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2 sm:gap-y-5 lg:grid-cols-4 lg:gap-0">
-                  {initialAssumptions.map((assumption, index) => (
-                    <article key={assumption.title} className="border-l-2 border-[#ed5b2b] pl-3.5 lg:pr-5">
-                      <h3 className="m-0 text-[14px] font-normal leading-[1.4] text-[#ed5b2b]" style={bodyStyle}>
-                        {index === 3 ? 'Discover, customize, and apply form the loop' : assumption.title}
-                      </h3>
-                      <p className="m-0 mt-2 text-[13px] font-light leading-[1.55] text-[#0a0a0a]/66" style={bodyStyle}>
-                        {assumption.body}
-                      </p>
-                    </article>
-                  ))}
-                </div>
-                <p className="m-0 mt-5 max-w-[820px] text-[14px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
-                  At this stage, we had a product direction, but not enough evidence to define the right product.
-                </p>
-              </div>
-            </div>
-
             <div className="flex max-w-[980px] flex-col gap-14" data-case-nav-label="Trust by Design">
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-3">
@@ -3342,7 +3454,7 @@ export default function JobnovaAIPlatformPage() {
                   {trustFocusCards.map((card, index) => (
                     <article
                       key={card.title}
-                      className="relative h-[232px] overflow-hidden rounded-3xl border border-[#cccccc] px-5 pb-[58px] pt-5"
+                      className="relative h-[232px] overflow-hidden case-radius-xl border border-[#cccccc] px-5 pb-[58px] pt-5"
                     >
                       <p className="m-0 text-[12px] font-light leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
                         {String(index + 1).padStart(2, '0')}
@@ -3379,7 +3491,7 @@ export default function JobnovaAIPlatformPage() {
                   Method
                 </p>
                 <div className="grid items-start gap-8 lg:grid-cols-[400px_1fr] lg:gap-10">
-                  <div className="bg-[#f3f1ea] p-5">
+                  <div className="case-radius-lg bg-[#f3f1ea] p-5">
                     <p className="m-0 text-[32px] font-normal leading-[32px] text-[#0a0a0a]" style={displayStyle}>
                       20+
                     </p>
@@ -3390,7 +3502,7 @@ export default function JobnovaAIPlatformPage() {
                       {researchSegments.map((segment) => (
                         <span
                           key={segment}
-                          className="border border-[#cccccc] px-3 py-2 text-[12px] font-light leading-[18px] text-[#0a0a0a]/70"
+                          className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[12px] font-light leading-[18px] text-[#0a0a0a]/70"
                           style={bodyStyle}
                         >
                           {segment}
@@ -3441,7 +3553,7 @@ export default function JobnovaAIPlatformPage() {
                     Research did not reject automation. It changed what successful automation needed to mean.
                   </h2>
                 </div>
-                <div className="overflow-hidden border border-[#cccccc]">
+                <div className="case-radius-lg overflow-hidden border border-[#cccccc]">
                   <div
                     className="hidden grid-cols-[0.9fr_1.1fr] border-b border-[#cccccc] bg-[#f3f1ea] px-5 py-3 text-[11px] font-light uppercase leading-[17px] text-[#0a0a0a]/55 sm:grid"
                     style={bodyStyle}
@@ -3471,7 +3583,7 @@ export default function JobnovaAIPlatformPage() {
                 <h2 className="m-0 text-[19px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
                   Research changed the product from an automation tool into a controlled AI system.
                 </h2>
-                <div className="grid overflow-hidden border border-[#cccccc] lg:min-h-[286px] lg:grid-cols-[1fr_72px_1fr]">
+                <div className="case-radius-lg grid overflow-hidden border border-[#cccccc] lg:min-h-[286px] lg:grid-cols-[1fr_72px_1fr]">
                   <div className="p-7 sm:p-9">
                     <p className="m-0 text-[13px] font-normal uppercase leading-[19.5px] text-[#0a0a0a]/45" style={bodyStyle}>
                       From
@@ -3492,200 +3604,11 @@ export default function JobnovaAIPlatformPage() {
                     </p>
                   </div>
                 </div>
-                <div className="mt-5 flex flex-col gap-4" data-case-nav-label="Automation & Control">
-                  <div className="max-w-[820px]">
-                    <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
-                      Core Challenge
-                    </p>
-                    <h3 className="m-0 mt-2 text-[19px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
-                      More automation increased efficiency, but also increased the cost of losing control.
-                    </h3>
-                  </div>
-                  <div className="grid border border-[#cccccc] lg:grid-cols-[1fr_72px_1fr]">
-                    <article className="p-6">
-                      <p className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
-                        Too little automation
-                      </p>
-                      <ul className="m-0 mt-4 flex list-disc flex-col gap-2 pl-4 text-[13px] font-light leading-[1.55] text-[#0a0a0a]/68" style={bodyStyle}>
-                        <li>Repetitive work remains with the user</li>
-                        <li>The product feels like another job board</li>
-                        <li>AI creates little meaningful time advantage</li>
-                      </ul>
-                    </article>
-                    <div className="flex min-h-14 items-center justify-center border-y border-[#cccccc] text-[18px] text-[#ed5b2b] lg:min-h-0 lg:border-x lg:border-y-0">
-                      <span aria-hidden>↔</span>
-                    </div>
-                    <article className="p-6">
-                      <p className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
-                        Too much automation
-                      </p>
-                      <ul className="m-0 mt-4 flex list-disc flex-col gap-2 pl-4 text-[13px] font-light leading-[1.55] text-[#0a0a0a]/68" style={bodyStyle}>
-                        <li>Users cannot see what the system applied to</li>
-                        <li>Incorrect materials can damage trust quickly</li>
-                        <li>Responsibility becomes unclear when execution fails</li>
-                      </ul>
-                    </article>
-                  </div>
-                  <p className="m-0 max-w-[820px] text-[14px] font-light leading-[1.6] text-[#0a0a0a]/68" style={bodyStyle}>
-                    Auto Apply therefore became a decision system combining matching rules, content authorization, execution permission, and traceable outcomes.
-                  </p>
-                </div>
                 <blockquote className="m-0 max-w-[820px] border-l border-[#ed5b2b] pl-5 text-[16px] font-normal leading-6 text-[#0a0a0a]" style={bodyStyle}>
                   How might we help job seekers complete more relevant applications faster, without losing{' '}
                   <span className="text-[#ed5b2b]">trust and control over AI-driven decisions</span>?
                 </blockquote>
               </div>
-            </div>
-
-            <div className="flex max-w-[980px] flex-col gap-12" data-case-nav-label="Defining the MVP">
-              <div className="grid gap-8 border-b border-[#0a0a0a] pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.82fr)] lg:items-end">
-                <div>
-                  <p className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    6. Defining the MVP
-                  </p>
-                  <h2
-                    className="m-0 mt-5 max-w-[610px] text-[clamp(36px,5vw,66px)] font-normal leading-[0.98] tracking-[-0.035em] text-[#0a0a0a]"
-                    style={displayStyle}
-                  >
-                    Building one complete application journey
-                  </h2>
-                  <p className="m-0 mt-6 max-w-[600px] text-[14px] font-light leading-[1.65] text-[#0a0a0a]/66" style={bodyStyle}>
-                    Early concepts included job alerts, AI resumes, cover letters, automated applications, inbox sync, networking recommendations, interview preparation, and an AI assistant.
-                  </p>
-                  <p className="m-0 mt-4 text-[11px] font-light leading-[1.7] text-[#0a0a0a]/38" style={bodyStyle}>
-                    {earlyMvpScope.join(' · ')}
-                  </p>
-                </div>
-
-                <aside className="border-l border-[#ed5b2b] py-1 pl-6">
-                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                    The scope question
-                  </p>
-                  <p className="m-0 mt-4 text-[21px] font-normal leading-[1.35] text-[#0a0a0a]" style={bodyStyle}>
-                    What capabilities must work together for users to complete one relevant, understandable, and controllable application?
-                  </p>
-                </aside>
-              </div>
-
-              <section className="flex flex-col gap-5" aria-labelledby="mvp-loop-title">
-                <div>
-                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                    The Core Workflow
-                  </p>
-                  <h3 id="mvp-loop-title" className="m-0 mt-2 text-[20px] font-normal leading-[1.3] text-[#0a0a0a]" style={bodyStyle}>
-                    We reduced the product to four moments that had to work together.
-                  </h3>
-                </div>
-
-                <div className="grid border-y border-[#0a0a0a] sm:grid-cols-2 lg:grid-cols-4" aria-label="MVP workflow: match, customize, apply, track">
-                  {mvpCoreLoop.map((step, index) => (
-                    <article
-                      key={step.title}
-                      className={`relative flex min-h-[292px] flex-col px-5 py-6 ${
-                        index < mvpCoreLoop.length - 1 ? 'border-b border-[#cccccc] sm:border-b-0 sm:border-r' : ''
-                      } ${index === 1 ? 'sm:border-r-0 lg:border-r' : ''} ${index >= 2 ? 'sm:border-t lg:border-t-0' : ''} ${
-                        index === 0 ? 'lg:pl-0' : ''
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
-                          {String(index + 1).padStart(2, '0')}
-                        </p>
-                        <p className="m-0 text-[11px] font-light uppercase tracking-[0.12em] text-[#0a0a0a]/38" style={bodyStyle}>
-                          {step.action}
-                        </p>
-                      </div>
-                      <h4 className="m-0 mt-8 text-[25px] font-normal leading-none text-[#0a0a0a]" style={displayStyle}>
-                        {step.title}
-                      </h4>
-                      <p className="m-0 mt-4 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/66" style={bodyStyle}>
-                        {step.body}
-                      </p>
-                      <p className="m-0 mt-auto border-t border-[#cccccc] pt-4 text-[11px] font-light leading-[1.45] text-[#ed5b2b]" style={bodyStyle}>
-                        {step.feature}
-                      </p>
-                      {index < mvpCoreLoop.length - 1 ? (
-                        <span
-                          className="absolute -right-[10px] top-[72px] z-10 hidden bg-white px-1 text-[15px] font-light text-[#0a0a0a]/38 lg:block"
-                          aria-hidden
-                        >
-                          -&gt;
-                        </span>
-                      ) : null}
-                    </article>
-                  ))}
-                </div>
-              </section>
-
-              <section className="grid gap-0 border-y border-[#cccccc] lg:grid-cols-2" aria-label="MVP scope and success criteria">
-                <div className="py-7 lg:border-r lg:border-[#cccccc] lg:pr-8">
-                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                    Included in the MVP
-                  </p>
-                  <div className="mt-6 flex flex-col">
-                    {mvpIncluded.map((item, index) => (
-                      <article
-                        key={item.title}
-                        className={`grid gap-2 py-4 sm:grid-cols-[124px_1fr] ${
-                          index < mvpIncluded.length - 1 ? 'border-b border-[#e1e1e1]' : ''
-                        }`}
-                      >
-                        <p className="m-0 text-[10px] font-light uppercase tracking-[0.1em] text-[#0a0a0a]/38" style={bodyStyle}>
-                          {item.group}
-                        </p>
-                        <div>
-                          <h4 className="m-0 text-[14px] font-normal leading-[1.4] text-[#0a0a0a]" style={bodyStyle}>
-                            {item.title}
-                          </h4>
-                          <p className="m-0 mt-1 text-[12px] font-light leading-[1.5] text-[#0a0a0a]/58" style={bodyStyle}>
-                            {item.body}
-                          </p>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="border-t border-[#cccccc] py-7 lg:border-t-0 lg:pl-8">
-                  <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                    MVP Success Criteria
-                  </p>
-                  <p className="m-0 mt-3 text-[13px] font-light leading-[1.6] text-[#0a0a0a]/58" style={bodyStyle}>
-                    The MVP would be considered successful if a user could:
-                  </p>
-                  <div className="mt-6 flex flex-col">
-                    {successCriteria.map((criterion, index) => (
-                      <div
-                        key={criterion}
-                        className={`flex items-start gap-4 py-4 ${
-                          index < successCriteria.length - 1 ? 'border-b border-[#e1e1e1]' : ''
-                        }`}
-                      >
-                        <span className="mt-[1px] flex size-5 shrink-0 items-center justify-center rounded-full border border-[#ed5b2b] text-[10px] font-light text-[#ed5b2b]" aria-hidden>
-                          ✓
-                        </span>
-                        <p className="m-0 text-[14px] font-light leading-[1.5] text-[#0a0a0a]/72" style={bodyStyle}>
-                          {criterion}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              <p className="m-0 max-w-[900px] text-[12px] font-light leading-[1.65] text-[#0a0a0a]/52" style={bodyStyle}>
-                <span className="font-normal text-[#0a0a0a]/72">Deferred beyond the MVP:</span>{' '}
-                Interview preparation, salary negotiation, long-term career planning, advanced networking, and recruiter-facing products were postponed because they did not determine whether the core application journey could succeed.
-              </p>
-
-              <blockquote className="m-0 border-y border-[#0a0a0a] py-8">
-                <p className="m-0 max-w-[900px] text-[clamp(22px,3vw,38px)] font-normal leading-[1.18] tracking-[-0.02em] text-[#0a0a0a]" style={displayStyle}>
-                  The MVP was not designed to cover the entire career journey. It was designed to validate one complete and trustworthy application experience.
-                </p>
-                <p className="m-0 mt-5 max-w-[720px] text-[14px] font-light leading-[1.6] text-[#0a0a0a]/58" style={bodyStyle}>
-                  With the scope defined, I focused on the four moments that most directly shaped user trust and application completion.
-                </p>
-              </blockquote>
             </div>
 
             <div className="flex max-w-[980px] flex-col gap-14" data-case-nav-label="Design Decisions">
@@ -3761,7 +3684,7 @@ export default function JobnovaAIPlatformPage() {
 
                     <ExplorationPlaceholder feature={feature.label} items={feature.exploration} />
 
-                    <div className="grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
+                    <div className="case-radius-lg grid gap-px overflow-hidden border border-[#cccccc] bg-[#cccccc] md:grid-cols-3">
                       {feature.iteration.map(([stage, description], stageIndex) => (
                         <article key={stage} className="relative min-h-[164px] bg-white p-5">
                           <div className="flex items-center justify-between">
@@ -3803,7 +3726,7 @@ export default function JobnovaAIPlatformPage() {
                     </p>
                     <div className={`grid gap-4 ${feature.howItWorks.length > 2 ? 'sm:grid-cols-2' : 'md:grid-cols-2'}`}>
                       {feature.howItWorks.map((group, groupIndex) => (
-                        <article key={group.title} className="border border-[#cccccc] p-5">
+                        <article key={group.title} className="case-radius-lg overflow-hidden border border-[#cccccc] p-5">
                           <p className="m-0 text-[11px] font-light text-[#ed5b2b]" style={bodyStyle}>
                             {String(groupIndex + 1).padStart(2, '0')}
                           </p>
@@ -3814,7 +3737,7 @@ export default function JobnovaAIPlatformPage() {
                             {group.items.map((item) => (
                               <span
                                 key={item}
-                                className="border border-[#d8d8d8] px-2.5 py-1.5 text-[11px] font-light leading-[17px] text-[#0a0a0a]/66"
+                                className="case-radius-sm border border-[#d8d8d8] px-2.5 py-1.5 text-[11px] font-light leading-[17px] text-[#0a0a0a]/66"
                                 style={bodyStyle}
                               >
                                 {item}
@@ -3910,7 +3833,7 @@ export default function JobnovaAIPlatformPage() {
                         {feature.validation.map((metric) => (
                           <span
                             key={metric}
-                            className="border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
+                            className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[11px] font-light leading-[17px] text-[#0a0a0a]/68"
                             style={bodyStyle}
                           >
                             {metric}
@@ -3975,7 +3898,7 @@ export default function JobnovaAIPlatformPage() {
                   {designSystemItems.map((item) => (
                     <span
                       key={item}
-                      className="border border-[#cccccc] px-3 py-2 text-[12px] font-light leading-[18px] text-[#0a0a0a]/68"
+                      className="case-radius-sm border border-[#cccccc] px-3 py-2 text-[12px] font-light leading-[18px] text-[#0a0a0a]/68"
                       style={bodyStyle}
                     >
                       {item}
@@ -3984,7 +3907,7 @@ export default function JobnovaAIPlatformPage() {
                 </div>
               </div>
 
-              <div className="w-full bg-[#f3f1ea] p-4 sm:p-6 lg:p-8">
+              <div className="case-radius-xl w-full bg-[#f3f1ea] p-4 sm:p-6 lg:p-8">
                 <figure className="relative m-0 w-full overflow-hidden" aria-label="JobNova design system">
                   <Image
                     src="/img/jobnova/design system.avif"
@@ -4038,7 +3961,7 @@ export default function JobnovaAIPlatformPage() {
 
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 {resultMetrics.map((metric) => (
-                  <article key={metric.label} className="flex min-h-[286px] flex-col border border-[#cccccc] p-5">
+                  <article key={metric.label} className="case-radius-lg flex min-h-[286px] flex-col overflow-hidden border border-[#cccccc] p-5">
                     <p className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#ed5b2b]" style={bodyStyle}>
                       {metric.label}
                     </p>
