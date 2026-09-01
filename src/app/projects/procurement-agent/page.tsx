@@ -871,7 +871,7 @@ export default function ProcurementAgentPage() {
                     'Manually search SKU one by one',
                     'Stock-in',
                   ].map((step, index, steps) => (
-                    <div key={step} className="case-radius-md overflow-hidden relative flex min-h-[104px] flex-col justify-between border border-white/20 bg-[#202020] px-3 py-4">
+                    <div key={step} className="case-radius-md relative flex min-h-[104px] flex-col justify-between border border-white/20 bg-[#202020] px-3 py-4">
                       <span className="text-[10px] font-bold text-[#7fa2ff]" style={bodyStyle}>
                         {String(index + 1).padStart(2, '0')}
                       </span>
