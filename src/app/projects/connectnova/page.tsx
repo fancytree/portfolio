@@ -11,11 +11,11 @@ import { fontFamily, textStyle, textColor } from '@/lib/design-tokens';
 
 /** Fig 7：Solution 卡片内嵌 mock 外框高度 */
 const connectNovaSolutionMockFrameClassName =
-  'h-[min(380px,45svh)] w-full min-h-0 overflow-hidden rounded-[10px] border border-dashed border-black/15 sm:h-[min(400px,48svh)]';
+  'case-radius-xl h-[min(380px,45svh)] w-full min-h-0 overflow-hidden border border-dashed border-black/15 sm:h-[min(400px,48svh)]';
 
 /** Fig 9：Profile Panel mock 专用外框（比 Fig 7 更高，便于侧栏内滚动与内容展开） */
 const connectNovaProfilePanelMockFrameClassName =
-  'h-[min(500px,58svh)] w-full min-h-0 overflow-hidden rounded-[10px] border border-dashed border-black/15 sm:h-[min(540px,62svh)]';
+  'case-radius-xl h-[min(500px,58svh)] w-full min-h-0 overflow-hidden border border-dashed border-black/15 sm:h-[min(540px,62svh)]';
 
 const CASE_STUDY_CONTENT_WIDTH = '980px';
 

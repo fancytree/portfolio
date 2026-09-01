@@ -1,4 +1,4 @@
-import { fontFamily } from '@/lib/design-tokens';
+import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 
 const center = { x: 540, y: 360 } as const;
 const radius = 296;
@@ -140,7 +140,7 @@ export default function ProcurementLearningLoop() {
                   y={top}
                   width={stationWidth}
                   height={stationHeight}
-                  rx="6"
+                  rx={caseRadiusPx.sm}
                   fill={focal ? 'rgb(33 85 232 / 0.22)' : '#202020'}
                   stroke={focal ? '#7fa2ff' : 'rgb(255 255 255 / 0.24)'}
                   strokeWidth={focal ? '1.2' : '1'}
@@ -162,7 +162,7 @@ export default function ProcurementLearningLoop() {
           })}
 
           <g>
-            <rect x="428" y="300" width={hubWidth} height={hubHeight} rx="6" fill="#f4f4f4" stroke="#ffffff" />
+            <rect x="428" y="300" width={hubWidth} height={hubHeight} rx={caseRadiusPx.sm} fill="#f4f4f4" stroke="#ffffff" />
             <text x="540" y="336" textAnchor="middle" fill="#777777" fontFamily={fontFamily.sans} fontSize="12" fontWeight="700">
               ACCUMULATED STATE
             </text>

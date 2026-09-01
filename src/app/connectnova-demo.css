@@ -131,6 +131,7 @@
   position: relative;
   height: 660px;
   overflow: hidden;
+  border-radius: var(--case-radius-xl, 24px);
 }
 
 /* Fullscreen: fill the screen and repaint the UA's default black backdrop.

@@ -56,7 +56,7 @@ export default function SequenceDemoEmbed() {
               alignItems: 'center',
               background: isFullscreen ? blue : '#FFFFFF',
               border: `1px solid ${isFullscreen ? blue : 'rgba(36, 89, 211, 0.35)'}`,
-              borderRadius: '8px',
+              borderRadius: 'var(--case-radius-sm, 8px)',
               color: isFullscreen ? '#FFFFFF' : blue,
               cursor: 'pointer',
               display: 'inline-flex',
@@ -77,7 +77,7 @@ export default function SequenceDemoEmbed() {
 
       <div
         ref={frameRef}
-        className="cn-demo-frame"
+        className="case-radius-xl cn-demo-frame"
         style={{ background: '#eef0f4', border: '1px solid rgba(10,10,10,0.12)' }}
       >
         <iframe

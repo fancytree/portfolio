@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 const PILL_CURSOR_SELECTOR = '[data-cursor="pill"]';
+const PILL_PAD_X = 18;
 
 function getCursorLabel(target: EventTarget | null) {
   if (!(target instanceof Element)) return '';
@@ -38,13 +39,14 @@ export default function CustomCursor() {
     let targetY = window.innerHeight / 2;
     let currentX = targetX;
     let currentY = targetY;
+    let labelClearTimer = 0;
 
     document.documentElement.classList.add('mei-custom-cursor-enabled');
 
     const animate = () => {
       currentX += (targetX - currentX) * 0.28;
       currentY += (targetY - currentY) * 0.28;
-      cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+      cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
       raf = window.requestAnimationFrame(animate);
     };
 
@@ -53,8 +55,21 @@ export default function CustomCursor() {
       targetY = event.clientY;
       cursor.dataset.visible = 'true';
       cursor.dataset.variant = getCursorVariant(event.target);
-      label.textContent = getCursorLabel(event.target);
-      cursor.dataset.hasLabel = label.textContent ? 'true' : 'false';
+
+      const nextLabel = getCursorLabel(event.target);
+      cursor.dataset.hasLabel = nextLabel ? 'true' : 'false';
+      if (nextLabel) {
+        window.clearTimeout(labelClearTimer);
+        label.textContent = nextLabel;
+        const pillWidth = Math.ceil(label.scrollWidth) + PILL_PAD_X;
+        cursor.style.setProperty('--cursor-pill-width', `${pillWidth}px`);
+      } else if (label.textContent) {
+        window.clearTimeout(labelClearTimer);
+        // 等胶囊从中心收起后再清文案
+        labelClearTimer = window.setTimeout(() => {
+          label.textContent = '';
+        }, 460);
+      }
     };
 
     const handlePointerLeave = () => {
@@ -66,6 +81,7 @@ export default function CustomCursor() {
     document.addEventListener('pointerleave', handlePointerLeave);
 
     return () => {
+      window.clearTimeout(labelClearTimer);
       window.cancelAnimationFrame(raf);
       window.removeEventListener('pointermove', handlePointerMove);
       document.removeEventListener('pointerleave', handlePointerLeave);
@@ -75,7 +91,9 @@ export default function CustomCursor() {
 
   return (
     <div ref={cursorRef} className="mei-custom-cursor" aria-hidden="true" data-visible="false" data-variant="default">
-      <span ref={labelRef} className="mei-custom-cursor__label" />
+      <div className="mei-custom-cursor__body">
+        <span ref={labelRef} className="mei-custom-cursor__label" />
+      </div>
     </div>
   );
 }

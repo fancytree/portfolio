@@ -1,4 +1,4 @@
-import { fontFamily } from '@/lib/design-tokens';
+import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 
 const operationalRecords = ['Sales', 'Inventory', 'Purchases', 'Receiving'] as const;
 const decisionContext = ['Supplier rules', 'Lead time', 'MOQ', 'Seasonality', 'Delivery history', 'Buyer overrides'] as const;
@@ -67,7 +67,7 @@ export default function AgentReadyContextDiagram() {
           </g>
 
           <g>
-            <rect x="0" y="40" width="640" height="112" rx="6" fill="rgb(255 255 255 / 0.03)" stroke="rgb(255 255 255 / 0.2)" />
+            <rect x="0" y="40" width="640" height="112" rx={caseRadiusPx.sm} fill="rgb(255 255 255 / 0.03)" stroke="rgb(255 255 255 / 0.2)" />
             <text x="24" y="72" fill="#9f9f9f" fontFamily={fontFamily.sans} fontSize="8" fontWeight="700" letterSpacing="1.4">
               OPERATIONAL RECORDS
             </text>
@@ -79,7 +79,7 @@ export default function AgentReadyContextDiagram() {
           </g>
 
           <g>
-            <rect x="0" y="184" width="744" height="120" rx="6" fill="rgb(255 255 255 / 0.03)" stroke="rgb(255 255 255 / 0.2)" />
+            <rect x="0" y="184" width="744" height="120" rx={caseRadiusPx.sm} fill="rgb(255 255 255 / 0.03)" stroke="rgb(255 255 255 / 0.2)" />
             <text x="24" y="216" fill="#7fa2ff" fontFamily={fontFamily.sans} fontSize="8" fontWeight="700" letterSpacing="1.4">
               DECISION CONTEXT
             </text>
@@ -91,7 +91,7 @@ export default function AgentReadyContextDiagram() {
           </g>
 
           <g>
-            <rect x="776" y="88" width="304" height="184" rx="6" fill="rgb(33 85 232 / 0.18)" stroke="#7fa2ff" strokeWidth="1.2" />
+            <rect x="776" y="88" width="304" height="184" rx={caseRadiusPx.sm} fill="rgb(33 85 232 / 0.18)" stroke="#7fa2ff" strokeWidth="1.2" />
             <rect x="800" y="112" width="104" height="20" rx="2" fill="#2155e8" />
             <text x="852" y="126" textAnchor="middle" fill="#ffffff" fontFamily={fontFamily.sans} fontSize="8" fontWeight="700" letterSpacing="1.2">
               STRUCTURED

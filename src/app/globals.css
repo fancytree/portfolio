@@ -120,11 +120,30 @@ body.no-scroll {
     top: 0;
     left: 0;
     z-index: 2147483647;
-    display: inline-flex;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(-100px, -100px, 0);
+    transition: opacity 0.2s ease;
+    will-change: transform, opacity;
+  }
+
+  .mei-custom-cursor[data-visible='true'] {
+    opacity: 1;
+  }
+
+  /* 视觉胶囊与定位点分离，宽度从中心向左右展开 */
+  .mei-custom-cursor__body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
     width: 13px;
     height: 13px;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     border: 1px solid rgb(237 91 43 / 0.9);
     border-radius: 999px;
     background: #ed5b2b;
@@ -134,55 +153,42 @@ body.no-scroll {
     font-weight: 400;
     letter-spacing: 0;
     line-height: 1;
-    opacity: 0;
-    pointer-events: none;
-    transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     transition:
-      width 0.34s cubic-bezier(0.16, 1, 0.3, 1),
-      height 0.34s cubic-bezier(0.16, 1, 0.3, 1),
-      border-radius 0.34s cubic-bezier(0.16, 1, 0.3, 1),
-      border-color 0.24s ease,
-      background-color 0.24s ease,
-      box-shadow 0.3s ease,
-      opacity 0.16s ease;
-    will-change: transform, width, height, opacity;
+      width 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+      height 0.36s cubic-bezier(0.4, 0, 0.2, 1),
+      padding 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.32s ease,
+      background-color 0.32s ease,
+      box-shadow 0.36s ease;
+    will-change: width, height;
   }
 
-  .mei-custom-cursor[data-visible='true'] {
-    opacity: 1;
-  }
-
-  .mei-custom-cursor[data-variant='pill'] {
+  .mei-custom-cursor[data-variant='pill'] .mei-custom-cursor__body {
     width: 52px;
-    height: 24px;
+    height: 26px;
     border-color: rgb(237 91 43 / 0.7);
     background: rgb(237 91 43 / 0.92);
     box-shadow: 0 8px 22px rgb(237 91 43 / 0.16);
   }
 
-  .mei-custom-cursor[data-variant='pill'][data-has-label='true'] {
-    width: 92px;
-    padding: 0 11px;
+  .mei-custom-cursor[data-variant='pill'][data-has-label='true'] .mei-custom-cursor__body {
+    width: var(--cursor-pill-width, auto);
+    height: 26px;
+    padding: 0 9px;
   }
 
   .mei-custom-cursor__label {
-    max-width: 90px;
-    filter: blur(2px);
-    overflow: hidden;
+    flex-shrink: 0;
+    color: #ffffff;
     opacity: 0;
-    transform: translateY(2px) scale(0.94);
-    text-overflow: ellipsis;
-    transition:
-      opacity 0.16s ease 0.06s,
-      transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) 0.04s,
-      filter 0.18s ease 0.04s;
     white-space: nowrap;
+    transition: opacity 0.24s ease;
   }
 
-  .mei-custom-cursor[data-variant='pill'][data-has-label='true'] .mei-custom-cursor__label {
-    filter: blur(0);
+  .mei-custom-cursor[data-has-label='true'] .mei-custom-cursor__label {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transition: opacity 0.22s ease 0.08s;
   }
 }
 
@@ -1233,8 +1239,8 @@ body.no-scroll {
   --case-type-quote-compact: clamp(18px, 2vw, 24px);
   --case-type-lead: clamp(17px, 1.45vw, 20px);
   --case-type-body: clamp(16px, 1.1vw, 18px);
-  --case-type-caption: 13px;
-  /* Shared case-study radius scale. Keep cards and media on one coherent system. */
+  --case-type-caption: clamp(14px, 1vw, 15px);
+  /* 案例页圆角体系：只从这组 token 选取，禁止页面内混用任意半径 */
   --case-radius-sm: 8px;
   --case-radius-md: 12px;
   --case-radius-lg: 16px;
@@ -1243,6 +1249,13 @@ body.no-scroll {
   background: var(--case-bg) !important;
   color: var(--case-ink);
   font-family: var(--mei-font-primary) !important;
+}
+
+/* JobNova 案例页：取消 #fcfcfb 极浅底色，整页纯白。
+   覆盖 token 而非 background，这样 hero 的 var(--case-bg) 一起变，不会出现色差接缝。
+   双类选择器把作用域限定在本页，其他 .mei-project-page 案例页不受影响。 */
+.jobnova-case-study.mei-project-page {
+  --case-bg: #ffffff;
 }
 
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) {
@@ -1451,11 +1464,26 @@ body.no-scroll {
   padding-block: var(--case-space-section) !important;
 }
 
-.case-radius-sm { border-radius: var(--case-radius-sm, 8px); }
-.case-radius-md { border-radius: var(--case-radius-md, 12px); }
-.case-radius-lg { border-radius: var(--case-radius-lg, 16px); }
-.case-radius-xl { border-radius: var(--case-radius-xl, 24px); }
-.case-radius-full { border-radius: var(--case-radius-full, 999px); }
+/* 案例页圆角工具类：sm 标签 / md 内框 / lg 卡片 / xl 媒体 / full pill */
+.case-radius-sm {
+  border-radius: var(--case-radius-sm, 8px);
+}
+
+.case-radius-md {
+  border-radius: var(--case-radius-md, 12px);
+}
+
+.case-radius-lg {
+  border-radius: var(--case-radius-lg, 16px);
+}
+
+.case-radius-xl {
+  border-radius: var(--case-radius-xl, 24px);
+}
+
+.case-radius-full {
+  border-radius: var(--case-radius-full, 999px);
+}
 
 .mei-project-page > section:not(.mei-case-study-hero) > div {
   width: 100%;
@@ -2114,6 +2142,35 @@ body.no-scroll {
 }
 
 .mei-demo-frame__cta:is(:hover, :focus-visible) { opacity: 1; }
+
+.mei-demo-frame__cta-label {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  background: rgb(10 10 10 / 0.82);
+  padding: 8px 14px;
+  font-family: var(--mei-font-primary);
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+}
+
+/* 自定义鼠标开启时：卡片上不展示文案，改由胶囊光标提示 */
+@media (pointer: fine) {
+  html.mei-custom-cursor-enabled .mei-demo-frame__cta {
+    background: none;
+    opacity: 1;
+  }
+
+  html.mei-custom-cursor-enabled .mei-demo-frame__cta-label {
+    display: none;
+  }
+}
 
 /* Touch and reduced-motion users never get the hover, so keep the cue visible. */
 @media (hover: none), (prefers-reduced-motion: reduce) {

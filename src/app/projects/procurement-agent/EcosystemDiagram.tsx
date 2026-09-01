@@ -1,4 +1,4 @@
-import { fontFamily } from '@/lib/design-tokens';
+import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 
 /**
  * Business ecosystem diagram for section 02 of the DEF Beauty Supply case study.
@@ -27,11 +27,11 @@ export default function EcosystemDiagram() {
             </defs>
 
             {/* ===== ZONES (drawn first) ===== */}
-            <rect x="32" y="96" width="400" height="144" rx="8" fill="rgba(22,22,22,0.02)" stroke="rgba(22,22,22,0.10)" strokeWidth="0.8"/>
+            <rect x="32" y="96" width="400" height="144" rx={caseRadiusPx.md} fill="rgba(22,22,22,0.02)" stroke="rgba(22,22,22,0.10)" strokeWidth="0.8"/>
             <rect x="48" y="100" width="72" height="12" rx="2" fill="#ffffff"/>
             <text x="84" y="108" fill="rgba(22,22,22,0.40)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">DEMAND SIDE</text>
 
-            <rect x="464" y="96" width="464" height="496" rx="8" fill="rgba(22,22,22,0.02)" stroke="rgba(22,22,22,0.10)" strokeWidth="0.8"/>
+            <rect x="464" y="96" width="464" height="496" rx={caseRadiusPx.md} fill="rgba(22,22,22,0.02)" stroke="rgba(22,22,22,0.10)" strokeWidth="0.8"/>
             <rect x="480" y="100" width="88" height="12" rx="2" fill="#ffffff"/>
             <text x="524" y="108" fill="rgba(22,22,22,0.40)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.14em">CORE PLATFORM</text>
 
@@ -76,64 +76,64 @@ export default function EcosystemDiagram() {
 
             {/* ===== NODES ===== */}
             {/* Customer (external) */}
-            <rect x="48" y="128" width="144" height="80" rx="6" fill="#ffffff"/>
-            <rect x="48" y="128" width="144" height="80" rx="6" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" strokeWidth="1"/>
+            <rect x="48" y="128" width="144" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="48" y="128" width="144" height="80" rx={caseRadiusPx.sm} fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" strokeWidth="1"/>
             <rect x="60" y="136" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.24)" strokeWidth="0.8"/>
             <text x="76" y="144" fill="rgba(22,22,22,0.55)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">USER</text>
             <text x="120" y="176" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Customer</text>
             <text x="120" y="192" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">pro salons</text>
 
             {/* WeChat Store (external) */}
-            <rect x="240" y="128" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="240" y="128" width="160" height="80" rx="6" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" strokeWidth="1"/>
+            <rect x="240" y="128" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="240" y="128" width="160" height="80" rx={caseRadiusPx.sm} fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" strokeWidth="1"/>
             <rect x="252" y="136" width="52" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.24)" strokeWidth="0.8"/>
             <text x="278" y="144" fill="rgba(22,22,22,0.55)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">CHANNEL</text>
             <text x="320" y="176" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">WeChat Store</text>
             <text x="320" y="192" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">storefront</text>
 
             {/* Sales Order */}
-            <rect x="496" y="128" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="496" y="128" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" strokeWidth="1"/>
+            <rect x="496" y="128" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="496" y="128" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#161616" strokeWidth="1"/>
             <rect x="508" y="136" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" strokeWidth="0.8"/>
             <text x="524" y="144" fill="rgba(22,22,22,0.70)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">CORE</text>
             <text x="576" y="176" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Sales Order</text>
             <text x="576" y="192" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">demand</text>
 
             {/* Inventory */}
-            <rect x="496" y="304" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="496" y="304" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" strokeWidth="1"/>
+            <rect x="496" y="304" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="496" y="304" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#161616" strokeWidth="1"/>
             <rect x="508" y="312" width="40" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" strokeWidth="0.8"/>
             <text x="528" y="320" fill="rgba(22,22,22,0.70)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">STORE</text>
             <text x="576" y="352" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Inventory</text>
             <text x="576" y="368" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">stock · incoming</text>
 
             {/* Finance */}
-            <rect x="736" y="304" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="736" y="304" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" strokeWidth="1"/>
+            <rect x="736" y="304" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="736" y="304" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#161616" strokeWidth="1"/>
             <rect x="748" y="312" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" strokeWidth="0.8"/>
             <text x="764" y="320" fill="rgba(22,22,22,0.70)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">CORE</text>
             <text x="816" y="352" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Finance</text>
             <text x="816" y="368" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">invoice · cash</text>
 
             {/* Procurement (FOCAL) */}
-            <rect x="496" y="480" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="496" y="480" width="160" height="80" rx="6" fill="#e9eef8" stroke="#2155e8" strokeWidth="1"/>
+            <rect x="496" y="480" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="496" y="480" width="160" height="80" rx={caseRadiusPx.sm} fill="#e9eef8" stroke="#2155e8" strokeWidth="1"/>
             <rect x="508" y="488" width="40" height="12" rx="2" fill="transparent" stroke="rgba(33,85,232,0.40)" strokeWidth="0.8"/>
             <text x="528" y="496" fill="#2155e8" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">FOCUS</text>
             <text x="576" y="528" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Procurement</text>
             <text x="576" y="544" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">lifecycle · states</text>
 
             {/* Receiving */}
-            <rect x="736" y="480" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="736" y="480" width="160" height="80" rx="6" fill="#ffffff" stroke="#161616" strokeWidth="1"/>
+            <rect x="736" y="480" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="736" y="480" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#161616" strokeWidth="1"/>
             <rect x="748" y="488" width="32" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.40)" strokeWidth="0.8"/>
             <text x="764" y="496" fill="rgba(22,22,22,0.70)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">CORE</text>
             <text x="816" y="528" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Receiving</text>
             <text x="816" y="544" fill="#555555" fontSize="9" fontFamily={fontFamily.mono} textAnchor="middle">ddt · variance</text>
 
             {/* Supplier (external) */}
-            <rect x="976" y="624" width="160" height="80" rx="6" fill="#ffffff"/>
-            <rect x="976" y="624" width="160" height="80" rx="6" fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" strokeWidth="1"/>
+            <rect x="976" y="624" width="160" height="80" rx={caseRadiusPx.sm} fill="#ffffff"/>
+            <rect x="976" y="624" width="160" height="80" rx={caseRadiusPx.sm} fill="rgba(22,22,22,0.03)" stroke="rgba(22,22,22,0.30)" strokeWidth="1"/>
             <rect x="988" y="632" width="56" height="12" rx="2" fill="transparent" stroke="rgba(22,22,22,0.24)" strokeWidth="0.8"/>
             <text x="1016" y="640" fill="rgba(22,22,22,0.55)" fontSize="7" fontFamily={fontFamily.mono} textAnchor="middle" letterSpacing="0.08em">EXTERNAL</text>
             <text x="1056" y="672" fill="#161616" fontSize="12" fontWeight="600" fontFamily={fontFamily.sans} textAnchor="middle">Supplier</text>

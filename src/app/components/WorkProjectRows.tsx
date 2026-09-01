@@ -12,6 +12,8 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
           key={project.title}
           href={project.href}
           className="mei-interactive-row group flex flex-col gap-2 py-6 first:pt-0"
+          data-cursor="pill"
+          data-cursor-label="View project"
           style={{ transitionDelay: `${projectIndex * 24}ms` }}
         >
           <div className="flex items-start justify-between gap-4">

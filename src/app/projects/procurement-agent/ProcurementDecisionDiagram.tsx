@@ -1,4 +1,4 @@
-import { fontFamily } from '@/lib/design-tokens';
+import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 
 const inputs = [
   { index: '01', title: 'Experience', detail: 'Context and exceptions', x: 40, y: 40 },
@@ -51,7 +51,7 @@ export default function ProcurementDecisionDiagram() {
 
           {inputs.map((input) => (
             <g key={input.title}>
-              <rect x={input.x} y={input.y} width="240" height="80" rx="6" fill="#f4f4f4" stroke="#d8d8d8" />
+              <rect x={input.x} y={input.y} width="240" height="80" rx={caseRadiusPx.sm} fill="#f4f4f4" stroke="#d8d8d8" />
               <text x={input.x + 20} y={input.y + 24} fill="#2155e8" fontFamily={fontFamily.sans} fontSize="8" fontWeight="700" letterSpacing="1.2">
                 {input.index}
               </text>
@@ -65,7 +65,7 @@ export default function ProcurementDecisionDiagram() {
           ))}
 
           <g>
-            <rect x="400" y="164" width="280" height="160" rx="6" fill="#e9eef8" stroke="#2155e8" strokeWidth="1.2" />
+            <rect x="400" y="164" width="280" height="160" rx={caseRadiusPx.sm} fill="#e9eef8" stroke="#2155e8" strokeWidth="1.2" />
             <rect x="420" y="184" width="112" height="20" rx="2" fill="#ed5b2b" />
             <text x="476" y="198" textAnchor="middle" fill="#ffffff" fontFamily={fontFamily.sans} fontSize="8" fontWeight="700" letterSpacing="1.2">
               SYNTHESIZE

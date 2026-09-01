@@ -10,7 +10,7 @@ import ProcurementDemoEmbed from './ProcurementDemoEmbed';
 import ProcurementDecisionDiagram from './ProcurementDecisionDiagram';
 import ProcurementLearningLoop from './ProcurementLearningLoop';
 import ResponsibilityArchitectureDiagram from './ResponsibilityArchitectureDiagram';
-import { fontFamily } from '@/lib/design-tokens';
+import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
 
 export const metadata: Metadata = {
@@ -128,7 +128,7 @@ function ThreeStageEvolution() {
         </article>
       </div>
 
-      <div className="case-radius-lg flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
+      <div className="case-radius-lg overflow-hidden flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
           AI as tool
         </p>
@@ -191,7 +191,7 @@ function ResponsibilityShiftDiagram() {
         <path d="M616 248 V360 H664" fill="none" stroke="#ed5b2b" strokeWidth="1.2" markerEnd="url(#phase-one-arrow-orange)" />
         <circle cx="616" cy="248" r="4" fill="#161616" stroke="rgba(255,255,255,0.4)" strokeWidth="1.2" />
 
-        <rect x="40" y="72" width="320" height="384" rx="8" fill="#202020" stroke="rgba(255,255,255,0.18)" />
+        <rect x="40" y="72" width="320" height="384" rx={caseRadiusPx.sm} fill="#202020" stroke="rgba(255,255,255,0.18)" />
         <text x="64" y="108" fill="#afafaf" fontSize="8" fontWeight="700" letterSpacing="1.2">BUYER OWNED</text>
         <text x="64" y="140" fill="#ffffff" fontSize="20" fontWeight="700">The full workflow</text>
         <line x1="64" y1="160" x2="336" y2="160" stroke="rgba(255,255,255,0.14)" />
@@ -206,26 +206,26 @@ function ResponsibilityShiftDiagram() {
           );
         })}
 
-        <rect x="432" y="216" width="144" height="64" rx="8" fill="#161616" stroke="rgba(255,255,255,0.28)" />
+        <rect x="432" y="216" width="144" height="64" rx={caseRadiusPx.sm} fill="#161616" stroke="rgba(255,255,255,0.28)" />
         <text x="504" y="240" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="700" letterSpacing="1.2">PHASE 1</text>
         <text x="504" y="260" textAnchor="middle" fill="#777777" fontSize="8" fontWeight="600">Records connected</text>
 
-        <rect x="664" y="72" width="376" height="148" rx="8" fill="rgba(127,162,255,0.12)" stroke="#7fa2ff" strokeWidth="1.2" />
+        <rect x="664" y="72" width="376" height="148" rx={caseRadiusPx.sm} fill="rgba(127,162,255,0.12)" stroke="#7fa2ff" strokeWidth="1.2" />
         <text x="688" y="104" fill="#7fa2ff" fontSize="8" fontWeight="700" letterSpacing="1.2">SYSTEM NOW</text>
         <text x="688" y="132" fill="#ffffff" fontSize="16" fontWeight="700">Operational work moves to the system</text>
-        <rect x="688" y="156" width="144" height="40" rx="6" fill="rgba(127,162,255,0.12)" stroke="rgba(127,162,255,0.46)" />
+        <rect x="688" y="156" width="144" height="40" rx={caseRadiusPx.sm} fill="rgba(127,162,255,0.12)" stroke="rgba(127,162,255,0.46)" />
         <text x="760" y="180" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Retrieve data</text>
-        <rect x="840" y="156" width="176" height="40" rx="6" fill="rgba(127,162,255,0.12)" stroke="rgba(127,162,255,0.46)" />
+        <rect x="840" y="156" width="176" height="40" rx={caseRadiusPx.sm} fill="rgba(127,162,255,0.12)" stroke="rgba(127,162,255,0.46)" />
         <text x="928" y="180" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Organize workflow</text>
 
-        <rect x="664" y="264" width="376" height="192" rx="8" fill="rgba(237,91,43,0.10)" stroke="#ed5b2b" strokeWidth="1.2" />
+        <rect x="664" y="264" width="376" height="192" rx={caseRadiusPx.sm} fill="rgba(237,91,43,0.10)" stroke="#ed5b2b" strokeWidth="1.2" />
         <text x="688" y="296" fill="#ed5b2b" fontSize="8" fontWeight="700" letterSpacing="1.2">BUYER STILL</text>
         <text x="688" y="324" fill="#ffffff" fontSize="16" fontWeight="700">Decision authority stays human</text>
-        <rect x="688" y="344" width="104" height="40" rx="6" fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
+        <rect x="688" y="344" width="104" height="40" rx={caseRadiusPx.sm} fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
         <text x="740" y="368" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Calculate</text>
-        <rect x="804" y="344" width="192" height="40" rx="6" fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
+        <rect x="804" y="344" width="192" height="40" rx={caseRadiusPx.sm} fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
         <text x="900" y="368" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Apply supplier rules</text>
-        <rect x="688" y="396" width="152" height="40" rx="6" fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
+        <rect x="688" y="396" width="152" height="40" rx={caseRadiusPx.sm} fill="rgba(237,91,43,0.10)" stroke="rgba(237,91,43,0.5)" />
         <text x="764" y="420" textAnchor="middle" fill="#ffffff" fontSize="12" fontWeight="600">Make judgment</text>
         <text x="856" y="412" fill="#afafaf" fontSize="8" fontWeight="700" letterSpacing="0.8">FINAL AUTHORITY</text>
         <text x="856" y="432" fill="#ffffff" fontSize="12" fontWeight="600">Place formal order</text>
@@ -317,7 +317,7 @@ function DesignResultEvidenceBackedAgency() {
         <p className="m-0 mb-5 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
           What required an Agent
         </p>
-        <div className="grid gap-px bg-white/20 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="case-radius-md overflow-hidden grid gap-px bg-white/20 sm:grid-cols-2 lg:grid-cols-5">
           {[
             {
               title: 'Interpret the goal',
@@ -352,7 +352,7 @@ function DesignResultEvidenceBackedAgency() {
         </div>
       </div>
 
-      <div className="case-radius-lg flex flex-col gap-6 border border-[#d8d8d8] bg-white p-[clamp(22px,4vw,40px)]">
+      <div className="case-radius-lg overflow-hidden flex flex-col gap-6 border border-[#d8d8d8] bg-white p-[clamp(22px,4vw,40px)]">
         <div className="flex flex-col gap-2 opacity-55">
           <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Not</p>
           <p className="m-0 text-[17px] font-bold text-[#555] line-through" style={bodyStyle}>How can AI automate procurement?</p>
@@ -369,7 +369,7 @@ function DesignResultEvidenceBackedAgency() {
         </div>
       </div>
 
-      <div className="case-radius-lg mt-[clamp(72px,10vw,128px)] flex flex-col gap-8 bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="08 / Agent-ready System">
+      <div className="case-radius-lg mt-[clamp(72px,10vw,128px)] flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="08 / Agent-ready System">
         <ChapterTitle inverse>08 / Agent-ready System</ChapterTitle>
         <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
           The Agent needed structured context and a defined role.
@@ -523,7 +523,7 @@ function AgentUxIterationsSection() {
 
         <div className="flex flex-col gap-3">
           {agentUxIterations.map((iteration) => (
-            <details key={iteration.index} className="case-radius-lg group overflow-hidden border border-[#d8d8d8] bg-white open:border-[#2155e8]">
+            <details key={iteration.index} className="case-radius-lg overflow-hidden group border border-[#d8d8d8] bg-white open:border-[#2155e8]">
               <summary className="grid cursor-pointer list-none gap-4 p-[clamp(18px,3vw,26px)] sm:grid-cols-[44px_minmax(220px,0.8fr)_1fr_24px] sm:items-center">
                 <span className="text-[11px] font-bold text-[#777]" style={bodyStyle}>{iteration.index}</span>
                 <span className="flex items-center gap-3 text-[15px] font-bold text-[#161616]" style={bodyStyle}>
@@ -548,7 +548,7 @@ function AgentUxIterationsSection() {
                   <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Design iteration</p>
                   <div className="grid gap-2 md:grid-cols-2">
                     {iteration.changes.map((change) => (
-                      <p key={change} className="m-0 bg-[#f4f4f4] px-4 py-3 text-[12px] font-normal leading-[1.5] text-[#161616]" style={bodyStyle}>{change}</p>
+                      <p key={change} className="case-radius-sm m-0 bg-[#f4f4f4] px-4 py-3 text-[12px] font-normal leading-[1.5] text-[#161616]" style={bodyStyle}>{change}</p>
                     ))}
                   </div>
                 </div>
@@ -561,7 +561,7 @@ function AgentUxIterationsSection() {
           ))}
         </div>
 
-        <div className="case-radius-lg bg-[#2155e8] p-[clamp(24px,4vw,40px)]">
+        <div className="case-radius-lg overflow-hidden bg-[#2155e8] p-[clamp(24px,4vw,40px)]">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>Iteration outcome</p>
           <h3 className="m-0 mt-4 max-w-[880px] text-[clamp(24px,3.2vw,34px)] font-bold leading-[1.2] tracking-[-0.02em] text-white" style={bodyStyle}>
             The Agent moved from explaining the workflow to coordinating it.
@@ -613,20 +613,20 @@ function ProcurementWorkspaceTreeDiagram() {
           <path d="M800 192 V232 H984" fill="none" stroke="#777777" />
           <path d="M816 232 V280 M984 232 V280" fill="none" stroke="#777777" />
 
-          <rect x="420" y="24" width="240" height="56" rx="8" fill="#161616" stroke="#161616" />
+          <rect x="420" y="24" width="240" height="56" rx={caseRadiusPx.sm} fill="#161616" stroke="#161616" />
           <text x="540" y="48" textAnchor="middle" fill="#ffffff" fontSize="8" fontWeight="700" letterSpacing="1.2">ROOT WORKSPACE</text>
           <text x="540" y="68" textAnchor="middle" fill="#ffffff" fontSize="16" fontWeight="700">Procurement Workspace</text>
 
-          <rect x="240" y="136" width="240" height="56" rx="8" fill="#f4f4f4" stroke="#777777" />
+          <rect x="240" y="136" width="240" height="56" rx={caseRadiusPx.sm} fill="#f4f4f4" stroke="#777777" />
           <text x="360" y="160" textAnchor="middle" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">OPERATE</text>
           <text x="360" y="180" textAnchor="middle" fill="#161616" fontSize="16" fontWeight="700">Plan and execute</text>
-          <rect x="680" y="136" width="240" height="56" rx="8" fill="#f4f4f4" stroke="#777777" />
+          <rect x="680" y="136" width="240" height="56" rx={caseRadiusPx.sm} fill="#f4f4f4" stroke="#777777" />
           <text x="800" y="160" textAnchor="middle" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">CONTROL</text>
           <text x="800" y="180" textAnchor="middle" fill="#161616" fontSize="16" fontWeight="700">Govern and learn</text>
 
           {leaves.map((leaf) => (
             <g key={leaf.title}>
-              <rect x={leaf.x} y="280" width="144" height="88" rx="8" fill={leaf.focal ? '#e9eef8' : '#ffffff'} stroke={leaf.focal ? '#2155e8' : '#cfcfcf'} strokeWidth={leaf.focal ? 1.2 : 1} />
+              <rect x={leaf.x} y="280" width="144" height="88" rx={caseRadiusPx.sm} fill={leaf.focal ? '#e9eef8' : '#ffffff'} stroke={leaf.focal ? '#2155e8' : '#cfcfcf'} strokeWidth={leaf.focal ? 1.2 : 1} />
               <text x={leaf.x + 16} y="312" fill={leaf.focal ? '#2155e8' : '#161616'} fontSize="12" fontWeight="700">{leaf.title}</text>
               <text x={leaf.x + 16} y="340" fill="#777777" fontSize="8" fontWeight="600">{leaf.note}</text>
             </g>
@@ -658,7 +658,7 @@ function AgentSemanticLayersDiagram() {
           <text x="28" y="56" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="0.8">STATE</text>
           <text x="16" y="468" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="0.8">BEHAVIOR</text>
 
-          <rect x="80" y="40" width="960" height="92" rx="8" fill="#ffffff" stroke="#cfcfcf" />
+          <rect x="80" y="40" width="960" height="92" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#cfcfcf" />
           <text x="104" y="72" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L1</text>
           <text x="152" y="80" fill="#161616" fontSize="16" fontWeight="700">Semantic states</text>
           {[
@@ -669,12 +669,12 @@ function AgentSemanticLayersDiagram() {
             { x: 880, w: 112, label: 'APPROVAL', fill: '#f6f0df', color: '#8a6500' },
           ].map((state) => (
             <g key={state.label}>
-              <rect x={state.x} y="64" width={state.w} height="40" rx="6" fill={state.fill} />
+              <rect x={state.x} y="64" width={state.w} height="40" rx={caseRadiusPx.sm} fill={state.fill} />
               <text x={state.x + state.w / 2} y="88" textAnchor="middle" fill={state.color} fontSize="8" fontWeight="700" letterSpacing="0.4">{state.label}</text>
             </g>
           ))}
 
-          <rect x="80" y="148" width="960" height="92" rx="8" fill="#f4f4f4" stroke="#cfcfcf" />
+          <rect x="80" y="148" width="960" height="92" rx={caseRadiusPx.sm} fill="#f4f4f4" stroke="#cfcfcf" />
           <text x="104" y="180" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L2</text>
           <text x="152" y="188" fill="#161616" fontSize="16" fontWeight="700">Evidence and explanation</text>
           {[
@@ -684,25 +684,25 @@ function AgentSemanticLayersDiagram() {
             { x: 856, w: 136, label: 'DecisionTrace' },
           ].map((item) => (
             <g key={item.label}>
-              <rect x={item.x} y="172" width={item.w} height="40" rx="6" fill="#ffffff" stroke="#d8d8d8" />
+              <rect x={item.x} y="172" width={item.w} height="40" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#d8d8d8" />
               <text x={item.x + item.w / 2} y="196" textAnchor="middle" fill="#161616" fontSize="8" fontWeight="700">{item.label}</text>
             </g>
           ))}
 
-          <rect x="80" y="256" width="960" height="92" rx="8" fill="#ffffff" stroke="#cfcfcf" />
+          <rect x="80" y="256" width="960" height="92" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#cfcfcf" />
           <text x="104" y="288" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L3</text>
           <text x="152" y="296" fill="#161616" fontSize="16" fontWeight="700">Risk and action</text>
-          <rect x="584" y="280" width="136" height="40" rx="6" fill="#f5e8e7" stroke="#d8b8b5" />
+          <rect x="584" y="280" width="136" height="40" rx={caseRadiusPx.sm} fill="#f5e8e7" stroke="#d8b8b5" />
           <text x="652" y="304" textAnchor="middle" fill="#9c2e2e" fontSize="8" fontWeight="700">RiskBanner</text>
-          <rect x="736" y="280" width="176" height="40" rx="6" fill="#ffffff" stroke="#d8d8d8" />
+          <rect x="736" y="280" width="176" height="40" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#d8d8d8" />
           <text x="824" y="304" textAnchor="middle" fill="#161616" fontSize="8" fontWeight="700">AgentActionFooter</text>
 
-          <rect x="80" y="364" width="960" height="92" rx="8" fill="#f4f4f4" stroke="#cfcfcf" />
+          <rect x="80" y="364" width="960" height="92" rx={caseRadiusPx.sm} fill="#f4f4f4" stroke="#cfcfcf" />
           <text x="104" y="396" fill="#777777" fontSize="8" fontWeight="700" letterSpacing="1.2">L4</text>
           <text x="152" y="404" fill="#161616" fontSize="16" fontWeight="700">Governance and learning</text>
-          <rect x="560" y="388" width="144" height="40" rx="6" fill="#f6f0df" stroke="#d8c99d" />
+          <rect x="560" y="388" width="144" height="40" rx={caseRadiusPx.sm} fill="#f6f0df" stroke="#d8c99d" />
           <text x="632" y="412" textAnchor="middle" fill="#8a6500" fontSize="8" fontWeight="700">ApprovalGate</text>
-          <rect x="720" y="388" width="216" height="40" rx="6" fill="#e9eef8" stroke="#b8c6ea" />
+          <rect x="720" y="388" width="216" height="40" rx={caseRadiusPx.sm} fill="#e9eef8" stroke="#b8c6ea" />
           <text x="828" y="412" textAnchor="middle" fill="#2155e8" fontSize="8" fontWeight="700">LearningCandidateCard</text>
         </svg>
       </div>
@@ -725,7 +725,7 @@ function InteractiveDemo() {
           alt="Procurement Agent workspace with the purchase order and the agent panel side by side"
           width={1600}
           height={1000}
-          className="h-auto w-full"
+          className="case-radius-xl h-auto w-full"
         />
         <p className="m-0 text-[13px] font-normal leading-[1.55] text-[#3b3b3b]" style={bodyStyle}>
           The demo needs a desktop-sized window to lay out its three panes.
@@ -852,7 +852,7 @@ export default function ProcurementAgentPage() {
             </p>
           </div>
 
-          <div className="bg-[#161616] p-[clamp(24px,4vw,44px)]">
+          <div className="case-radius-lg overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
             <p className="m-0 mb-7 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
               The old purchasing flow
             </p>
@@ -871,7 +871,7 @@ export default function ProcurementAgentPage() {
                     'Manually search SKU one by one',
                     'Stock-in',
                   ].map((step, index, steps) => (
-                    <div key={step} className="relative flex min-h-[104px] flex-col justify-between border border-white/20 bg-[#202020] px-3 py-4">
+                    <div key={step} className="case-radius-md overflow-hidden relative flex min-h-[104px] flex-col justify-between border border-white/20 bg-[#202020] px-3 py-4">
                       <span className="text-[10px] font-bold text-[#7fa2ff]" style={bodyStyle}>
                         {String(index + 1).padStart(2, '0')}
                       </span>
@@ -898,12 +898,12 @@ export default function ProcurementAgentPage() {
                         aria-hidden
                       />
                       <span
-                        className="absolute top-0 size-[7px] -translate-x-1/2 rounded-full bg-[#2155e8]"
+                        className="absolute top-0 size-[7px] -translate-x-1/2 case-radius-full bg-[#2155e8]"
                         style={{ left: item.left }}
                         aria-hidden
                       />
                       <article
-                        className="absolute flex min-h-[56px] w-[168px] -translate-x-1/2 items-center border px-3 py-2"
+                        className="case-radius-md overflow-hidden absolute flex min-h-[56px] w-[168px] -translate-x-1/2 items-center border px-3 py-2"
                         style={{
                           background: item.primary ? '#2155e8' : '#172348',
                           borderColor: '#2155e8',
@@ -994,7 +994,7 @@ export default function ProcurementAgentPage() {
 
           <ResponsibilityArchitectureDiagram />
 
-          <div className="border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,32px)] py-6">
+          <div className="case-radius-lg overflow-hidden border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,32px)] py-6">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>Rationale</p>
             <p className="m-0 mt-3 max-w-[960px] text-[18px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
               Quantity affects cash, inventory risk, and supplier commitments, so the recommendation must be reproducible from business inputs, not generated probabilistically.
@@ -1013,7 +1013,7 @@ export default function ProcurementAgentPage() {
             This was not a static flow. The Agent workflow preserves state, resumes after external work, uses system tools, and pauses whenever human action is required.
           </p>
 
-          <div className="case-radius-lg grid grid-cols-2 gap-px overflow-hidden bg-[#d8d8d8] lg:grid-cols-4">
+          <div className="case-radius-lg overflow-hidden grid grid-cols-2 gap-px bg-[#d8d8d8] lg:grid-cols-4">
             {[
               { label: 'Stateful', body: 'Carry the purchase context across the task.' },
               { label: 'Resumable', body: 'Continue after approval, clarification, or external supplier response.' },
@@ -1027,7 +1027,7 @@ export default function ProcurementAgentPage() {
             ))}
           </div>
 
-          <div className="border-l-[5px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
+          <div className="case-radius-lg overflow-hidden border-l-[5px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
             <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
               Implementation note
             </p>
@@ -1050,7 +1050,7 @@ export default function ProcurementAgentPage() {
             </p>
           </div>
 
-          <div className="case-radius-lg grid gap-px overflow-hidden bg-[#b8c6ea] lg:grid-cols-[0.9fr_1.15fr_0.95fr]">
+          <div className="case-radius-lg overflow-hidden grid gap-px bg-[#b8c6ea] lg:grid-cols-[0.9fr_1.15fr_0.95fr]">
             {[
               {
                 label: 'Agent can',
@@ -1107,7 +1107,7 @@ export default function ProcurementAgentPage() {
             ))}
           </div>
 
-          <div className="case-radius-lg grid gap-px overflow-hidden bg-[#b8c6ea] sm:grid-cols-5">
+          <div className="case-radius-lg overflow-hidden grid gap-px bg-[#b8c6ea] sm:grid-cols-5">
             {[
               { label: 'Evidence', body: 'Show the source behind every recommendation.' },
               { label: 'Confidence', body: 'Signal uncertainty without false precision.' },
@@ -1125,7 +1125,7 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
-        <div className="flex flex-col gap-9 bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="12 / Closing the Loop">
+        <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="12 / Closing the Loop">
           <ChapterTitle inverse>12 / Closing the Loop</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-white" style={bodyStyle}>
             Every outcome becomes evidence for the next purchasing decision.
@@ -1156,7 +1156,7 @@ export default function ProcurementAgentPage() {
             <AgentSemanticLayersDiagram />
           </div>
 
-          <div className="flex flex-col gap-3 border-l-[4px] border-[#2155e8] bg-white px-5 py-5 sm:flex-row sm:items-baseline sm:gap-6">
+          <div className="case-radius-lg overflow-hidden flex flex-col gap-3 border-l-[4px] border-[#2155e8] bg-white px-5 py-5 sm:flex-row sm:items-baseline sm:gap-6">
             <p className="m-0 shrink-0 text-[10px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>
               CONSISTENCY RULE
             </p>
@@ -1176,7 +1176,7 @@ export default function ProcurementAgentPage() {
             Validate safety and comprehension before speed.
           </h2>
 
-          <div className="case-radius-lg grid gap-px overflow-hidden bg-[#d8d8d8] lg:grid-cols-2">
+          <div className="case-radius-lg overflow-hidden grid gap-px bg-[#d8d8d8] lg:grid-cols-2">
             <article className="bg-[#161616] p-[clamp(22px,3vw,32px)]">
               <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
                 What I already validated
@@ -1250,7 +1250,7 @@ export default function ProcurementAgentPage() {
                     body: 'Whether reviewed memory improves later recommendations.',
                   },
                 ].map((metric) => (
-                  <div key={metric.label} className="flex min-h-[132px] flex-col justify-between gap-4 bg-white p-4">
+                  <div key={metric.label} className="case-radius-lg flex min-h-[132px] flex-col justify-between gap-4 bg-white p-4">
                     <p className="m-0 text-[13px] font-bold leading-[1.4] text-[#161616]" style={bodyStyle}>
                       {metric.label}
                     </p>
@@ -1266,7 +1266,7 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section className="overflow-x-clip bg-[#f4f4f4]" style={sectionStyle}>
-        <div className="flex max-w-[1080px] flex-col gap-6 bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="15 / Results & Measurement">
+        <div className="case-radius-lg flex max-w-[1080px] flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="15 / Results & Measurement">
             <ChapterTitle inverse>15 / Results & Measurement</ChapterTitle>
             <h2 className="m-0 max-w-[520px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.14] text-white" style={bodyStyle}>
               A functional Agent-ready procurement MVP.
@@ -1278,7 +1278,7 @@ export default function ProcurementAgentPage() {
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
               System capabilities
             </p>
-            <div className="grid gap-px bg-white/20 sm:grid-cols-2">
+            <div className="case-radius-md overflow-hidden grid gap-px bg-white/20 sm:grid-cols-2">
               {[
                 { title: 'One traceable procurement lifecycle', body: 'Purchase, confirmation, DDT, receiving, and stock-in share one context.' },
                 { title: 'One reproducible recommendation model', body: 'Every quantity can be recalculated from explicit data and business rules.' },
@@ -1303,7 +1303,7 @@ export default function ProcurementAgentPage() {
                 { value: '5', label: 'critical validation scenarios' },
                 { value: '1', label: 'shared workbench for plan + conversation' },
               ].map((metric) => (
-                <div key={metric.label} className="flex min-h-[76px] items-end gap-3 border border-white/15 px-4 py-3">
+                <div key={metric.label} className="case-radius-lg overflow-hidden flex min-h-[76px] items-end gap-3 border border-white/15 px-4 py-3">
                   <p className="m-0 shrink-0 text-[18px] font-bold text-white" style={bodyStyle}>
                     {metric.value}
                   </p>
@@ -1327,7 +1327,7 @@ export default function ProcurementAgentPage() {
                 Throughout this work, the most challenging decisions were not about capabilities or automation. They were about boundaries: what evidence the Agent needed to support a recommendation, when it should pause instead of continuing, and who remained accountable when the formal order was placed.
               </p>
             </div>
-            <div className="mt-auto border-l-[5px] border-[#2155e8] bg-[#f4f4f4] px-5 py-5">
+            <div className="case-radius-lg overflow-hidden mt-auto border-l-[5px] border-[#2155e8] bg-[#f4f4f4] px-5 py-5">
               <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
                 Final reflection
               </p>

@@ -79,21 +79,19 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
           }
         />
 
-        {/* Until it is fullscreen the card is a preview: one click target over the
-            whole demo, so a stray click cannot land inside a shrunken UI. */}
+        {/* 预览态整卡可点；桌面用鼠标胶囊提示，不在卡片上画按钮 */}
         {!isFullscreen ? (
           <button
             type="button"
             onClick={toggle}
             disabled={!supported}
-            className="mei-demo-frame__cta absolute inset-0 flex items-end justify-start p-4 text-left disabled:cursor-default"
+            className="mei-demo-frame__cta absolute inset-0 disabled:cursor-default"
+            data-cursor={supported ? 'pill' : undefined}
+            data-cursor-label={supported ? 'Open fullscreen' : undefined}
             aria-label={supported ? `Open the ${title} demo fullscreen` : `${title} demo preview`}
           >
             {supported ? (
-              <span
-                className="inline-flex items-center gap-2 rounded-full bg-[#0a0a0a]/82 px-3.5 py-2 text-[13px] font-medium text-white backdrop-blur-sm"
-                style={{ fontFamily: 'var(--mei-font-primary)' }}
-              >
+              <span className="mei-demo-frame__cta-label">
                 <Maximize2 aria-hidden size={14} />
                 Open fullscreen
               </span>

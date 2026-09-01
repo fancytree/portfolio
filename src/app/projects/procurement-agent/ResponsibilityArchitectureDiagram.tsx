@@ -1,4 +1,4 @@
-import { fontFamily } from '@/lib/design-tokens';
+import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 
 const llmResponsibilities = [
   'Interpret intent',
@@ -86,7 +86,7 @@ export default function ResponsibilityArchitectureDiagram() {
           </g>
 
           <g>
-            <rect x="40" y="112" width="260" height="256" rx="6" fill="#ffffff" stroke="#d8d8d8" />
+            <rect x="40" y="112" width="260" height="256" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#d8d8d8" />
             <text x="64" y="144" fill="#777777" fontFamily={fontFamily.sans} fontSize="9" fontWeight="700" letterSpacing="1.4">
               INTERPRET
             </text>
@@ -101,7 +101,7 @@ export default function ResponsibilityArchitectureDiagram() {
           </g>
 
           <g>
-            <rect x="380" y="80" width="320" height="320" rx="6" fill="#e9eef8" stroke="#2155e8" strokeWidth="1.2" />
+            <rect x="380" y="80" width="320" height="320" rx={caseRadiusPx.sm} fill="#e9eef8" stroke="#2155e8" strokeWidth="1.2" />
             <rect x="404" y="104" width="84" height="20" rx="2" fill="#2155e8" />
             <text x="446" y="118" textAnchor="middle" fill="#ffffff" fontFamily={fontFamily.sans} fontSize="8" fontWeight="700" letterSpacing="1.2">
               CALCULATE
@@ -121,7 +121,7 @@ export default function ResponsibilityArchitectureDiagram() {
           </g>
 
           <g>
-            <rect x="780" y="128" width="260" height="224" rx="6" fill="#ffffff" stroke="#d8d8d8" />
+            <rect x="780" y="128" width="260" height="224" rx={caseRadiusPx.sm} fill="#ffffff" stroke="#d8d8d8" />
             <text x="804" y="160" fill="#ed5b2b" fontFamily={fontFamily.sans} fontSize="9" fontWeight="700" letterSpacing="1.4">
               DECIDE
             </text>
