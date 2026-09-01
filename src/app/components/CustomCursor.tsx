@@ -21,6 +21,10 @@ function getCursorVariant(target: EventTarget | null) {
   return 'pill';
 }
 
+function isFooterTarget(target: EventTarget | null) {
+  return target instanceof Element && Boolean(target.closest('footer'));
+}
+
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
@@ -55,6 +59,7 @@ export default function CustomCursor() {
       targetY = event.clientY;
       cursor.dataset.visible = 'true';
       cursor.dataset.variant = getCursorVariant(event.target);
+      cursor.dataset.surface = isFooterTarget(event.target) ? 'footer' : 'default';
 
       const nextLabel = getCursorLabel(event.target);
       cursor.dataset.hasLabel = nextLabel ? 'true' : 'false';
@@ -90,7 +95,7 @@ export default function CustomCursor() {
   }, []);
 
   return (
-    <div ref={cursorRef} className="mei-custom-cursor" aria-hidden="true" data-visible="false" data-variant="default">
+    <div ref={cursorRef} className="mei-custom-cursor" aria-hidden="true" data-visible="false" data-variant="default" data-surface="default">
       <div className="mei-custom-cursor__body">
         <span ref={labelRef} className="mei-custom-cursor__label" />
       </div>

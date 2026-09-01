@@ -178,6 +178,13 @@ body.no-scroll {
     padding: 0 9px;
   }
 
+  /* The orange footer needs a high-contrast cursor surface. */
+  .mei-custom-cursor[data-surface='footer'] .mei-custom-cursor__body {
+    border-color: rgb(17 17 17 / 0.9);
+    background: #111111;
+    box-shadow: 0 8px 22px rgb(17 17 17 / 0.2);
+  }
+
   .mei-custom-cursor__label {
     flex-shrink: 0;
     color: #ffffff;
