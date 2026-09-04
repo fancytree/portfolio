@@ -77,8 +77,7 @@ combine experience, sales, inventory, supplier constraints, lead time and season
 ## 07 Why an Agent (and not another dashboard)
 A dashboard could expose data, but could not dynamically interpret a purchasing goal, gather
 the right context, resolve missing inputs, coordinate calculations, and decide what required
-human attention. Buyer quote: "Don't just give me the data. Help me calculate a reasonable
-purchasing plan from it."
+human attention. Buyer quote: "Don't just give me the numbers. Explain them."
 What required an agent: interpret the goal; retrieve the right evidence; coordinate tools and
 calculations; detect exceptions (missing inputs, unusual prices, shortages, approval
 conditions); explain and resume after human intervention.

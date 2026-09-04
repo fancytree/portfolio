@@ -103,9 +103,9 @@ export default function ProcurementLearningLoop() {
           role="img"
           aria-labelledby="procurement-learning-loop-title procurement-learning-loop-description"
         >
-          <title id="procurement-learning-loop-title">The procurement outcome and learning loop</title>
+          <title id="procurement-learning-loop-title">How the Agent grows from closed purchase outcomes</title>
           <desc id="procurement-learning-loop-description">
-            Supplier confirmation, DDT, receiving, variance, outcome and governed learning form a continuous loop. Each stage contributes evidence to the shared purchasing record at the center.
+            Supplier confirmation, DDT, receiving, variance, outcome and learning form a continuous loop. As these outcomes accumulate, the Agent can improve the next purchase and earn the buyer&apos;s trust.
           </desc>
 
           <defs>

@@ -1265,6 +1265,16 @@ body.no-scroll {
   --case-bg: #ffffff;
 }
 
+/* 采购 Agent：每一章上下各分一半 --case-space-section。
+   相邻章节无论同色还是换底，上一章末尾到下一章标题都是一段间距。 */
+.procurement-case.mei-project-page .procurement-section {
+  padding-block: calc(var(--case-space-section) / 2);
+}
+
+.procurement-case.mei-project-page > .procurement-section:last-of-type {
+  padding-bottom: var(--case-space-section);
+}
+
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) {
   background: var(--case-bg) !important;
 }

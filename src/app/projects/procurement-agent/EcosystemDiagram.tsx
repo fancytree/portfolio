@@ -4,7 +4,7 @@ import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
  * Business ecosystem diagram for section 02 of the DEF Beauty Supply case study.
  *
  * Shows the as-is business only. No Agent node is introduced
- * until section 07, so putting it here would give away the turn.
+ * until section 06, so putting it here would give away the turn.
  *
  * Built with the diagram-design skill under the `def-procurement` style profile:
  * accent #2155e8, accent tint #e9eef8, external-exchange edges in the page's
@@ -16,7 +16,7 @@ import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 export default function EcosystemDiagram() {
   return (
     <div className="overflow-x-auto">
-      <svg viewBox="0 0 1200 760" role="img" aria-labelledby="def-ecosystem-title def-ecosystem-desc"
+      <svg viewBox="0 0 1200 720" role="img" aria-labelledby="def-ecosystem-title def-ecosystem-desc"
               className="block w-full min-w-[900px]">
             <title id="def-ecosystem-title">DEF Beauty Supply business ecosystem</title>
             <desc id="def-ecosystem-desc">Architecture diagram of the DEF Beauty Supply B2B wholesale platform. Customer demand arrives through a WeChat storefront and becomes sales orders that draw down inventory; an inventory gap drives procurement, which places the order with an external supplier at a human gate; received goods and their variance flow back into inventory while finance reconciles the invoice.</desc>
