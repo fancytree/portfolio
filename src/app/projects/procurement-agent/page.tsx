@@ -80,8 +80,8 @@ function ChapterTitle({ children, inverse = false }: { children: string; inverse
 
 function ThreeStageEvolution() {
   return (
-    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="04 / Phase 1">
-      <ChapterTitle>04 / Phase 1</ChapterTitle>
+    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Phase 1">
+      <ChapterTitle>03 / Phase 1</ChapterTitle>
       <h2 className="case-study-section-title m-0 max-w-[900px]" style={bodyStyle}>
         Making procurement structured and traceable
       </h2>
@@ -246,8 +246,8 @@ function ResponsibilityShiftDiagram() {
 
 function ProcurementTurningPoint() {
   return (
-    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="05 / Turning point">
-      <ChapterTitle inverse>05 / The Turning Point</ChapterTitle>
+    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="04 / Turning point">
+      <ChapterTitle inverse>04 / The Turning Point</ChapterTitle>
       <div className="flex max-w-[920px] flex-col gap-6">
         <h2 className="m-0 text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
           I had digitized the workflow,
@@ -289,9 +289,9 @@ function DesignResultEvidenceBackedAgency() {
   return (
     <>
     <section {...sectionBandProps('white')}>
-    {/* 06：先讲清 Agent 如何参与整条流程、并和采购员一起完成，最后把最难的 purchase decision 交给 07 */}
-    <div className="flex flex-col gap-10" data-case-nav-label="06 / Why an Agent?">
-      <ChapterTitle>06 / Why an Agent?</ChapterTitle>
+    {/* 05：先讲清 Agent 如何参与整条流程、并和采购员一起完成，最后把最难的 purchase decision 交给 06 */}
+    <div className="flex flex-col gap-10" data-case-nav-label="05 / Why an Agent?">
+      <ChapterTitle>05 / Why an Agent?</ChapterTitle>
       <div className="flex max-w-[940px] flex-col gap-5">
         <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
           To reduce the cognitive work, the Agent had to participate in the <span className="text-[#2155e8]">whole procurement workflow</span>.
@@ -324,8 +324,8 @@ function DesignResultEvidenceBackedAgency() {
     </section>
 
     <section {...sectionBandProps('white')}>
-      <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="07 / Agent-ready system">
-        <ChapterTitle inverse>07 / Agent-ready System</ChapterTitle>
+      <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="06 / Agent-ready system">
+        <ChapterTitle inverse>06 / Agent-ready System</ChapterTitle>
         <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
           The purchase decision needed structured context and a defined role.
         </h2>
@@ -465,8 +465,8 @@ const agentUxIterations = [
 function AgentUxIterationsSection() {
   return (
     <section {...sectionBandProps('gray')}>
-      <div className="flex flex-col gap-9" data-case-nav-label="10 / UX iterations">
-        <ChapterTitle>10 / Agent UX Iterations</ChapterTitle>
+      <div className="flex flex-col gap-9" data-case-nav-label="09 / UX iterations">
+        <ChapterTitle>09 / Agent UX Iterations</ChapterTitle>
         <div className="flex max-w-[980px] flex-col gap-5">
           <h2 className="m-0 text-[clamp(26px,3.6vw,40px)] font-bold leading-[1.15] text-[#161616]" style={bodyStyle}>
             The Agent became useful as its role became more specific.
@@ -639,17 +639,16 @@ export default function ProcurementAgentPage() {
           '00 / Demo',
           '01 / Context',
           '02 / Why procurement',
-          '03 / Original workflow',
-          '04 / Phase 1',
-          '05 / Turning point',
-          '06 / Why an Agent?',
-          '07 / Agent-ready system',
-          '08 / Designing the Agent',
-          '09 / Closing the loop',
-          '10 / UX iterations',
-          '11 / Validation',
-          '12 / Results',
-          '13 / Reflection',
+          '03 / Phase 1',
+          '04 / Turning point',
+          '05 / Why an Agent?',
+          '06 / Agent-ready system',
+          '07 / Designing the Agent',
+          '08 / Closing the loop',
+          '09 / UX iterations',
+          '10 / Validation',
+          '11 / Results',
+          '12 / Reflection',
         ]}
       />
       <CaseStudyHero
@@ -713,38 +712,21 @@ export default function ProcurementAgentPage() {
               I redesigned the core business architecture across sales, inventory, procurement, and receiving. This case study <strong>focuses on procurement</strong>.
             </p>
           </div>
+
+          <EcosystemDiagram />
         </div>
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex max-w-[1080px] flex-col gap-9" data-case-nav-label="02 / Why procurement">
+        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Why procurement">
           <ChapterTitle>02 / Why I focused on procurement</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            Procurement is <span className="text-[#2155e8]">workflow-driven</span>.
+            Procurement sat in the middle — <span className="text-[#2155e8]">outside the system</span>.
           </h2>
 
-          <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b] [&_strong]:font-bold [&_strong]:text-[#161616]" style={bodyStyle}>
-            Sales, inventory, receiving, and finance only hold together if purchasing sits in the middle: a stock gap becomes an order, then goods and documents come back. I focused here because that is where the <strong>workflow</strong> either <strong>holds or breaks</strong>.
+          <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+            A stock gap becomes an order, then goods come back. I focused here because that is where the workflow holds or breaks. Inventory was in the system. The purchase happened in Excel, messages, and manual stock-in.
           </p>
-
-          <div>
-            <EcosystemDiagram />
-          </div>
-        </div>
-      </section>
-
-      <section {...sectionBandProps('white')}>
-        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Original workflow">
-          <ChapterTitle>03 / Original Workflow</ChapterTitle>
-          <div className="flex max-w-[820px] flex-col gap-5">
-            <h2 className="m-0 text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-              Procurement existed across systems, not inside one
-            </h2>
-            <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-              Inventory existed in the system, but purchasing happened through exports, spreadsheets, messages, supplier documents, and manual stock entry.
-            </p>
-          </div>
-
           <div className="case-radius-lg overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
             <p className="m-0 mb-7 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
               The old purchasing flow
@@ -874,8 +856,8 @@ export default function ProcurementAgentPage() {
       <DesignResultEvidenceBackedAgency />
 
       <section {...sectionBandProps('gray')}>
-        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="08 / Designing the Agent">
-          <ChapterTitle>08 / Designing the Procurement Agent</ChapterTitle>
+        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="07 / Designing the Agent">
+          <ChapterTitle>07 / Designing the Procurement Agent</ChapterTitle>
           <h2 className="m-0 max-w-[940px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
             The LLM interprets. The engine calculates. The buyer decides.
           </h2>
@@ -895,9 +877,9 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('gray')}>
-        <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="09 / Closing the loop">
-          {/* 09：数据足够之后 Agent 能自己成长，并由此获得用户信任 */}
-          <ChapterTitle inverse>09 / Closing the Loop</ChapterTitle>
+        <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="08 / Closing the loop">
+          {/* 08：数据足够之后 Agent 能自己成长，并由此获得用户信任 */}
+          <ChapterTitle inverse>08 / Closing the Loop</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
             The Agent can <span className="text-[#7fa2ff]">grow</span>.
             <br />
@@ -920,8 +902,8 @@ export default function ProcurementAgentPage() {
       <AgentUxIterationsSection />
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-9" data-case-nav-label="11 / Validation">
-          <ChapterTitle>11 / Validation</ChapterTitle>
+        <div className="flex flex-col gap-9" data-case-nav-label="10 / Validation">
+          <ChapterTitle>10 / Validation</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             Validate safety and comprehension before speed.
           </h2>
@@ -1016,8 +998,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('gray')}>
-        <div className="case-radius-lg flex max-w-[1080px] flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="12 / Results">
-            <ChapterTitle inverse>12 / Results & Measurement</ChapterTitle>
+        <div className="case-radius-lg flex max-w-[1080px] flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="11 / Results">
+            <ChapterTitle inverse>11 / Results & Measurement</ChapterTitle>
             <h2 className="m-0 max-w-[520px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.14] text-white" style={bodyStyle}>
               A functional Agent-ready procurement MVP.
             </h2>
@@ -1072,9 +1054,9 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-          {/* 13：按今天的主线收束——拆成卡片，方便一条一条读 */}
-          <div className="flex max-w-[1080px] flex-col gap-8" data-case-nav-label="13 / Reflection">
-            <ChapterTitle>13 / Reflection</ChapterTitle>
+          {/* 12：按今天的主线收束——拆成卡片，方便一条一条读 */}
+          <div className="flex max-w-[1080px] flex-col gap-8" data-case-nav-label="12 / Reflection">
+            <ChapterTitle>12 / Reflection</ChapterTitle>
             <h2 className="m-0 max-w-[820px] text-[clamp(30px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
               The Agent had to work with the buyer.
               <br />

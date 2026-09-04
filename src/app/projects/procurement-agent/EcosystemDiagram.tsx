@@ -1,10 +1,10 @@
 import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
 
 /**
- * Business ecosystem diagram for section 02 of the DEF Beauty Supply case study.
+ * Business ecosystem diagram for section 01 of the DEF Beauty Supply case study.
  *
  * Shows the as-is business only. No Agent node is introduced
- * until section 06, so putting it here would give away the turn.
+ * until section 05, so putting it here would give away the turn.
  *
  * Built with the diagram-design skill under the `def-procurement` style profile:
  * accent #2155e8, accent tint #e9eef8, external-exchange edges in the page's
