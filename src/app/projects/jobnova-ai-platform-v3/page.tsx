@@ -2681,11 +2681,26 @@ export default function JobnovaAIPlatformPage() {
               <WorkflowThesisDiagram />
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="02 / The first hypothesis">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="02 / How I worked">
+              <div className="flex flex-col gap-5">
+                <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
+                  02 / How I worked
+                </p>
+                <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
+                  The work ran as a loop, not a handoff.
+                  <br />
+                  <span className="text-[#ed5b2b]">Discover, reframe with the team, then review what shipped.</span>
+                </h2>
+              </div>
+              <DesktopProcessTimeline />
+              <MobileProcessTimeline />
+            </div>
+
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="03 / The first hypothesis">
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-3">
                   <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    02 / The first hypothesis
+                    03 / The first hypothesis
                   </p>
                   <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     We assumed AI could replace pieces of the job-search journey.
@@ -2699,10 +2714,6 @@ export default function JobnovaAIPlatformPage() {
               </div>
 
               <div className="flex flex-col gap-8">
-                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
-                  Version 1
-                </p>
-
                 <div className="flex flex-col gap-3">
                   <p className="m-0 text-[14px] font-normal leading-[1.4] text-[#0a0a0a]" style={bodyStyle}>
                     Job matching
@@ -2755,7 +2766,7 @@ export default function JobnovaAIPlatformPage() {
               <div className="grid gap-4 md:grid-cols-2">
                 <article className="case-radius-lg bg-[#f3f1ea] p-5">
                   <p className="m-0 text-[11px] font-light uppercase tracking-[0.14em] text-[#ed5b2b]" style={bodyStyle}>
-                    Version 1 outcome
+                    Outcome
                   </p>
                   <h3 data-case-type="small-title" className="m-0 mt-6 text-[21px] font-normal leading-[1.2] tracking-[-0.01em] text-[#0a0a0a]" style={displayStyle}>
                     AI made parts of applying faster.
@@ -2778,10 +2789,10 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="03 / What research showed">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="04 / What research showed">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  03 / What research showed
+                  04 / What research showed
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   Matching and writing were not the bottleneck.
@@ -2813,10 +2824,10 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="04 / One complete application journey">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="05 / One complete application journey">
               <div className="flex flex-col gap-5">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  04 / One complete application journey
+                  05 / One complete application journey
                 </p>
                 <h2
                   data-case-type="display"
@@ -2835,10 +2846,10 @@ export default function JobnovaAIPlatformPage() {
               <ScopeStoryMap />
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="05 / Four levels of AI responsibility">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="06 / Four levels of AI responsibility">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  05 / Four levels of AI responsibility
+                  06 / Four levels of AI responsibility
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[850px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   The challenge was not whether to automate applying.
@@ -2881,24 +2892,13 @@ export default function JobnovaAIPlatformPage() {
               </p>
 
               <ResponsibilityFrameworkDiagram />
-
-              <div className="flex flex-col gap-4">
-                <p className="m-0 text-[13px] font-light uppercase leading-[19.5px] text-[#ed5b2b]" style={bodyStyle}>
-                  How the work unfolded
-                </p>
-                <p className="m-0 max-w-[760px] text-[15px] font-light leading-6 text-[#0a0a0a]/68" style={bodyStyle}>
-                  Once the workflow was named, this is how we designed it.
-                </p>
-                <DesktopProcessTimeline />
-                <MobileProcessTimeline />
-              </div>
             </div>
 
-            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="06 / A permission system, not a switch" aria-labelledby="jobnova-v3-act-title">
+            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="07 / A permission system, not a switch" aria-labelledby="jobnova-v3-act-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
                   <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    06 / A permission system, not a switch
+                    07 / A permission system, not a switch
                   </p>
                   <h2 data-case-type="display" id="jobnova-v3-act-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     Applying on someone’s behalf is the highest-stakes moment in the loop.
@@ -2962,11 +2962,11 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </section>
 
-            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="07 / Every action leaves a trace" aria-labelledby="jobnova-v3-account-title">
+            <section className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="08 / Every action leaves a trace" aria-labelledby="jobnova-v3-account-title">
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-5">
                   <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                    07 / Every action leaves a trace
+                    08 / Every action leaves a trace
                   </p>
                   <h2 data-case-type="display" id="jobnova-v3-account-title" className="m-0 text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                     If an application disappears after send, the automation has failed.
@@ -2998,10 +2998,10 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </section>
 
-            <div className="flex max-w-[980px] flex-col gap-8" data-case-nav-label="08 / From screens to product rules">
+            <div className="flex max-w-[980px] flex-col gap-8" data-case-nav-label="09 / From screens to product rules">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  08 / From screens to product rules
+                  09 / From screens to product rules
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[820px] text-[clamp(32px,4.6vw,60px)] font-normal leading-[1.03] tracking-[-0.03em] text-[#0a0a0a]" style={displayStyle}>
                   The four moments had to feel like one product.
@@ -3048,10 +3048,10 @@ export default function JobnovaAIPlatformPage() {
               </div>
             </div>
 
-            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="09 / Results, debt, and learnings">
+            <div className="flex max-w-[980px] flex-col gap-10" data-case-nav-label="10 / Results, debt, and learnings">
               <div className="flex flex-col gap-4">
                 <p data-case-type="eyebrow" className="m-0 text-[12px] font-light uppercase leading-none text-[#ed5b2b]" style={bodyStyle}>
-                  09 / Results, debt, and learnings
+                  10 / Results, debt, and learnings
                 </p>
                 <h2 data-case-type="display" className="m-0 max-w-[880px] text-[clamp(32px,4.8vw,64px)] font-normal leading-[1.02] tracking-[-0.035em] text-[#0a0a0a]" style={displayStyle}>
                   The goal was never maximum automation.
