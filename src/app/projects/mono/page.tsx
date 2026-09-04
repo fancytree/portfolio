@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import Button from '../../components/Button';
+import { ArrowUpRight } from 'lucide-react';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import CaseStudyBackButton from '../../components/CaseStudyBackButton';
 import CaseStudyHero from '../../components/CaseStudyHero';
@@ -1402,16 +1402,29 @@ export default function MonoProjectPage() {
                 </div>
 
                 <div style={{ marginTop: '32px' }}>
-                  <Button
+                  <button
+                    type="button"
                     onClick={() => setIsMonoLoginModalOpen(true)}
-                    style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                    className="mei-view-all-work-link mei-case-study-live-link group"
+                    style={{
+                      ...fontStyle,
+                      alignItems: 'center',
+                      background: 'transparent',
+                      border: '1px solid rgb(10 10 10 / 0.72)',
+                      borderRadius: 'var(--case-radius-full, 999px)',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      fontSize: '14px',
+                      fontWeight: 400,
+                      gap: '10px',
+                      lineHeight: '20px',
+                      padding: '9px 16px',
+                    }}
                   >
-                    Explore the live site
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </Button>
+                    <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
+                    <span className="relative z-10">Explore the live site</span>
+                    <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
+                  </button>
                 </div>
               </div>
             </div>
