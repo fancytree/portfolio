@@ -13,14 +13,14 @@ const bodyStyle = {
 const shots = [
   {
     id: 'purchase-order',
-    src: '/img/procurement-agent/Phase 1-01.png',
+    src: '/img/procurement-agent/Phase 1-02.png?v=3',
     label: 'Purchase order',
     description: 'A shared purchase record connects estimated quantities, supplier confirmation, pricing, and order status. AI flags confirmation discrepancies visually in the table.',
     alt: 'Purchase order workspace: draft PO with estimated quantities, supplier confirmation columns with visual discrepancy highlighting, and Upload confirmation action',
   },
   {
     id: 'goods-receipt',
-    src: '/img/procurement-agent/Phase 1-02.png?v=2',
+    src: '/img/procurement-agent/Phase 1-01.png?v=3',
     label: 'Goods receipt',
     description: 'Receiving keeps ordered, DDT, and actual quantities visible together so discrepancies remain traceable. AI highlights mismatches between DDT and confirmation.',
     alt: 'Goods receipt workspace: ordered, DDT, and actual quantities on the same purchase order with visual discrepancy highlighting, and Confirm receipt as the primary action',
@@ -105,7 +105,7 @@ export default function Phase1ScreenshotSwitcher() {
         aria-label={`View ${shots[active].label} fullscreen`}
       >
         {/* 用截图比例撑开容器，fill + cover 铺满，切换时高度不变 */}
-        <div className="aspect-[3024/1721] w-full" aria-hidden />
+        <div className="aspect-[3024/1722] w-full" aria-hidden />
         {shots.map((shot, index) => (
           <Image
             key={shot.id}
