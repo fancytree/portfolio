@@ -342,6 +342,21 @@ export default function Home() {
           <p>const passion = Infinity;</p>
         </div>
 
+        {/* 左边距对齐 Work 区域：先用负 margin 抵消 Hero 自身的 px-6 sm:px-8，
+            再套用 Work 完全相同的 px-6 sm:px-10 md:px-16 + max-w-[1200px]，
+            这样两个区域的正文左边缘在任何视口宽度下都精确对齐 */}
+        <div className="pointer-events-none relative z-10 -mx-6 px-6 sm:-mx-8 sm:px-10 md:px-16">
+          <div className="mx-auto w-full max-w-[1200px]">
+            <h1
+              className="max-w-[620px] text-[30px] leading-[1.2] text-[#0a0a0a] sm:text-[38px] md:text-[44px]"
+              style={fontDisplay}
+            >
+              Hey, I&apos;m Mei Chai — also known as River. I&apos;m a UX/AX designer who turns ideas into products
+              people can actually use.
+            </h1>
+          </div>
+        </div>
+
         <div className="pointer-events-none relative z-10 flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
           <p style={fontBody}>Based in Milan, IT</p>
           <div className="flex items-center gap-1.5" style={fontBody}>
