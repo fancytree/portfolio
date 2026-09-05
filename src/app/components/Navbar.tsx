@@ -11,6 +11,7 @@ const navLinks: { href: string; label: string; target?: '_blank' }[] = [
   { href: '/#strategy', label: 'Strategy' },
   { href: '/#about', label: 'About me' },
   { href: '/MeiChai_Product_Designer_Resume.pdf', label: 'Resume', target: '_blank' },
+  { href: 'mailto:mei.chai@mail.polimi.it', label: 'Email' },
 ];
 
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };

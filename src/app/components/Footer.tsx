@@ -74,7 +74,7 @@ export default function Footer() {
             aria-label="Email Mei"
             className="relative flex size-[140px] shrink-0 items-center justify-center self-center transition-transform duration-300 hover:scale-105 sm:size-[170px] md:size-[214px]"
           >
-            <img src="/img/footer/reach-out-badge.svg" alt="" className="absolute inset-0 size-full" />
+            <img src="/img/footer/reach-out-badge.svg" alt="" className="mei-badge-spin absolute inset-0 size-full" />
             <Mail size={28} strokeWidth={1.5} className="relative text-[#ed5b2b] md:size-8" />
           </a>
         </div>

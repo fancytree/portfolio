@@ -485,6 +485,25 @@ body.no-scroll {
   animation: meiScrollDropLine 1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+.pond-shell {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+.pond-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: manipulation;
+  outline: none;
+}
+
+.pond-canvas:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(237, 91, 43, 0.34);
+}
+
 .mei-view-all-work-link {
   position: relative;
   overflow: hidden;
@@ -1647,6 +1666,15 @@ body.no-scroll {
 @keyframes meiFadePulse {
   0%, 100% { opacity: 0.42; }
   50% { opacity: 1; }
+}
+
+@keyframes meiBadgeSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Footer 印章徽标：外圈弧形文字持续旋转，中间信封图标保持静止不动 */
+.mei-badge-spin {
+  animation: meiBadgeSpin 14s linear infinite;
 }
 
 @media (max-width: 767px) {

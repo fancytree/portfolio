@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { AudioWaveform, ArrowUpRight, ChartSpline, Copy, FileText, Mail, Plus, Search, Star, Tangent } from 'lucide-react';
-import HeroFish from './components/HeroFish';
+import { AudioWaveform, ArrowUpRight, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
+import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
 import { productProjects, researchProjects, sortProjectsByTimeDesc } from '@/lib/work-projects';
 import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
@@ -145,88 +145,6 @@ const fullBleed: React.CSSProperties = {
   marginLeft: 'calc(-50vw + 50%)',
   marginRight: 'calc(-50vw + 50%)',
 };
-
-// Hero 标题里持续向上滚动的身份词——Product 较短，左右加 "*" 作装饰以平衡视觉宽度。
-// 首词复制到末尾形成循环带，滚到复制帧后瞬间（无动画）跳回真正的第一帧，实现无缝连续滚动。
-const heroRoles = ['Product', 'Interaction', 'Experience'];
-const heroRoleDisplay = (word: string) => (word === 'Product' ? `* ${word} *` : word);
-const heroReel = [...heroRoles, heroRoles[0]];
-
-function RotatingRole() {
-  const [step, setStep] = useState(0);
-  const [animated, setAnimated] = useState(true);
-  const [width, setWidth] = useState<number>();
-  const measureRef = useRef<HTMLSpanElement>(null);
-
-  // 测量所有候选词里最宽的一个，固定容器宽度，避免整行文字随词长变化而跳动/重新居中。
-  useEffect(() => {
-    function measure() {
-      if (!measureRef.current) return;
-      const widths = Array.from(measureRef.current.children).map(
-        (el) => (el as HTMLElement).getBoundingClientRect().width
-      );
-      setWidth(Math.max(...widths));
-    }
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, []);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => setStep((s) => s + 1), 2200);
-    return () => window.clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    if (step !== heroReel.length - 1) return;
-    // 滚到复制的末帧后，等过渡动画播完，再无动画地跳回第 0 帧（内容相同，视觉无缝）。
-    const timeout = window.setTimeout(() => {
-      setAnimated(false);
-      setStep(0);
-      requestAnimationFrame(() => requestAnimationFrame(() => setAnimated(true)));
-    }, 600);
-    return () => window.clearTimeout(timeout);
-  }, [step]);
-
-  return (
-    <span
-      style={{
-        display: 'inline-block',
-        overflow: 'hidden',
-        verticalAlign: 'bottom',
-        height: '1em',
-        lineHeight: 1,
-        width: width ? `${width}px` : undefined,
-      }}
-    >
-      {/* 隐藏测量层：渲染所有候选词以取得最大宽度 */}
-      <span
-        ref={measureRef}
-        aria-hidden="true"
-        style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }}
-      >
-        {heroRoles.map((word) => (
-          <span key={word} style={{ display: 'block', whiteSpace: 'nowrap' }}>
-            {heroRoleDisplay(word)}
-          </span>
-        ))}
-      </span>
-      <span
-        style={{
-          display: 'block',
-          transform: `translateY(${-step}em)`,
-          transition: animated ? 'transform 0.6s cubic-bezier(0.65, 0, 0.35, 1)' : 'none',
-        }}
-      >
-        {heroReel.map((word, i) => (
-          <span key={i} style={{ display: 'block', height: '1em', lineHeight: 1, whiteSpace: 'nowrap' }}>
-            {heroRoleDisplay(word)}
-          </span>
-        ))}
-      </span>
-    </span>
-  );
-}
 
 const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-fraunces)' };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
@@ -396,21 +314,12 @@ const experienceItems = [
 
 const skills = ['User Research', 'Product Strategy', 'Interaction Design', 'Information Architecture', 'AI UX', 'Design Systems', 'Data Visualization', 'Prototyping'];
 const toolkit = ['Figma', 'Cursor', 'Claude Code', 'Maze', 'ProtoPie', 'n8n', 'Arduino', 'TouchDesigner'];
-const contactEmail = 'mei.chai@mail.polimi.it';
 
 export default function Home() {
-  const [emailCopied, setEmailCopied] = useState(false);
-
   useEffect(() => {
     document.documentElement.classList.add('mei-snap-page');
     return () => document.documentElement.classList.remove('mei-snap-page');
   }, []);
-
-  const copyEmail = async () => {
-    await navigator.clipboard.writeText(contactEmail);
-    setEmailCopied(true);
-    window.setTimeout(() => setEmailCopied(false), 1200);
-  };
 
   return (
     <>
@@ -418,54 +327,22 @@ export default function Home() {
           负 marginTop 抵消 Layout 的 pt-12（导航栏高度），让 hero 顶到视口顶部，
           导航栏悬浮在 hero 上方（半透明 + 模糊），而不是与 hero 之间留白 */}
       <section
-        className="mei-section-screen relative flex w-screen flex-col overflow-hidden bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
+        className="mei-section-screen relative flex w-screen flex-col justify-between overflow-hidden bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
         style={{ ...fullBleed, marginTop: '-48px', height: '100vh' }}
       >
-        {/* 背景：一条粒子构成的鱼在画面里巡游（纯 canvas，无 3D 依赖） */}
-        <HeroFish className="pointer-events-none absolute inset-0 z-0 block" />
+        {/* 背景：可交互的池塘（点击水面放鱼、点击鱼弹俏皮话），纯 canvas 无 3D 依赖 */}
+        <InteractivePond className="absolute inset-0 z-0 block" />
 
-        <div className="relative z-10 text-[13px] leading-relaxed text-[#0a0a0a]/70 sm:text-[15px]" style={fontMono}>
+        {/* 前景内容层 pointer-events-none，让点击穿透到下方的池塘 canvas */}
+        <div
+          className="pointer-events-none relative z-10 text-[13px] leading-relaxed text-[#0a0a0a]/70 sm:text-[15px]"
+          style={fontMono}
+        >
           <p>const experience = &quot;7+ years&quot;;</p>
           <p>const passion = Infinity;</p>
         </div>
 
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-3 text-center text-[#0a0a0a]">
-          <div className="flex flex-wrap items-baseline justify-center gap-3 sm:gap-4">
-            <span className="text-[16px] tracking-wide sm:text-[20px]" style={fontBody}>
-              I AM A(AN)
-            </span>
-            <h1
-              className="text-[44px] leading-[1.05] sm:text-[64px] md:text-[80px]"
-              style={{ ...fontDisplay, fontWeight: 500 }}
-            >
-              <RotatingRole /> Designer
-            </h1>
-          </div>
-          <p className="max-w-[860px] text-[16px] font-light sm:text-[20px]" style={fontBody}>
-            I design AI-powered product experiences from research to working prototypes, turning complex systems
-            into interfaces people can understand, trust, and use.
-          </p>
-          <div
-            className="mt-4 flex max-w-[380px] flex-wrap items-center justify-center gap-x-2 gap-y-2 text-[13px] leading-tight text-[#0a0a0a] sm:text-[15px] md:text-[18px]"
-            style={fontBody}
-          >
-            <span>Open to thoughtful chats</span>
-            <button
-              type="button"
-              onClick={copyEmail}
-              className="mei-email-pill inline-flex min-h-[22px] items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] leading-none sm:min-h-[24px] sm:px-3 sm:text-[11px] md:min-h-[27px] md:px-3.5 md:text-[12px]"
-              aria-label="Copy email address"
-            >
-              <span className="relative size-3 sm:size-3.5" aria-hidden="true">
-                <Mail strokeWidth={1.8} className="mei-email-icon mei-email-icon-mail absolute inset-0 size-full" />
-                <Copy strokeWidth={1.8} className="mei-email-icon mei-email-icon-copy absolute inset-0 size-full" />
-              </span>
-              <span>{emailCopied ? 'copied' : 'email'}</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="relative z-10 flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
+        <div className="pointer-events-none relative z-10 flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
           <p style={fontBody}>Based in Milan, IT</p>
           <div className="flex items-center gap-1.5" style={fontBody}>
             <span>Scroll Down</span>
@@ -482,15 +359,10 @@ export default function Home() {
       >
         <div className="w-full max-w-[1200px]">
           <Reveal>
-            <div className="flex flex-col gap-6 border-b border-[#cccccc] py-12 md:flex-row md:items-center md:justify-between md:py-16">
+            <div className="flex flex-col gap-6 border-b border-[#cccccc] py-12 md:py-16">
               <h2 className="text-[56px] leading-none md:text-[80px]" style={fontDisplay}>
                 Work
               </h2>
-              <p className="max-w-[560px] text-[16px] font-light text-[#0a0a0a] md:text-[20px]" style={fontBody}>
-                Selected projects across AI recruiting, career tools, learning products, and parenting communities,
-                plus research on education decisions and sharing behavior. Each case connects user insight to clearer
-                flows, product systems, and testable interfaces.
-              </p>
             </div>
           </Reveal>
 
