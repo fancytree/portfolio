@@ -67,7 +67,8 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-function useSectionMotion() {
+function useSectionMotion(options?: { pinned?: boolean }) {
+  const pinned = options?.pinned ?? false;
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [shift, setShift] = useState(0);
@@ -78,13 +79,18 @@ function useSectionMotion() {
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting || entry.intersectionRatio > 0),
+      ([entry]) => {
+        const nowVisible = entry.isIntersecting || entry.intersectionRatio > 0;
+        // pinned：只淡入一次，永不再淡出/位移——这是页面最后一屏，紧贴着 fixed footer，
+        // 若在滚出视口时被重新判定为不可见，视差位移和透明度衰减会露出下方正文容器的白色背景。
+        setIsVisible((prev) => (pinned ? prev || nowVisible : nowVisible));
+      },
       { threshold: 0.12, rootMargin: '0px 0px -12% 0px' }
     );
 
     observer.observe(node);
 
-    if (reduceMotion) {
+    if (reduceMotion || pinned) {
       return () => observer.disconnect();
     }
 
@@ -111,7 +117,7 @@ function useSectionMotion() {
       window.removeEventListener('resize', requestUpdate);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [pinned]);
 
   return { ref, isVisible, shift };
 }
@@ -120,9 +126,10 @@ function MotionSection({
   children,
   className = '',
   style,
+  pinned,
   ...props
-}: React.ComponentPropsWithoutRef<'section'>) {
-  const { ref, isVisible, shift } = useSectionMotion();
+}: React.ComponentPropsWithoutRef<'section'> & { pinned?: boolean }) {
+  const { ref, isVisible, shift } = useSectionMotion({ pinned });
   const motionStyle = {
     ...style,
     '--mei-section-shift': `${shift.toFixed(2)}px`,
@@ -146,18 +153,15 @@ const fullBleed: React.CSSProperties = {
   marginRight: 'calc(-50vw + 50%)',
 };
 
-const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-fraunces)' };
+const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)', fontWeight: 400 };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
-const workGroups = [
-  {
-    label: 'Product',
-    items: ['Procurement Agent', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
-      productProjects.filter((project) => project.title === title)
-    ),
-  },
-  { label: 'Research', items: sortProjectsByTimeDesc(researchProjects) },
+const homeWorkItems = [
+  ...['Procurement Agent', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
+    productProjects.filter((project) => project.title === title)
+  ),
+  ...sortProjectsByTimeDesc(researchProjects),
 ];
 
 type ToolItem =
@@ -343,16 +347,17 @@ export default function Home() {
         </div>
 
         {/* 左边距对齐 Work 区域：先用负 margin 抵消 Hero 自身的 px-6 sm:px-8，
-            再套用 Work 完全相同的 px-6 sm:px-10 md:px-16 + max-w-[1200px]，
+            再套用 Work 完全相同的 px-6 sm:px-10 md:px-16 + max-w-[1000px]，
             这样两个区域的正文左边缘在任何视口宽度下都精确对齐 */}
         <div className="pointer-events-none relative z-10 -mx-6 px-6 sm:-mx-8 sm:px-10 md:px-16">
-          <div className="mx-auto w-full max-w-[1200px]">
+          <div className="mx-auto w-full max-w-[1000px]">
             <h1
               className="max-w-[620px] text-[30px] leading-[1.2] text-[#0a0a0a] sm:text-[38px] md:text-[44px]"
               style={fontDisplay}
             >
-              Hey, I&apos;m Mei Chai — also known as River. I&apos;m a UX/AX designer who turns ideas into products
-              people can actually use.
+              Hey, I&apos;m Mei Chai (River). I&apos;m a{' '}
+              <span className="font-medium text-[#ed5b2b]">UX/AX designer</span> who turns ideas into products people
+              can actually use.
             </h1>
           </div>
         </div>
@@ -372,67 +377,51 @@ export default function Home() {
         className="mei-section-screen flex w-screen flex-col items-center bg-white px-6 pb-16 sm:px-10 md:px-16 md:pb-24"
         style={fullBleed}
       >
-        <div className="w-full max-w-[1200px]">
+        <div className="w-full max-w-[1000px]">
           <Reveal>
-            <div className="flex flex-col gap-6 border-b border-[#cccccc] py-12 md:py-16">
-              <h2 className="text-[56px] leading-none md:text-[80px]" style={fontDisplay}>
+            <div className="flex flex-col gap-6 pt-12 md:pt-16">
+              <h2 className="text-[40px] leading-none md:text-[56px]" style={fontDisplay}>
                 Work
               </h2>
             </div>
           </Reveal>
 
-          <div className="flex flex-col gap-16 pt-16 md:gap-24">
-            {workGroups.map((group, groupIndex) => (
-              <Reveal key={group.label} delay={groupIndex * 70}>
-                <div className="flex flex-col gap-6 md:flex-row md:gap-16">
-                  <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontBody}>
-                    {group.label}
-                  </p>
-                  <div className="flex-1 divide-y divide-[#cccccc]">
-                    <WorkProjectRows items={group.items} />
-                    {group.label === 'Product' ? (
-                      <div className="pt-6">
-                        <Link
-                          href="/works"
-                          className="mei-view-all-work-link group inline-flex items-center gap-2.5 rounded-full border border-[#0a0a0a]/72 px-4 py-2.5 text-[14px]"
-                          style={fontBody}
-                        >
-                          <span className="relative z-10">View all works</span>
-                          <ArrowUpRight
-                            aria-hidden
-                            strokeWidth={1.6}
-                            className="mei-view-all-work-icon relative z-10 size-4 shrink-0"
-                          />
-                        </Link>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+          <div className="pt-8 md:pt-10">
+            <Reveal>
+              <WorkProjectRows items={homeWorkItems} />
+              <div className="pt-6">
+                <Link
+                  href="/works"
+                  className="mei-view-all-work-link group inline-flex items-center gap-2.5 rounded-full border border-[#0a0a0a]/72 px-4 py-2.5 text-[14px]"
+                  style={fontBody}
+                >
+                  <span className="relative z-10">View all works</span>
+                  <ArrowUpRight
+                    aria-hidden
+                    strokeWidth={1.6}
+                    className="mei-view-all-work-icon relative z-10 size-4 shrink-0"
+                  />
+                </Link>
+              </div>
+            </Reveal>
           </div>
 
-          <Reveal delay={workGroups.length * 70}>
-            <div className="flex flex-col gap-6 pt-16 md:flex-row md:gap-16 md:pt-24">
-              <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontBody}>
+          <Reveal delay={140}>
+            <div className="flex flex-col gap-6 pt-16 md:pt-24">
+              <h3 className="text-[22px] leading-none md:text-[28px]" style={fontDisplay}>
                 Demos
-              </p>
-              <div className="flex-1">
-                <p className="max-w-[560px] text-[16px] font-light text-[#0a0a0a]/58 md:text-[18px]" style={fontBody}>
-                  Two interfaces you can actually drive. Open either one fullscreen.
-                </p>
-                <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
-                  <HomeDemoCard
-                    title="Procurement Agent"
-                    blurb="An agent workspace for purchase planning — review a proposal, check documents, and approve."
-                    src={PROCUREMENT_AGENT_DEMO_URL}
-                  />
-                  <HomeDemoCard
-                    title="ConnectNova Sequence Builder"
-                    blurb="Build an outreach sequence on the canvas, walk a complete flow, or inspect execution results."
-                    src="/demos/connectnova-sequence"
-                  />
-                </div>
+              </h3>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
+                <HomeDemoCard
+                  title="Procurement Agent"
+                  blurb="An agent workspace for purchase planning — review a proposal, check documents, and approve."
+                  src={PROCUREMENT_AGENT_DEMO_URL}
+                />
+                <HomeDemoCard
+                  title="ConnectNova Sequence Builder"
+                  blurb="Build an outreach sequence on the canvas, walk a complete flow, or inspect execution results."
+                  src="/demos/connectnova-sequence"
+                />
               </div>
             </div>
           </Reveal>
@@ -448,10 +437,10 @@ export default function Home() {
       >
         <Reveal>
           <h2
-            className="text-center text-[64px] leading-none text-white sm:text-[96px] md:text-[140px]"
+            className="text-center text-[40px] leading-none text-white md:text-[56px]"
             style={{ ...fontDisplay, fontStyle: 'italic', fontWeight: 400 }}
           >
-            strategy
+            Strategy
           </h2>
         </Reveal>
 
@@ -525,11 +514,12 @@ export default function Home() {
         id="about"
         className="mei-section-screen flex w-screen flex-col items-center bg-[#f3f1ea] px-6 py-16 sm:px-10 md:px-16 md:py-28"
         style={fullBleed}
+        pinned
       >
         <div className="w-full max-w-[1200px]">
           <Reveal>
             <div className="flex flex-col gap-6 border-b border-[#cccccc] pb-12 md:flex-row md:items-end md:justify-between md:pb-16">
-              <h2 className="text-[56px] leading-none md:text-[80px]" style={fontDisplay}>
+              <h2 className="text-[40px] leading-none md:text-[56px]" style={fontDisplay}>
                 About
               </h2>
               <p className="max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a] md:text-[20px]" style={fontBody}>
@@ -572,7 +562,7 @@ export default function Home() {
 
             <Reveal>
               <div className="flex flex-col gap-6 pt-10 md:flex-row md:gap-16 md:pt-12">
-                <h2 className="w-full shrink-0 text-[32px] leading-tight md:w-[300px] md:text-[48px]" style={fontDisplay}>
+                <h2 className="w-full shrink-0 text-[24px] leading-tight md:w-[300px] md:text-[34px]" style={fontDisplay}>
                   How Can I Help?
                 </h2>
                 <div className="grid flex-1 grid-cols-1 gap-8 sm:grid-cols-2 md:gap-10">

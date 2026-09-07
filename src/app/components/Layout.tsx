@@ -23,7 +23,8 @@ export default function Layout({ children }: LayoutProps) {
   useLayoutEffect(() => {
     const el = footerRef.current;
     if (!el) return;
-    const update = () => setFooterHeight(el.offsetHeight);
+    // 减 2px 让正文轻微覆盖 footer 顶部边缘，避免子像素取整导致的白色缝隙
+    const update = () => setFooterHeight(Math.max(0, el.getBoundingClientRect().height - 2));
     update();
     const observer = new ResizeObserver(update);
     observer.observe(el);

@@ -661,10 +661,7 @@ export default function ProcurementAgentPage() {
         meta={[
           {
             label: 'Role',
-            value: [
-              'UX / AX Designer',
-              'End-to-end ownership across research, workflow and data modeling, Agent architecture, interaction design, LangGraph prototyping, and implementation.',
-            ],
+            value: ['UX / AX Designer', 'End-to-end ownership from research through agent design and implementation.'],
           },
           {
             label: 'Scope',

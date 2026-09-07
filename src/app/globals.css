@@ -38,7 +38,7 @@
   --mei-orange: #ed5b2b;
   --mei-muted: rgb(10 10 10 / 0.62);
   --mei-font-primary: var(--font-inter), Inter, sans-serif;
-  --mei-font-secondary: var(--font-fraunces), Fraunces, Georgia, serif;
+  --mei-font-secondary: var(--font-inter), Inter, sans-serif;
 }
 
 @theme inline {

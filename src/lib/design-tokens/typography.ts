@@ -14,7 +14,7 @@
 export const fontFamily = {
   sans: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
   system: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
-  display: 'var(--font-fraunces), Fraunces, Georgia, serif',
+  display: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 } as const;
 

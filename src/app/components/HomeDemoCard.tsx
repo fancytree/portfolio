@@ -115,7 +115,7 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
           {title}
         </p>
         <p
-          className="m-0 text-[14px] font-light leading-[1.6] text-[#0a0a0a]/58"
+          className="m-0 text-[14px] font-light leading-snug text-[#0a0a0a]/58"
           style={{ fontFamily: 'var(--mei-font-primary)' }}
         >
           {blurb}

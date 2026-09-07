@@ -5,7 +5,7 @@
 
 import { ArrowRight, ArrowUp, Mail } from 'lucide-react';
 
-const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-fraunces)' };
+const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 
 const socialLinks = [

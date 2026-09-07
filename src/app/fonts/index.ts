@@ -24,22 +24,6 @@ export const nunito = localFont({
   display: "swap",
 });
 
-export const fraunces = localFont({
-  src: [
-    {
-      path: "./fraunces-latin-wght-normal.woff2",
-      style: "normal",
-    },
-    {
-      path: "./fraunces-latin-wght-italic.woff2",
-      style: "italic",
-    },
-  ],
-  variable: "--font-fraunces",
-  weight: "400 600",
-  display: "swap",
-});
-
 export const inter = localFont({
   src: "./inter-latin-wght-normal.woff2",
   variable: "--font-inter",
