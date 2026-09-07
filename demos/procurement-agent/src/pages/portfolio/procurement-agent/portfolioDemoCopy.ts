@@ -416,6 +416,7 @@ export const PORTFOLIO_COPY = {
   } satisfies Record<DemoPhaseKey, string>,
   planBuildingTitle: 'Building replenishment plan',
   planBuildingHint: 'Forecast, stock, inbound, and MNP lead time',
+  comparingConfirmation: 'Comparing against confirmation…',
   planWaitingHint: 'A planning request is about to start…',
 
   refuseAutoOrder:
@@ -466,7 +467,7 @@ export const PORTFOLIO_COPY = {
   ],
 
   confirmationDiff:
-    'I compared the platform PO with the supplier confirmation:\n• Missing: 400213 Functional treatment 50 ml\n• Qty: 370102 96→90 · 431001 72→60 · 510002 24→18\n• Price: 370102 and 420106 are above estimate; the remaining confirmed prices match the plan\nGaps are highlighted on the plan table. Approval activation rules fired - Submit for approval on this page (does not leave the plan).',
+    'I compared the platform PO with the supplier confirmation:\n• Missing: 400213 Functional treatment 50 ml\n• Qty: 370102 96→90 · 431001 72→60\n• Price: 370102 and 420106 are above estimate; the remaining confirmed prices match the plan\nGaps are highlighted on the plan table. Approval activation rules fired - Submit for approval on this page (does not leave the plan).',
   confirmationSameFile:
     'Same confirmation file as the current upload - negotiation log was not duplicated. Diffs and attachments stay bound to this file.',
   confirmationDifferentRecorded: (fileName: string) =>

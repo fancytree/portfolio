@@ -1,6 +1,7 @@
 import {
   Fragment,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -17,6 +18,7 @@ import {
   CheckIcon,
   ChevronRightIcon,
   CircleDashedIcon,
+  CircleHelpIcon,
   ClipboardListIcon,
   DownloadIcon,
   EyeIcon,
@@ -331,7 +333,7 @@ function ApproveChoiceDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="rounded-2xl sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{PORTFOLIO_COPY.approveDialogTitle}</DialogTitle>
           <DialogDescription>{PORTFOLIO_COPY.approveDialogHint}</DialogDescription>
@@ -1526,19 +1528,21 @@ function ActionLinks({
       <div className="flex items-center justify-end gap-1.5">
         <button
           type="button"
-          className="inline-flex h-7 cursor-pointer items-center text-[11px] font-medium text-[#2f6bff] hover:underline"
-          onClick={onWhy}
-        >
-          Why
-        </button>
-        <button
-          type="button"
           title="Delete"
           aria-label="Delete"
-          className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#c23b3b] transition-colors hover:bg-[#fdecec]"
+          className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition-colors hover:bg-[#fdecec] hover:text-[#c23b3b]"
           onClick={onDelete}
         >
           <Trash2Icon className="size-3.5" aria-hidden />
+        </button>
+        <button
+          type="button"
+          title="Why"
+          aria-label="Why"
+          className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition-colors hover:bg-[#eaf1ff] hover:text-[#2f6bff]"
+          onClick={onWhy}
+        >
+          <CircleHelpIcon className="size-3.5" aria-hidden />
         </button>
       </div>
     </TableCell>
@@ -1566,7 +1570,7 @@ function EstQtyCell({
         value={line.plannedQty}
         className={cn(
           'ml-auto h-8 w-[68px] rounded-lg text-right text-[13px] tabular-nums',
-          qtyDiffers(line) && 'border-[#ffd7b8] bg-[#fffaf5]',
+          qtyDiffers(line) && (line.risk === 'missing' ? 'border-[#f5c2c2] bg-[#fff5f5]' : 'border-[#ffd7b8] bg-[#fffaf5]'),
         )}
         onChange={(event) => onUpdateEstQty(line.sku, Number(event.target.value) || 0)}
       />
@@ -1604,7 +1608,7 @@ function ConfQtyCell({
         placeholder="-"
         className={cn(
           'ml-auto h-8 w-[68px] rounded-lg text-right text-[13px] tabular-nums',
-          changed && 'border-[#ffd7b8] bg-[#fffaf5]',
+          changed && (line.risk === 'missing' ? 'border-[#f5c2c2] bg-[#fff5f5]' : 'border-[#ffd7b8] bg-[#fffaf5]'),
         )}
         onChange={(event) => onUpdateConfQty(line.sku, Number(event.target.value) || 0)}
       />
@@ -1692,7 +1696,7 @@ function ConfPriceCell({
         placeholder="-"
         className={cn(
           'ml-auto h-8 w-[84px] rounded-lg text-right text-[13px] tabular-nums',
-          changed && 'border-[#ffd7b8] bg-[#fffaf5]',
+          changed && (line.risk === 'missing' ? 'border-[#f5c2c2] bg-[#fff5f5]' : 'border-[#ffd7b8] bg-[#fffaf5]'),
         )}
         onChange={(event) => {
           const raw = event.target.value;
@@ -1795,6 +1799,8 @@ function LineTable({
   editable,
   editableEstQty = false,
   editableEstPrice = false,
+  showActions,
+  comparing = false,
   stickyOffsetTop = 0,
   revealRows = false,
   onUpdateEstQty,
@@ -1809,6 +1815,10 @@ function LineTable({
   editable: boolean;
   editableEstQty?: boolean;
   editableEstPrice?: boolean;
+  /** Actions 列（Why/Delete）是否展示；默认跟随 editable，可单独开启（如 Owner approval） */
+  showActions?: boolean;
+  /** Agent 正在比对确认单差异：表格盖一层"比对中"动效，掩盖 lines 还未更新的旧值 */
+  comparing?: boolean;
   /** 上方吸顶操作栏高度，表格 meta / 列头叠在其下 */
   stickyOffsetTop?: number;
   /** 计划生成后：表头先出现，SPU 行再逐条淡入 */
@@ -1821,8 +1831,8 @@ function LineTable({
   onDeleteSpu: (productId: string) => void;
   onAskAgent: (text: string) => void;
 }) {
-  const showActions = editable;
-  const columns = useMemo(() => planColumns(showActions), [showActions]);
+  const resolvedShowActions = showActions ?? editable;
+  const columns = useMemo(() => planColumns(resolvedShowActions), [resolvedShowActions]);
   const tableMinWidth = useMemo(
     () => columns.reduce((sum, col) => sum + col.widthPx, 0),
     [columns],
@@ -1877,20 +1887,72 @@ function LineTable({
   const { sentinelRef, stuck } = useStickyStuck(stickyOffsetTop);
   // 列头 / 表体横向滚动同步（列头并入 sticky 区，表体单独裁切底圆角）
   const headScrollRef = useRef<HTMLDivElement>(null);
+  const bodyScrollRef = useRef<HTMLDivElement>(null);
+  // 固定列投影条从表头顶部开始（不盖住表头上方 "N products · Expand all" 那条工具栏）
+  const toolbarRef = useRef<HTMLDivElement>(null);
+  const [toolbarHeight, setToolbarHeight] = useState(0);
+  useLayoutEffect(() => {
+    const el = toolbarRef.current;
+    if (!el) return;
+    setToolbarHeight(el.offsetHeight);
+    const resizeObserver = new ResizeObserver(() => setToolbarHeight(el.offsetHeight));
+    resizeObserver.observe(el);
+    return () => resizeObserver.disconnect();
+  }, []);
+  // 固定列投影：只在对应方向确实有内容被横向滚动遮住时才显示（不可滚动/已到边界时不显示）
+  const [scrollShadow, setScrollShadow] = useState({ start: false, end: false });
+  const updateScrollShadow = () => {
+    const el = bodyScrollRef.current;
+    if (!el) return;
+    const canScroll = el.scrollWidth > el.clientWidth + 1;
+    const maxScrollLeft = el.scrollWidth - el.clientWidth;
+    setScrollShadow({
+      start: canScroll && el.scrollLeft > 0,
+      end: canScroll && el.scrollLeft < maxScrollLeft - 1,
+    });
+  };
+  useLayoutEffect(() => {
+    updateScrollShadow();
+    const container = bodyScrollRef.current;
+    if (!container) return;
+    // 同时观察滚动容器和内部 table：容器自身宽度由外部布局决定（视口/侧栏变化才会变），
+    // 但 table 的渲染宽度可能在挂载后因字体加载 / 逐行淡入动画短暂波动——只看容器会漏掉这次变化。
+    const resizeObserver = new ResizeObserver(updateScrollShadow);
+    resizeObserver.observe(container);
+    const tableEl = container.querySelector('table');
+    if (tableEl) resizeObserver.observe(tableEl);
+    // 兜底：挂载后的短时间内布局可能还在抖动（逐行淡入 / 字体加载），
+    // 用几次延迟复查确保最终落在稳定值上，而不是卡在过程中的某次错误测量。
+    const settleTimers = [50, 150, 400, 900, 1600].map((delay) => window.setTimeout(updateScrollShadow, delay));
+    // 兜底：某些视口变化场景下 ResizeObserver 可能不够及时，窗口 resize 再复查一次。
+    window.addEventListener('resize', updateScrollShadow);
+    return () => {
+      resizeObserver.disconnect();
+      settleTimers.forEach((id) => window.clearTimeout(id));
+      window.removeEventListener('resize', updateScrollShadow);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lines, resolvedShowActions]);
   const syncHeadScroll = (event: UIEvent<HTMLDivElement>) => {
     if (headScrollRef.current) {
       headScrollRef.current.scrollLeft = event.currentTarget.scrollLeft;
     }
+    updateScrollShadow();
   };
 
   const tableWidthStyle = {
     '--sticky-lead-1-w': '200px',
     '--sticky-lead-2-w': '88px',
     '--sticky-lead-3-w': '0px',
-    '--sticky-trail-w': showActions ? '88px' : '0px',
+    '--sticky-trail-w': resolvedShowActions ? '88px' : '0px',
     width: `${tableMinWidth}px`,
     minWidth: `${tableMinWidth}px`,
   } as CSSProperties;
+  // 固定列投影条的水平偏移：与 tableWidthStyle 里的 lead1/lead2/trail 宽度一一对应，
+  // 贯穿表头(thead 代理表)+表体整卡高度的一条独立渐变遮罩，而不是逐格叠 box-shadow
+  // （逐格叠加在表头/表体分离的结构里会在表头处丢失，行边框也会把投影切成一段段）。
+  const stickyLeadTotalW = 200 + 88;
+  const stickyTrailW = resolvedShowActions ? 88 : 0;
 
   // sticky 表头与表体分离：表头/表体各自 overflow-hidden 裁切圆角，不打断吸顶
   return (
@@ -1910,16 +1972,38 @@ function LineTable({
       <div ref={sentinelRef} className="pointer-events-none absolute top-0 h-px w-full" aria-hidden />
       <div
         className={cn(
-          'rounded-b-2xl border border-[#e8eaef] bg-white',
+          'relative isolate rounded-b-2xl border border-[#e8eaef] bg-white',
           stuck ? 'rounded-t-none' : 'rounded-t-2xl',
           revealRows && 'motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-300',
         )}
       >
+        {scrollShadow.start ? (
+          <div
+            className="pointer-events-none absolute bottom-0 z-40 w-1.5"
+            style={{ top: toolbarHeight, left: stickyLeadTotalW, background: 'linear-gradient(to right, rgb(0 0 0 / 0.06), transparent)' }}
+            aria-hidden
+          />
+        ) : null}
+        {scrollShadow.end ? (
+          <div
+            className="pointer-events-none absolute bottom-0 z-40 w-1.5"
+            style={{ top: toolbarHeight, right: stickyTrailW, background: 'linear-gradient(to left, rgb(0 0 0 / 0.06), transparent)' }}
+            aria-hidden
+          />
+        ) : null}
+        {comparing ? (
+          <div className="pointer-events-none absolute inset-0 z-50 flex flex-col items-center justify-center gap-2 rounded-b-2xl bg-white/85 backdrop-blur-[1px] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200">
+            <span className="inline-flex size-9 items-center justify-center rounded-xl bg-[#eef4ff] text-[#2f6bff]">
+              <Loader2Icon className="size-4 animate-spin" aria-hidden />
+            </span>
+            <p className="text-[12px] font-medium text-[#5c6478]">{PORTFOLIO_COPY.comparingConfirmation}</p>
+          </div>
+        ) : null}
         <div
           className={cn('sticky z-30 bg-white', !stuck && 'overflow-hidden rounded-t-2xl')}
           style={{ top: stickyOffsetTop }}
         >
-          <div className="flex items-center justify-between gap-3 border-b border-[#e8eaef] bg-[#fafbfc] px-4 py-2">
+          <div ref={toolbarRef} className="flex items-center justify-between gap-3 border-b border-[#e8eaef] bg-[#fafbfc] px-4 py-2">
             <span className="text-[11px] text-[#8b93a7]">
               {groups.length} products · {lines.length} SKUs
             </span>
@@ -1964,7 +2048,7 @@ function LineTable({
         </div>
 
         <div className="overflow-hidden rounded-b-2xl">
-          <div className="max-w-full overflow-x-auto" onScroll={syncHeadScroll}>
+          <div ref={bodyScrollRef} className="max-w-full overflow-x-auto overscroll-x-none" onScroll={syncHeadScroll}>
             <Table
               scroll={false}
               frame={false}
@@ -2000,6 +2084,8 @@ function LineTable({
               : hasGap
                 ? 'hover:bg-[#fff3e8]'
                 : 'hover:bg-[#eceef3]';
+            // 固定列 hover 背景通过 CSS 变量传给 index.css，与可滚动列的 hover 色保持一致
+            const groupStickyHoverBg = hasMissing ? '#f8dede' : hasGap ? '#fff3e8' : '#eceef3';
             const agg = group.items.reduce(
               (acc, line) => {
                 acc.stock += line.stock;
@@ -2022,6 +2108,7 @@ function LineTable({
                     groupHover,
                     revealRows && 'portfolio-plan-row-in',
                   )}
+                  style={{ '--row-hover-bg': groupStickyHoverBg } as CSSProperties}
                   onClick={() => toggle(group.key)}
                 >
                   <TableCell className={dataListStickyCol('lead1', cn('px-3 py-2.5', stickyGroupBg))}>
@@ -2062,7 +2149,7 @@ function LineTable({
                       '-'
                     )}
                   </TableCell>
-                  {showActions ? (
+                  {resolvedShowActions ? (
                     <ActionLinks
                       dense
                       stickyBg={stickyGroupBg}
@@ -2148,7 +2235,7 @@ function LineTable({
                         <TableCell className="px-3 py-3 align-middle whitespace-normal">
                           <NoteCell line={line} onAskAgent={onAskAgent} />
                         </TableCell>
-                        {showActions ? (
+                        {resolvedShowActions ? (
                           <ActionLinks
                             stickyBg={stickyBg}
                             onWhy={() => onAskAgent(
@@ -2468,6 +2555,7 @@ function ReplenishmentView({
   exportFormat,
   attachments,
   confirmationUploaded,
+  confirmationComparing,
   approvalRequiredByRules,
   approvalSubmitted,
   approvalDecision,
@@ -2500,6 +2588,7 @@ function ReplenishmentView({
   exportFormat: 'xlsx' | 'pdf' | null;
   attachments: OrderAttachment[];
   confirmationUploaded: boolean;
+  confirmationComparing: boolean;
   approvalRequiredByRules: boolean;
   approvalSubmitted: boolean;
   approvalDecision: DemoState['approvalDecision'];
@@ -2635,6 +2724,7 @@ function ReplenishmentView({
         <LineTable
           lines={lines}
           editable={!orderRecorded}
+          comparing={confirmationComparing}
           stickyOffsetTop={actionBar.stickTop}
           revealRows
           onUpdateEstQty={onUpdateEstQty}
@@ -2850,6 +2940,7 @@ function ApprovalView({
   approved,
   orderRecorded,
   confirmationUploaded,
+  confirmationComparing,
   attachments,
   confirmationRounds,
   approvalDecision,
@@ -2861,7 +2952,11 @@ function ApprovalView({
   onAskAgent,
   onAddNegotiationNote,
   onUpdateEstQty,
+  onUpdateConfQty,
   onUpdateEstPrice,
+  onUpdateConfPrice,
+  onDeleteSku,
+  onDeleteSpu,
   onExport,
   title,
   onRenameTitle,
@@ -2871,6 +2966,7 @@ function ApprovalView({
   approved: boolean;
   orderRecorded: boolean;
   confirmationUploaded: boolean;
+  confirmationComparing: boolean;
   attachments: OrderAttachment[];
   confirmationRounds: ConfirmationRound[];
   approvalDecision: DemoState['approvalDecision'];
@@ -2882,7 +2978,11 @@ function ApprovalView({
   onAskAgent: (text: string) => void;
   onAddNegotiationNote: (text: string) => void;
   onUpdateEstQty: (sku: string, qty: number) => void;
+  onUpdateConfQty: (sku: string, qty: number) => void;
   onUpdateEstPrice: (sku: string, price: number) => void;
+  onUpdateConfPrice: (sku: string, price: number | null) => void;
+  onDeleteSku: (sku: string) => void;
+  onDeleteSpu: (productId: string) => void;
   onExport: (format: 'xlsx' | 'pdf') => void;
   title: string;
   onRenameTitle: (title: string) => void;
@@ -2968,16 +3068,15 @@ function ApprovalView({
 
         <LineTable
           lines={lines}
-          editable={false}
-          editableEstQty={!orderRecorded}
-          editableEstPrice={!orderRecorded}
+          editable={!orderRecorded}
+          comparing={confirmationComparing}
           stickyOffsetTop={actionBar.stickTop}
           onUpdateEstQty={onUpdateEstQty}
-          onUpdateConfQty={() => undefined}
+          onUpdateConfQty={onUpdateConfQty}
           onUpdateEstPrice={onUpdateEstPrice}
-          onUpdateConfPrice={() => undefined}
-          onDeleteSku={() => undefined}
-          onDeleteSpu={() => undefined}
+          onUpdateConfPrice={onUpdateConfPrice}
+          onDeleteSku={onDeleteSku}
+          onDeleteSpu={onDeleteSpu}
           onAskAgent={onAskAgent}
         />
         {exportFormat ? (
@@ -4056,6 +4155,7 @@ export default function PortfolioMainCanvas(props: Props) {
         exportFormat={state.exportFormat}
         attachments={state.attachments}
         confirmationUploaded={state.confirmationUploaded}
+        confirmationComparing={state.confirmationComparing}
         approvalRequiredByRules={state.approvalRequiredByRules}
         approvalSubmitted={state.approvalSubmitted}
         approvalDecision={state.approvalDecision}
@@ -4094,6 +4194,7 @@ export default function PortfolioMainCanvas(props: Props) {
         approved={state.approved}
         orderRecorded={state.orderRecorded}
         confirmationUploaded={state.confirmationUploaded}
+        confirmationComparing={state.confirmationComparing}
         attachments={state.attachments}
         confirmationRounds={state.confirmationRounds}
         approvalDecision={state.approvalDecision}
@@ -4106,7 +4207,11 @@ export default function PortfolioMainCanvas(props: Props) {
         onAskAgent={props.onAskAgent}
         onAddNegotiationNote={props.onAddNegotiationNote}
         onUpdateEstQty={props.onUpdateEstQty}
+        onUpdateConfQty={props.onUpdateConfQty}
         onUpdateEstPrice={props.onUpdateEstPrice}
+        onUpdateConfPrice={props.onUpdateConfPrice}
+        onDeleteSku={props.onDeleteSku}
+        onDeleteSpu={props.onDeleteSpu}
         onExport={props.onExport}
         onRenameTitle={onRenameTitle}
       />

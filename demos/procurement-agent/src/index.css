@@ -879,6 +879,33 @@
     @apply bg-background;
   }
 
+  /*
+   * Portfolio 补货计划表（.portfolio-plan-table）：
+   * 1) 固定列边框改用与普通列同色调的半透明分隔线（不再是更重的实色描边），横向滚动时也不变化。
+   *    投影不再逐格叠 box-shadow（表头代理表和表体是两张独立 table，逐格叠加会在表头处消失，
+   *    且行与行之间的背景色/边框会把投影切成一段一段）。改为在 LineTable 里渲染一条独立的
+   *    渐变遮罩条，贯穿表头+表体整个卡片高度，见组件内 scrollShadow 渲染部分。
+   * 2) 固定列 hover 背景通过行上的 --row-hover-bg 变量与可滚动列保持同一色调；
+   *    需要 !important 覆盖同层内联的 bg-[...] 工具类（Tailwind arbitrary-value 类与本文件同处
+   *    @layer components，纯靠选择器优先级无法稳定获胜）。
+   */
+  .portfolio-plan-table.def-data-table tbody td.sticky-col-lead-2,
+  .portfolio-plan-table.def-data-table thead th.sticky-col-lead-2 {
+    @apply border-r! border-border/50!;
+  }
+
+  .portfolio-plan-table.def-data-table tbody td.sticky-col-trail,
+  .portfolio-plan-table.def-data-table thead th.sticky-col-trail {
+    @apply border-l! border-border/50!;
+    border-right: 0 !important;
+  }
+
+  .portfolio-plan-table.def-data-table tbody tr:hover td.sticky-col-lead-1,
+  .portfolio-plan-table.def-data-table tbody tr:hover td.sticky-col-lead-2,
+  .portfolio-plan-table.def-data-table tbody tr:hover td.sticky-col-trail {
+    background-color: var(--row-hover-bg, var(--background)) !important;
+  }
+
   /* 通用业务列表（采购/客户等） */
   .def-data-table.data-list-table {
     table-layout: fixed;

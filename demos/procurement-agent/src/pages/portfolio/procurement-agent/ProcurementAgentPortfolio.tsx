@@ -174,6 +174,8 @@ type AgentReplyOptions = {
   /** 用户消息文案；省略则不追加用户气泡（如画布 Export） */
   userText?: string;
   patch?: Partial<DemoState>;
+  /** 思考动效结束、Agent 回复气泡出现的那一刻才应用（例如上传确认单后的差异对比结果） */
+  delayedPatch?: Partial<DemoState>;
   delayMs?: number;
   label?: string;
   /** 为 false 时不清空既有定时器（计划生成阶段用） */
@@ -348,7 +350,7 @@ export default function ProcurementAgentPortfolio() {
       const statusId = activeStatusIdRef.current;
       setBusy(false);
       setState((prev) => {
-        let next = prev;
+        let next: DemoState = { ...prev, ...(options.delayedPatch ?? {}) };
         if (statusId) {
           next = updateStatusMessage(next, statusId, {
             text: 'Thinking complete',
@@ -1201,17 +1203,23 @@ export default function ProcurementAgentPortfolio() {
           // Owner 页上传也留在当前 stage；谈价两边共用同一 confirmationRounds
           stage: state.stage === 'approval' ? 'approval' : 'replenishment',
           confirmationUploaded: uploaded.confirmationUploaded,
-          confirmationHasRisk: uploaded.confirmationHasRisk,
-          lines: uploaded.lines,
           confirmationRounds: uploaded.confirmationRounds,
           attachments: uploaded.attachments,
+          messageSeq: uploaded.messageSeq,
+          planGenerated: true,
+          // 表格先播"比对中"动效；差异结果随 Agent 思考结束一起揭晓（见 delayedPatch）
+          confirmationComparing: true,
+        },
+        // 数量/价格差异、审批触发等"对比结果"字段留到思考动效结束、回复气泡出现时才落地
+        delayedPatch: {
+          confirmationHasRisk: uploaded.confirmationHasRisk,
+          lines: uploaded.lines,
           approvalTriggers: uploaded.approvalTriggers,
           approvalRequiredByRules: uploaded.approvalRequiredByRules,
           approvalSubmitted: uploaded.approvalSubmitted,
           approvalDecision: uploaded.approvalDecision,
           approved: uploaded.approved,
-          messageSeq: uploaded.messageSeq,
-          planGenerated: true,
+          confirmationComparing: false,
         },
         label: 'Parsing confirmation diffs…',
       });

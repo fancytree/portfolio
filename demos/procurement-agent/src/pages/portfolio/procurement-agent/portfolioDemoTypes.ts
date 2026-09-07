@@ -196,6 +196,8 @@ export type DemoState = {
   lines: DemoLine[];
   confirmationUploaded: boolean;
   confirmationHasRisk: boolean;
+  /** 上传确认单后，Agent 正在比对差异（表格先播动效，思考结束才展示对比结果） */
+  confirmationComparing: boolean;
   exportFormat: 'xlsx' | 'pdf' | null;
   /** 本单附件清单（查看 / 下载 / 删除） */
   attachments: OrderAttachment[];

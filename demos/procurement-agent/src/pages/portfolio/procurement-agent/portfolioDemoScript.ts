@@ -122,7 +122,7 @@ export const CONFIRMED_LINES: DemoLine[] = [
   { ...BASE_LINES[6], confirmedPrice: BASE_LINES[6].estimatedPrice },
   { ...BASE_LINES[7], confirmedPrice: 7.9, risk: 'price' },
   { ...BASE_LINES[8], confirmedPrice: BASE_LINES[8].estimatedPrice },
-  { ...BASE_LINES[9], qty: 18, confirmedPrice: BASE_LINES[9].estimatedPrice, risk: 'qty' },
+  { ...BASE_LINES[9], confirmedPrice: BASE_LINES[9].estimatedPrice },
   { ...BASE_LINES[10], confirmedPrice: BASE_LINES[10].estimatedPrice },
   { ...BASE_LINES[11], confirmedPrice: BASE_LINES[11].estimatedPrice },
   { ...BASE_LINES[12], confirmedPrice: BASE_LINES[12].estimatedPrice },
@@ -215,7 +215,7 @@ export const RECEIVING_CATALOG: Array<Pick<ReceivingLine, 'sku' | 'name' | 'orde
   { sku: '431001', name: 'Classic bonder 8 ml', ordered: 60 },
   { sku: '431015', name: 'Classic bonder 15 ml', ordered: 36 },
   { sku: '420106', name: 'Care treatment 100 ml', ordered: 36 },
-  { sku: '510002', name: 'Top coat Matte', ordered: 18 },
+  { sku: '510002', name: 'Top coat Matte', ordered: 24 },
   { sku: 'NEW-024', name: 'Promo care kit', ordered: 0 },
 ];
 
@@ -229,7 +229,7 @@ const BATCH1_DDT: Record<string, { ddt: number; disposition?: ReceivingLine['dis
   '431001': { ddt: 48 },
   '431015': { ddt: 36 },
   '420106': { ddt: 0 },
-  '510002': { ddt: 18 },
+  '510002': { ddt: 24 },
   // 赠品：默认 hold，需 Accept / Return 后才能 Confirm
   'NEW-024': { ddt: 12, disposition: 'hold' },
 };
@@ -623,7 +623,7 @@ export const OUTCOME_ROWS: OutcomeRow[] = [
   { sku: '420050', name: 'Care treatment 50 ml', ordered: 36, sold: 28, remaining: 10, note: 'Healthy velocity after arrival' },
   { sku: '420106', name: 'Care treatment 100 ml', ordered: 36, sold: 22, remaining: 14, note: 'Mild over-order vs post-arrival demand' },
   { sku: '510001', name: 'Top coat Gloss', ordered: 60, sold: 52, remaining: 11, note: 'Fast mover - coverage held' },
-  { sku: '510002', name: 'Top coat Matte', ordered: 18, sold: 11, remaining: 7, note: 'Slower sell-through after arrival' },
+  { sku: '510002', name: 'Top coat Matte', ordered: 24, sold: 11, remaining: 13, note: 'Slower sell-through after arrival' },
   { sku: '880101', name: 'Color gel Red Passion', ordered: 48, sold: 40, remaining: 10, note: 'On track vs coverage' },
   { sku: '880102', name: 'Color gel Nude Rose', ordered: 36, sold: 31, remaining: 7, note: 'On track vs coverage' },
   { sku: '880103', name: 'Color gel Black Onyx', ordered: 24, sold: 16, remaining: 9, note: 'A bit soft vs plan - watch next cycle' },
@@ -1286,6 +1286,7 @@ export function createInitialState(): DemoState {
     lines: BASE_LINES.map((line) => ({ ...line })),
     confirmationUploaded: false,
     confirmationHasRisk: false,
+    confirmationComparing: false,
     exportFormat: null,
     attachments: [],
     confirmationRounds: [],
