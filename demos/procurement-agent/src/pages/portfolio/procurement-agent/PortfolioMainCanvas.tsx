@@ -1513,16 +1513,18 @@ function ActionLinks({
   onDelete,
   stickyBg,
   dense,
+  endShadow,
 }: {
   onWhy: () => void;
   onDelete: () => void;
   stickyBg: string;
   dense?: boolean;
+  endShadow?: string;
 }) {
   return (
     <TableCell
       align="right"
-      className={dataListStickyCol('trail', cn(dense ? 'px-2 py-2.5' : 'px-2 py-3 align-middle', stickyBg))}
+      className={dataListStickyCol('trail', cn(dense ? 'px-2 py-2.5' : 'px-2 py-3 align-middle', stickyBg, endShadow))}
       onClick={(event) => event.stopPropagation()}
     >
       <div className="flex items-center justify-end gap-1.5">
@@ -1888,17 +1890,6 @@ function LineTable({
   // 列头 / 表体横向滚动同步（列头并入 sticky 区，表体单独裁切底圆角）
   const headScrollRef = useRef<HTMLDivElement>(null);
   const bodyScrollRef = useRef<HTMLDivElement>(null);
-  // 固定列投影条从表头顶部开始（不盖住表头上方 "N products · Expand all" 那条工具栏）
-  const toolbarRef = useRef<HTMLDivElement>(null);
-  const [toolbarHeight, setToolbarHeight] = useState(0);
-  useLayoutEffect(() => {
-    const el = toolbarRef.current;
-    if (!el) return;
-    setToolbarHeight(el.offsetHeight);
-    const resizeObserver = new ResizeObserver(() => setToolbarHeight(el.offsetHeight));
-    resizeObserver.observe(el);
-    return () => resizeObserver.disconnect();
-  }, []);
   // 固定列投影：只在对应方向确实有内容被横向滚动遮住时才显示（不可滚动/已到边界时不显示）
   const [scrollShadow, setScrollShadow] = useState({ start: false, end: false });
   const updateScrollShadow = () => {
@@ -1939,6 +1930,12 @@ function LineTable({
     }
     updateScrollShadow();
   };
+  // 固定列投影：直接落在 sticky 单元格自己身上（跟随同一个滚动容器一起动），
+  // 而不是叠一层独立于滚动内容之外的遮罩——横向滚动到边缘的原生回弹动效才不会跟它错位。
+  // 负 spread 会把每格投影矩形的上下边同时往里收，行与行交界处就会露出一段没投影的缝隙，
+  // 看起来一段一段的——这里 spread 用 0（矩形贴满整格高度），靠 blur 在行边界自然重叠过渡。
+  const startShadowClass = scrollShadow.start ? 'shadow-[3px_0_4px_0_rgba(0,0,0,0.05)]' : undefined;
+  const endShadowClass = scrollShadow.end ? 'shadow-[-3px_0_4px_0_rgba(0,0,0,0.05)]' : undefined;
 
   const tableWidthStyle = {
     '--sticky-lead-1-w': '200px',
@@ -1948,12 +1945,6 @@ function LineTable({
     width: `${tableMinWidth}px`,
     minWidth: `${tableMinWidth}px`,
   } as CSSProperties;
-  // 固定列投影条的水平偏移：与 tableWidthStyle 里的 lead1/lead2/trail 宽度一一对应，
-  // 贯穿表头(thead 代理表)+表体整卡高度的一条独立渐变遮罩，而不是逐格叠 box-shadow
-  // （逐格叠加在表头/表体分离的结构里会在表头处丢失，行边框也会把投影切成一段段）。
-  const stickyLeadTotalW = 200 + 88;
-  const stickyTrailW = resolvedShowActions ? 88 : 0;
-
   // sticky 表头与表体分离：表头/表体各自 overflow-hidden 裁切圆角，不打断吸顶
   return (
     <div className="relative">
@@ -1972,25 +1963,11 @@ function LineTable({
       <div ref={sentinelRef} className="pointer-events-none absolute top-0 h-px w-full" aria-hidden />
       <div
         className={cn(
-          'relative isolate rounded-b-2xl border border-[#e8eaef] bg-white',
+          'relative rounded-b-2xl border border-[#e8eaef] bg-white',
           stuck ? 'rounded-t-none' : 'rounded-t-2xl',
           revealRows && 'motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-300',
         )}
       >
-        {scrollShadow.start ? (
-          <div
-            className="pointer-events-none absolute bottom-0 z-40 w-1.5"
-            style={{ top: toolbarHeight, left: stickyLeadTotalW, background: 'linear-gradient(to right, rgb(0 0 0 / 0.06), transparent)' }}
-            aria-hidden
-          />
-        ) : null}
-        {scrollShadow.end ? (
-          <div
-            className="pointer-events-none absolute bottom-0 z-40 w-1.5"
-            style={{ top: toolbarHeight, right: stickyTrailW, background: 'linear-gradient(to left, rgb(0 0 0 / 0.06), transparent)' }}
-            aria-hidden
-          />
-        ) : null}
         {comparing ? (
           <div className="pointer-events-none absolute inset-0 z-50 flex flex-col items-center justify-center gap-2 rounded-b-2xl bg-white/85 backdrop-blur-[1px] motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200">
             <span className="inline-flex size-9 items-center justify-center rounded-xl bg-[#eef4ff] text-[#2f6bff]">
@@ -2003,7 +1980,7 @@ function LineTable({
           className={cn('sticky z-30 bg-white', !stuck && 'overflow-hidden rounded-t-2xl')}
           style={{ top: stickyOffsetTop }}
         >
-          <div ref={toolbarRef} className="flex items-center justify-between gap-3 border-b border-[#e8eaef] bg-[#fafbfc] px-4 py-2">
+          <div className="flex items-center justify-between gap-3 border-b border-[#e8eaef] bg-[#fafbfc] px-4 py-2">
             <span className="text-[11px] text-[#8b93a7]">
               {groups.length} products · {lines.length} SKUs
             </span>
@@ -2034,7 +2011,11 @@ function LineTable({
                         'whitespace-nowrap px-3 py-2.5 text-[11px] font-medium text-[#8b93a7]',
                         col.align === 'right' ? 'text-right' : 'text-left',
                         col.key === 'actions' && 'px-2',
-                        col.sticky && dataListStickyCol(col.sticky, 'bg-[#f6f7f9]'),
+                        col.sticky && dataListStickyCol(col.sticky, cn(
+                          'bg-[#f6f7f9]',
+                          col.sticky === 'lead2' && startShadowClass,
+                          col.sticky === 'trail' && endShadowClass,
+                        )),
                         !col.sticky && 'bg-[#f6f7f9]',
                       )}
                     >
@@ -2048,7 +2029,7 @@ function LineTable({
         </div>
 
         <div className="overflow-hidden rounded-b-2xl">
-          <div ref={bodyScrollRef} className="max-w-full overflow-x-auto overscroll-x-none" onScroll={syncHeadScroll}>
+          <div ref={bodyScrollRef} className="max-w-full overflow-x-auto" onScroll={syncHeadScroll}>
             <Table
               scroll={false}
               frame={false}
@@ -2122,7 +2103,7 @@ function LineTable({
                   </TableCell>
                   <TableCell
                     align="right"
-                    className={dataListStickyCol('lead2', cn('px-3 py-2.5 text-[12px] font-semibold tabular-nums', stickyGroupBg))}
+                    className={dataListStickyCol('lead2', cn('px-3 py-2.5 text-[12px] font-semibold tabular-nums', stickyGroupBg, startShadowClass))}
                   >
                     {agg.plannedQty}
                   </TableCell>
@@ -2153,6 +2134,7 @@ function LineTable({
                     <ActionLinks
                       dense
                       stickyBg={stickyGroupBg}
+                      endShadow={endShadowClass}
                       onWhy={() => onAskAgent(
                         `Why did you recommend ${group.label}? Explain the SPU-level quantity logic.`,
                       )}
@@ -2194,7 +2176,7 @@ function LineTable({
                         </TableCell>
                         <TableCell
                           align="right"
-                          className={dataListStickyCol('lead2', cn('px-3 py-3 align-middle', stickyBg))}
+                          className={dataListStickyCol('lead2', cn('px-3 py-3 align-middle', stickyBg, startShadowClass))}
                         >
                           <EstQtyCell
                             line={line}
@@ -2238,6 +2220,7 @@ function LineTable({
                         {resolvedShowActions ? (
                           <ActionLinks
                             stickyBg={stickyBg}
+                            endShadow={endShadowClass}
                             onWhy={() => onAskAgent(
                               `Why did you recommend ${line.sku} · ${line.variant} at qty ${line.qty}?`,
                             )}

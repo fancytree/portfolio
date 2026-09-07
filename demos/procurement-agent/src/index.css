@@ -882,9 +882,9 @@
   /*
    * Portfolio 补货计划表（.portfolio-plan-table）：
    * 1) 固定列边框改用与普通列同色调的半透明分隔线（不再是更重的实色描边），横向滚动时也不变化。
-   *    投影不再逐格叠 box-shadow（表头代理表和表体是两张独立 table，逐格叠加会在表头处消失，
-   *    且行与行之间的背景色/边框会把投影切成一段一段）。改为在 LineTable 里渲染一条独立的
-   *    渐变遮罩条，贯穿表头+表体整个卡片高度，见组件内 scrollShadow 渲染部分。
+   *    投影直接落在 sticky 单元格自己身上（组件里按 scrollShadow 状态给 thead/tbody 的
+   *    lead2、trail 单元格各自加 shadow-[...] 工具类），跟随同一个滚动容器一起动——
+   *    这样横向滚动到边缘的原生回弹动效才不会让投影跟边框错位，也不用额外关掉回弹。
    * 2) 固定列 hover 背景通过行上的 --row-hover-bg 变量与可滚动列保持同一色调；
    *    需要 !important 覆盖同层内联的 bg-[...] 工具类（Tailwind arbitrary-value 类与本文件同处
    *    @layer components，纯靠选择器优先级无法稳定获胜）。
