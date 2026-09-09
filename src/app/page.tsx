@@ -158,22 +158,20 @@ const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
 const heroGreeting = "Hey, I'm Mei Chai (River).";
-const heroIntroText = 'Beyond screens, I shape intelligent systems for meaningful human–AI collaboration.';
+const heroIntroText = 'Beyond screens, I shape intelligent systems for meaningful human–AI collaboration';
+const heroIntroTokens = heroIntroText.match(/\S+\s*/g) ?? [heroIntroText];
 
 function HeroTypedHeading() {
   const [visibleCharacters, setVisibleCharacters] = useState(0);
-  const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) {
       setVisibleCharacters(heroIntroText.length);
-      setShowCursor(false);
       return;
     }
 
     let animationFrame = 0;
-    let cursorTimer = 0;
     const startTimer = window.setTimeout(() => {
       const startedAt = performance.now();
       const charactersPerSecond = 42;
@@ -187,8 +185,6 @@ function HeroTypedHeading() {
 
         if (nextCount < heroIntroText.length) {
           animationFrame = window.requestAnimationFrame(typeNextCharacters);
-        } else {
-          cursorTimer = window.setTimeout(() => setShowCursor(false), 700);
         }
       };
 
@@ -197,13 +193,39 @@ function HeroTypedHeading() {
 
     return () => {
       window.clearTimeout(startTimer);
-      window.clearTimeout(cursorTimer);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
     };
   }, []);
 
-  const visibleText = heroIntroText.slice(0, visibleCharacters);
   const isComplete = visibleCharacters === heroIntroText.length;
+  let characterOffset = 0;
+  const typedTokens = heroIntroTokens.map((token, tokenIndex) => {
+    const tokenStart = characterOffset;
+    characterOffset += token.length;
+
+    return (
+      <span key={`${token}-${tokenIndex}`} className="inline-block whitespace-pre">
+        {Array.from(token).map((character, characterIndex) => {
+          const absoluteIndex = tokenStart + characterIndex;
+          const isVisible = absoluteIndex < visibleCharacters;
+          const carriesCursor = visibleCharacters > 0 && absoluteIndex === visibleCharacters - 1;
+
+          return (
+            <span
+              key={absoluteIndex}
+              className="relative inline-block"
+              style={{ visibility: isVisible ? 'visible' : 'hidden' }}
+            >
+              {character}
+              {carriesCursor && (
+                <span className="mei-type-cursor mei-type-cursor-follow text-[#ed5b2b]" />
+              )}
+            </span>
+          );
+        })}
+      </span>
+    );
+  });
 
   return (
     <div className="max-w-[760px]">
@@ -222,13 +244,7 @@ function HeroTypedHeading() {
         className="relative text-[34px] leading-[1.08] tracking-[-0.035em] text-[#0a0a0a] sm:text-[44px] md:text-[54px]"
         style={fontDisplay}
       >
-        <span aria-hidden="true" className="invisible">
-          {heroIntroText}
-        </span>
-        <span aria-hidden="true" className="absolute inset-0">
-          {visibleText}
-          {showCursor && <span className="mei-type-cursor text-[#ed5b2b]" />}
-        </span>
+        <span aria-hidden="true">{typedTokens}</span>
       </h1>
 
       <div
@@ -276,8 +292,8 @@ const shipStorybookTool: ToolItem = { type: 'ship-storybook' };
 const processSteps = [
   {
     icon: Search,
-    title: 'Research & synthesis',
-    body: 'Talk to users, read behavior, and turn messy signals into clear product questions. AI helps accelerate synthesis without replacing judgment.',
+    title: 'Find the decision',
+    body: 'Combine interviews, behavior, and domain evidence to identify the decision the product must support—not only the feature users ask for.',
     tools: [
       tool('/img/strategy/notion.svg', 'Notion'),
       tool('/img/strategy/claude.svg', 'Claude'),
@@ -288,14 +304,14 @@ const processSteps = [
   },
   {
     icon: Star,
-    title: 'Prioritize with stakeholders',
-    body: 'Frame opportunities with stakeholders, weigh user value against business constraints, and decide what deserves to be built first.',
+    title: 'Frame the product',
+    body: 'Align user value, business goals, system constraints, and risk. Define what deserves automation and what should remain a human choice.',
     tools: [tool('/img/strategy/figma.svg', 'Figma'), tool('/img/strategy/notion.svg', 'Notion')],
   },
   {
     icon: Tangent,
-    title: 'Design & prototype',
-    body: 'Map flows, shape interactions, and build working prototypes when static screens are not enough to validate the idea.',
+    title: 'Model the system',
+    body: 'Map inputs, states, recommendations, actions, and failure paths before committing to interface details.',
     tools: [
       tool('/img/strategy/figma.svg', 'Figma'),
       tool('/img/strategy/openai.svg', 'OpenAI', true),
@@ -306,8 +322,8 @@ const processSteps = [
   },
   {
     icon: AudioWaveform,
-    title: 'Test & iterate',
-    body: 'Put concepts in front of users and stakeholders, watch where they break, and iterate until the experience becomes clearer.',
+    title: 'Prototype the behavior',
+    body: 'Build working interactions that reveal how the product responds, then test comprehension, control, and edge cases.',
     tools: [
       tool('/img/strategy/research-tool.png', 'User research tool'),
       tool('/img/strategy/trello.svg', 'Trello'),
@@ -319,8 +335,8 @@ const processSteps = [
   },
   {
     icon: ChartSpline,
-    title: 'Ship & measure',
-    body: 'Partner with engineering or build directly, then track adoption, task completion, and qualitative feedback after launch.',
+    title: 'Ship and learn',
+    body: 'Partner with engineering or build directly, measure real behavior, and use the evidence to refine the experience and its underlying rules.',
     toolGapClassName: 'gap-[29px]',
     tools: [
       shipIcon('/img/strategy/ship-github.svg', 'GitHub'),
@@ -533,11 +549,12 @@ export default function Home() {
             <Reveal>
               <div className="flex flex-col gap-5 text-[#ed5b2b]">
                 <h3 className="max-w-[480px] text-[22px] md:text-[24px]" style={fontBody}>
-                  Research to reality — no hand-off gap
+                  Design behavior, not only interfaces
                 </h3>
                 <p className="max-w-[380px] text-[15px] font-light md:text-[16px]" style={fontBody}>
-                  My process connects discovery, product decisions, prototype, and measurement so design does not
-                  stop at handoff. I use research to reduce ambiguity, then make ideas tangible enough to test.
+                  With generative AI, cause and effect is no longer fixed: the same intent can produce different
+                  outcomes. I design the rules around that uncertainty—what the product should understand, how people
+                  can steer it, and when human judgment takes over.
                 </p>
               </div>
             </Reveal>
@@ -607,8 +624,9 @@ export default function Home() {
                 About
               </h2>
               <p className="max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a] md:text-[20px]" style={fontBody}>
-                I am a Product Designer with 7+ years of experience across AI products, research, design systems, and
-                code-based delivery. I turn complex product logic into clear, usable experiences people can trust.
+                My path runs from user research and interaction design to product ownership and code-based delivery.
+                I am most effective when a problem is still ambiguous: creating a shared model, making the behavior
+                tangible, and helping the team move from an idea to something people can use.
               </p>
             </div>
           </Reveal>
@@ -647,7 +665,7 @@ export default function Home() {
             <Reveal>
               <div className="flex flex-col gap-6 pt-10 md:flex-row md:gap-16 md:pt-12">
                 <h2 className="w-full shrink-0 text-[24px] leading-tight md:w-[300px] md:text-[34px]" style={fontDisplay}>
-                  How Can I Help?
+                  What I bring
                 </h2>
                 <div className="grid flex-1 grid-cols-1 gap-8 sm:grid-cols-2 md:gap-10">
                   <div className="flex flex-col gap-3">

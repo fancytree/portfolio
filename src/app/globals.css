@@ -487,12 +487,22 @@ body.no-scroll {
 
 .mei-type-cursor {
   display: inline-block;
-  width: 2px;
-  height: 0.9em;
-  margin-left: 0.08em;
+  width: 0.42em;
+  height: 0.78em;
+  margin-left: 0.1em;
+  border-radius: 1px;
   background: currentColor;
-  vertical-align: -0.08em;
-  animation: mei-type-cursor-blink 0.72s steps(1, end) infinite;
+  vertical-align: -0.04em;
+  animation: mei-type-cursor-blink 0.78s steps(1, end) infinite;
+}
+
+.mei-type-cursor-follow {
+  position: absolute;
+  left: calc(100% + 0.1em);
+  bottom: 0.04em;
+  z-index: 1;
+  margin-left: 0;
+  vertical-align: initial;
 }
 
 @keyframes mei-type-cursor-blink {
