@@ -818,6 +818,7 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
   const delayLabel = value === 0 ? 'No delay' : `${value} ${unitLabel}`
   const [draft, setDraft] = useState(String(value))
   const [draftUnit, setDraftUnit] = useState<DelayTarget['unit']>(unit)
+  const durationInputRef = useRef<HTMLInputElement>(null)
   const parsedValue = Number(draft)
   const maxValue = draftUnit === 'days' ? 30 : 30 * 24
   const numericDraft = draft.trim() !== '' && Number.isFinite(parsedValue)
@@ -837,6 +838,13 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
     if (!data.editingDelay) return
     setDraft(String(value))
     setDraftUnit(unit)
+
+    const frame = requestAnimationFrame(() => {
+      durationInputRef.current?.focus({ preventScroll: true })
+      durationInputRef.current?.select()
+    })
+
+    return () => cancelAnimationFrame(frame)
   }, [data.editingDelay, unit, value])
 
   return (
@@ -947,7 +955,7 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
                 )}
               >
                 <Input
-                  autoFocus={Boolean(data.editingDelay)}
+                  ref={durationInputRef}
                   type="number"
                   min={0}
                   max={maxValue}
