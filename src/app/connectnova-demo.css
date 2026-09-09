@@ -122,6 +122,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cn-demo-scope .cn-execution-edge { animation: none !important; }
+  .cn-demo-scope .cn-delay-shape-motion {
+    transition: none !important;
+  }
 }
 
 /* Demo frame — fixed px height. Viewport units are avoided here because the

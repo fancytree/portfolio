@@ -485,6 +485,34 @@ body.no-scroll {
   animation: meiScrollDropLine 1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+.mei-type-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.9em;
+  margin-left: 0.08em;
+  background: currentColor;
+  vertical-align: -0.08em;
+  animation: mei-type-cursor-blink 0.72s steps(1, end) infinite;
+}
+
+@keyframes mei-type-cursor-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mei-type-cursor {
+    animation: none;
+  }
+}
+
 .pond-shell {
   position: absolute;
   inset: 0;

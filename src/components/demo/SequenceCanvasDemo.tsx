@@ -842,9 +842,14 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
   return (
     <div
       className={cn(
-        'relative flex items-center justify-center font-manrope transition-[width,height] duration-250 ease-out',
+        'cn-delay-shape-motion relative flex items-center justify-center font-manrope',
         data.editingDelay ? 'h-[212px] w-[307px]' : 'h-12 w-[243px]',
       )}
+      style={{
+        transition: data.editingDelay
+          ? 'width 280ms cubic-bezier(0.22, 1, 0.36, 1) 90ms, height 280ms cubic-bezier(0.22, 1, 0.36, 1) 90ms'
+          : 'width 230ms cubic-bezier(0.4, 0, 0.2, 1), height 230ms cubic-bezier(0.4, 0, 0.2, 1)',
+      }}
     >
       <div
         role="button"
@@ -852,12 +857,31 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
         aria-label={`Edit delay: ${delayLabel}`}
         className={cn(
           'nodrag nopan group absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 overflow-hidden border font-manrope',
-          'transition-[width,height,border-radius,background-color,border-color,box-shadow] duration-250 ease-out',
+          'cn-delay-shape-motion origin-center will-change-[width,height,border-radius,box-shadow]',
           data.editingDelay
-            ? 'h-[212px] w-[307px] rounded-lg border-border bg-[var(--cn-surface)] shadow-lg'
+            ? 'h-[212px] w-[307px] rounded-lg border-border bg-[var(--cn-surface)] shadow-[var(--cn-shadow-popover)]'
             : 'h-12 w-[123px] rounded-full border-primary bg-[color-mix(in_srgb,var(--cn-primary)_8%,transparent)] hover:bg-[color-mix(in_srgb,var(--cn-primary)_13%,transparent)]',
           data.invalid && !data.editingDelay && 'border-destructive',
         )}
+        style={{
+          transition: data.editingDelay
+            ? [
+                'border-radius 110ms ease-out',
+                'width 280ms cubic-bezier(0.22, 1, 0.36, 1) 90ms',
+                'height 280ms cubic-bezier(0.22, 1, 0.36, 1) 90ms',
+                'background-color 160ms ease-out 70ms',
+                'border-color 160ms ease-out 70ms',
+                'box-shadow 200ms ease-out 120ms',
+              ].join(', ')
+            : [
+                'width 230ms cubic-bezier(0.4, 0, 0.2, 1)',
+                'height 230ms cubic-bezier(0.4, 0, 0.2, 1)',
+                'border-radius 100ms ease-in 170ms',
+                'background-color 150ms ease-in 100ms',
+                'border-color 150ms ease-in 100ms',
+                'box-shadow 120ms ease-in',
+              ].join(', '),
+        }}
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {
           event.stopPropagation()
@@ -872,8 +896,11 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
       >
         <div
           className={cn(
-            'absolute inset-0 flex items-center justify-center gap-2 whitespace-nowrap px-6 text-base font-medium text-primary transition-opacity duration-150',
-            data.editingDelay ? 'invisible pointer-events-none opacity-0' : 'visible opacity-100 delay-100',
+            'absolute inset-0 flex items-center justify-center gap-2 whitespace-nowrap px-6 text-base font-medium text-primary',
+            'transition-[opacity,transform,filter] duration-[120ms] ease-in motion-reduce:transition-none',
+            data.editingDelay
+              ? 'invisible pointer-events-none scale-[0.96] opacity-0 blur-[2px]'
+              : 'visible scale-100 opacity-100 blur-0 delay-[170ms] motion-reduce:delay-0',
           )}
         >
           <FigmaIcon name="clock" className="h-6 w-6" />
@@ -883,13 +910,35 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
 
         <div
           className={cn(
-            'absolute inset-0 flex flex-col px-6 pb-4 pt-6 text-foreground transition-opacity duration-150',
-            data.editingDelay ? 'visible opacity-100 delay-100' : 'invisible pointer-events-none opacity-0',
+            'absolute inset-0 flex flex-col px-6 pb-4 pt-6 text-foreground',
+            'transition-[opacity,transform] duration-[190ms] ease-out motion-reduce:transition-none',
+            data.editingDelay
+              ? 'visible translate-y-0 scale-100 opacity-100 delay-[170ms] motion-reduce:delay-0'
+              : 'invisible pointer-events-none translate-y-2 scale-[0.985] opacity-0',
           )}
           onClick={(event) => event.stopPropagation()}
         >
-          <p className="text-base font-medium leading-[22px]">Delay before the next action:</p>
-          <div className="mt-3">
+          <div
+            className={cn(
+              'flex items-center gap-2 transition-[opacity,transform] duration-[160ms] ease-out motion-reduce:transition-none',
+              data.editingDelay
+                ? 'translate-y-0 opacity-100 delay-[185ms] motion-reduce:delay-0'
+                : 'translate-y-1 opacity-0',
+            )}
+          >
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              <FigmaIcon name="clock" className="h-4 w-4" />
+            </span>
+            <p className="text-base font-medium leading-[22px]">Delay before the next action</p>
+          </div>
+          <div
+            className={cn(
+              'mt-3 transition-[opacity,transform] duration-[180ms] ease-out motion-reduce:transition-none',
+              data.editingDelay
+                ? 'translate-y-0 opacity-100 delay-[215ms] motion-reduce:delay-0'
+                : 'translate-y-1.5 opacity-0',
+            )}
+          >
             <div>
               <div
                 className={cn(
@@ -948,7 +997,14 @@ const WorkflowDelayNode = memo(function WorkflowDelayNode({ data }: NodeProps<No
               </p>
             </div>
           </div>
-          <div className="mt-auto flex items-center justify-end gap-6">
+          <div
+            className={cn(
+              'mt-auto flex items-center justify-end gap-6 transition-[opacity,transform] duration-[180ms] ease-out motion-reduce:transition-none',
+              data.editingDelay
+                ? 'translate-y-0 opacity-100 delay-[245ms] motion-reduce:delay-0'
+                : 'translate-y-1.5 opacity-0',
+            )}
+          >
               <Button
                 type="button"
                 variant="ghost"
@@ -1296,7 +1352,11 @@ function buildCanvas(
       type,
       position: { x: 0, y: 0 },
       zIndex: editingDelayId === node.id ? 20 : 0,
-      style: { transition: 'transform 250ms ease-out' },
+      style: {
+        transition: editingDelayId
+          ? 'transform 280ms cubic-bezier(0.22, 1, 0.36, 1) 90ms'
+          : 'transform 230ms cubic-bezier(0.4, 0, 0.2, 1)',
+      },
       data: {
         kind: type,
         node,

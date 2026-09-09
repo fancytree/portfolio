@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { useFullscreen } from '@/lib/useFullscreen';
 import { DEMO_CLOSE_MESSAGE } from '@/lib/demoMessages';
+import posthog from 'posthog-js';
+
+const posthogEnabled = Boolean(
+  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST,
+);
 
 type Props = {
   title: string;
@@ -53,6 +58,16 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
     return () => window.removeEventListener('message', onMessage);
   }, []);
 
+  const toggleFullscreen = () => {
+    if (posthogEnabled) {
+      posthog.capture('portfolio_demo_fullscreen_toggled', {
+        demo_title: title,
+        fullscreen_action: isFullscreen ? 'exited' : 'opened',
+      });
+    }
+    toggle();
+  };
+
   return (
     <figure className="m-0 flex min-w-0 flex-col gap-4">
       {/* The card is a scaled-down window, so its height comes from the window's
@@ -83,7 +98,7 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
         {!isFullscreen ? (
           <button
             type="button"
-            onClick={toggle}
+            onClick={toggleFullscreen}
             disabled={!supported}
             className="mei-demo-frame__cta absolute inset-0 disabled:cursor-default"
             data-cursor={supported ? 'pill' : undefined}
@@ -100,7 +115,7 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
         ) : (
           <button
             type="button"
-            onClick={toggle}
+            onClick={toggleFullscreen}
             className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-[#0a0a0a]/82 px-3.5 py-2 text-[13px] font-medium text-white backdrop-blur-sm"
             style={{ fontFamily: 'var(--mei-font-primary)' }}
           >

@@ -17,7 +17,7 @@ export const productProjects: WorkProject[] = [
     title: 'Procurement Agent',
     category: 'Product / UX / AX Designer',
     time: '2026',
-    tags: ['AX Design', 'B2B SaaS'],
+    tags: ['AX Design', 'Full stack'],
     description: 'AI procurement agent for a B2B beauty wholesaler, with human control at every step.',
     image: '/img/procurement-agent/Procurement Agent.avif',
     imageFit: 'cover',

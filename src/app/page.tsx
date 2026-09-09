@@ -157,6 +157,97 @@ const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)', font
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
+const heroGreeting = "Hey, I'm Mei Chai (River).";
+const heroIntroText = 'Beyond screens, I shape intelligent systems for meaningful human–AI collaboration.';
+
+function HeroTypedHeading() {
+  const [visibleCharacters, setVisibleCharacters] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) {
+      setVisibleCharacters(heroIntroText.length);
+      setShowCursor(false);
+      return;
+    }
+
+    let animationFrame = 0;
+    let cursorTimer = 0;
+    const startTimer = window.setTimeout(() => {
+      const startedAt = performance.now();
+      const charactersPerSecond = 42;
+
+      const typeNextCharacters = (now: number) => {
+        const nextCount = Math.min(
+          heroIntroText.length,
+          Math.floor(((now - startedAt) / 1000) * charactersPerSecond),
+        );
+        setVisibleCharacters(nextCount);
+
+        if (nextCount < heroIntroText.length) {
+          animationFrame = window.requestAnimationFrame(typeNextCharacters);
+        } else {
+          cursorTimer = window.setTimeout(() => setShowCursor(false), 700);
+        }
+      };
+
+      animationFrame = window.requestAnimationFrame(typeNextCharacters);
+    }, 420);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(cursorTimer);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
+  const visibleText = heroIntroText.slice(0, visibleCharacters);
+  const isComplete = visibleCharacters === heroIntroText.length;
+
+  return (
+    <div className="max-w-[760px]">
+      <p
+        className="mb-4 flex items-center gap-2 text-[12px] leading-none text-[#0a0a0a]/65 sm:mb-5 sm:text-[13px]"
+        style={fontMono}
+      >
+        <span className="text-[#ed5b2b]" aria-hidden="true">
+          &gt;
+        </span>
+        {heroGreeting}
+      </p>
+
+      <h1
+        aria-label={heroIntroText}
+        className="relative text-[34px] leading-[1.08] tracking-[-0.035em] text-[#0a0a0a] sm:text-[44px] md:text-[54px]"
+        style={fontDisplay}
+      >
+        <span aria-hidden="true" className="invisible">
+          {heroIntroText}
+        </span>
+        <span aria-hidden="true" className="absolute inset-0">
+          {visibleText}
+          {showCursor && <span className="mei-type-cursor text-[#ed5b2b]" />}
+        </span>
+      </h1>
+
+      <div
+        className={`mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] tracking-[0.08em] text-[#0a0a0a]/55 transition-all duration-500 sm:mt-6 sm:text-[11px] ${
+          isComplete ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
+        }`}
+        style={fontMono}
+        aria-label="UX, product strategy, and systems thinking"
+      >
+        <span>UX</span>
+        <span className="text-[#ed5b2b]" aria-hidden="true">/</span>
+        <span>PRODUCT STRATEGY</span>
+        <span className="text-[#ed5b2b]" aria-hidden="true">/</span>
+        <span>SYSTEMS THINKING</span>
+      </div>
+    </div>
+  );
+}
+
 const homeWorkItems = [
   ...['Procurement Agent', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
     productProjects.filter((project) => project.title === title)
@@ -351,14 +442,7 @@ export default function Home() {
             这样两个区域的正文左边缘在任何视口宽度下都精确对齐 */}
         <div className="pointer-events-none relative z-10 -mx-6 px-6 sm:-mx-8 sm:px-10 md:px-16">
           <div className="mx-auto w-full max-w-[1000px]">
-            <h1
-              className="max-w-[620px] text-[30px] leading-[1.2] text-[#0a0a0a] sm:text-[38px] md:text-[44px]"
-              style={fontDisplay}
-            >
-              Hey, I&apos;m Mei Chai (River). I&apos;m a{' '}
-              <span className="font-medium text-[#ed5b2b]">UX/AX designer</span> who turns ideas into products people
-              can actually use.
-            </h1>
+            <HeroTypedHeading />
           </div>
         </div>
 

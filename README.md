@@ -20,6 +20,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Analytics
+
+PostHog is initialized in `src/instrumentation-client.ts`. Page views, client-side route changes, clicks, web vitals, and session replay are collected according to the active PostHog project settings.
+
+All portfolio events include `app = portfolio-site`, so they can be filtered separately when the PostHog project also contains data from other products.
+
+Set the following variables in `.env.local` and in the deployment environment:
+
+```bash
+NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN=phc_...
+NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
+NEXT_PUBLIC_POSTHOG_UI_HOST=https://eu.posthog.com
+```
+
+Browser traffic is sent through the same-origin `/hzn` rewrite configured in
+`next.config.ts`, which reduces blocking by privacy extensions. The rewrite
+uses the configured PostHog host and derives its matching assets host.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

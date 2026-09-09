@@ -655,7 +655,7 @@ export default function ProcurementAgentPage() {
         accentColor={accent}
         title="AI Procurement Agent for DEF Beauty Supply"
         subtitle="Evidence-backed purchasing decisions, with deterministic calculations, visible reasoning, and human control at every commitment."
-        tags={['B2B SaaS', 'Enterprise UX', 'AX Design', 'Agent Workflow', 'Data Architecture']}
+        tags={['B2B SaaS', 'Enterprise UX', 'AX Design', 'Agent Workflow', 'Full stack']}
         aboutLabel="About DEF Beauty Supply"
         about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts purchasing work was fragmented across software, documents, messages, and spreadsheets. I redesigned the procurement lifecycle first, then built an AI decision-support layer on top of that traceable foundation.'}
         meta={[

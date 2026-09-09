@@ -6,6 +6,11 @@ import type { Workflow as CampaignWorkflow, WorkflowNode } from '@/components/ca
 import { cn } from '@/lib/utils'
 import { SequenceCanvasDemo } from '@/components/demo/SequenceCanvasDemo'
 import { createEmptyWorkflow, getStart, makeNode } from '@/components/campaigns/workflow/workflow.model'
+import posthog from 'posthog-js'
+
+const posthogEnabled = Boolean(
+  process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN && process.env.NEXT_PUBLIC_POSTHOG_HOST,
+)
 
 type ExploreMode = 'free' | 'workflow' | 'results'
 
@@ -243,9 +248,20 @@ export function SequenceDemoWorkspace() {
   // three of them by key is what returns the whole demo to its starting state.
   const [resetKey, setResetKey] = useState(0)
 
+  const selectMode = (nextMode: ExploreMode) => {
+    if (nextMode === mode) return
+    if (posthogEnabled) posthog.capture('sequence_demo_mode_selected', { selected_mode: nextMode })
+    setMode(nextMode)
+  }
+
+  const resetWorkspace = () => {
+    if (posthogEnabled) posthog.capture('sequence_demo_reset', { selected_mode: mode })
+    setResetKey((n) => n + 1)
+  }
+
   return (
     <div className="flex h-full min-h-0 flex-col sm:flex-row">
-      <ExploreNavigation value={mode} onChange={setMode} onReset={() => setResetKey((n) => n + 1)} />
+      <ExploreNavigation value={mode} onChange={selectMode} onReset={resetWorkspace} />
       <div className="relative min-h-0 min-w-0 flex-1">
         <div
           className={cn(

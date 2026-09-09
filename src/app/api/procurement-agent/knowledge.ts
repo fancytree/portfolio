@@ -14,7 +14,7 @@ export const PROJECT_CASE_STUDY = `
 One-line: Designing an evidence-backed procurement agent that helps buyers decide what to
 purchase, how much to order, and why - while keeping critical decisions under human control.
 
-Tags: B2B SaaS, Enterprise UX, AX Design, Agent Workflow, Data Architecture
+Tags: B2B SaaS, Enterprise UX, AX Design, Agent Workflow, Full stack
 Year: 2026. Company: DEF Beauty Supply (B2B beauty wholesaler serving professional customers in Italy).
 
 ## Role
