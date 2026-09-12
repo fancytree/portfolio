@@ -468,6 +468,7 @@ function AIRankingViewMock({
       scoreColor: primary,
       note: 'test note',
       avatarSrc: '/img/jobnova/persona-alex.jpg',
+      skills: ['Unity', 'C++', 'Gameplay Systems', 'Multiplayer Networking', 'Physics Programming', 'Git', '+2'],
       analysis: [
         { text: 'Samik is a ', bold: false },
         { text: 'Game Engineer', bold: true },
@@ -496,6 +497,7 @@ function AIRankingViewMock({
       scoreColor: primary,
       note: '—',
       avatarSrc: '/img/jobnova/persona-sarah.jpg',
+      skills: ['Unreal Engine', 'C++', 'Combat Systems', 'Multiplayer Netcode', 'Animation Blending', 'Profiling', '+2'],
       analysis: [
         { text: 'Jordan ships ', bold: false },
         { text: 'gameplay systems', bold: true },
@@ -521,6 +523,7 @@ function AIRankingViewMock({
       scoreColor: primary,
       note: 'shortlist',
       avatarSrc: '/img/jobnova/persona-alex.jpg',
+      skills: ['Rendering Pipelines', 'HLSL/GLSL', 'Vulkan', 'Shader Programming', 'Performance Optimization', 'C++', '+2'],
       analysis: [
         { text: 'Priya is a ', bold: false },
         { text: 'Graphics Engineer', bold: true },
@@ -621,6 +624,7 @@ function AIRankingViewMock({
       location: 'Montreal, Canada',
       note: '',
       avatarSrc: '/img/jobnova/persona-sarah.jpg',
+      skills: ['Python', 'C++', 'Editor Tooling', 'Build Pipelines', 'Perforce', 'Automation', '+2'],
       linkedinUrl: '#',
     },
     {
@@ -635,6 +639,7 @@ function AIRankingViewMock({
       location: 'Austin, Texas',
       note: 'pending relocation',
       avatarSrc: '/img/jobnova/persona-alex.jpg',
+      skills: ['C++', 'Engine Architecture', 'Memory Management', 'Multithreading', 'Console Porting', 'CMake', '+2'],
       linkedinUrl: '#',
     },
   ];
@@ -670,7 +675,7 @@ function AIRankingViewMock({
           <div className="min-w-0">
             <div className="text-[8px] font-medium leading-3 text-slate-500">← Back to Project list</div>
             <div className="mt-0.5 flex items-center gap-1">
-              <h2 className="truncate text-[11px] font-bold lowercase leading-4 tracking-tight text-slate-900">game developer</h2>
+              <p className="truncate text-[11px] font-bold lowercase leading-4 tracking-tight text-slate-900">game developer</p>
               <button
                 type="button"
                 className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-600"
@@ -984,9 +989,9 @@ function AIRankingViewMock({
             {/* Ranked 列表 */}
             <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
               <div className="flex items-center justify-between border-b border-slate-100 px-2 py-1.5">
-                <h3 className="text-[9px] font-bold text-slate-800">
+                <p className="text-[9px] font-bold text-slate-800">
                   Ranked Candidates <span className="font-semibold text-slate-500">({rankedListTotal})</span>
-                </h3>
+                </p>
                 <button
                   type="button"
                   className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[8px] font-semibold text-slate-600 hover:bg-slate-50"
@@ -1220,11 +1225,15 @@ function AIRankingViewMock({
             profile={{
               name: profileCandidate.name,
               avatarSrc: profileCandidate.avatarSrc,
-              headline: 'headline' in profileCandidate
-                ? profileCandidate.headline
-                : `${profileCandidate.title} · ${profileCandidate.company}`,
+              headline: profileCandidate.title,
               company: profileCandidate.company,
               location: profileCandidate.location,
+              matchScore: 'score' in profileCandidate ? profileCandidate.score : undefined,
+              skills: 'skills' in profileCandidate ? profileCandidate.skills : undefined,
+              aiSummary:
+                'analysis' in profileCandidate
+                  ? profileCandidate.analysis.map((segment) => segment.text).join('')
+                  : undefined,
             }}
             onRequestClose={closeProfilePanel}
           />
@@ -1251,13 +1260,22 @@ function ProfilePanelSlideMock({
     headline: string;
     company: string;
     location: string;
+    matchScore?: number;
+    matchLabel?: string;
+    yearsExperience?: string;
+    email?: string;
+    phone?: string;
+    skills?: string[];
+    aiSummary?: string;
   };
   onRequestClose?: () => void;
 }) {
   const primary = '#0052CC';
+  const accent = '#7C3AED';
   const [gridOpen, setGridOpen] = useState(defaultOpen);
   const [panelVisible, setPanelVisible] = useState(defaultOpen);
   const [activeRowId, setActiveRowId] = useState<string | null>(defaultOpen ? '1' : null);
+  const [activeTab, setActiveTab] = useState<'Overview' | 'Profile'>('Overview');
   const [notesEditing, setNotesEditing] = useState(false);
   const [notesValue, setNotesValue] = useState('');
   const [aboutExpanded, setAboutExpanded] = useState(false);
@@ -1298,6 +1316,7 @@ function ProfilePanelSlideMock({
     closeTimerRef.current = window.setTimeout(() => {
       setGridOpen(false);
       setActiveRowId(null);
+      setActiveTab('Overview');
       setAboutExpanded(false);
       setNotesEditing(false);
       closeTimerRef.current = null;
@@ -1310,7 +1329,42 @@ function ProfilePanelSlideMock({
     ? 'transform 280ms cubic-bezier(0.2, 0, 0, 1)'
     : 'transform 220ms ease-in';
 
-  // 公司 logo：本地 /public/img/connectnova/logos（Simple Icons SVG，仅视觉示意）
+  // 候选人字段：仅少数（name/headline/company/location/matchScore）随点击的候选人变化，
+  // 其余当前数据模型里还没有真实字段，默认值延续同一个 Sarah Chen · Senior PM · Google 示例人设，
+  // 不套用参考截图里的姓名/职位/技能等具体信息。
+  const displayName = profile?.name ?? 'Sarah Chen';
+  const matchScore = profile?.matchScore ?? 92;
+  const matchLabel = profile?.matchLabel ?? 'Strong match';
+  const overviewFields = [
+    { icon: 'briefcase' as const, text: profile?.yearsExperience ?? '8+ years experience' },
+    { icon: 'pin' as const, text: profile?.location ?? 'San Francisco Bay Area' },
+    {
+      icon: 'mail' as const,
+      text: profile?.email ?? `${displayName.toLowerCase().replace(/[^a-z]/g, '')}@gmail.com`,
+    },
+    { icon: 'phone' as const, text: profile?.phone ?? '+1 (628) 555-0142' },
+  ];
+  const skills = profile?.skills ?? [
+    'Roadmapping',
+    'User Research',
+    'A/B Testing',
+    'Stakeholder Alignment',
+    'SQL',
+    'Figma',
+    '+2',
+  ];
+  const aiSummary =
+    profile?.aiSummary ??
+    'Strong product leadership background with excellent experience in roadmap execution, cross-functional alignment, and shipping measurable outcomes.';
+
+  const overviewIconPaths: Record<'briefcase' | 'pin' | 'mail' | 'phone', string> = {
+    briefcase: 'M4 7h16v10H4V7zm2 4h12M8 11h4M9 7V5h6v2',
+    pin: 'M12 21s6-5.35 6-10a6 6 0 10-12 0c0 4.65 6 10 6 10z',
+    mail: 'M4 6h16v12H4V6zm0 0l8 7 8-7',
+    phone: 'M6 3h3l1.5 4L8 9a11 11 0 006 6l2-2.5 4 1.5v3a2 2 0 01-2.2 2A17 17 0 015 5.2 2 2 0 016 3z',
+  };
+
+  // Profile tab：恢复原来的 About / Experience / Education / Languages 叙事内容
   const experienceMock = [
     {
       title: 'Senior Product Manager',
@@ -1402,48 +1456,33 @@ function ProfilePanelSlideMock({
           }}
         >
           {/* 关闭：相对 Panel 固定定位，不随下方内容滚动 */}
-          <div className="relative h-full min-h-0 w-full">
+          <div className="flex h-full min-h-0 w-full flex-col">
             <div className="pointer-events-none absolute right-2 top-2 z-40">
               <button
                 type="button"
                 onClick={closePanel}
-                className="pointer-events-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-black/45 hover:bg-black/[0.08] hover:text-black/75"
+                className="pointer-events-auto inline-flex h-6 w-6 items-center justify-center rounded-md border border-black/10 text-black/45 transition-colors hover:bg-black/[0.08] hover:text-black/75"
                 aria-label="Close profile panel"
               >
-                <span className="text-base leading-none">×</span>
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
               </button>
             </div>
-            <div className="h-full min-h-0 overflow-y-auto overscroll-contain">
-              {/* Hero：顶 padding 为 0，渐变 absolute 铺满整块，避免 pt 区域露出白底白条 */}
-              <div className="relative isolate overflow-x-hidden px-3 pb-4 pt-0">
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background: `linear-gradient(to bottom right, ${primary}21, ${primary}0f, transparent)`,
-                  }}
-                />
-                <div
-                  className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-40 blur-2xl"
-                  style={{ backgroundColor: `${primary}40` }}
-                />
-                <div
-                  className="pointer-events-none absolute left-0 right-0 top-0 h-px"
-                  style={{
-                    background: `linear-gradient(to right, transparent, ${primary}40, transparent)`,
-                  }}
-                />
 
-                <div className="relative z-10 flex items-start gap-2.5 pt-10">
-                <Image
-                  src={profile?.avatarSrc ?? '/img/jobnova/persona-sarah.jpg'}
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="h-12 w-12 shrink-0 rounded-full object-cover ring-1 ring-white/80"
-                />
-                <div className="min-w-0 pt-0.5">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <h2 className="text-[13px] font-bold leading-tight text-black/90">{profile?.name ?? 'Sarah Chen'}</h2>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+              {/* Hero：头像 + 姓名，下面一行左侧角色/团队、右侧 Match Score 环形分（不加装饰底色） */}
+              <div className="px-3 pb-3 pt-9">
+                <div className="flex items-center gap-2.5">
+                  <Image
+                    src={profile?.avatarSrc ?? '/img/jobnova/persona-sarah.jpg'}
+                    alt=""
+                    width={44}
+                    height={44}
+                    className="h-11 w-11 shrink-0 rounded-full object-cover ring-1 ring-black/5"
+                  />
+                  <div className="flex min-w-0 items-center gap-1.5">
+                    <p className="truncate text-[12px] font-bold leading-tight text-black/90">{displayName}</p>
                     <a
                       href="https://www.linkedin.com"
                       target="_blank"
@@ -1455,37 +1494,115 @@ function ProfilePanelSlideMock({
                       <Image src="/LinkedIN.svg" alt="" width={14} height={14} className="h-3.5 w-3.5" />
                     </a>
                   </div>
-                  <p className="mt-1 text-[10px] font-normal leading-snug text-black/75">
-                    {profile?.headline ?? 'Senior Product Manager · Roadmaps, discovery, and shipping cross-team outcomes.'}
-                  </p>
-                  <div className="mt-1.5 flex flex-col gap-0.5 text-[9px] text-black/50">
-                    <span className="flex items-center gap-1">
-                      <svg className="h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
-                        <path
-                          d="M4 10.5V20h16v-9.5M9 20v-4h6v4M8 4h8v3H8V4zM6 7h12l1 3H5l1-3z"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                </div>
+
+                <div className="mt-2 flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md"
+                        style={{ backgroundColor: `${accent}1a`, color: accent }}
+                        aria-hidden
+                      >
+                        <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M21 16.5V7.5L12 3 3 7.5v9L12 21l9-4.5zM12 3v18M3 7.5l9 4.5 9-4.5M3 16.5l9-4.5 9 4.5"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </span>
+                      <span className="truncate text-[10px] font-semibold text-black/85">
+                        {profile?.headline ?? 'Senior Product Manager'}
+                      </span>
+                    </div>
+                    <p className="mt-0.5 truncate pl-[26px] text-[8px] font-medium" style={{ color: accent }}>
                       {profile?.company ?? 'Google'}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <svg className="h-2.5 w-2.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
-                        <path
-                          d="M12 21s7-4.35 7-10a7 7 0 10-14 0c0 5.65 7 10 7 10z"
-                          stroke="currentColor"
-                          strokeWidth="1.4"
-                          strokeLinejoin="round"
-                        />
-                        <circle cx="12" cy="11" r="2" fill="currentColor" />
-                      </svg>
-                      {profile?.location ?? 'San Francisco Bay Area'}
-                    </span>
+                    </p>
                   </div>
 
+                  <div className="flex shrink-0 flex-col items-center gap-0.5">
+                    <span className="text-[7px] font-medium uppercase tracking-wide text-black/40">Match Score</span>
+                    <div
+                      className="relative flex h-9 w-9 items-center justify-center rounded-full"
+                      style={{ background: `conic-gradient(${primary} ${matchScore * 3.6}deg, ${primary}1f 0deg)` }}
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[9px] font-bold" style={{ color: primary }}>
+                        {matchScore}%
+                      </div>
+                    </div>
+                    <span className="text-[8px] font-semibold text-emerald-600">{matchLabel}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tabs：Overview（新结构化信息）/ Profile（原来的简介 + 备注） */}
+              <div className="flex items-center gap-3 border-b border-black/10 px-3">
+                {(['Overview', 'Profile'] as const).map((tab) => {
+                  const isActive = activeTab === tab;
+                  return (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setActiveTab(tab)}
+                      className="border-b-2 pb-1.5 text-[9px] font-semibold transition-colors"
+                      style={{
+                        borderColor: isActive ? primary : 'transparent',
+                        color: isActive ? primary : 'rgba(0,0,0,0.4)',
+                      }}
+                    >
+                      {tab}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeTab === 'Overview' ? (
+                <div className="px-3 py-3">
+                  <p className="mb-1.5 text-[8px] font-semibold uppercase tracking-wider text-black/45">
+                    Candidate Overview
+                  </p>
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 rounded-lg border border-black/10 p-2.5">
+                    {overviewFields.map((field) => (
+                      <span key={field.text} className="flex items-center gap-1.5 text-[9px] text-black/70">
+                        <svg className="h-3 w-3 shrink-0 text-black/40" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d={overviewIconPaths[field.icon]}
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                        <span className="truncate">{field.text}</span>
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="mb-1.5 mt-3 text-[8px] font-semibold uppercase tracking-wider text-black/45">Skills</p>
+                  <div className="flex flex-wrap gap-1">
+                    {skills.map((skill) => (
+                      <span key={skill} className="rounded-full bg-black/[0.06] px-2 py-0.5 text-[8px] text-black/70">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 rounded-lg p-2.5" style={{ backgroundColor: `${accent}0f` }}>
+                    <div className="flex items-center gap-1 text-[9px] font-semibold" style={{ color: accent }}>
+                      <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                        <path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2zM19 15l.9 2.6L22.5 18.5l-2.6.9L19 22l-.9-2.6-2.6-.9 2.6-.9L19 15z" />
+                      </svg>
+                      AI Summary
+                    </div>
+                    <p className="mt-1 text-[9px] leading-relaxed text-black/70">{aiSummary}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="px-3 py-3">
                   {/* My Note：对齐真实抽屉（铅笔 + Add note / 编辑 textarea） */}
-                  <div className="mt-2 flex min-h-[26px] items-center border-t border-black/10 pt-2">
+                  <div className="mb-3 flex min-h-[26px] items-center border-b border-black/10 pb-3">
                     {notesEditing ? (
                       <textarea
                         value={notesValue}
@@ -1517,136 +1634,139 @@ function ProfilePanelSlideMock({
                       </button>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
 
-              {/* Hero 与 About 间距（约为原先一半） */}
-              <div className="mt-2 px-3 pb-5 pt-2">
-                <div className="divide-y divide-black/10">
-              <div className="py-2.5 first:pt-0">
-                <h4 className="mb-1.5 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
-                  <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M6 4h12v16H6V4zm3 4h6M9 14h6"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  About
-                </h4>
-                <p className={`text-[9px] leading-relaxed text-black/75 ${aboutExpanded ? '' : 'line-clamp-3'}`}>{aboutText}</p>
-                {!aboutExpanded && (
-                  <button
-                    type="button"
-                    onClick={() => setAboutExpanded(true)}
-                    className="mt-0.5 text-[8px] font-medium text-blue-700 hover:underline"
-                  >
-                    More
-                  </button>
-                )}
-              </div>
+                  <div className="divide-y divide-black/10">
+                    <div className="pb-2.5">
+                      <p className="mb-1.5 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
+                        <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M6 4h12v16H6V4zm3 4h6M9 14h6"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        About
+                      </p>
+                      <p className={`text-[9px] leading-relaxed text-black/75 ${aboutExpanded ? '' : 'line-clamp-3'}`}>{aboutText}</p>
+                      {!aboutExpanded && (
+                        <button
+                          type="button"
+                          onClick={() => setAboutExpanded(true)}
+                          className="mt-0.5 text-[8px] font-medium text-blue-700 hover:underline"
+                        >
+                          More
+                        </button>
+                      )}
+                    </div>
 
-              <div className="py-2.5">
-                <h4 className="mb-2 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/55">
-                  <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M4 7h16v10H4V7zm2 4h12M8 11h4"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  Experience
-                </h4>
-                <div className="ml-0.5 border-l-2 border-black/10 pl-3">
-                  {experienceMock.map((exp) => (
-                    <div key={exp.company} className="relative flex gap-2 pb-3 last:pb-0">
-                      <div
-                        className="absolute -left-[5px] top-1.5 h-2 w-2 rounded-full"
-                        style={{ backgroundColor: `${primary}80` }}
-                        aria-hidden
-                      />
-                      <div
-                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-black/[0.06]"
-                        aria-hidden
-                      >
-                        <Image
-                          src={exp.logoSrc}
-                          alt=""
-                          width={14}
-                          height={14}
-                          className="h-3.5 w-3.5 object-contain"
-                          aria-hidden
-                        />
+                    <div className="py-2.5">
+                      <p className="mb-2 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/55">
+                        <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M4 7h16v10H4V7zm2 4h12M8 11h4"
+                            stroke="currentColor"
+                            strokeWidth="1.4"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        Experience
+                      </p>
+                      <div className="ml-0.5 border-l-2 border-black/10 pl-3">
+                        {experienceMock.map((exp) => (
+                          <div key={exp.company} className="relative flex gap-2 pb-3 last:pb-0">
+                            <div
+                              className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-black/[0.06]"
+                              aria-hidden
+                            >
+                              <Image
+                                src={exp.logoSrc}
+                                alt=""
+                                width={14}
+                                height={14}
+                                className="h-3.5 w-3.5 object-contain"
+                                aria-hidden
+                              />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-[9px] font-semibold text-black/90">{exp.title}</p>
+                              <p className="text-[9px] text-black/55">{exp.company}</p>
+                              <div className="mt-0.5 flex flex-wrap gap-1 text-[8px] text-black/45">
+                                <span>{exp.duration}</span>
+                                <span>·</span>
+                                <span>{exp.location}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-[9px] font-semibold text-black/90">{exp.title}</p>
-                        <p className="text-[9px] text-black/55">{exp.company}</p>
-                        <div className="mt-0.5 flex flex-wrap gap-1 text-[8px] text-black/45">
-                          <span>{exp.duration}</span>
-                          <span>·</span>
-                          <span>{exp.location}</span>
+                    </div>
+
+                    <div className="py-2.5">
+                      <p className="mb-2 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
+                        <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path d="M12 3L3 8v7l9 5 9-5V8l-9-5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+                        </svg>
+                        Education
+                      </p>
+                      <div className="flex gap-2 rounded-lg bg-black/[0.04] p-2">
+                        {/* 学校 logo：Wikimedia Commons Stanford block S SVG，仅视觉示意 */}
+                        <div
+                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white ring-1 ring-black/8"
+                          aria-hidden
+                        >
+                          <Image
+                            src="/img/connectnova/logos/stanford.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                            className="h-[18px] w-[18px] object-contain"
+                            aria-hidden
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[9px] font-medium text-black/90">Stanford University</p>
+                          <p className="text-[9px] text-black/55">MS, Computer Science</p>
+                          <p className="mt-0.5 text-[8px] text-black/45">2014 – 2016</p>
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
 
-              <div className="py-2.5">
-                <h4 className="mb-2 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
-                  <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path d="M12 3L3 8v7l9 5 9-5V8l-9-5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-                  </svg>
-                  Education
-                </h4>
-                <div className="flex gap-2 rounded-lg bg-black/[0.04] p-2">
-                  {/* 学校 logo：Wikimedia Commons Stanford block S SVG，仅视觉示意 */}
-                  <div
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white ring-1 ring-black/8"
-                    aria-hidden
-                  >
-                    <Image
-                      src="/img/connectnova/logos/stanford.svg"
-                      alt=""
-                      width={18}
-                      height={18}
-                      className="h-[18px] w-[18px] object-contain"
-                      aria-hidden
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[9px] font-medium text-black/90">Stanford University</p>
-                    <p className="text-[9px] text-black/55">MS, Computer Science</p>
-                    <p className="mt-0.5 text-[8px] text-black/45">2014 – 2016</p>
+                    <div className="py-2.5">
+                      <p className="mb-1.5 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
+                        <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M4 5h16v14H4V5zm4 3h8M8 13h4M8 17h3"
+                            stroke="currentColor"
+                            strokeWidth="1.3"
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        Languages
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {['English · Full professional', 'Mandarin · Native'].map((lang) => (
+                          <span key={lang} className="rounded-md border-0 bg-black/[0.06] px-2 py-0.5 text-[8px] text-black/55">
+                            {lang}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
+            </div>
 
-              <div className="py-2.5">
-                <h4 className="mb-1.5 flex items-center gap-1 text-[8px] font-semibold uppercase tracking-wider text-black/45">
-                  <svg className="h-3 w-3 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M4 5h16v14H4V5zm4 3h8M8 13h4M8 17h3"
-                      stroke="currentColor"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  Languages
-                </h4>
-                <div className="flex flex-wrap gap-1">
-                  {['English · Full professional', 'Mandarin · Native'].map((lang) => (
-                    <span key={lang} className="rounded-md border-0 bg-black/[0.06] px-2 py-0.5 text-[8px] text-black/55">
-                      {lang}
-                    </span>
-                  ))}
-                </div>
-              </div>
-                </div>
-              </div>
+            {/* Footer：不随内容滚动，常驻主操作 */}
+            <div className="flex shrink-0 items-center gap-2 border-t border-black/10 px-3 py-2.5">
+              <button
+                type="button"
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg py-1.5 text-[9px] font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: primary }}
+              >
+                View Full Profile
+                <span aria-hidden>→</span>
+              </button>
             </div>
           </div>
         </div>
