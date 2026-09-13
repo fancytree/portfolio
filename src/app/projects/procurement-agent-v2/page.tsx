@@ -576,6 +576,7 @@ export default function ProcurementAgentPage() {
           '04 / Turning point',
           '05 / Agent workflow',
           '06 / MVP boundary',
+          '07 / Next and reflection',
         ]}
       />
       <CaseStudyHero
@@ -824,10 +825,19 @@ export default function ProcurementAgentPage() {
             <p className="m-0 max-w-[640px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
               A coded workflow with a shared plan-and-conversation workbench. The Agent never places the formal order.
             </p>
+        </div>
+      </section>
 
-            {/* 后续若要自动化：按供应商成熟度打分后再开自动下单，以及按销售/交期/免运费做采购提醒 */}
-            <p className="m-0 mt-2 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
-              Feedback and what to do next
+      <section {...sectionBandProps('white')}>
+        <div className="flex flex-col gap-10" data-case-nav-label="07 / Next and reflection">
+          <ChapterTitle>07 / Next & Reflection</ChapterTitle>
+          <h2 className="m-0 max-w-[900px] text-[clamp(26px,3.6vw,40px)] font-bold leading-[1.15] tracking-[-0.02em] text-[#161616]" style={bodyStyle}>
+            What I would do next — and what this changed about how I use AI.
+          </h2>
+
+          <div className="case-radius-lg flex flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
+            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
+              What to do next
             </p>
             <div className="case-radius-md overflow-hidden grid gap-px bg-white/20 md:grid-cols-2">
               {[
@@ -847,20 +857,19 @@ export default function ProcurementAgentPage() {
                 </article>
               ))}
             </div>
-        </div>
-      </section>
+          </div>
 
-      <section {...sectionBandProps('white')}>
-        <div className="flex max-w-[860px] flex-col gap-3">
-          <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-            I started by adding AI for the sake of AI — looking at which manual checks it could take.
-          </p>
-          <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-            Isolated checks could not give the buyer a purchase-quantity recommendation.
-          </p>
-          <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-            To reduce the cognitive work, the Agent had to participate in the whole workflow, with a visible handoff: AI flags and drafts, the buyer judges and commits.
-          </p>
+          <div className="flex max-w-[860px] flex-col gap-3">
+            <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+              I started by adding AI for the sake of AI — looking at which manual checks it could take.
+            </p>
+            <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+              Isolated checks could not give the buyer a purchase-quantity recommendation.
+            </p>
+            <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+              To reduce the cognitive work, the Agent had to participate in the whole workflow, with a visible handoff: AI flags and drafts, the buyer judges and commits.
+            </p>
+          </div>
         </div>
       </section>
 
