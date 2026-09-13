@@ -859,19 +859,32 @@ export default function ProcurementAgentPage() {
             </div>
           </div>
 
-          <div className="flex max-w-[860px] flex-col gap-3">
+          <div className="flex flex-col gap-5">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
               Reflection
             </p>
-            <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-              I started by adding AI for the sake of AI — looking at which manual checks it could take.
-            </p>
-            <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-              Isolated checks could not give the buyer a purchase-quantity recommendation.
-            </p>
-            <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-              To reduce the cognitive work, the Agent had to participate in the whole workflow, with a visible handoff: AI flags and drafts, the buyer judges and commits.
-            </p>
+            <div className="case-radius-lg overflow-hidden grid gap-px bg-[#d8d8d8] md:grid-cols-3">
+              {[
+                {
+                  title: "Started from AI for the sake of AI",
+                  body: 'I looked at which manual checks AI could take: draft vs confirmation, then DDT vs confirmation.',
+                },
+                {
+                  title: 'Isolated checks were not enough',
+                  body: 'They could flag diffs, but they could not give the buyer a purchase-quantity recommendation.',
+                },
+                {
+                  title: 'The Agent had to join the workflow',
+                  body: 'To reduce the cognitive work, context stayed in the flow. AI flags and drafts; the buyer judges and commits.',
+                },
+              ].map((item, index) => (
+                <article key={item.title} className="flex min-h-[168px] flex-col gap-4 bg-[#f4f4f4] p-[clamp(20px,3vw,28px)]">
+                  <p className="m-0 text-[11px] font-bold text-[#2155e8]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</p>
+                  <p className="m-0 text-[18px] font-bold leading-[1.3] text-[#161616]" style={bodyStyle}>{item.title}</p>
+                  <p className="m-0 mt-auto text-[14px] font-normal leading-[1.55] text-[#555]" style={bodyStyle}>{item.body}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
