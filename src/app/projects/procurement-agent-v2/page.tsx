@@ -138,6 +138,8 @@ function ThreeStageEvolution() {
         </article>
       </div>
 
+      <DesignResultStructuredOperations />
+
       <div className="case-radius-lg overflow-hidden flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
           Adding AI for the sake of adding AI
@@ -149,8 +151,6 @@ function ThreeStageEvolution() {
           Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. This was AI bolted onto a check, not a purchasing recommendation. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much.</strong>
         </p>
       </div>
-
-      <DesignResultStructuredOperations />
     </div>
   );
 }
