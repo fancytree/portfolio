@@ -86,7 +86,7 @@ function ThreeStageEvolution() {
         Making procurement structured and traceable
       </h2>
       <p className="case-study-lead m-0 max-w-[840px]" style={bodyStyle}>
-        Procurement needed a shared object model, explicit states, and traceable evidence so purchase and fulfillment could operate as one connected lifecycle.
+        While making procurement structured and traceable, I also looked at which <strong className="font-bold text-[#161616]">manual parts</strong> AI could take — not to recommend what to buy, but to replace repetitive checking inside that lifecycle.
       </p>
 
       <div className="grid border-y border-[#cfcfcf] lg:grid-cols-3">
@@ -143,7 +143,7 @@ function ThreeStageEvolution() {
           Adding AI for the sake of adding AI
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Once the lifecycle was structured, I looked for a <strong className="font-bold text-[#161616]">manual task AI could take</strong>: compare the buyer&apos;s purchase draft against the supplier confirmation (typo, new packaging, stockout), then compare the DDT against the confirmation when goods arrive (missing vs partial shipment).
+          The manual work that could move to AI was <strong className="font-bold text-[#161616]">document comparison</strong>: buyer draft vs supplier confirmation (typo, new packaging, stockout), then DDT vs confirmation when goods arrive (missing vs partial shipment).
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
           Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. This was AI bolted onto a check, not a purchasing recommendation. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much.</strong>
