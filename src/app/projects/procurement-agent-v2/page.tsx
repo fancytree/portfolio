@@ -274,14 +274,10 @@ function ProcurementTurningPoint() {
 
       <ResponsibilityShiftDiagram />
 
-      <p className="m-0 max-w-[880px] text-[18px] font-normal leading-[1.55] text-[#d8d8d8]" style={bodyStyle}>
-        To reduce the cognitive work, the Agent had to participate in the whole procurement workflow.
-      </p>
-
       <div className="case-radius-lg overflow-hidden bg-white/5 px-[clamp(22px,3vw,32px)] py-6">
         <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>One example of lost context</p>
         <p className="m-0 mt-4 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
-          I observed buyers&apos; path: they used the last three months of sales to estimate quantities. The first design showed last-3-month sales on the corresponding SKU. But other signals were still lost — notably which SKUs had been out of stock before. Buyers had to remember that themselves. Those signals were not kept in the flow.
+          I observed buyers used the last three months of sales to estimate quantities. The first design showed last-3-month sales on the SKU. But stockout signals were still lost. Buyers had to remember that themselves.
         </p>
       </div>
     </div>
@@ -292,15 +288,14 @@ function DesignResultEvidenceBackedAgency() {
   return (
     <>
     <section {...sectionBandProps('white')}>
-    {/* 05：先讲清 Agent 如何参与整条流程、并和采购员一起完成，最后把最难的 purchase decision 交给 06 */}
-    <div className="flex flex-col gap-10" data-case-nav-label="05 / Why an Agent?">
-      <ChapterTitle>05 / Why an Agent?</ChapterTitle>
+    <div className="flex flex-col gap-10" data-case-nav-label="04 / Agent workflow">
+      <ChapterTitle>04 / Agent Workflow & Handoff</ChapterTitle>
       <div className="flex max-w-[940px] flex-col gap-5">
         <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
-          To reduce the cognitive work, the Agent had to participate in the <span className="text-[#2155e8]">whole procurement workflow</span>.
+          The Agent participates in the whole procurement workflow. The buyer keeps <span className="text-[#2155e8]">decision authority</span> and <span className="text-[#2155e8]">sees every handoff</span>.
         </h2>
         <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Phase 1 had connected the records. Buyers still had to operate every step: find the gap, decide, contact the supplier, check documents, receive. An Agent could stay in that cycle with the buyer and complete it together, keeping context with each SKU across the flow — instead of handing the work back at every screen.
+          To reduce cognitive work, context had to stay with each SKU across the flow. The Agent keeps that context, surfaces exceptions, and stops before commitments. The buyer reviews, adjusts, and explicitly places the formal order.
         </p>
       </div>
 
@@ -323,16 +318,11 @@ function DesignResultEvidenceBackedAgency() {
         But that raised a boundary question: what should the Agent calculate, and what <span className="text-[#2155e8]">must stay human</span>?
       </p>
     </div>
-    </section>
 
-    <section {...sectionBandProps('white')}>
-      <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="06 / Agent-ready system">
-        <ChapterTitle inverse>06 / Agent-ready System</ChapterTitle>
-        <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
-          The purchase decision needed structured context and a defined role.
-        </h2>
+      <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]">
+        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Purchase decision</p>
         <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
-          What to buy, how much, and when had to be assembled from evidence the buyer could inspect. Operational records were the foundation. Supplier constraints, historical evidence, and human authority made those records usable for the decision. The Agent participates by keeping context with each SKU across the workflow, but the buyer still judges and explicitly places the formal order.
+          What to buy, how much, and when had to be assembled from evidence the buyer could inspect. The Agent keeps context, but the buyer judges and explicitly places the formal order.
         </p>
 
         <div className="case-radius-lg overflow-hidden bg-white">
@@ -357,14 +347,7 @@ function DesignResultEvidenceBackedAgency() {
             ))}
           </div>
         </div>
-
-        <div className="pt-6">
-          <p className="m-0 text-[18px] font-bold leading-[1.5] text-white" style={bodyStyle}>
-            Interpret intent. Keep context with the SKU. Show evidence. Stop for human approval.
-          </p>
-        </div>
       </div>
-    </section>
     </>
   );
 }
@@ -466,20 +449,11 @@ const agentUxIterations = [
 
 function AgentUxIterationsSection() {
   return (
-    <section {...sectionBandProps('gray')}>
-      <div className="flex flex-col gap-9" data-case-nav-label="09 / UX iterations">
-        <ChapterTitle>09 / Agent UX Iterations</ChapterTitle>
-        <div className="flex max-w-[980px] flex-col gap-5">
-          <h2 className="m-0 text-[clamp(26px,3.6vw,40px)] font-bold leading-[1.15] text-[#161616]" style={bodyStyle}>
-            The Agent became useful as the handoff became clearer.
-          </h2>
-          <p className="m-0 text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            Early testing revealed buyers thought the Agent already placed orders automatically. These iterations made the <strong className="font-bold text-[#161616]">handoff visible</strong>: AI suggests → human reviews and edits → human explicitly places the formal order → exceptions return to the human.
-          </p>
-          <p className="m-0 text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            Each iteration changed what the Agent calculated, what stayed editable, and when human approval was required.
-          </p>
-        </div>
+      <div className="flex flex-col gap-9">
+        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>UX Iterations</p>
+        <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+          Early testing revealed buyers thought the Agent already placed orders automatically. These iterations made the handoff visible: AI suggests → human reviews and edits → human places the order → exceptions return to the human.
+        </p>
 
         <div className="flex flex-col gap-3">
           {agentUxIterations.map((iteration) => (
@@ -520,27 +494,7 @@ function AgentUxIterationsSection() {
             </details>
           ))}
         </div>
-
-        <div className="case-radius-lg overflow-hidden bg-[#2155e8] p-[clamp(24px,4vw,40px)]">
-          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>Iteration outcome</p>
-          <h3 className="m-0 mt-4 max-w-[880px] text-[clamp(24px,3.2vw,34px)] font-bold leading-[1.2] tracking-[-0.02em] text-white" style={bodyStyle}>
-            The Agent calculates and suggests. The buyer reviews, adjusts, and commits.
-          </h3>
-          <div className="mt-8 grid border-t border-white/30 md:grid-cols-3">
-            {[
-              { label: 'Calculate', body: 'Produce one editable draft recommendation from evidence.' },
-              { label: 'Hand off', body: 'The buyer reviews, adjusts, then explicitly places the order.' },
-              { label: 'Escalate', body: 'High-risk scenarios return to the buyer for approval.' },
-            ].map((outcome) => (
-              <div key={outcome.label} className="border-b border-white/30 py-5 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0">
-                <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-white/70" style={bodyStyle}>{outcome.label}</p>
-                <p className="m-0 mt-3 text-[15px] font-bold leading-[1.5] text-white" style={bodyStyle}>{outcome.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
-    </section>
   );
 }
 
@@ -854,14 +808,10 @@ export default function ProcurementAgentPage() {
 
       <DesignResultEvidenceBackedAgency />
 
-      <section {...sectionBandProps('gray')}>
-        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="07 / Designing the Agent">
-          <ChapterTitle>07 / Designing the Procurement Agent</ChapterTitle>
-          <h2 className="m-0 max-w-[940px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            The LLM interprets. The engine calculates. The buyer decides.
-          </h2>
+      <div className="flex max-w-[1080px] flex-col gap-10">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Architecture</p>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            I separated probabilistic interpretation from deterministic quantity calculation, risk checking, and human authorization so every recommendation remained explainable and controllable.
+            <strong className="font-bold text-[#161616]">The LLM interprets. The engine calculates. The buyer decides.</strong> I separated probabilistic interpretation from deterministic quantity calculation and human authorization so recommendations remained explainable and controllable.
           </p>
 
           <ResponsibilityArchitectureDiagram />
@@ -873,19 +823,11 @@ export default function ProcurementAgentPage() {
             </p>
           </div>
         </div>
-      </section>
 
-      <section {...sectionBandProps('gray')}>
-        <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="08 / Closing the loop">
-          {/* 08：数据足够之后 Agent 能自己成长，并由此获得用户信任 */}
-          <ChapterTitle inverse>08 / Closing the Loop</ChapterTitle>
-          <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
-            The Agent learns from <span className="text-[#7fa2ff]">what the buyer changed</span>
-            <br />
-            and <span className="text-[#7fa2ff]">what actually arrived</span>.
-          </h2>
+      <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Learning loop</p>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
-            Each time a buyer adjusts a recommendation, and each time actual delivery differs from the draft, that gap becomes a learning signal. When enough outcomes accumulate, the Agent can refine its next calculation — but only after the buyer reviews and approves those learning updates.
+            Each time a buyer adjusts a recommendation, and each time actual delivery differs, that gap becomes a learning signal. The Agent can refine its next calculation — after the buyer reviews and approves those updates.
           </p>
 
           <ProcurementLearningLoop />
@@ -896,15 +838,16 @@ export default function ProcurementAgentPage() {
             </p>
           </div>
         </div>
-      </section>
 
       <AgentUxIterationsSection />
 
+      </section>
+
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-9" data-case-nav-label="10 / Validation">
-          <ChapterTitle>10 / Validation</ChapterTitle>
+        <div className="flex flex-col gap-9" data-case-nav-label="05 / MVP boundary">
+          <ChapterTitle>05 / MVP Boundary & Results</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
-            Validate safety and comprehension before speed.
+            Validated a functional Agent-ready MVP. The Agent does not place real orders.
           </h2>
 
           <div className="case-radius-lg overflow-hidden grid gap-px bg-[#d8d8d8] lg:grid-cols-2">
@@ -994,16 +937,11 @@ export default function ProcurementAgentPage() {
             </article>
           </div>
         </div>
-      </section>
 
-      <section {...sectionBandProps('gray')}>
-        <div className="case-radius-lg flex max-w-[1080px] flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]" data-case-nav-label="11 / Results">
-            <ChapterTitle inverse>11 / Results & Measurement</ChapterTitle>
-            <h2 className="m-0 max-w-[520px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.14] text-white" style={bodyStyle}>
-              A functional Agent-ready procurement MVP.
-            </h2>
+        <div className="case-radius-lg flex flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
+            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Scope</p>
             <p className="m-0 max-w-[510px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
-              The work moved from a screen concept to a coded workflow with explicit data contracts, tool boundaries, document reconciliation and a preserved human ordering gate.
+              The work moved from screen concept to coded workflow with explicit data contracts, tool boundaries, document reconciliation, and a preserved human ordering gate.
             </p>
 
             <p className="m-0 mt-2 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
@@ -1087,7 +1025,11 @@ export default function ProcurementAgentPage() {
                 </article>
               ))}
             </div>
-          </div>
+
+        <p className="m-0 mt-8 max-w-[860px] text-[15px] font-normal leading-[1.65] text-[#d8d8d8]" style={bodyStyle}>
+          Started from adding AI for the sake of AI. Ended solving the real user problem by letting AI participate in the entire procurement workflow — not just flagging diffs, but keeping all signals in the flow. The handoff stayed visible: AI flags and drafts, human judges and commits.
+        </p>
+        </div>
       </section>
 
       <section {...sectionBandProps('white')}>
