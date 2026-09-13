@@ -15,7 +15,7 @@ import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
 export const metadata: Metadata = {
   title: 'AI Procurement Agent for DEF Beauty Supply | Mei Chai',
   description:
-    'Designing AI to participate in the real purchasing workflow — taking repetitive retrieval and calculation work while keeping purchase decisions, commitments, and exceptions under human control.',
+    'Designing AI to participate in the real purchasing workflow — starting from document comparison and exception flagging, while keeping judgment, decisions, and commitments under human control.',
 };
 
 const tldrPoints = [
@@ -653,10 +653,10 @@ export default function ProcurementAgentPage() {
       <CaseStudyHero
         accentColor={accent}
         title="AI Procurement Agent for DEF Beauty Supply"
-        subtitle="Designing AI to participate in the real purchasing workflow — taking repetitive retrieval and calculation work while keeping purchase decisions, commitments, and exceptions under human control."
+        subtitle="Designing AI to participate in the real purchasing workflow — starting from document comparison and exception flagging, while keeping judgment, decisions, and commitments under human control."
         tags={['B2B SaaS', 'Enterprise UX', 'AX Design', 'Agent Workflow', 'Full stack']}
         aboutLabel="About DEF Beauty Supply"
-        about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts purchasing work was stuck: decisions about what to buy and how much were manual, and fulfillment records lived disconnected from purchase intent. I designed a workflow where AI participates by handling retrieval and calculation, while buyers keep control of decisions and commitments.'}
+        about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts purchasing work was stuck on manual checking: compare the buyer's draft against the supplier confirmation, then compare delivery documents against that confirmation when goods arrive. I designed a workflow where AI flags discrepancies, and buyers judge what each difference means and what to do next.'}
         meta={[
           {
             label: 'Role',
@@ -702,10 +702,10 @@ export default function ProcurementAgentPage() {
           </h2>
           <div className="flex max-w-[900px] flex-col gap-4 [&_strong]:font-bold [&_strong]:text-[#161616]">
             <p className="m-0 text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-              DEF Beauty Supply&apos;s procurement work was spread across <strong>disconnected software, documents, messaging, and spreadsheets</strong>. The business wanted to explore how AI could help buyers decide what to purchase and how much to order.
+              DEF Beauty Supply&apos;s procurement work was spread across <strong>disconnected software, documents, messaging, and spreadsheets</strong>. Buyers spent time manually comparing purchase drafts against supplier confirmations, then comparing delivery documents against those confirmations when goods arrived — checking for typos, packaging changes, stockouts, missing shipments, or partial deliveries.
             </p>
             <p className="m-0 text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-              I started from that impulse — add AI to procurement — then discovered the real work was <strong>not building an AI feature, but making AI participate in the buyer&apos;s actual workflow</strong>.
+              I started from that impulse — add AI to procurement — then discovered the real work was <strong>not building an AI feature, but making AI participate in the buyer&apos;s actual workflow, starting from those repetitive document comparisons</strong>.
             </p>
           </div>
 
@@ -717,11 +717,11 @@ export default function ProcurementAgentPage() {
         <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Why procurement">
           <ChapterTitle>02 / Where the workflow got stuck</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            Procurement decisions stayed <span className="text-[#2155e8]">manual</span>, while everything around them lived <span className="text-[#2155e8]">disconnected</span>.
+            Buyers spent time <span className="text-[#2155e8]">manually checking</span> for discrepancies, then <span className="text-[#2155e8]">judging</span> what each one meant.
           </h2>
 
           <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            Buyers had to decide what to buy and how much — by hand, in Excel, switching between inventory records, sales data, supplier messages, and past delivery documents. Those decisions took time, but they also had to stay human: purchase commitments carry financial and supplier relationship risk.
+            Compare the purchase draft against the supplier confirmation: is this difference a typo, new packaging, or a stockout? Then when goods arrive, compare the delivery document against the confirmation: is this a missing shipment or a partial one? Should you chase the supplier? Each check was manual. Each judgment stayed human.
           </p>
           <div className="case-radius-lg overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
             <p className="m-0 mb-7 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
@@ -832,10 +832,10 @@ export default function ProcurementAgentPage() {
               “
             </span>
             <p className="m-0 max-w-[880px] text-[clamp(17px,1.8vw,20px)] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
-              An AI feature alone would not solve this. The buyer still had to retrieve, organize, calculate, and decide — by hand, across disconnected records.
+              An AI feature alone would not solve this. The buyer still had to compare documents line by line, judge what each discrepancy meant, and decide whether to act.
             </p>
             <p data-case-type="quote-compact" className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
-              AI had to participate in the whole purchasing workflow, taking the repetitive work while keeping decisions human.
+              AI had to participate in the purchasing workflow, starting with the repetitive comparison work, while keeping judgment human.
             </p>
           </blockquote>
         </div>
