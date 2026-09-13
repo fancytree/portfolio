@@ -288,8 +288,8 @@ function DesignResultEvidenceBackedAgency() {
   return (
     <>
     <section {...sectionBandProps('white')}>
-    <div className="flex flex-col gap-10" data-case-nav-label="04 / Agent workflow">
-      <ChapterTitle>04 / Agent Workflow & Handoff</ChapterTitle>
+    <div className="flex flex-col gap-10" data-case-nav-label="05 / Agent workflow">
+      <ChapterTitle>05 / Agent Workflow & Handoff</ChapterTitle>
       <div className="flex max-w-[940px] flex-col gap-5">
         <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
           The Agent participates in the whole procurement workflow. The buyer keeps <span className="text-[#2155e8]">decision authority</span> and <span className="text-[#2155e8]">sees every handoff</span>.
@@ -844,8 +844,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-9" data-case-nav-label="05 / MVP boundary">
-          <ChapterTitle>05 / MVP Boundary & Results</ChapterTitle>
+        <div className="flex flex-col gap-9" data-case-nav-label="06 / MVP boundary">
+          <ChapterTitle>06 / MVP Boundary & Results</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             Validated a functional Agent-ready MVP. The Agent does not place real orders.
           </h2>
@@ -991,44 +991,16 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-          {/* 12：按今天的主线收束——拆成卡片，方便一条一条读 */}
-          <div className="flex max-w-[1080px] flex-col gap-8" data-case-nav-label="12 / Reflection">
-            <ChapterTitle>12 / Reflection</ChapterTitle>
-            <h2 className="m-0 max-w-[820px] text-[clamp(30px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-              Not AI for the sake of AI.
-              <br />
-              <span className="text-[#2155e8]">AI participating in the real purchasing workflow.</span>
-            </h2>
-            <div className="case-radius-lg overflow-hidden grid gap-px bg-[#d8d8d8] md:grid-cols-2">
-              {[
-                {
-                  title: 'Started from adding AI for the sake of AI',
-                  body: 'Looking at which manual tasks AI could take: the document checks (draft vs confirmation, DDT vs confirmation).',
-                },
-                {
-                  title: 'Isolated checks lose context',
-                  body: 'Showing 3-month sales on the SKU helped, but stockout history was still forgotten. All related data had to become Agent context.',
-                },
-                {
-                  title: 'Ended solving the real user problem',
-                  body: 'By letting AI participate in the entire procurement workflow — not just flagging diffs, but keeping all signals in the flow so buyers can actually execute.',
-                },
-                {
-                  title: 'The handoff stayed visible and human',
-                  body: 'AI flags discrepancies and drafts recommendations. Human judges what diffs mean, reviews, adjusts, and explicitly places the formal order. MVP does not place real orders.',
-                },
-              ].map((item, index) => (
-                <article key={item.title} className="flex min-h-[160px] flex-col gap-4 bg-[#f4f4f4] p-[clamp(20px,3vw,28px)]">
-                  <p className="m-0 text-[11px] font-bold text-[#2155e8]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</p>
-                  <h3 className="m-0 text-[17px] font-bold leading-[1.3] text-[#161616]" style={bodyStyle}>{item.title}</h3>
-                  <p className="m-0 mt-auto text-[14px] font-normal leading-[1.55] text-[#555]" style={bodyStyle}>{item.body}</p>
-                </article>
-              ))}
-            </div>
-
-        <p className="m-0 mt-8 max-w-[860px] text-[15px] font-normal leading-[1.65] text-[#d8d8d8]" style={bodyStyle}>
-          Started from adding AI for the sake of AI. Ended solving the real user problem by letting AI participate in the entire procurement workflow — not just flagging diffs, but keeping all signals in the flow. The handoff stayed visible: AI flags and drafts, human judges and commits.
-        </p>
+        <div className="flex max-w-[860px] flex-col gap-3">
+          <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+            I started by adding AI for the sake of AI — looking at which manual checks it could take.
+          </p>
+          <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+            Isolated checks could not give the buyer a purchase-quantity recommendation.
+          </p>
+          <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+            To reduce the cognitive work, the Agent had to participate in the whole workflow, with a visible handoff: AI flags and drafts, the buyer judges and commits.
+          </p>
         </div>
       </section>
 
