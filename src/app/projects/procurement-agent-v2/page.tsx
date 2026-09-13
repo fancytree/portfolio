@@ -720,11 +720,11 @@ export default function ProcurementAgentPage() {
         <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Why procurement">
           <ChapterTitle>02 / Why I focused on procurement</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            Buyers spent time <span className="text-[#2155e8]">manually checking</span> for discrepancies, then <span className="text-[#2155e8]">judging</span> what each one meant.
+            The old path ran through <span className="text-[#2155e8]">Excel, estimates, and messages</span> — purchase and fulfillment never shared one record.
           </h2>
 
           <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            Compare the purchase draft against the supplier confirmation: is this difference a typo, new packaging, or a stockout? Then when goods arrive, compare the delivery document against the confirmation: is this a missing shipment or a partial one? Should you chase the supplier? Each check was manual. Each judgment stayed human.
+            Buyers downloaded sales and stock, estimated quantity in Excel, then confirmed with suppliers over WhatsApp and email. When goods arrived they searched SKUs one by one to stock in. Confirmation, DDT, and received quantities were compared by hand. The quantity decision stayed with the buyer; the system only recorded the final stock-in.
           </p>
           <div className="case-radius-lg overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
             <p className="m-0 mb-7 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
@@ -835,10 +835,10 @@ export default function ProcurementAgentPage() {
               “
             </span>
             <p className="m-0 max-w-[880px] text-[clamp(17px,1.8vw,20px)] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
-              An AI feature alone would not solve this. The buyer still had to compare documents line by line, judge what each discrepancy meant, and decide whether to act.
+              Procurement data existed at every step, but the system could not connect those records into one decision and fulfillment lifecycle.
             </p>
             <p data-case-type="quote-compact" className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
-              AI had to participate in the purchasing workflow, starting with the repetitive comparison work, while keeping judgment human.
+              So I rebuilt procurement as a structured, traceable lifecycle.
             </p>
           </blockquote>
         </div>
