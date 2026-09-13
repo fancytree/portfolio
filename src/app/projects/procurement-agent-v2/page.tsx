@@ -140,13 +140,13 @@ function ThreeStageEvolution() {
 
       <div className="case-radius-lg overflow-hidden flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
-          AI took repetitive retrieval work
+          AI replaced manual checking work
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Phase 1 already used AI to handle <strong className="font-bold text-[#161616]">repetitive document reading</strong>: it extracted data from purchase-request Excel files, supplier confirmations, and DDT documents, then flagged mismatches across those records.
+          Phase 1 already used AI, but only to replace <strong className="font-bold text-[#161616]">repetitive document comparison</strong>: compare the buyer&apos;s purchase draft against the supplier confirmation to surface differences — supplier typo, new product packaging, or stockout. Then compare the DDT against the confirmation when goods arrive, so you can tell missing shipment from partial shipment.
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. This was AI as a retrieval and flagging tool. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much</strong> — which is why Phase 1 had not reduced the cognitive work for buyers.
+          Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. This was AI as a checking tool. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much</strong> — which is why Phase 1 had not reduced the cognitive work for buyers.
         </p>
       </div>
 
