@@ -281,6 +281,16 @@ function ProcurementTurningPoint() {
           <span className="text-[#7fa2ff]">The calculation and decision problem had not.</span>
         </p>
       </div>
+
+      <div className="case-radius-lg overflow-hidden bg-white/5 px-[clamp(22px,3vw,32px)] py-6">
+        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Why reconciliation alone was not enough</p>
+        <p className="m-0 mt-4 max-w-[880px] text-[16px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
+          I observed buyers&apos; path: they used the last three months of sales to estimate quantities. The first design showed last-3-month sales on the corresponding SKU. But other signals were still lost — notably which SKUs had been out of stock before. Buyers had to remember that themselves. Those signals were not kept in the flow.
+        </p>
+        <p className="m-0 mt-4 max-w-[880px] text-[17px] font-bold leading-[1.5] text-white" style={bodyStyle}>
+          That is why the procurement process had to be designed as one whole workflow: all related data becomes Agent context, so the full purchasing flow can actually execute and help the buyer — not just flag a document diff on a row.
+        </p>
+      </div>
     </div>
   );
 }
