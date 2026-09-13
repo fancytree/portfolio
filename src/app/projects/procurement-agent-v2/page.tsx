@@ -1071,20 +1071,20 @@ export default function ProcurementAgentPage() {
             <div className="case-radius-lg overflow-hidden grid gap-px bg-[#d8d8d8] md:grid-cols-2">
               {[
                 {
-                  title: 'Started from adding AI',
-                  body: 'The initial brief was adding AI capability to procurement.',
+                  title: 'Started from adding AI for the sake of AI',
+                  body: 'Looking at which manual tasks AI could take: the document checks (draft vs confirmation, DDT vs confirmation).',
                 },
                 {
-                  title: 'Ended in workflow thinking',
-                  body: 'AI only became useful when it took repetitive calculation work while leaving decisions and commitments human.',
+                  title: 'Isolated checks lose context',
+                  body: 'Showing 3-month sales on the SKU helped, but stockout history was still forgotten. All related data had to become Agent context.',
                 },
                 {
-                  title: 'The handoff had to be visible',
-                  body: 'People thought the Agent already placed orders automatically. The workflow had to show: AI suggests → human confirms → exceptions return to the human.',
+                  title: 'Ended solving the real user problem',
+                  body: 'By letting AI participate in the entire procurement workflow — not just flagging diffs, but keeping all signals in the flow so buyers can actually execute.',
                 },
                 {
-                  title: 'The MVP does not place real orders',
-                  body: 'It calculates, drafts a recommendation, and escalates exceptions. The buyer reviews, adjusts, and explicitly places the formal order.',
+                  title: 'The handoff stayed visible and human',
+                  body: 'AI flags discrepancies and drafts recommendations. Human judges what diffs mean, reviews, adjusts, and explicitly places the formal order. MVP does not place real orders.',
                 },
               ].map((item, index) => (
                 <article key={item.title} className="flex min-h-[160px] flex-col gap-4 bg-[#f4f4f4] p-[clamp(20px,3vw,28px)]">
