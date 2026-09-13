@@ -4,6 +4,15 @@ const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  async redirects() {
+    return [
+      {
+        source: "/projects/procurement-agent",
+        destination: "/projects/procurement-agent-v2",
+        permanent: false,
+      },
+    ];
+  },
   async rewrites() {
     if (!posthogHost) {
       return [];

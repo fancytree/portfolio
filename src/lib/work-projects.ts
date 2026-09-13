@@ -24,7 +24,7 @@ export const productProjects: WorkProject[] = [
     imageScale: 1.68,
     imageTranslateY: '0%',
     imageBackground: '#161616',
-    href: '/projects/procurement-agent',
+    href: '/projects/procurement-agent-v2',
   },
   {
     title: 'ConnectNova',
