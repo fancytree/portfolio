@@ -250,9 +250,9 @@ function ProcurementTurningPoint() {
       <ChapterTitle inverse>04 / The Turning Point</ChapterTitle>
       <div className="flex max-w-[920px] flex-col gap-6">
         <h2 className="m-0 text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
-          AI handled retrieval and flagging,
+          There was no way to predict purchase quantity.
           <br />
-          <span className="text-[#7fa2ff]">but buyers still carried the decision work.</span>
+          <span className="text-[#7fa2ff]">No way to give the buyer a purchasing recommendation.</span>
         </h2>
       </div>
 
@@ -273,14 +273,6 @@ function ProcurementTurningPoint() {
       </blockquote>
 
       <ResponsibilityShiftDiagram />
-
-      <div>
-        <p className="m-0 max-w-[820px] text-[clamp(23px,3vw,36px)] font-bold leading-[1.16] tracking-[-0.018em] text-white" style={bodyStyle}>
-          There was no way to predict purchase quantity.
-          <br />
-          <span className="text-[#7fa2ff]">No way to give the buyer a purchasing recommendation.</span>
-        </p>
-      </div>
 
       <p className="m-0 max-w-[880px] text-[18px] font-normal leading-[1.55] text-[#d8d8d8]" style={bodyStyle}>
         To reduce the cognitive work, the Agent had to participate in the whole procurement workflow.
@@ -667,7 +659,7 @@ export default function ProcurementAgentPage() {
         subtitle="Designing AI to participate in the real purchasing workflow — starting from document comparison and exception flagging, while keeping judgment, decisions, and commitments under human control."
         tags={['B2B SaaS', 'Enterprise UX', 'AX Design', 'Agent Workflow', 'Full stack']}
         aboutLabel="About DEF Beauty Supply"
-        about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts purchasing work was stuck on manual checking: compare the buyer's draft against the supplier confirmation, then compare delivery documents against that confirmation when goods arrive. I designed a workflow where AI flags discrepancies, and buyers judge what each difference means and what to do next.'}
+        about={'DEF Beauty Supply is a B2B beauty wholesaler serving professional customers in Italy.\n\nIts purchasing work was stuck on manual checking: compare the buyer\'s draft against the supplier confirmation, then compare delivery documents against that confirmation when goods arrive. I designed a workflow where AI flags discrepancies, and buyers judge what each difference means and what to do next.'}
         meta={[
           {
             label: 'Role',
