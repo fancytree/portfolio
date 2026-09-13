@@ -248,22 +248,13 @@ function ProcurementTurningPoint() {
   return (
     <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Turning">
       <ChapterTitle inverse>03 / The Turning Point</ChapterTitle>
-      <div className="flex max-w-[920px] flex-col gap-6">
-        <h2 className="m-0 text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
+        <h2 className="m-0 max-w-[920px] text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
           There was no way to predict purchase quantity.
           <br />
           <span className="text-[#7fa2ff]">No way to give the buyer a purchasing recommendation.</span>
         </h2>
-      </div>
 
-      <blockquote className="relative m-0 max-w-[900px] py-3 pl-[clamp(48px,7vw,78px)]">
-        <span
-          className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none text-[#7fa2ff]"
-          style={bodyStyle}
-          aria-hidden
-        >
-          “
-        </span>
+      <blockquote className="m-0 max-w-[900px] border-l-[4px] border-[#7fa2ff] pl-5">
         <p data-case-type="quote-compact" className="m-0 text-[clamp(17px,2vw,22px)] font-normal leading-[1.55] text-white" style={bodyStyle}>
           Now I don&apos;t need to switch between Excel and the system anymore. But the part that takes the most time is still the same. I still have to decide what to buy and how much.
         </p>
@@ -290,25 +281,16 @@ function DesignResultEvidenceBackedAgency() {
     <section {...sectionBandProps('white')}>
     <div className="flex flex-col gap-10" data-case-nav-label="04 / Agent">
       <ChapterTitle>04 / Agent Workflow & Handoff</ChapterTitle>
-      <div className="flex max-w-[940px] flex-col gap-5">
-        <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
+        <h2 className="m-0 max-w-[940px] text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
           The Agent participates in the whole procurement workflow. The buyer keeps <span className="text-[#2155e8]">decision authority</span> and <span className="text-[#2155e8]">sees every handoff</span>.
         </h2>
         <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
           To reduce cognitive work, context had to stay with each SKU across the flow. The Agent keeps that context, surfaces exceptions, and stops before commitments. The buyer reviews, adjusts, and explicitly places the formal order.
         </p>
-      </div>
 
       <ProcurementWorkspaceTreeDiagram />
 
-      <blockquote className="relative m-0 max-w-[920px] py-3 pl-[clamp(48px,7vw,78px)]">
-        <span
-          className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none"
-          style={{ ...bodyStyle, color: accent }}
-          aria-hidden
-        >
-          “
-        </span>
+      <blockquote className="m-0 max-w-[920px] border-l-[4px] border-[#2155e8] pl-5">
         <p data-case-type="quote-compact" className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
           Don&apos;t just give me the numbers. Explain them.
         </p>
@@ -318,7 +300,7 @@ function DesignResultEvidenceBackedAgency() {
         That raised a boundary: what the Agent can calculate, and what must stay human.
       </p>
 
-      <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]">
+      <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]">
         <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Purchase decision</p>
         <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
           What to buy, how much, and when had to be assembled from evidence the buyer could inspect. The Agent keeps context, but the buyer judges and explicitly places the formal order.
@@ -364,7 +346,7 @@ function DesignResultEvidenceBackedAgency() {
           </div>
         </div>
 
-      <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
+      <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Learning loop</p>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
             Each time a buyer adjusts a recommendation, and each time actual delivery differs, that gap becomes a learning signal. The Agent can refine its next calculation — after the buyer reviews and approves those updates.
@@ -483,7 +465,7 @@ const agentUxIterations = [
 
 function AgentUxIterationsSection() {
   return (
-      <div className="flex flex-col gap-9">
+      <div className="flex flex-col gap-10">
         <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>UX Iterations</p>
         <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
           Early testing revealed buyers thought the Agent already placed orders automatically. These iterations made the handoff visible: AI suggests → human reviews and edits → human places the order → exceptions return to the human.
@@ -564,7 +546,7 @@ function ProcurementWorkspaceTreeDiagram() {
 
 function InteractiveDemo() {
   return (
-    <div className="flex flex-col gap-5" data-case-nav-label="00 / Demo">
+    <div className="flex flex-col gap-10" data-case-nav-label="00 / Demo">
       <ChapterTitle>00 / Interactive Demo</ChapterTitle>
       <div className="hidden md:block">
         <ProcurementDemoEmbed src={PROCUREMENT_AGENT_DEMO_URL} title="Procurement Agent interactive demo" />
@@ -676,7 +658,7 @@ export default function ProcurementAgentPage() {
           <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
             Buyers downloaded sales and stock, estimated quantity in Excel, then confirmed with suppliers over WhatsApp and email. When goods arrived they searched SKUs one by one to stock in. Confirmation, DDT, and received quantities were compared by hand. The quantity decision stayed with the buyer; the system only recorded the final stock-in.
           </p>
-          <div className="case-radius-lg overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
+          <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
             <p className="m-0 mb-7 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
               The old purchasing flow
             </p>
@@ -746,7 +728,7 @@ export default function ProcurementAgentPage() {
               </div>
             </div>
 
-            <div className="mt-8 grid gap-px border-t border-[#2155e8] bg-[#2155e8] md:grid-cols-[1.1fr_0.9fr_1.2fr]">
+            <div className="grid gap-px border-t border-[#2155e8] bg-[#2155e8] md:grid-cols-[1.1fr_0.9fr_1.2fr]">
             {[
               {
                 label: 'Fragmented data',
@@ -776,14 +758,7 @@ export default function ProcurementAgentPage() {
             </div>
           </div>
 
-          <blockquote className="relative m-0 flex max-w-[960px] flex-col gap-3 py-3 pl-[clamp(48px,7vw,78px)]">
-            <span
-              className="absolute left-0 top-0 text-[clamp(68px,9vw,108px)] font-bold leading-none"
-              style={{ ...bodyStyle, color: accent }}
-              aria-hidden
-            >
-              “
-            </span>
+          <blockquote className="m-0 max-w-[960px] border-l-[4px] border-[#2155e8] pl-5">
             <p className="m-0 max-w-[880px] text-[clamp(17px,1.8vw,20px)] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
               Procurement data existed at every step, but the system could not connect those records into one decision and fulfillment lifecycle.
             </p>
@@ -802,7 +777,7 @@ export default function ProcurementAgentPage() {
       <DesignResultEvidenceBackedAgency />
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-9" data-case-nav-label="05 / MVP">
+        <div className="flex flex-col gap-10" data-case-nav-label="05 / MVP">
           <ChapterTitle>05 / MVP Boundary & Results</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             Validated a functional Agent-ready MVP. The Agent does not place real orders.
@@ -857,7 +832,6 @@ export default function ProcurementAgentPage() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-5">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
               Reflection
             </p>
@@ -883,7 +857,6 @@ export default function ProcurementAgentPage() {
                 </article>
               ))}
             </div>
-          </div>
           <CaseStudyBackButton />
         </div>
       </section>
