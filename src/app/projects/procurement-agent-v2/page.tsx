@@ -80,8 +80,8 @@ function ChapterTitle({ children, inverse = false }: { children: string; inverse
 
 function ThreeStageEvolution() {
   return (
-    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Phase 1">
-      <ChapterTitle>03 / Phase 1</ChapterTitle>
+    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Phase 1">
+      <ChapterTitle>02 / Phase 1</ChapterTitle>
       <h2 className="case-study-section-title m-0 max-w-[900px]" style={bodyStyle}>
         Making procurement structured and traceable
       </h2>
@@ -246,8 +246,8 @@ function ResponsibilityShiftDiagram() {
 
 function ProcurementTurningPoint() {
   return (
-    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="04 / Turning point">
-      <ChapterTitle inverse>04 / The Turning Point</ChapterTitle>
+    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Turning">
+      <ChapterTitle inverse>03 / The Turning Point</ChapterTitle>
       <div className="flex max-w-[920px] flex-col gap-6">
         <h2 className="m-0 text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
           There was no way to predict purchase quantity.
@@ -288,8 +288,8 @@ function DesignResultEvidenceBackedAgency() {
   return (
     <>
     <section {...sectionBandProps('white')}>
-    <div className="flex flex-col gap-10" data-case-nav-label="05 / Agent workflow">
-      <ChapterTitle>05 / Agent Workflow & Handoff</ChapterTitle>
+    <div className="flex flex-col gap-10" data-case-nav-label="04 / Agent">
+      <ChapterTitle>04 / Agent Workflow & Handoff</ChapterTitle>
       <div className="flex max-w-[940px] flex-col gap-5">
         <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
           The Agent participates in the whole procurement workflow. The buyer keeps <span className="text-[#2155e8]">decision authority</span> and <span className="text-[#2155e8]">sees every handoff</span>.
@@ -572,11 +572,11 @@ export default function ProcurementAgentPage() {
         navLabels={[
           '00 / Demo',
           '01 / Old flow',
-          '03 / Phase 1',
-          '04 / Turning point',
-          '05 / Agent workflow',
-          '06 / MVP boundary',
-          '07 / Next and reflection',
+          '02 / Phase 1',
+          '03 / Turning',
+          '04 / Agent',
+          '05 / MVP',
+          '06 / Next & Reflection',
         ]}
       />
       <CaseStudyHero
@@ -804,8 +804,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-9" data-case-nav-label="06 / MVP boundary">
-          <ChapterTitle>06 / MVP Boundary & Results</ChapterTitle>
+        <div className="flex flex-col gap-9" data-case-nav-label="05 / MVP">
+          <ChapterTitle>05 / MVP Boundary & Results</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             Validated a functional Agent-ready MVP. The Agent does not place real orders.
           </h2>
@@ -829,8 +829,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-10" data-case-nav-label="07 / Next and reflection">
-          <ChapterTitle>07 / Next & Reflection</ChapterTitle>
+        <div className="flex flex-col gap-10" data-case-nav-label="06 / Next & Reflection">
+          <ChapterTitle>06 / Next & Reflection</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(26px,3.6vw,40px)] font-bold leading-[1.15] tracking-[-0.02em] text-[#161616]" style={bodyStyle}>
             What I would do next — and what this changed about how I use AI.
           </h2>
@@ -852,7 +852,7 @@ export default function ProcurementAgentPage() {
               ].map((item, index) => (
                 <article key={item.title} className="flex min-h-[178px] flex-col gap-4 bg-[#202020] p-5">
                   <p className="m-0 text-[11px] font-bold text-[#7fa2ff]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</p>
-                  <h3 className="m-0 text-[17px] font-bold leading-[1.3] text-white" style={bodyStyle}>{item.title}</h3>
+                  <p className="m-0 text-[17px] font-bold leading-[1.3] text-white" style={bodyStyle}>{item.title}</p>
                   <p className="m-0 mt-auto text-[12px] font-normal leading-[1.5] text-[#bdbdbd]" style={bodyStyle}>{item.body}</p>
                 </article>
               ))}
@@ -860,6 +860,9 @@ export default function ProcurementAgentPage() {
           </div>
 
           <div className="flex max-w-[860px] flex-col gap-3">
+            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
+              Reflection
+            </p>
             <p className="m-0 text-[16px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
               I started by adding AI for the sake of AI — looking at which manual checks it could take.
             </p>
