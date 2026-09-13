@@ -317,7 +317,6 @@ function DesignResultEvidenceBackedAgency() {
       <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
         That raised a boundary: what the Agent can calculate, and what must stay human.
       </p>
-    </div>
 
       <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]">
         <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Purchase decision</p>
@@ -348,6 +347,40 @@ function DesignResultEvidenceBackedAgency() {
           </div>
         </div>
       </div>
+
+      <div className="flex max-w-[1080px] flex-col gap-10">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Architecture</p>
+          <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+            <strong className="font-bold text-[#161616]">The LLM interprets. The engine calculates. The buyer decides.</strong> I separated probabilistic interpretation from deterministic quantity calculation and human authorization so recommendations remained explainable and controllable.
+          </p>
+
+          <ResponsibilityArchitectureDiagram />
+
+          <div className="case-radius-lg overflow-hidden border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,32px)] py-6">
+            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>Rationale</p>
+            <p className="m-0 mt-3 max-w-[960px] text-[18px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
+              Quantity affects cash, inventory risk, and supplier commitments, so the recommendation must be reproducible from business inputs, not generated probabilistically.
+            </p>
+          </div>
+        </div>
+
+      <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Learning loop</p>
+          <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
+            Each time a buyer adjusts a recommendation, and each time actual delivery differs, that gap becomes a learning signal. The Agent can refine its next calculation — after the buyer reviews and approves those updates.
+          </p>
+
+          <ProcurementLearningLoop />
+
+          <div className="border-l-[4px] border-[#7fa2ff] pl-5">
+            <p className="m-0 max-w-[920px] text-[20px] font-bold leading-[1.4] text-white" style={bodyStyle}>
+              Learning is governed: the Agent suggests updates, the buyer approves them before they affect future calculations.
+            </p>
+          </div>
+        </div>
+
+      <AgentUxIterationsSection />
+    </div>
     </section>
     </>
   );
@@ -769,41 +802,6 @@ export default function ProcurementAgentPage() {
       <DesignResultEvidenceBackedAgency />
 
       <section {...sectionBandProps('white')}>
-      <div className="flex max-w-[1080px] flex-col gap-10">
-          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Architecture</p>
-          <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            <strong className="font-bold text-[#161616]">The LLM interprets. The engine calculates. The buyer decides.</strong> I separated probabilistic interpretation from deterministic quantity calculation and human authorization so recommendations remained explainable and controllable.
-          </p>
-
-          <ResponsibilityArchitectureDiagram />
-
-          <div className="case-radius-lg overflow-hidden border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,32px)] py-6">
-            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>Rationale</p>
-            <p className="m-0 mt-3 max-w-[960px] text-[18px] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
-              Quantity affects cash, inventory risk, and supplier commitments, so the recommendation must be reproducible from business inputs, not generated probabilistically.
-            </p>
-          </div>
-        </div>
-
-      <div className="case-radius-lg flex flex-col gap-9 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
-          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Learning loop</p>
-          <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
-            Each time a buyer adjusts a recommendation, and each time actual delivery differs, that gap becomes a learning signal. The Agent can refine its next calculation — after the buyer reviews and approves those updates.
-          </p>
-
-          <ProcurementLearningLoop />
-
-          <div className="border-l-[4px] border-[#7fa2ff] pl-5">
-            <p className="m-0 max-w-[920px] text-[20px] font-bold leading-[1.4] text-white" style={bodyStyle}>
-              Learning is governed: the Agent suggests updates, the buyer approves them before they affect future calculations.
-            </p>
-          </div>
-        </div>
-
-      <AgentUxIterationsSection />
-      </section>
-
-      <section {...sectionBandProps('white')}>
         <div className="flex flex-col gap-9" data-case-nav-label="05 / MVP">
           <ChapterTitle>05 / MVP Boundary & Results</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
@@ -818,13 +816,13 @@ export default function ProcurementAgentPage() {
               After production use I would measure whether buyers keep the recommended quantity, and whether the Agent still stops when approval is required.
             </p>
           </div>
-        </div>
 
         <div className="case-radius-lg flex flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Scope</p>
             <p className="m-0 max-w-[640px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
               A coded workflow with a shared plan-and-conversation workbench. The Agent never places the formal order.
             </p>
+        </div>
         </div>
       </section>
 
@@ -886,11 +884,6 @@ export default function ProcurementAgentPage() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      <section {...sectionBandProps('white')}>
-        <div>
           <CaseStudyBackButton />
         </div>
       </section>
