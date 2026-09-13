@@ -279,56 +279,13 @@ function DesignResultEvidenceBackedAgency() {
   return (
     <>
     <section {...sectionBandProps('white')}>
-    <div className="flex flex-col gap-10" data-case-nav-label="05 / Agent">
-      <ChapterTitle>05 / Agent Workflow & Handoff</ChapterTitle>
+    <div className="flex flex-col gap-10" data-case-nav-label="05 / Handoff">
+      <ChapterTitle>05 / Handoff</ChapterTitle>
         <h2 className="m-0 max-w-[940px] text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
-          The Agent participates in the whole procurement workflow. The buyer keeps <span className="text-[#2155e8]">decision authority</span> and <span className="text-[#2155e8]">sees every handoff</span>.
+          AI suggests and flags. The buyer <span className="text-[#2155e8]">sees every handoff</span> and keeps the formal order.
         </h2>
-        <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          To reduce cognitive work, context had to stay with each SKU across the flow. The Agent keeps that context, surfaces exceptions, and stops before commitments. The buyer reviews, adjusts, and explicitly places the formal order.
-        </p>
 
       <ProcurementWorkspaceTreeDiagram />
-
-      <blockquote className="m-0 max-w-[920px] border-l-[4px] border-[#2155e8] pl-5">
-        <p data-case-type="quote-compact" className="m-0 text-[clamp(19px,2.4vw,27px)] font-bold leading-[1.42] tracking-[-0.012em] text-[#161616]" style={bodyStyle}>
-          Don&apos;t just give me the numbers. Explain them.
-        </p>
-      </blockquote>
-
-      <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-        That raised a boundary: what the Agent can calculate, and what must stay human.
-      </p>
-
-      <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]">
-        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Purchase decision</p>
-        <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
-          What to buy, how much, and when had to be assembled from evidence the buyer could inspect. The Agent keeps context, but the buyer judges and explicitly places the formal order.
-        </p>
-
-        <div className="case-radius-lg overflow-hidden bg-white">
-          <ProcurementDecisionDiagram />
-        </div>
-
-        <div>
-          <p className="m-0 mb-4 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>How the Agent participates</p>
-          <div className="grid border-y border-white/20 md:grid-cols-3">
-            {[
-              { title: 'Interpret intent', body: 'Understand the buyer&apos;s goal.' },
-              { title: 'Keep context flowing', body: 'Maintain signals across the SKU lifecycle.' },
-              { title: 'Surface exceptions', body: 'Pause when human judgment is required.' },
-            ].map((responsibility, index) => (
-              <div key={responsibility.title} className="flex min-h-[132px] flex-col gap-4 border-b border-white/20 py-5 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0">
-                <span className="text-[10px] font-bold text-[#777]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</span>
-                <div className="flex flex-col gap-2">
-                  <p className="m-0 text-[15px] font-bold text-white" style={bodyStyle}>{responsibility.title}</p>
-                  <p className="m-0 text-[12px] font-normal leading-[1.5] text-[#b8b8b8]" style={bodyStyle}>{responsibility.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
     </section>
 
@@ -343,6 +300,16 @@ function DesignResultEvidenceBackedAgency() {
           </p>
 
           <ResponsibilityArchitectureDiagram />
+
+      <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]">
+        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Purchase decision</p>
+        <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
+          What to buy, how much, and when is assembled from evidence the buyer can inspect. The Agent keeps context; the buyer judges and places the formal order.
+        </p>
+        <div className="case-radius-lg overflow-hidden bg-white">
+          <ProcurementDecisionDiagram />
+        </div>
+      </div>
 
           <div className="case-radius-lg overflow-hidden border-l-[5px] border-[#2155e8] bg-white px-[clamp(22px,3vw,32px)] py-6">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>Rationale</p>
@@ -608,7 +575,7 @@ export default function ProcurementAgentPage() {
           '02 / Old flow',
           '03 / Phase 1',
           '04 / Turning',
-          '05 / Agent',
+          '05 / Handoff',
           '06 / Architecture',
           '07 / Learning',
           '08 / Iterations',
