@@ -80,8 +80,8 @@ function ChapterTitle({ children, inverse = false }: { children: string; inverse
 
 function ThreeStageEvolution() {
   return (
-    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Phase 1">
-      <ChapterTitle>02 / Phase 1</ChapterTitle>
+    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Phase 1">
+      <ChapterTitle>03 / Phase 1</ChapterTitle>
       <h2 className="case-study-section-title m-0 max-w-[900px]" style={bodyStyle}>
         Making procurement structured and traceable
       </h2>
@@ -246,8 +246,8 @@ function ResponsibilityShiftDiagram() {
 
 function ProcurementTurningPoint() {
   return (
-    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="03 / Turning">
-      <ChapterTitle inverse>03 / The Turning Point</ChapterTitle>
+    <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="04 / Turning">
+      <ChapterTitle inverse>04 / The Turning Point</ChapterTitle>
         <h2 className="m-0 max-w-[920px] text-[clamp(30px,4.2vw,52px)] font-bold leading-[1.08] tracking-[-0.028em] text-white" style={bodyStyle}>
           There was no way to predict purchase quantity.
           <br />
@@ -279,8 +279,8 @@ function DesignResultEvidenceBackedAgency() {
   return (
     <>
     <section {...sectionBandProps('white')}>
-    <div className="flex flex-col gap-10" data-case-nav-label="04 / Agent">
-      <ChapterTitle>04 / Agent Workflow & Handoff</ChapterTitle>
+    <div className="flex flex-col gap-10" data-case-nav-label="05 / Agent">
+      <ChapterTitle>05 / Agent Workflow & Handoff</ChapterTitle>
         <h2 className="m-0 max-w-[940px] text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
           The Agent participates in the whole procurement workflow. The buyer keeps <span className="text-[#2155e8]">decision authority</span> and <span className="text-[#2155e8]">sees every handoff</span>.
         </h2>
@@ -329,11 +329,17 @@ function DesignResultEvidenceBackedAgency() {
           </div>
         </div>
       </div>
+    </div>
+    </section>
 
-      <div className="flex max-w-[1080px] flex-col gap-10">
-          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Architecture</p>
+    <section {...sectionBandProps('white')}>
+      <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="06 / Architecture">
+          <ChapterTitle>06 / Architecture</ChapterTitle>
+          <h2 className="m-0 max-w-[900px] text-[clamp(28px,3.8vw,42px)] font-bold leading-[1.12] tracking-[-0.02em] text-[#161616]" style={bodyStyle}>
+            The LLM interprets. The engine calculates. The buyer decides.
+          </h2>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-            <strong className="font-bold text-[#161616]">The LLM interprets. The engine calculates. The buyer decides.</strong> I separated probabilistic interpretation from deterministic quantity calculation and human authorization so recommendations remained explainable and controllable.
+            I separated probabilistic interpretation from deterministic quantity calculation and human authorization so recommendations remained explainable and controllable.
           </p>
 
           <ResponsibilityArchitectureDiagram />
@@ -345,8 +351,15 @@ function DesignResultEvidenceBackedAgency() {
             </p>
           </div>
         </div>
+    </section>
 
-      <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
+    <section {...sectionBandProps('ink')}>
+      <div className="flex flex-col gap-10" data-case-nav-label="07 / Learning">
+          <ChapterTitle inverse>07 / Learning</ChapterTitle>
+          <h2 className="m-0 max-w-[900px] text-[clamp(28px,3.8vw,42px)] font-bold leading-[1.12] tracking-[-0.02em] text-white" style={bodyStyle}>
+            Learning is governed. The Agent suggests updates; the buyer approves them.
+          </h2>
+      <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#202020] p-[clamp(24px,5vw,56px)]">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Learning loop</p>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
             Each time a buyer adjusts a recommendation, and each time actual delivery differs, that gap becomes a learning signal. The Agent can refine its next calculation — after the buyer reviews and approves those updates.
@@ -360,9 +373,11 @@ function DesignResultEvidenceBackedAgency() {
             </p>
           </div>
         </div>
+      </div>
+    </section>
 
+    <section {...sectionBandProps('white')}>
       <AgentUxIterationsSection />
-    </div>
     </section>
     </>
   );
@@ -465,10 +480,13 @@ const agentUxIterations = [
 
 function AgentUxIterationsSection() {
   return (
-      <div className="flex flex-col gap-10">
-        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>UX Iterations</p>
+      <div className="flex flex-col gap-10" data-case-nav-label="08 / Iterations">
+        <ChapterTitle>08 / Iterations</ChapterTitle>
+        <h2 className="m-0 max-w-[900px] text-[clamp(28px,3.8vw,42px)] font-bold leading-[1.12] tracking-[-0.02em] text-[#161616]" style={bodyStyle}>
+          Testers thought the Agent already placed orders. The iterations made the handoff visible.
+        </h2>
         <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Early testing revealed buyers thought the Agent already placed orders automatically. These iterations made the handoff visible: AI suggests → human reviews and edits → human places the order → exceptions return to the human.
+          AI suggests, the buyer reviews and edits, the buyer places the order, exceptions return to the human.
         </p>
 
         <div className="flex flex-col gap-3">
@@ -586,12 +604,16 @@ export default function ProcurementAgentPage() {
         tldrPoints={tldrPoints}
         navLabels={[
           '00 / Demo',
-          '01 / Old flow',
-          '02 / Phase 1',
-          '03 / Turning',
-          '04 / Agent',
-          '05 / MVP',
-          '06 / Next & Reflection',
+          '01 / Context',
+          '02 / Old flow',
+          '03 / Phase 1',
+          '04 / Turning',
+          '05 / Agent',
+          '06 / Architecture',
+          '07 / Learning',
+          '08 / Iterations',
+          '09 / MVP',
+          '10 / Next & Reflection',
         ]}
       />
       <CaseStudyHero
@@ -639,10 +661,10 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="01 / Old flow">
-          <ChapterTitle>01 / Old flow</ChapterTitle>
+        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="01 / Context">
+          <ChapterTitle>01 / Context</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            The old path ran through <span className="text-[#2155e8]">Excel, estimates, and messages</span> — purchase and fulfillment never shared one record.
+            The brief: add AI to <span className="text-[#2155e8]">fragmented</span> B2B procurement.
           </h2>
           <div className="flex max-w-[900px] flex-col gap-4 [&_strong]:font-bold [&_strong]:text-[#161616]">
             <p className="m-0 text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
@@ -654,12 +676,20 @@ export default function ProcurementAgentPage() {
           </div>
 
           <EcosystemDiagram />
+        </div>
+      </section>
 
+      <section {...sectionBandProps('white')}>
+        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Old flow">
+          <ChapterTitle>02 / Old flow</ChapterTitle>
+          <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
+            The old path ran through <span className="text-[#2155e8]">Excel, estimates, and messages</span> — purchase and fulfillment never shared one record.
+          </h2>
           <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
             Buyers downloaded sales and stock, estimated quantity in Excel, then confirmed with suppliers over WhatsApp and email. When goods arrived they searched SKUs one by one to stock in. Confirmation, DDT, and received quantities were compared by hand. The quantity decision stayed with the buyer; the system only recorded the final stock-in.
           </p>
           <div className="case-radius-lg flex flex-col gap-10 overflow-hidden bg-[#161616] p-[clamp(24px,4vw,44px)]">
-            <p className="m-0 mb-7 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
+            <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
               The old purchasing flow
             </p>
             <div className="overflow-x-auto pb-2" aria-label="Horizontal legacy purchasing flow with five annotated break points">
@@ -777,8 +807,8 @@ export default function ProcurementAgentPage() {
       <DesignResultEvidenceBackedAgency />
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-10" data-case-nav-label="05 / MVP">
-          <ChapterTitle>05 / MVP Boundary & Results</ChapterTitle>
+        <div className="flex flex-col gap-10" data-case-nav-label="09 / MVP">
+          <ChapterTitle>09 / MVP Boundary & Results</ChapterTitle>
           <h2 className="m-0 max-w-[930px] text-[clamp(26px,3.6vw,36px)] font-bold leading-[1.17] text-[#161616]" style={bodyStyle}>
             Validated a functional Agent-ready MVP. The Agent does not place real orders.
           </h2>
@@ -802,8 +832,8 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex flex-col gap-10" data-case-nav-label="06 / Next & Reflection">
-          <ChapterTitle>06 / Next & Reflection</ChapterTitle>
+        <div className="flex flex-col gap-10" data-case-nav-label="10 / Next & Reflection">
+          <ChapterTitle>10 / Next & Reflection</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(26px,3.6vw,40px)] font-bold leading-[1.15] tracking-[-0.02em] text-[#161616]" style={bodyStyle}>
             What I would do next — and what this changed about how I use AI.
           </h2>
