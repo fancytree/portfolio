@@ -27,12 +27,12 @@ const tldrPoints = [
   {
     label: 'Shift',
     body:
-      'The transformation happened in three deliberate stages: manual work revealed the operational gaps, the Main platform created structured purchase and receiving records, and the Agent layer then used that foundation to analyze demand, apply supplier rules, and support decisions.',
+      'Started from document reconciliation: AI flagged discrepancies between buyer drafts, supplier confirmations, and delivery documents. Then discovered isolated checks lose context, so the Agent had to participate in the whole procurement workflow to actually reduce cognitive work.',
   },
   {
     label: 'Core insight',
     body:
-      'The middle stage made agency possible. Before AI could reason about procurement, the platform first had to connect purchase requests, orders, supplier documents, partial receipts, and inventory outcomes.',
+      'Isolated row checks were not enough. To give the buyer a purchasing recommendation, all related context — sales history, stockout signals, in-transit stock, supplier constraints — had to stay with the SKU across the workflow.',
   },
   {
     label: 'Design principle',
@@ -276,19 +276,20 @@ function ProcurementTurningPoint() {
 
       <div>
         <p className="m-0 max-w-[820px] text-[clamp(23px,3vw,36px)] font-bold leading-[1.16] tracking-[-0.018em] text-white" style={bodyStyle}>
-          The retrieval problem had been solved.
+          There was no way to predict purchase quantity.
           <br />
-          <span className="text-[#7fa2ff]">The calculation and decision problem had not.</span>
+          <span className="text-[#7fa2ff]">No way to give the buyer a purchasing recommendation.</span>
         </p>
       </div>
 
+      <p className="m-0 max-w-[880px] text-[18px] font-normal leading-[1.55] text-[#d8d8d8]" style={bodyStyle}>
+        To reduce the cognitive work, the Agent had to participate in the whole procurement workflow.
+      </p>
+
       <div className="case-radius-lg overflow-hidden bg-white/5 px-[clamp(22px,3vw,32px)] py-6">
-        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Why reconciliation alone was not enough</p>
-        <p className="m-0 mt-4 max-w-[880px] text-[16px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
+        <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>One example of lost context</p>
+        <p className="m-0 mt-4 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
           I observed buyers&apos; path: they used the last three months of sales to estimate quantities. The first design showed last-3-month sales on the corresponding SKU. But other signals were still lost — notably which SKUs had been out of stock before. Buyers had to remember that themselves. Those signals were not kept in the flow.
-        </p>
-        <p className="m-0 mt-4 max-w-[880px] text-[17px] font-bold leading-[1.5] text-white" style={bodyStyle}>
-          That is why the procurement process had to be designed as one whole workflow: all related data becomes Agent context, so the full purchasing flow can actually execute and help the buyer — not just flag a document diff on a row.
         </p>
       </div>
     </div>
@@ -304,10 +305,10 @@ function DesignResultEvidenceBackedAgency() {
       <ChapterTitle>05 / Why an Agent?</ChapterTitle>
       <div className="flex max-w-[940px] flex-col gap-5">
         <h2 className="m-0 text-[clamp(34px,4.8vw,56px)] font-bold leading-[1.08] tracking-[-0.03em] text-[#161616]" style={bodyStyle}>
-          AI could calculate from evidence and <span className="text-[#2155e8]">draft a recommendation</span>, while buyers kept control of the commitment.
+          To reduce the cognitive work, the Agent had to participate in the <span className="text-[#2155e8]">whole procurement workflow</span>.
         </h2>
         <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Buyers were stuck estimating quantities from experience, checking in-transit stock across spreadsheets, and piecing orders together by hand. AI could take that calculation work — summarize inventory and sales, apply supplier rules, produce an editable draft — then hand the recommendation back for the buyer to review, adjust, and place the formal order.
+          Phase 1 had connected the records. Buyers still had to operate every step: find the gap, decide, contact the supplier, check documents, receive. An Agent could stay in that cycle with the buyer and complete it together, keeping context with each SKU across the flow — instead of handing the work back at every screen.
         </p>
       </div>
 
@@ -336,10 +337,10 @@ function DesignResultEvidenceBackedAgency() {
       <div className="case-radius-lg flex flex-col gap-8 overflow-hidden bg-[#161616] p-[clamp(22px,4vw,40px)]" data-case-nav-label="06 / Agent-ready system">
         <ChapterTitle inverse>06 / Agent-ready System</ChapterTitle>
         <h2 className="m-0 max-w-[900px] text-[clamp(28px,4vw,44px)] font-bold leading-[1.12] tracking-[-0.025em] text-white" style={bodyStyle}>
-          The Agent calculates. The buyer decides and commits.
+          The purchase decision needed structured context and a defined role.
         </h2>
         <p className="m-0 max-w-[820px] text-[17px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
-          The Agent assembles inventory, sales velocity, in-transit stock, and supplier constraints into a draft recommendation. Every SKU and quantity stays editable. The buyer reviews, adjusts if needed, then explicitly places the formal order. High-risk scenarios — over-budget, changing supplier, or material exceptions — return to the buyer for approval.
+          What to buy, how much, and when had to be assembled from evidence the buyer could inspect. Operational records were the foundation. Supplier constraints, historical evidence, and human authority made those records usable for the decision. The Agent participates by keeping context with each SKU across the workflow, but the buyer still judges and explicitly places the formal order.
         </p>
 
         <div className="case-radius-lg overflow-hidden bg-white">
@@ -347,12 +348,12 @@ function DesignResultEvidenceBackedAgency() {
         </div>
 
         <div>
-          <p className="m-0 mb-4 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>What the Agent does</p>
+          <p className="m-0 mb-4 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>How the Agent participates</p>
           <div className="grid border-y border-white/20 md:grid-cols-3">
             {[
               { title: 'Interpret intent', body: 'Understand the buyer&apos;s goal.' },
-              { title: 'Calculate quantity', body: 'Produce an editable draft recommendation.' },
-              { title: 'Surface exceptions', body: 'Escalate high-risk scenarios to the buyer.' },
+              { title: 'Keep context flowing', body: 'Maintain signals across the SKU lifecycle.' },
+              { title: 'Surface exceptions', body: 'Pause when human judgment is required.' },
             ].map((responsibility, index) => (
               <div key={responsibility.title} className="flex min-h-[132px] flex-col gap-4 border-b border-white/20 py-5 md:border-b-0 md:border-l md:px-6 md:first:border-l-0 md:first:pl-0">
                 <span className="text-[10px] font-bold text-[#777]" style={bodyStyle}>{String(index + 1).padStart(2, '0')}</span>
@@ -367,7 +368,7 @@ function DesignResultEvidenceBackedAgency() {
 
         <div className="pt-6">
           <p className="m-0 text-[18px] font-bold leading-[1.5] text-white" style={bodyStyle}>
-            Interpret intent. Calculate deterministically. Show evidence. Stop for human approval.
+            Interpret intent. Keep context with the SKU. Show evidence. Stop for human approval.
           </p>
         </div>
       </div>
@@ -725,7 +726,7 @@ export default function ProcurementAgentPage() {
 
       <section {...sectionBandProps('white')}>
         <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Why procurement">
-          <ChapterTitle>02 / Where the workflow got stuck</ChapterTitle>
+          <ChapterTitle>02 / Why I focused on procurement</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
             Buyers spent time <span className="text-[#2155e8]">manually checking</span> for discrepancies, then <span className="text-[#2155e8]">judging</span> what each one meant.
           </h2>
