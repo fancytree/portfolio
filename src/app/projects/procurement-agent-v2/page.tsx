@@ -314,8 +314,8 @@ function DesignResultEvidenceBackedAgency() {
         </p>
       </blockquote>
 
-      <p className="m-0 max-w-[860px] text-[clamp(23px,3vw,32px)] font-bold leading-[1.22] tracking-[-0.018em] text-[#161616]" style={bodyStyle}>
-        But that raised a boundary question: what should the Agent calculate, and what <span className="text-[#2155e8]">must stay human</span>?
+      <p className="m-0 max-w-[860px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+        That raised a boundary: what the Agent can calculate, and what must stay human.
       </p>
     </div>
 
@@ -457,41 +457,18 @@ function AgentUxIterationsSection() {
 
         <div className="flex flex-col gap-3">
           {agentUxIterations.map((iteration) => (
-            <details key={iteration.index} className="case-radius-lg overflow-hidden group border border-[#d8d8d8] bg-white open:border-[#2155e8]">
-              <summary className="grid cursor-pointer list-none gap-4 p-[clamp(18px,3vw,26px)] sm:grid-cols-[44px_minmax(220px,0.8fr)_1fr_24px] sm:items-center">
-                <span className="text-[11px] font-bold text-[#777]" style={bodyStyle}>{iteration.index}</span>
-                <span className="flex items-center gap-3 text-[15px] font-bold text-[#161616]" style={bodyStyle}>
-                  {iteration.from}
-                  <span className="text-[#2155e8]" aria-hidden>→</span>
-                  <span style={{ color: accent }}>{iteration.to}</span>
-                </span>
-                <span className="text-[13px] font-normal leading-[1.5] text-[#555]" style={bodyStyle}>{iteration.summary}</span>
-                <span className="text-[20px] font-bold text-[#2155e8] transition-transform group-open:rotate-45" aria-hidden>+</span>
-              </summary>
-
-              <div className="grid gap-px border-t border-[#d8d8d8] bg-[#d8d8d8] lg:grid-cols-2">
-                <div className="flex flex-col gap-3 bg-[#f4f4f4] p-[clamp(20px,3vw,28px)]">
-                  <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Initial design</p>
-                  <p className="m-0 text-[14px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>{iteration.initial}</p>
-                </div>
-                <div className="flex flex-col gap-3 bg-[#e9eef8] p-[clamp(20px,3vw,28px)]">
-                  <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>What I learned</p>
-                  <p className="m-0 text-[14px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>{iteration.learning}</p>
-                </div>
-                <div className="flex flex-col gap-4 bg-white p-[clamp(20px,3vw,28px)] lg:col-span-2">
-                  <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Design iteration</p>
-                  <div className="grid gap-2 md:grid-cols-2">
-                    {iteration.changes.map((change) => (
-                      <p key={change} className="case-radius-sm m-0 bg-[#f4f4f4] px-4 py-3 text-[12px] font-normal leading-[1.5] text-[#161616]" style={bodyStyle}>{change}</p>
-                    ))}
-                  </div>
-                </div>
-                <div className="m-0 bg-[#161616] px-[clamp(20px,3vw,28px)] py-5 lg:col-span-2">
-                  <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Design principle</p>
-                  <p className="m-0 mt-3 text-[18px] font-bold leading-[1.5] text-white" style={bodyStyle}>{iteration.principle}</p>
-                </div>
+            <article key={iteration.index} className="case-radius-lg grid gap-3 border border-[#d8d8d8] bg-white p-[clamp(18px,3vw,24px)] sm:grid-cols-[44px_minmax(160px,0.7fr)_1fr]">
+              <span className="text-[11px] font-bold text-[#777]" style={bodyStyle}>{iteration.index}</span>
+              <p className="m-0 text-[15px] font-bold text-[#161616]" style={bodyStyle}>
+                {iteration.from}
+                <span className="text-[#2155e8]" aria-hidden> → </span>
+                <span style={{ color: accent }}>{iteration.to}</span>
+              </p>
+              <div className="flex flex-col gap-2">
+                <p className="m-0 text-[15px] font-bold leading-[1.45] text-[#161616]" style={bodyStyle}>{iteration.principle}</p>
+                <p className="m-0 text-[13px] font-normal leading-[1.55] text-[#555]" style={bodyStyle}>{iteration.learning}</p>
               </div>
-            </details>
+            </article>
           ))}
         </div>
       </div>
@@ -512,7 +489,7 @@ function ProcurementWorkspaceTreeDiagram() {
     <figure className="m-0 flex flex-col gap-5">
       <figcaption className="flex flex-col gap-2">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Information architecture</p>
-        <h3 className="m-0 text-[clamp(22px,2.8vw,28px)] font-bold leading-[1.2] text-[#161616]" style={bodyStyle}>Procurement Workspace</h3>
+        <p className="m-0 text-[15px] font-bold leading-[1.4] text-[#161616]" style={bodyStyle}>Procurement Workspace</p>
       </figcaption>
       <div className="w-full overflow-x-auto">
         <svg className="h-auto min-w-[820px] w-full" viewBox="0 0 1080 404" role="img" aria-labelledby="workspace-tree-title workspace-tree-desc" style={bodyStyle}>
@@ -597,14 +574,8 @@ export default function ProcurementAgentPage() {
           '02 / Why procurement',
           '03 / Phase 1',
           '04 / Turning point',
-          '05 / Why an Agent?',
-          '06 / Agent-ready system',
-          '07 / Designing the Agent',
-          '08 / Closing the loop',
-          '09 / UX iterations',
-          '10 / Validation',
-          '11 / Results',
-          '12 / Reflection',
+          '05 / Agent workflow',
+          '06 / MVP boundary',
         ]}
       />
       <CaseStudyHero
@@ -654,9 +625,9 @@ export default function ProcurementAgentPage() {
       <section {...sectionBandProps('white')}>
         <div className="flex max-w-[1080px] flex-col gap-8" data-case-nav-label="01 / Context">
           <ChapterTitle>01 / Context</ChapterTitle>
-          <h2 className="m-0 max-w-[950px] text-[clamp(32px,4.6vw,52px)] font-bold leading-[1.08] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            The brief: add AI capability to <span className="text-[#2155e8]">fragmented</span> B2B procurement
-          </h2>
+          <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
+            The brief was to add AI capability to <strong className="font-bold text-[#161616]">fragmented</strong> B2B procurement.
+          </p>
           <div className="flex max-w-[900px] flex-col gap-4 [&_strong]:font-bold [&_strong]:text-[#161616]">
             <p className="m-0 text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
               DEF Beauty Supply&apos;s procurement work was spread across <strong>disconnected software, documents, messaging, and spreadsheets</strong>. Buyers spent time manually comparing purchase drafts against supplier confirmations, then comparing delivery documents against those confirmations when goods arrived — checking for typos, packaging changes, stockouts, missing shipments, or partial deliveries.
@@ -668,9 +639,7 @@ export default function ProcurementAgentPage() {
 
           <EcosystemDiagram />
         </div>
-      </section>
 
-      <section {...sectionBandProps('white')}>
         <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Why procurement">
           <ChapterTitle>02 / Why I focused on procurement</ChapterTitle>
           <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
@@ -791,9 +760,6 @@ export default function ProcurementAgentPage() {
             <p className="m-0 max-w-[880px] text-[clamp(17px,1.8vw,20px)] font-bold leading-[1.5] text-[#161616]" style={bodyStyle}>
               Procurement data existed at every step, but the system could not connect those records into one decision and fulfillment lifecycle.
             </p>
-            <p data-case-type="quote-compact" className="m-0 max-w-[880px] text-[clamp(18px,2.2vw,24px)] font-bold leading-[1.42]" style={{ ...bodyStyle, color: accent }}>
-              So I rebuilt procurement as a structured, traceable lifecycle.
-            </p>
           </blockquote>
         </div>
       </section>
@@ -850,120 +816,21 @@ export default function ProcurementAgentPage() {
             Validated a functional Agent-ready MVP. The Agent does not place real orders.
           </h2>
 
-          <div className="case-radius-lg overflow-hidden grid gap-px bg-[#d8d8d8] lg:grid-cols-2">
-            <article className="bg-[#161616] p-[clamp(22px,3vw,32px)]">
-              <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
-                What I already validated
-              </p>
-              <p className="m-0 mt-4 text-[14px] font-normal leading-[1.6] text-[#d8d8d8]" style={bodyStyle}>
-                Using real procurement records, sales and inventory data, representative supplier scenarios, and a coded workflow prototype, I validated:
-              </p>
-              <div className="mt-6 flex flex-col gap-px bg-white/20">
-                {[
-                  {
-                    label: 'End-to-end lifecycle',
-                    body: 'Purchase need → recommendation → confirmation → receiving → outcome.',
-                  },
-                  {
-                    label: 'Reproducible quantity recommendation',
-                    body: 'The same inputs reproduce the same recommended quantity.',
-                  },
-                  {
-                    label: 'Discrepancy handling',
-                    body: 'Confirmation, DDT, and receiving differences remain visible and actionable.',
-                  },
-                  {
-                    label: 'Human approval boundary',
-                    body: 'The Agent pauses before supplier or financial commitment.',
-                  },
-                  {
-                    label: 'Stateful recovery',
-                    body: 'The workflow can resume after clarification, external supplier response, or approval.',
-                  },
-                ].map((result) => (
-                  <div key={result.label} className="flex flex-col gap-2 bg-[#202020] px-4 py-4">
-                    <p className="m-0 text-[14px] font-bold leading-[1.45] text-white" style={bodyStyle}>
-                      {result.label}
-                    </p>
-                    <p className="m-0 text-[12px] font-normal leading-[1.55] text-[#bdbdbd]" style={bodyStyle}>
-                      {result.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </article>
-
-            <article className="bg-[#f4f4f4] p-[clamp(22px,3vw,32px)]">
-              <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>
-                What I would measure after production use
-              </p>
-              <div className="mt-6 grid grid-cols-2 gap-2">
-                {[
-                  {
-                    label: 'Recommendation acceptance',
-                    body: 'How often buyers keep the proposed quantity.',
-                  },
-                  {
-                    label: 'Time to recommendation',
-                    body: 'How long it takes to reach a reviewable plan.',
-                  },
-                  {
-                    label: 'Discrepancy detection',
-                    body: 'How reliably the system catches quantity and document differences.',
-                  },
-                  {
-                    label: 'Override reasons',
-                    body: 'Why buyers change the recommendation.',
-                  },
-                  {
-                    label: 'High-risk interception',
-                    body: 'Whether the Agent stops when approval is actually required.',
-                  },
-                  {
-                    label: 'Learning quality',
-                    body: 'Whether reviewed memory improves later recommendations.',
-                  },
-                ].map((metric) => (
-                  <div key={metric.label} className="case-radius-lg flex min-h-[132px] flex-col justify-between gap-4 bg-white p-4">
-                    <p className="m-0 text-[13px] font-bold leading-[1.4] text-[#161616]" style={bodyStyle}>
-                      {metric.label}
-                    </p>
-                    <p className="m-0 text-[12px] font-normal leading-[1.5] text-[#555]" style={bodyStyle}>
-                      {metric.body}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </article>
+          <div className="flex max-w-[860px] flex-col gap-4">
+            <p className="m-0 text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+              Using real records and a coded prototype, I validated the lifecycle, discrepancy handling, and the human gate before any supplier commitment.
+            </p>
+            <p className="m-0 text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+              After production use I would measure whether buyers keep the recommended quantity, and whether the Agent still stops when approval is required.
+            </p>
           </div>
         </div>
 
         <div className="case-radius-lg flex flex-col gap-6 overflow-hidden bg-[#161616] p-[clamp(24px,5vw,56px)]">
             <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>Scope</p>
-            <p className="m-0 max-w-[510px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
-              The work moved from screen concept to coded workflow with explicit data contracts, tool boundaries, document reconciliation, and a preserved human ordering gate.
+            <p className="m-0 max-w-[640px] text-[17px] font-normal leading-[1.53] text-[#d8d8d8]" style={bodyStyle}>
+              A coded workflow with a shared plan-and-conversation workbench. The Agent never places the formal order.
             </p>
-
-            <p className="m-0 mt-2 text-[11px] font-bold uppercase tracking-[0.05em] text-[#afafaf]" style={bodyStyle}>
-              MVP scope
-            </p>
-            <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-              {[
-                { value: '60', label: 'documented design iterations' },
-                { value: '8', label: 'core Agent components' },
-                { value: '5', label: 'critical validation scenarios' },
-                { value: '1', label: 'shared workbench for plan + conversation' },
-              ].map((metric) => (
-                <div key={metric.label} className="case-radius-lg overflow-hidden flex min-h-[120px] flex-col justify-end gap-2 border border-white/15 px-4 py-4">
-                  <p className="m-0 text-[clamp(40px,6vw,56px)] font-bold leading-none text-white" style={bodyStyle}>
-                    {metric.value}
-                  </p>
-                  <p className="m-0 text-[11px] font-normal leading-[1.4] text-[#afafaf]" style={bodyStyle}>
-                    {metric.label}
-                  </p>
-                </div>
-              ))}
-            </div>
 
             {/* 后续若要自动化：按供应商成熟度打分后再开自动下单，以及按销售/交期/免运费做采购提醒 */}
             <p className="m-0 mt-2 text-[11px] font-bold uppercase tracking-[0.05em] text-[#7fa2ff]" style={bodyStyle}>
