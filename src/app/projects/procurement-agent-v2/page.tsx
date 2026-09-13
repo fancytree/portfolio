@@ -89,7 +89,7 @@ function ThreeStageEvolution() {
         Procurement needed a shared object model, explicit states, and traceable evidence so purchase and fulfillment could operate as one connected lifecycle.
       </p>
 
-      <div className="hidden grid border-y border-[#cfcfcf] lg:grid-cols-3" aria-hidden="true">
+      <div className="grid border-y border-[#cfcfcf] lg:grid-cols-3">
         <article className="flex flex-col gap-5 border-b border-[#cfcfcf] py-[clamp(26px,4vw,40px)] lg:border-b-0 lg:pr-[clamp(24px,3vw,36px)]">
           <p className="m-0 text-[11px] font-bold text-[#2155e8]" style={bodyStyle}>01 · OBJECT MODEL</p>
           <h3 className="m-0 text-[21px] font-bold leading-[1.3] text-[#161616]" style={bodyStyle}>Every receiving event belongs to a purchase lifecycle.</h3>
@@ -140,13 +140,13 @@ function ThreeStageEvolution() {
 
       <div className="case-radius-lg overflow-hidden flex flex-col gap-4 border-l-[4px] border-[#2155e8] bg-[#f4f4f4] px-[clamp(20px,3vw,28px)] py-5">
         <p className="m-0 text-[10px] font-bold uppercase tracking-[0.05em] text-[#2155e8]" style={bodyStyle}>
-          AI replaced manual checking work
+          Adding AI for the sake of adding AI
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Phase 1 already used AI, but only to replace <strong className="font-bold text-[#161616]">repetitive document comparison</strong>: compare the buyer&apos;s purchase draft against the supplier confirmation to surface differences — supplier typo, new product packaging, or stockout. Then compare the DDT against the confirmation when goods arrive, so you can tell missing shipment from partial shipment.
+          Once the lifecycle was structured, I looked for a <strong className="font-bold text-[#161616]">manual task AI could take</strong>: compare the buyer&apos;s purchase draft against the supplier confirmation (typo, new packaging, stockout), then compare the DDT against the confirmation when goods arrive (missing vs partial shipment).
         </p>
         <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
-          Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. This was AI as a checking tool. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much</strong> — which is why Phase 1 had not reduced the cognitive work for buyers.
+          Differences showed as <strong className="font-bold text-[#161616]">highlighting in the table</strong> and a <strong className="font-bold text-[#161616]">reminder column</strong>. This was AI bolted onto a check, not a purchasing recommendation. <strong className="font-bold text-[#161616]">It did not decide what to buy or how much.</strong>
         </p>
       </div>
 
