@@ -348,6 +348,7 @@ function DesignResultEvidenceBackedAgency() {
           </div>
         </div>
       </div>
+    </section>
     </>
   );
 }
@@ -570,8 +571,7 @@ export default function ProcurementAgentPage() {
         tldrPoints={tldrPoints}
         navLabels={[
           '00 / Demo',
-          '01 / Context',
-          '02 / Why procurement',
+          '01 / Old flow',
           '03 / Phase 1',
           '04 / Turning point',
           '05 / Agent workflow',
@@ -623,11 +623,11 @@ export default function ProcurementAgentPage() {
       </section>
 
       <section {...sectionBandProps('white')}>
-        <div className="flex max-w-[1080px] flex-col gap-8" data-case-nav-label="01 / Context">
-          <ChapterTitle>01 / Context</ChapterTitle>
-          <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
-            The brief was to add AI capability to <strong className="font-bold text-[#161616]">fragmented</strong> B2B procurement.
-          </p>
+        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="01 / Old flow">
+          <ChapterTitle>01 / Old flow</ChapterTitle>
+          <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
+            The old path ran through <span className="text-[#2155e8]">Excel, estimates, and messages</span> — purchase and fulfillment never shared one record.
+          </h2>
           <div className="flex max-w-[900px] flex-col gap-4 [&_strong]:font-bold [&_strong]:text-[#161616]">
             <p className="m-0 text-[17px] font-normal leading-[1.65] text-[#3b3b3b]" style={bodyStyle}>
               DEF Beauty Supply&apos;s procurement work was spread across <strong>disconnected software, documents, messaging, and spreadsheets</strong>. Buyers spent time manually comparing purchase drafts against supplier confirmations, then comparing delivery documents against those confirmations when goods arrived — checking for typos, packaging changes, stockouts, missing shipments, or partial deliveries.
@@ -638,13 +638,6 @@ export default function ProcurementAgentPage() {
           </div>
 
           <EcosystemDiagram />
-        </div>
-
-        <div className="flex max-w-[1080px] flex-col gap-10" data-case-nav-label="02 / Why procurement">
-          <ChapterTitle>02 / Why I focused on procurement</ChapterTitle>
-          <h2 className="m-0 max-w-[900px] text-[clamp(30px,4.2vw,46px)] font-bold leading-[1.1] tracking-[-0.025em] text-[#161616]" style={bodyStyle}>
-            The old path ran through <span className="text-[#2155e8]">Excel, estimates, and messages</span> — purchase and fulfillment never shared one record.
-          </h2>
 
           <p className="m-0 max-w-[760px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
             Buyers downloaded sales and stock, estimated quantity in Excel, then confirmed with suppliers over WhatsApp and email. When goods arrived they searched SKUs one by one to stock in. Confirmation, DDT, and received quantities were compared by hand. The quantity decision stayed with the buyer; the system only recorded the final stock-in.
@@ -774,6 +767,7 @@ export default function ProcurementAgentPage() {
 
       <DesignResultEvidenceBackedAgency />
 
+      <section {...sectionBandProps('white')}>
       <div className="flex max-w-[1080px] flex-col gap-10">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#777]" style={bodyStyle}>Architecture</p>
           <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
@@ -806,7 +800,6 @@ export default function ProcurementAgentPage() {
         </div>
 
       <AgentUxIterationsSection />
-
       </section>
 
       <section {...sectionBandProps('white')}>
