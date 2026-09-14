@@ -265,7 +265,7 @@ function HeroTypedHeading() {
 }
 
 const homeWorkItems = [
-  ...['Procurement Agent', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
+  ...['Procurement Agent', 'DEF Beauty ERP', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
     productProjects.filter((project) => project.title === title)
   ),
   ...sortProjectsByTimeDesc(researchProjects),

@@ -14,6 +14,19 @@ export type WorkProject = {
 
 export const productProjects: WorkProject[] = [
   {
+    title: 'DEF Beauty ERP',
+    category: 'Product / UX Designer',
+    time: '2026',
+    tags: ['Systems Design', 'Full stack'],
+    description: 'One skeleton, five roles: redesigning a wholesaler’s ERP as a small set of rules.',
+    image: '/img/def-erp/def-erp-cover-v2.webp',
+    imageFit: 'cover',
+    imageScale: 1,
+    imageTranslateY: '0%',
+    imageBackground: '#f1f3f5',
+    href: '/projects/def-erp',
+  },
+  {
     title: 'Procurement Agent',
     category: 'Product / UX / AX Designer',
     time: '2026',

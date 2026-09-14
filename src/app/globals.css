@@ -1332,6 +1332,15 @@ body.no-scroll {
   padding-bottom: var(--case-space-section);
 }
 
+/* DEF ERP case study: same half-section-per-chapter rhythm as the Procurement Agent page. */
+.def-erp-case.mei-project-page .def-erp-section {
+  padding-block: calc(var(--case-space-section) / 2);
+}
+
+.def-erp-case.mei-project-page > .def-erp-section:last-of-type {
+  padding-bottom: var(--case-space-section);
+}
+
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) {
   background: var(--case-bg) !important;
 }
