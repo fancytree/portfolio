@@ -6,6 +6,7 @@ import CaseStudyHero from '../../components/CaseStudyHero';
 import BeforeAfterSlider from './BeforeAfterSlider';
 import DashboardSwitcher from './DashboardSwitcher';
 import EcosystemDiagram from './EcosystemDiagram';
+import { LiveDashboardWidgets, LivePackagingPricing, LivePurchaseCostCalculator } from './live/LiveComponents';
 import { fontFamily } from '@/lib/design-tokens';
 
 export const metadata: Metadata = {
@@ -243,6 +244,11 @@ function RoleDashboardsSection() {
 
       <DashboardSwitcher shots={dashboardShots} accent={accent} />
 
+      <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+        Two pieces of that shell, running here instead of as screenshots: <strong className="font-bold text-[#161616]">the trend chart and the customer-type mix</strong>, on the same component code and demo data as the Admin view.
+      </p>
+      <LiveDashboardWidgets />
+
       <Callout label="The rule, not the screen">
         The thing I designed is not four dashboards. It is one rule: <strong className="font-bold text-[#161616]">same skeleton, reweighted content, sourced from what each role actually does daily.</strong> A fifth role (ops) reuses the Admin view. New roles get a cheap starting point instead of a blank page, and the shell itself stays a single component to maintain.
       </Callout>
@@ -307,6 +313,11 @@ function RulesOverScreensSection() {
       <FigureCaption>
         Expanding a group reveals SKU-level rows. Estimated quantity and price sit next to editable confirmed fields, the pattern used everywhere OCR fills a value: the system proposes, the person on the counter decides. Column widths are fixed so expanding a row never reflows the ones a person already checked.
       </FigureCaption>
+
+      <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+        Those confirmed prices follow one calculation, and it matters before anything is ordered. <strong className="font-bold text-[#161616]">A product can&apos;t get a selling price until someone knows what it will really cost.</strong> Italian suppliers price a line as a list price, stacked discounts printed like &ldquo;50%+50%+7,69&rdquo;, a document discount and IVA. The tiers read like a sum but each applies to what the previous one left, so adding them gives a &euro;20 item a negative cost. I designed this component for both moments: estimate one item&apos;s real purchase cost from a supplier&apos;s discount terms before ordering, and get the same number once the confirmation is uploaded.
+      </p>
+      <LivePurchaseCostCalculator />
 
       <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
         Receiving is where the two systems overlap: <strong className="font-bold text-[#161616]">both record what physically came in.</strong> Drag to compare the same task, years apart.
@@ -541,6 +552,11 @@ function OrderLifecycleSection() {
       <FigureCaption>
         Building the order: one search box adds anything, but each line keeps its own packaging unit &#8212; plain text when a SKU has one unit, a dropdown when it sells by box or carton. There&apos;s no separate &ldquo;add gift&rdquo; flow: any line becomes a gift by toggling its own row, and drops out of the total.
       </FigureCaption>
+
+      <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+        Behind that packaging dropdown sits a small model. <strong className="font-bold text-[#161616]">One product sells as a piece, a pack, a carton or a display kit, each priced on its own, while stock only ever counts pieces.</strong>
+      </p>
+      <LivePackagingPricing />
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image

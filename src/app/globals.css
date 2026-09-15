@@ -1467,8 +1467,9 @@ body.no-scroll {
 }
 
 /* Legacy narrative markup can opt into the same scale without touching
-   diagrams or embedded product UI. Explicit data-case-type always wins. */
-.mei-project-page [data-case-nav-label] h2:not([data-case-type]) {
+   diagrams or embedded product UI. Explicit data-case-type always wins.
+   Live DEF ERP components (.def-erp-live) keep the product's own card titles. */
+.mei-project-page [data-case-nav-label] h2:not([data-case-type]):not(.def-erp-live *) {
   max-width: 940px;
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-section) !important;

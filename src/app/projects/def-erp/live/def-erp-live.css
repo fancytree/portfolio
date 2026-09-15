@@ -1,0 +1,68 @@
+/*
+ * DEF ERP live components — scoped design tokens.
+ * Values copied from the ERP's light theme (web/src/index.css) so the embedded
+ * components render in the product's own colours. Everything is scoped to
+ * .def-erp-live; the site's shadcn utilities (bg-card, text-muted-foreground…)
+ * read these variables inside the scope only.
+ */
+.def-erp-live {
+  --background: #f5f6fa;
+  --foreground: #2f3137;
+  --card: #ffffff;
+  --card-foreground: #2f3137;
+  --muted: #f5f6fa;
+  --muted-foreground: #666c7c;
+  --border: #e6e9ef;
+  --input: #e6e9ef;
+  --ring: #1366d6;
+  --primary: #1366d6;
+  --primary-foreground: #ffffff;
+  --destructive: #c42727;
+  --success: #00a85f;
+
+  --customer-type-nail: oklch(0.82 0.14 350);
+  --customer-type-beauty: oklch(0.80 0.12 275);
+  --customer-type-massage: oklch(0.80 0.12 178);
+  --customer-type-hair: oklch(0.84 0.13 48);
+  --customer-type-other: oklch(0.72 0.015 255);
+
+  color: var(--foreground);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* 以下动效原样取自 ERP index.css：切换时段只重画曲线，坐标轴与网格不动 */
+@keyframes sales-line-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes sales-area-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.def-erp-live .sales-chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: sales-line-draw 620ms ease-out;
+}
+
+.def-erp-live .sales-chart-area {
+  /* 等曲线画完（sales-line-draw 620ms）再淡入；both 让延迟期间保持透明 */
+  animation: sales-area-fade 420ms ease-out 620ms both;
+}
+
+/* 悬浮提示经 portal 挂到 body，不在 .def-erp-live 内，单独给它补上变量 */
+.def-erp-live-tooltip {
+  --card: #ffffff;
+  --border: #e6e9ef;
+  --foreground: #2f3137;
+  --muted-foreground: #666c7c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .def-erp-live .sales-chart-line,
+  .def-erp-live .sales-chart-area {
+    animation: none;
+  }
+}
