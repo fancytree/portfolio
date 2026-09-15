@@ -42,8 +42,8 @@ const tldrPoints = [
   },
 ];
 
-/** DEF ERP's own primary brand blue (web/src/index.css --primary), not a portfolio-picked accent. */
-const accent = '#197afa';
+/** DEF ERP's own primary brand blue (web/src/index.css --primary, darkened from #197afa for WCAG AA), not a portfolio-picked accent. */
+const accent = '#1366d6';
 const accentInverse = '#7fbaff';
 
 const sectionPadX = {
@@ -197,22 +197,22 @@ function ResearchSystemSection() {
 /** 04 / One skeleton, five roles */
 const dashboardShots = [
   {
-    src: '/img/def-erp/dashboard-admin.png',
+    src: '/img/def-erp/dashboard-admin-v3.png',
     label: 'Admin',
     focus: 'Full operating snapshot: revenue, orders, receivables, customer mix, in one view.',
   },
   {
-    src: '/img/def-erp/dashboard-sales.png',
+    src: '/img/def-erp/dashboard-sales-v3.png',
     label: 'Sales',
     focus: 'Orders to ship, overdue customers, unfollowed accounts. The queue a salesperson actually works.',
   },
   {
-    src: '/img/def-erp/dashboard-finance.png',
+    src: '/img/def-erp/dashboard-finance-v3.png',
     label: 'Finance',
     focus: 'Payment approvals batched by method, overdue receivables, invoices still to issue.',
   },
   {
-    src: '/img/def-erp/dashboard-warehouse.png',
+    src: '/img/def-erp/dashboard-warehouse-v3.png',
     label: 'Warehouse',
     focus: '"Rush to store" walk-in items, near-expiry batches, incoming receipts to confirm.',
   },
@@ -232,7 +232,7 @@ function RoleDashboardsSection() {
         beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
         beforeAlt="Legacy WeChat mini-program backend Dashboard page: one undifferentiated view mixing sales KPIs, customer approvals, and withdrawal requests for every user."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/dashboard-admin.png"
+        afterSrc="/img/def-erp/dashboard-admin-v3.png"
         afterAlt="New Admin dashboard: sales, orders, receivables, customer mix, and tasks to handle, laid out for the admin role specifically."
         afterLabel="After"
         aspectRatio={1.6}
@@ -282,7 +282,7 @@ function RulesOverScreensSection() {
       </p>
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/po-detail-collapsed.png"
+          src="/img/def-erp/po-detail-collapsed-v3.png"
           alt="Purchase order detail view, product rows collapsed into SPU groups with estimated quantity, stock, and pricing columns."
           width={3200}
           height={2000}
@@ -296,7 +296,7 @@ function RulesOverScreensSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/po-detail-expanded.png"
+          src="/img/def-erp/po-detail-expanded-v3.png"
           alt="Expanded SKU rows inside a purchase order, showing editable confirmed quantity and confirmed price fields next to system estimates."
           width={3200}
           height={2000}
@@ -315,7 +315,7 @@ function RulesOverScreensSection() {
         beforeSrc="/img/def-erp/legacy-mpsoft-purchasing.png"
         beforeAlt="Legacy desktop inventory software: a flat purchasing table with a generic supplier dropdown, a single receiving date and warehouse, and no distinction between ordered and received quantities."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/receiving-workspace.png"
+        afterSrc="/img/def-erp/receiving-workspace-v3.png"
         afterAlt="Receiving workspace comparing ordered vs received quantities per SKU, with a short-shipment note and linked supplier confirmation, DDT, and invoice documents."
         afterLabel="After"
         aspectRatio={1.6}
@@ -370,7 +370,7 @@ function ConfirmationRuleSection() {
         beforeSrc="/img/def-erp/legacy-mpsoft-sales-counter-cropped.png"
         beforeAlt="Legacy desktop POS screen: product sales table with price, discount rate, discounted price, quantity, and unit, plus Hold and Resume buttons."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/sales-counter-real-dropdown.png"
+        afterSrc="/img/def-erp/sales-counter-dropdown-v4.png"
         afterAlt="New product sales screen: the same Hold and Resume buttons, with a packaging-unit popover open on one line (piece or box of 3, with prices), live stock, an Oversold 2 pcs warning on a gift line, and a pre-tax and VAT breakdown."
         afterLabel="After"
         aspectRatio={1.78}
@@ -530,7 +530,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/sales-order-create-v2.png"
+          src="/img/def-erp/sales-order-create-v4.png"
           alt="Product sales screen with five catalog products for Luce Beauty Lab, each with its product photo: L'Oréal Vitamino Color and Absolut Repair shampoos sold by the piece, Olaplex Nº7 by the box and a DEF anti-dandruff shampoo by the carton (chosen from packaging dropdowns), one line at a 0.95 discount, and an OPI cuticle oil toggled to a gift with its price struck through. The cuticle oil shows an Oversold 2 pcs warning. The footer splits the €823 goods total into pre-tax and VAT."
           width={3200}
           height={2000}
@@ -544,7 +544,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/order-checkout-dialog-v2.png"
+          src="/img/def-erp/order-checkout-dialog-v4.png"
           alt="Save sales order dialog: Collect payment now is ticked with a card payment of €823, and Picked up / partially picked up is ticked with a per-line table where 2 of 4 Absolut Repair bottles and 0 of 3 cartons of anti-dandruff shampoo are picked up."
           width={2400}
           height={1760}
@@ -558,7 +558,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/sales-order-detail-real.png"
+          src="/img/def-erp/sales-order-detail-v4.png"
           alt="Sales order OUT-2026-001248 with Partially shipped and Paid badges, an Ordered, Shipped, Completed tracker with Shipped half-filled, and shipping progress at 34 of 39 pieces. The Deliveries tab lists a shipped pickup, a draft courier delivery for the shampoo cartons, and two unshipped Absolut Repair bottles. The sidebar shows Invoice status Not invoiced and Payment status Paid in separate boxes."
           width={3200}
           height={2000}
@@ -572,7 +572,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/finance-invoice-edit-real.png"
+          src="/img/def-erp/finance-invoice-edit-ui.png"
           alt="New invoice dialog for Luce Beauty Lab: the paid order's lines with remaining quantity, quantity on this invoice and editable invoice amounts, the gift line unselected, and a shipping line included. Invoice settings on the right show an €831 total, card payment, operator and notes."
           width={3200}
           height={2000}
@@ -668,6 +668,30 @@ function HonestStatusSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <div className="border-b border-[#e2e2e2] bg-[#eef5ff] px-[clamp(18px,2.6vw,24px)] py-3">
+          <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>Accessibility, audited and fixed</p>
+        </div>
+        <div className="grid grid-cols-2 gap-px bg-[#e2e2e2] sm:grid-cols-4">
+          {[
+            { stat: '17', label: 'screens and dialogs audited against WCAG 2.2 A/AA' },
+            { stat: '282 → 7', label: 'violations found by axe-core, before and after' },
+            { stat: '11 → 1', label: 'failing rules, the last one a documented exception' },
+            { stat: '4.03 → 5.39', label: 'contrast of white text on the primary blue' },
+          ].map((item) => (
+            <div key={item.label} className="flex flex-col gap-1 bg-white p-[clamp(16px,2.4vw,22px)]">
+              <span className="text-[24px] font-bold leading-none" style={{ ...bodyStyle, color: accent }}>{item.stat}</span>
+              <span className="text-[12px] font-normal leading-[1.4] text-[#686868]" style={bodyStyle}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="bg-white px-[clamp(18px,2.6vw,24px)] py-5">
+          <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+            I ran axe-core across the live code &#8212; dashboards, sales, finance, procurement, inventory, customers, settings, and the two money dialogs. <strong className="font-bold text-[#161616]">Most failures came from a few shared pieces, so the fixes were systemic rather than page by page:</strong> the brand blue moved from #197afa to #1366d6, status text got its own darker tokens, every select and number input now has an accessible name, the open-pages strip became a keyboard-operable tab list, and order details use valid description lists. The 7 remaining are 16px stepper arrows beside a full-size number input, covered by WCAG 2.5.8&apos;s equivalent-control exception.
+          </p>
+        </div>
+      </div>
+
+      <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
+        <div className="border-b border-[#e2e2e2] bg-[#eef5ff] px-[clamp(18px,2.6vw,24px)] py-3">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>What&apos;s next</p>
         </div>
         <div className="grid grid-cols-1 divide-y divide-[#e2e2e2] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
@@ -690,11 +714,10 @@ function HonestStatusSection() {
         <div className="border-b border-[#e2e2e2] bg-[#f4f4f4] px-[clamp(18px,2.6vw,24px)] py-3">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em] text-[#686868]" style={bodyStyle}>Known limits</p>
         </div>
-        <div className="grid grid-cols-1 divide-y divide-[#e2e2e2] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        <div className="grid grid-cols-1 divide-y divide-[#e2e2e2] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
           {[
             { label: 'Interview coverage', body: 'One person per role. Enough to expose mechanics, not enough to prove it generalizes across all fifteen staff.' },
             { label: 'Confirm-dialog migration', body: 'Tracked in chapter 06, not finished.' },
-            { label: 'Accessibility', body: 'Fixed baselines (focus rings, 4.5:1 contrast, reduced-motion), not a full audit.' },
           ].map((item) => (
             <article key={item.label} className="flex flex-col gap-2 bg-white p-[clamp(16px,2.4vw,22px)]">
               <p className="m-0 text-[13px] font-bold text-[#161616]" style={bodyStyle}>{item.label}</p>

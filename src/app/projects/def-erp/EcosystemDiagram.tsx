@@ -8,7 +8,7 @@ import { caseRadiusPx, fontFamily } from '@/lib/design-tokens';
  * original: this page's argument is that all of these modules had to become one
  * system, not that one module mattered more than the rest.
  *
- * accent #197afa, accent tint #e6f1ff, external-exchange edges in a neutral
+ * accent #1366d6, accent tint #e6f1ff, external-exchange edges in a neutral
  * exchange stroke. Sits directly on the section background, no container fill.
  */
 export default function EcosystemDiagram() {
@@ -20,7 +20,7 @@ export default function EcosystemDiagram() {
             <desc id="def-ecosystem-desc">Architecture diagram of the DEF Beauty Supply B2B wholesale platform. Customer demand arrives through a WeChat storefront and becomes sales orders that draw down inventory; an inventory gap drives procurement, which places the order with an external supplier at a human gate; received goods and their variance flow back into inventory while finance reconciles the invoice.</desc>
             <defs>
               <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#555555"/></marker>
-              <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#197afa"/></marker>
+              <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1366d6"/></marker>
               <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#64748b"/></marker>
             </defs>
 
