@@ -1,0 +1,509 @@
+.card {
+  border-radius: 1rem;
+  outline: none;
+}
+
+.cover {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #e9ebee;
+  box-shadow: inset 0 0 0 1px rgb(16 24 40 / 0.035);
+  transition:
+    background-color 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 420ms ease;
+}
+
+.card:hover .cover,
+.card:focus-visible .cover {
+  background: color-mix(in srgb, var(--cover-accent) 11%, #e9ebee);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--cover-accent) 12%, transparent),
+    0 22px 48px -34px color-mix(in srgb, var(--cover-accent) 45%, transparent);
+  transform: translateY(-4px);
+}
+
+.card:focus-visible .cover {
+  outline: 2px solid var(--cover-accent);
+  outline-offset: 3px;
+}
+
+.wash,
+.orbit,
+.orb,
+.dots {
+  pointer-events: none;
+  position: absolute;
+  opacity: 0;
+  transition:
+    opacity 420ms ease,
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.wash {
+  inset: -35%;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 24% 34%, color-mix(in srgb, var(--cover-accent) 24%, transparent), transparent 27%),
+    radial-gradient(circle at 79% 76%, color-mix(in srgb, var(--cover-accent) 15%, white), transparent 23%);
+  filter: blur(18px);
+  transform: scale(0.9) rotate(-5deg);
+}
+
+.orbit {
+  top: -28%;
+  left: -6%;
+  z-index: -1;
+  width: 54%;
+  aspect-ratio: 1;
+  border: clamp(9px, 1.6vw, 18px) solid var(--cover-accent);
+  border-right-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-32deg) scale(0.78);
+}
+
+.orb {
+  right: 8%;
+  bottom: 7%;
+  z-index: -1;
+  width: 15%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--cover-accent);
+  filter: blur(1px);
+  transform: translate(18px, 20px) scale(0.65);
+}
+
+.dots {
+  top: 14%;
+  right: 8%;
+  z-index: -1;
+  width: 18%;
+  height: 25%;
+  background-image: radial-gradient(var(--cover-accent) 1.4px, transparent 1.4px);
+  background-size: 11px 11px;
+  transform: translateX(18px);
+}
+
+.decorations {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+
+.decorObject,
+.decorDash {
+  position: absolute;
+  opacity: 0;
+  transition:
+    opacity 360ms ease,
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.decorObject {
+  display: grid;
+  place-items: center;
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.6),
+    0 14px 24px color-mix(in srgb, var(--cover-accent) 24%, transparent);
+}
+
+.decorObject svg {
+  width: 46%;
+  height: 46%;
+  stroke-width: 1.65;
+}
+
+.decorPrimary {
+  right: 6.5%;
+  bottom: 9%;
+  width: clamp(46px, 5.8vw, 68px);
+  aspect-ratio: 1;
+  border-radius: 38% 62% 54% 46% / 48% 42% 58% 52%;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--cover-accent) 76%, white), var(--cover-accent));
+  color: white;
+  transform: translate(18px, 20px) rotate(14deg) scale(0.72);
+}
+
+.decorSecondary {
+  top: 17%;
+  left: 7%;
+  width: clamp(38px, 4.8vw, 56px);
+  aspect-ratio: 1;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--cover-accent) 22%, white);
+  color: color-mix(in srgb, var(--cover-accent) 88%, #1d2430);
+  transform: translate(-18px, -10px) rotate(-18deg) scale(0.72);
+}
+
+.decorDash {
+  bottom: 8.5%;
+  left: 7.5%;
+  width: clamp(42px, 6.4vw, 76px);
+  height: clamp(9px, 1.1vw, 13px);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cover-accent) 68%, white);
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--cover-accent) 22%, transparent);
+  transform: translate(-14px, 14px) rotate(-13deg) scaleX(0.66);
+}
+
+.decorations[data-motif='procurement'] .decorPrimary,
+.decorations[data-motif='support'] .decorPrimary {
+  border-radius: 16px;
+}
+
+.decorations[data-motif='beauty'] .decorSecondary {
+  top: auto;
+  bottom: 10%;
+  left: 7.5%;
+  width: clamp(25px, 3.1vw, 37px);
+  height: clamp(54px, 7.2vw, 82px);
+  border-radius: 9px 9px 15px 15px;
+  background: linear-gradient(180deg, #f8e4df 0%, #e7bab1 72%, #c99389 73%, #b77e75 100%);
+}
+
+.decorations[data-motif='beauty'] .decorSecondary svg {
+  display: none;
+}
+
+.decorations[data-motif='beauty'] .decorSecondary::before {
+  position: absolute;
+  top: -8%;
+  width: 72%;
+  height: 10%;
+  border-radius: 4px 4px 1px 1px;
+  background: #c99389;
+  content: '';
+}
+
+.decorations[data-motif='beauty'] .decorSecondary::after {
+  width: 28%;
+  height: 34%;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.38);
+  content: '';
+}
+
+.decorations[data-motif='recruiting'] .decorPrimary,
+.decorations[data-motif='finance'] .decorPrimary,
+.decorations[data-motif='interview'] .decorPrimary {
+  border-radius: 50%;
+}
+
+.decorations[data-motif='job-search'] .decorSecondary,
+.decorations[data-motif='health'] .decorSecondary {
+  border-radius: 50%;
+}
+
+.decorations[data-motif='learning'] .decorSecondary,
+.decorations[data-motif='research-coding'] .decorSecondary {
+  border-radius: 9px 18px 9px 18px;
+}
+
+.decorations[data-motif='parenting'] .decorPrimary,
+.decorations[data-motif='research-sharing'] .decorPrimary {
+  border-radius: 50% 50% 42% 58% / 56% 44% 56% 44%;
+}
+
+.decorations[data-motif='civic'] .decorPrimary {
+  border-radius: 50% 50% 50% 12%;
+}
+
+.device {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  filter: drop-shadow(0 18px 18px rgb(38 45 56 / 0.16));
+  transform: translate(-50%, -48%);
+  transition:
+    filter 500ms ease,
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.screen {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #f8f8f8;
+}
+
+.laptop {
+  width: 72%;
+  aspect-ratio: 16 / 10;
+  border: clamp(5px, 0.7vw, 9px) solid #26282c;
+  border-radius: clamp(7px, 1vw, 13px);
+}
+
+.laptop .screen {
+  border-radius: clamp(2px, 0.35vw, 5px);
+}
+
+.laptopBase {
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 50%;
+  width: 112%;
+  height: 5.8%;
+  border-radius: 0 0 999px 999px;
+  background: linear-gradient(180deg, #e5e7ea 0%, #aeb3ba 100%);
+  box-shadow: 0 4px 7px rgb(0 0 0 / 0.17);
+  transform: translateX(-50%);
+}
+
+.laptopBase::after {
+  position: absolute;
+  top: 0;
+  left: 44%;
+  width: 12%;
+  height: 34%;
+  border-radius: 0 0 5px 5px;
+  background: #8f959d;
+  content: '';
+}
+
+.phone {
+  height: 78%;
+  aspect-ratio: 9 / 19.5;
+  border: clamp(5px, 0.75vw, 8px) solid #222428;
+  border-radius: clamp(20px, 3vw, 34px);
+}
+
+.phone .screen {
+  border-radius: clamp(14px, 2.25vw, 26px);
+}
+
+.phoneNotch {
+  position: absolute;
+  top: 2.2%;
+  left: 50%;
+  z-index: 4;
+  width: 32%;
+  height: 3.5%;
+  border-radius: 999px;
+  background: #222428;
+  transform: translateX(-50%);
+}
+
+.phone-stack {
+  width: 76%;
+  height: 82%;
+  perspective: 900px;
+  filter: drop-shadow(0 17px 17px rgb(38 45 56 / 0.15));
+}
+
+.stackPhone {
+  position: absolute;
+  top: 4%;
+  height: 90%;
+  aspect-ratio: 9 / 19.5;
+  overflow: hidden;
+  border: clamp(3px, 0.45vw, 5px) solid #24262a;
+  border-radius: clamp(10px, 1.55vw, 18px);
+  background: #24262a;
+  box-shadow: 0 14px 22px rgb(30 35 42 / 0.2);
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+
+.stackPhone:nth-child(1) {
+  left: 3%;
+  z-index: 1;
+  transform: rotateY(13deg) rotateZ(-8deg) scale(0.88);
+}
+
+.stackPhone:nth-child(2) {
+  top: 0;
+  left: 35%;
+  z-index: 3;
+  transform: rotateY(-2deg) rotateZ(1.5deg);
+}
+
+.stackPhone:nth-child(3) {
+  right: 2%;
+  z-index: 2;
+  transform: rotateY(-14deg) rotateZ(8deg) scale(0.88);
+}
+
+.stackScreen {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: clamp(6px, 1vw, 12px);
+  background: #fafafa;
+}
+
+.tablet {
+  width: 70%;
+  aspect-ratio: 4 / 3;
+  border: clamp(5px, 0.75vw, 9px) solid #26282c;
+  border-radius: clamp(12px, 1.8vw, 22px);
+}
+
+.tablet .screen {
+  border-radius: clamp(7px, 1.15vw, 14px);
+}
+
+.tabletCamera {
+  position: absolute;
+  top: 50%;
+  left: -0.9%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #6f7379;
+  transform: translateY(-50%);
+}
+
+.freeform {
+  width: 84%;
+  height: 82%;
+  filter: drop-shadow(0 18px 16px rgb(38 45 56 / 0.13));
+}
+
+.freeform .screen {
+  overflow: visible;
+  background: transparent;
+}
+
+.glare {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(112deg, rgb(255 255 255 / 0.16), transparent 28%, transparent 76%, rgb(255 255 255 / 0.08));
+  mix-blend-mode: screen;
+}
+
+.arrow {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 5;
+  transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card:hover .device,
+.card:focus-visible .device {
+  filter: drop-shadow(0 26px 24px rgb(38 45 56 / 0.22));
+  transform: translate(-50%, -52%) scale(1.035) rotate(-0.45deg);
+}
+
+.card:hover .stackPhone:nth-child(1),
+.card:focus-visible .stackPhone:nth-child(1) {
+  transform: translate(-7px, 2px) rotateY(17deg) rotateZ(-11deg) scale(0.89);
+}
+
+.card:hover .stackPhone:nth-child(2),
+.card:focus-visible .stackPhone:nth-child(2) {
+  transform: translateY(-5px) rotateY(-2deg) rotateZ(0deg) scale(1.015);
+}
+
+.card:hover .stackPhone:nth-child(3),
+.card:focus-visible .stackPhone:nth-child(3) {
+  transform: translate(7px, 1px) rotateY(-18deg) rotateZ(11deg) scale(0.89);
+}
+
+.card:hover .wash,
+.card:focus-visible .wash {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.card:hover .orbit,
+.card:focus-visible .orbit {
+  opacity: 0.85;
+  transform: rotate(18deg) scale(1);
+}
+
+.card:hover .orb,
+.card:focus-visible .orb {
+  opacity: 0.3;
+  transform: translate(0, 0) scale(1);
+}
+
+.card:hover .dots,
+.card:focus-visible .dots {
+  opacity: 0.42;
+  transform: translateX(0);
+}
+
+.card:hover .decorPrimary,
+.card:focus-visible .decorPrimary {
+  opacity: 0.96;
+  transform: translate(0, 0) rotate(-7deg) scale(1);
+}
+
+.card:hover .decorSecondary,
+.card:focus-visible .decorSecondary {
+  opacity: 0.94;
+  transform: translate(0, 0) rotate(8deg) scale(1);
+}
+
+.card:hover .decorDash,
+.card:focus-visible .decorDash {
+  opacity: 0.88;
+  transform: translate(0, 0) rotate(-13deg) scaleX(1);
+}
+
+.card:hover .arrow,
+.card:focus-visible .arrow {
+  transform: rotate(45deg);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover .orbit {
+    animation: cover-orbit-drift 5.5s ease-in-out infinite alternate;
+  }
+
+  .card:hover .dots {
+    animation: cover-dots-drift 3.8s ease-in-out infinite alternate;
+  }
+
+  .card:hover .decorPrimary {
+    animation: cover-object-float 3.2s ease-in-out 250ms infinite alternate;
+  }
+
+  .card:hover .decorSecondary {
+    animation: cover-object-float-secondary 3.8s ease-in-out 600ms infinite alternate;
+  }
+}
+
+@keyframes cover-orbit-drift {
+  to { transform: translate(8px, 5px) rotate(34deg) scale(1.02); }
+}
+
+@keyframes cover-dots-drift {
+  to { transform: translate(-7px, 8px); }
+}
+
+@keyframes cover-object-float {
+  to { transform: translate(-3px, -8px) rotate(2deg) scale(1.02); }
+}
+
+@keyframes cover-object-float-secondary {
+  to { transform: translate(4px, 7px) rotate(-3deg) scale(0.98); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover,
+  .device,
+  .stackPhone,
+  .wash,
+  .orbit,
+  .orb,
+  .dots,
+  .decorObject,
+  .decorDash,
+  .arrow {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
