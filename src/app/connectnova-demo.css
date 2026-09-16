@@ -97,7 +97,7 @@
   --secondary-foreground: var(--cn-foreground);
   --muted: var(--cn-gray-200);
   --muted-foreground: var(--cn-foreground-muted);
-  --accent: var(--cn-primary-container);
+  --accent: color-mix(in srgb, var(--cn-primary-container) 50%, white);
   --accent-foreground: var(--cn-primary);
   --destructive: var(--cn-destructive);
   --destructive-foreground: var(--cn-primary-foreground);
@@ -108,6 +108,21 @@
 
   color: var(--cn-foreground);
   font-family: var(--font-inter, Inter), Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* Tailwind v4 dropped the old default border-color (previously themed) in favor
+   of the CSS default `currentColor`. Every shadcn component here (dropdown menu,
+   etc.) uses the bare `border` utility assuming it still picks up --border, so
+   without this it renders as solid text-color instead of the intended faint
+   outline. Scoped to the demo and kept in the base layer so explicit color
+   utilities (border-primary, border-destructive, ...) still win. */
+@layer base {
+  .cn-demo-scope,
+  .cn-demo-scope *,
+  .cn-demo-scope *::before,
+  .cn-demo-scope *::after {
+    border-color: var(--border);
+  }
 }
 
 .cn-demo-scope .cn-execution-edge {

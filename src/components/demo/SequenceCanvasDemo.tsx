@@ -1,6 +1,7 @@
 'use client'
 
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
   Background,
   BackgroundVariant,
@@ -22,7 +23,7 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import dagre from 'dagre'
-import { ChevronDown, Copy, Eye, EyeOff, Sparkles } from 'lucide-react'
+import { Check, ChevronDown, Copy, Eye, EyeOff, Sparkles } from 'lucide-react'
 import type { Workflow, WorkflowNode, WorkflowNodeType } from '@/components/campaigns/workflow/types'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -553,6 +554,116 @@ function renderMessagePreview(value: string) {
   )
 }
 
+// Tracks how recently any HoverHint was last dismissed, shared across instances so
+// switching between adjacent icons shows the next hint instantly instead of waiting
+// out the full delay again — matching how native title tooltips behave in Chrome.
+let lastHintHiddenAt = 0
+const HINT_INITIAL_DELAY = 500
+const HINT_GRACE_PERIOD = 500
+const HINT_CURSOR_OFFSET_X = 11
+const HINT_CURSOR_OFFSET_Y = 15
+const HINT_VIEWPORT_MARGIN = 8
+
+// Positioning runs before paint so a clamped hint never shows at the unclamped
+// spot first; on the server there is no layout to measure.
+const useHintLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
+// Custom stand-in for the native `title` tooltip: same near-cursor placement and
+// light, plain styling, but with a shorter, consistent delay instead of the OS's
+// slow (and unadjustable) first-hover wait.
+function HoverHint({ text, children }: { text: string; children: React.ReactNode }) {
+  const [visible, setVisible] = useState(false)
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const showTimerRef = useRef<number | null>(null)
+  const tipRef = useRef<HTMLSpanElement | null>(null)
+  // Latest cursor position, tracked even while hidden so the hint opens where the
+  // cursor is when the delay elapses — not where it first crossed the edge — while
+  // avoiding a re-render per mousemove.
+  const posRef = useRef({ x: 0, y: 0 })
+
+  // Native tooltips slide along the edge to stay on screen rather than jumping to
+  // the other side of the cursor, so this only clamps — it never flips.
+  useHintLayoutEffect(() => {
+    const el = tipRef.current
+    if (!el) return
+    const { width, height } = el.getBoundingClientRect()
+    const maxLeft = Math.max(window.innerWidth - HINT_VIEWPORT_MARGIN - width, HINT_VIEWPORT_MARGIN)
+    const maxTop = Math.max(window.innerHeight - HINT_VIEWPORT_MARGIN - height, HINT_VIEWPORT_MARGIN)
+
+    const left = Math.min(Math.max(pos.x + HINT_CURSOR_OFFSET_X, HINT_VIEWPORT_MARGIN), maxLeft)
+    const top = Math.min(Math.max(pos.y + HINT_CURSOR_OFFSET_Y, HINT_VIEWPORT_MARGIN), maxTop)
+
+    el.style.left = `${left}px`
+    el.style.top = `${top}px`
+  }, [visible, pos])
+
+  const clearShowTimer = () => {
+    if (showTimerRef.current !== null) {
+      window.clearTimeout(showTimerRef.current)
+      showTimerRef.current = null
+    }
+  }
+
+  const handleMouseEnter = (event: React.MouseEvent) => {
+    posRef.current = { x: event.clientX, y: event.clientY }
+    clearShowTimer()
+    const withinGrace = Date.now() - lastHintHiddenAt < HINT_GRACE_PERIOD
+    if (withinGrace) {
+      setPos(posRef.current)
+      setVisible(true)
+    } else {
+      showTimerRef.current = window.setTimeout(() => {
+        setPos(posRef.current)
+        setVisible(true)
+      }, HINT_INITIAL_DELAY)
+    }
+  }
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    posRef.current = { x: event.clientX, y: event.clientY }
+    if (!visible) return
+    setPos(posRef.current)
+  }
+
+  const hide = () => {
+    clearShowTimer()
+    setVisible(false)
+    lastHintHiddenAt = Date.now()
+  }
+
+  useEffect(() => () => clearShowTimer(), [])
+
+  return (
+    <span
+      className="relative inline-flex"
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={hide}
+      onMouseDown={hide}
+    >
+      {children}
+      {visible
+        ? createPortal(
+            // Portalled to <body>: the composer panel centers itself with
+            // `-translate-y-1/2`, and a `translate` (like `transform`) on an
+            // ancestor turns `position: fixed` into "relative to that ancestor"
+            // instead of the viewport — rendering this outside that tree keeps
+            // the cursor-relative math correct.
+            <span
+              ref={tipRef}
+              role="tooltip"
+              className="pointer-events-none fixed z-50 whitespace-nowrap rounded-md bg-[#f2f2f2] px-2 py-1 text-[11px] leading-tight text-black shadow-[0_1px_4px_rgb(0_0_0/0.18)]"
+              style={{ left: pos.x + HINT_CURSOR_OFFSET_X, top: pos.y + HINT_CURSOR_OFFSET_Y }}
+            >
+              {text}
+            </span>,
+            document.body
+          )
+        : null}
+    </span>
+  )
+}
+
 function DemoMessageEditor({
   node,
   onSave,
@@ -568,6 +679,8 @@ function DemoMessageEditor({
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const generationTimerRef = useRef<number | null>(null)
   const generationRunRef = useRef(0)
+  const [copied, setCopied] = useState(false)
+  const copyTimerRef = useRef<number | null>(null)
   const maxLength = MESSAGE_LIMITS[node.type] ?? 8000
   const draft = primaryDraft
   const setDraft = setPrimaryDraft
@@ -592,12 +705,20 @@ function DemoMessageEditor({
   }
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(draft)
+    try {
+      await navigator.clipboard.writeText(draft)
+    } catch {
+      return
+    }
+    setCopied(true)
+    if (copyTimerRef.current !== null) window.clearTimeout(copyTimerRef.current)
+    copyTimerRef.current = window.setTimeout(() => setCopied(false), 1600)
   }
 
   useEffect(() => () => {
     generationRunRef.current += 1
     if (generationTimerRef.current !== null) window.clearTimeout(generationTimerRef.current)
+    if (copyTimerRef.current !== null) window.clearTimeout(copyTimerRef.current)
   }, [])
 
   const handleRegenerate = () => {
@@ -698,39 +819,53 @@ function DemoMessageEditor({
             aria-label="Message"
           />
           <div className="absolute right-3 top-3 flex flex-col gap-1">
-            <Button
-              type="button"
-              variant={isGenerating ? 'soft' : 'ghost'}
-              size="iconSm"
-              onClick={handleRegenerate}
-              disabled={isGenerating}
-              title="Regenerate with AI"
-              aria-label="Regenerate message with AI"
-            >
-              <Sparkles className={cn(isGenerating && 'animate-pulse')} />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="iconSm"
-              onClick={() => setPreviewing((current) => !current)}
-              disabled={isGenerating}
-              title={previewing ? 'Edit message' : 'Preview with sample candidate data'}
-              aria-label={previewing ? 'Edit message' : 'Preview message'}
-            >
-              {previewing ? <EyeOff /> : <Eye />}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="iconSm"
-              onClick={() => void handleCopy()}
-              disabled={isGenerating}
-              title="Copy message"
-              aria-label="Copy message"
-            >
-              <Copy />
-            </Button>
+            <HoverHint text="Regenerate with AI">
+              <Button
+                type="button"
+                variant={isGenerating ? 'soft' : 'ghost'}
+                size="iconSm"
+                onClick={handleRegenerate}
+                disabled={isGenerating}
+                aria-label="Regenerate message with AI"
+              >
+                <Sparkles className={cn(isGenerating && 'animate-pulse')} />
+              </Button>
+            </HoverHint>
+            <HoverHint text={previewing ? 'Edit message' : 'Preview sample data'}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="iconSm"
+                onClick={() => setPreviewing((current) => !current)}
+                disabled={isGenerating}
+                aria-label={previewing ? 'Edit message' : 'Preview message'}
+              >
+                {previewing ? <EyeOff /> : <Eye />}
+              </Button>
+            </HoverHint>
+            <div className="relative">
+              <HoverHint text="Copy message">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="iconSm"
+                  onClick={() => void handleCopy()}
+                  disabled={isGenerating}
+                  aria-label="Copy message"
+                >
+                  {copied ? <Check /> : <Copy />}
+                </Button>
+              </HoverHint>
+              <span
+                role="status"
+                className={cn(
+                  'pointer-events-none absolute right-full top-1/2 mr-2 -translate-y-1/2 whitespace-nowrap rounded-full bg-background/90 px-2 py-1 text-xs font-medium text-primary shadow-sm transition-[opacity,transform] duration-150',
+                  copied ? 'translate-x-0 opacity-100' : 'pointer-events-none translate-x-1 opacity-0'
+                )}
+              >
+                Copied
+              </span>
+            </div>
           </div>
           <p className="pointer-events-none absolute bottom-3 right-4 text-xs tabular-nums text-muted-foreground">
             {Math.max(0, maxLength - draft.length)}
