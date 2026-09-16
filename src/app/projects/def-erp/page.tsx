@@ -198,22 +198,22 @@ function ResearchSystemSection() {
 /** 04 / One skeleton, five roles */
 const dashboardShots = [
   {
-    src: '/img/def-erp/dashboard-admin-v3.png',
+    src: '/img/def-erp/dashboard-admin-v5.png',
     label: 'Admin',
     focus: 'Full operating snapshot: revenue, orders, receivables, customer mix, in one view.',
   },
   {
-    src: '/img/def-erp/dashboard-sales-v3.png',
+    src: '/img/def-erp/dashboard-sales-v5.png',
     label: 'Sales',
     focus: 'Orders to ship, overdue customers, unfollowed accounts. The queue a salesperson actually works.',
   },
   {
-    src: '/img/def-erp/dashboard-finance-v3.png',
+    src: '/img/def-erp/dashboard-finance-v5.png',
     label: 'Finance',
     focus: 'Payment approvals batched by method, overdue receivables, invoices still to issue.',
   },
   {
-    src: '/img/def-erp/dashboard-warehouse-v3.png',
+    src: '/img/def-erp/dashboard-warehouse-v5.png',
     label: 'Warehouse',
     focus: '"Rush to store" walk-in items, near-expiry batches, incoming receipts to confirm.',
   },
@@ -233,7 +233,7 @@ function RoleDashboardsSection() {
         beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
         beforeAlt="Legacy WeChat mini-program backend Dashboard page: one undifferentiated view mixing sales KPIs, customer approvals, and withdrawal requests for every user."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/dashboard-admin-v3.png"
+        afterSrc="/img/def-erp/dashboard-admin-v5.png"
         afterAlt="New Admin dashboard: sales, orders, receivables, customer mix, and tasks to handle, laid out for the admin role specifically."
         afterLabel="After"
         aspectRatio={1.6}
@@ -288,7 +288,7 @@ function RulesOverScreensSection() {
       </p>
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/po-detail-collapsed-v3.png"
+          src="/img/def-erp/po-detail-collapsed-v5.png"
           alt="Purchase order detail view, product rows collapsed into SPU groups with estimated quantity, stock, and pricing columns."
           width={3200}
           height={2000}
@@ -302,7 +302,7 @@ function RulesOverScreensSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/po-detail-expanded-v3.png"
+          src="/img/def-erp/po-detail-expanded-v5.png"
           alt="Expanded SKU rows inside a purchase order, showing editable confirmed quantity and confirmed price fields next to system estimates."
           width={3200}
           height={2000}
@@ -326,7 +326,7 @@ function RulesOverScreensSection() {
         beforeSrc="/img/def-erp/legacy-mpsoft-purchasing.png"
         beforeAlt="Legacy desktop inventory software: a flat purchasing table with a generic supplier dropdown, a single receiving date and warehouse, and no distinction between ordered and received quantities."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/receiving-workspace-v3.png"
+        afterSrc="/img/def-erp/receiving-workspace-v5.png"
         afterAlt="Receiving workspace comparing ordered vs received quantities per SKU, with a short-shipment note and linked supplier confirmation, DDT, and invoice documents."
         afterLabel="After"
         aspectRatio={1.6}
@@ -381,7 +381,7 @@ function ConfirmationRuleSection() {
         beforeSrc="/img/def-erp/legacy-mpsoft-sales-counter-cropped.png"
         beforeAlt="Legacy desktop POS screen: product sales table with price, discount rate, discounted price, quantity, and unit, plus Hold and Resume buttons."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/sales-counter-dropdown-v4.png"
+        afterSrc="/img/def-erp/sales-counter-dropdown-v5.png"
         afterAlt="New product sales screen: the same Hold and Resume buttons, with a packaging-unit popover open on one line (piece or box of 3, with prices), live stock, an Oversold 2 pcs warning on a gift line, and a pre-tax and VAT breakdown."
         afterLabel="After"
         aspectRatio={1.78}
@@ -541,7 +541,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/sales-order-create-v4.png"
+          src="/img/def-erp/sales-order-create-v5.png"
           alt="Product sales screen with five catalog products for Luce Beauty Lab, each with its product photo: L'Oréal Vitamino Color and Absolut Repair shampoos sold by the piece, Olaplex Nº7 by the box and a DEF anti-dandruff shampoo by the carton (chosen from packaging dropdowns), one line at a 0.95 discount, and an OPI cuticle oil toggled to a gift with its price struck through. The cuticle oil shows an Oversold 2 pcs warning. The footer splits the €823 goods total into pre-tax and VAT."
           width={3200}
           height={2000}
@@ -555,7 +555,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/order-checkout-dialog-v4.png"
+          src="/img/def-erp/order-checkout-dialog-v5.png"
           alt="Save sales order dialog: Collect payment now is ticked with a card payment of €823, and Picked up / partially picked up is ticked with a per-line table where 2 of 4 Absolut Repair bottles and 0 of 3 cartons of anti-dandruff shampoo are picked up."
           width={2400}
           height={1760}
@@ -569,7 +569,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/sales-order-detail-v4.png"
+          src="/img/def-erp/sales-order-detail-v5.png"
           alt="Sales order OUT-2026-001248 with Partially shipped and Paid badges, an Ordered, Shipped, Completed tracker with Shipped half-filled, and shipping progress at 34 of 39 pieces. The Deliveries tab lists a shipped pickup, a draft courier delivery for the shampoo cartons, and two unshipped Absolut Repair bottles. The sidebar shows Invoice status Not invoiced and Payment status Paid in separate boxes."
           width={3200}
           height={2000}
@@ -583,7 +583,7 @@ function OrderLifecycleSection() {
 
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <Image
-          src="/img/def-erp/finance-invoice-edit-ui.png"
+          src="/img/def-erp/finance-invoice-edit-v5.png"
           alt="New invoice dialog for Luce Beauty Lab: the paid order's lines with remaining quantity, quantity on this invoice and editable invoice amounts, the gift line unselected, and a shipping line included. Invoice settings on the right show an €831 total, card payment, operator and notes."
           width={3200}
           height={2000}
@@ -829,7 +829,7 @@ export default function DefErpPage() {
           { label: 'Year', value: ['2026'] },
         ]}
         visualLabel="DEF Beauty Supply ERP admin dashboard"
-        visualSrc="/img/def-erp/def-erp-hero-v3.webp"
+        visualSrc="/img/def-erp/def-erp-hero-v4.webp"
         visualAlt="DEF Beauty Supply ERP shown across a central dashboard, an inventory panel, and a finance panel, with beauty products and shipping objects connecting the business workflow."
         visualObjectPosition="center"
         visualObjectFit="cover"
