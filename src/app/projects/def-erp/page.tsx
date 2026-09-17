@@ -323,8 +323,8 @@ function RulesOverScreensSection() {
         Receiving is where the two systems overlap: <strong className="font-bold text-[#161616]">both record what physically came in.</strong> Drag to compare the same task, years apart.
       </p>
       <BeforeAfterSlider
-        beforeSrc="/img/def-erp/legacy-mpsoft-purchasing.png"
-        beforeAlt="Legacy desktop inventory software: a flat purchasing table with a generic supplier dropdown, a single receiving date and warehouse, and no distinction between ordered and received quantities."
+        beforeSrc="/img/def-erp/legacy-mpsoft-purchasing-v2.png"
+        beforeAlt="Legacy desktop inventory software: a purchasing screen with a generic supplier dropdown, a single receiving date and warehouse, and an add-product dialog listing items with one quantity each, with no distinction between ordered and received quantities."
         beforeLabel="Before"
         afterSrc="/img/def-erp/receiving-workspace-v5.png"
         afterAlt="Receiving workspace comparing ordered vs received quantities per SKU, with a short-shipment note and linked supplier confirmation, DDT, and invoice documents."
