@@ -65,7 +65,8 @@ export function DonutMixChart({
         <svg viewBox="0 0 100 100" className={cn(chartClassName, '-rotate-90')} aria-label={ariaLabel}>
           {segments.map((segment, index) => {
             const segmentOffset = offsets[index];
-            if (segment.percent <= 0) return null;
+            // 0% 的段保持挂载（不画出长度），切换时段的展开动画中途不会卸载重挂导致跳帧
+            const empty = segment.percent <= 0;
             return (
               <circle
                 key={segment.key}
@@ -79,12 +80,14 @@ export function DonutMixChart({
                 strokeDasharray={`${segment.percent} ${100 - segment.percent}`}
                 strokeDashoffset={-segmentOffset}
                 opacity={activeIndex == null || activeIndex === index ? 1 : 0.25}
-                className="cursor-pointer transition-all duration-200"
+                // 只过渡 hover 相关属性；dasharray / offset 由外部逐帧补间，加过渡会拖影、抢帧
+                className={cn('cursor-pointer transition-[stroke-width,opacity] duration-200', empty && 'pointer-events-none')}
                 onMouseEnter={() => activate(index)}
                 onMouseLeave={clear}
                 onFocus={() => activate(index)}
                 onBlur={clear}
-                tabIndex={0}
+                tabIndex={empty ? -1 : 0}
+                aria-hidden={empty || undefined}
                 role="button"
                 aria-label={`${segment.label}：${Math.round(segment.percent)}%`}
               />
