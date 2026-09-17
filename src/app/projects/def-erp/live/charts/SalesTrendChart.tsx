@@ -1,7 +1,8 @@
 'use client';
 
 // Copied from the DEF ERP repository (web/src/components/charts/SalesTrendChart.tsx). Keep in sync; do not edit the logic here.
-// Only change: the body-portaled tooltip gets `def-erp-live-tooltip` so it can read the scoped colour tokens.
+// Portfolio-only changes: the body-portaled tooltip gets `def-erp-live-tooltip` so it can read the scoped
+// colour tokens, and it is positioned by its measured size so it never covers the lines.
 import { useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { chartColors } from '../lib/chartColors';
@@ -133,6 +134,7 @@ export function SalesTrendChart({
   const gradientId = useId().replace(/:/g, '');
   const curveKey = animationKey ?? `${data[0]?.date ?? 'empty'}-${data.length}`;
   const svgRef = useRef<SVGSVGElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ left: 0, top: 0 });
@@ -167,13 +169,43 @@ export function SalesTrendChart({
   useLayoutEffect(() => {
     if (!isHovering || isLoading || data.length === 0) return;
     const svg = svgRef.current;
-    if (!svg) return;
+    const tooltip = tooltipRef.current;
+    if (!svg || !tooltip) return;
     const bounds = svg.getBoundingClientRect();
-    setTooltipPos({
-      left: bounds.left + (selectedNet.x / 720) * bounds.width,
-      top: Math.max(8, bounds.top + (tooltipTop / 220) * bounds.height - 72),
+    const { width, height } = tooltip.getBoundingClientRect();
+    const margin = 8;
+    // 圆点半径 5px + 4px 光晕，再留出间距
+    const gap = 14;
+    const lineGap = 8;
+    const pointX = bounds.left + (selectedNet.x / 720) * bounds.width;
+    const pointY = bounds.top + (tooltipTop / 220) * bounds.height;
+    const maxLeft = window.innerWidth - margin - width;
+    const centeredLeft = Math.min(Math.max(pointX - width / 2, margin), maxLeft);
+
+    // 卡片横向会盖住悬停点两侧的一段曲线，取这一段里所有线的最高点，而不只是悬停点
+    let curveTop = Infinity;
+    svg.querySelectorAll<SVGPathElement>('path.sales-chart-line').forEach((path) => {
+      const length = path.getTotalLength();
+      for (let step = 0; step <= 160; step += 1) {
+        const point = path.getPointAtLength((step / 160) * length);
+        const x = bounds.left + (point.x / 720) * bounds.width;
+        if (x < centeredLeft || x > centeredLeft + width) continue;
+        curveTop = Math.min(curveTop, bounds.top + (point.y / 220) * bounds.height);
+      }
     });
-  }, [isHovering, isLoading, data.length, selectedNet.x, tooltipTop]);
+
+    const aboveTop = Math.min(pointY - gap, curveTop - lineGap) - height;
+    if (aboveTop >= margin) {
+      setTooltipPos({ left: centeredLeft, top: aboveTop });
+      return;
+    }
+    // 上方放不下（页面滚到图表贴近视口顶部）时，放到悬停竖线的一侧，而不是往下压住曲线
+    const rightLeft = pointX + gap;
+    setTooltipPos({
+      left: rightLeft <= maxLeft ? rightLeft : Math.max(margin, pointX - gap - width),
+      top: Math.min(Math.max(pointY, margin), window.innerHeight - margin - height),
+    });
+  }, [isHovering, isLoading, data.length, selectedNet.x, tooltipTop, safeSelectedIndex, locale]);
 
   if (isLoading) return <div className="h-[340px] animate-pulse rounded-xl bg-muted" />;
   if (data.length === 0) {
@@ -335,7 +367,8 @@ export function SalesTrendChart({
         {/* 挂到 body，始终居中对准 hover 点，避免被图表容器裁剪或挤窄 */}
         {isHovering && typeof document !== 'undefined' ? createPortal(
           <div
-            className="def-erp-live-tooltip pointer-events-none fixed z-50 w-max min-w-max -translate-x-1/2 rounded-xl bg-card px-3 py-2 text-left shadow-none ring-1 ring-border"
+            ref={tooltipRef}
+            className="def-erp-live-tooltip pointer-events-none fixed z-50 w-max min-w-max rounded-xl bg-card px-3 py-2 text-left shadow-none ring-1 ring-border"
             style={{ left: tooltipPos.left, top: tooltipPos.top }}
           >
             <p className="text-[10px] text-muted-foreground">{formatChartDate(data[safeSelectedIndex].date, locale)}</p>
@@ -343,7 +376,7 @@ export function SalesTrendChart({
               {labeledSeries.map((series) => (
                 <p key={series.key} className="flex items-center justify-between gap-6 whitespace-nowrap text-[11px]">
                   <span className="inline-flex shrink-0 items-center gap-1.5 text-muted-foreground">
-                    <span className="size-1.5 rounded-full" style={{ background: series.stroke }} />
+                    <span className="size-2 shrink-0 rounded-full" style={{ background: series.stroke }} />
                     {series.label}
                   </span>
                   <span className="font-semibold tabular-nums text-foreground">

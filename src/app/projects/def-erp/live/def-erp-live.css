@@ -72,6 +72,10 @@
   --border: #e6e9ef;
   --foreground: #2f3137;
   --muted-foreground: #666c7c;
+  /* 图例圆点用的系列色（净收入 / 销售额 / 退款），缺了圆点会没有颜色 */
+  --primary: #1366d6;
+  --destructive: #c42727;
+  --success: #00a85f;
 }
 
 @media (prefers-reduced-motion: reduce) {
