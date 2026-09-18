@@ -21,7 +21,7 @@ export type CoachStep = {
 type Rect = { top: number; left: number; width: number; height: number };
 
 const CARD_WIDTH = 268;
-const GAP = 18;
+const GAP = 56; // 卡片和目标之间留出足够距离，连线才看得出来（箭头尖还要离高亮框 12px）
 const PADDING = 12;
 
 function readRect(target: string): Rect | null {
@@ -47,15 +47,16 @@ function placeCard(rect: Rect) {
   return { left, top, side };
 }
 
-/** 从卡片朝锚点画一条二次贝塞尔弧线 */
+/**
+ * 从卡片朝锚点画一条三次贝塞尔曲线：从卡片水平伸出，最后水平扎向目标。
+ * 水平进场让箭头和高亮虚线框垂直，方向一眼可辨；高度不同时中间自然成一个柔和的 S 形。
+ */
 function arrowPath(from: { x: number; y: number }, to: { x: number; y: number }, side: 'left' | 'right') {
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  // 控制点垂直于连线偏移，弧度随距离增长但有上限
-  const bow = Math.min(Math.abs(dx) * 0.45 + 26, 74) * (side === 'right' ? -1 : 1);
-  const cx = from.x + dx * 0.5;
-  const cy = from.y + dy * 0.5 + bow;
-  return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+  const dir = side === 'right' ? -1 : 1; // 卡片在目标右侧时，线往左走
+  const reach = Math.max(28, Math.abs(to.x - from.x) * 0.5);
+  const c1x = from.x + dir * reach;
+  const c2x = to.x - dir * reach;
+  return `M ${from.x} ${from.y} C ${c1x} ${from.y} ${c2x} ${to.y} ${to.x} ${to.y}`;
 }
 
 export default function PortfolioCoach({
@@ -115,8 +116,9 @@ export default function PortfolioCoach({
     x: card.side === 'right' ? card.left + 14 : card.left + CARD_WIDTH - 14,
     y: card.top + (single ? 56 : 104),
   };
+  // 箭头尖停在高亮虚线框（外扩 5px）外再留 7px，不和虚线叠在一起
   const tip = {
-    x: card.side === 'right' ? rect.left + rect.width + 6 : rect.left - 6,
+    x: card.side === 'right' ? rect.left + rect.width + 12 : rect.left - 12,
     y: rect.top + rect.height / 2,
   };
   const isLast = index >= visibleSteps.length - 1;
@@ -126,8 +128,8 @@ export default function PortfolioCoach({
       <svg className="absolute inset-0 size-full overflow-visible" aria-hidden>
         <defs>
           {/* 箭头按像素定尺寸（userSpaceOnUse），不随线宽放大 —— 默认会 ×strokeWidth，2px 线上就成了 18px 的箭头 */}
-          <marker id="coach-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse">
-            <path d="M 0 0 L 8 4 L 0 8 z" fill="#2f6bff" />
+          <marker id="coach-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M 0 0 L 9 4.5 L 0 9 z" fill="#2f6bff" />
           </marker>
         </defs>
         {/* 锚点高亮框 */}
