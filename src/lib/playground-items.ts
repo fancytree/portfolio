@@ -59,6 +59,13 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 608,
   },
   {
+    // 摘自 Lenny's Podcast 访谈（约 22:22–27:34 与 32:23），去掉口头语、用省略号拼接原句
+    id: 'quote-ian-silber',
+    kind: 'quote',
+    text: "I think it already is an incredible product designer. That doesn't necessarily mean that it's the best visual designer, or best at information hierarchy, or even interaction design. … Truly understanding what people need. Inventing something new. Somebody had a point of view about this. … Just do less. Don't design it if you don't have to.",
+    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
+  },
+  {
     id: 'quote-simplicity',
     kind: 'quote',
     text: 'Placeholder quote — something I keep coming back to when a design feels too loud.',
