@@ -2,11 +2,15 @@
 // 然后在 src/lib/playground-items.ts 中用 component: '<id>' 引用。
 
 import type { ComponentType } from 'react';
+import ParticleFish from './ParticleFish';
+import PondFish from './PondFish';
 import SquishButton from './SquishButton';
 import TornMesh from './TornMesh';
 
 export const interactiveComponents = {
   'torn-mesh': TornMesh,
+  'pond-fish': PondFish,
+  'particle-fish': ParticleFish,
   'squish-button': SquishButton,
 } satisfies Record<string, ComponentType>;
 

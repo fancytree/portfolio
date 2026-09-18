@@ -63,6 +63,11 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 2400,
   },
   {
+    id: 'interactive-pond-fish',
+    kind: 'interactive',
+    component: 'pond-fish',
+  },
+  {
     id: 'video-memq',
     kind: 'video',
     src: '/img/MemQ Video.mp4',
@@ -81,6 +86,11 @@ export const playgroundItems: PlaygroundItem[] = [
     alt: 'Mono cover placeholder',
     width: 1672,
     height: 941,
+  },
+  {
+    id: 'interactive-particle-fish',
+    kind: 'interactive',
+    component: 'particle-fish',
   },
   {
     id: 'interactive-squish',

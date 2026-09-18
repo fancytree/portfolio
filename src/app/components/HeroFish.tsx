@@ -49,7 +49,14 @@ function clamp01(v: number) {
   return v < 0 ? 0 : v > 1 ? 1 : v;
 }
 
-export default function HeroFish({ className = '' }: { className?: string }) {
+type HeroFishProps = {
+  className?: string;
+  // window：跟随整页指针（Hero 背景用，canvas 本身不接收事件）；
+  // self：只在 canvas 上跟随，离开即回正（Playground 卡片用）
+  pointerScope?: 'window' | 'self';
+};
+
+export default function HeroFish({ className = '', pointerScope = 'window' }: HeroFishProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -59,7 +66,9 @@ export default function HeroFish({ className = '' }: { className?: string }) {
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const count = window.innerWidth < 640 ? 2600 : window.innerWidth < 1024 ? 4000 : 5200;
+    // 粒子数按画布实际宽度定：在卡片里是小画布，不必按整页宽度铺满粒子
+    const refWidth = pointerScope === 'self' ? canvas.getBoundingClientRect().width : window.innerWidth;
+    const count = refWidth < 640 ? 2600 : refWidth < 1024 ? 4000 : 5200;
 
     // 缓动后的局部坐标：原型里 lerp 的是世界坐标，但那时鱼是原地不动的。
     // 加了巡游之后必须在局部空间缓动，否则整条鱼会拖在目标位置后面糊掉。
@@ -134,7 +143,9 @@ export default function HeroFish({ className = '' }: { className?: string }) {
 
       // 先按"鱼占视口宽度约三分之一"定出比例尺，再反推镜头距离和巡游范围，
       // 这样窄屏上鱼不会缩成一个小点，宽屏上也不会撑满整个 Hero。
-      const targetFishPx = Math.min(Math.max(width * 0.32, 200 * dpr), 620 * dpr);
+      // 卡片里画布本身就小，按画布宽度的比例定，不套整页的最小尺寸
+      const targetFishPx =
+        pointerScope === 'self' ? width * 0.4 : Math.min(Math.max(width * 0.32, 200 * dpr), 620 * dpr);
       scaleRef = targetFishPx / FISH_LENGTH;
       focal = height / 2 / Math.tan(Math.PI / 6);
       camZ = focal / scaleRef;
@@ -145,7 +156,7 @@ export default function HeroFish({ className = '' }: { className?: string }) {
       const worldW = width / scaleRef;
       const worldH = height / scaleRef;
       // 留出的余量比半条鱼身稍多：转身时鳍会甩到轮廓之外
-      ampX = Math.max(0.4, worldW * 0.5 - FISH_LENGTH * 0.72);
+      ampX = Math.max(pointerScope === 'self' ? 0.1 : 0.4, worldW * 0.5 - FISH_LENGTH * 0.72);
       ampY = Math.max(0.2, Math.min(worldH * 0.13, 0.85));
     }
 
@@ -502,19 +513,24 @@ export default function HeroFish({ className = '' }: { className?: string }) {
       targetPitch = 0;
     };
 
+    const moveTarget: EventTarget = pointerScope === 'self' ? canvas : window;
+    const leaveTarget: EventTarget = pointerScope === 'self' ? canvas : document;
     const bindPointer = () => {
-      if (!finePointer.matches) return;
-      window.addEventListener('pointermove', onPointerMove, { passive: true });
-      document.addEventListener('pointerleave', onPointerLeave);
+      // 卡片里的触屏拖动也算，整页背景只认精确指针
+      if (pointerScope === 'window' && !finePointer.matches) return;
+      moveTarget.addEventListener('pointermove', onPointerMove as EventListener, { passive: true });
+      leaveTarget.addEventListener('pointerleave', onPointerLeave);
+      if (pointerScope === 'self') canvas.addEventListener('pointercancel', onPointerLeave);
     };
     const unbindPointer = () => {
-      window.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerleave', onPointerLeave);
+      moveTarget.removeEventListener('pointermove', onPointerMove as EventListener);
+      leaveTarget.removeEventListener('pointerleave', onPointerLeave);
+      canvas.removeEventListener('pointercancel', onPointerLeave);
     };
     const onPointerCapabilityChange = () => {
       unbindPointer();
-      if (finePointer.matches) bindPointer();
-      else onPointerLeave();
+      bindPointer();
+      if (pointerScope === 'window' && !finePointer.matches) onPointerLeave();
     };
     bindPointer();
     finePointer.addEventListener('change', onPointerCapabilityChange);
@@ -529,7 +545,7 @@ export default function HeroFish({ className = '' }: { className?: string }) {
       unbindPointer();
       finePointer.removeEventListener('change', onPointerCapabilityChange);
     };
-  }, []);
+  }, [pointerScope]);
 
   // canvas 是替换元素：绝对定位下 inset-0 不会拉伸它，宽高必须显式给 100%
   return (

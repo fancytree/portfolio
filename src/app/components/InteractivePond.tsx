@@ -1,72 +1,32 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import {
+  BUBBLE_HIT_RADIUS,
+  BUBBLE_LIFE,
+  FISH_SPRITE_SRC,
+  GOLD_CHANCE,
+  WATER_BOTTOM,
+  WATER_TOP,
+  buildRippleTexture,
+  drawBubble as drawBubbleShape,
+  drawFishSprite,
+  drawRipple as drawRippleShape,
+  loadImage,
+  randomBubblePhrase,
+  rippleFade,
+  rippleRadius,
+  shortestAngle,
+  type Bubble,
+  type Ripple,
+} from './pondShared';
 
 const WORLD = { width: 1564, height: 1006 };
 const ISLAND = { x: 1114, y: 418, rx: 200, ry: 120 };
 const MAX_FISH = 12;
 const MAX_RIPPLES = 28;
-const GOLD_HUE = 34;
-const GOLD_CHANCE = 0.08;
 const EXIT_MARGIN = 90;
 const MAX_BUBBLES = 3;
-const BUBBLE_LIFE = 2.4;
-const BUBBLE_HIT_RADIUS = 46;
-const RIPPLE_TEX_REF_RADIUS_X = 100;
-const RIPPLE_TEX_REF_RADIUS_Y = RIPPLE_TEX_REF_RADIUS_X * 0.66;
-const RIPPLE_TEX_SIZE = 240;
-
-// `filter: blur()` is by far the most expensive canvas op, and drawRipple used to
-// pay for it on 3 strokes per ripple, every frame. The ripple's per-ripple "seed"
-// only ever rotates the whole 3-arc bundle (it's added uniformly to every arc's
-// start angle) and its radius is just a scale, so the whole shape can be baked
-// into one offscreen texture and reused via drawImage + rotate + scale instead.
-function buildRippleTexture() {
-  const texture = document.createElement('canvas');
-  texture.width = RIPPLE_TEX_SIZE;
-  texture.height = RIPPLE_TEX_SIZE;
-  const textureContext = texture.getContext('2d');
-  if (!textureContext) return texture;
-
-  textureContext.translate(RIPPLE_TEX_SIZE / 2, RIPPLE_TEX_SIZE / 2);
-  textureContext.strokeStyle = '#91bdcd';
-  textureContext.lineCap = 'round';
-  textureContext.filter = 'blur(1.1px)';
-
-  const arcStarts = [0.12, 2.18, 4.27];
-  const arcLengths = [1.34, 1.08, 1.2];
-  for (let segment = 0; segment < arcStarts.length; segment++) {
-    const start = arcStarts[segment];
-    const end = start + arcLengths[segment];
-    textureContext.beginPath();
-    textureContext.ellipse(0, 0, RIPPLE_TEX_REF_RADIUS_X, RIPPLE_TEX_REF_RADIUS_Y, 0, start, end);
-    textureContext.globalAlpha = 0.42 - segment * 0.05;
-    textureContext.lineWidth = 2.6 - segment * 0.4;
-    textureContext.stroke();
-  }
-
-  return texture;
-}
-const BUBBLE_PHRASES = [
-  'We see you',
-  'Stop poking me',
-  'Welcome',
-  'BLUE BLUE BLUE',
-  "Mei hasn't fed us yet...",
-  'Not today',
-  'Personal space!',
-  'Ooh, shiny',
-  'Rude.',
-  'Again?',
-  'Splish splash',
-  'Tickles!',
-  'I was here first',
-  'So judged right now',
-  'Bubble bubble',
-  'Nice try',
-  'Feed me instead',
-  'Excuse you',
-];
 
 type Fish = {
   id: number;
@@ -90,57 +50,12 @@ type Fish = {
   behaviorSpin: number;
 };
 
-type Ripple = {
-  x: number;
-  y: number;
-  age: number;
-  life: number;
-  size: number;
-  seed: number;
-};
-
-type Bubble = {
-  fishId: number;
-  x: number;
-  y: number;
-  age: number;
-  text: string;
-};
-
 type LoadedAssets = {
   island: HTMLImageElement;
   plantsA: HTMLImageElement;
   plantsB: HTMLImageElement;
   fish: HTMLImageElement;
 };
-
-function loadImage(src: string) {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = reject;
-    image.src = src;
-  });
-}
-
-function shortestAngle(from: number, to: number) {
-  return Math.atan2(Math.sin(to - from), Math.cos(to - from));
-}
-
-// Ripples should read as fading outward as they expand, not brightening then
-// dimming symmetrically. Snap up to full strength fast (avoids a hard pop-in
-// at spawn) then decay for the rest of the ripple's life as it grows.
-// Normalized so the peak still hits 1 (matching the old sine curve's max),
-// instead of topping out under it like an un-normalized ramp*decay would.
-const RIPPLE_FADE_RAMP = 0.06;
-const RIPPLE_FADE_DECAY = 0.85;
-const RIPPLE_FADE_PEAK = Math.pow(1 - RIPPLE_FADE_RAMP, RIPPLE_FADE_DECAY);
-
-function rippleFade(progress: number) {
-  const fadeIn = Math.min(1, progress / RIPPLE_FADE_RAMP);
-  const fadeOut = Math.pow(1 - progress, RIPPLE_FADE_DECAY);
-  return (fadeIn * fadeOut) / RIPPLE_FADE_PEAK;
-}
 
 function makeFish(id: number, x: number, y: number, heading = Math.random() * Math.PI * 2, isGold = false): Fish {
   return {
@@ -197,8 +112,8 @@ export function InteractivePond({ className = '' }: { className?: string }) {
 
     const rippleTexture = buildRippleTexture();
     const waterGradient = context.createLinearGradient(0, 0, 0, WORLD.height);
-    waterGradient.addColorStop(0, '#f7f5ee');
-    waterGradient.addColorStop(1, '#ece9e0');
+    waterGradient.addColorStop(0, WATER_TOP);
+    waterGradient.addColorStop(1, WATER_BOTTOM);
 
     let disposed = false;
     let frameId = 0;
@@ -241,7 +156,7 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function addBubble(owner: Fish) {
-      const text = BUBBLE_PHRASES[Math.floor(Math.random() * BUBBLE_PHRASES.length)];
+      const text = randomBubblePhrase();
       bubbles.push({
         fishId: owner.id,
         x: owner.x,
@@ -458,32 +373,18 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function drawRipple(ripple: Ripple) {
-      const progress = Math.min(1, ripple.age / ripple.life);
-      const alpha = rippleFade(progress) * 0.34;
-      if (alpha < 0.01) return;
-      const radiusX = 42 + ripple.size + progress * 112;
+      const radiusX = rippleRadius(ripple);
       let interference = 0;
 
       for (const other of ripples) {
         if (other === ripple) continue;
-        const otherProgress = Math.min(1, other.age / other.life);
-        const otherRadius = 42 + other.size + otherProgress * 112;
+        const otherRadius = rippleRadius(other);
         const distance = Math.hypot(ripple.x - other.x, (ripple.y - other.y) / 0.66);
         const overlap = Math.abs(distance - radiusX - otherRadius * 0.18);
         if (overlap < 28) interference += (1 - overlap / 28) * 0.025;
       }
 
-      const rotation = Math.sin(ripple.seed) * 0.06 + interference + ripple.seed * 0.12;
-      const scale = radiusX / RIPPLE_TEX_REF_RADIUS_X;
-
-      context.save();
-      context.translate(ripple.x, ripple.y);
-      context.rotate(rotation);
-      context.scale(scale, scale);
-      context.globalCompositeOperation = 'multiply';
-      context.globalAlpha = alpha;
-      context.drawImage(rippleTexture, -RIPPLE_TEX_SIZE / 2, -RIPPLE_TEX_SIZE / 2);
-      context.restore();
+      drawRippleShape(context, rippleTexture, ripple, interference);
     }
 
     function drawRippleInterference() {
@@ -584,45 +485,7 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function drawBubble(bubble: Bubble) {
-      const progress = bubble.age / BUBBLE_LIFE;
-      const fadeIn = Math.min(1, bubble.age / 0.15);
-      const fadeOut = 1 - Math.max(0, (bubble.age - (BUBBLE_LIFE - 0.5)) / 0.5);
-      const alpha = Math.min(fadeIn, fadeOut);
-      if (alpha <= 0.01) return;
-
-      const floatY = bubble.y - 8 - progress * 14;
-
-      context.save();
-      context.font = '600 12px system-ui, -apple-system, sans-serif';
-      const textWidth = context.measureText(bubble.text).width;
-      const paddingX = 9;
-      const boxWidth = textWidth + paddingX * 2;
-      const boxHeight = 24;
-      const boxX = bubble.x - boxWidth / 2;
-      const boxY = floatY - boxHeight;
-      const radius = 8;
-
-      context.beginPath();
-      context.moveTo(boxX + radius, boxY);
-      context.arcTo(boxX + boxWidth, boxY, boxX + boxWidth, boxY + boxHeight, radius);
-      context.arcTo(boxX + boxWidth, boxY + boxHeight, boxX, boxY + boxHeight, radius);
-      context.arcTo(boxX, boxY + boxHeight, boxX, boxY, radius);
-      context.arcTo(boxX, boxY, boxX + boxWidth, boxY, radius);
-      context.closePath();
-      context.moveTo(bubble.x - 4, boxY + boxHeight);
-      context.lineTo(bubble.x, boxY + boxHeight + 6);
-      context.lineTo(bubble.x + 4, boxY + boxHeight);
-      context.closePath();
-
-      context.globalAlpha = alpha;
-      context.fillStyle = '#fdfefe';
-      context.fill();
-
-      context.fillStyle = '#3f5a61';
-      context.textAlign = 'center';
-      context.textBaseline = 'middle';
-      context.fillText(bubble.text, bubble.x, boxY + boxHeight / 2);
-      context.restore();
+      drawBubbleShape(context, bubble);
     }
 
     function drawIslandRipples(time: number) {
@@ -669,18 +532,7 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function drawFish(item: Fish, image: HTMLImageElement, time: number) {
-      context.save();
-      context.translate(item.x, item.y);
-      context.rotate(item.heading);
-      context.scale(item.scale, item.scale);
-      context.globalAlpha = 0.96;
-      context.filter = item.isGold ? `hue-rotate(${GOLD_HUE}deg) saturate(1.18)` : 'none';
-      context.imageSmoothingEnabled = true;
-      const frame = (Math.floor((time / 1000) * 24) + item.phase) % 104;
-      const sourceX = (frame % 13) * 320;
-      const sourceY = Math.floor(frame / 13) * 180;
-      context.drawImage(image, sourceX, sourceY, 320, 180, -64, -36, 128, 72);
-      context.restore();
+      drawFishSprite(context, image, item, time);
     }
 
     function render(assets: LoadedAssets, time: number) {
@@ -752,7 +604,7 @@ export function InteractivePond({ className = '' }: { className?: string }) {
       loadImage('/pond/island.png'),
       loadImage('/pond/plants-a.png'),
       loadImage('/pond/plants-b.png'),
-      loadImage('/pond/fish-swim-sprite-clean.png'),
+      loadImage(FISH_SPRITE_SRC),
     ]).then(([island, plantsA, plantsB, fishImage]) => {
       if (!disposed) render({ island, plantsA, plantsB, fish: fishImage }, performance.now());
     });
