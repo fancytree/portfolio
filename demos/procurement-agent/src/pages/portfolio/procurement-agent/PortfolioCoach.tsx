@@ -48,15 +48,21 @@ function placeCard(rect: Rect) {
 }
 
 /**
- * 从卡片朝锚点画一条三次贝塞尔曲线：从卡片水平伸出，最后水平扎向目标。
- * 水平进场让箭头和高亮虚线框垂直，方向一眼可辨；高度不同时中间自然成一个柔和的 S 形。
+ * 从卡片朝锚点画一条弧线：从卡片伸出时略微上拱，最后以约 35° 斜向下落到目标上。
+ * 进场角度固定成斜的，箭头既看得出弧度，又不会和竖向的高亮虚线框平行而“隐身”。
  */
+const ARRIVE_ANGLE = (35 * Math.PI) / 180;
+
 function arrowPath(from: { x: number; y: number }, to: { x: number; y: number }, side: 'left' | 'right') {
   const dir = side === 'right' ? -1 : 1; // 卡片在目标右侧时，线往左走
-  const reach = Math.max(28, Math.abs(to.x - from.x) * 0.5);
-  const c1x = from.x + dir * reach;
-  const c2x = to.x - dir * reach;
-  return `M ${from.x} ${from.y} C ${c1x} ${from.y} ${c2x} ${to.y} ${to.x} ${to.y}`;
+  const reach = Math.max(22, Math.hypot(to.x - from.x, to.y - from.y) * 0.5);
+  // 出发：朝目标方向走，同时往上拱一点
+  const c1x = from.x + dir * reach * 0.8;
+  const c1y = from.y - reach * 0.45;
+  // 到达：切线方向 = 朝目标、斜向下 35°
+  const c2x = to.x - dir * Math.cos(ARRIVE_ANGLE) * reach;
+  const c2y = to.y - Math.sin(ARRIVE_ANGLE) * reach;
+  return `M ${from.x} ${from.y} C ${c1x} ${c1y} ${c2x} ${c2y} ${to.x} ${to.y}`;
 }
 
 export default function PortfolioCoach({
@@ -112,9 +118,10 @@ export default function PortfolioCoach({
 
   const card = placeCard(rect);
   const single = visibleSteps.length <= 1;
+  // 从卡片标题的高度伸出，比目标中线略高，弧线才有往下落的余地
   const anchor = {
-    x: card.side === 'right' ? card.left + 14 : card.left + CARD_WIDTH - 14,
-    y: card.top + (single ? 56 : 104),
+    x: card.side === 'right' ? card.left + 2 : card.left + CARD_WIDTH - 2,
+    y: card.top + 26,
   };
   // 箭头尖停在高亮虚线框（外扩 5px）外再留 7px，不和虚线叠在一起
   const tip = {
@@ -144,13 +151,13 @@ export default function PortfolioCoach({
           strokeWidth="2"
           strokeDasharray="5 4"
         />
-        {/* 弧线箭头 */}
+        {/* 虚线弧线箭头 */}
         <path
           d={arrowPath(anchor, tip, card.side)}
           fill="none"
           stroke="#2f6bff"
           strokeWidth="2"
-          strokeLinecap="round"
+          strokeDasharray="5 4"
           markerEnd="url(#coach-arrow)"
         />
       </svg>
