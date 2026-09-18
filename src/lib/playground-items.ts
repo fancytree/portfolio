@@ -54,8 +54,8 @@ export const playgroundItems: PlaygroundItem[] = [
     id: 'interactive-hero-pond',
     kind: 'interactive',
     component: 'hero-pond',
-    // 与首页池塘的世界尺寸 1564×1006 同比例，整片池塘完整可见
-    aspectRatio: 1564 / 1006,
+    // 扁一些的横幅卡片，配合 HeroPond 里的放大只取小岛一带
+    aspectRatio: 2,
     wide: true,
   },
   {

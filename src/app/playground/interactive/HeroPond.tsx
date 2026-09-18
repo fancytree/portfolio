@@ -6,5 +6,5 @@
 import { InteractivePond } from '@/app/components/InteractivePond';
 
 export default function HeroPond() {
-  return <InteractivePond className="block" zoom={1.45} focus={{ x: 880, y: 480 }} />;
+  return <InteractivePond className="block" zoom={1.75} focus={{ x: 1000, y: 400 }} />;
 }
