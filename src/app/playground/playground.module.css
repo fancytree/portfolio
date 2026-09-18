@@ -30,19 +30,37 @@
 }
 
 .feed {
-  column-count: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   column-gap: 20px;
+  row-gap: 20px;
+}
+
+/* 测量完成后切到 4px 细行：每个格子按高度占 span N 行，错落排布；dense 让宽卡片留下的空位被补上 */
+.feed[data-ready] {
+  grid-auto-flow: row dense;
+  grid-auto-rows: 4px;
+  row-gap: 0;
+}
+
+.cell[data-wide] {
+  grid-column: span 2;
 }
 
 @media (max-width: 1024px) {
   .feed {
-    column-count: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 640px) {
   .feed {
-    column-count: 1;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cell[data-wide] {
+    grid-column: auto;
   }
 
   .header {
@@ -51,8 +69,6 @@
 }
 
 .card {
-  margin: 0 0 20px;
-  break-inside: avoid;
   overflow: hidden;
   border: 1px solid rgb(10 10 10 / 0.08);
   border-radius: 16px;

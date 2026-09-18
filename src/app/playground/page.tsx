@@ -2,6 +2,7 @@
 // 内容在 src/lib/playground-items.ts 维护。
 
 import { playgroundItems } from '@/lib/playground-items';
+import MasonryFeed from './MasonryFeed';
 import PlaygroundCard from './PlaygroundCard';
 import styles from './playground.module.css';
 
@@ -17,11 +18,13 @@ export default function PlaygroundPage() {
         <p>Small experiments, fragments and things I like — no case study attached.</p>
       </header>
 
-      <div className={styles.feed}>
+      <MasonryFeed>
         {playgroundItems.map((item) => (
-          <PlaygroundCard key={item.id} item={item} />
+          <div key={item.id} className={styles.cell} data-wide={item.wide || undefined}>
+            <PlaygroundCard item={item} />
+          </div>
         ))}
-      </div>
+      </MasonryFeed>
     </section>
   );
 }

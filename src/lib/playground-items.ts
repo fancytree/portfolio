@@ -6,6 +6,8 @@ import type { InteractiveId } from '@/app/playground/interactive';
 
 type PlaygroundBase = {
   id: string;
+  // 横跨两列的大卡片（单列的窄屏上自动回到一列）
+  wide?: boolean;
 };
 
 export type PlaygroundQuote = PlaygroundBase & {
@@ -49,6 +51,14 @@ export const playgroundItems: PlaygroundItem[] = [
     component: 'torn-mesh',
   },
   {
+    id: 'interactive-hero-pond',
+    kind: 'interactive',
+    component: 'hero-pond',
+    // 与首页池塘的世界尺寸 1564×1006 同比例，整片池塘完整可见
+    aspectRatio: 1564 / 1006,
+    wide: true,
+  },
+  {
     id: 'quote-simplicity',
     kind: 'quote',
     text: 'Placeholder quote — something I keep coming back to when a design feels too loud.',
@@ -61,11 +71,6 @@ export const playgroundItems: PlaygroundItem[] = [
     alt: 'MemQ cover placeholder',
     width: 3200,
     height: 2400,
-  },
-  {
-    id: 'interactive-pond-fish',
-    kind: 'interactive',
-    component: 'pond-fish',
   },
   {
     id: 'video-memq',
