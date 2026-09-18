@@ -159,7 +159,7 @@ export default function BubblePop() {
           s.x += (cell.cx - s.x) * rate;
           s.y += (cell.cy - s.y) * rate;
         }
-        const pull = Math.min(1, 0.007 * k);
+        const pull = Math.min(1, 0.01 * k);
         s.x += (cx0 - s.x) * pull;
         s.y += (cy0 - s.y) * pull;
       }
@@ -285,8 +285,9 @@ export default function BubblePop() {
       const dying = new Set(sites.filter((s) => s.dying).map((s) => s.id));
       const radius = new Map<number, number>();
       for (const [id, cell] of cells) radius.set(id, Math.sqrt(cell.area / Math.PI));
-      // 两个相邻泡泡各画一次共享的壁：位置一致时叠在一起看不出来；
-      // 外圈两个泡泡没挤实、两侧算出的壁对不上时，各画各的才能保证每个泡泡都是闭合的
+      // 两个相邻泡泡各画一次共享的壁：位置一致时叠在一起看不出来。
+      // 只有一侧认的壁（外圈两个泡泡没挤实）其实是对着空气的外表面，按外壁画、向外鼓
+      const shares = (a: number, b: number) => cells.get(b)?.labels.includes(a) ?? false;
 
       const hovered = hoverId >= 0 && !dying.has(hoverId) ? cells.get(hoverId) : undefined;
       if (hovered) {
@@ -371,10 +372,16 @@ export default function BubblePop() {
           const y2 = ys[j];
           const len = Math.hypot(x2 - x1, y2 - y1);
           if (len < 0.5) continue;
-          const rj = radius.get(label) ?? ri;
-          // 弧高 = L²/8 · (1/ri - 1/rj)：小泡泡（压力大）一侧鼓向大泡泡
-          let sag = ((len * len) / 8) * (1 / ri - 1 / rj);
-          sag = Math.max(-len * 0.22, Math.min(len * 0.22, sag));
+          let sag: number;
+          if (shares(s.id, label)) {
+            // 真正的隔壁：弧高 = L²/8 · (1/ri - 1/rj)，小泡泡（压力大）一侧鼓向大泡泡
+            const rj = radius.get(label) ?? ri;
+            sag = ((len * len) / 8) * (1 / ri - 1 / rj);
+            sag = Math.max(-len * 0.15, Math.min(len * 0.15, sag));
+          } else {
+            // 对着空气：像外壁一样以自身半径向外鼓
+            sag = Math.min(len * 0.3, (len * len) / (8 * ri));
+          }
           const mx = (x1 + x2) / 2;
           const my = (y1 + y2) / 2;
           // 法线指向本泡泡外侧
