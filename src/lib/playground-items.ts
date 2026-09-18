@@ -51,6 +51,14 @@ export const playgroundItems: PlaygroundItem[] = [
     component: 'torn-mesh',
   },
   {
+    id: 'image-mei-wave',
+    kind: 'image',
+    src: '/meiwave.gif',
+    alt: 'A hand-drawn girl with an orange bow waving hello',
+    width: 844,
+    height: 608,
+  },
+  {
     id: 'quote-simplicity',
     kind: 'quote',
     text: 'Placeholder quote — something I keep coming back to when a design feels too loud.',
