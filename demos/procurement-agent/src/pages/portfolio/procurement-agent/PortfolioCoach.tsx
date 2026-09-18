@@ -125,8 +125,9 @@ export default function PortfolioCoach({
     <div className="pointer-events-none fixed inset-0 z-[60]">
       <svg className="absolute inset-0 size-full overflow-visible" aria-hidden>
         <defs>
-          <marker id="coach-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-            <path d="M 0 0 L 9 4.5 L 0 9 z" fill="#2f6bff" />
+          {/* 箭头按像素定尺寸（userSpaceOnUse），不随线宽放大 —— 默认会 ×strokeWidth，2px 线上就成了 18px 的箭头 */}
+          <marker id="coach-arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M 0 0 L 8 4 L 0 8 z" fill="#2f6bff" />
           </marker>
         </defs>
         {/* 锚点高亮框 */}
