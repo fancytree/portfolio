@@ -1,21 +1,23 @@
 'use client';
 
-// 戳泡泡：黑底上的一团肥皂泡沫，只画白色的泡壁。中间的泡泡大、越往外越小，
-// 外轮廓就是最外圈小泡泡自己鼓出来的圆弧。点一个泡泡，它迸成一圈小水珠；
-// 里面的泡泡破了，气并进邻居，邻居撑开补上；外圈的破了，气跑掉，泡沫团缩一点。
+// 戳泡泡：黑底上的一团肥皂泡沫。中间的泡泡大、越往外越小，外轮廓由最外圈小泡泡鼓出来的圆弧组成。
+// 点一个泡泡，它迸成一圈小水珠；里面的泡泡破了，气并进邻居，邻居撑开补上；
+// 外圈的破了，气跑掉，整团缩一点。
 //
-// 几何用 power diagram（加权 Voronoi）：每个泡泡是站点 p、权重 w、半径 r，
-// 格子 = {x : |x-p|² - w 最小} ∩ 以 p 为心、r 为半径的圆。
-// 被邻居围住的泡泡，格子完全由邻居决定（多边形）；贴外面的泡泡，外侧被自己的圆截住 —— 就鼓出来了。
-// 每帧：站点向格子重心靠（Lloyd，泡壁趋向 120° 相交、格子以六边形为主），
-// 权重调向目标面积（泡泡大小不一且能平滑长大），再整体向中心轻拉一点保持成团。
+// 几何分两步：
+//   1. 整团泡沫是一块边缘略起伏的区域，在里面用 power diagram（加权 Voronoi）切分：
+//      每个泡泡是站点 p 和权重 w，格子 = {x : |x-p|² - w 最小} ∩ 区域。
+//      格子之间严丝合缝，内部不会出现缝隙。每帧站点向重心靠（Lloyd，泡壁趋向 120° 相交、
+//      以六边形为主），权重调向目标面积（泡泡大小不一、能平滑长大）。
+//   2. 画的时候，外圈泡泡贴着区域边界的那一段换成向外鼓的圆弧，两端正好落在它和左右邻居的交点上，
+//      所以相邻外圈泡泡一定首尾相接、每个泡泡都是闭合的。
 // 泡壁按两侧压力差弯曲：小泡泡压力大，壁往大泡泡那侧弯（Young–Laplace）。
 
 import { useEffect, useRef } from 'react';
 
 const TWO_PI = Math.PI * 2;
-const DISK_SIDES = 40;
-const FREE = -1; // 外侧自由边（泡泡自己的圆弧）
+const BOUNDARY_SIDES = 120; // 泡沫区域边界的多边形近似
+const FREE = -1; // 贴着区域边界的边（画成外圈泡泡的外鼓圆弧）
 const WALL = '#f5f3ee';
 
 type Site = { id: number; x: number; y: number; w: number; target: number; base: number; phase: number; hue: number; dying: boolean };
@@ -71,11 +73,82 @@ function measure(cell: Cell) {
   }
 }
 
-function contains(cell: Cell, x: number, y: number) {
-  const { xs, ys } = cell;
+// 外圈泡泡的轮廓：把贴着区域边界的那一段（连续的 FREE 边）换成向外鼓的圆弧，
+// 圆弧两端就是它和左右邻居的交点。返回整圈轮廓点，以及每段外弧自己的点（用来描边）。
+function outline(cell: Cell, r: number) {
+  const { xs, ys, labels } = cell;
+  const n = xs.length;
+  const points: number[] = [];
+  const arcs: number[][] = [];
+  const start = labels.findIndex((l) => l !== FREE);
+  if (start < 0) {
+    // 整团只剩这一个泡泡
+    for (let k = 0; k < n; k++) points.push(xs[k], ys[k]);
+    arcs.push(points.concat(xs[0], ys[0]));
+    return { points, arcs };
+  }
+  let k = start;
+  let walked = 0;
+  while (walked < n) {
+    if (labels[k] !== FREE) {
+      points.push(xs[k], ys[k]);
+      k = (k + 1) % n;
+      walked++;
+      continue;
+    }
+    // 一段连续的 FREE 边：从 a 走到 b
+    const a = k;
+    while (labels[k] === FREE && walked < n) {
+      k = (k + 1) % n;
+      walked++;
+    }
+    const ax = xs[a];
+    const ay = ys[a];
+    const bx = xs[k];
+    const by = ys[k];
+    const len = Math.hypot(bx - ax, by - ay);
+    const arc: number[] = [ax, ay];
+    if (len > 0.5) {
+      const mx = (ax + bx) / 2;
+      const my = (ay + by) / 2;
+      let nx = -(by - ay) / len;
+      let ny = (bx - ax) / len;
+      if (nx * (mx - cell.cx) + ny * (my - cell.cy) < 0) {
+        nx = -nx;
+        ny = -ny;
+      }
+      // 圆弧半径略大于泡泡等效半径，外鼓得自然；弦太长时退化为半圆
+      const rho = Math.max(len / 2 + 0.01, r * 1.3);
+      const h = rho - Math.sqrt(rho * rho - (len / 2) ** 2);
+      const ccx = mx - nx * (rho - h);
+      const ccy = my - ny * (rho - h);
+      const t0 = Math.atan2(ay - ccy, ax - ccx);
+      let sweep = Math.atan2(by - ccy, bx - ccx) - t0;
+      sweep = Math.atan2(Math.sin(sweep), Math.cos(sweep));
+      // 确认走的是外鼓的那一侧
+      if (Math.cos(t0 + sweep / 2 - Math.atan2(ny, nx)) < 0) sweep -= Math.sign(sweep) * TWO_PI;
+      const steps = 16;
+      for (let i = 1; i < steps; i++) {
+        const t = t0 + (sweep * i) / steps;
+        arc.push(ccx + Math.cos(t) * rho, ccy + Math.sin(t) * rho);
+      }
+    }
+    for (let i = 0; i < arc.length; i += 2) points.push(arc[i], arc[i + 1]);
+    arc.push(bx, by);
+    arcs.push(arc);
+  }
+  return { points, arcs };
+}
+
+function containsPoints(points: number[], x: number, y: number) {
   let inside = false;
-  for (let i = 0, j = xs.length - 1; i < xs.length; j = i++) {
-    if (ys[i] > y !== ys[j] > y && x < ((xs[j] - xs[i]) * (y - ys[i])) / (ys[j] - ys[i]) + xs[i]) inside = !inside;
+  const n = points.length / 2;
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    const xi = points[i * 2];
+    const yi = points[i * 2 + 1];
+    const xj = points[j * 2];
+    const yj = points[j * 2 + 1];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
 }
@@ -83,9 +156,6 @@ function contains(cell: Cell, x: number, y: number) {
 function gaussian() {
   return Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(TWO_PI * Math.random());
 }
-
-// 泡泡的圆盘半径：比等面积圆稍大，被邻居围住时不起作用，贴外面时截出外侧圆弧
-const diskRadius = (target: number) => Math.sqrt(Math.max(0, target) / Math.PI) * 1.25;
 
 export default function BubblePop() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -104,6 +174,9 @@ export default function BubblePop() {
     let cy0 = 0;
     let R = 0;
 
+    let edgePhase: number[] = [];
+    let boundary: Cell = { xs: [], ys: [], labels: [], area: 0, cx: 0, cy: 0 };
+
     let sites: Site[] = [];
     let cells = new Map<number, Cell>();
     const drops: Drop[] = [];
@@ -112,27 +185,34 @@ export default function BubblePop() {
     let fade = 1;
     let regrowClock = -1;
     let hoverId = -1;
+    let lastOutlines = new Map<number, { points: number[]; arcs: number[][] }>();
+
+    // 泡沫区域：面积等于所有泡泡目标面积之和（外圈泡泡破了、气跑掉，区域就缩），
+    // 边缘用几层正弦略微起伏，不是正圆
+    const buildBoundary = () => {
+      const total = sites.reduce((sum, x) => sum + Math.max(0, x.target), 0);
+      const r0 = Math.sqrt(total / Math.PI) * 0.96;
+      boundary = { xs: [], ys: [], labels: [], area: 0, cx: 0, cy: 0 };
+      for (let k = 0; k < BOUNDARY_SIDES; k++) {
+        const a = (k / BOUNDARY_SIDES) * TWO_PI;
+        const wobble = 1 + 0.05 * Math.sin(3 * a + edgePhase[0] + time * 0.15) + 0.035 * Math.sin(5 * a + edgePhase[1] - time * 0.1);
+        boundary.xs.push(cx0 + Math.cos(a) * r0 * wobble);
+        boundary.ys.push(cy0 + Math.sin(a) * r0 * wobble);
+        boundary.labels.push(FREE);
+      }
+    };
 
     const computeCells = () => {
+      buildBoundary();
       const next = new Map<number, Cell>();
       for (const s of sites) {
-        const r = diskRadius(s.target);
-        if (r < 0.5) continue;
-        let poly: Cell = { xs: [], ys: [], labels: [], area: 0, cx: 0, cy: 0 };
-        for (let k = 0; k < DISK_SIDES; k++) {
-          const a = (k / DISK_SIDES) * TWO_PI;
-          poly.xs.push(s.x + Math.cos(a) * r);
-          poly.ys.push(s.y + Math.sin(a) * r);
-          poly.labels.push(FREE);
-        }
-        // 近的先裁（多边形很快变小）；离得比两圆半径之和还远的不可能相邻，跳过
+        let poly: Cell = { xs: boundary.xs.slice(), ys: boundary.ys.slice(), labels: boundary.labels.slice(), area: 0, cx: 0, cy: 0 };
+        // 近的先裁，多边形很快缩小，后面的裁剪就很便宜
         const others = sites
           .filter((o) => o !== s)
           .map((o) => ({ o, d: (o.x - s.x) ** 2 + (o.y - s.y) ** 2 }))
           .sort((a, b) => a.d - b.d);
-        for (const { o, d } of others) {
-          const reach = r + diskRadius(o.target);
-          if (d > reach * reach) continue;
+        for (const { o } of others) {
           // |x-s|² - ws <= |x-o|² - wo  ⇔  2(o-s)·x <= |o|² - |s|² + ws - wo
           const ax = 2 * (o.x - s.x);
           const ay = 2 * (o.y - s.y);
@@ -147,7 +227,7 @@ export default function BubblePop() {
       cells = next;
     };
 
-    // 一步松弛：算格子 → 调权重逼近目标面积 → 站点向重心靠 → 整体轻轻向中心收拢
+    // 一步松弛：算格子 → 调权重逼近目标面积 → 站点向重心靠
     function relax(k: number) {
       computeCells();
       for (const s of sites) {
@@ -159,9 +239,6 @@ export default function BubblePop() {
           s.x += (cell.cx - s.x) * rate;
           s.y += (cell.cy - s.y) * rate;
         }
-        const pull = Math.min(1, 0.01 * k);
-        s.x += (cx0 - s.x) * pull;
-        s.y += (cy0 - s.y) * pull;
       }
       const mean = sites.reduce((sum, s) => sum + s.w, 0) / Math.max(1, sites.length);
       // 权重限幅：离群的泡泡面积永远到不了目标，不限的话权重会一直漂，回来时就被挤没了
@@ -171,6 +248,7 @@ export default function BubblePop() {
 
     const seed = () => {
       sites = [];
+      edgePhase = [Math.random() * TWO_PI, Math.random() * TWO_PI];
       const count = Math.max(30, Math.round((Math.PI * R * R) / 1300));
       for (let i = 0; i < count; i++) {
         // 外圈放得更密（泡泡更小）
@@ -285,16 +363,24 @@ export default function BubblePop() {
       const dying = new Set(sites.filter((s) => s.dying).map((s) => s.id));
       const radius = new Map<number, number>();
       for (const [id, cell] of cells) radius.set(id, Math.sqrt(cell.area / Math.PI));
-      // 两个相邻泡泡各画一次共享的壁：位置一致时叠在一起看不出来。
-      // 只有一侧认的壁（外圈两个泡泡没挤实）其实是对着空气的外表面，按外壁画、向外鼓
-      const shares = (a: number, b: number) => cells.get(b)?.labels.includes(a) ?? false;
+      const outlines = new Map<number, ReturnType<typeof outline>>();
+      for (const [id, cell] of cells) outlines.set(id, outline(cell, radius.get(id) ?? 1));
+      lastOutlines = outlines;
+      // 相邻两个泡泡各画一次共享的壁（两侧算出的弯曲一致，叠在一起看不出来）
 
-      const hovered = hoverId >= 0 && !dying.has(hoverId) ? cells.get(hoverId) : undefined;
+      const tracePath = (points: number[]) => {
+        ctx.beginPath();
+        for (let i = 0; i < points.length; i += 2) {
+          if (i) ctx.lineTo(points[i], points[i + 1]);
+          else ctx.moveTo(points[i], points[i + 1]);
+        }
+        ctx.closePath();
+      };
+
+      const hovered = hoverId >= 0 && !dying.has(hoverId) ? outlines.get(hoverId) : undefined;
       if (hovered) {
         ctx.fillStyle = 'rgba(245, 243, 238, 0.08)';
-        ctx.beginPath();
-        hovered.xs.forEach((x, i) => (i ? ctx.lineTo(x, hovered.ys[i]) : ctx.moveTo(x, hovered.ys[i])));
-        ctx.closePath();
+        tracePath(hovered.points);
         ctx.fill();
       }
 
@@ -313,9 +399,7 @@ export default function BubblePop() {
         film.addColorStop(0.7, `hsla(${hue}, 85%, 70%, 0.05)`);
         film.addColorStop(1, `hsla(${(hue + 90) % 360}, 90%, 72%, 0.16)`);
         ctx.fillStyle = film;
-        ctx.beginPath();
-        cell.xs.forEach((x, i) => (i ? ctx.lineTo(x, cell.ys[i]) : ctx.moveTo(x, cell.ys[i])));
-        ctx.closePath();
+        tracePath(outlines.get(s.id)?.points ?? []);
         ctx.fill();
 
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
@@ -349,16 +433,16 @@ export default function BubblePop() {
         const tint = `hsl(${(s.hue + time * 18 + 40) % 360}, 45%, 88%)`;
         ctx.strokeStyle = tint;
 
-        // 外侧自由边：连续的圆弧一笔画出
+        // 外圈泡泡鼓出去的外壁
         ctx.lineWidth = 1.25;
-        ctx.beginPath();
-        for (let k = 0; k < n; k++) {
-          if (labels[k] !== FREE) continue;
-          const j = (k + 1) % n;
-          ctx.moveTo(xs[k], ys[k]);
-          ctx.lineTo(xs[j], ys[j]);
+        for (const arc of outlines.get(s.id)?.arcs ?? []) {
+          ctx.beginPath();
+          for (let i = 0; i < arc.length; i += 2) {
+            if (i) ctx.lineTo(arc[i], arc[i + 1]);
+            else ctx.moveTo(arc[i], arc[i + 1]);
+          }
+          ctx.stroke();
         }
-        ctx.stroke();
 
         // 与邻居之间的壁，按压力差弯曲
         ctx.lineWidth = 1.1;
@@ -372,16 +456,10 @@ export default function BubblePop() {
           const y2 = ys[j];
           const len = Math.hypot(x2 - x1, y2 - y1);
           if (len < 0.5) continue;
-          let sag: number;
-          if (shares(s.id, label)) {
-            // 真正的隔壁：弧高 = L²/8 · (1/ri - 1/rj)，小泡泡（压力大）一侧鼓向大泡泡
-            const rj = radius.get(label) ?? ri;
-            sag = ((len * len) / 8) * (1 / ri - 1 / rj);
-            sag = Math.max(-len * 0.15, Math.min(len * 0.15, sag));
-          } else {
-            // 对着空气：像外壁一样以自身半径向外鼓
-            sag = Math.min(len * 0.3, (len * len) / (8 * ri));
-          }
+          // 弧高 = L²/8 · (1/ri - 1/rj)：小泡泡（压力大）一侧鼓向大泡泡
+          const rj = radius.get(label) ?? ri;
+          let sag = ((len * len) / 8) * (1 / ri - 1 / rj);
+          sag = Math.max(-len * 0.15, Math.min(len * 0.15, sag));
           const mx = (x1 + x2) / 2;
           const my = (y1 + y2) / 2;
           // 法线指向本泡泡外侧
@@ -426,8 +504,8 @@ export default function BubblePop() {
     const siteAt = (x: number, y: number) => {
       for (const s of sites) {
         if (s.dying) continue;
-        const cell = cells.get(s.id);
-        if (cell && contains(cell, x, y)) return s;
+        const shape = lastOutlines.get(s.id);
+        if (shape && containsPoints(shape.points, x, y)) return s;
       }
       return null;
     };
