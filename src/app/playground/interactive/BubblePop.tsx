@@ -1,38 +1,28 @@
 'use client';
 
-// 戳泡泡：黑底上的一团肥皂泡沫，只画白色的泡壁。点一个泡泡，它的壁破开、碎片飞散，
-// 气体并进相邻的泡泡，邻居撑开把缺口补上 —— 泡沫越戳越粗，就像真的泡沫在衰老。
+// 戳泡泡：黑底上的一团肥皂泡沫，只画白色的泡壁。中间的泡泡大、越往外越小，
+// 外轮廓就是最外圈小泡泡自己鼓出来的圆弧。点一个泡泡，它迸成一圈小水珠；
+// 里面的泡泡破了，气并进邻居，邻居撑开补上；外圈的破了，气跑掉，泡沫团缩一点。
 //
-// 泡沫的几何用 power diagram（加权 Voronoi）：每个泡泡是一个站点 p 和一个权重 w，
-// 格子是 {x : |x-p|² - w 最小}。每帧做两件事让它像真泡沫：
-//   1. 站点向格子重心靠（Lloyd 松弛）—— 泡壁自然趋向三壁 120° 相交，格子以六边形为主；
-//   2. 调权重让格子面积趋向各自的目标面积 —— 泡泡大小不一，戳破后邻居能平滑地长大。
-// 格子由容器圆（多边形近似）逐个用半平面裁出来，每条边记着“隔壁是谁”，
-// 这样正在破的泡泡两侧的壁可以不画，露出破口。
+// 几何用 power diagram（加权 Voronoi）：每个泡泡是站点 p、权重 w、半径 r，
+// 格子 = {x : |x-p|² - w 最小} ∩ 以 p 为心、r 为半径的圆。
+// 被邻居围住的泡泡，格子完全由邻居决定（多边形）；贴外面的泡泡，外侧被自己的圆截住 —— 就鼓出来了。
+// 每帧：站点向格子重心靠（Lloyd，泡壁趋向 120° 相交、格子以六边形为主），
+// 权重调向目标面积（泡泡大小不一且能平滑长大），再整体向中心轻拉一点保持成团。
+// 泡壁按两侧压力差弯曲：小泡泡压力大，壁往大泡泡那侧弯（Young–Laplace）。
 
 import { useEffect, useRef } from 'react';
 
 const TWO_PI = Math.PI * 2;
-const RIM_SIDES = 96; // 容器圆的多边形近似
+const DISK_SIDES = 40;
+const FREE = -1; // 外侧自由边（泡泡自己的圆弧）
 const WALL = '#f5f3ee';
-const CONTAINER = -1;
 
-type Site = {
-  id: number;
-  x: number;
-  y: number;
-  w: number;
-  target: number; // 目标面积
-  base: number; // 目标面积的基准（呼吸在它上面起伏）
-  phase: number;
-  dying: boolean;
-};
-
+type Site = { id: number; x: number; y: number; w: number; target: number; base: number; phase: number; hue: number; dying: boolean };
 type Cell = { xs: number[]; ys: number[]; labels: number[]; area: number; cx: number; cy: number };
+type Drop = { x: number; y: number; vx: number; vy: number; age: number; life: number; size: number; hue: number };
 
-type Shard = { x1: number; y1: number; x2: number; y2: number; vx: number; vy: number; spin: number; age: number; life: number };
-
-// 用半平面 a·x <= b 裁剪多边形；新边（沿裁剪线）标记为 label
+// 用半平面 a·x <= b 裁剪多边形；沿裁剪线的新边标记为 label
 function clip(poly: Cell, ax: number, ay: number, b: number, label: number): Cell {
   const { xs, ys, labels } = poly;
   const n = xs.length;
@@ -55,7 +45,6 @@ function clip(poly: Cell, ax: number, ay: number, b: number, label: number): Cel
       const t = ds / (ds - dt);
       out.xs.push(sx + (tx - sx) * t);
       out.ys.push(sy + (ty - sy) * t);
-      // 出去的那一点之后沿裁剪线走（新边）；进来的那一点之后沿原边走
       out.labels.push(sIn ? label : labels[k]);
     }
   }
@@ -95,6 +84,9 @@ function gaussian() {
   return Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(TWO_PI * Math.random());
 }
 
+// 泡泡的圆盘半径：比等面积圆稍大，被邻居围住时不起作用，贴外面时截出外侧圆弧
+const diskRadius = (target: number) => Math.sqrt(Math.max(0, target) / Math.PI) * 1.25;
+
 export default function BubblePop() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -111,37 +103,36 @@ export default function BubblePop() {
     let cx0 = 0;
     let cy0 = 0;
     let R = 0;
-    let rim: Cell = { xs: [], ys: [], labels: [], area: 0, cx: 0, cy: 0 };
 
     let sites: Site[] = [];
     let cells = new Map<number, Cell>();
-    const shards: Shard[] = [];
+    const drops: Drop[] = [];
     let nextId = 0;
     let time = 0;
-    let fade = 1; // 泡沫重新长出来时淡入
+    let fade = 1;
     let regrowClock = -1;
     let hoverId = -1;
-
-    const buildRim = () => {
-      rim = { xs: [], ys: [], labels: [], area: 0, cx: 0, cy: 0 };
-      for (let k = 0; k < RIM_SIDES; k++) {
-        const a = (k / RIM_SIDES) * TWO_PI;
-        rim.xs.push(cx0 + Math.cos(a) * R);
-        rim.ys.push(cy0 + Math.sin(a) * R);
-        rim.labels.push(CONTAINER);
-      }
-    };
 
     const computeCells = () => {
       const next = new Map<number, Cell>();
       for (const s of sites) {
-        // 近的站点先裁，多边形很快缩小，后面的裁剪就很便宜
+        const r = diskRadius(s.target);
+        if (r < 0.5) continue;
+        let poly: Cell = { xs: [], ys: [], labels: [], area: 0, cx: 0, cy: 0 };
+        for (let k = 0; k < DISK_SIDES; k++) {
+          const a = (k / DISK_SIDES) * TWO_PI;
+          poly.xs.push(s.x + Math.cos(a) * r);
+          poly.ys.push(s.y + Math.sin(a) * r);
+          poly.labels.push(FREE);
+        }
+        // 近的先裁（多边形很快变小）；离得比两圆半径之和还远的不可能相邻，跳过
         const others = sites
           .filter((o) => o !== s)
           .map((o) => ({ o, d: (o.x - s.x) ** 2 + (o.y - s.y) ** 2 }))
           .sort((a, b) => a.d - b.d);
-        let poly: Cell = { xs: rim.xs.slice(), ys: rim.ys.slice(), labels: rim.labels.slice(), area: 0, cx: 0, cy: 0 };
-        for (const { o } of others) {
+        for (const { o, d } of others) {
+          const reach = r + diskRadius(o.target);
+          if (d > reach * reach) continue;
           // |x-s|² - ws <= |x-o|² - wo  ⇔  2(o-s)·x <= |o|² - |s|² + ws - wo
           const ax = 2 * (o.x - s.x);
           const ay = 2 * (o.y - s.y);
@@ -149,37 +140,53 @@ export default function BubblePop() {
           poly = clip(poly, ax, ay, b, o.id);
           if (poly.xs.length < 3) break;
         }
+        if (poly.xs.length < 3) continue;
         measure(poly);
         next.set(s.id, poly);
       }
       cells = next;
     };
 
+    // 一步松弛：算格子 → 调权重逼近目标面积 → 站点向重心靠 → 整体轻轻向中心收拢
+    function relax(k: number) {
+      computeCells();
+      for (const s of sites) {
+        const cell = cells.get(s.id);
+        const area = cell ? cell.area : 0;
+        s.w += Math.min(0.9, 0.3 * k) * (s.target - area);
+        if (cell) {
+          const rate = Math.min(1, 0.1 * k);
+          s.x += (cell.cx - s.x) * rate;
+          s.y += (cell.cy - s.y) * rate;
+        }
+        const pull = Math.min(1, 0.007 * k);
+        s.x += (cx0 - s.x) * pull;
+        s.y += (cy0 - s.y) * pull;
+      }
+      const mean = sites.reduce((sum, s) => sum + s.w, 0) / Math.max(1, sites.length);
+      // 权重限幅：离群的泡泡面积永远到不了目标，不限的话权重会一直漂，回来时就被挤没了
+      const limit = (Math.PI * R * R) / Math.max(1, sites.length);
+      for (const s of sites) s.w = Math.max(-limit, Math.min(limit, s.w - mean));
+    }
+
     const seed = () => {
-      const count = Math.max(24, Math.round((Math.PI * R * R) / 1500));
       sites = [];
+      const count = Math.max(30, Math.round((Math.PI * R * R) / 1300));
       for (let i = 0; i < count; i++) {
+        // 外圈放得更密（泡泡更小）
         const a = Math.random() * TWO_PI;
-        const r = Math.sqrt(Math.random()) * R * 0.95;
-        sites.push({
-          id: nextId++,
-          x: cx0 + Math.cos(a) * r,
-          y: cy0 + Math.sin(a) * r,
-          w: 0,
-          target: 0,
-          base: Math.exp(gaussian() * 0.42), // 大小不一：对数正态
-          phase: Math.random() * TWO_PI,
-          dying: false,
-        });
+        const u = Math.pow(Math.random(), 0.42);
+        const d = u * R;
+        // 越靠外越小：中心约为外缘的 6 倍面积
+        const base = Math.exp(gaussian() * 0.3) * (1 - 0.84 * Math.pow(u, 1.6));
+        sites.push({ id: nextId++, x: cx0 + Math.cos(a) * d, y: cy0 + Math.sin(a) * d, w: 0, target: 0, base, phase: Math.random() * TWO_PI, hue: Math.random() * 360, dying: false });
       }
       const total = sites.reduce((sum, s) => sum + s.base, 0);
-      const area = Math.PI * R * R;
       for (const s of sites) {
-        s.base = (s.base / total) * area;
+        s.base = (s.base / total) * Math.PI * R * R;
         s.target = s.base;
       }
-      // 先松弛到像样的泡沫再显示
-      for (let i = 0; i < 90; i++) relax(1);
+      for (let i = 0; i < 140; i++) relax(1);
     };
 
     const layout = () => {
@@ -194,61 +201,46 @@ export default function BubblePop() {
       if (changed) {
         cx0 = width / 2;
         cy0 = height / 2;
-        R = Math.min(width, height) * 0.4;
-        buildRim();
+        R = Math.min(width, height) * 0.36;
         seed();
       }
       return true;
     };
-
-    // 一步松弛：算格子 → 调权重逼近目标面积 → 站点向重心靠
-    function relax(k: number) {
-      computeCells();
-      for (const s of sites) {
-        const cell = cells.get(s.id);
-        const area = cell && cell.xs.length >= 3 ? cell.area : 0;
-        s.w += Math.min(0.9, 0.35 * k) * (s.target - area);
-        if (cell && cell.xs.length >= 3) {
-          const rate = Math.min(1, 0.12 * k);
-          s.x += (cell.cx - s.x) * rate;
-          s.y += (cell.cy - s.y) * rate;
-        }
-      }
-      // 权重整体平移不改变图形，归零防止数值漂移
-      const mean = sites.reduce((sum, s) => sum + s.w, 0) / Math.max(1, sites.length);
-      for (const s of sites) s.w -= mean;
-    }
 
     const pop = (site: Site) => {
       const cell = cells.get(site.id);
       site.dying = true;
       if (!cell) return;
 
-      // 气体并进相邻的泡泡（按共享边分），没有邻居（贴着容器）时平分给所有泡泡
-      const neighbours = new Set(cell.labels.filter((l) => l !== CONTAINER));
-      const heirs = sites.filter((s) => neighbours.has(s.id) && !s.dying);
-      const pool = heirs.length ? heirs : sites.filter((s) => !s.dying);
-      for (const h of pool) h.base += site.base / pool.length;
+      // 被围住的泡泡：气并进邻居；贴外面的：气跑掉，泡沫团缩一点
+      const touchesOutside = cell.labels.includes(FREE);
+      if (!touchesOutside) {
+        const neighbours = new Set(cell.labels);
+        const heirs = sites.filter((s) => neighbours.has(s.id) && !s.dying);
+        for (const h of heirs) h.base += site.base / Math.max(1, heirs.length);
+      }
       site.base = 0;
 
-      // 泡壁碎片：每条边拆成几段，从泡泡中心向外飞散
+      // 迸成一圈小水珠：沿泡壁撒点，向外飞、稍微下坠、渐隐
       const { xs, ys } = cell;
-      for (let k = 0; k < xs.length; k++) {
-        const j = (k + 1) % xs.length;
-        const pieces = 3;
-        for (let p = 0; p < pieces; p++) {
-          const t0 = p / pieces + 0.04;
-          const t1 = (p + 1) / pieces - 0.04;
-          const x1 = xs[k] + (xs[j] - xs[k]) * t0;
-          const y1 = ys[k] + (ys[j] - ys[k]) * t0;
-          const x2 = xs[k] + (xs[j] - xs[k]) * t1;
-          const y2 = ys[k] + (ys[j] - ys[k]) * t1;
-          const mx = (x1 + x2) / 2 - cell.cx;
-          const my = (y1 + y2) / 2 - cell.cy;
-          const len = Math.hypot(mx, my) || 1;
-          const speed = 30 + Math.random() * 60;
-          shards.push({ x1, y1, x2, y2, vx: (mx / len) * speed, vy: (my / len) * speed, spin: (Math.random() - 0.5) * 6, age: 0, life: 0.45 + Math.random() * 0.3 });
-        }
+      let perimeter = 0;
+      for (let k = 0; k < xs.length; k++) perimeter += Math.hypot(xs[(k + 1) % xs.length] - xs[k], ys[(k + 1) % ys.length] - ys[k]);
+      const count = Math.round(10 + perimeter / 5);
+      const r = Math.sqrt(cell.area / Math.PI);
+      for (let i = 0; i < count; i++) {
+        const a = Math.random() * TWO_PI;
+        const at = r * (0.7 + Math.random() * 0.35);
+        const speed = (35 + Math.random() * 95) * (0.6 + r / 40);
+        drops.push({
+          x: cell.cx + Math.cos(a) * at,
+          y: cell.cy + Math.sin(a) * at,
+          vx: Math.cos(a) * speed,
+          vy: Math.sin(a) * speed,
+          age: 0,
+          life: 0.45 + Math.random() * 0.45,
+          size: 0.7 + Math.random() * 1.5,
+          hue: Math.random() * 360,
+        });
       }
     };
 
@@ -267,42 +259,22 @@ export default function BubblePop() {
       }
       fade = Math.min(1, fade + dt * 1.6);
 
-      // 呼吸：目标面积缓慢起伏，泡沫一直在轻轻动
       for (const s of sites) {
-        if (s.dying) {
-          // 正在破的泡泡迅速缩小，邻居撑开补上
-          s.target = Math.max(0, s.target - s.target * Math.min(1, dt * 7) - dt * 40);
-        } else {
-          s.target += (s.base * (1 + 0.06 * Math.sin(time * 0.8 + s.phase)) - s.target) * Math.min(1, dt * 3);
-        }
+        if (s.dying) s.target = Math.max(0, s.target - s.target * Math.min(1, dt * 8) - dt * 30);
+        else s.target += (s.base * (1 + 0.06 * Math.sin(time * 0.8 + s.phase)) - s.target) * Math.min(1, dt * 3);
       }
 
       relax(k);
+      sites = sites.filter((s) => !s.dying || (cells.get(s.id)?.area ?? 0) > 3);
 
-      // 面积缩到几乎为零的泡泡正式移除
-      sites = sites.filter((s) => {
-        if (!s.dying) return true;
-        const cell = cells.get(s.id);
-        return !!cell && cell.xs.length >= 3 && cell.area > 4;
-      });
-
-      for (const sh of shards) {
-        sh.age += dt;
-        sh.x1 += sh.vx * dt;
-        sh.y1 += sh.vy * dt;
-        sh.x2 += sh.vx * dt;
-        sh.y2 += sh.vy * dt;
-        // 绕中点转一点
-        const mx = (sh.x1 + sh.x2) / 2;
-        const my = (sh.y1 + sh.y2) / 2;
-        const a = sh.spin * dt;
-        const rot = (x: number, y: number) => [mx + (x - mx) * Math.cos(a) - (y - my) * Math.sin(a), my + (x - mx) * Math.sin(a) + (y - my) * Math.cos(a)];
-        [sh.x1, sh.y1] = rot(sh.x1, sh.y1);
-        [sh.x2, sh.y2] = rot(sh.x2, sh.y2);
-        sh.vx *= 0.92;
-        sh.vy *= 0.92;
+      for (const d of drops) {
+        d.age += dt;
+        d.vx *= 0.9;
+        d.vy = d.vy * 0.9 + 70 * dt;
+        d.x += d.vx * dt;
+        d.y += d.vy * dt;
       }
-      for (let i = shards.length - 1; i >= 0; i--) if (shards[i].age >= shards[i].life) shards.splice(i, 1);
+      for (let i = drops.length - 1; i >= 0; i--) if (drops[i].age >= drops[i].life) drops.splice(i, 1);
     };
 
     const draw = () => {
@@ -311,11 +283,14 @@ export default function BubblePop() {
       ctx.fillRect(0, 0, width, height);
 
       const dying = new Set(sites.filter((s) => s.dying).map((s) => s.id));
+      const radius = new Map<number, number>();
+      for (const [id, cell] of cells) radius.set(id, Math.sqrt(cell.area / Math.PI));
+      // 两个相邻泡泡各画一次共享的壁：位置一致时叠在一起看不出来；
+      // 外圈两个泡泡没挤实、两侧算出的壁对不上时，各画各的才能保证每个泡泡都是闭合的
 
-      // 悬停的泡泡：极淡的填充
       const hovered = hoverId >= 0 && !dying.has(hoverId) ? cells.get(hoverId) : undefined;
-      if (hovered && hovered.xs.length >= 3) {
-        ctx.fillStyle = 'rgba(245, 243, 238, 0.07)';
+      if (hovered) {
+        ctx.fillStyle = 'rgba(245, 243, 238, 0.08)';
         ctx.beginPath();
         hovered.xs.forEach((x, i) => (i ? ctx.lineTo(x, hovered.ys[i]) : ctx.moveTo(x, hovered.ys[i])));
         ctx.closePath();
@@ -323,57 +298,129 @@ export default function BubblePop() {
       }
 
       ctx.globalAlpha = fade;
+
+      // 光泽：每个泡泡内侧一层很淡的彩虹薄膜（越靠边越明显），左上方一道弧形高光和一个亮点
+      ctx.globalCompositeOperation = 'lighter';
+      for (const s of sites) {
+        if (s.dying) continue;
+        const cell = cells.get(s.id);
+        if (!cell) continue;
+        const r = radius.get(s.id) ?? 1;
+        const hue = (s.hue + time * 18) % 360;
+        const film = ctx.createRadialGradient(cell.cx, cell.cy, r * 0.35, cell.cx, cell.cy, r * 1.05);
+        film.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        film.addColorStop(0.7, `hsla(${hue}, 85%, 70%, 0.05)`);
+        film.addColorStop(1, `hsla(${(hue + 90) % 360}, 90%, 72%, 0.16)`);
+        ctx.fillStyle = film;
+        ctx.beginPath();
+        cell.xs.forEach((x, i) => (i ? ctx.lineTo(x, cell.ys[i]) : ctx.moveTo(x, cell.ys[i])));
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = Math.max(0.8, r * 0.07);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(cell.cx, cell.cy, r * 0.6, Math.PI * 1.08, Math.PI * 1.38);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.beginPath();
+        ctx.arc(cell.cx + Math.cos(Math.PI * 1.47) * r * 0.6, cell.cy + Math.sin(Math.PI * 1.47) * r * 0.6, Math.max(0.7, r * 0.045), 0, TWO_PI);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+
       ctx.strokeStyle = WALL;
       ctx.fillStyle = WALL;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      // 泡壁：每个活着的泡泡画自己的边；与正在破的泡泡之间的壁不画，露出破口
       const joints: number[] = [];
       for (const s of sites) {
         if (s.dying) continue;
         const cell = cells.get(s.id);
-        if (!cell || cell.xs.length < 3) continue;
+        if (!cell) continue;
         const { xs, ys, labels } = cell;
         const n = xs.length;
+        const ri = radius.get(s.id) ?? 1;
+
+        // 泡壁：主体是白的，带一点随时间流转的彩虹色调
+        const tint = `hsl(${(s.hue + time * 18 + 40) % 360}, 45%, 88%)`;
+        ctx.strokeStyle = tint;
+
+        // 外侧自由边：连续的圆弧一笔画出
+        ctx.lineWidth = 1.25;
+        ctx.beginPath();
         for (let k = 0; k < n; k++) {
-          const label = labels[k];
-          if (dying.has(label)) continue;
+          if (labels[k] !== FREE) continue;
           const j = (k + 1) % n;
-          ctx.lineWidth = label === CONTAINER ? 1.7 : 1.15;
-          ctx.beginPath();
           ctx.moveTo(xs[k], ys[k]);
           ctx.lineTo(xs[j], ys[j]);
+        }
+        ctx.stroke();
+
+        // 与邻居之间的壁，按压力差弯曲
+        ctx.lineWidth = 1.1;
+        for (let k = 0; k < n; k++) {
+          const label = labels[k];
+          if (label === FREE || dying.has(label)) continue;
+          const j = (k + 1) % n;
+          const x1 = xs[k];
+          const y1 = ys[k];
+          const x2 = xs[j];
+          const y2 = ys[j];
+          const len = Math.hypot(x2 - x1, y2 - y1);
+          if (len < 0.5) continue;
+          const rj = radius.get(label) ?? ri;
+          // 弧高 = L²/8 · (1/ri - 1/rj)：小泡泡（压力大）一侧鼓向大泡泡
+          let sag = ((len * len) / 8) * (1 / ri - 1 / rj);
+          sag = Math.max(-len * 0.22, Math.min(len * 0.22, sag));
+          const mx = (x1 + x2) / 2;
+          const my = (y1 + y2) / 2;
+          // 法线指向本泡泡外侧
+          let nx = -(y2 - y1) / len;
+          let ny = (x2 - x1) / len;
+          if (nx * (mx - cell.cx) + ny * (my - cell.cy) < 0) {
+            nx = -nx;
+            ny = -ny;
+          }
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.quadraticCurveTo(mx + nx * sag * 2, my + ny * sag * 2, x2, y2);
           ctx.stroke();
-          // 三壁交汇处（Plateau 边界）加粗一点
+        }
+
+        // 壁的交汇处稍微加粗
+        for (let k = 0; k < n; k++) {
+          const cur = labels[k];
           const prev = labels[(k - 1 + n) % n];
-          if (label !== CONTAINER && prev !== label && !dying.has(prev)) joints.push(xs[k], ys[k]);
+          if (cur !== prev && !dying.has(cur) && !dying.has(prev)) joints.push(xs[k], ys[k]);
         }
       }
       for (let i = 0; i < joints.length; i += 2) {
         ctx.beginPath();
-        ctx.arc(joints[i], joints[i + 1], 1.35, 0, TWO_PI);
+        ctx.arc(joints[i], joints[i + 1], 1.2, 0, TWO_PI);
         ctx.fill();
       }
 
-      // 飞散的泡壁碎片
-      ctx.lineWidth = 1;
-      for (const sh of shards) {
-        ctx.globalAlpha = fade * (1 - sh.age / sh.life);
+      // 小水珠：带一点彩虹光泽的亮点
+      ctx.globalCompositeOperation = 'lighter';
+      for (const d of drops) {
+        const alpha = 1 - d.age / d.life;
+        ctx.fillStyle = `hsla(${d.hue}, 70%, 85%, ${(alpha * fade).toFixed(3)})`;
         ctx.beginPath();
-        ctx.moveTo(sh.x1, sh.y1);
-        ctx.lineTo(sh.x2, sh.y2);
-        ctx.stroke();
+        ctx.arc(d.x, d.y, d.size * (0.55 + alpha * 0.45), 0, TWO_PI);
+        ctx.fill();
       }
+      ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = 1;
     };
 
     const siteAt = (x: number, y: number) => {
-      if (Math.hypot(x - cx0, y - cy0) > R) return null;
       for (const s of sites) {
         if (s.dying) continue;
         const cell = cells.get(s.id);
-        if (cell && cell.xs.length >= 3 && contains(cell, x, y)) return s;
+        if (cell && contains(cell, x, y)) return s;
       }
       return null;
     };
