@@ -28,7 +28,7 @@ function CardBody({ item }: { item: PlaygroundItem }) {
     case 'video':
       return <PlaygroundVideo src={item.src} poster={item.poster} width={item.width} height={item.height} />;
     case 'interactive':
-      return <InteractiveStage component={item.component} aspectRatio={item.aspectRatio} />;
+      return <InteractiveStage component={item.component} aspectRatio={item.aspectRatio} resettable={item.resettable} />;
   }
 }
 

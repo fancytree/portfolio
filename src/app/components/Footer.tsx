@@ -3,7 +3,8 @@
 // 页脚组件 —— 按 Figma node 27:892 实现：整版橘色，社交链接 + 回到顶部，
 // "Let's work together" 大标题 + 徽章印章（黑底橙色弧形文字 + 信封图标），版权栏收尾。
 
-import { ArrowRight, ArrowUp, Mail } from 'lucide-react';
+import { ArrowRight, ArrowUp } from 'lucide-react';
+import ReachOutBadge from './ReachOutBadge';
 
 const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
@@ -69,14 +70,7 @@ export default function Footer() {
             />
           </a>
 
-          <a
-            href="mailto:mei.chai@mail.polimi.it"
-            aria-label="Email Mei"
-            className="relative flex size-[140px] shrink-0 items-center justify-center self-center transition-transform duration-300 hover:scale-105 sm:size-[170px] md:size-[214px]"
-          >
-            <img src="/img/footer/reach-out-badge.svg" alt="" className="mei-badge-spin absolute inset-0 size-full" />
-            <Mail size={28} strokeWidth={1.5} className="relative text-[#ed5b2b] md:size-8" />
-          </a>
+          <ReachOutBadge className="size-[140px] self-center sm:size-[170px] md:size-[214px]" />
         </div>
 
         <div className="flex w-full items-end justify-center border-t border-[#0a0a0a] py-2">

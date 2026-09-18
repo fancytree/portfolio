@@ -39,6 +39,8 @@ export type PlaygroundInteractive = PlaygroundBase & {
   component: InteractiveId;
   // 舞台宽高比，默认 1（正方形）
   aspectRatio?: number;
+  // 没有状态可重置的组件（比如只是个链接）可以关掉右下角的重置按钮
+  resettable?: boolean;
 };
 
 export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive;
@@ -56,6 +58,12 @@ export const playgroundItems: PlaygroundItem[] = [
     alt: 'A hand-drawn girl with an orange bow waving hello',
     width: 844,
     height: 608,
+  },
+  {
+    id: 'interactive-reach-out',
+    kind: 'interactive',
+    component: 'reach-out',
+    resettable: false,
   },
   {
     // 摘自 Lenny's Podcast 访谈（约 22:22–27:34），去掉口头语、用省略号拼接原句
