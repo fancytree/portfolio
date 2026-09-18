@@ -414,6 +414,12 @@ function SalesRangeToggle({ range, onChange }: { range: SalesRange; onChange: (r
 /** 销售表现图：与线上同一套曲线，作品集用英文 */
 export function SalesPerformanceCard() {
   const [range, setRange] = useState<SalesRange>('1M');
+  const data = attachSalesSeries(SALES_RANGES[range].points);
+  // 当前时段合计：与曲线同一份数据，切换时段即更新
+  const totals = data.reduce(
+    (sum, point) => ({ net: sum.net + point.net, sales: sum.sales + point.sales, returns: sum.returns + point.returns }),
+    { net: 0, sales: 0, returns: 0 },
+  );
 
   return (
     <ShowcaseCard
@@ -423,9 +429,17 @@ export function SalesPerformanceCard() {
       action={<SalesRangeToggle range={range} onChange={setRange} />}
     >
       <div className="px-6 pb-5">
+        <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <p className="text-2xl font-semibold tracking-tight tabular-nums text-foreground">{formatDemoAmount(totals.net)}</p>
+          <p className="text-xs tabular-nums text-muted-foreground">
+            Sales {formatDemoAmount(totals.sales)}
+            <span aria-hidden className="mx-1.5">·</span>
+            Refunds −{formatDemoAmount(totals.returns)}
+          </p>
+        </div>
         <SalesTrendChart
           animationKey={range}
-          data={attachSalesSeries(SALES_RANGES[range].points)}
+          data={data}
           isLoading={false}
           locale="en"
         />
