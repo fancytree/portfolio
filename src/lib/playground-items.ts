@@ -43,7 +43,6 @@ export type PlaygroundInteractive = PlaygroundBase & {
 
 export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive;
 
-// 以下为占位内容，先把布局撑起来，之后替换成真实素材。
 export const playgroundItems: PlaygroundItem[] = [
   {
     id: 'interactive-torn-mesh',
@@ -59,32 +58,18 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 608,
   },
   {
-    // 摘自 Lenny's Podcast 访谈（约 22:22–27:34 与 32:23），去掉口头语、用省略号拼接原句
+    // 摘自 Lenny's Podcast 访谈（约 22:22–27:34），去掉口头语、用省略号拼接原句
     id: 'quote-ian-silber',
     kind: 'quote',
-    text: "I think it already is an incredible product designer. That doesn't necessarily mean that it's the best visual designer, or best at information hierarchy, or even interaction design. … Truly understanding what people need. Inventing something new. Somebody had a point of view about this. … Just do less. Don't design it if you don't have to.",
+    text: "I think it already is an incredible product designer. That doesn't necessarily mean that it's the best visual designer, or best at information hierarchy, or even interaction design. … Truly understanding what people need. Inventing something new. Somebody had a point of view about this.",
     source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
   {
-    id: 'quote-simplicity',
+    // 同一期 Lenny's Podcast（约 32:23），他给团队的建议："Just do less… don't design it. If you don't have to, …"
+    id: 'quote-ian-silber-do-less',
     kind: 'quote',
-    text: 'Placeholder quote — something I keep coming back to when a design feels too loud.',
-    source: 'Someone wise',
-  },
-  {
-    id: 'image-memq',
-    kind: 'image',
-    src: '/img/MemQ/Cover.png',
-    alt: 'MemQ cover placeholder',
-    width: 3200,
-    height: 2400,
-  },
-  {
-    id: 'video-memq',
-    kind: 'video',
-    src: '/img/MemQ Video.mp4',
-    width: 334,
-    height: 720,
+    text: "Just do less. Don't design it if you don't have to.",
+    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
   {
     // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
@@ -92,30 +77,5 @@ export const playgroundItems: PlaygroundItem[] = [
     kind: 'quote',
     text: 'The human feedback loop of watching people use something and understanding that.',
     source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
-  },
-  {
-    id: 'quote-short',
-    kind: 'quote',
-    text: 'Make it work, then make it calm.',
-  },
-  {
-    id: 'image-mono',
-    kind: 'image',
-    src: '/img/Mono/mono-cover-cutout.png',
-    alt: 'Mono cover placeholder',
-    width: 1672,
-    height: 941,
-  },
-  {
-    id: 'interactive-squish',
-    kind: 'interactive',
-    component: 'squish-button',
-    aspectRatio: 4 / 3,
-  },
-  {
-    id: 'quote-long',
-    kind: 'quote',
-    text: 'Placeholder for a longer thought. Quotes can run a few lines — the card grows with the text, and the masonry column absorbs the height.',
-    source: 'Notebook, 2026',
   },
 ];
