@@ -87,6 +87,13 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 720,
   },
   {
+    // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
+    id: 'quote-ian-silber-feedback',
+    kind: 'quote',
+    text: 'The human feedback loop of watching people use something and understanding that.',
+    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
+  },
+  {
     id: 'quote-short',
     kind: 'quote',
     text: 'Make it work, then make it calm.',
