@@ -44,6 +44,11 @@ export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo
 // 以下为占位内容，先把布局撑起来，之后替换成真实素材。
 export const playgroundItems: PlaygroundItem[] = [
   {
+    id: 'interactive-torn-mesh',
+    kind: 'interactive',
+    component: 'torn-mesh',
+  },
+  {
     id: 'quote-simplicity',
     kind: 'quote',
     text: 'Placeholder quote — something I keep coming back to when a design feels too loud.',
@@ -56,11 +61,6 @@ export const playgroundItems: PlaygroundItem[] = [
     alt: 'MemQ cover placeholder',
     width: 3200,
     height: 2400,
-  },
-  {
-    id: 'interactive-dot-field',
-    kind: 'interactive',
-    component: 'dot-field',
   },
   {
     id: 'video-memq',
