@@ -6,10 +6,6 @@ import type { InteractiveId } from '@/app/playground/interactive';
 
 type PlaygroundBase = {
   id: string;
-  // 卡片下方的一行说明，可选
-  caption?: string;
-  // 小标签，例如 "Motion"、"Prototype"
-  tag?: string;
 };
 
 export type PlaygroundQuote = PlaygroundBase & {
@@ -60,15 +56,11 @@ export const playgroundItems: PlaygroundItem[] = [
     alt: 'MemQ cover placeholder',
     width: 3200,
     height: 2400,
-    caption: 'Placeholder image card',
-    tag: 'Visual',
   },
   {
     id: 'interactive-dot-field',
     kind: 'interactive',
     component: 'dot-field',
-    caption: 'Move your cursor across the dots',
-    tag: 'Interaction',
   },
   {
     id: 'video-memq',
@@ -76,8 +68,6 @@ export const playgroundItems: PlaygroundItem[] = [
     src: '/img/MemQ Video.mp4',
     width: 334,
     height: 720,
-    caption: 'Placeholder video card',
-    tag: 'Motion',
   },
   {
     id: 'quote-short',
@@ -91,15 +81,12 @@ export const playgroundItems: PlaygroundItem[] = [
     alt: 'Mono cover placeholder',
     width: 1672,
     height: 941,
-    tag: 'Visual',
   },
   {
     id: 'interactive-squish',
     kind: 'interactive',
     component: 'squish-button',
     aspectRatio: 4 / 3,
-    caption: 'A button that enjoys being pressed',
-    tag: 'Micro-interaction',
   },
   {
     id: 'quote-long',

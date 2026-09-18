@@ -1,6 +1,7 @@
 'use client';
 
-// 视频卡片：静音循环，只在进入视口时播放，离开就暂停，避免一屏多个视频同时解码。
+// 视频卡片：静音循环自动播放。
+// React 不会把 muted 写进 SSR 的 HTML，浏览器可能因此拦下 autoPlay，所以挂载后再手动 play 一次兜底。
 
 import { useEffect, useRef } from 'react';
 
@@ -12,15 +13,8 @@ export default function PlaygroundVideo({ src, poster, width, height }: Props) {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) video.play().catch(() => {});
-        else video.pause();
-      },
-      { threshold: 0.25 }
-    );
-    observer.observe(video);
-    return () => observer.disconnect();
+    video.muted = true;
+    video.play().catch(() => {});
   }, []);
 
   return (
@@ -28,10 +22,10 @@ export default function PlaygroundVideo({ src, poster, width, height }: Props) {
       ref={videoRef}
       src={src}
       poster={poster}
+      autoPlay
       muted
       loop
       playsInline
-      preload="metadata"
       style={{ aspectRatio: `${width} / ${height}` }}
     />
   );

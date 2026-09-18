@@ -51,34 +51,28 @@
 }
 
 .card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0 0 28px;
+  margin: 0 0 20px;
   break-inside: avoid;
-}
-
-.media {
   overflow: hidden;
   border: 1px solid rgb(10 10 10 / 0.08);
   border-radius: 16px;
   background: var(--mei-surface);
 }
 
-.media img,
-.media video {
+.card img,
+.card video {
   display: block;
   width: 100%;
   height: auto;
   object-fit: cover;
 }
 
-.card[data-kind='quote'] .media {
+.card[data-kind='quote'] {
   border-color: transparent;
   background: var(--mei-paper);
 }
 
-.card[data-kind='interactive'] .media {
+.card[data-kind='interactive'] {
   background: #fafaf8;
 }
 
@@ -107,26 +101,20 @@
 }
 
 .stage {
+  position: relative;
   width: 100%;
 }
 
-.meta {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 0 4px;
-  color: var(--mei-ink);
-  font-family: var(--mei-font-primary);
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.tag {
-  flex-shrink: 0;
-  margin-left: auto;
-  color: var(--mei-muted);
-  font-family: var(--font-dm-mono), monospace;
-  font-size: 11px;
-  text-transform: uppercase;
+.interactiveBadge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--mei-ink);
+  color: #fff;
+  pointer-events: none;
 }

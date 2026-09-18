@@ -1,6 +1,7 @@
-// 单张 Playground 卡片：按 kind 渲染不同内容，统一的外框 + 可选的说明行。
+// 单张 Playground 卡片：按 kind 渲染不同内容，卡片外不放任何文字信息。
 
 import Image from 'next/image';
+import { MousePointer2 } from 'lucide-react';
 import type { PlaygroundItem } from '@/lib/playground-items';
 import { interactiveComponents } from './interactive';
 import PlaygroundVideo from './PlaygroundVideo';
@@ -32,6 +33,10 @@ function CardBody({ item }: { item: PlaygroundItem }) {
       return (
         <div className={styles.stage} style={{ aspectRatio: item.aspectRatio ?? 1 }}>
           <Component />
+          {/* 右下角小标志：提示这张卡片可以玩 */}
+          <span className={styles.interactiveBadge} aria-label="Interactive" title="Interactive">
+            <MousePointer2 size={12} strokeWidth={2} aria-hidden />
+          </span>
         </div>
       );
     }
@@ -39,18 +44,9 @@ function CardBody({ item }: { item: PlaygroundItem }) {
 }
 
 export default function PlaygroundCard({ item }: { item: PlaygroundItem }) {
-  const hasMeta = item.caption || item.tag;
   return (
     <article className={styles.card} data-kind={item.kind}>
-      <div className={styles.media}>
-        <CardBody item={item} />
-      </div>
-      {hasMeta && (
-        <footer className={styles.meta}>
-          {item.caption && <span>{item.caption}</span>}
-          {item.tag && <span className={styles.tag}>{item.tag}</span>}
-        </footer>
-      )}
+      <CardBody item={item} />
     </article>
   );
 }
