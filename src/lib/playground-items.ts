@@ -93,11 +93,6 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 941,
   },
   {
-    id: 'interactive-particle-fish',
-    kind: 'interactive',
-    component: 'particle-fish',
-  },
-  {
     id: 'interactive-squish',
     kind: 'interactive',
     component: 'squish-button',
