@@ -78,4 +78,11 @@ export const playgroundItems: PlaygroundItem[] = [
     text: 'The human feedback loop of watching people use something and understanding that.',
     source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
+  {
+    // Lenny's Podcast《AI's third era: the rise of persistent AI coworkers》开场（00:00）的原句
+    id: 'quote-tara-seshan-third-era',
+    kind: 'quote',
+    text: 'That third era that might come soon is how do you work with a persistent coworker who is able to get things done with you?',
+    source: "Tara Seshan, Product Lead for ChatGPT Work at OpenAI, on Lenny's Podcast",
+  },
 ];
