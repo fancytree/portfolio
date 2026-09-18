@@ -12,7 +12,7 @@
 import { useEffect, useRef } from 'react';
 
 const JOINTS = 28;
-const BODY_END = 0.64; // 脊柱前 64% 是身体，后面是飘逸的长尾鳍
+const BODY_END = 0.78; // 脊柱前 78% 是身体，后面是双叶叉尾
 const BODY_BEND = 0.2; // 身体每节最大弯折（弧度）
 const TAIL_BEND = 0.34; // 尾部更软
 const TWO_PI = Math.PI * 2;
@@ -23,8 +23,12 @@ const PALETTE: [number, number, number][] = [
   [196, 62, 30], // 1 深橙
   [10, 10, 10], // 2 墨 --mei-ink
   [176, 164, 146], // 3 米（在浅底上要压暗一些才看得见）
-  [120, 110, 98], // 4 灰褐：鳍、触须
+  [120, 110, 98], // 4 灰褐：轮廓、触须
+  [226, 170, 140], // 5 鳍膜：半透明的浅暖色
+  [168, 112, 86], // 6 鳍条
 ];
+// 绘制顺序：鳍先画、压在身体下面，看起来是从身体侧面长出来的；轮廓最后画保持清晰
+const DRAW_ORDER = [5, 6, 3, 0, 1, 2, 4];
 const ALPHA_STEPS = 8;
 
 const enum Part {
@@ -42,6 +46,7 @@ type Particles = {
   s: Float32Array; // 沿脊柱 0 头 → 1 尾尖
   v: Float32Array; // 横向 -1..1（鳍：沿鳍条 0..1）
   w: Float32Array; // 鳍：鳍条序号 / 胸鳍腹鳍的侧别等附加参数
+  r: Float32Array; // 鳍：沿鳍条的半径比例 0..1
   side: Int8Array;
   color: Uint8Array;
   alpha: Float32Array; // 基础浓度 0..1
@@ -54,14 +59,14 @@ function frac(x: number) {
 
 // 身体半宽轮廓（占整条鱼长度的比例）：修长的流线型 —— 吻部收尖、最宽处在前四分之一、
 // 之后一路平滑收到细细的尾柄
-const BODY_HALF_WIDTH = 0.072;
+const BODY_HALF_WIDTH = 0.086;
 function bodyWidth(u: number) {
   if (u < 0.24) return BODY_HALF_WIDTH * Math.pow(Math.max(0, u) / 0.24, 0.62);
   return BODY_HALF_WIDTH * (1 - 0.84 * Math.pow((u - 0.24) / 0.76, 1.25));
 }
 
 function buildParticles(): Particles {
-  const list: { part: Part; s: number; v: number; w: number; side: number; color: number; alpha: number; size: number }[] = [];
+  const list: { part: Part; s: number; v: number; w: number; r?: number; side: number; color: number; alpha: number; size: number }[] = [];
   const push = (p: (typeof list)[number]) => list.push(p);
 
   // 锦鲤斑纹：几层正弦叠加的平滑噪声，每条鱼随机相位
@@ -113,45 +118,45 @@ function buildParticles(): Particles {
     push({ part: Part.Body, s: u * BODY_END, v: v * 0.98, w: 0, side: 0, color: 4, alpha: 0.5, size: 1 });
   }
 
-  // 尾鳍：从尾柄散开的扇形，沿鳍条铺点，尾尖半透明并带分叉
-  const RAYS = 13;
-  for (let ray = 0; ray < RAYS; ray++) {
-    const v = (ray / (RAYS - 1)) * 2 - 1;
-    for (let k = 0; k < 56; k++) {
-      const t = (k + Math.random() * 0.8) / 56;
-      if (t > 0.72 && Math.abs(v) < (t - 0.72) * 2.6) continue; // 分叉缺口
-      push({
-        part: Part.Tail,
-        s: BODY_END - 0.02 + t * (1 - BODY_END + 0.02),
-        v: v + (Math.random() - 0.5) * 0.08,
-        w: t,
-        side: 0,
-        color: t < 0.25 ? 0 : 4,
-        alpha: 0.65 * (1 - t * 0.8),
-        size: 1 - t * 0.35,
-      });
+  // 尾鳍：锦鲤的双叶叉尾。v 为横向 -1..1、t 为沿尾长 0..1：
+  // 中间的鳍条短（V 形分叉），两侧长，尾瓣末端再收圆。鳍膜均匀铺点，鳍条单独加密。
+  const tailReach = (v: number) => 1 - 0.42 * Math.pow(1 - Math.abs(v), 1.4) - 0.1 * Math.pow(Math.abs(v), 6);
+  for (let i = 0; i < 900; i++) {
+    const v = frac(i * 0.618033988749895) * 2 - 1;
+    const t = frac(i * 0.754877666246693);
+    if (t > tailReach(v)) continue;
+    push({ part: Part.Tail, s: t, v, w: 0, side: 0, color: 5, alpha: 0.5 * (1 - t * 0.45), size: 1.05 });
+  }
+  const TAIL_RAYS = 16;
+  for (let ray = 0; ray < TAIL_RAYS; ray++) {
+    const v = (ray / (TAIL_RAYS - 1)) * 2 - 1;
+    const reach = tailReach(v);
+    for (let k = 0; k < 30; k++) {
+      const t = (k / 29) * reach;
+      push({ part: Part.Tail, s: t, v, w: 1, side: 0, color: 6, alpha: 0.62 * (1 - t * 0.35), size: 0.8 });
     }
   }
 
-  // 胸鳍（前）和腹鳍（后），左右各一；w 记长度比例，v 记沿鳍条位置
-  for (const [anchor, length, rays] of [
-    [0.2, 1, 7],
-    [0.5, 0.55, 5],
+  // 胸鳍（大）和腹鳍（小）：圆扇形。v 为扇面内的角度 -1..1，r 为半径 0..1；
+  // 扇缘是圆弧，鳍条从根部放射出去
+  const finEdge = (v: number) => Math.sqrt(1 - 0.5 * v * v);
+  for (const [kind, anchor] of [
+    [0, 0.2],
+    [1, 0.55],
   ] as const) {
     for (const side of [-1, 1]) {
+      const membrane = kind === 0 ? 420 : 180;
+      for (let i = 0; i < membrane; i++) {
+        const v = frac(i * 0.618033988749895) * 2 - 1;
+        const r = Math.sqrt(frac(i * 0.754877666246693)) * finEdge(v);
+        push({ part: Part.Fin, s: anchor * BODY_END, v, r, w: kind, side, color: 5, alpha: 0.5 * (1 - r * 0.35), size: 1 });
+      }
+      const rays = kind === 0 ? 9 : 6;
       for (let ray = 0; ray < rays; ray++) {
-        for (let k = 1; k <= 14; k++) {
-          const t = k / 14;
-          push({
-            part: Part.Fin,
-            s: anchor * BODY_END,
-            v: t,
-            w: length * 10 + ray / rays, // 整数部分长度、小数部分鳍条序号
-            side,
-            color: 4,
-            alpha: 0.55 * (1 - t * 0.6),
-            size: 1,
-          });
+        const v = (ray / (rays - 1)) * 2 - 1;
+        for (let k = 1; k <= 18; k++) {
+          const r = (k / 18) * finEdge(v);
+          push({ part: Part.Fin, s: anchor * BODY_END, v, r, w: kind, side, color: 6, alpha: 0.6 * (1 - r * 0.3), size: 0.8 });
         }
       }
     }
@@ -186,6 +191,7 @@ function buildParticles(): Particles {
     s: new Float32Array(count),
     v: new Float32Array(count),
     w: new Float32Array(count),
+    r: new Float32Array(count),
     side: new Int8Array(count),
     color: new Uint8Array(count),
     alpha: new Float32Array(count),
@@ -196,6 +202,7 @@ function buildParticles(): Particles {
     p.s[i] = q.s;
     p.v[i] = q.v;
     p.w[i] = q.w;
+    p.r[i] = q.r ?? 0;
     p.side[i] = q.side;
     p.color[i] = q.color;
     p.alpha[i] = Math.min(1, q.alpha);
@@ -284,7 +291,8 @@ export default function ParticleFish() {
       const dist = Math.hypot(tx, ty);
 
       // 离目标很近时不再追角度（否则目标在嘴边会让鱼原地打转抖动），只顺势滑行
-      const maxTurn = (3.6 + (1 - Math.min(1, speed / L)) * 1.4) * dt;
+      // 转向速度受游速限制：转弯半径至少约 0.32 个鱼长，慢游时也不会原地蜷成一团
+      const maxTurn = Math.min(4.2, Math.max(0.7, speed / (L * 0.32))) * dt;
       // 预判：照当前朝向再游一小段会不会出画面，会的话先转向画面中心
       const aheadX = jx[0] + Math.cos(heading) * L * 0.45;
       const aheadY = jy[0] + Math.sin(heading) * L * 0.45;
@@ -406,11 +414,11 @@ export default function ParticleFish() {
           x = sx - Math.sin(a) * off;
           y = sy + Math.cos(a) * off;
         } else if (part === Part.Tail) {
-          const { x: sx, y: sy, a } = sample(s);
-          const t = p.w[i];
-          // 尾鳍宽度从尾柄往外散开，边缘再加一层飘动
-          const spread = L * (0.012 + 0.13 * Math.pow(t, 0.9));
-          const flutter = Math.sin(swimPhase * 1.3 - t * 7 + p.v[i] * 2) * t * L * 0.03;
+          // 尾鳍挂在脊柱最后一段上，所以跟着身体一起甩；尾瓣边缘再有一点滞后的飘动
+          const t = s;
+          const { x: sx, y: sy, a } = sample(BODY_END - 0.01 + t * (1 - BODY_END + 0.01));
+          const spread = L * (0.016 + 0.125 * Math.pow(t, 0.75));
+          const flutter = Math.sin(swimPhase - t * 3.2 - Math.abs(p.v[i]) * 1.2) * t * t * L * 0.028;
           const off = p.v[i] * spread + flutter;
           x = sx - Math.sin(a) * off;
           y = sy + Math.cos(a) * off;
@@ -418,19 +426,21 @@ export default function ParticleFish() {
           const { x: sx, y: sy, a } = sample(s);
           const u = s / BODY_END;
           const side = p.side[i];
-          const len = Math.floor(p.w[i]) / 10;
-          const ray = p.w[i] - Math.floor(p.w[i]);
-          const t = p.v[i];
-          const edge = bodyWidth(u) * L * 0.85;
-          // 鳍向后外侧张开，拍动时张角来回摆
-          const flap = Math.sin(finPhase + (len < 0.8 ? 1.7 : 0)) * 0.35;
-          const spreadAngle = (1.05 + flap + (ray - 0.5) * 0.7) * side;
-          const dir = a + Math.PI - spreadAngle; // 从“向后”往外侧偏
-          const reach = t * L * 0.15 * len;
+          const pectoral = p.w[i] === 0;
+          const finLen = L * (pectoral ? 0.13 : 0.075);
+          // 鳍根贴在身体侧缘略靠里，扇面被身体压住一截
+          const edge = bodyWidth(u) * L * 0.7;
           const bx = sx - Math.sin(a) * edge * side;
           const by = sy + Math.cos(a) * edge * side;
-          x = bx + Math.cos(dir) * reach;
-          y = by + Math.sin(dir) * reach;
+          // 张角：慢游时张开划水，快游时往后收贴向身体；再叠加一拍一拍的划动
+          const speedFold = Math.min(1, speed / (L * 1.3));
+          const stroke = Math.sin(finPhase + (pectoral ? 0 : 1.9) + side * 0.4);
+          const sweep = 0.35 + speedFold * 0.75 + stroke * (0.28 - speedFold * 0.15);
+          const center = a + side * (Math.PI / 2 + sweep);
+          const theta = center + p.v[i] * 0.55 * side;
+          const reach = p.r[i] * finLen;
+          x = bx + Math.cos(theta) * reach;
+          y = by + Math.sin(theta) * reach;
         } else if (part === Part.Eye) {
           const { x: sx, y: sy, a } = sample(s);
           const off = p.v[i] * bodyWidth(s / BODY_END) * L;
@@ -457,7 +467,7 @@ export default function ParticleFish() {
         b.push(x, y, p.size[i]);
       }
 
-      for (let c = 0; c < PALETTE.length; c++) {
+      for (const c of DRAW_ORDER) {
         for (let k = 0; k < ALPHA_STEPS; k++) {
           const b = buckets[c * ALPHA_STEPS + k];
           if (!b.length) continue;
