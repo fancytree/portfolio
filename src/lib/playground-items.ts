@@ -85,4 +85,11 @@ export const playgroundItems: PlaygroundItem[] = [
     text: 'That third era that might come soon is how do you work with a persistent coworker who is able to get things done with you?',
     source: "Tara Seshan, Product Lead for ChatGPT Work at OpenAI, on Lenny's Podcast",
   },
+  {
+    // 同一期 Lenny's Podcast（约 27:39）的原句
+    id: 'quote-tara-seshan-build-horizon',
+    kind: 'quote',
+    text: 'You fail if you build for where the models are now. You fail if you build for where you think the models will be in a year. Both outcomes are equally wrong.',
+    source: "Tara Seshan, Product Lead for ChatGPT Work at OpenAI, on Lenny's Podcast",
+  },
 ];
