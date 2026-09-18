@@ -48,11 +48,6 @@ export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo
 export const playgroundItems: PlaygroundItem[] = [
   // 顺序即排布顺序：视觉卡片与引用交错放，让每一列都有图也有字、引用不会全挤在下面
   {
-    id: 'interactive-torn-mesh',
-    kind: 'interactive',
-    component: 'torn-mesh',
-  },
-  {
     id: 'interactive-bubble-pop',
     kind: 'interactive',
     component: 'bubble-pop',
@@ -65,13 +60,6 @@ export const playgroundItems: PlaygroundItem[] = [
     source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
   {
-    // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
-    id: 'quote-ian-silber-feedback',
-    kind: 'quote',
-    text: 'The human feedback loop of watching people use something and understanding that.',
-    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
-  },
-  {
     id: 'image-mei-wave',
     kind: 'image',
     src: '/meiwave.gif',
@@ -80,10 +68,11 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 608,
   },
   {
-    id: 'interactive-reach-out',
-    kind: 'interactive',
-    component: 'reach-out',
-    resettable: false,
+    // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
+    id: 'quote-ian-silber-feedback',
+    kind: 'quote',
+    text: 'The human feedback loop of watching people use something and understanding that.',
+    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
   {
     // 摘自 Lenny's Podcast 访谈（约 22:22–27:34），去掉口头语、用省略号拼接原句
@@ -98,6 +87,17 @@ export const playgroundItems: PlaygroundItem[] = [
     kind: 'quote',
     text: 'That third era that might come soon is how do you work with a persistent coworker who is able to get things done with you?',
     source: "Tara Seshan, Product Lead for ChatGPT Work at OpenAI, on Lenny's Podcast",
+  },
+  {
+    id: 'interactive-torn-mesh',
+    kind: 'interactive',
+    component: 'torn-mesh',
+  },
+  {
+    id: 'interactive-reach-out',
+    kind: 'interactive',
+    component: 'reach-out',
+    resettable: false,
   },
   {
     // 同一期 Lenny's Podcast（约 27:39）的原句
