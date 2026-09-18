@@ -51,14 +51,6 @@ export const playgroundItems: PlaygroundItem[] = [
     component: 'torn-mesh',
   },
   {
-    id: 'interactive-hero-pond',
-    kind: 'interactive',
-    component: 'hero-pond',
-    // 扁一些的横幅卡片，配合 HeroPond 里的放大只取小岛一带
-    aspectRatio: 2,
-    wide: true,
-  },
-  {
     id: 'quote-simplicity',
     kind: 'quote',
     text: 'Placeholder quote — something I keep coming back to when a design feels too loud.',

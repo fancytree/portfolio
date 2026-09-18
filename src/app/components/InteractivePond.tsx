@@ -184,15 +184,7 @@ function drawImageAroundPivot(
   context.restore();
 }
 
-type InteractivePondProps = {
-  className?: string;
-  // 在“铺满画布”的基础上再放大多少倍（首页为 1）。放大后以 focus 为画面中心，
-  // 边缘会被裁掉，但不会露出世界以外的空白
-  zoom?: number;
-  focus?: { x: number; y: number };
-};
-
-export function InteractivePond({ className = '', zoom = 1, focus }: InteractivePondProps) {
+export function InteractivePond({ className = '' }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -265,17 +257,14 @@ export function InteractivePond({ className = '', zoom = 1, focus }: Interactive
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas!.width = Math.max(1, Math.round(rect.width * dpr));
       canvas!.height = Math.max(1, Math.round(rect.height * dpr));
-      const scale = Math.max(rect.width / WORLD.width, rect.height / WORLD.height) * zoom;
-      const focusX = focus?.x ?? WORLD.width / 2;
-      const focusY = focus?.y ?? WORLD.height / 2;
-      const clamp = (value: number, min: number) => Math.min(0, Math.max(min, value));
+      const scale = Math.max(rect.width / WORLD.width, rect.height / WORLD.height);
       viewport = {
         width: rect.width,
         height: rect.height,
         dpr,
         scale,
-        offsetX: clamp(rect.width / 2 - focusX * scale, rect.width - WORLD.width * scale),
-        offsetY: clamp(rect.height / 2 - focusY * scale, rect.height - WORLD.height * scale),
+        offsetX: (rect.width - WORLD.width * scale) / 2,
+        offsetY: (rect.height - WORLD.height * scale) / 2,
       };
     }
 
@@ -777,7 +766,7 @@ export function InteractivePond({ className = '', zoom = 1, focus }: Interactive
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('keydown', onKeyDown);
     };
-  }, [zoom, focus?.x, focus?.y]);
+  }, []);
 
   return (
     <div className={`pond-shell ${className}`}>
