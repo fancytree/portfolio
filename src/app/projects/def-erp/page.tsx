@@ -198,12 +198,12 @@ function ResearchSystemSection() {
 /** 04 / One skeleton, five roles */
 const dashboardShots = [
   {
-    src: '/img/def-erp/dashboard-admin-v5.png',
+    src: '/img/def-erp/dashboard-admin-v6.png',
     label: 'Admin',
     focus: 'Full operating snapshot: revenue, orders, receivables, customer mix, in one view.',
   },
   {
-    src: '/img/def-erp/dashboard-sales-v5.png',
+    src: '/img/def-erp/dashboard-sales-v6.png',
     label: 'Sales',
     focus: 'Orders to ship, overdue customers, unfollowed accounts. The queue a salesperson actually works.',
   },
@@ -233,7 +233,7 @@ function RoleDashboardsSection() {
         beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
         beforeAlt="Legacy WeChat mini-program backend Dashboard page: one undifferentiated view mixing sales KPIs, customer approvals, and withdrawal requests for every user."
         beforeLabel="Before"
-        afterSrc="/img/def-erp/dashboard-admin-v5.png"
+        afterSrc="/img/def-erp/dashboard-admin-v6.png"
         afterAlt="New Admin dashboard: sales, orders, receivables, customer mix, and tasks to handle, laid out for the admin role specifically."
         afterLabel="After"
         aspectRatio={1.6}
@@ -829,7 +829,7 @@ export default function DefErpPage() {
           { label: 'Year', value: ['2026'] },
         ]}
         visualLabel="DEF Beauty Supply ERP admin dashboard"
-        visualSrc="/img/def-erp/def-erp-hero-v4.webp"
+        visualSrc="/img/def-erp/def-erp-hero-v5.webp"
         visualAlt="DEF Beauty Supply ERP shown across a central dashboard, an inventory panel, and a finance panel, with beauty products and shipping objects connecting the business workflow."
         visualObjectPosition="center"
         visualObjectFit="cover"
