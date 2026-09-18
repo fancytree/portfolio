@@ -429,15 +429,17 @@ export function SalesPerformanceCard() {
       action={<SalesRangeToggle range={range} onChange={setRange} />}
     >
       <div className="px-6 pb-5">
-        <div className="mb-6 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <p className="text-2xl font-semibold tracking-tight tabular-nums text-foreground">{formatDemoAmount(totals.net)}</p>
-          <p className="text-xs tabular-nums text-muted-foreground">
-            Sales {formatDemoAmount(totals.sales)}
-            <span aria-hidden className="mx-1.5">·</span>
-            Refunds −{formatDemoAmount(totals.returns)}
-          </p>
-        </div>
         <SalesTrendChart
+          summary={
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p className="text-2xl font-semibold tracking-tight tabular-nums text-foreground">{formatDemoAmount(totals.net)}</p>
+              <p className="text-xs tabular-nums text-muted-foreground">
+                Sales {formatDemoAmount(totals.sales)}
+                <span aria-hidden className="mx-1.5">·</span>
+                Refunds −{formatDemoAmount(totals.returns)}
+              </p>
+            </div>
+          }
           animationKey={range}
           data={data}
           isLoading={false}

@@ -1,11 +1,11 @@
 'use client';
 
 // Copied from the DEF ERP repository (web/src/components/charts/SalesTrendChart.tsx). Keep in sync; do not edit the logic here.
-// Portfolio-only changes: the body-portaled tooltip gets `def-erp-live-tooltip` so it can read the scoped
-// colour tokens, and it is positioned by its measured size so it never covers the lines.
-import { useId, useLayoutEffect, useRef, useState } from 'react';
+// Only change: the body-portaled tooltip gets `def-erp-live-tooltip` so it can read the scoped colour tokens.
+import { useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { chartColors } from '../lib/chartColors';
+import { cn } from '@/lib/utils';
 type SalesTrendPoint = { date: string; sales: number; returns: number; net: number };
 
 export type ChartLocale = 'zh' | 'en';
@@ -122,12 +122,15 @@ export function SalesTrendChart({
   isLoading,
   animationKey,
   locale = 'zh',
+  summary,
 }: {
   data: SalesTrendPoint[];
   isLoading: boolean;
   /** 周期切换时只重播曲线画出动效 */
   animationKey?: string;
   locale?: ChartLocale;
+  /** 图例左侧的汇总（如当前时段合计）；传入后与图例同一行、按文字基线对齐 */
+  summary?: ReactNode;
 }) {
   const seriesLabels = SALES_SERIES_LABELS[locale];
   const labeledSeries = SALES_SERIES.map((series) => ({ ...series, label: seriesLabels[series.key] }));
@@ -223,7 +226,12 @@ export function SalesTrendChart({
     const pointIndex = data.length === 1
       ? 0
       : Math.round((index / Math.max(1, Math.min(4, data.length - 1))) * (data.length - 1));
-    return { key: `${data[pointIndex].date}-${index}`, label: formatChartDate(data[pointIndex].date, locale) };
+    return {
+      key: `${data[pointIndex].date}-${index}`,
+      label: formatChartDate(data[pointIndex].date, locale),
+      // 与曲线同一套横坐标：标签中心对准该日期的数据点
+      position: data.length === 1 ? 0 : pointIndex / (data.length - 1),
+    };
   });
 
   function selectNearest(cursorX: number) {
@@ -234,20 +242,32 @@ export function SalesTrendChart({
     setSelectedIndex(nearestIndex);
   }
 
+  const legendItems = labeledSeries.map((series) => (
+    <span key={series.key} className="inline-flex items-center gap-1.5">
+      <span
+        className="size-2 shrink-0 rounded-full"
+        style={{ background: series.stroke }}
+      />
+      {series.label}
+    </span>
+  ));
+
   return (
     <div className="-mx-6 -mb-5 -mt-4 px-6 pb-4 pt-0">
-      <div className="relative h-[340px] pl-9">
-        <div className="pointer-events-none absolute right-0 top-1 flex items-center gap-3 text-[10px] text-muted-foreground">
-          {labeledSeries.map((series) => (
-            <span key={series.key} className="inline-flex items-center gap-1.5">
-              <span
-                className="size-2 shrink-0 rounded-full"
-                style={{ background: series.stroke }}
-              />
-              {series.label}
-            </span>
-          ))}
+      {summary ? (
+        <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <div className="min-w-0">{summary}</div>
+          <div className="pointer-events-none flex items-center gap-3 text-[10px] text-muted-foreground">
+            {legendItems}
+          </div>
         </div>
+      ) : null}
+      <div className="relative h-[340px] pl-9">
+        {summary ? null : (
+          <div className="pointer-events-none absolute right-0 top-1 flex items-center gap-3 text-[10px] text-muted-foreground">
+            {legendItems}
+          </div>
+        )}
         <div className="pointer-events-none absolute bottom-8 left-0 top-5 text-[10px] text-muted-foreground">
           {axis.map((label, index) => (
             <span key={`${label}-${index}`} className="absolute -translate-y-1/2" style={{ top: `${13.64 + index * 20.45}%` }}>
@@ -388,8 +408,20 @@ export function SalesTrendChart({
           </div>,
           document.body,
         ) : null}
-        <div className="absolute bottom-0 right-0 flex justify-between pl-2 text-[10px] text-muted-foreground" style={{ left: '40px' }}>
-          {xLabels.map((item) => <span key={item.key}>{item.label}</span>)}
+        <div className="pointer-events-none absolute bottom-0 right-0 h-4 text-[10px] text-muted-foreground" style={{ left: '40px' }}>
+          {xLabels.map((item) => (
+            <span
+              key={item.key}
+              // 首尾标签贴齐绘图区边缘（周区间等长标签不会溢出卡片），中间标签居中对准数据点
+              className={cn(
+                'absolute top-0 whitespace-nowrap',
+                item.position === 0 ? 'translate-x-0' : item.position === 1 ? '-translate-x-full' : '-translate-x-1/2',
+              )}
+              style={{ left: `${item.position * 100}%` }}
+            >
+              {item.label}
+            </span>
+          ))}
         </div>
       </div>
     </div>
