@@ -56,7 +56,6 @@ export const playgroundItems: PlaygroundItem[] = [
     id: 'interactive-bubble-pop',
     kind: 'interactive',
     component: 'bubble-pop',
-    aspectRatio: 4 / 5,
   },
   {
     // 同一期 Lenny's Podcast（约 32:23），他给团队的建议："Just do less… don't design it. If you don't have to, …"
