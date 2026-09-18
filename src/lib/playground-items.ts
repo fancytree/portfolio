@@ -46,10 +46,25 @@ export type PlaygroundInteractive = PlaygroundBase & {
 export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive;
 
 export const playgroundItems: PlaygroundItem[] = [
+  // 顺序即排布顺序：视觉卡片与引用交错放，让每一列都有图也有字、引用不会全挤在下面
   {
     id: 'interactive-torn-mesh',
     kind: 'interactive',
     component: 'torn-mesh',
+  },
+  {
+    // 同一期 Lenny's Podcast（约 32:23），他给团队的建议："Just do less… don't design it. If you don't have to, …"
+    id: 'quote-ian-silber-do-less',
+    kind: 'quote',
+    text: "Just do less. Don't design it if you don't have to.",
+    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
+  },
+  {
+    // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
+    id: 'quote-ian-silber-feedback',
+    kind: 'quote',
+    text: 'The human feedback loop of watching people use something and understanding that.',
+    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
   {
     id: 'image-mei-wave',
@@ -70,20 +85,6 @@ export const playgroundItems: PlaygroundItem[] = [
     id: 'quote-ian-silber',
     kind: 'quote',
     text: "I think it already is an incredible product designer. That doesn't necessarily mean that it's the best visual designer, or best at information hierarchy, or even interaction design. … Truly understanding what people need. Inventing something new. Somebody had a point of view about this.",
-    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
-  },
-  {
-    // 同一期 Lenny's Podcast（约 32:23），他给团队的建议："Just do less… don't design it. If you don't have to, …"
-    id: 'quote-ian-silber-do-less',
-    kind: 'quote',
-    text: "Just do less. Don't design it if you don't have to.",
-    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
-  },
-  {
-    // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
-    id: 'quote-ian-silber-feedback',
-    kind: 'quote',
-    text: 'The human feedback loop of watching people use something and understanding that.',
     source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
   },
   {
