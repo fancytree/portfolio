@@ -105,16 +105,47 @@
   width: 100%;
 }
 
-.interactiveBadge {
+.stageControls {
   position: absolute;
   right: 12px;
   bottom: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.interactiveBadge,
+.resetButton {
   display: grid;
   place-items: center;
   width: 24px;
   height: 24px;
   border-radius: 50%;
+}
+
+.interactiveBadge {
   background: var(--mei-ink);
   color: #fff;
   pointer-events: none;
+}
+
+.resetButton {
+  padding: 0;
+  border: 1px solid rgb(10 10 10 / 0.14);
+  background: rgb(255 255 255 / 0.85);
+  color: var(--mei-ink);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.3s ease;
+}
+
+.resetButton:hover {
+  background: #fff;
+}
+
+.resetButton:active {
+  transform: rotate(-120deg);
+}
+
+.resetButton:focus-visible {
+  outline: 2px solid var(--mei-orange);
+  outline-offset: 2px;
 }
