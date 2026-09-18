@@ -24,6 +24,11 @@ const STITCH_TIMEOUT = 8; // 缝这么久还没拉拢就直接收尾（秒），
 const STITCH_PULL = 0.05; // 缝合时把两端往原位拉的力度：整块布的张力会把洞撑大，单靠缝线拉不回来
 const SCAR_SHRINK = 0.72; // 疤痕处连线比原来短，布会被拉皱
 const SCAR_EXTRA_CHANCE = 0.8; // 缝上时额外多缝乱线的概率
+const EDGE_MARGIN = 4; // 布边离画布边缘平均多少个节点
+const FRINGE_CHANCE = 0.3; // 每行 / 列伸出散线头的概率
+const FRINGE_MAX = 4; // 散线头最长几个节点
+const PIN_CHANCE = 0.12; // 布边节点被钉住的概率
+const SETTLE_STEPS = 150; // 建布时先预演多少帧让张力稳定
 const STRAIN_VISIBLE = 0.22; // 对角线形变超过多少才画出来
 
 const RED = '#e0405a';
@@ -58,6 +63,7 @@ type Sim = {
   rx: Float32Array;
   ry: Float32Array;
   pinned: Uint8Array;
+  alive: Uint8Array; // 0 布外，1 布面，2 散线头
   // 连线（疤痕会额外加线，所以按容量分配）
   count: number;
   la: Int32Array;
@@ -72,8 +78,8 @@ type Sim = {
 };
 
 function buildSim(width: number, height: number): Sim {
-  const cols = Math.max(4, Math.floor(width / SPACING));
-  const rows = Math.max(4, Math.floor(height / SPACING));
+  const cols = Math.max(12, Math.floor(width / SPACING));
+  const rows = Math.max(12, Math.floor(height / SPACING));
   const sx = width / cols;
   const sy = height / rows;
   const n = (cols + 1) * (rows + 1);
@@ -90,12 +96,30 @@ function buildSim(width: number, height: number): Sim {
   for (let r = 0; r <= rows; r++) {
     for (let c = 0; c <= cols; c++) {
       const i = idx(r, c);
-      const edge = r === 0 || c === 0 || r === rows || c === cols;
       const gx = c * sx;
       const gy = r * sy;
-      x[i] = gx + (edge ? 0 : wobble(gx, gy, 0) * 0.6);
-      y[i] = gy + (edge ? 0 : wobble(gx, gy, 3));
-      if (edge) pinned[i] = 1;
+      x[i] = gx + wobble(gx, gy, 0) * 0.6;
+      y[i] = gy + wobble(gx, gy, 3);
+    }
+  }
+
+  // 布的轮廓：四条边各自按噪声往里缩，边缘参差不齐，不是规整矩形
+  const edgePhase = Array.from({ length: 8 }, () => Math.random() * Math.PI * 2);
+  const margin = (t: number, side: number) =>
+    Math.round(
+      EDGE_MARGIN +
+        Math.sin(t * 0.08 + edgePhase[side * 2]) * 2.2 +
+        Math.sin(t * 0.21 + edgePhase[side * 2 + 1]) * 1 +
+        (Math.random() - 0.5) * 1.2
+    );
+  const left = Array.from({ length: rows + 1 }, (_, r) => margin(r, 0));
+  const right = Array.from({ length: rows + 1 }, (_, r) => cols - margin(r, 1));
+  const top = Array.from({ length: cols + 1 }, (_, c) => margin(c, 2));
+  const bottom = Array.from({ length: cols + 1 }, (_, c) => rows - margin(c, 3));
+  const alive = new Uint8Array(n);
+  for (let r = 0; r <= rows; r++) {
+    for (let c = 0; c <= cols; c++) {
+      if (c >= left[r] && c <= right[r] && r >= top[c] && r <= bottom[c]) alive[idx(r, c)] = 1;
     }
   }
 
@@ -110,6 +134,7 @@ function buildSim(width: number, height: number): Sim {
     rx: x.slice(),
     ry: y.slice(),
     pinned,
+    alive,
     count: 0,
     la: new Int32Array(cap),
     lb: new Int32Array(cap),
@@ -122,16 +147,68 @@ function buildSim(width: number, height: number): Sim {
     cols,
   };
 
+  const weftColor = (r: number) => WEFT_BANDS[Math.floor(r / ROWS_PER_BAND) % WEFT_BANDS.length];
+  const both = (i: number, j: number) => alive[i] === 1 && alive[j] === 1;
   for (let r = 0; r <= rows; r++) {
     for (let c = 0; c <= cols; c++) {
-      if (c < cols) addLink(sim, idx(r, c), idx(r, c + 1), Kind.Weft, WEFT_BANDS[Math.floor(r / ROWS_PER_BAND) % WEFT_BANDS.length]);
-      if (r < rows) addLink(sim, idx(r, c), idx(r + 1, c), Kind.Warp, 2);
+      if (c < cols && both(idx(r, c), idx(r, c + 1))) addLink(sim, idx(r, c), idx(r, c + 1), Kind.Weft, weftColor(r));
+      if (r < rows && both(idx(r, c), idx(r + 1, c))) addLink(sim, idx(r, c), idx(r + 1, c), Kind.Warp, 2);
       if (r < rows && c < cols) {
-        if ((r + c) % 2 === 0) addLink(sim, idx(r, c), idx(r + 1, c + 1), Kind.Diagonal, (r + c) % 4 === 0 ? 0 : 1);
-        else addLink(sim, idx(r, c + 1), idx(r + 1, c), Kind.Diagonal, (r + c) % 4 === 1 ? 1 : 0);
+        const [i, j] = (r + c) % 2 === 0 ? [idx(r, c), idx(r + 1, c + 1)] : [idx(r, c + 1), idx(r + 1, c)];
+        if (both(i, j)) addLink(sim, i, j, Kind.Diagonal, (r + c) % 4 < 2 ? 0 : 1);
       }
     }
   }
+
+  // 散线头：部分纬线 / 经线伸出布边，只靠一根线连着，会被扫动
+  const fringe = (from: number, dr: number, dc: number, r0: number, c0: number, kind: Kind, color: number) => {
+    const len = 1 + Math.floor(Math.random() * FRINGE_MAX);
+    let prev = from;
+    for (let s = 1; s <= len; s++) {
+      const r = r0 + dr * s;
+      const c = c0 + dc * s;
+      if (r < 0 || r > rows || c < 0 || c > cols) break;
+      const i = idx(r, c);
+      if (alive[i]) break;
+      alive[i] = 2;
+      x[i] += (Math.random() - 0.5) * SPACING * 0.6;
+      y[i] += (Math.random() - 0.5) * SPACING * 0.6;
+      addLink(sim, prev, i, kind, color, Math.hypot(x[i] - x[prev], y[i] - y[prev]));
+      prev = i;
+    }
+  };
+  for (let r = 0; r <= rows; r++) {
+    if (Math.random() < FRINGE_CHANCE) fringe(idx(r, left[r]), 0, -1, r, left[r], Kind.Weft, weftColor(r));
+    if (Math.random() < FRINGE_CHANCE) fringe(idx(r, right[r]), 0, 1, r, right[r], Kind.Weft, weftColor(r));
+  }
+  for (let c = 0; c <= cols; c++) {
+    if (Math.random() < FRINGE_CHANCE) fringe(idx(top[c], c), -1, 0, top[c], c, Kind.Warp, 2);
+    if (Math.random() < FRINGE_CHANCE) fringe(idx(bottom[c], c), 1, 0, bottom[c], c, Kind.Warp, 2);
+  }
+
+  // 只在布边上稀疏地钉几个点：钉点之间的边被张力往里拽，形成自然的弧形凹口
+  for (let r = 0; r <= rows; r++) {
+    for (let c = 0; c <= cols; c++) {
+      const i = idx(r, c);
+      if (alive[i] !== 1) {
+        if (!alive[i]) pinned[i] = 1; // 布外的空节点不参与模拟
+        continue;
+      }
+      const onEdge =
+        c === 0 || c === cols || r === 0 || r === rows ||
+        alive[idx(r, c - 1)] !== 1 || alive[idx(r, c + 1)] !== 1 || alive[idx(r - 1, c)] !== 1 || alive[idx(r + 1, c)] !== 1;
+      if (onEdge && Math.random() < PIN_CHANCE) pinned[i] = 1;
+    }
+  }
+
+  sim.px.set(x);
+  sim.py.set(y);
+  // 先让布在张力下收缩、稳定下来，再把稳定后的形状当作“原位”
+  for (let i = 0; i < SETTLE_STEPS; i++) step(sim, 1 / 60);
+  sim.rx.set(sim.x);
+  sim.ry.set(sim.y);
+  sim.px.set(sim.x);
+  sim.py.set(sim.y);
   return sim;
 }
 
@@ -209,7 +286,7 @@ function addStray(sim: Sim, i: number) {
   const c = c0 + dc;
   if ((dr === 0 && dc === 0) || c < 0 || c > cols || r < 0) return;
   const j = r * (cols + 1) + c;
-  if (j >= sim.n) return;
+  if (j >= sim.n || sim.alive[j] !== 1 || sim.alive[i] !== 1) return;
   const d = Math.hypot(x[j] - x[i], y[j] - y[i]);
   const k = addLink(sim, i, j, Kind.Diagonal, Math.random() < 0.5 ? 0 : 1, d * SCAR_SHRINK);
   if (k >= 0) sim.state[k] = State.Scar;
@@ -376,7 +453,7 @@ export default function TornMesh() {
     if (!canvas || !ctx) return;
 
     // 网布四周留边
-    const inset = SPACING * 3;
+    const inset = SPACING;
     const dpr = () => Math.min(2, window.devicePixelRatio || 1);
 
     let sim: Sim | null = null;
