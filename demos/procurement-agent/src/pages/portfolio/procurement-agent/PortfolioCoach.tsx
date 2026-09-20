@@ -21,7 +21,7 @@ export type CoachStep = {
 type Rect = { top: number; left: number; width: number; height: number };
 
 const CARD_WIDTH = 268;
-const GAP = 56; // 卡片和目标之间留出足够距离，连线才看得出来（箭头尖还要离高亮框 12px）
+const GAP = 18;
 const PADDING = 12;
 
 function readRect(target: string): Rect | null {
@@ -47,36 +47,15 @@ function placeCard(rect: Rect) {
   return { left, top, side };
 }
 
-/**
- * 从卡片朝锚点画一条单一弧度的弧线（二次贝塞尔，全程只朝一个方向弯，没有 S 形拐折）：
- * 从卡片出发时上扬约 45°，最后以约 40° 斜向下落到目标上 —— 一道明显的拱形，
- * 箭头也不会和竖向的高亮虚线框平行而“隐身”。
- * 控制点取“出发方向线”和“到达方向线”的交点，所以两端的切线正好是这两个方向。
- */
-const LEAVE_ANGLE = (45 * Math.PI) / 180;
-const ARRIVE_ANGLE = (40 * Math.PI) / 180;
-// 弦（起点到箭头尖的连线）的理想倾角：落在出发、到达两个角度正中，拱形才对称
-const CHORD_ANGLE = (ARRIVE_ANGLE - LEAVE_ANGLE) / 2;
-
+/** 从卡片朝锚点画一条二次贝塞尔弧线 */
 function arrowPath(from: { x: number; y: number }, to: { x: number; y: number }, side: 'left' | 'right') {
-  const dir = side === 'right' ? -1 : 1; // 卡片在目标右侧时，线往左走
-  // 出发方向 u（朝目标、向上），到达方向 v（朝目标、向下）；解 from + s·u = to − t·v
-  const ux = dir * Math.cos(LEAVE_ANGLE);
-  const uy = -Math.sin(LEAVE_ANGLE);
-  const vx = dir * Math.cos(ARRIVE_ANGLE);
-  const vy = Math.sin(ARRIVE_ANGLE);
   const dx = to.x - from.x;
   const dy = to.y - from.y;
-  const det = ux * vy - uy * vx;
-  const sPar = (dx * vy - dy * vx) / det;
-  const tPar = (ux * dy - uy * dx) / det;
-  if (sPar > 0 && tPar > 0) {
-    return `M ${from.x} ${from.y} Q ${from.x + ux * sPar} ${from.y + uy * sPar} ${to.x} ${to.y}`;
-  }
-  // 几何上凑不出这两个方向时（目标远高于卡片等），退回一道向上拱的圆弧
-  const midX = (from.x + to.x) / 2;
-  const midY = Math.min(from.y, to.y) - Math.max(14, Math.abs(dx) * 0.35);
-  return `M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`;
+  // 控制点垂直于连线偏移，弧度随距离增长但有上限
+  const bow = Math.min(Math.abs(dx) * 0.45 + 26, 74) * (side === 'right' ? -1 : 1);
+  const cx = from.x + dx * 0.5;
+  const cy = from.y + dy * 0.5 + bow;
+  return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
 }
 
 export default function PortfolioCoach({
@@ -132,16 +111,13 @@ export default function PortfolioCoach({
 
   const card = placeCard(rect);
   const single = visibleSteps.length <= 1;
-  // 箭头尖停在高亮虚线框（外扩 5px）外再留 7px，不和虚线叠在一起
-  const tip = {
-    x: card.side === 'right' ? rect.left + rect.width + 12 : rect.left - 12,
-    y: rect.top + rect.height / 2,
-  };
-  // 起点高度按目标反推，让弦的倾角落在理想值上（拱形对称），同时不超出卡片的上下范围
-  const anchorX = card.side === 'right' ? card.left + 2 : card.left + CARD_WIDTH - 2;
   const anchor = {
-    x: anchorX,
-    y: Math.min(Math.max(tip.y - Math.tan(CHORD_ANGLE) * Math.abs(tip.x - anchorX), card.top + 18), card.top + 84),
+    x: card.side === 'right' ? card.left + 14 : card.left + CARD_WIDTH - 14,
+    y: card.top + (single ? 56 : 104),
+  };
+  const tip = {
+    x: card.side === 'right' ? rect.left + rect.width + 6 : rect.left - 6,
+    y: rect.top + rect.height / 2,
   };
   const isLast = index >= visibleSteps.length - 1;
 
@@ -166,13 +142,13 @@ export default function PortfolioCoach({
           strokeWidth="2"
           strokeDasharray="5 4"
         />
-        {/* 虚线弧线箭头 */}
+        {/* 弧线箭头 */}
         <path
           d={arrowPath(anchor, tip, card.side)}
           fill="none"
           stroke="#2f6bff"
           strokeWidth="2"
-          strokeDasharray="5 4"
+          strokeLinecap="round"
           markerEnd="url(#coach-arrow)"
         />
       </svg>
