@@ -426,7 +426,7 @@ export default function CrackInterviewPage() {
               }}
             >
               <img
-                src="/img/crackinterview/Conversation%20Design.avif"
+                src="/img/crackinterview/conversation-design.png"
                 alt="Conversation Design"
                 style={{
                   width: '50%',

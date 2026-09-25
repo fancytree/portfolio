@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { AudioWaveform, ArrowUpRight, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
 import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
-import { productProjects, researchProjects, sortProjectsByTimeDesc } from '@/lib/work-projects';
+import { productProjects, researchProjects } from '@/lib/work-projects';
 import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
 import HomeDemoCard from './components/HomeDemoCard';
 
@@ -264,11 +264,18 @@ function HeroTypedHeading() {
   );
 }
 
+const homeResearchItems = researchProjects
+  .filter((project) => project.href === '/projects/walnut-coding')
+  .map((project) => ({
+    ...project,
+    title: 'Walnut Coding: From Trial to Trust',
+  }));
+
 const homeWorkItems = [
   ...['Procurement Agent', 'DEF Beauty ERP', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
     productProjects.filter((project) => project.title === title)
   ),
-  ...sortProjectsByTimeDesc(researchProjects),
+  ...homeResearchItems,
 ];
 
 type ToolItem =
