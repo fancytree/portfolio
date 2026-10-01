@@ -1,10 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
-import { CheckIcon, ChevronDownIcon, Loader2Icon, PaperclipIcon, SendIcon } from 'lucide-react';
+import {
+  AlertTriangleIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  FileCheck2Icon,
+  Loader2Icon,
+  PackageOpenIcon,
+  PaperclipIcon,
+  SendIcon,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PORTFOLIO_COPY } from './portfolioDemoCopy';
 import { PHASES } from './portfolioDemoScript';
-import type { DemoChatAction, DemoChatMessage, DemoPhaseKey, DemoStageId } from './portfolioDemoTypes';
+import type {
+  DemoChatAction,
+  DemoChatMessage,
+  DdtMatchEvidence,
+  DemoPhaseKey,
+  DemoStageId,
+  RecommendationEvidence,
+  SupplierOrderEvidence,
+} from './portfolioDemoTypes';
 
 type Props = {
   stage: DemoStageId;
@@ -217,6 +234,250 @@ function StatusCard({ message }: { message: DemoChatMessage }) {
   );
 }
 
+/** Compact decision trace: result first, calculation second, evidence third. */
+function RecommendationEvidenceCard({ evidence }: { evidence: RecommendationEvidence }) {
+  const maxSales = Math.max(...evidence.recentSales.map((item) => item.units), 1);
+
+  return (
+    <article
+      data-recommendation-evidence
+      className="overflow-hidden rounded-2xl border border-[#dfe4ee] bg-white text-[#1a1d26] shadow-[0_8px_24px_rgba(35,48,78,0.06)]"
+    >
+      <header className="border-b border-[#e8ebf1] bg-[#f7f9fc] px-4 py-3.5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-semibold tracking-[0.12em] text-[#6f7890] uppercase">
+              Recommendation trace
+            </p>
+            <h3 className="mt-1 text-[17px] font-semibold tracking-[-0.02em]">
+              Why {evidence.recommendedQty} units?
+            </h3>
+            <p className="mt-0.5 text-[11px] text-[#727b90]">
+              {evidence.sku} · {evidence.variant} · current stock {evidence.stock}
+            </p>
+          </div>
+          <span className="shrink-0 rounded-lg bg-[#eaf1ff] px-2 py-1 text-[10px] font-semibold text-[#2f6bff]">
+            Editable
+          </span>
+        </div>
+      </header>
+
+      <div className="space-y-4 px-4 py-4">
+        <section>
+          <p className="text-[10px] font-semibold tracking-[0.12em] text-[#8b93a7] uppercase">
+            Computed quantity
+          </p>
+          <p className="mt-2 text-[13px] font-medium tabular-nums text-[#303747]">
+            {evidence.forecastDemand} forecast − {evidence.stock} stock − {evidence.inbound} inbound
+            <span className="text-[#8b93a7]"> = </span>{evidence.netNeed} net need
+          </p>
+          <div className="mt-2 flex items-center justify-between rounded-xl bg-[#f1f5ff] px-3 py-2.5">
+            <span className="text-[11px] leading-snug text-[#5d6880]">
+              {evidence.coverageDays}d cover + {evidence.leadTimeDays}d lead time<br />
+              Rounded to supplier pack of {evidence.packSize}
+            </span>
+            <span className="text-[20px] font-semibold tabular-nums tracking-[-0.03em] text-[#2f6bff]">
+              {evidence.recommendedQty}
+            </span>
+          </div>
+        </section>
+
+        <section>
+          <div className="flex items-center justify-between">
+            <p className="text-[10px] font-semibold tracking-[0.12em] text-[#8b93a7] uppercase">
+              Recent sales
+            </p>
+            <span className="text-[10px] text-[#8b93a7]">units / month</span>
+          </div>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {evidence.recentSales.map((item) => (
+              <div key={item.month} className="rounded-lg bg-[#f7f8fa] px-2.5 py-2">
+                <div className="flex items-end justify-between gap-1">
+                  <span className="text-[10px] text-[#7b8498]">{item.month}</span>
+                  <span className="text-[12px] font-semibold tabular-nums">{item.units}</span>
+                </div>
+                <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-[#e3e7ef]">
+                  <div
+                    className="h-full rounded-full bg-[#2f6bff]"
+                    style={{ width: `${Math.max(12, (item.units / maxSales) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {evidence.signals.length > 0 ? (
+          <section>
+            <p className="text-[10px] font-semibold tracking-[0.12em] text-[#8b93a7] uppercase">
+              Demand signals
+            </p>
+            <dl className="mt-2 divide-y divide-[#eceff4] border-y border-[#eceff4]">
+              {evidence.signals.map((signal) => (
+                <div key={signal.label} className="grid grid-cols-[86px_1fr] gap-2 py-2.5">
+                  <dt className="text-[10.5px] font-medium text-[#778096]">{signal.label}</dt>
+                  <dd>
+                    <p className={cn(
+                      'text-[11.5px] font-semibold leading-snug',
+                      signal.tone === 'attention' ? 'text-[#a45b16]' : 'text-[#303747]',
+                    )}>
+                      {signal.value}
+                    </p>
+                    <p className="mt-0.5 text-[10.5px] leading-snug text-[#7b8498]">{signal.detail}</p>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
+
+        <p className="rounded-lg bg-[#fff8ec] px-3 py-2 text-[10.5px] leading-snug text-[#7a5727]">
+          Human control · You can edit or remove this line. The Agent will not place the order.
+        </p>
+      </div>
+    </article>
+  );
+}
+
+function SupplierOrderEvidenceCard({ evidence }: { evidence: SupplierOrderEvidence }) {
+  return (
+    <article
+      data-supplier-order-evidence
+      className="overflow-hidden rounded-2xl border border-[#dfe4ee] bg-white text-[#1a1d26] shadow-[0_8px_24px_rgba(35,48,78,0.06)]"
+    >
+      <header className="border-b border-[#e8ebf1] bg-[#f7f9fc] px-4 py-3.5">
+        <p className="text-[10px] font-semibold tracking-[0.12em] text-[#6f7890] uppercase">
+          Supplier check
+        </p>
+        <h3 className="mt-1 text-[17px] font-semibold tracking-[-0.02em]">Why this order?</h3>
+        <p className="mt-1 text-[11px] text-[#727b90]">
+          {evidence.supplier} · {evidence.totalUnits} units · €{evidence.goodsValue.toFixed(2)}
+        </p>
+      </header>
+
+      <div className="px-4 py-3.5">
+        <dl className="divide-y divide-[#eceff4] border-y border-[#eceff4]">
+          {evidence.rules.map((rule) => (
+            <div key={rule.label} className="grid grid-cols-[94px_1fr] items-center gap-2 py-2">
+              <dt className="text-[10.5px] font-medium text-[#778096]">{rule.label}</dt>
+              <dd className="min-w-0 text-right">
+                <p className={cn(
+                    'text-[11px] font-semibold leading-snug',
+                    rule.status === 'met' && 'text-[#1f8a57]',
+                    rule.status === 'review' && 'text-[#a45b16]',
+                    rule.status === 'context' && 'text-[#2f6bff]',
+                  )}>
+                  {rule.outcome}
+                </p>
+                <p className="mt-0.5 truncate text-[9.5px] text-[#8b93a7]">{rule.requirement}</p>
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-2.5 text-[9.5px] text-[#8b93a7]">
+          {evidence.version} · valid until {evidence.validUntil}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+/** DDT result: summary first, exceptions grouped by the decision they require. */
+function DdtMatchEvidenceCard({ evidence }: { evidence: DdtMatchEvidence }) {
+  const hasExceptions = evidence.orderVariances.length > 0
+    || evidence.missing.skuCount > 0
+    || evidence.unexpected.length > 0;
+
+  return (
+    <article
+      data-ddt-match-evidence
+      className="overflow-hidden rounded-2xl border border-[#dfe4ee] bg-white text-[#1a1d26] shadow-[0_8px_24px_rgba(35,48,78,0.06)]"
+    >
+      <header className="border-b border-[#e8ebf1] bg-[#f7f9fc] px-4 py-3.5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-start gap-2.5">
+            <span className="mt-0.5 inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#eaf1ff] text-[#2f6bff]">
+              <FileCheck2Icon className="size-4" aria-hidden />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold tracking-[0.12em] text-[#6f7890] uppercase">
+                DDT matched
+              </p>
+              <h3 className="mt-0.5 text-[16px] font-semibold tracking-[-0.02em]">
+                {evidence.label} · Batch {evidence.batchNo}
+              </h3>
+            </div>
+          </div>
+          <span className={cn(
+            'shrink-0 rounded-lg px-2 py-1 text-[10px] font-semibold',
+            hasExceptions ? 'bg-[#fff3e8] text-[#a45b16]' : 'bg-[#e7f6ee] text-[#1f8a57]',
+          )}>
+            {hasExceptions ? 'Review needed' : 'Matched'}
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-[#e7eaf0] bg-white px-3 py-2">
+            <p className="text-[9.5px] font-medium text-[#8b93a7]">Lines on DDT</p>
+            <p className="mt-0.5 text-[15px] font-semibold tabular-nums">{evidence.lineCount}</p>
+          </div>
+          <div className="rounded-lg border border-[#e7eaf0] bg-white px-3 py-2">
+            <p className="text-[9.5px] font-medium text-[#8b93a7]">DDT quantity</p>
+            <p className="mt-0.5 text-[15px] font-semibold tabular-nums">{evidence.totalUnits} pcs</p>
+          </div>
+        </div>
+      </header>
+
+      <div className="space-y-2 px-4 py-3.5">
+        {evidence.orderVariances.map((variance) => (
+          <div key={`${variance.sku}-${variance.type}`} className="flex gap-2.5 rounded-xl bg-[#fff7ed] px-3 py-2.5">
+            <AlertTriangleIcon className="mt-0.5 size-3.5 shrink-0 text-[#b35b1f]" aria-hidden />
+            <div>
+              <p className="text-[11.5px] font-semibold text-[#6f431e]">
+                {variance.sku} · {variance.type === 'short' ? 'Short shipment' : 'Over shipment'}
+              </p>
+              <p className="mt-0.5 text-[10.5px] text-[#8a6543]">
+                Ordered {variance.ordered} → DDT {variance.ddt} · {variance.type === 'short' ? '−' : '+'}{variance.difference}
+              </p>
+            </div>
+          </div>
+        ))}
+
+        {evidence.missing.skuCount > 0 ? (
+          <div className="flex gap-2.5 rounded-xl bg-[#f5f7fa] px-3 py-2.5">
+            <PackageOpenIcon className="mt-0.5 size-3.5 shrink-0 text-[#68738a]" aria-hidden />
+            <div className="min-w-0">
+              <p className="text-[11.5px] font-semibold text-[#3e475a]">
+                Later batch expected
+              </p>
+              <p className="mt-0.5 text-[10.5px] leading-snug text-[#727b90]">
+                {evidence.missing.skuCount} SKUs · {evidence.missing.units} pcs still open
+              </p>
+              <p className="mt-0.5 truncate text-[9.5px] text-[#9299a9]">
+                {evidence.missing.skus.join(', ')}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {evidence.unexpected.map((line) => (
+          <div key={line.sku} className="rounded-xl border border-[#bfd0ff] bg-[#f3f7ff] px-3 py-2.5">
+            <p className="text-[11.5px] font-semibold text-[#2f5fce]">
+              Decision needed · {line.sku}
+            </p>
+            <p className="mt-0.5 text-[10.5px] leading-snug text-[#61729a]">
+              Unexpected supplier gift · {line.units} pcs. Accept it into stock or return it.
+            </p>
+          </div>
+        ))}
+
+        <p className="pt-1 text-[10.5px] leading-snug text-[#7b8498]">
+          Actual quantity starts from the DDT. Warehouse count is confirmed in the next step.
+        </p>
+      </div>
+    </article>
+  );
+}
+
 /** 按内容撑高 textarea，封顶后内部滚动 */
 function resizeComposer(el: HTMLTextAreaElement | null) {
   if (!el) return;
@@ -250,6 +511,19 @@ export default function PortfolioAgentPanel({
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage?.recommendationEvidence || lastMessage?.supplierOrderEvidence || lastMessage?.ddtMatchEvidence) {
+      const cards = el.querySelectorAll<HTMLElement>(
+        '[data-recommendation-evidence], [data-supplier-order-evidence], [data-ddt-match-evidence]',
+      );
+      const latestCard = cards[cards.length - 1];
+      if (latestCard) {
+        const cardTop = latestCard.getBoundingClientRect().top;
+        const scrollerTop = el.getBoundingClientRect().top;
+        el.scrollTop = Math.max(0, el.scrollTop + cardTop - scrollerTop - 12);
+        return;
+      }
+    }
     el.scrollTop = el.scrollHeight;
   }, [messages, stage, busy]);
 
@@ -296,9 +570,15 @@ export default function PortfolioAgentPanel({
             }
 
             const isUser = message.role === 'user';
+            const hasRecommendationEvidence = !isUser && !!message.recommendationEvidence;
+            const hasSupplierOrderEvidence = !isUser && !!message.supplierOrderEvidence;
+            const hasDdtMatchEvidence = !isUser && !!message.ddtMatchEvidence;
             const hasStructure = !isUser && (
               (message.bullets && message.bullets.length > 0)
               || (message.actions && message.actions.length > 0)
+              || hasRecommendationEvidence
+              || hasSupplierOrderEvidence
+              || hasDdtMatchEvidence
             );
 
             return (
@@ -314,9 +594,18 @@ export default function PortfolioAgentPanel({
                     'max-w-[92%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed',
                     isUser ? 'bg-[#2f6bff] text-white whitespace-pre-wrap' : 'bg-[#f1f3f7] text-[#1a1d26]',
                     hasStructure && 'w-full',
+                    (hasRecommendationEvidence || hasSupplierOrderEvidence || hasDdtMatchEvidence) && 'max-w-full bg-transparent p-0',
                   )}
                 >
-                  <p className={cn(!hasStructure && 'whitespace-pre-wrap')}>{message.text}</p>
+                  {hasDdtMatchEvidence && message.ddtMatchEvidence ? (
+                    <DdtMatchEvidenceCard evidence={message.ddtMatchEvidence} />
+                  ) : hasSupplierOrderEvidence && message.supplierOrderEvidence ? (
+                    <SupplierOrderEvidenceCard evidence={message.supplierOrderEvidence} />
+                  ) : hasRecommendationEvidence && message.recommendationEvidence ? (
+                    <RecommendationEvidenceCard evidence={message.recommendationEvidence} />
+                  ) : (
+                    <p className={cn(!hasStructure && 'whitespace-pre-wrap')}>{message.text}</p>
+                  )}
                   {message.bullets && message.bullets.length > 0 ? (
                     <ul className="mt-2 list-disc space-y-1.5 pl-4 text-[12.5px] leading-snug text-[#3d4455]">
                       {message.bullets.map((bullet) => (

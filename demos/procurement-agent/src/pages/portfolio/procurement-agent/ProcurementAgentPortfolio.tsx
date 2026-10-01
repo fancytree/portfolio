@@ -47,12 +47,15 @@ import {
   type MarkOrderMeta,
 } from './portfolioDemoScript';
 import type {
+  DdtMatchEvidence,
   DemoChatAction,
   DemoPhaseKey,
   DemoStageId,
   DemoState,
   NegotiationNote,
+  RecommendationEvidence,
   RemainingReceiptDecision,
+  SupplierOrderEvidence,
 } from './portfolioDemoTypes';
 
 const THINKING_LABELS = [
@@ -133,18 +136,9 @@ function suggestionsFor(state: DemoState): string[] {
       if (state.messages.some((message) => message.role === 'user')) return [];
       return [PORTFOLIO_COPY.kickoffPlan];
     }
-    if (state.confirmationUploaded) {
-      const next = state.approved
-        ? [PORTFOLIO_COPY.markOrdered, PORTFOLIO_COPY.viewSupplierRules]
-        : [PORTFOLIO_COPY.approve, PORTFOLIO_COPY.viewSupplierRules];
-      return [PORTFOLIO_COPY.addProductLine, ...next];
-    }
-    return [
-      PORTFOLIO_COPY.addProductLine,
-      PORTFOLIO_COPY.exportRequest,
-      PORTFOLIO_COPY.uploadConfirmation,
-      PORTFOLIO_COPY.viewSupplierRules,
-    ];
+    // 计划生成后，工作台已提供添加商品、上传确认单、供应规则等明确入口。
+    // 不在聊天区重复这些页面操作；对话保留给解释、澄清和异常处理。
+    return [];
   }
   if (stage === 'approval') {
     return state.approved
@@ -186,6 +180,12 @@ type AgentReplyOptions = {
   actions?: DemoChatAction[];
   /** Agent 回复结束后预填输入框（如复盘草稿） */
   draftAfter?: string;
+  /** Rich, inspectable explanation for a line-level recommendation. */
+  recommendationEvidence?: RecommendationEvidence;
+  /** Rich order-level trace focused on supplier requirements. */
+  supplierOrderEvidence?: SupplierOrderEvidence;
+  /** Structured receiving-document match result. */
+  ddtMatchEvidence?: DdtMatchEvidence;
 };
 
 /**
@@ -364,6 +364,9 @@ export default function ProcurementAgentPortfolio() {
           text: agentText,
           bullets: options.bullets,
           actions: options.actions,
+          recommendationEvidence: options.recommendationEvidence,
+          supplierOrderEvidence: options.supplierOrderEvidence,
+          ddtMatchEvidence: options.ddtMatchEvidence,
         }]);
         // 复盘等场景：回复后预填草稿供用户编辑发送
         if (options.draftAfter != null) {
@@ -838,13 +841,13 @@ export default function ProcurementAgentPortfolio() {
       const batchNo = withDdt.receiptBatches.length + 1;
       const label = batchNo <= 1 ? 'DDT-1292' : 'DDT-1301';
       const report = buildDdtMatchReport(withDdt, label);
-      // 预填一条「实点 ≠ DDT」的上报：发送后直接改表，演示差异处理
-      const countable = withDdt.receivingLines.filter((line) => line.ddt > 0);
-      const proposed = countable.slice(0, 2).map((line, index) => (
-        // 第一条多收、第二条少收：一次覆盖 over / short 两种差异
-        { sku: line.sku, qty: Math.max(0, line.ddt + (index === 0 ? 3 : -2)) }
-      ));
-      const prefill = proposed.length > 0
+      const needsDisposition = hasUnresolvedHold(withDdt.receivingLines);
+      const countable = withDdt.receivingLines.filter((line) => line.ddt > 0 && line.ordered > 0);
+      const proposed = countable.slice(0, 2).map((line, index) => ({
+        sku: line.sku,
+        qty: Math.max(0, line.ddt + (index === 0 ? 3 : -2)),
+      }));
+      const countDraft = proposed.length > 0
         ? PORTFOLIO_COPY.reportActualsPrefill(
           proposed.map((item) => PORTFOLIO_COPY.reportActualsPart(item.sku, item.qty)),
         )
@@ -853,9 +856,9 @@ export default function ProcurementAgentPortfolio() {
         userText: prompt,
         patch: pickReceivingPatch(withDdt),
         label: 'Matching DDT to PO lines…',
-        bullets: prefill ? [...report.bullets, PORTFOLIO_COPY.reportActualsHint] : report.bullets,
-        actions: report.actions,
-        draftAfter: prefill,
+        ddtMatchEvidence: report.evidence,
+        actions: needsDisposition ? report.actions : undefined,
+        draftAfter: needsDisposition ? undefined : countDraft,
       });
       return;
     }
@@ -897,18 +900,48 @@ export default function ProcurementAgentPortfolio() {
           : nextDisposition === 'return'
             ? 'marked Return (will not stock-in)'
             : 'put on hold for review';
-        replyAsAgent(`${skuFromPrompt} ${verb}. You can keep adjusting in chat or Confirm receipt when ready.`, {
+        const unresolvedHoldLines = patchedLines.filter((item) => item.disposition === 'hold');
+        const nextHoldActions = unresolvedHoldLines.flatMap((item) => ([
+          {
+            id: `accept-${item.sku}`,
+            label: PORTFOLIO_COPY.acceptSkuGift(item.sku),
+            prompt: `Accept ${item.sku} as gift`,
+          },
+          {
+            id: `return-${item.sku}`,
+            label: PORTFOLIO_COPY.returnSku(item.sku),
+            prompt: `Return ${item.sku}`,
+          },
+        ]));
+
+        // The next turn handles warehouse count separately from the gift decision.
+        const countable = patchedLines.filter((item) => item.ddt > 0 && item.ordered > 0);
+        const proposed = countable.slice(0, 2).map((item, index) => ({
+          sku: item.sku,
+          qty: Math.max(0, item.ddt + (index === 0 ? 3 : -2)),
+        }));
+        const countDraft = proposed.length > 0
+          ? PORTFOLIO_COPY.reportActualsPrefill(
+            proposed.map((item) => PORTFOLIO_COPY.reportActualsPart(item.sku, item.qty)),
+          )
+          : undefined;
+        const allHoldsResolved = unresolvedHoldLines.length === 0;
+        const resolvedMessages = state.messages.map((message) => (
+          message.ddtMatchEvidence ? { ...message, actions: undefined } : message
+        ));
+
+        replyAsAgent(
+          allHoldsResolved
+            ? `${skuFromPrompt} ${verb}. Next, confirm the warehouse count. Review the prepared message below, edit any quantities that differ, then send it.`
+            : `${skuFromPrompt} ${verb}. Resolve the next held item before confirming the warehouse count.`,
+          {
           userText: prompt,
-          patch: { receivingLines: patchedLines },
+          patch: { receivingLines: patchedLines, messages: resolvedMessages },
           label: 'Updating disposition…',
-          actions: [
-            {
-              id: 'confirm-after-disposition',
-              label: PORTFOLIO_COPY.confirmReceipt,
-              prompt: PORTFOLIO_COPY.confirmReceipt,
-            },
-          ],
-        });
+            actions: allHoldsResolved ? undefined : nextHoldActions,
+            draftAfter: allHoldsResolved ? countDraft : undefined,
+          },
+        );
         return;
       }
     }
@@ -1288,20 +1321,113 @@ export default function ProcurementAgentPortfolio() {
       return;
     }
 
+    if (lower.includes('why this order') || lower.includes('supplier requirements shape')) {
+      const goodsValue = state.lines.reduce(
+        (sum, line) => sum + line.qty * (line.confirmedPrice ?? line.estimatedPrice),
+        0,
+      );
+      const shippingValue = goodsValue >= MNP_SUPPLIER_RULES.freeShippingThreshold
+        ? 0
+        : MNP_SUPPLIER_RULES.defaultShippingFee;
+      replyAsAgent('How MNP requirements shaped this order', {
+        userText: prompt,
+        label: 'Checking order against supplier rules…',
+        supplierOrderEvidence: {
+          supplier: MNP_SUPPLIER_RULES.name,
+          productCount: new Set(state.lines.map((line) => line.productId)).size,
+          skuCount: state.lines.length,
+          totalUnits: state.lines.reduce((sum, line) => sum + line.qty, 0),
+          goodsValue,
+          shippingValue,
+          rules: [
+            {
+              label: 'Minimum order',
+              requirement: `€${MNP_SUPPLIER_RULES.minOrderValue.toLocaleString('en-US')}`,
+              outcome: goodsValue >= MNP_SUPPLIER_RULES.minOrderValue ? 'Met' : 'Below threshold',
+              detail: `Current goods value is €${goodsValue.toFixed(2)}.`,
+              status: goodsValue >= MNP_SUPPLIER_RULES.minOrderValue ? 'met' : 'review',
+            },
+            {
+              label: 'Free shipping',
+              requirement: `From €${MNP_SUPPLIER_RULES.freeShippingThreshold.toLocaleString('en-US')}`,
+              outcome: shippingValue === 0 ? 'Qualified' : `€${shippingValue.toFixed(2)} fee`,
+              detail: shippingValue === 0
+                ? `The order clears the threshold, avoiding the €${MNP_SUPPLIER_RULES.defaultShippingFee} shipping fee.`
+                : 'Changing quantities may move the order above or below this threshold.',
+              status: shippingValue === 0 ? 'met' : 'review',
+            },
+            {
+              label: 'Volume discount',
+              requirement: `8% from €${MNP_SUPPLIER_RULES.minOrderValue.toLocaleString('en-US')}`,
+              outcome: goodsValue >= MNP_SUPPLIER_RULES.minOrderValue ? 'Eligible' : 'Not eligible',
+              detail: 'Eligibility is flagged now; the final discount must be verified on supplier confirmation.',
+              status: goodsValue >= MNP_SUPPLIER_RULES.minOrderValue ? 'met' : 'review',
+            },
+            {
+              label: 'Lead time',
+              requirement: `${MNP_SUPPLIER_RULES.leadTimeMedianDays}d median · ${MNP_SUPPLIER_RULES.leadTimeP90Days}d P90`,
+              outcome: 'Included in forecast window',
+              detail: 'Demand is projected through supplier lead time before the target coverage period begins.',
+              status: 'context',
+            },
+            {
+              label: 'Payment terms',
+              requirement: `${MNP_SUPPLIER_RULES.earlyPaymentDiscountRate * 100}% within ${MNP_SUPPLIER_RULES.earlyPaymentDays} days`,
+              outcome: 'Buyer decision',
+              detail: `${MNP_SUPPLIER_RULES.paymentMethod}; cash timing and early-payment discount remain human-owned.`,
+              status: 'review',
+            },
+          ],
+          source: MNP_SUPPLIER_RULES.source,
+          version: MNP_SUPPLIER_RULES.version,
+          validUntil: MNP_SUPPLIER_RULES.validUntil,
+        },
+      });
+      return;
+    }
+
     if (lower.includes('why did you recommend') || lower.includes('why recommend')) {
       const skuMatch = state.lines.find((line) => lower.includes(line.sku.toLowerCase()));
       const spuMatch = state.lines.find((line) => lower.includes(line.productName.toLowerCase()));
       if (skuMatch) {
+        const context = skuMatch.decisionContext;
         replyAsAgent(
-          [
-            `${skuMatch.sku} · ${skuMatch.variant}:`,
-            `• Sales 30d ${skuMatch.sales30} · stock ${skuMatch.stock}`,
-            `• Coverage target drives suggested ${skuMatch.recommended}; current qty ${skuMatch.qty}`,
-            `• Lead-time median for MNP is applied so arrival covers the window`,
-            skuMatch.alert ? `• Note: ${skuMatch.alert}` : '• No planner alert on this SKU',
-            'You can edit qty or delete the line - I will not place the order.',
-          ].join('\n'),
-          { userText: prompt, label: 'Explaining SKU recommendation…' },
+          `Why ${skuMatch.recommended} units`,
+          {
+            userText: prompt,
+            label: 'Tracing recommendation evidence…',
+            recommendationEvidence: context ? {
+              sku: skuMatch.sku,
+              variant: skuMatch.variant,
+              recommendedQty: skuMatch.recommended,
+              currentQty: skuMatch.qty,
+              stock: skuMatch.stock,
+              ...context,
+            } : {
+              sku: skuMatch.sku,
+              variant: skuMatch.variant,
+              recommendedQty: skuMatch.recommended,
+              currentQty: skuMatch.qty,
+              stock: skuMatch.stock,
+              inbound: 0,
+              coverageDays: DEMO_COVERAGE_DAYS,
+              leadTimeDays: MNP_SUPPLIER_RULES.leadTimeMedianDays,
+              forecastDemand: skuMatch.stock + skuMatch.recommended,
+              netNeed: skuMatch.recommended,
+              packSize: 1,
+              recentSales: [
+                { month: 'May', units: Math.max(0, Math.round(skuMatch.sales30 * 0.82)) },
+                { month: 'Jun', units: Math.max(0, Math.round(skuMatch.sales30 * 0.91)) },
+                { month: 'Jul', units: skuMatch.sales30 },
+              ],
+              signals: skuMatch.alert ? [{
+                label: 'Planner alert',
+                value: skuMatch.alert,
+                detail: 'This exception remains visible for buyer review.',
+                tone: 'attention',
+              }] : [],
+            },
+          },
         );
         return;
       }
@@ -1427,10 +1553,9 @@ export default function ProcurementAgentPortfolio() {
         <div className="hidden md:flex">
           <PortfolioStageNav stage={state.stage} onSelect={selectStage} onReset={reset} />
         </div>
-        {/* 滚动在 main：白卡片随内容变高并整卡上移（勿给卡片 h-full，否则只剩内部滚）。
-            内边距放在 main 上，便于操作栏 sticky -top / 小计 sticky bottom 对齐库存总览。 */}
-        <main className="min-w-0 flex-1 overflow-y-auto overscroll-y-none bg-[#eef0f4] px-3 pb-3 pt-3 md:px-4 md:pb-4 md:pr-2 md:pt-4">
-            <div className="rounded-2xl bg-white">
+        {/* 主区域固定填满浏览器；白卡不随页面滚动，超出内容只在卡片内部滚动。 */}
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[#eef0f4] px-3 pb-3 pt-3 md:px-4 md:pb-4 md:pr-2 md:pt-4">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-white">
             <PortfolioMainCanvas
               state={state}
               onGoStage={selectStage}
@@ -1495,10 +1620,6 @@ export default function ProcurementAgentPortfolio() {
               }}
               onExport={(format) => {
                 setState((prev) => upsertExportAttachment(prev, format));
-                replyAsAgent(
-                  `${PORTFOLIO_COPY.exportDone(format)}. Saved under Attachments - downloaded only, not sent.`,
-                  { label: 'Preparing export package…' },
-                );
               }}
               onDownloadAttachment={(attachment) => {
                 replyAsAgent(

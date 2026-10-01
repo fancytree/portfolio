@@ -107,24 +107,10 @@ import type {
 
 /** 操作栏默认高度（h-10 + py-3）；实际以 ResizeObserver 为准 */
 const PORTFOLIO_ACTION_BAR_H = 65;
-/** main 上下内边距：px-3/pt-3=12，md:p-4=16（与库存总览 -top-3 对齐） */
-function useMainPadY() {
-  const [padY, setPadY] = useState(12);
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)');
-    const update = () => setPadY(mq.matches ? 16 : 12);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-  return padY;
-}
-
-/** 操作栏高度 + 表格叠在其下的 sticky top（已扣 main 内边距） */
+/** 操作栏高度 + 表格叠在其下的 sticky top */
 function useActionBarStickyHeight() {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(PORTFOLIO_ACTION_BAR_H);
-  const padY = useMainPadY();
   useEffect(() => {
     const el = ref.current;
     if (!el || typeof ResizeObserver === 'undefined') return;
@@ -134,12 +120,10 @@ function useActionBarStickyHeight() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-  // 操作栏 sticky -top-* 抵消 main padding 后，下级 sticky 的 top = height - padY
-  const stickTop = Math.max(0, height - padY);
-  return { ref, height, stickTop, padY };
+  return { ref, height, stickTop: height };
 }
 
-/** 操作栏：吸顶固定（-top 抵消 main 内边距，避免顶缝） */
+/** 操作栏：固定在白卡内部滚动视口顶部 */
 function CanvasActionBar({
   barRef,
   children,
@@ -150,7 +134,7 @@ function CanvasActionBar({
   return (
     <div
       ref={barRef}
-      className="sticky -top-3 z-40 flex flex-wrap items-center justify-between gap-2 border-b border-[#eef0f4] bg-white px-6 py-3 md:-top-4"
+      className="sticky top-0 z-40 flex flex-wrap items-center justify-between gap-2 border-b border-[#eef0f4] bg-white px-6 py-3"
     >
       {children}
     </div>
@@ -278,17 +262,17 @@ function ViewAttachmentsButton({
       {PORTFOLIO_COPY.viewAttachments}
       <span
         className={cn(
-          'rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums',
+          'inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums',
           empty ? 'bg-[#eef0f4] text-[#8b93a7]' : 'bg-[#eef4ff] text-[#2f6bff]',
         )}
       >
-        ({count})
+        {count}
       </span>
     </Button>
   );
 }
 
-/** 谈价记录入口：两边共用，无记录时显示 (0) 并禁用 */
+/** 谈价记录入口：两边共用，无记录时徽章显示 0 并禁用 */
 function ViewNegotiationLogButton({
   count,
   onClick,
@@ -309,11 +293,11 @@ function ViewNegotiationLogButton({
       {PORTFOLIO_COPY.viewNegotiationLog}
       <span
         className={cn(
-          'rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums',
+          'inline-flex min-w-5 items-center justify-center rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums',
           empty ? 'bg-[#eef0f4] text-[#8b93a7]' : 'bg-[#eef4ff] text-[#2f6bff]',
         )}
       >
-        ({count})
+        {count}
       </span>
     </Button>
   );
@@ -578,10 +562,7 @@ function resolveDocumentTitle(stage: DemoStageId, documentTitle: string | null) 
  * 左侧：可编辑业务标题 + PO 生命周期进度
  * 右侧：采购单号（小号）在供应规则上方
  */
-/**
- * 滚动在上层 main（整卡上移）；此处只铺内容。
- * 表格标题栏 sticky top-0 相对 main 吸顶。
- */
+/** 白卡保持固定；只有卡内内容滚动，底部栏始终留在卡片底部。 */
 function CanvasScrollShell({
   children,
   footer,
@@ -590,10 +571,12 @@ function CanvasScrollShell({
   footer?: ReactNode;
 }) {
   return (
-    <>
-      {children}
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div data-canvas-scroll className="min-h-0 flex-1 overflow-y-auto overscroll-y-none">
+        {children}
+      </div>
       {footer ?? null}
-    </>
+    </div>
   );
 }
 
@@ -1362,11 +1345,11 @@ function SubtotalBar({
   const deltaAbs = Math.abs(delta).toFixed(2);
   const deltaTone = delta > 0.009 ? 'higher' : delta < -0.009 ? 'lower' : 'flat';
 
-  // 对齐操作栏：-bottom 抵消 main 的 pb；两行布局，避免状态与金额挤成一行
+  // 固定在卡片底部；内容区独立滚动，两行布局避免状态与金额挤成一行
   return (
     <div
       className={cn(
-        'sticky -bottom-3 z-20 shrink-0 space-y-1 rounded-b-2xl border-t border-[#e8eaef] bg-white px-6 py-2.5 text-[12px] md:-bottom-4',
+        'relative z-20 shrink-0 space-y-1 rounded-b-2xl border-t border-[#e8eaef] bg-white px-6 py-2.5 text-[12px]',
         revealDelayMs > 0 && 'motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-500',
       )}
       style={revealDelayMs > 0 ? { animationDelay: `${revealDelayMs}ms`, animationFillMode: 'both' } : undefined}
@@ -1984,13 +1967,24 @@ function LineTable({
             <span className="text-[11px] text-[#8b93a7]">
               {groups.length} products · {lines.length} SKUs
             </span>
-            <button
-              type="button"
-              className="cursor-pointer text-[11px] font-medium text-[#2f6bff] hover:underline"
-              onClick={() => setExpanded(allExpanded ? new Set() : new Set(groups.map((g) => g.key)))}
-            >
-              {allExpanded ? 'Collapse all' : 'Expand all'}
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                className="cursor-pointer text-[11px] font-medium text-[#2f6bff] hover:underline"
+                onClick={() => setExpanded(allExpanded ? new Set() : new Set(groups.map((g) => g.key)))}
+              >
+                {allExpanded ? 'Collapse all' : 'Expand all'}
+              </button>
+              <button
+                type="button"
+                title="Why this order?"
+                aria-label="Why this order?"
+                className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#6b7280] transition-colors hover:bg-[#eaf1ff] hover:text-[#2f6bff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2f6bff]/40"
+                onClick={() => onAskAgent('Why this order? Explain how MNP supplier requirements shaped the full recommendation.')}
+              >
+                <CircleHelpIcon className="size-3.5" aria-hidden />
+              </button>
+            </div>
           </div>
           <div ref={headScrollRef} className="overflow-x-hidden border-b border-[#e8eaef] bg-[#f6f7f9]">
             <table
@@ -3543,10 +3537,6 @@ function ReceivingWorkspaceView({
 
         {awaitingRemainingDecision ? (
           <p className="text-[12px] text-[#b35b1f]">{PORTFOLIO_COPY.remainingRequiredHint}</p>
-        ) : null}
-
-        {!currentDdtReady && receiptBatches.length === 0 ? (
-          <p className="text-[12px] text-[#8b93a7]">{PORTFOLIO_COPY.receivingEmptyHint}</p>
         ) : null}
 
         {/* 哨兵 + 卡片同包一层；未吸顶圆角，吸顶后直角 */}

@@ -4,6 +4,7 @@ import type {
   ConfirmationRound,
   DemoChatAction,
   DemoChatMessage,
+  DdtMatchEvidence,
   DemoLine,
   DemoPhaseKey,
   DemoProgress,
@@ -41,6 +42,42 @@ export const BASE_LINES: DemoLine[] = [
     productId: 'p-bn-370', productCode: 'BN-370', productName: 'Reinforced bonder',
     sku: '370102', variant: '14 ml', nameIt: 'Bonder rinforzante 14 ml',
     stock: 22, sales30: 68, recommended: 96, qty: 96, estimatedPrice: 5.4,
+    decisionContext: {
+      inbound: 0,
+      coverageDays: 30,
+      leadTimeDays: 14,
+      forecastDemand: 110,
+      netNeed: 88,
+      packSize: 12,
+      recentSales: [
+        { month: 'May', units: 52 },
+        { month: 'Jun', units: 61 },
+        { month: 'Jul', units: 68 },
+      ],
+      signals: [
+        {
+          label: 'Seasonality',
+          value: '+6% forecast',
+          detail: 'Higher nail-service demand expected in Aug–Sep.',
+        },
+        {
+          label: 'Customer mix',
+          value: 'Nail salons +5% MoM',
+          detail: 'The fastest-growing customer segment buys this category.',
+        },
+        {
+          label: 'Stockout recovery',
+          value: '9 days out of stock',
+          detail: 'Observed sales understate demand, so missed demand is restored.',
+          tone: 'attention',
+        },
+        {
+          label: 'Buyer note',
+          value: 'Replenish next MNP order',
+          detail: 'A prior purchasing recommendation is included as evidence.',
+        },
+      ],
+    },
   }),
   demoLine({
     productId: 'p-bn-370', productCode: 'BN-370', productName: 'Reinforced bonder',
@@ -329,6 +366,7 @@ export type DdtMatchReport = {
   text: string;
   bullets: string[];
   actions: DemoChatAction[];
+  evidence: DdtMatchEvidence;
 };
 
 const REMAINING_DECISION_KEYS: RemainingReceiptDecision[] = [
@@ -508,6 +546,40 @@ export function buildDdtMatchReport(state: DemoState, ddtLabel: string): DdtMatc
     text: PORTFOLIO_COPY.ddtMatchTitle(ddtLabel, batchNo),
     bullets,
     actions,
+    evidence: {
+      label: ddtLabel,
+      batchNo,
+      lineCount: lines.filter((line) => line.ddt > 0).length,
+      totalUnits: lines.reduce((sum, line) => sum + line.ddt, 0),
+      orderVariances: [
+        ...shortVsOrder.map((line) => {
+          const ordered = openOrderedOf(line);
+          return {
+            sku: line.sku,
+            type: 'short' as const,
+            ordered,
+            ddt: line.ddt,
+            difference: ordered - line.ddt,
+          };
+        }),
+        ...overVsOrder.map((line) => {
+          const ordered = openOrderedOf(line);
+          return {
+            sku: line.sku,
+            type: 'over' as const,
+            ordered,
+            ddt: line.ddt,
+            difference: line.ddt - ordered,
+          };
+        }),
+      ],
+      missing: {
+        skuCount: missingOnDdt.length,
+        units: missingOnDdt.reduce((sum, line) => sum + openOrderedOf(line), 0),
+        skus: missingOnDdt.map((line) => line.sku),
+      },
+      unexpected: giftLines.map((line) => ({ sku: line.sku, units: line.ddt })),
+    },
   };
 }
 

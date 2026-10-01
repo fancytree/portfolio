@@ -286,7 +286,6 @@ export const PORTFOLIO_COPY = {
   receivingPoNoBatchesYet: 'No confirmed receipts yet',
   receivingItemsMeta: (spuCount: number, skuCount: number) =>
     `${spuCount} products · ${skuCount} SKUs`,
-  receivingEmptyHint: 'No DDT on this arrival yet. Upload DDT to prefill DDT / actual qty for this batch.',
   receivingBatch1Note: 'DDT-1292',
   receivingBatch2Note: 'DDT-1301',
   receivingColProduct: 'Product',

@@ -49,6 +49,75 @@ export type DemoChatMessage = {
   progress?: DemoProgress;
   /** think 模式当前步骤 0-2 */
   thinkStep?: number;
+  /** SKU-level explanation rendered as an evidence card instead of prose. */
+  recommendationEvidence?: RecommendationEvidence;
+  /** Order-level explanation centered on supplier rules and constraints. */
+  supplierOrderEvidence?: SupplierOrderEvidence;
+  /** Structured DDT match result shown after a receiving document is uploaded. */
+  ddtMatchEvidence?: DdtMatchEvidence;
+};
+
+export type DdtMatchEvidence = {
+  label: string;
+  batchNo: number;
+  lineCount: number;
+  totalUnits: number;
+  orderVariances: Array<{
+    sku: string;
+    type: 'short' | 'over';
+    ordered: number;
+    ddt: number;
+    difference: number;
+  }>;
+  missing: {
+    skuCount: number;
+    units: number;
+    skus: string[];
+  };
+  unexpected: Array<{
+    sku: string;
+    units: number;
+  }>;
+};
+
+export type RecommendationEvidence = {
+  sku: string;
+  variant: string;
+  recommendedQty: number;
+  currentQty: number;
+  stock: number;
+  inbound: number;
+  coverageDays: number;
+  leadTimeDays: number;
+  forecastDemand: number;
+  netNeed: number;
+  packSize: number;
+  recentSales: Array<{ month: string; units: number }>;
+  signals: Array<{
+    label: string;
+    value: string;
+    detail: string;
+    tone?: 'default' | 'attention';
+  }>;
+};
+
+export type SupplierOrderEvidence = {
+  supplier: string;
+  productCount: number;
+  skuCount: number;
+  totalUnits: number;
+  goodsValue: number;
+  shippingValue: number;
+  rules: Array<{
+    label: string;
+    requirement: string;
+    outcome: string;
+    detail: string;
+    status: 'met' | 'review' | 'context';
+  }>;
+  source: string;
+  version: string;
+  validUntil: string;
 };
 
 export type DemoLine = {
@@ -72,6 +141,11 @@ export type DemoLine = {
   /** 规划侧提示（慢动销等），非确认单差异 */
   alert?: string;
   risk?: 'price' | 'qty' | 'missing' | 'extra' | null;
+  /** Optional richer business context used by the Agent's Why explanation. */
+  decisionContext?: Omit<
+    RecommendationEvidence,
+    'sku' | 'variant' | 'recommendedQty' | 'currentQty' | 'stock'
+  >;
 };
 
 /** 收货工作区行：来自采购单明细 + 当前批次清点 + 已入库累计 */
