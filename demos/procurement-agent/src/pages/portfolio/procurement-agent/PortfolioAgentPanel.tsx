@@ -20,6 +20,7 @@ import type {
   DemoPhaseKey,
   DemoStageId,
   RecommendationEvidence,
+  ReviewPromptEvidence,
   SupplierOrderEvidence,
 } from './portfolioDemoTypes';
 
@@ -478,6 +479,52 @@ function DdtMatchEvidenceCard({ evidence }: { evidence: DdtMatchEvidence }) {
   );
 }
 
+/** End-of-order review: one closed state and three distinct judgment prompts. */
+function ReviewPromptEvidenceCard({ evidence }: { evidence: ReviewPromptEvidence }) {
+  return (
+    <article
+      data-review-prompt-evidence
+      className="overflow-hidden rounded-2xl border border-[#dfe4ee] bg-white text-[#1a1d26] shadow-[0_8px_24px_rgba(35,48,78,0.06)]"
+    >
+      <header className="border-b border-[#e7ebe9] bg-[#f5faf7] px-4 py-3.5">
+        <div className="flex items-center gap-2 text-[#1f8a57]">
+          <span className="inline-flex size-5 items-center justify-center rounded-full bg-[#dff3e8]">
+            <CheckIcon className="size-3" aria-hidden />
+          </span>
+          <p className="text-[10px] font-semibold tracking-[0.12em] uppercase">{evidence.status}</p>
+        </div>
+        <h3 className="mt-2 text-[17px] font-semibold leading-snug tracking-[-0.02em]">
+          {evidence.title}
+        </h3>
+        <p className="mt-1 text-[10.5px] leading-snug text-[#6f7890]">
+          Add buyer context before these outcomes become learning candidates.
+        </p>
+      </header>
+
+      <ol className="divide-y divide-[#eceff4] px-4">
+        {evidence.questions.map((item, index) => (
+          <li key={item.label} className="grid grid-cols-[24px_1fr] gap-2.5 py-3">
+            <span className="mt-0.5 inline-flex size-6 items-center justify-center rounded-lg bg-[#eef3ff] text-[10px] font-semibold tabular-nums text-[#2f6bff]">
+              {index + 1}
+            </span>
+            <div>
+              <p className="text-[10px] font-semibold tracking-[0.08em] text-[#7a8397] uppercase">
+                {item.label}
+              </p>
+              <p className="mt-0.5 text-[12px] font-medium leading-snug text-[#303747]">
+                {item.question}
+              </p>
+              <p className="mt-1 text-[10.5px] leading-snug text-[#81899b]">
+                {item.context}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </article>
+  );
+}
+
 /** 按内容撑高 textarea，封顶后内部滚动 */
 function resizeComposer(el: HTMLTextAreaElement | null) {
   if (!el) return;
@@ -504,17 +551,22 @@ export default function PortfolioAgentPanel({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
-  const working = busy || messages.some(
-    (message) => message.role === 'status' && message.progress?.status === 'running',
-  );
+  // `busy` is the live execution state. Historical/interrupted status cards must not
+  // keep the composer disabled after a follow-up draft has been prepared.
+  const working = busy;
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     const lastMessage = messages[messages.length - 1];
-    if (lastMessage?.recommendationEvidence || lastMessage?.supplierOrderEvidence || lastMessage?.ddtMatchEvidence) {
+    if (
+      lastMessage?.recommendationEvidence
+      || lastMessage?.supplierOrderEvidence
+      || lastMessage?.ddtMatchEvidence
+      || lastMessage?.reviewPromptEvidence
+    ) {
       const cards = el.querySelectorAll<HTMLElement>(
-        '[data-recommendation-evidence], [data-supplier-order-evidence], [data-ddt-match-evidence]',
+        '[data-recommendation-evidence], [data-supplier-order-evidence], [data-ddt-match-evidence], [data-review-prompt-evidence]',
       );
       const latestCard = cards[cards.length - 1];
       if (latestCard) {
@@ -533,6 +585,7 @@ export default function PortfolioAgentPanel({
   }, [draftInput]);
 
   const canSend = draftInput.trim().length > 0 || !!pendingFile;
+  const readyToSend = canSend && !working;
 
   const handleSend = () => {
     if (working || !canSend) return;
@@ -573,12 +626,14 @@ export default function PortfolioAgentPanel({
             const hasRecommendationEvidence = !isUser && !!message.recommendationEvidence;
             const hasSupplierOrderEvidence = !isUser && !!message.supplierOrderEvidence;
             const hasDdtMatchEvidence = !isUser && !!message.ddtMatchEvidence;
+            const hasReviewPromptEvidence = !isUser && !!message.reviewPromptEvidence;
             const hasStructure = !isUser && (
               (message.bullets && message.bullets.length > 0)
               || (message.actions && message.actions.length > 0)
               || hasRecommendationEvidence
               || hasSupplierOrderEvidence
               || hasDdtMatchEvidence
+              || hasReviewPromptEvidence
             );
 
             return (
@@ -594,10 +649,12 @@ export default function PortfolioAgentPanel({
                     'max-w-[92%] rounded-2xl px-3.5 py-2.5 text-[13px] leading-relaxed',
                     isUser ? 'bg-[#2f6bff] text-white whitespace-pre-wrap' : 'bg-[#f1f3f7] text-[#1a1d26]',
                     hasStructure && 'w-full',
-                    (hasRecommendationEvidence || hasSupplierOrderEvidence || hasDdtMatchEvidence) && 'max-w-full bg-transparent p-0',
+                    (hasRecommendationEvidence || hasSupplierOrderEvidence || hasDdtMatchEvidence || hasReviewPromptEvidence) && 'max-w-full bg-transparent p-0',
                   )}
                 >
-                  {hasDdtMatchEvidence && message.ddtMatchEvidence ? (
+                  {hasReviewPromptEvidence && message.reviewPromptEvidence ? (
+                    <ReviewPromptEvidenceCard evidence={message.reviewPromptEvidence} />
+                  ) : hasDdtMatchEvidence && message.ddtMatchEvidence ? (
                     <DdtMatchEvidenceCard evidence={message.ddtMatchEvidence} />
                   ) : hasSupplierOrderEvidence && message.supplierOrderEvidence ? (
                     <SupplierOrderEvidenceCard evidence={message.supplierOrderEvidence} />
@@ -724,10 +781,13 @@ export default function PortfolioAgentPanel({
                 type="button"
                 size="sm"
                 className={cn(
-                  'h-8 gap-1.5 rounded-xl bg-[#2f6bff] px-3 text-[12px] font-medium hover:bg-[#2458d9]',
+                  'h-8 gap-1.5 rounded-xl px-3 text-[12px] font-medium transition-colors',
+                  readyToSend
+                    ? 'bg-[#2f6bff] text-white shadow-sm hover:bg-[#2458d9]'
+                    : 'bg-[#d6e1fb] text-white hover:bg-[#d6e1fb]',
                   kickoffReady && !working && 'motion-safe:animate-pulse',
                 )}
-                disabled={working || !canSend}
+                disabled={!readyToSend}
                 onClick={handleSend}
               >
                 <SendIcon className="size-3.5" />

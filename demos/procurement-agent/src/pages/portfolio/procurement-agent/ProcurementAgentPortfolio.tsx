@@ -55,6 +55,7 @@ import type {
   NegotiationNote,
   RecommendationEvidence,
   RemainingReceiptDecision,
+  ReviewPromptEvidence,
   SupplierOrderEvidence,
 } from './portfolioDemoTypes';
 
@@ -186,6 +187,8 @@ type AgentReplyOptions = {
   supplierOrderEvidence?: SupplierOrderEvidence;
   /** Structured receiving-document match result. */
   ddtMatchEvidence?: DdtMatchEvidence;
+  /** Structured end-of-order retrospective prompt. */
+  reviewPromptEvidence?: ReviewPromptEvidence;
 };
 
 /**
@@ -247,13 +250,13 @@ export default function ProcurementAgentPortfolio() {
             if (when.reviewDone !== done) return false;
           }
         }
-        // 上传 DDT 后等 Agent 匹配结束、预填草稿再指向输入框
-        if (step.id === 'report-actuals' && busy) return false;
+        // 只有 Agent 已完成上一问、并在输入框预填实点消息后，才提示用户检查并发送。
+        if (step.id === 'report-actuals' && (busy || state.draftInput.trim().length === 0)) return false;
         // 进入复盘后等收货收口回复结束，再指向 Review this order
         if (step.id === 'review-order' && busy) return false;
         return true;
       }).map(({ id, target, title, body }) => ({ id, target, title, body })),
-    [busy, state.approved, state.confirmationUploaded, state.currentDdtReady, state.learningDecision, state.orderRecorded, state.stage],
+    [busy, state.approved, state.confirmationUploaded, state.currentDdtReady, state.draftInput, state.learningDecision, state.orderRecorded, state.stage],
   );
 
   const reset = useCallback(() => {
@@ -367,6 +370,7 @@ export default function ProcurementAgentPortfolio() {
           recommendationEvidence: options.recommendationEvidence,
           supplierOrderEvidence: options.supplierOrderEvidence,
           ddtMatchEvidence: options.ddtMatchEvidence,
+          reviewPromptEvidence: options.reviewPromptEvidence,
         }]);
         // 复盘等场景：回复后预填草稿供用户编辑发送
         if (options.draftAfter != null) {
@@ -608,7 +612,27 @@ export default function ProcurementAgentPortfolio() {
       replyAsAgent(PORTFOLIO_COPY.reviewOrderIntro, {
         userText: prompt,
         label: 'Checking forecast signals…',
-        bullets: [...PORTFOLIO_COPY.reviewOrderAskBullets],
+        reviewPromptEvidence: {
+          status: 'Receiving fully closed',
+          title: 'Review the signals for the next buy',
+          questions: [
+            {
+              label: 'Demand fit',
+              question: PORTFOLIO_COPY.reviewOrderAskBullets[0],
+              context: 'Compare ordered quantity with sell-through after arrival.',
+            },
+            {
+              label: 'Arrival timing',
+              question: PORTFOLIO_COPY.reviewOrderAskBullets[1],
+              context: 'Separate supplier delay from a forecasting error.',
+            },
+            {
+              label: 'SKU exception',
+              question: PORTFOLIO_COPY.reviewOrderAskBullets[2],
+              context: 'Identify any coverage, buffer, or lead-time change.',
+            },
+          ],
+        },
         draftAfter: PORTFOLIO_COPY.reviewOrderDraft,
       });
       return;
@@ -896,10 +920,10 @@ export default function ProcurementAgentPortfolio() {
           item.sku === skuFromPrompt ? { ...item, disposition: nextDisposition } : item
         ));
         const verb = nextDisposition === 'receive'
-          ? 'accepted as gift / receive'
+          ? 'will be added to inventory as a supplier gift'
           : nextDisposition === 'return'
-            ? 'marked Return (will not stock-in)'
-            : 'put on hold for review';
+            ? 'will be returned and excluded from stock-in'
+            : 'will remain on hold for review';
         const unresolvedHoldLines = patchedLines.filter((item) => item.disposition === 'hold');
         const nextHoldActions = unresolvedHoldLines.flatMap((item) => ([
           {
@@ -932,7 +956,7 @@ export default function ProcurementAgentPortfolio() {
 
         replyAsAgent(
           allHoldsResolved
-            ? `${skuFromPrompt} ${verb}. Next, confirm the warehouse count. Review the prepared message below, edit any quantities that differ, then send it.`
+            ? `${skuFromPrompt} ${verb}. Next, confirm the warehouse count.`
             : `${skuFromPrompt} ${verb}. Resolve the next held item before confirming the warehouse count.`,
           {
           userText: prompt,

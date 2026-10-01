@@ -271,17 +271,6 @@ const BATCH1_DDT: Record<string, { ddt: number; disposition?: ReceivingLine['dis
   'NEW-024': { ddt: 12, disposition: 'hold' },
 };
 
-/** 第二批 DDT-1301：补齐剩余（含 431001 缺口与 420106） */
-const BATCH2_DDT: Record<string, { ddt: number; disposition?: ReceivingLine['disposition'] }> = {
-  '370102': { ddt: 0 },
-  '370108': { ddt: 0 },
-  '431001': { ddt: 14 },
-  '431015': { ddt: 0 },
-  '420106': { ddt: 36 },
-  '510002': { ddt: 0 },
-  'NEW-024': { ddt: 0 },
-};
-
 /** 本批 open 订购量（ordered − 已入库） */
 export function openOrderedOf(line: ReceivingLine) {
   return Math.max(0, line.ordered - line.stocked);
@@ -343,9 +332,11 @@ export function nextReceiptBatchNo(batches: ReceiptBatchSnapshot[]) {
 
 export function applyCurrentBatchDdt(state: DemoState): DemoState {
   const batchNo = nextReceiptBatchNo(state.receiptBatches);
-  const fill = batchNo <= 1 ? BATCH1_DDT : BATCH2_DDT;
   const receivingLines = state.receivingLines.map((line) => {
-    const patch = fill[line.sku] ?? { ddt: 0 };
+    // 第一批保留差异案例；第二批按当前 open qty 补齐，确保收货闭环来自真实批次数据。
+    const patch = batchNo <= 1
+      ? (BATCH1_DDT[line.sku] ?? { ddt: 0 })
+      : { ddt: line.ordered > 0 ? openOrderedOf(line) : 0 };
     // Actual 默认填入 DDT，仓差异再改
     return {
       ...line,
@@ -598,8 +589,8 @@ export function summarizeReceiptBatch(batch: ReceiptBatchSnapshot): {
   let pcs = 0;
   let ddtPcs = 0;
   for (const row of Object.values(batch.bySku)) {
-    if (row.ddt > 0 || row.counted > 0) skuCount += 1;
-    pcs += row.counted;
+    if (row.stocked > 0) skuCount += 1;
+    pcs += row.stocked;
     ddtPcs += row.ddt;
   }
   return { skuCount, pcs, ddtPcs };
@@ -613,8 +604,8 @@ export function confirmCurrentReceiptBatch(state: DemoState): DemoState {
   const label = batchNo <= 1 ? 'DDT-1292' : 'DDT-1301';
   const bySku: ReceiptBatchSnapshot['bySku'] = {};
   const receivingLines = state.receivingLines.map((line) => {
-    bySku[line.sku] = { ddt: line.ddt, counted: line.counted };
     const add = line.disposition === 'receive' ? line.counted : 0;
+    bySku[line.sku] = { ddt: line.ddt, counted: line.counted, stocked: add };
     return {
       ...line,
       stocked: line.stocked + add,

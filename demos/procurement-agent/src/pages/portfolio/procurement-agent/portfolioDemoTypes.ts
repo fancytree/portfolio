@@ -55,6 +55,8 @@ export type DemoChatMessage = {
   supplierOrderEvidence?: SupplierOrderEvidence;
   /** Structured DDT match result shown after a receiving document is uploaded. */
   ddtMatchEvidence?: DdtMatchEvidence;
+  /** Structured prompt for the buyer's end-of-order retrospective. */
+  reviewPromptEvidence?: ReviewPromptEvidence;
 };
 
 export type DdtMatchEvidence = {
@@ -77,6 +79,16 @@ export type DdtMatchEvidence = {
   unexpected: Array<{
     sku: string;
     units: number;
+  }>;
+};
+
+export type ReviewPromptEvidence = {
+  status: string;
+  title: string;
+  questions: Array<{
+    label: string;
+    question: string;
+    context: string;
   }>;
 };
 
@@ -179,7 +191,7 @@ export type ReceiptBatchSnapshot = {
   batchNo: number;
   /** 确认入库时间（Order details 分批摘要用） */
   confirmedAt: string;
-  bySku: Record<string, { ddt: number; counted: number }>;
+  bySku: Record<string, { ddt: number; counted: number; stocked: number }>;
 };
 
 export type IntakeDraft = {

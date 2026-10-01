@@ -3127,8 +3127,11 @@ function ReceivingNoteCell({
   if (missing) {
     notes.push(PORTFOLIO_COPY.receivingNoteMissing(open));
   }
+  const isSupplierAddedLine = line.ordered === 0 && line.ddt > 0;
   if (line.disposition === 'hold') {
     notes.push(PORTFOLIO_COPY.receivingNoteHold);
+  } else if (isSupplierAddedLine && line.disposition === 'receive') {
+    notes.push(PORTFOLIO_COPY.receivingNoteGift);
   } else if (line.disposition === 'return') {
     notes.push(PORTFOLIO_COPY.receivingNoteReturn);
   }
@@ -3166,18 +3169,30 @@ function ReceivingNoteCell({
           ))}
         </span>
       </button>
-      {line.disposition === 'hold' ? (
+      {isSupplierAddedLine ? (
         <div className="flex flex-wrap items-center gap-2 pl-4">
           <button
             type="button"
-            className="cursor-pointer text-[11px] font-medium text-[#2f6bff] hover:underline"
+            aria-pressed={line.disposition === 'receive'}
+            className={cn(
+              'cursor-pointer rounded-md px-2 py-1 text-[11px] font-medium transition-colors',
+              line.disposition === 'receive'
+                ? 'bg-[#eaf0ff] text-[#2f6bff]'
+                : 'text-[#2f6bff] hover:bg-[#f3f7ff]',
+            )}
             onClick={() => onSetDisposition(line.sku, 'receive')}
           >
             {PORTFOLIO_COPY.acceptGift}
           </button>
           <button
             type="button"
-            className="cursor-pointer text-[11px] font-medium text-[#c23b3b] hover:underline"
+            aria-pressed={line.disposition === 'return'}
+            className={cn(
+              'cursor-pointer rounded-md px-2 py-1 text-[11px] font-medium transition-colors',
+              line.disposition === 'return'
+                ? 'bg-[#fff0f0] text-[#c23b3b]'
+                : 'text-[#c23b3b] hover:bg-[#fff6f6]',
+            )}
             onClick={() => onSetDisposition(line.sku, 'return')}
           >
             {PORTFOLIO_COPY.returnLine}
@@ -3321,7 +3336,7 @@ function ReceivingWorkspaceView({
         receiptBatches.length > 0
           ? PORTFOLIO_COPY.receivingPoBatchSummary(
             receiptBatches.length,
-            receiptBatches.reduce((sum, batch) => sum + summarizeReceiptBatch(batch).pcs, 0),
+            stockedQty,
           )
           : null,
         reviewDone ? null : 'Use Review this order to discuss forecast quality',
@@ -3484,31 +3499,33 @@ function ReceivingWorkspaceView({
               >
                 {currentDdtReady ? PORTFOLIO_COPY.uploadDdtDone : PORTFOLIO_COPY.uploadDdt}
               </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="h-10 rounded-xl"
-                disabled={!canHandleRemaining}
-                onClick={() => {
-                  setRemainingPick(remainingDecision ?? (openQty > 0 ? 'wait_next_batch' : 'close_remaining'));
-                  setRemainingOpen(true);
-                }}
-              >
-                {PORTFOLIO_COPY.handleRemaining}
-              </Button>
-              <Button
-                type="button"
-                className="h-10 rounded-xl bg-[#2f6bff] text-white hover:bg-[#2458d9]"
-                disabled={!canConfirm}
-                title={
-                  blocked
-                    ? PORTFOLIO_COPY.holdUnresolved
-                    : undefined
-                }
-                onClick={onConfirmReceipt}
-              >
-                {PORTFOLIO_COPY.confirmReceipt}
-              </Button>
+              {awaitingRemainingDecision ? (
+                <Button
+                  type="button"
+                  className="h-10 rounded-xl bg-[#2f6bff] text-white hover:bg-[#2458d9]"
+                  disabled={!canHandleRemaining}
+                  onClick={() => {
+                    setRemainingPick(remainingDecision ?? (openQty > 0 ? 'wait_next_batch' : 'close_remaining'));
+                    setRemainingOpen(true);
+                  }}
+                >
+                  {PORTFOLIO_COPY.handleRemaining}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  className="h-10 rounded-xl bg-[#2f6bff] text-white hover:bg-[#2458d9]"
+                  disabled={!canConfirm}
+                  title={
+                    blocked
+                      ? PORTFOLIO_COPY.holdUnresolved
+                      : undefined
+                  }
+                  onClick={onConfirmReceipt}
+                >
+                  {PORTFOLIO_COPY.confirmReceipt}
+                </Button>
+              )}
             </>
           )}
         </div>
@@ -3517,12 +3534,20 @@ function ReceivingWorkspaceView({
       <div className="space-y-4 px-6 py-5">
         {/* 原 Purchase order 位置：收货进度 */}
         <section className="rounded-2xl border border-[#e8eaef] px-4 py-3">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="text-[11px] font-medium text-[#8b93a7]">{PORTFOLIO_COPY.receivingProgressLabel}</span>
-            <span className="text-[13px] font-semibold text-[#1a1d26]">{progressLabel}</span>
-            <span className="text-[12px] tabular-nums text-[#5c6478]">
-              {progressStockedDisplay}/{orderedQty} pcs
-            </span>
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5">
+            {isRetrospective && reviewDone && progressMeta ? (
+              <span className="text-[11px] leading-relaxed text-[#8b93a7]">{progressMeta}</span>
+            ) : (
+              <span className="text-[13px] font-semibold text-[#1a1d26]">{progressLabel}</span>
+            )}
+            <div className="ml-auto flex items-center justify-end gap-3 text-right">
+              {isRetrospective && reviewDone ? (
+                <span className="text-[13px] font-semibold text-[#1a1d26]">{progressLabel}</span>
+              ) : null}
+              <span className="text-[12px] tabular-nums text-[#5c6478]">
+                {progressStockedDisplay}/{orderedQty} pcs
+              </span>
+            </div>
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#eef0f4]">
             <div
@@ -3530,14 +3555,19 @@ function ReceivingWorkspaceView({
               style={{ width: `${progressPct}%` }}
             />
           </div>
-          {progressMeta ? (
+          {(!isRetrospective || !reviewDone) && progressMeta ? (
             <p className="mt-1.5 text-[11px] leading-relaxed text-[#8b93a7]">{progressMeta}</p>
           ) : null}
+          {awaitingRemainingDecision ? (
+            <div
+              className="mt-2.5 flex items-start gap-2 rounded-xl border border-[#f0d4b6] bg-[#fff8ef] px-3 py-2 text-[11px] leading-relaxed text-[#9a531d]"
+              role="status"
+            >
+              <AlertTriangleIcon className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+              <span>{PORTFOLIO_COPY.remainingRequiredHint}</span>
+            </div>
+          ) : null}
         </section>
-
-        {awaitingRemainingDecision ? (
-          <p className="text-[12px] text-[#b35b1f]">{PORTFOLIO_COPY.remainingRequiredHint}</p>
-        ) : null}
 
         {/* 哨兵 + 卡片同包一层；未吸顶圆角，吸顶后直角 */}
         <div className="relative">

@@ -248,7 +248,6 @@ export const PORTFOLIO_COPY = {
   receivingStatusReady: 'DDT uploaded · waiting to confirm',
   receivingStatusAwaitingRemaining: 'Handle remaining goods',
   receivingStatusComplete: 'Receipt complete',
-  receivingProgressLabel: 'Receiving progress',
   /** 英文对应「订单信息」 */
   receivingPoInfoTitle: 'Order details',
   receivingPoInfoButton: 'Order details',
@@ -314,8 +313,9 @@ export const PORTFOLIO_COPY = {
   receivingNoteOverVsDdt: (extra: number, ddt: number, counted: number) =>
     `Over ${extra} vs DDT (${ddt}→${counted})`,
   receivingNoteMissing: (open: number) => `Not on this DDT (open ${open})`,
-  receivingNoteHold: 'On hold - accept as gift or return',
-  receivingNoteReturn: 'Marked return - will not stock-in',
+  receivingNoteHold: 'On hold',
+  receivingNoteGift: 'Gift accepted',
+  receivingNoteReturn: 'Return selected',
   uploadDdt: 'Upload DDT',
   /** 已上传当前批次 DDT 的完成态（对齐 reviewOrderDone 的写法） */
   uploadDdtDone: 'DDT uploaded',
@@ -332,7 +332,7 @@ export const PORTFOLIO_COPY = {
   },
   handleRemaining: 'Handle remaining goods',
   confirmReceipt: 'Confirm receipt',
-  acceptGift: 'Accept as gift',
+  acceptGift: 'Accept gift',
   returnLine: 'Return',
   /** 对话内推荐区标题 */
   recommendedActions: 'Recommended in chat',
