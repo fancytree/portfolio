@@ -675,7 +675,11 @@ function DemoMessageEditor({
   onSave: (patch: Partial<WorkflowNode['data']>) => void
   onCancel: () => void
 }) {
-  const [primaryDraft, setPrimaryDraft] = useState((node.data.message as string) ?? '')
+  const [primaryDraft, setPrimaryDraft] = useState(
+    node.type === 'inmail'
+      ? ((node.data.message as string) || DEMO_REGENERATED_MESSAGE)
+      : ((node.data.message as string) ?? ''),
+  )
   const [subjectDraft, setSubjectDraft] = useState(
     node.type === 'inmail'
       ? ((node.data.subject as string) || DEMO_INMAIL_SUBJECT)
@@ -2300,7 +2304,10 @@ function SequenceCanvasDemoInner({
                   : type === 'send_message'
                     ? makeNode(type, { message: DEMO_FOUNDER_MESSAGE })
                     : type === 'inmail'
-                      ? makeNode(type, { subject: DEMO_INMAIL_SUBJECT })
+                      ? makeNode(type, {
+                          subject: DEMO_INMAIL_SUBJECT,
+                          message: DEMO_REGENERATED_MESSAGE,
+                        })
                       : makeNode(type)
               setWorkflow((current) => {
                 const parent = findNode(current, pickerTarget.parentId)
