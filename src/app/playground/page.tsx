@@ -1,4 +1,4 @@
-// Playground —— 卡片流，不点开详情：quote / 图片 / 视频 / 交互小组件混排。
+// Playground —— 卡片流：文字、媒体、小组件与可全屏展开的交互作品。
 // 内容在 src/lib/playground-items.ts 维护。
 
 import { playgroundItems } from '@/lib/playground-items';

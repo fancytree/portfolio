@@ -1,4 +1,4 @@
-// Playground 卡片流数据 —— 不跳详情页，每张卡片就是内容本身。
+// Playground 卡片流数据 —— 卡片内体验，沉浸式作品可全屏展开。
 // 新增一张卡片：往 playgroundItems 里加一条即可，顺序即展示顺序。
 // kind 决定卡片类型：quote 文字 / image 图片 / video 视频 / interactive 交互小组件。
 
@@ -43,9 +43,26 @@ export type PlaygroundInteractive = PlaygroundBase & {
   resettable?: boolean;
 };
 
-export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive;
+export type PlaygroundExperience = PlaygroundBase & {
+  kind: 'experience';
+  title: string;
+  description: string;
+  src: string;
+  poster: string;
+};
+
+export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive | PlaygroundExperience;
 
 export const playgroundItems: PlaygroundItem[] = [
+  {
+    id: 'experience-river',
+    kind: 'experience',
+    title: 'River',
+    description: 'A journey through water, light and time.',
+    src: '/play/river/index.html',
+    poster: '/play/river-cover.png',
+    wide: true,
+  },
   // 顺序即排布顺序：视觉卡片与引用交错放，让每一列都有图也有字、引用不会全挤在下面
   {
     id: 'interactive-bubble-pop',

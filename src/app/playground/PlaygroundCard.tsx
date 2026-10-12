@@ -4,10 +4,13 @@ import Image from 'next/image';
 import type { PlaygroundItem } from '@/lib/playground-items';
 import InteractiveStage from './InteractiveStage';
 import PlaygroundVideo from './PlaygroundVideo';
+import FullscreenExperience from './FullscreenExperience';
 import styles from './playground.module.css';
 
 function CardBody({ item }: { item: PlaygroundItem }) {
   switch (item.kind) {
+    case 'experience':
+      return <FullscreenExperience item={item} />;
     case 'quote':
       return (
         <blockquote className={styles.quote}>
