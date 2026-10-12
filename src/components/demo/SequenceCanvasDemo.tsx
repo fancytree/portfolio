@@ -521,6 +521,8 @@ I’m the founder of an early-stage startup and I’m looking for an operations 
 
 Your experience as {POSITION} at {COMPANY} caught my attention. Would you be open to a 20-minute conversation next week to explore whether our goals and working styles align?`
 
+const DEMO_INMAIL_SUBJECT = 'Exploring an operations partnership'
+
 const DEMO_REGENERATED_INVITE =
   'Hi {FIRST_NAME}, your operations experience at {COMPANY} caught my attention. I’m building an early-stage startup and looking for an operations partner. I’d love to connect and explore whether there could be a fit.'
 
@@ -674,6 +676,11 @@ function DemoMessageEditor({
   onCancel: () => void
 }) {
   const [primaryDraft, setPrimaryDraft] = useState((node.data.message as string) ?? '')
+  const [subjectDraft, setSubjectDraft] = useState(
+    node.type === 'inmail'
+      ? ((node.data.subject as string) || DEMO_INMAIL_SUBJECT)
+      : '',
+  )
   const [previewing, setPreviewing] = useState(false)
   const [generationState, setGenerationState] = useState<'idle' | 'thinking' | 'typing'>('idle')
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
@@ -760,7 +767,9 @@ function DemoMessageEditor({
   }
 
   const primaryRequired = node.type !== 'connection_request'
-  const canSave = !primaryRequired || primaryDraft.trim().length > 0
+  const subjectRequired = node.type === 'inmail'
+  const canSave = (!primaryRequired || primaryDraft.trim().length > 0)
+    && (!subjectRequired || subjectDraft.trim().length > 0)
 
   return (
     <div className="flex max-h-[calc(100vh-48px)] flex-col bg-background font-manrope">
@@ -805,6 +814,28 @@ function DemoMessageEditor({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+
+        {node.type === 'inmail' ? (
+          <div className="mt-6">
+            <label
+              htmlFor={`inmail-subject-${node.id}`}
+              className="mb-2 block text-sm font-medium text-foreground"
+            >
+              Subject <span className="text-destructive" aria-hidden="true">*</span>
+            </label>
+            <Input
+              id={`inmail-subject-${node.id}`}
+              type="text"
+              value={subjectDraft}
+              onChange={(event) => setSubjectDraft(event.target.value)}
+              placeholder="Add an InMail subject…"
+              disabled={isGenerating}
+              required
+              className="h-12 border border-[var(--cn-field-border)] bg-background px-4 text-base shadow-none hover:border-[var(--cn-field-border-hover)] focus-visible:border-primary focus-visible:ring-0 active:scale-100"
+              aria-label="InMail subject"
+            />
+          </div>
+        ) : null}
 
         <div className="relative mt-6">
           <Input
@@ -891,7 +922,11 @@ function DemoMessageEditor({
           type="button"
           size="lg"
           disabled={isGenerating || !canSave || primaryDraft.length > maxLength}
-          onClick={() => onSave({ message: primaryDraft })}
+          onClick={() => onSave(
+            node.type === 'inmail'
+              ? { subject: subjectDraft.trim(), message: primaryDraft.trim() }
+              : { message: primaryDraft },
+          )}
           className="min-w-32"
         >
           Save
@@ -2264,7 +2299,9 @@ function SequenceCanvasDemoInner({
                   ? makeConditionFlow(type)
                   : type === 'send_message'
                     ? makeNode(type, { message: DEMO_FOUNDER_MESSAGE })
-                    : makeNode(type)
+                    : type === 'inmail'
+                      ? makeNode(type, { subject: DEMO_INMAIL_SUBJECT })
+                      : makeNode(type)
               setWorkflow((current) => {
                 const parent = findNode(current, pickerTarget.parentId)
                 const existing = parent?.[pickerTarget.slot] as WorkflowNode | null | undefined
