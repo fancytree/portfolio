@@ -3,6 +3,8 @@
 
 import type { ComponentType } from 'react';
 import BubblePop from './BubblePop';
+import HoldCheckbox from './HoldCheckbox';
+import ProjectButton from './ProjectButton';
 import ReachOut from './ReachOut';
 import TornMesh from './TornMesh';
 
@@ -10,6 +12,8 @@ export const interactiveComponents = {
   'torn-mesh': TornMesh,
   'reach-out': ReachOut,
   'bubble-pop': BubblePop,
+  'project-button': ProjectButton,
+  'hold-checkbox': HoldCheckbox,
 } satisfies Record<string, ComponentType>;
 
 export type InteractiveId = keyof typeof interactiveComponents;

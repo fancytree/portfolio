@@ -1,0 +1,184 @@
+.stage {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 24px;
+  background: #f5f5f5;
+  font-family: var(--mei-font-primary), sans-serif;
+}
+
+.content {
+  width: min(100%, 330px);
+}
+
+.title {
+  margin: 0 0 18px;
+  color: #737373;
+  font-size: 15px;
+  font-weight: 450;
+  line-height: 1.35;
+}
+
+.option {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 76px;
+  align-items: center;
+  gap: 14px;
+  overflow: hidden;
+  padding: 12px 16px;
+  border: 1px solid #dedede;
+  border-radius: 12px;
+  background: #fff;
+  color: #121214;
+  text-align: left;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color 180ms ease;
+}
+
+.option:hover,
+.option:focus-visible {
+  border-color: #aaa;
+}
+
+.option:focus-visible {
+  outline: 2px solid #ff3e3e;
+  outline-offset: 3px;
+}
+
+.box {
+  position: relative;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  place-items: center;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.box svg {
+  position: absolute;
+  inset: 0;
+  width: 30px;
+  height: 30px;
+  overflow: visible;
+}
+
+.outline {
+  stroke: #121214;
+  stroke-width: 2;
+  transition: stroke 120ms ease;
+}
+
+.option[data-holding] .outline {
+  stroke: #b8b8b8;
+}
+
+.outlineProgress {
+  stroke: #ff3e3e;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+}
+
+.option[data-holding] .outlineProgress {
+  opacity: 1;
+  animation: trace-border 960ms linear forwards;
+}
+
+.dropDot {
+  position: absolute;
+  z-index: 1;
+  top: -8px;
+  left: 3.5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff3e3e;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.check path {
+  stroke: #ff3e3e;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+}
+
+.option[data-checked] .dropDot {
+  animation: drop-dot 345ms 40ms linear both;
+}
+
+.option[data-checked] .check path {
+  animation: unfold-check 500ms 315ms cubic-bezier(0.65, 0, 0.2, 1) forwards;
+}
+
+.copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.copy strong {
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.copy small {
+  color: #a2a2a2;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.hint {
+  min-height: 18px;
+  margin: 12px 0 0;
+  color: #777;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@keyframes trace-border {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes drop-dot {
+  0% { opacity: 0; transform: translateY(0); animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.5); }
+  8% { opacity: 1; }
+  64% { opacity: 1; transform: translateY(20.5px); }
+  80% { opacity: 1; transform: translateY(20.5px); }
+  100% { opacity: 0; transform: translateY(20.5px); }
+}
+
+@keyframes unfold-check {
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option {
+    transition: none;
+  }
+
+  .option[data-checked] .dropDot,
+  .option[data-checked] .check path {
+    animation: none;
+  }
+
+  .option[data-checked] .check path {
+    stroke-dashoffset: 0;
+  }
+}

@@ -70,6 +70,17 @@ export const playgroundItems: PlaygroundItem[] = [
     component: 'bubble-pop',
   },
   {
+    id: 'interactive-project-button',
+    kind: 'interactive',
+    component: 'project-button',
+    resettable: false,
+  },
+  {
+    id: 'interactive-hold-checkbox',
+    kind: 'interactive',
+    component: 'hold-checkbox',
+  },
+  {
     // 同一期 Lenny's Podcast（约 32:23），他给团队的建议："Just do less… don't design it. If you don't have to, …"
     id: 'quote-ian-silber-do-less',
     kind: 'quote',
