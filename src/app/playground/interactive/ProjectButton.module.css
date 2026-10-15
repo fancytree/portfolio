@@ -37,11 +37,25 @@
 
 .button::before {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(110px circle at var(--light-x) var(--light-y), rgb(255 255 255 / 0.12), transparent 75%);
+  top: var(--light-y);
+  left: var(--light-x);
+  width: 76px;
+  height: 140px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(255 255 255 / 0.04) 22%,
+    rgb(255 255 255 / 0.16) 43%,
+    rgb(255 255 255 / 0.23) 50%,
+    rgb(255 255 255 / 0.16) 57%,
+    rgb(255 255 255 / 0.04) 78%,
+    transparent 100%
+  );
   content: '';
+  filter: blur(6px);
   opacity: 0;
   pointer-events: none;
+  transform: translate(-50%, -50%) rotate(22deg);
   transition: opacity 350ms ease;
 }
 
