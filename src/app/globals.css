@@ -1620,15 +1620,6 @@ body.no-scroll {
   padding-inline: clamp(20px, 5vw, 64px);
 }
 
-/* On wide screens the Mono nav rail ends at the same x-coordinate as the
-   centered case-study content, keeping the navigation and article on one grid. */
-@media (min-width: 1280px) {
-  .mono-case-study .mei-case-study-rail {
-    width: max(240px, calc((100vw - 840px) / 2)) !important;
-    padding-left: max(24px, calc((100vw - 1320px) / 2 + 24px)) !important;
-  }
-}
-
 @media (min-width: 1280px) {
   .mei-project-page > section:not(:first-of-type) {
     width: calc(100vw - 240px) !important;
