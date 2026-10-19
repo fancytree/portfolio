@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Blocks, Braces, Brain, ChartNoAxesColumnIncreasing, MessageSquare, PanelsTopLeft, Pencil, ShieldCheck, Sparkles } from 'lucide-react';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import CaseStudyBackButton from '../../components/CaseStudyBackButton';
 import CaseStudyHero from '../../components/CaseStudyHero';
@@ -80,6 +80,46 @@ export default function MonoProjectPage() {
   const fontStyle = {
     fontFamily: fontFamily.system,
   };
+  const caseTypography = {
+    eyebrow: {
+      fontSize: '12px',
+      lineHeight: '18px',
+      fontWeight: 600,
+      letterSpacing: '0.1em',
+      textTransform: 'uppercase' as const,
+    },
+    sectionHeading: {
+      fontSize: 'var(--case-type-section, clamp(32px, 4.2vw, 48px))',
+      lineHeight: 1.12,
+      fontWeight: 500,
+      letterSpacing: '-0.025em',
+    },
+    lead: {
+      fontSize: 'var(--case-type-lead, clamp(18px, 1.45vw, 20px))',
+      lineHeight: 1.6,
+      fontWeight: 400,
+    },
+    body: {
+      fontSize: '16px',
+      lineHeight: '26px',
+      fontWeight: 400,
+    },
+    bodySmall: {
+      fontSize: '14px',
+      lineHeight: '22px',
+      fontWeight: 400,
+    },
+    subheading: {
+      fontSize: '20px',
+      lineHeight: '28px',
+      fontWeight: 600,
+    },
+    cardTitle: {
+      fontSize: '18px',
+      lineHeight: '24px',
+      fontWeight: 600,
+    },
+  };
 
   // 展开/折叠状态
   // Design token color mode switcher
@@ -88,13 +128,13 @@ export default function MonoProjectPage() {
   const [isMonoLoginModalOpen, setIsMonoLoginModalOpen] = useState(false);
 
   return (
-    <div className="mei-project-page w-full" style={{ backgroundColor: '#FAFAFA' }}>
+    <div className="mei-project-page mono-case-study w-full" style={{ backgroundColor: '#FAFAFA' }}>
       <CaseStudyControls accentColor="#10A37F" />
       {/* Hero Section */}
       <CaseStudyHero
         accentColor="#10A37F"
         title="Mono"
-        subtitle="A personal finance agent built on the A2UI protocol, turning natural language into deterministic financial interface views."
+        subtitle="Build Interactive Agents with Generative UI: a full-stack agent app with a LangChain backend, a React frontend, and AG-UI as the runtime."
         tags={['AI Product', 'Generative UI', 'Finance', 'Protocol Design', 'Web UX']}
         visualSrc="/img/Mono/mono-cover-cutout.png"
         visualAlt="Mono financial agent shown on a graphite laptop with floating budget, expense, and spending overview cards"
@@ -105,400 +145,204 @@ export default function MonoProjectPage() {
         visualTranslateY="3%"
         visualBackground="radial-gradient(circle at 18% 76%, rgb(16 163 127 / 0.24), transparent 34%), radial-gradient(circle at 82% 18%, rgb(118 197 173 / 0.18), transparent 30%), linear-gradient(135deg, #f4f8f5 0%, #dce8e1 52%, #edf3ef 100%)"
         visualHeight="clamp(300px, 38vw, 540px)"
-        aboutLabel="About Mono"
-        about="Mono bridges LLM intent and deterministic UI output. Instead of returning only text, it renders contextual financial cards, charts, and forms that match the user's request, making conversational finance feel actionable and inspectable."
+        aboutFontSize="16px"
+        aboutFontWeight={400}
+        aboutLineHeight="26px"
+        aboutLabel="The project"
+        about="I researched emerging generative UI patterns, compared how much control each gives to a model, then chose declarative composition for a finance agent. Mono uses A2UI-style structured output to connect natural-language intent with a library of designed, interactive components."
         liveSiteHref="https://mono.riverstudio.cc/"
+        liveSiteLabel="View live site"
+        onLiveSiteClick={() => setIsMonoLoginModalOpen(true)}
         meta={[
           { label: 'Role', value: ['Product Designer,', 'AI Architect'] },
           { label: 'Team', value: ['Solo product designer'] },
-          { label: 'Tool', value: ['Figma,', 'React,', 'A2UI protocol'] },
+          { label: 'Tool', value: ['LangChain,', 'React,', 'AG-UI runtime,', 'A2UI'] },
           { label: 'Company', value: ['River Studio'] },
           { label: 'Year', value: ['2026'] },
         ]}
       />
 
-      {/* Core Research Pillars Section */}
+      {/* Part 1: Research into the state of generative UI */}
       <section 
         className="w-screen py-16"
         style={{
           backgroundColor: '#FAFAFA',
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
+          paddingTop: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
+          paddingBottom: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
         }}
       >
         <ScrollAnimatedSection>
           <div
             style={{
-              maxWidth: '1280px',
+              maxWidth: 'var(--case-content-wide, 1080px)',
               margin: '0 auto',
             }}
           >
+            <p style={{ ...fontStyle, ...caseTypography.eyebrow, color: '#0D9488', margin: '0 0 12px' }}>
+              Part 01 · The State of Generative UI
+            </p>
             <h2
+              data-case-type="display"
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
+                ...caseTypography.sectionHeading,
                 color: 'rgb(0, 0, 0)',
                 marginBottom: '16px',
               }}
             >
-              The Design Problem
+              The spectrum of model participation
             </h2>
 
             <div
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
+                ...caseTypography.body,
                 color: 'rgb(0, 0, 0)',
-                maxWidth: '780px',
+                maxWidth: 'var(--case-content-reading, 760px)',
                 marginTop: '24px',
               }}
             >
               <p style={{ marginBottom: '16px' }}>
-                Most personal finance tools put the interface first — you learn the dashboard, then find your answer. Mono inverts this: you say what you need, the system decides what to render.
+                My research starts with a distinction that is easy to miss: AI products may all answer with cards, charts, and forms, but the model does not always have the same role in creating them. Using CopilotKit&apos;s taxonomy as a lens, I mapped generative UI as a spectrum of model participation.
               </p>
               <p style={{ marginBottom: '0' }}>
-                That shift — from <strong>navigating UI</strong> to <strong>expressing intent</strong> — creates a hard design constraint. The LLM output is probabilistic; the rendered UI must not be. Three decisions resolved this tension.
+                At one end, the product prepares complete views and the model selects one. In the middle, the model describes a composition using known components and the client renders it. At the other end, the model generates a complete interface. The farther the model moves toward creating the UI, the more flexibility it gains—and the more the product must account for consistency, validation, latency, and safety.
               </p>
             </div>
 
-            {/* Three Design Decisions */}
-            <div style={{ marginTop: '48px', maxWidth: '1280px' }}>
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '24px',
-                }}
-              >
-                Three Design Decisions
-              </h3>
-              <div className="flex flex-row" style={{ gap: '24px' }}>
-                {/* Card 1: A2UI Protocol & Structural Determinism */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  {/* Icon: shield / validation */}
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      border: '1px solid rgba(0, 0, 0, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '40px',
-                    }}
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                      <polyline points="9 12 11 14 15 10"></polyline>
-                    </svg>
-                  </div>
-                  {/* Content */}
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h5,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Every render must be predictable
-                  </h4>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  >
-                    Instead of generating code, the LLM emits a <strong>structured JSON spec</strong>. A Zod validation layer catches schema violations before they reach the UI — every render is <strong>predictable by contract</strong>, not by luck.
-                  </p>
-                </div>
+            <figure style={{ margin: '40px 0 0', maxWidth: '100%' }}>
+              <Image
+                src="/img/mono-generative-ui-spectrum.svg"
+                alt="Comparison of controlled, declarative, and open-ended generative UI, with example platforms and the model and client responsibilities in each pattern."
+                width={1200}
+                height={480}
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </figure>
 
-                {/* Card 2: Decoupled JSON-Render Factory */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  {/* Icon: layers / components */}
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      border: '1px solid rgba(0, 0, 0, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '40px',
-                    }}
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                      <polyline points="2 17 12 22 22 17"></polyline>
-                    </svg>
-                  </div>
-                  {/* Content */}
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h5,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Components are the answer, not generated layouts
-                  </h4>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  >
-                    Financial data needs structure, not improvisation. A fixed component registry — budget gauge, spending chart, transaction list — ensures every response is a <strong>purposefully designed view</strong>, not a layout invented on the fly. Each JSON <code style={{ fontFamily: 'monospace', fontSize: '13px', background: 'rgba(0,0,0,0.06)', borderRadius: '3px', padding: '1px 5px' }}>type</code> maps to exactly one component.
-                  </p>
-                </div>
-
-                {/* Card 3: Semantic Disambiguation via CoT */}
-                <div
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
-                    borderRadius: '12px',
-                    padding: '24px',
-                    flex: 1,
-                  }}
-                >
-                  {/* Icon: thought / reasoning (CoT) */}
-                  <div
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                      border: '1px solid rgba(0, 0, 0, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '40px',
-                    }}
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(0, 0, 0, 0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                      <path d="M8 10h.01"></path>
-                      <path d="M12 10h.01"></path>
-                      <path d="M16 10h.01"></path>
-                    </svg>
-                  </div>
-                  {/* Content */}
-                  <h4
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.h5,
-                      color: 'rgb(0, 0, 0)',
-                      marginBottom: '8px',
-                    }}
-                  >
-                    Intent must be resolved before UI is chosen
-                  </h4>
-                  <p
-                    style={{
-                      ...fontStyle,
-                      ...textStyle.body,
-                      color: 'rgb(0, 0, 0)',
-                    }}
-                  >
-                    Ambiguous queries pass through a <strong>CoT reasoning step</strong> that classifies intent before any component is selected. The &quot;internal monologue&quot; streams to the client in real-time — giving users immediate feedback while the final JSON spec is computed.
-                  </p>
-                </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '28px', maxWidth: 'var(--case-content-reading, 760px)', marginTop: '40px' }}>
+              <div>
+                <p style={{ ...fontStyle, ...caseTypography.eyebrow, color: '#0D9488', margin: '0 0 10px' }}>
+                  A hybrid direction
+                </p>
+                <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.72)', margin: 0 }}>
+                  <strong style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>ChatGPT&apos;s Intelligent UI points to a hybrid direction, not a fourth category.</strong> Product-built components handle common needs, the model composes their structure and data, and sandboxed generated UI extends the system when the component set cannot express an answer.
+                </p>
               </div>
+            </div>
+
+            <figure style={{ margin: '40px 0 0', maxWidth: '980px' }}>
+              <Image
+                src="/img/mono-chatgpt-hybrid.svg"
+                alt="A reverse-engineering interpretation of ChatGPT Intelligent UI: model-composed structured output is validated and rendered with native components, with an AppBlock sandbox fallback for novel content."
+                width={980}
+                height={400}
+                loading="eager"
+                style={{ width: '100%', height: 'auto', display: 'block' }}
+              />
+            </figure>
+
+            <div style={{ maxWidth: 'var(--case-content-reading, 760px)', marginTop: '28px', padding: '20px 24px', borderLeft: '3px solid #0D9488', background: 'rgba(13,148,136,0.06)' }}>
+              <p style={{ ...fontStyle, ...caseTypography.eyebrow, color: '#0D7068', margin: '0 0 8px' }}>
+                The designer&apos;s role
+              </p>
+              <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.76)', margin: 0 }}>
+                <strong style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>I designed Mono to explore how designers can give AI room to compose context-specific answers while keeping financial data, visual rules, and consequential actions within a system people can understand and trust.</strong> That meant shaping the component vocabulary and constraints, then evaluating whether generated views were clear, useful, and complete in real use.
+              </p>
             </div>
           </div>
         </ScrollAnimatedSection>
       </section>
 
-      {/* Interaction Design Section */}
+      {/* Part 2: My exploration of the research through Mono */}
       <section
         className="w-screen"
         style={{
           backgroundColor: '#FFFFFF',
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '96px',
-          paddingBottom: '96px',
+          paddingTop: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
+          paddingBottom: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
         }}
       >
         <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ maxWidth: 'var(--case-content-wide, 1080px)', margin: '0 auto' }}>
 
             {/* Header */}
-            <h2 style={{ ...fontStyle, fontSize: '28px', lineHeight: '36px', fontWeight: 500, color: 'rgb(0,0,0)', marginBottom: '16px' }}>
-              Designing the Conversation–UI Balance
+            <p style={{ ...fontStyle, ...caseTypography.eyebrow, color: '#0D9488', margin: '0 0 12px' }}>
+              Part 02 · My exploration
+            </p>
+            <h2 data-case-type="display" style={{ ...fontStyle, ...caseTypography.sectionHeading, color: 'rgb(0,0,0)', marginBottom: '16px' }}>
+              From conversational intent to interface
             </h2>
-            <p style={{ ...fontStyle, fontSize: '18px', lineHeight: '32px', fontWeight: 400, color: 'rgba(0,0,0,0.72)', maxWidth: '720px', marginBottom: '64px' }}>
-              The hardest UX question in Mono wasn&apos;t technical — it was compositional: <em>when should the AI respond with a message, and when should it render a component?</em> Text is flexible but forgettable. UI is scannable but can feel over-engineered for a simple answer. Mono explores the boundary between the two.
+            <p data-case-type="lead" style={{ ...fontStyle, ...caseTypography.lead, color: 'rgba(0,0,0,0.72)', maxWidth: 'var(--case-content-reading, 760px)', marginBottom: '48px' }}>
+              I translated the research into response patterns for Mono. Conversation stays flexible; the agent can return a reviewable action card, a data-rich component, or a short explanation paired with a view.
             </p>
 
-            {/* Two-column: chat demo + principles */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '56px', alignItems: 'start' }}>
+            {/* Full Mono platform view: sidebar, conversation, composer, and insights */}
+            <div style={{ overflow: 'hidden', borderRadius: '20px', background: '#171717', boxShadow: '0 18px 48px rgba(0,0,0,0.12)' }}>
+              <video
+                src="/img/Mono/Mono%20Demo.mp4"
+                aria-label="Mono finance workspace demo showing the navigation, chat input, and Insights panel"
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                preload="metadata"
+                style={{ width: "100%", height: "auto", display: "block" }}
+              />
+            </div>
 
-              {/* Left: annotated chat mockup */}
-              <div style={{ background: '#111111', borderRadius: '16px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                {/* Thread 1: logging */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '6px' }}>
-                  <div style={{ background: '#10a37f', borderRadius: '12px 12px 2px 12px', padding: '9px 14px', maxWidth: '80%' }}>
-                    <span style={{ fontFamily: 'system-ui', fontSize: '13px', color: '#fff', lineHeight: 1.5 }}>I just spent $89 at Whole Foods</span>
-                  </div>
-                </div>
-
-                {/* AI thought bubble */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
-                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-                    <span style={{ fontSize: '10px' }}>✦</span>
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: '2px 12px 12px 12px', padding: '9px 14px', maxWidth: '80%' }}>
-                    <span style={{ fontFamily: 'system-ui', fontSize: '12px', color: 'rgba(255,255,255,0.45)', fontStyle: 'italic', lineHeight: 1.5 }}>Parsing… Whole Foods → Groceries · $89.00 · today</span>
-                  </div>
-                </div>
-
-                {/* Inline ConfirmExpense mini-card */}
-                <div style={{ marginLeft: '30px', marginBottom: '12px' }}>
-                  <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px 14px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
-                      <span style={{ fontSize: '11px', fontFamily: 'monospace', color: '#10a37f' }}>ConfirmExpense</span>
-                      <span style={{ fontSize: '9px', background: 'rgba(16,163,127,0.15)', color: '#10a37f', borderRadius: '4px', padding: '1px 6px', fontFamily: 'system-ui' }}>AI-prefilled</span>
-                    </div>
-                    {[['Amount', '$89.00  USD'], ['Merchant', 'Whole Foods'], ['Category', 'Food & Dining  ›  Groceries'], ['Date', 'Today']].map(([k, v]) => (
-                      <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', fontFamily: 'system-ui' }}>
-                        <span style={{ color: 'rgba(255,255,255,0.4)' }}>{k}</span>
-                        <span style={{ color: '#ececec' }}>{v}</span>
-                      </div>
-                    ))}
-                    <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-                      <button style={{ flex: 1, padding: '6px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.12)', background: 'transparent', color: 'rgba(255,255,255,0.6)', fontSize: '11px', fontFamily: 'system-ui', cursor: 'pointer' }}>Edit</button>
-                      <button style={{ flex: 1, padding: '6px', borderRadius: '8px', border: 'none', background: '#10a37f', color: '#fff', fontSize: '11px', fontFamily: 'system-ui', cursor: 'pointer', fontWeight: 500 }}>✓ Confirm</button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', margin: '8px 0 12px' }} />
-
-                {/* Thread 2: query → UI answer */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '6px' }}>
-                  <div style={{ background: '#10a37f', borderRadius: '12px 12px 2px 12px', padding: '9px 14px', maxWidth: '80%' }}>
-                    <span style={{ fontFamily: 'system-ui', fontSize: '13px', color: '#fff', lineHeight: 1.5 }}>How&apos;s my dining budget?</span>
-                  </div>
-                </div>
-
-                {/* AI renders component, no text */}
-                <div style={{ marginLeft: '30px', marginBottom: '12px' }}>
-                  <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '12px 14px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                      <span style={{ fontFamily: 'system-ui', fontSize: '13px', fontWeight: 600, color: '#ececec' }}>Dining Out</span>
-                      <span style={{ fontFamily: 'system-ui', fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>April</span>
-                    </div>
-                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontFamily: 'system-ui', marginBottom: '8px' }}>Spent $292.00 · Limit $400.00 · <span style={{ color: '#ececec', fontWeight: 500 }}>$108.00 left</span></div>
-                    <div style={{ height: '7px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: '73%', background: '#10a37f', borderRadius: '999px' }} />
-                    </div>
-                    <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', fontFamily: 'system-ui', marginTop: '5px' }}>73% used</div>
-                  </div>
-                </div>
-
-                {/* Divider */}
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', margin: '8px 0 12px' }} />
-
-                {/* Thread 3: summary */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '6px' }}>
-                  <div style={{ background: '#10a37f', borderRadius: '12px 12px 2px 12px', padding: '9px 14px', maxWidth: '80%' }}>
-                    <span style={{ fontFamily: 'system-ui', fontSize: '13px', color: '#fff', lineHeight: 1.5 }}>Summarize my week</span>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                  <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
-                    <span style={{ fontSize: '10px' }}>✦</span>
-                  </div>
-                  <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: '2px 12px 12px 12px', padding: '9px 14px', maxWidth: '85%' }}>
-                    <p style={{ fontFamily: 'system-ui', fontSize: '12px', color: 'rgba(255,255,255,0.7)', lineHeight: 1.6, margin: '0 0 8px' }}>
-                      You spent <strong style={{ color: '#ececec' }}>$568.70</strong> this week — up 18% from last week. Dining accounted for 43% of total spend.
-                    </p>
-                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#10a37f' }}>↓ SpendingRecords</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: three interaction patterns */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            {/* Three interaction patterns */}
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: '32px', marginTop: '36px' }}>
 
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: '13px' }}>✏</span>
+                      <Pencil size={14} strokeWidth={1.8} color="currentColor" aria-hidden="true" />
                     </div>
-                    <h4 style={{ ...fontStyle, fontSize: '16px', fontWeight: 600, color: 'rgb(0,0,0)', margin: 0 }}>Log by talking</h4>
+                    <h4 style={{ ...fontStyle, ...caseTypography.cardTitle, color: 'rgb(0,0,0)', margin: 0 }}>Log by talking</h4>
                   </div>
-                  <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '26px', color: 'rgba(0,0,0,0.65)', margin: 0 }}>
-                    A single natural language message — &quot;spent $89 at Whole Foods&quot; — triggers an AI-prefilled confirmation form. The conversation handles the <em>input</em>; the UI handles the <em>review and commit</em>. Neither has to do the other&apos;s job.
+                  <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.72)', margin: 0 }}>
+                    “I spent $89 at Whole Foods.” Mono prepares a <strong>transaction for review</strong>; you confirm before it is saved.
                   </p>
                 </div>
 
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: '13px' }}>📊</span>
+                      <ChartNoAxesColumnIncreasing size={14} strokeWidth={1.8} color="currentColor" aria-hidden="true" />
                     </div>
-                    <h4 style={{ ...fontStyle, fontSize: '16px', fontWeight: 600, color: 'rgb(0,0,0)', margin: 0 }}>Query, get UI</h4>
+                    <h4 style={{ ...fontStyle, ...caseTypography.cardTitle, color: 'rgb(0,0,0)', margin: 0 }}>Query, get UI</h4>
                   </div>
-                  <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '26px', color: 'rgba(0,0,0,0.65)', margin: 0 }}>
-                    Financial data is inherently visual. When a user asks &quot;how&apos;s my budget?&quot;, a rendered gauge answers more precisely than a sentence ever could. Mono never replies with text when a component communicates better.
+                  <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.72)', margin: 0 }}>
+                    “How much dining budget is left?” A budget view puts <strong>spent, limit, and remaining</strong> in one glance.
                   </p>
                 </div>
 
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                     <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: '13px' }}>✦</span>
+                      <Sparkles size={14} strokeWidth={1.8} color="currentColor" aria-hidden="true" />
                     </div>
-                    <h4 style={{ ...fontStyle, fontSize: '16px', fontWeight: 600, color: 'rgb(0,0,0)', margin: 0 }}>Summarize with both</h4>
+                    <h4 style={{ ...fontStyle, ...caseTypography.cardTitle, color: 'rgb(0,0,0)', margin: 0 }}>Summarize with both</h4>
                   </div>
-                  <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '26px', color: 'rgba(0,0,0,0.65)', margin: 0 }}>
-                    For recaps and insights, text and UI coexist — each playing a different role. The AI writes the narrative; the component holds the data. Together they answer &quot;what happened&quot; and &quot;show me the numbers&quot; in a single response.
+                  <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.72)', margin: 0 }}>
+                    A weekly recap pairs a brief explanation with a chart or records card, keeping <strong>context and figures together</strong>.
                   </p>
                 </div>
+
+            </div>
 
                 {/* Design tension callout */}
-                <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '20px', background: '#fafafa', marginTop: '8px' }}>
-                  <div style={{ ...fontStyle, fontSize: '11px', fontWeight: 600, color: 'rgba(0,0,0,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: '8px' }}>Design tension</div>
-                  <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '26px', color: 'rgba(0,0,0,0.7)', margin: 0 }}>
-                    A pure chat UI feels lightweight but loses structure. A pure dashboard is powerful but imposes cognitive overhead. Mono&apos;s hypothesis: <strong>conversation is the input layer; components are the output layer</strong> — and the boundary between them should be invisible to the user.
+            <div style={{ border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', padding: '20px', background: '#fafafa', marginTop: '24px' }}>
+              <div style={{ ...fontStyle, ...caseTypography.eyebrow, fontWeight: 700, color: '#0D766E', marginBottom: '8px' }}>The design decision</div>
+                  <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.72)', margin: 0 }}>
+                    When an answer depends on comparing financial figures, a structured view makes their relationships clear at a glance. Mono pairs brief explanations with UI, while <strong>product-defined components keep data clear and actions reviewable.</strong>
                   </p>
-                </div>
-
-              </div>
             </div>
 
           </div>
@@ -512,282 +356,111 @@ export default function MonoProjectPage() {
           backgroundColor: '#FAFAFA',
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
+          paddingTop: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
+          paddingBottom: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
         }}
       >
         {/* 标题和简介使用动画 */}
         <ScrollAnimatedSection>
           <div
             style={{
-              maxWidth: '1280px',
+              maxWidth: 'var(--case-content-wide, 1080px)',
               margin: '0 auto',
             }}
           >
             <h2
+              data-case-type="display"
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
+                ...caseTypography.sectionHeading,
                 color: 'rgb(0, 0, 0)',
-                marginBottom: '32px',
+                marginBottom: '20px',
               }}
             >
-              System Architecture: The A2UI Engine
+              Turning the research into a system: A2UI
             </h2>
-            <div
+            <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
-                color: 'rgb(0, 0, 0)',
-                maxWidth: '780px',
+                ...caseTypography.lead,
+                color: 'rgba(0,0,0,0.72)',
+                maxWidth: 'var(--case-content-reading, 760px)',
+                margin: 0,
               }}
             >
-              <p style={{ marginBottom: '24px' }}>
-                Every user input passes through a <strong>CoT reasoning engine</strong> before anything is rendered. The LLM doesn&apos;t guess — it scores its own confidence, asks a follow-up if needed, and only routes to a component once intent is unambiguous. Three mechanisms make this reliable.
-              </p>
-            </div>
+              Built with LangChain, the agent routes requests and composes an A2UI spec from supported components. <strong style={{ color: "rgba(0,0,0,0.92)", fontWeight: 600 }}>Mono validates the spec and renders it with product-owned components.</strong>
+            </p>
           </div>
         </ScrollAnimatedSection>
 
         {/* A2UI Engine: three pillars + workflow visual */}
         <div
+          className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)]"
           style={{
-            maxWidth: '1280px',
+            maxWidth: 'var(--case-content-wide, 1080px)',
             margin: '0 auto',
-            marginTop: '100px',
+            marginTop: '64px',
             display: 'grid',
-            gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1.4fr)',
             gap: '56px',
             alignItems: 'flex-start',
           }}
         >
           {/* Left: three architecture pillars */}
           <div>
-            {/* 1. Thought Trace & Intent Routing */}
-            <div style={{ marginBottom: '40px' }}>
-              <h3
+            {[
+              {
+                number: '01',
+                label: 'ROUTE',
+                title: 'Understand the task first',
+                description: <>Identify the intent; if key details are missing, <strong>ask before choosing a view.</strong></>,
+                flow: 'Request → intent → data or clarification → view',
+              },
+              {
+                number: '02',
+                label: 'GROUND',
+                title: 'Keep financial data in the product',
+                description: <>Mono’s services provide balances and records, so <strong>the model never invents account state.</strong></>,
+                flow: 'Question → domain data → component',
+              },
+              {
+                number: '03',
+                label: 'CONFIRM',
+                title: 'Make actions reviewable',
+                description: <>People can review or edit a proposed change, then <strong>confirm before it is saved.</strong></>,
+                flow: 'Prepare → review → confirm → save',
+              },
+            ].map((step, index) => (
+              <div
+                key={step.number}
                 style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '16px',
+                  padding: '24px 0',
+                  borderTop: '1px solid rgba(0,0,0,0.12)',
+                  borderBottom: index === 2 ? '1px solid rgba(0,0,0,0.12)' : undefined,
                 }}
               >
-                1. Thought Trace &amp; Intent Routing
-              </h3>
-              <p
-                style={{
-                  marginBottom: '16px',
-                  ...fontStyle,
-                  fontSize: '18px',
-                  lineHeight: '32px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                The CoT reasoning step produces a confidence score. If confidence is <strong>low</strong> — the query is ambiguous or underspecified — Mono asks a targeted follow-up before proceeding. Only at <strong>high confidence</strong> does it assemble a Formatted New Prompt (original input + LLM analysis + any follow-up reply) and route to one of four intent handlers.
-              </p>
-              <p
-                style={{
-                  marginBottom: '8px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Flow:
-              </p>
-              <p
-                style={{
-                  marginBottom: '16px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Input → CoT Reasoning → Confidence Gate → [Low: FollowUp → repeat | High: Formatted New Prompt] → Route: <strong>CREATE</strong> / <strong>QUERY</strong> / <strong>DELETE·UPDATE</strong> / <strong>CHAT</strong>
-              </p>
-              <p
-                style={{
-                  marginBottom: '8px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                UX rationale:
-              </p>
-              <p
-                style={{
-                  margin: 0,
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                The FollowUp loop is a UX decision, not just a technical safeguard. A wrong component rendered confidently is worse than a clarifying question. The reasoning trace also streams to the client — users see the thinking in progress while the final spec is computed.
-              </p>
-            </div>
-
-            {/* 2. Predictive Lifecycle Scheduling */}
-            <div style={{ marginBottom: '40px' }}>
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '16px',
-                }}
-              >
-                2. Predictive Lifecycle Scheduling
-              </h3>
-              <p
-                style={{
-                  marginBottom: '16px',
-                  ...fontStyle,
-                  fontSize: '18px',
-                  lineHeight: '32px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Scheduling intent is detected <em>during</em> CoT reasoning — before the confidence gate. When the LLM recognises a recurring pattern (&quot;every month,&quot; &quot;each payday&quot;), it immediately fires the <strong>Scheduler Tool</strong> as a parallel path, independent of the main intent routing. The cron job then autonomously injects the transaction when the trigger date is met.
-              </p>
-              <p
-                style={{
-                  marginBottom: '8px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Flow:
-              </p>
-              <p
-                style={{
-                  marginBottom: '16px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                CoT detects recurring pattern → Scheduler Tool (parallel path) → Cron Job → Auto-inject transaction on trigger date.
-              </p>
-              <p
-                style={{
-                  marginBottom: '8px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Design note:
-              </p>
-              <p
-                style={{
-                  margin: 0,
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Bypassing the confidence gate here is intentional — recurring intent is structurally unambiguous. The user said &quot;every month&quot;; no follow-up needed.
-              </p>
-            </div>
-
-            {/* 3. Adaptive Memory Loop (Feedback-Driven Evolution) */}
-            <div>
-              <h3
-                style={{
-                  ...fontStyle,
-                  ...textStyle.h3Medium,
-                  color: 'rgb(0, 0, 0)',
-                  marginBottom: '16px',
-                }}
-              >
-                3. Adaptive Memory Loop
-              </h3>
-              <p
-                style={{
-                  marginBottom: '16px',
-                  ...fontStyle,
-                  fontSize: '18px',
-                  lineHeight: '32px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                The feedback loop shown at the base of the diagram closes the system. User edits — correcting a category, adjusting an amount, dismissing a suggestion — are stored as preference signals and injected back into the <strong>Formatted New Prompt</strong> on every subsequent query. The context gets richer with every interaction.
-              </p>
-              <p
-                style={{
-                  marginBottom: '8px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Flow:
-              </p>
-              <p
-                style={{
-                  marginBottom: '16px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                User correction → Preference store → Injected into Formatted New Prompt → Personalized CoT reasoning.
-              </p>
-              <p
-                style={{
-                  marginBottom: '8px',
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 600,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                Design note:
-              </p>
-              <p
-                style={{
-                  margin: 0,
-                  ...fontStyle,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  fontWeight: 400,
-                  color: 'rgb(0, 0, 0)',
-                }}
-              >
-                This is the layer that turns a generic agent into a personal one. &quot;Trader Joe&apos;s&quot; → Groceries, not Food &amp; Dining. The system learns each user&apos;s financial vocabulary — so future renders align with <strong>their habits, not default assumptions</strong>.
-              </p>
-            </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '8px' }}>
+                  <span style={{ fontFamily: 'monospace', fontSize: '12px', fontWeight: 600, color: '#0D766E', letterSpacing: '0.08em' }}>{step.number}</span>
+                  <span style={{ ...fontStyle, fontSize: '11px', fontWeight: 700, color: '#0D766E', letterSpacing: '0.12em' }}>{step.label}</span>
+                </div>
+                <h3
+                  style={{
+                    ...fontStyle,
+                    ...caseTypography.subheading,
+                    letterSpacing: '-0.015em',
+                    color: 'rgb(0, 0, 0)',
+                    margin: '0 0 8px',
+                  }}
+                >
+                  {step.title}
+                </h3>
+                <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.72)', margin: '0 0 12px' }}>
+                  {step.description}
+                </p>
+                <p style={{ ...fontStyle, ...caseTypography.bodySmall, color: 'rgba(0,0,0,0.58)', margin: 0 }}>
+                  {step.flow}
+                </p>
+              </div>
+            ))}
           </div>
 
           {/* Right: Mono workflow visual */}
@@ -800,10 +473,10 @@ export default function MonoProjectPage() {
             }}
           >
             <Image
-              src="/img/mono_work flow.svg"
-              alt="Mono A2UI engine workflow"
-              width={800}
-              height={600}
+              src="/img/mono-a2ui-system.svg"
+              alt="Mono routes a request into a structured A2UI specification, validates it, and renders a product-owned budget component for review."
+              width={688}
+              height={1060}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -822,38 +495,35 @@ export default function MonoProjectPage() {
           backgroundColor: '#FFFFFF',
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '96px',
-          paddingBottom: '96px',
+          paddingTop: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
+          paddingBottom: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
         }}
       >
         <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ maxWidth: 'var(--case-content-wide, 1080px)', margin: '0 auto' }}>
 
             {/* Header */}
             <h2
+              data-case-type="display"
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
+                ...caseTypography.sectionHeading,
                 color: 'rgb(0, 0, 0)',
                 marginBottom: '16px',
               }}
             >
-              From JSON Token to Rendered UI
+              From declarative spec to rendered UI
             </h2>
             <p
               style={{
                 ...fontStyle,
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
+                ...caseTypography.lead,
                 color: 'rgba(0,0,0,0.72)',
-                maxWidth: '720px',
+                maxWidth: 'var(--case-content-reading, 760px)',
                 marginBottom: '56px',
               }}
             >
-              The render engine is a <strong>deterministic factory</strong> — it never guesses. The LLM emits a validated JSON spec; each <code style={{ fontFamily: 'monospace', fontSize: '15px', background: 'rgba(0,0,0,0.05)', borderRadius: '4px', padding: '1px 6px' }}>type</code> token maps 1-to-1 to a React component. No code generation, no eval, no surprises.
+              Each spec names an intent, supported component, data, and feedback. Mono validates it and maps the component to a React view. The model composes the response; <strong style={{ color: "rgba(0,0,0,0.92)", fontWeight: 600 }}>the client owns rendering and interaction.</strong>
             </p>
 
             {/* Pipeline flow */}
@@ -863,39 +533,47 @@ export default function MonoProjectPage() {
                 alignItems: 'stretch',
                 gap: '0',
                 marginBottom: '64px',
+                padding: '4px 2px 10px',
                 overflowX: 'auto',
               }}
             >
               {[
-                { label: 'User Intent', sub: '"Show my spending this month"', icon: '💬', color: '#f0f4ff' },
-                { label: 'LLM Orchestrator', sub: 'Semantic CoT → intent routing', icon: '🧠', color: '#faf0ff' },
-                { label: 'A2UI JSON Spec', sub: 'Structured output with component tokens', icon: '{}', color: '#fff8e6', mono: true },
-                { label: 'Zod Validator', sub: '100% schema enforcement — fails fast', icon: '✓', color: '#f0fff4' },
-                { label: 'Component Factory', sub: 'Token → React component lookup', icon: '⚙', color: '#fff0f0' },
-                { label: 'Rendered UI', sub: 'Deterministic, pixel-consistent output', icon: '▣', color: '#f5f5f5' },
+                { label: 'User intent', sub: '“Show my spending this month”', icon: <MessageSquare size={17} strokeWidth={1.8} /> },
+                { label: 'Intent + data', sub: 'Route the request and retrieve facts', icon: <Brain size={17} strokeWidth={1.8} /> },
+                { label: 'A2UI spec', sub: 'Intent · component · data · feedback', icon: <Braces size={17} strokeWidth={1.8} /> },
+                { label: 'Schema validation', sub: 'Check the supported output shape', icon: <ShieldCheck size={17} strokeWidth={1.8} /> },
+                { label: 'Component registry', sub: 'Map known types to product UI', icon: <Blocks size={17} strokeWidth={1.8} /> },
+                { label: 'Rendered view', sub: 'Product-owned style and behavior', icon: <PanelsTopLeft size={17} strokeWidth={1.8} /> },
               ].map((step, i, arr) => (
-                <div key={step.label} style={{ display: 'flex', alignItems: 'stretch', flex: 1, minWidth: 0 }}>
+                <div key={step.label} style={{ display: 'flex', alignItems: 'center', flex: '1 0 150px', minWidth: 0 }}>
                   <div
                     style={{
                       flex: 1,
-                      background: step.color,
-                      border: '1px solid rgba(0,0,0,0.07)',
-                      borderRadius: i === 0 ? '12px 0 0 12px' : i === arr.length - 1 ? '0 12px 12px 0' : '0',
-                      borderLeft: i > 0 ? 'none' : undefined,
-                      padding: '20px 16px',
+                      minHeight: '148px',
+                      background: '#FFFFFF',
+                      border: '1px solid rgba(0,0,0,0.1)',
+                      borderRadius: '12px',
+                      padding: '16px',
                       display: 'flex',
                       flexDirection: 'column' as const,
-                      gap: '8px',
+                      alignItems: 'flex-start',
+                      gap: '10px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.025)',
                     }}
                   >
-                    <div style={{ fontFamily: step.mono ? 'monospace' : 'system-ui', fontSize: '20px' }}>{step.icon}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                      <span style={{ ...fontStyle, fontSize: '10px', lineHeight: '14px', fontWeight: 600, letterSpacing: '0.1em', color: '#0D766E' }}>{String(i + 1).padStart(2, '0')}</span>
+                      <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(16,163,127,0.1)', color: '#0D766E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {step.icon}
+                      </span>
+                    </div>
                     <div style={{ ...fontStyle, fontSize: '13px', fontWeight: 600, color: 'rgb(0,0,0)', lineHeight: '18px' }}>{step.label}</div>
-                    <div style={{ ...fontStyle, fontSize: '11px', color: 'rgba(0,0,0,0.5)', lineHeight: '16px' }}>{step.sub}</div>
+                    <div style={{ ...fontStyle, fontSize: '11px', color: 'rgba(0,0,0,0.56)', lineHeight: '16px' }}>{step.sub}</div>
                   </div>
                   {i < arr.length - 1 && (
-                    <div style={{ display: 'flex', alignItems: 'center', zIndex: 1, margin: '0 -1px', flexShrink: 0 }}>
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M7 4l6 6-6 6" stroke="rgba(0,0,0,0.25)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    <div style={{ display: 'flex', alignItems: 'center', zIndex: 1, margin: '0 6px', flexShrink: 0 }}>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M4 8h8M8 4l4 4-4 4" stroke="rgba(0,0,0,0.32)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
                   )}
@@ -931,7 +609,7 @@ export default function MonoProjectPage() {
                       <span key={c} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c, display: 'inline-block' }} />
                     ))}
                   </div>
-                  <span style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginLeft: '8px' }}>a2ui-spec.json</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginLeft: '8px' }}>budget-status.a2ui.json</span>
                 </div>
                 {/* Code body */}
                 <pre
@@ -947,103 +625,28 @@ export default function MonoProjectPage() {
                   }}
                 >
 {`{
-  `}<span style={{ color: '#89b4fa' }}>&quot;intent&quot;</span>{`: `}<span style={{ color: '#a6e3a1' }}>&quot;show spending this month&quot;</span>{`,
-  `}<span style={{ color: '#89b4fa' }}>&quot;confidence&quot;</span>{`: `}<span style={{ color: '#fab387' }}>0.94</span>{`,
-  `}<span style={{ color: '#89b4fa' }}>&quot;components&quot;</span>{`: [
-    {
-      `}<span style={{ color: '#89b4fa' }}>&quot;type&quot;</span>{`: `}<span style={{ color: '#f38ba8' }}>&quot;account-summary&quot;</span>{`,
-      `}<span style={{ color: '#89b4fa' }}>&quot;props&quot;</span>{`: {
-        `}<span style={{ color: '#89b4fa' }}>&quot;balance&quot;</span>{`: `}<span style={{ color: '#fab387' }}>12540.80</span>{`,
-        `}<span style={{ color: '#89b4fa' }}>&quot;change&quot;</span>{`: `}<span style={{ color: '#fab387' }}>-3.2</span>{`,
-        `}<span style={{ color: '#89b4fa' }}>&quot;period&quot;</span>{`: `}<span style={{ color: '#a6e3a1' }}>&quot;this month&quot;</span>{`
-      }
-    },
-    {
-      `}<span style={{ color: '#89b4fa' }}>&quot;type&quot;</span>{`: `}<span style={{ color: '#f38ba8' }}>&quot;chart-sparkline&quot;</span>{`,
-      `}<span style={{ color: '#89b4fa' }}>&quot;props&quot;</span>{`: {
-        `}<span style={{ color: '#89b4fa' }}>&quot;data&quot;</span>{`: `}<span style={{ color: '#fab387' }}>[1200, 980, 1450, 890, 1100]</span>{`,
-        `}<span style={{ color: '#89b4fa' }}>&quot;color&quot;</span>{`: `}<span style={{ color: '#a6e3a1' }}>&quot;warning&quot;</span>{`
-      }
-    },
-    {
-      `}<span style={{ color: '#89b4fa' }}>&quot;type&quot;</span>{`: `}<span style={{ color: '#f38ba8' }}>&quot;insight-card&quot;</span>{`,
-      `}<span style={{ color: '#89b4fa' }}>&quot;props&quot;</span>{`: {
-        `}<span style={{ color: '#89b4fa' }}>&quot;message&quot;</span>{`: `}<span style={{ color: '#a6e3a1' }}>&quot;Dining up 28% vs last month&quot;</span>{`,
-        `}<span style={{ color: '#89b4fa' }}>&quot;severity&quot;</span>{`: `}<span style={{ color: '#a6e3a1' }}>&quot;warning&quot;</span>{`
-      }
-    }
-  ]
+  "intent": "QUERY_BUDGET",
+  "component": "BudgetStatusCard",
+  "data": {
+    "category": "Dining",
+    "limit": 400,
+    "spent": 292,
+    "remaining": 108,
+    "period": "This month",
+    "progress_percentage": 73,
+    "status": "normal"
+  },
+  "ai_feedback": "You have $108 left in your dining budget."
 }`}
                 </pre>
               </div>
 
               {/* Right: Component token registry + note */}
               <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '24px' }}>
-                {/* Registry table */}
-                <div
-                  style={{
-                    border: '1px solid rgba(0,0,0,0.08)',
-                    borderRadius: '12px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div
-                    style={{
-                      padding: '14px 20px',
-                      borderBottom: '1px solid rgba(0,0,0,0.06)',
-                      background: 'rgba(0,0,0,0.015)',
-                    }}
-                  >
-                    <span style={{ ...fontStyle, fontSize: '10px', letterSpacing: '0.16em', textTransform: 'uppercase' as const, fontWeight: 500, color: 'rgba(0,0,0,0.4)' }}>
-                      Component Token Registry
-                    </span>
-                  </div>
-                  <table style={{ width: '100%', borderCollapse: 'collapse' as const }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid rgba(0,0,0,0.06)', background: 'rgba(0,0,0,0.01)' }}>
-                        {['Token type', 'Component', 'Renders'].map(h => (
-                          <th key={h} style={{ ...fontStyle, fontSize: '10px', fontWeight: 600, color: 'rgba(0,0,0,0.4)', textAlign: 'left' as const, padding: '10px 16px', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>{h}</th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { token: 'account-summary', component: '<AccountSummary>', desc: 'Balance + period change' },
-                        { token: 'transaction-list', component: '<TransactionList>', desc: 'Filterable recent items' },
-                        { token: 'chart-sparkline', component: '<ChartSparkline>', desc: 'Inline trend line' },
-                        { token: 'budget-gauge', component: '<BudgetGauge>', desc: 'Circular budget usage' },
-                        { token: 'insight-card', component: '<InsightCard>', desc: 'AI-generated observation' },
-                        { token: 'action-button', component: '<ActionButton>', desc: 'Intent-driven CTA' },
-                      ].map((row, i) => (
-                        <tr
-                          key={row.token}
-                          style={{ borderBottom: i < 5 ? '1px solid rgba(0,0,0,0.04)' : 'none' }}
-                        >
-                          <td style={{ padding: '11px 16px' }}>
-                            <code style={{ fontFamily: 'monospace', fontSize: '11px', color: '#c0392b', background: 'rgba(192,57,43,0.06)', borderRadius: '4px', padding: '2px 6px' }}>{row.token}</code>
-                          </td>
-                          <td style={{ padding: '11px 16px' }}>
-                            <code style={{ fontFamily: 'monospace', fontSize: '11px', color: '#2563eb', background: 'rgba(37,99,235,0.06)', borderRadius: '4px', padding: '2px 6px' }}>{row.component}</code>
-                          </td>
-                          <td style={{ ...fontStyle, padding: '11px 16px', fontSize: '12px', color: 'rgba(0,0,0,0.5)' }}>{row.desc}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Design principle callout */}
-                <div
-                  style={{
-                    border: '1px solid rgba(0,0,0,0.08)',
-                    borderRadius: '12px',
-                    padding: '20px',
-                    background: '#fafafa',
-                  }}
-                >
-                  <div style={{ ...fontStyle, fontSize: '12px', fontWeight: 600, color: 'rgba(0,0,0,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: '8px' }}>Design principle</div>
-                  <p style={{ ...fontStyle, fontSize: '15px', lineHeight: '24px', color: 'rgba(0,0,0,0.75)', margin: 0 }}>
-                    Components are sealed contracts — the factory only accepts <strong>known token types</strong>. Adding a new component means extending the registry and the Zod schema simultaneously, which keeps the LLM&apos;s output space and the UI surface permanently in sync.
+                <div style={{ border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', padding: '20px', background: '#FAFAFA' }}>
+                  <div style={{ ...fontStyle, fontSize: '11px', fontWeight: 700, color: '#0D766E', letterSpacing: '0.12em', textTransform: 'uppercase' as const, marginBottom: '10px' }}>Client-owned boundary</div>
+                  <p style={{ ...fontStyle, fontSize: '14px', lineHeight: '22px', color: 'rgba(0,0,0,0.72)', margin: 0 }}>
+                    Mono validates the spec and maps supported types to product-owned React views. <strong style={{ color: 'rgba(0,0,0,0.92)', fontWeight: 600 }}>Rendering, styling, and actions stay in the client.</strong>
                   </p>
                 </div>
               </div>
@@ -1060,18 +663,17 @@ export default function MonoProjectPage() {
           backgroundColor: '#FAFAFA',
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '96px',
-          paddingBottom: '96px',
+          paddingTop: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
+          paddingBottom: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
         }}
       >
         <ScrollAnimatedSection>
-          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+          <div style={{ maxWidth: 'var(--case-content-wide, 1080px)', margin: '0 auto' }}>
             <h2
+              data-case-type="display"
               style={{
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
+                ...fontStyle,
+                ...caseTypography.sectionHeading,
                 color: 'rgb(0, 0, 0)',
                 marginBottom: '12px',
               }}
@@ -1080,71 +682,55 @@ export default function MonoProjectPage() {
             </h2>
             <p
               style={{
-                fontFamily: 'system-ui, -apple-system, sans-serif',
-                fontSize: '18px',
-                lineHeight: '32px',
-                fontWeight: 400,
-                color: 'rgba(0,0,0,0.6)',
-                maxWidth: '680px',
+                ...fontStyle,
+                ...caseTypography.lead,
+                color: 'rgba(0,0,0,0.72)',
+                maxWidth: 'var(--case-content-reading, 760px)',
                 marginBottom: '64px',
               }}
             >
-              Every visual decision maps to a named token. Token names appear verbatim in both the design spec JSON and the React component library — the spec <em>is</em> the contract.
+              The app pairs theme-aware color aliases with Geist fonts, a compact spacing scale, and consistent radii and motion. Product components own the final presentation in both dark and light themes.
             </p>
 
             {/* ── Color ── */}
             <div style={{ marginBottom: '64px' }}>
-              <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '20px' }}>Color</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.55)', marginBottom: '20px' }}>Color · runtime themes</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
                 {([
                   {
-                    label: 'Light Mode',
-                    bg: '#FAFAFA',
-                    cardBorder: '1px solid rgba(0,0,0,0.07)',
-                    groupLabelColor: 'rgba(0,0,0,0.28)',
-                    rowBorder: '1px solid rgba(0,0,0,0.05)',
-                    nameColor: 'rgba(0,0,0,0.5)',
-                    swatchBorder: 'rgba(0,0,0,0.1)',
+                    label: 'Dark · default', bg: '#212121', cardBorder: '1px solid rgba(255,255,255,0.1)', groupLabelColor: '#B5B5B5', rowBorder: '1px solid rgba(255,255,255,0.08)', nameColor: '#ECECEC',
                     groups: [
-                      { label: 'Action',   tokens: [{ key: 'brand', val: '#0D9488' }, { key: 'brand-hover', val: '#0F766E' }] },
-                      { label: 'Semantic', tokens: [{ key: 'positive', val: '#10A37F' }, { key: 'pos-subtle', val: 'rgba(16,163,127,.12)' }, { key: 'negative', val: '#E03E3E' }, { key: 'neg-subtle', val: 'rgba(224,62,62,.10)' }, { key: 'warning', val: '#D97706' }] },
-                      { label: 'Surface',  tokens: [{ key: 'bg', val: '#FFFFFF' }, { key: 'surface', val: '#FFFFFF' }, { key: 'elevated', val: '#FAFAFA' }, { key: 'surface-2', val: '#F3F3F3' }] },
-                      { label: 'Text',     tokens: [{ key: 'text-primary', val: '#171717' }, { key: 'text-secondary', val: '#737373' }, { key: 'text-muted', val: '#5A6178' }, { key: 'text-inverse', val: '#FFFFFF' }] },
-                      { label: 'Border',   tokens: [{ key: 'border', val: '#E0E0E0' }, { key: 'border-strong', val: '#B0B0B0' }] },
+                      { label: 'Action', tokens: [{ key: 'brand', val: '#10A37F' }, { key: 'brand-hover', val: '#0D8C6D' }, { key: 'primary', val: '#0F766E' }, { key: 'primary-hover', val: '#0B625B' }, { key: 'focus', val: '#62C4B7' }] },
+                      { label: 'Status', tokens: [{ key: 'success', val: '#4ADE80' }, { key: 'warning', val: '#F59E0B' }, { key: 'danger', val: '#FCA5A5' }, { key: 'chart-2', val: '#3B82F6' }, { key: 'chart-3', val: '#8B5CF6' }] },
+                      { label: 'Surface', tokens: [{ key: 'canvas', val: '#212121' }, { key: 'sidebar', val: '#171717' }, { key: 'input', val: '#2F2F2F' }, { key: 'card-outer', val: '#202020' }, { key: 'surface-8%', val: 'rgba(255,255,255,0.08)' }] },
+                      { label: 'Text + border', tokens: [{ key: 'text', val: '#ECECEC' }, { key: 'secondary', val: '#B5B5B5' }, { key: 'brand-text', val: '#62C4B7' }, { key: 'border', val: 'rgba(255,255,255,0.1)' }, { key: 'border-strong', val: 'rgba(255,255,255,0.2)' }] },
                     ],
                   },
                   {
-                    label: 'Dark Mode',
-                    bg: '#1A1A1A',
-                    cardBorder: '1px solid rgba(255,255,255,0.07)',
-                    groupLabelColor: 'rgba(255,255,255,0.28)',
-                    rowBorder: '1px solid rgba(255,255,255,0.05)',
-                    nameColor: 'rgba(255,255,255,0.5)',
-                    swatchBorder: 'rgba(255,255,255,0.12)',
+                    label: 'Light · theme-light', bg: '#FFFFFF', cardBorder: '1px solid #E0E0E0', groupLabelColor: '#626262', rowBorder: '1px solid #ECECEC', nameColor: '#171717',
                     groups: [
-                      { label: 'Action',   tokens: [{ key: 'brand', val: '#10A37F' }, { key: 'brand-hover', val: '#0D8C6D' }] },
-                      { label: 'Semantic', tokens: [{ key: 'positive', val: '#10A37F' }, { key: 'pos-subtle', val: 'rgba(16,163,127,.14)' }, { key: 'negative', val: '#E03E3E' }, { key: 'neg-subtle', val: 'rgba(224,62,62,.12)' }, { key: 'warning', val: '#D97706' }] },
-                      { label: 'Surface',  tokens: [{ key: 'bg', val: '#212121' }, { key: 'surface', val: 'rgba(255,255,255,.08)' }, { key: 'elevated', val: 'rgba(255,255,255,.12)' }, { key: 'surface-2', val: 'rgba(255,255,255,.06)' }] },
-                      { label: 'Text',     tokens: [{ key: 'text-primary', val: '#ECECEC' }, { key: 'text-secondary', val: '#9B9B9B' }, { key: 'text-muted', val: '#737373' }, { key: 'text-inverse', val: '#171717' }] },
-                      { label: 'Border',   tokens: [{ key: 'border', val: 'rgba(255,255,255,.10)' }, { key: 'border-strong', val: 'rgba(255,255,255,.20)' }] },
+                      { label: 'Action', tokens: [{ key: 'primary', val: '#0F766E' }, { key: 'primary-hover', val: '#0B625B' }, { key: 'action-border', val: '#0F766E' }, { key: 'focus', val: '#0F766E' }] },
+                      { label: 'Status', tokens: [{ key: 'success', val: '#166534' }, { key: 'warning', val: '#F59E0B' }, { key: 'danger', val: '#B91C1C' }, { key: 'chart-1', val: '#10A37F' }, { key: 'chart-2', val: '#3B82F6' }] },
+                      { label: 'Surface', tokens: [{ key: 'canvas', val: '#FFFFFF' }, { key: 'sidebar', val: '#FAFAFA' }, { key: 'sidebar-hover', val: '#F0F0F0' }, { key: 'user-bubble', val: '#F7F7F7' }, { key: 'surface-muted', val: '#F3F3F3' }] },
+                      { label: 'Text + border', tokens: [{ key: 'text', val: '#171717' }, { key: 'secondary', val: '#626262' }, { key: 'brand-text', val: '#0F766E' }, { key: 'border', val: '#E0E0E0' }, { key: 'border-strong', val: '#B0B0B0' }] },
                     ],
                   },
                 ] as {
                   label: string; bg: string; cardBorder: string; groupLabelColor: string;
-                  rowBorder: string; nameColor: string; swatchBorder: string;
+                  rowBorder: string; nameColor: string;
                   groups: { label: string; tokens: { key: string; val: string }[] }[];
                 }[]).map(col => (
                   <div key={col.label}>
-                    <div style={{ fontFamily: 'system-ui', fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '8px' }}>{col.label}</div>
+                    <div style={{ fontFamily: 'system-ui', fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.55)', marginBottom: '8px' }}>{col.label}</div>
                     <div style={{ background: col.bg, borderRadius: '12px', border: col.cardBorder, overflow: 'hidden' }}>
                       {col.groups.map((group, gi) => (
                         <div key={group.label} style={{ display: 'flex', alignItems: 'flex-start', borderBottom: gi < col.groups.length - 1 ? col.rowBorder : 'none' }}>
-                          <div style={{ width: '68px', flexShrink: 0, padding: '14px 0 14px 16px', fontFamily: 'system-ui', fontSize: '9px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' as const, color: col.groupLabelColor, paddingTop: '18px' }}>{group.label}</div>
-                          <div style={{ display: 'flex', gap: '10px', padding: '14px 16px', flexWrap: 'wrap' as const }}>
+                          <div style={{ width: '84px', flexShrink: 0, padding: '16px 0 12px 16px', fontFamily: 'system-ui', fontSize: '9px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' as const, color: col.groupLabelColor }}>{group.label}</div>
+                          <div style={{ display: 'flex', gap: '8px', padding: '12px 12px 12px 4px', flexWrap: 'wrap' as const }}>
                             {group.tokens.map(t => (
-                              <div key={t.key} style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '5px', width: '44px' }}>
-                                <div style={{ width: '36px', height: '36px', borderRadius: '7px', background: t.val, border: `1px solid ${col.swatchBorder}`, flexShrink: 0 }} />
-                                <span style={{ fontFamily: 'monospace', fontSize: '8.5px', color: col.nameColor, textAlign: 'center' as const, lineHeight: '12px', wordBreak: 'break-all' as const }}>{t.key}</span>
+                              <div key={t.key} style={{ display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '5px', width: '46px' }}>
+                                <div title={t.val} style={{ width: '32px', height: '32px', borderRadius: '8px', background: t.val, border: '1px solid rgba(0,0,0,0.12)', flexShrink: 0 }} />
+                                <span style={{ fontFamily: 'monospace', fontSize: '8px', color: col.nameColor, textAlign: 'center' as const, lineHeight: '11px', wordBreak: 'break-all' as const }}>{t.key}</span>
                               </div>
                             ))}
                           </div>
@@ -1158,87 +744,71 @@ export default function MonoProjectPage() {
 
             {/* ── Typography ── */}
             <div style={{ marginBottom: '64px' }}>
-              <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '16px' }}>Typography</div>
-              <div style={{ border: '1px solid rgba(0,0,0,0.07)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
+              <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.55)', marginBottom: '16px' }}>Typography · runtime fonts</div>
+              <div style={{ border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
                 {([
-                  { name: 'heading', size: '24px', weight: 700, lineHeight: '32px', usage: 'Account names, dashboard panel titles, modal headers', sample: 'Spending Overview', mono: false },
-                  { name: 'subheading', size: '17px', weight: 600, lineHeight: '24px', usage: 'Sub-section labels, card titles, transaction group headers', sample: 'Chase Checking', mono: false },
-                  { name: 'body', size: '14px', weight: 400, lineHeight: '22px', usage: 'Descriptions, insight narrative, form helper text', sample: 'Your dining spend increased 28% vs last month.', mono: false },
-                  { name: 'label', size: '12px', weight: 500, lineHeight: '16px', usage: 'Badges, category chips, input labels, column headers', sample: 'Groceries · Apr 24', mono: false },
-                  { name: 'caption', size: '11px', weight: 400, lineHeight: '16px', usage: 'Timestamps, footnotes, secondary metadata', sample: 'Updated 2 min ago', mono: false },
-                  { name: 'mono-figure', size: '16px', weight: 500, lineHeight: '24px', usage: 'Currency amounts, percentages, numeric data', sample: '-$340.50', mono: true },
-                  { name: 'mono-figure-lg', size: '28px', weight: 600, lineHeight: '36px', usage: 'Primary balance — the focal number', sample: '$12,540.80', mono: true },
-                  { name: 'mono-figure-sm', size: '13px', weight: 500, lineHeight: '20px', usage: 'Table row figures, sparkline labels, compact gauges', sample: '+2.4%', mono: true },
-                ] as { name: string; size: string; weight: number; lineHeight: string; usage: string; sample: string; mono: boolean }[]).map((t, i, arr) => (
-                  <div
-                    key={t.name}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '140px 1fr 1fr',
-                      padding: '14px 20px',
-                      borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <code style={{ fontFamily: 'monospace', fontSize: '10px', color: '#c0392b', background: 'rgba(192,57,43,0.06)', borderRadius: '4px', padding: '2px 6px', display: 'inline-block' }}>{t.name}</code>
-                    <div style={{ fontFamily: t.mono ? 'monospace' : 'system-ui, -apple-system, sans-serif', fontSize: t.size, fontWeight: t.weight, lineHeight: t.lineHeight, color: 'rgb(0,0,0)', paddingLeft: '20px' }}>{t.sample}</div>
-                    <div style={{ fontFamily: 'system-ui', fontSize: '11px', color: 'rgba(0,0,0,0.4)', paddingLeft: '20px' }}>{t.size}/{t.weight} — {t.usage}</div>
+                  { name: '--font-sans', sample: 'Mono, your finance agent', usage: 'Geist Sans · interface and conversation', family: 'var(--font-geist-sans), system-ui, sans-serif', mono: false },
+                  { name: '--font-mono', sample: '€1,200.00 · 42%', usage: 'Geist Mono · figures and structured data', family: 'var(--font-geist-mono), monospace', mono: true },
+                ] as { name: string; sample: string; usage: string; family: string; mono: boolean }[]).map((t, i, arr) => (
+                  <div key={t.name} style={{ display: 'grid', gridTemplateColumns: '150px 1fr 1fr', gap: '16px', padding: '18px 20px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none', alignItems: 'center' }}>
+                    <code style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0D766E', background: 'rgba(16,163,127,0.08)', borderRadius: '4px', padding: '4px 6px', display: 'inline-block' }}>{t.name}</code>
+                    <div style={{ fontFamily: t.family, fontSize: t.mono ? '16px' : '18px', fontWeight: 500, color: '#171717' }}>{t.sample}</div>
+                    <div style={{ fontFamily: 'system-ui', fontSize: '11px', color: 'rgba(0,0,0,0.55)' }}>{t.usage}</div>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* ── Spacing + Radius ── */}
+            {/* ── Spacing, radius + motion ── */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '64px' }}>
               <div>
-                <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '16px' }}>Spacing</div>
-                <div style={{ border: '1px solid rgba(0,0,0,0.07)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
+                <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.55)', marginBottom: '16px' }}>Spacing · runtime scale</div>
+                <div style={{ border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
                   {([
-                    { name: 'space-1', value: '4px' },
-                    { name: 'space-2', value: '8px' },
-                    { name: 'space-3', value: '12px' },
-                    { name: 'space-4', value: '16px' },
-                    { name: 'space-5', value: '20px' },
-                    { name: 'space-6', value: '24px' },
-                    { name: 'space-8', value: '32px' },
-                    { name: 'space-10', value: '40px' },
-                    { name: 'space-12', value: '48px' },
-                    { name: 'space-16', value: '64px' },
+                    { name: 'space-2xs', value: '2px' },
+                    { name: 'space-xs', value: '4px' },
+                    { name: 'space-sm', value: '8px' },
+                    { name: 'space-md', value: '12px' },
+                    { name: 'space-lg', value: '16px' },
+                    { name: 'space-xl', value: '24px' },
+                    { name: 'space-2xl', value: '32px' },
                   ] as { name: string; value: string }[]).map((t, i, arr) => (
-                    <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
-                      <div style={{ width: Math.min(parseInt(t.value), 64), height: '8px', background: 'rgba(91,95,239,0.2)', borderRadius: '2px', flexShrink: 0 }} />
-                      <code style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.5)', flex: 1 }}>{t.name}</code>
-                      <span style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.35)' }}>{t.value}</span>
+                    <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>
+                      <div style={{ width: Math.max(2, parseInt(t.value) * 2), height: '7px', background: '#10A37F', borderRadius: '999px', flexShrink: 0 }} />
+                      <code style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.58)', flex: 1 }}>{t.name}</code>
+                      <span style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.58)' }}>{t.value}</span>
                     </div>
                   ))}
                 </div>
               </div>
               <div>
-                <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '16px' }}>Radius</div>
-                <div style={{ border: '1px solid rgba(0,0,0,0.07)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
+                <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.55)', marginBottom: '16px' }}>Radius + motion</div>
+                <div style={{ border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
                   {([
-                    { name: 'radius-xs', value: '4px' },
-                    { name: 'radius-sm', value: '8px' },
-                    { name: 'radius-md', value: '12px' },
-                    { name: 'radius-lg', value: '16px' },
-                    { name: 'radius-full', value: '9999px' },
-                  ] as { name: string; value: string }[]).map((t, i, arr) => {
-                    const r = parseInt(t.value) || 999;
-                    return (
-                      <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
-                        <div style={{ width: '64px', height: '44px', background: 'rgba(91,95,239,0.15)', borderRadius: `${r}px`, border: '1px solid rgba(91,95,239,0.25)', flexShrink: 0 }} />
-                        <code style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.5)', flex: 1 }}>{t.name}</code>
-                        <span style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.35)' }}>{t.value}</span>
-                      </div>
-                    );
-                  })}
+                    { name: 'radius-sm', value: '6px', radius: '6px' },
+                    { name: 'radius-md', value: '8px', radius: '8px' },
+                    { name: 'radius-lg', value: '12px', radius: '12px' },
+                    { name: 'radius-xl', value: '16px', radius: '16px' },
+                  ] as { name: string; value: string; radius: string }[]).map((t, i, arr) => (
+                    <div key={t.name} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>
+                      <div style={{ width: '48px', height: '30px', background: 'rgba(16,163,127,0.12)', borderRadius: t.radius, border: '1px solid rgba(16,163,127,0.3)', flexShrink: 0 }} />
+                      <code style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.58)', flex: 1 }}>{t.name}</code>
+                      <span style={{ fontFamily: 'monospace', fontSize: '11px', color: 'rgba(0,0,0,0.58)' }}>{t.value}</span>
+                    </div>
+                  ))}
+                  <div style={{ padding: '12px 16px', borderTop: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: '12px', flexWrap: 'wrap' as const }}>
+                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0D766E' }}>150ms fast</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0D766E' }}>250ms base</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0D766E' }}>400ms slow</span>
+                  </div>
+                  <div style={{ padding: '0 16px 12px', fontFamily: 'monospace', fontSize: '9px', color: 'rgba(0,0,0,0.5)' }}>standard · cubic-bezier(0.2, 0, 0, 1) · icon stroke 1.8</div>
                 </div>
               </div>
             </div>
 
-            {/* ── Component Registry ── */}
+            {/* ── Component Registry example ── */}
             <div>
-              <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.35)', marginBottom: '20px' }}>Component Registry</div>
+              <div style={{ ...fontStyle, ...caseTypography.eyebrow, color: 'rgba(0,0,0,0.58)', marginBottom: '20px' }}>Component Registry example</div>
               <MonoComponentShowcase />
             </div>
 
@@ -1253,28 +823,27 @@ export default function MonoProjectPage() {
           backgroundColor: '#FAFAFA',
           marginLeft: 'calc(-50vw + 50%)',
           marginRight: 'calc(-50vw + 50%)',
-          paddingTop: '80px',
-          paddingBottom: '80px',
+          paddingTop: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
+          paddingBottom: 'var(--case-space-section-compact, clamp(52px, 7vw, 80px))',
         }}
       >
         <ScrollAnimatedSection>
           <div
             style={{
-              maxWidth: '1280px',
+              maxWidth: 'var(--case-content-wide, 1080px)',
               margin: '0 auto',
             }}
           >
             <h2
+              data-case-type="display"
               style={{
                 ...fontStyle,
-                fontSize: '28px',
-                lineHeight: '36px',
-                fontWeight: 500,
+                ...caseTypography.sectionHeading,
                 color: 'rgb(0, 0, 0)',
                 marginBottom: '32px',
               }}
             >
-              The Result
+              What I learned building Mono with A2UI
             </h2>
 
             {/* 左侧结果图 + 右侧内容：优先保证文字栏的可读宽度 */}
@@ -1306,21 +875,19 @@ export default function MonoProjectPage() {
                 <div
                   style={{
                     ...fontStyle,
-                    fontSize: '18px',
-                    lineHeight: '32px',
-                    fontWeight: 400,
+                    ...caseTypography.lead,
                     color: 'rgb(0, 0, 0)',
                     marginBottom: '32px',
                   }}
                 >
                   <p style={{ marginBottom: '24px' }}>
-                    The Mono financial agent brings intent-driven, generative UI to everyday money management. Users get real-time insights and actionable views through natural language, reducing friction and putting financial clarity one question away.
+                    Building Mono taught me that consistency starts before generation. <strong>I defined visual tokens and a component vocabulary—schemas, data fields, constraints, and interaction examples—so the agent can compose within a clear design system.</strong>
                   </p>
                 </div>
 
                 {/* 两个结果卡片 */}
                 <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:gap-5">
-                  {/* Card 1: Stable A2UI Execution */}
+                  {/* Card 1: Preparing a design system for the model */}
                   <div
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0.03)',
@@ -1340,27 +907,27 @@ export default function MonoProjectPage() {
                       <h4
                         style={{
                           ...fontStyle,
-                          ...textStyle.h5,
+                        ...caseTypography.cardTitle,
                           color: 'rgb(0, 0, 0)',
                           margin: 0,
                         }}
                       >
-                        Stable A2UI Execution
+                        Give the model a design vocabulary
                       </h4>
                     </div>
                     <p
                       style={{
                         ...fontStyle,
-                        ...textStyle.body,
+                        ...caseTypography.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
                     >
-                      A strict <strong>A2UI JSON contract</strong> turns LLM outputs into a <strong>reliable, render-safe UI layer</strong> — no code generation, no eval, no hallucinated components.
+                      Tokens set visual rules; component schemas define data and actions. <strong>The registry keeps generated views consistent as it grows.</strong>
                     </p>
                   </div>
 
-                  {/* Card 2: Intent-Aligned Financial Clarity */}
+                  {/* Card 2: Scope of the A2UI implementation */}
                   <div
                     style={{
                       backgroundColor: 'rgba(0, 0, 0, 0.03)',
@@ -1380,26 +947,30 @@ export default function MonoProjectPage() {
                       <h4
                         style={{
                           ...fontStyle,
-                          ...textStyle.h5,
+                        ...caseTypography.cardTitle,
                           color: 'rgb(0, 0, 0)',
                           margin: 0,
                         }}
                       >
-                        Intent-Aligned Financial Clarity
+                        A2UI covers declarative composition
                       </h4>
                     </div>
                     <p
                       style={{
                         ...fontStyle,
-                        ...textStyle.body,
+                        ...caseTypography.body,
                         color: 'rgb(0, 0, 0)',
                         margin: 0,
                       }}
                     >
-                      Thought trace, memory, and scheduling combine into views that feel <strong>built for you</strong> — not generated for anyone.
+                      Mono validates model-selected components and renders them in React. My reading of ChatGPT&apos;s Intelligent UI also includes sandboxed generated UI; <strong>Mono does not implement that layer.</strong>
                     </p>
                   </div>
                 </div>
+
+                <p style={{ ...fontStyle, ...caseTypography.bodySmall, color: 'rgba(0,0,0,0.76)', margin: '20px 0 0' }}>
+                  The next step is a hybrid renderer: keep common finance tasks on validated, product-owned components, and use sandboxed generated UI when no component can express the request. I would define and test that boundary—preserving consistency for familiar tasks while giving novel requests room to adapt.
+                </p>
 
                 <div style={{ marginTop: '32px' }}>
                   <button
@@ -1544,10 +1115,10 @@ export default function MonoProjectPage() {
                       wordBreak: 'break-all',
                     }}
                   >
-                    mei.chai@mail.polimi.it
+                    flyskytoo@outlook.com
                   </div>
                   <button
-                    onClick={() => navigator.clipboard.writeText('mei.chai@mail.polimi.it')}
+                    onClick={() => navigator.clipboard.writeText('flyskytoo@outlook.com')}
                     style={{
                       padding: '6px 10px',
                       borderRadius: '6px',

@@ -27,6 +27,7 @@ type CaseStudyHeroProps = {
   meta: CaseStudyMetaItem[];
   liveSiteHref?: string;
   liveSiteLabel?: string;
+  onLiveSiteClick?: () => void;
   visualLabel?: string;
   visualSrc?: string;
   visualAlt?: string;
@@ -41,6 +42,9 @@ type CaseStudyHeroProps = {
   accentColor?: string;
   compactTypography?: boolean;
   titleFontSize?: string;
+  aboutFontSize?: string;
+  aboutFontWeight?: number;
+  aboutLineHeight?: string | number;
   wideDetails?: boolean;
   tagRadius?: string;
 };
@@ -54,6 +58,7 @@ export default function CaseStudyHero({
   meta,
   liveSiteHref,
   liveSiteLabel = 'View live site',
+  onLiveSiteClick,
   visualLabel = 'Project visual placeholder',
   visualSrc,
   visualAlt,
@@ -68,6 +73,9 @@ export default function CaseStudyHero({
   accentColor = '#ed5b2b',
   compactTypography = false,
   titleFontSize,
+  aboutFontSize,
+  aboutFontWeight,
+  aboutLineHeight,
   wideDetails = false,
   tagRadius = 'var(--case-radius-full, 999px)',
 }: CaseStudyHeroProps) {
@@ -243,9 +251,9 @@ export default function CaseStudyHero({
                 style={{
                   ...fontStyle,
                   color: 'rgb(10 10 10 / 0.72)',
-                  fontSize: compactTypography ? '14px' : '15px',
-                  fontWeight: 300,
-                  lineHeight: 1.6,
+                  fontSize: aboutFontSize ?? (compactTypography ? '14px' : '15px'),
+                  fontWeight: aboutFontWeight ?? 300,
+                  lineHeight: aboutLineHeight ?? 1.6,
                   margin: '0 0 18px',
                   maxWidth: '650px',
                   whiteSpace: 'pre-line',
@@ -253,7 +261,32 @@ export default function CaseStudyHero({
               >
                 {about}
               </p>
-              {liveSiteHref && (
+              {(liveSiteHref || onLiveSiteClick) && (
+                onLiveSiteClick ? (
+                <button
+                  type="button"
+                  onClick={onLiveSiteClick}
+                  className="mei-view-all-work-link mei-case-study-live-link group"
+                  style={{
+                    ...fontStyle,
+                    alignItems: 'center',
+                    background: 'transparent',
+                    border: '1px solid rgb(10 10 10 / 0.72)',
+                    borderRadius: 'var(--case-radius-full, 999px)',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    fontSize: '14px',
+                    fontWeight: 400,
+                    gap: '10px',
+                    lineHeight: '20px',
+                    padding: '9px 16px',
+                  }}
+                >
+                  <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
+                  <span className="relative z-10">{liveSiteLabel}</span>
+                  <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
+                </button>
+                ) : (
                 <a
                   href={liveSiteHref}
                   target="_blank"
@@ -277,6 +310,7 @@ export default function CaseStudyHero({
                   <span className="relative z-10">{liveSiteLabel}</span>
                   <ArrowUpRight aria-hidden strokeWidth={1.6} className="mei-view-all-work-icon size-5 shrink-0" />
                 </a>
+                )
               )}
             </div>
 

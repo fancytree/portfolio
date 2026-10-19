@@ -26,6 +26,26 @@
   --color-border-default: rgba(255, 255, 255, 0.10);
   --color-border-strong: rgba(255, 255, 255, 0.20);
   --color-accent: #10a37f;
+  --color-text-brand: #62c4b7;
+  --color-chat-bg: #212121;
+  --color-chat-card-inner: #171717;
+  --color-bg-chat-card-inner: #171717;
+  --color-input-border: rgba(255, 255, 255, 0.24);
+  --color-action-primary: #0f766e;
+  --color-action-hover: #0b625b;
+  --color-action-border: #0d9488;
+  --color-border-control: #969696;
+  --color-focus-ring: #62c4b7;
+  --color-chart-series-1: #10a37f;
+  --color-chart-series-2: #3b82f6;
+  --color-chart-series-3: #8b5cf6;
+  --color-chart-series-4: #f59e0b;
+  --color-chart-series-5: #ec4899;
+  --color-chart-series-6: #06b6d4;
+  --color-chart-series-7: #ef4444;
+  --color-budget-growth: #4ade80;
+  --color-status-success: #4ade80;
+  --color-status-danger: #fca5a5;
 }
 
 :root {
@@ -1466,6 +1486,23 @@ body.no-scroll {
   text-transform: uppercase;
 }
 
+/* Mono uses a slightly firmer editorial hierarchy across the full case study. */
+.mono-case-study {
+  --case-type-section: clamp(32px, 4.2vw, 48px);
+  --case-type-lead: clamp(18px, 1.45vw, 20px);
+  --case-type-body: 16px;
+  --case-type-caption: 14px;
+}
+
+.mono-case-study [data-case-type='display'] {
+  font-weight: 500 !important;
+  line-height: 1.12 !important;
+}
+
+.mono-case-study [data-case-type='lead'] {
+  font-weight: 400 !important;
+}
+
 /* Legacy narrative markup can opt into the same scale without touching
    diagrams or embedded product UI. Explicit data-case-type always wins.
    Live DEF ERP components (.def-erp-live) keep the product's own card titles. */
@@ -1574,6 +1611,22 @@ body.no-scroll {
   max-width: var(--case-content-wide) !important;
   margin-right: auto !important;
   margin-left: auto !important;
+}
+
+/* Mono uses the same case-study reading measure and section gutters as the
+   rest of the portfolio, while keeping its full-bleed section backgrounds. */
+.mono-case-study > section:not(.mei-case-study-hero) {
+  box-sizing: border-box;
+  padding-inline: clamp(20px, 5vw, 64px);
+}
+
+/* On wide screens the Mono nav rail ends at the same x-coordinate as the
+   centered case-study content, keeping the navigation and article on one grid. */
+@media (min-width: 1280px) {
+  .mono-case-study .mei-case-study-rail {
+    width: max(240px, calc((100vw - 840px) / 2)) !important;
+    padding-left: max(24px, calc((100vw - 1320px) / 2 + 24px)) !important;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -2268,4 +2321,60 @@ body.no-scroll {
 /* Touch and reduced-motion users never get the hover, so keep the cue visible. */
 @media (hover: none), (prefers-reduced-motion: reduce) {
   .mei-demo-frame__cta { opacity: 1; }
+}
+
+/* Production Mono card and chart motion, scoped to the case study preview. */
+@keyframes insightCardEnter {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes insightFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes lineDraw {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes barGrow {
+  from { height: 0%; opacity: 0; }
+  to { opacity: 0.85; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mono-showcase .insight-card-enter { animation: none !important; }
+  .mono-showcase .insight-card-enter *,
+  .mono-showcase .transition-all,
+  .mono-showcase .transition-opacity,
+  .mono-showcase .transition-transform { transition-duration: 0.01ms !important; }
+  .mono-showcase [style*="barGrow"],
+  .mono-showcase [style*="insightFadeIn"] { animation: none !important; }
+  .mono-showcase svg path { transition-duration: 0.01ms !important; }
+}
+
+/* Mono's original fields use this focus treatment inside the registry preview. */
+.mono-showcase .mono-field,
+.mono-showcase .mono-select {
+  border-color: var(--color-input-border);
+}
+.mono-showcase .mono-field:focus {
+  outline: none;
+  box-shadow: none;
+}
+.mono-showcase :is(button, input, textarea, select, [role="button"]):focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+.mono-showcase .mono-field:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.mono-showcase .mono-field[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  margin-left: 8px;
+  background-color: var(--color-text-secondary, #9b9b9b);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='white' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='white' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  cursor: pointer;
 }
