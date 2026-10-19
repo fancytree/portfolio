@@ -968,8 +968,8 @@ export default function MonoProjectPage() {
                   </div>
                 </div>
 
-                <p style={{ ...fontStyle, ...caseTypography.bodySmall, color: 'rgba(0,0,0,0.76)', margin: '20px 0 0' }}>
-                  The next step is a hybrid renderer: keep common finance tasks on validated, product-owned components, and use sandboxed generated UI when no component can express the request. I would define and test that boundary—preserving consistency for familiar tasks while giving novel requests room to adapt.
+                <p style={{ ...fontStyle, ...caseTypography.body, color: 'rgba(0,0,0,0.86)', fontWeight: 500, margin: '20px 0 0' }}>
+                  Next, I’d test a hybrid renderer: <strong style={{ color: '#111', fontWeight: 700 }}>validated components for common finance tasks, sandboxed generated UI for novel requests.</strong> Task completion, correction rate, and comprehension would show whether that boundary works.
                 </p>
 
                 <div style={{ marginTop: '32px' }}>
