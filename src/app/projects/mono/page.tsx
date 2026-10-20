@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight, Blocks, Braces, Brain, ChartNoAxesColumnIncreasing, MessageSquare, PanelsTopLeft, Pencil, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, Blocks, Bot, Braces, Brain, ChartNoAxesColumnIncreasing, Compass, Layers3, MessageSquare, PanelsTopLeft, Pencil, ShieldCheck, Sparkles } from 'lucide-react';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import CaseStudyBackButton from '../../components/CaseStudyBackButton';
 import CaseStudyHero from '../../components/CaseStudyHero';
@@ -669,6 +669,82 @@ export default function MonoProjectPage() {
       >
         <ScrollAnimatedSection>
           <div style={{ maxWidth: 'var(--case-content-wide, 1080px)', margin: '0 auto' }}>
+            <div
+              aria-label="How project documents support AI generated UI"
+              style={{
+                border: '1px solid rgba(16, 163, 127, 0.2)',
+                borderRadius: '18px',
+                background: 'linear-gradient(135deg, #f0f7f4 0%, #f8faf8 62%, #f2f6f4 100%)',
+                padding: 'clamp(20px, 3vw, 32px)',
+                marginBottom: '52px',
+                overflow: 'hidden',
+              }}
+            >
+              <div style={{ marginBottom: '22px' }}>
+                <p style={{ ...fontStyle, ...caseTypography.eyebrow, color: '#0D766E', margin: 0 }}>AI-ready design system</p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                {[
+                  { file: 'AGENTS.md', title: 'Agent guidance', detail: 'Role · tools · boundaries', Icon: Bot },
+                  { file: 'UX.md', title: 'Experience rules', detail: 'User goals · flows · feedback', Icon: Compass },
+                  { file: 'DESIGN.md', title: 'System vocabulary', detail: 'Tokens · components · schemas', Icon: Layers3 },
+                ].map(({ file, title, detail, Icon }) => (
+                  <div
+                    key={file}
+                    style={{
+                      minWidth: 0,
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      borderRadius: '12px',
+                      background: 'rgba(255,255,255,0.78)',
+                      padding: '18px 20px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+                      <span style={{ display: 'grid', width: '30px', height: '30px', placeItems: 'center', borderRadius: '9px', background: 'rgba(16,163,127,0.1)', color: '#0D766E' }}>
+                        <Icon size={17} strokeWidth={1.8} aria-hidden="true" />
+                      </span>
+                      <span style={{ ...fontStyle, color: '#0D766E', fontFamily: 'var(--font-geist-mono), monospace', fontSize: '13px', fontWeight: 600 }}>{file}</span>
+                    </div>
+                    <h3 style={{ ...fontStyle, ...caseTypography.cardTitle, color: '#111', margin: '0 0 5px' }}>{title}</h3>
+                    <p style={{ ...fontStyle, ...caseTypography.bodySmall, color: 'rgba(0,0,0,0.64)', margin: 0 }}>{detail}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'center', color: '#0D9488', padding: '12px 0 8px' }} aria-hidden="true">
+                <ArrowDown size={18} strokeWidth={1.8} />
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '18px 24px',
+                  borderRadius: '12px',
+                  background: '#172521',
+                  padding: '18px 20px',
+                  color: '#f4f7f5',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ display: 'grid', width: '34px', height: '34px', placeItems: 'center', borderRadius: '10px', background: 'rgba(16,163,127,0.18)', color: '#62c4b7' }}>
+                    <Sparkles size={18} strokeWidth={1.8} aria-hidden="true" />
+                  </span>
+                  <div>
+                    <span style={{ ...fontStyle, display: 'block', color: '#8ed4c9', fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', marginBottom: '3px' }}>THE SHARED FOUNDATION</span>
+                    <strong style={{ ...fontStyle, color: '#f4f7f5', fontSize: '16px', fontWeight: 600, lineHeight: 1.35 }}>Conversational generated UI</strong>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {['Adaptive responses', 'Consistent UI', 'Scalable system'].map((label) => (
+                    <span key={label} style={{ ...fontStyle, border: '1px solid rgba(255,255,255,0.17)', borderRadius: '999px', color: 'rgba(244,247,245,0.82)', fontSize: '12px', lineHeight: '20px', padding: '3px 10px' }}>{label}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
             <h2
               data-case-type="display"
               style={{
@@ -747,15 +823,33 @@ export default function MonoProjectPage() {
               <div style={{ fontFamily: 'system-ui', fontSize: '11px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: 'rgba(0,0,0,0.55)', marginBottom: '16px' }}>Typography · runtime fonts</div>
               <div style={{ border: '1px solid rgba(0,0,0,0.1)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
                 {([
-                  { name: '--font-sans', sample: 'Mono, your finance agent', usage: 'Geist Sans · interface and conversation', family: 'var(--font-geist-sans), system-ui, sans-serif', mono: false },
-                  { name: '--font-mono', sample: '€1,200.00 · 42%', usage: 'Geist Mono · figures and structured data', family: 'var(--font-geist-mono), monospace', mono: true },
-                ] as { name: string; sample: string; usage: string; family: string; mono: boolean }[]).map((t, i, arr) => (
-                  <div key={t.name} style={{ display: 'grid', gridTemplateColumns: '150px 1fr 1fr', gap: '16px', padding: '18px 20px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none', alignItems: 'center' }}>
-                    <code style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0D766E', background: 'rgba(16,163,127,0.08)', borderRadius: '4px', padding: '4px 6px', display: 'inline-block' }}>{t.name}</code>
-                    <div style={{ fontFamily: t.family, fontSize: t.mono ? '16px' : '18px', fontWeight: 500, color: '#171717' }}>{t.sample}</div>
-                    <div style={{ fontFamily: 'system-ui', fontSize: '11px', color: 'rgba(0,0,0,0.55)' }}>{t.usage}</div>
+                  { name: '--font-sans', family: 'var(--font-geist-sans), system-ui, sans-serif', specimen: 'Your finance, in focus', role: 'Interface & conversation', detail: 'Geist Sans · headings, controls, and readable copy' },
+                  { name: '--font-mono', family: 'var(--font-geist-mono), monospace', specimen: '€1,200.00  ·  42%', role: 'Financial data & code', detail: 'Geist Mono · amounts, percentages, and code blocks' },
+                ] as { name: string; family: string; specimen: string; role: string; detail: string }[]).map((font, i, arr) => (
+                  <div key={font.name} style={{ display: 'grid', gridTemplateColumns: 'minmax(130px, 0.7fr) minmax(180px, 1fr) minmax(190px, 1fr)', gap: '16px', padding: '18px 20px', borderBottom: i < arr.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none', alignItems: 'center' }}>
+                    <div>
+                      <code style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0D766E', background: 'rgba(16,163,127,0.08)', borderRadius: '4px', padding: '4px 6px', display: 'inline-block' }}>{font.name}</code>
+                      <div style={{ fontFamily: 'system-ui', fontSize: '10px', color: 'rgba(0,0,0,0.48)', marginTop: '7px' }}>{font.role}</div>
+                    </div>
+                    <div style={{ fontFamily: font.family, fontSize: font.name === '--font-mono' ? '15px' : '18px', fontWeight: font.name === '--font-mono' ? 500 : 600, color: '#171717' }}>{font.specimen}</div>
+                    <div style={{ fontFamily: 'system-ui', fontSize: '11px', lineHeight: 1.5, color: 'rgba(0,0,0,0.55)' }}>{font.detail}</div>
                   </div>
                 ))}
+                <div style={{ padding: '16px 20px 18px', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '18px', alignItems: 'end' }}>
+                    {([
+                      { label: 'Section title · 24 / 32 · 600', text: 'Spending overview', size: '24px', weight: 600 },
+                      { label: 'Body · 14 / 22 · 400', text: 'Your monthly budget at a glance.', size: '14px', weight: 400 },
+                      { label: 'Field label · 12 / 16 · 500', text: 'MONTHLY LIMIT', size: '12px', weight: 500 },
+                      { label: 'Figure · 14 / 20 · 500', text: '$1,240.50', size: '14px', weight: 500, mono: true },
+                    ] as { label: string; text: string; size: string; weight: number; mono?: boolean }[]).map((sample) => (
+                      <div key={sample.label}>
+                        <div style={{ fontFamily: 'system-ui', fontSize: '9px', lineHeight: 1.4, color: 'rgba(0,0,0,0.48)', marginBottom: '9px' }}>{sample.label}</div>
+                        <div style={{ fontFamily: sample.mono ? 'var(--font-geist-mono), monospace' : 'var(--font-geist-sans), system-ui, sans-serif', fontSize: sample.size, lineHeight: sample.label.startsWith('Section') ? '32px' : sample.label.startsWith('Body') ? '22px' : sample.label.startsWith('Field') ? '16px' : '20px', fontWeight: sample.weight, color: '#171717' }}>{sample.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
