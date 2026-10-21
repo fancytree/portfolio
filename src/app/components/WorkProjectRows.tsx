@@ -83,6 +83,7 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
             key={project.title}
             href={project.href}
             className={`${styles.card} flex flex-col gap-4`}
+            data-project={project.title}
             data-cursor="pill"
             data-cursor-label="View project"
           >
@@ -115,12 +116,29 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
                         src={project.coverScreen ?? project.image}
                         alt={`${project.title} product interface`}
                         fill
+                        unoptimized={Boolean(project.coverScreenHover)}
                         sizes="(min-width: 640px) 46vw, 92vw"
                         style={{
                           objectFit: project.coverScreenFit ?? 'cover',
                           objectPosition: project.coverScreenPosition ?? 'center',
                         }}
+                        className={project.coverScreenHover ? styles.coverImageDefault : undefined}
                       />
+                      {project.coverScreenHover && (
+                        <Image
+                          src={project.coverScreenHover}
+                          alt=""
+                          aria-hidden="true"
+                          fill
+                          unoptimized
+                          sizes="(min-width: 640px) 46vw, 92vw"
+                          className={styles.coverImageHover}
+                          style={{
+                            objectFit: project.coverScreenFit ?? 'cover',
+                            objectPosition: project.coverScreenPosition ?? 'center',
+                          }}
+                        />
+                      )}
                       {device !== 'freeform' && <span className={styles.glare} aria-hidden="true" />}
                     </div>
                     {device === 'laptop' && <span className={styles.laptopBase} aria-hidden="true" />}

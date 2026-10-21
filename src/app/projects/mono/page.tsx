@@ -136,7 +136,7 @@ export default function MonoProjectPage() {
         title="Mono"
         subtitle="Build Interactive Agents with Generative UI: a full-stack agent app with a LangChain backend, a React frontend, and AG-UI as the runtime."
         tags={['AI Product', 'Generative UI', 'Finance', 'Protocol Design', 'Web UX']}
-        visualSrc="/img/Mono/mono-cover-cutout.png"
+        visualSrc="/img/Mono/mono-cover-hover.webp"
         visualAlt="Mono financial agent shown on a graphite laptop with floating budget, expense, and spending overview cards"
         visualObjectFit="contain"
         visualObjectPosition="center bottom"

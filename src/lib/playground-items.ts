@@ -122,12 +122,6 @@ export const playgroundItems: PlaygroundItem[] = [
     component: 'torn-mesh',
   },
   {
-    id: 'interactive-reach-out',
-    kind: 'interactive',
-    component: 'reach-out',
-    resettable: false,
-  },
-  {
     // 同一期 Lenny's Podcast（约 27:39）的原句
     id: 'quote-tara-seshan-build-horizon',
     kind: 'quote',

@@ -132,6 +132,7 @@ export default function CaseStudyHero({
               src={visualSrc}
               alt={visualAlt ?? ''}
               fill
+              unoptimized={visualSrc.includes('?')}
               priority
               sizes="100vw"
               style={{

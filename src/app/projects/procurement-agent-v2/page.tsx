@@ -609,11 +609,12 @@ export default function ProcurementAgentPage() {
         visualLabel="DEF Beauty Supply procurement workspace"
         visualSrc="/img/procurement-agent/Procurement Agent.avif"
         visualAlt="DEF Beauty Supply purchase workspace with supplier purchase orders and an AI procurement agent panel."
-        visualObjectPosition="center bottom"
+        visualObjectPosition="center"
         visualObjectFit="contain"
-        visualImageScale={1.8}
-        visualTransformOrigin="center top"
-        visualTranslateY="0%"
+        visualImageScale={1.35}
+        visualTransformOrigin="center"
+        visualTranslateY="3%"
+        visualHeight="clamp(320px, 46svh, 560px)"
         visualBackground="radial-gradient(circle at 78% 22%, rgb(83 118 255 / 0.3), transparent 28%), radial-gradient(circle at 18% 82%, rgb(33 85 232 / 0.22), transparent 34%), linear-gradient(135deg, #0b1020 0%, #111b38 48%, #071020 100%)"
         visualNavTone="light"
         compactTypography

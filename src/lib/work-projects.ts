@@ -10,6 +10,7 @@ export type WorkProject = {
   imageTranslateY?: string;
   imageBackground?: string;
   coverScreen?: string;
+  coverScreenHover?: string;
   coverScreens?: string[];
   coverDevice?: 'laptop' | 'phone' | 'phone-stack' | 'tablet' | 'freeform';
   coverAccent?: string;
@@ -27,7 +28,7 @@ export type WorkProject = {
     | 'health'
     | 'research-sharing'
     | 'research-coding';
-  coverScreenFit?: 'cover' | 'contain';
+  coverScreenFit?: 'cover' | 'contain' | 'fill';
   coverScreenPosition?: string;
   href: string;
 };
@@ -133,16 +134,17 @@ export const productProjects: WorkProject[] = [
     time: '2026 · 4 weeks',
     tags: ['AI Agent', 'FinTech'],
     description: 'AI financial agent that turns plain language into clear money insights.',
-    image: '/img/Mono/mono-cover-cutout.png',
+    image: '/img/Mono/mono-cover.webp',
     imageFit: 'contain',
     imageScale: 1.02,
     imageTranslateY: '7%',
     imageBackground:
       'radial-gradient(circle at 18% 76%, rgb(16 163 127 / 0.24), transparent 34%), radial-gradient(circle at 82% 18%, rgb(118 197 173 / 0.18), transparent 30%), linear-gradient(135deg, #f4f8f5 0%, #dce8e1 52%, #edf3ef 100%)',
-    coverScreen: '/img/Mono/mono-cover-cutout.png',
+    coverScreen: '/img/Mono/mono-cover.webp',
+    coverScreenHover: '/img/Mono/mono-cover-hover.webp',
     coverDevice: 'freeform',
     coverAccent: '#167f62',
-    coverScreenFit: 'contain',
+    coverScreenFit: 'fill',
     coverMotif: 'finance',
     href: '/projects/mono',
   },
