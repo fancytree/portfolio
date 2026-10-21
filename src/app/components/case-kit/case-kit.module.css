@@ -1,0 +1,556 @@
+/* 案例详情的阅读框架。样式页和以后的详情页共用这一套块。 */
+
+.page {
+  --case-accent: #ed5b2b;
+  max-width: 100%;
+  min-width: 0;
+  color: var(--case-ink);
+}
+
+/* 居中的外层不是内容区。内容被拉到导航右侧，这里不给外层铺底色。 */
+:global(.mei-project-page.case-kit) {
+  --case-bg: transparent;
+  background: transparent !important;
+  font-family: var(--mei-font-primary), Geist, sans-serif !important;
+}
+
+/* 标题用 Oswald。选择器要比全局 data-case-type 更具体。 */
+:global(.mei-project-page.case-kit) :global([data-case-type='hero']),
+:global(.mei-project-page.case-kit) :global([data-case-type='display']),
+:global(.mei-project-page.case-kit) :global([data-case-type='eyebrow']) {
+  font-family: var(--mei-font-display) !important;
+  text-transform: uppercase;
+}
+
+:global(.mei-project-page.case-kit) :global([data-case-type='lead']),
+:global(.mei-project-page.case-kit) :global([data-case-type='body']),
+:global(.mei-project-page.case-kit) :global([data-case-type='caption']),
+:global(.mei-project-page.case-kit) :global([data-case-type='quote-compact']) {
+  font-family: var(--mei-font-primary), Geist, sans-serif !important;
+}
+
+/* 通栏两列：导航在内容内部，高度跟章节走，到页脚前结束。 */
+@media (min-width: 1280px) {
+  .page {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .sections {
+    grid-column: 2;
+  }
+}
+
+.sections {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: var(--case-space-page-x, 24px) var(--case-space-page-x, 24px) var(--case-space-page-bottom, 64px);
+}
+
+.column {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--case-content-wide, 1120px);
+  min-width: 0;
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+.heroColumn {
+  padding-top: 8px;
+  padding-bottom: 0;
+}
+
+.chapter {
+  /* 只拉开样式页章节间距，不改全站 --case-space-section。 */
+  padding-top: var(--case-space-chapter);
+}
+
+.chapter:last-of-type {
+  padding-bottom: calc(var(--case-space-section) + 12px);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-space-kit-stack);
+  min-width: 0;
+}
+
+/* 纵向 flex 的默认 min-width:auto 会按内容最小宽度撑开，窄屏上把句子推出屏幕。 */
+.stack > *,
+.heading,
+.heroCopy,
+.prose,
+.figure,
+.visual,
+.frame {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.spec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  color: var(--case-muted);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-spec);
+  font-weight: 400;
+  letter-spacing: var(--case-tracking-spec);
+  line-height: var(--case-leading-spec);
+  text-transform: uppercase;
+}
+
+.heading .spec,
+.figure .spec {
+  margin-bottom: 0;
+}
+
+.visual,
+.frame {
+  overflow: hidden;
+  border: 1px solid var(--case-rule);
+  border-radius: var(--case-radius-xl);
+  background: var(--case-surface);
+}
+
+.visual {
+  margin-top: 22px;
+}
+
+.visual :global(img),
+.frame :global(img) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  max-width: min(var(--case-content-title), 100%);
+}
+
+.heroKicker {
+  margin: 0;
+  color: var(--case-muted);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-eyebrow);
+  font-weight: 400;
+  letter-spacing: var(--case-tracking-label);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.heroIntro {
+  width: 100%;
+  max-width: min(var(--case-content-reading, 768px), 100%);
+  margin: 4px 0 0;
+  color: var(--case-muted);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-lead, 18px);
+  font-weight: 400;
+  line-height: var(--case-leading-body);
+}
+
+/* 项目信息一行六列，按内容宽度排开，不换行。 */
+.heroFacts {
+  display: grid;
+  grid-template-columns: repeat(6, max-content);
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  margin: 24px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--case-ink);
+  color: var(--case-ink);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-eyebrow);
+  line-height: var(--case-leading-meta);
+}
+
+.heroFacts > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heroFactLabel {
+  margin: 0;
+  color: var(--case-muted);
+  font-size: var(--case-type-caption);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.heroFactValue {
+  margin: 0;
+  color: var(--case-ink);
+  font-size: var(--case-type-body);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.heroAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin-top: 24px;
+  padding: 8px 16px;
+  background: var(--case-ink);
+  color: var(--case-on-ink);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-eyebrow);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: var(--case-leading-meta);
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.heroAction:hover,
+.heroAction:focus-visible {
+  opacity: 0.85;
+}
+
+.heroAction:focus-visible {
+  outline: 2px solid var(--case-accent);
+  outline-offset: 3px;
+}
+
+.heroTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.heroTag {
+  border: 1px solid var(--case-tag-border);
+  padding: 8px 12px;
+  color: var(--case-ink);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-caption);
+  font-weight: 400;
+  letter-spacing: var(--case-tracking-tag);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.glance {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  margin-top: clamp(36px, 5vw, 56px);
+}
+
+.glanceLabel {
+  display: block;
+  margin: 0;
+  color: var(--case-ink);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-eyebrow);
+  font-weight: 400;
+  letter-spacing: var(--case-tracking-glance);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.glanceCards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.glanceCard {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: var(--case-radius-md);
+  background: var(--case-surface);
+  padding: 24px;
+}
+
+.glanceCardTitle {
+  margin: 0;
+  color: var(--case-ink);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-subsection);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.glanceCardBody {
+  margin: 0;
+  color: var(--case-copy);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-card-body);
+  font-weight: 400;
+  line-height: var(--case-leading-body);
+}
+
+.deliverables {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 32px;
+  border-radius: var(--case-radius-md);
+  background: var(--case-surface);
+  padding: 24px;
+}
+
+.deliverableList {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.deliverablePill {
+  border: 0;
+  border-radius: var(--case-radius-tag);
+  background: var(--case-on-ink);
+  padding: 8px 12px;
+  color: var(--case-ink);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-caption);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.deliverablesLabel {
+  margin: 0;
+  color: var(--case-ink);
+  font-family: var(--mei-font-display), Oswald, sans-serif;
+  font-size: var(--case-type-subsection);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* 压过全局 data-case-type 的 !important。开场标题铺满内容栏，章节标题仍收在约 18em。 */
+.page .heroTitle:global([data-case-type='hero']) {
+  width: 100%;
+  max-width: 100% !important;
+  margin: 6px 0 0;
+  color: var(--case-ink);
+  text-wrap: wrap;
+}
+
+.page .title:global([data-case-type='display']) {
+  width: 100%;
+  max-width: min(18em, 100%) !important;
+  margin: 0;
+  color: var(--case-ink);
+  text-wrap: wrap;
+}
+
+.page .lead:global([data-case-type='lead']) {
+  width: 100%;
+  max-width: min(var(--case-content-reading), 100%) !important;
+  margin: 0;
+  color: var(--case-muted);
+}
+
+.page .prose:global([data-case-type='body']) {
+  max-width: min(var(--case-content-reading), 100%);
+  color: var(--case-ink);
+  font-weight: 400 !important;
+}
+
+.prose p {
+  margin: 0;
+}
+
+.prose p + p {
+  margin-top: 1.15em;
+}
+
+.prose .spec + p {
+  margin-top: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--case-muted);
+}
+
+.meta,
+.stats {
+  display: grid;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.meta {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px 32px;
+  margin-top: 10px;
+  padding-top: 18px;
+}
+
+.stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px 28px;
+  padding-top: 4px;
+}
+
+.meta > div,
+.stats > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.stats .statValue {
+  order: -1;
+}
+
+.metaLabel,
+.statLabel {
+  margin: 0;
+  color: var(--case-muted);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-stat-label);
+  font-weight: var(--case-weight-medium);
+  letter-spacing: var(--case-tracking-stat-label);
+  line-height: var(--case-leading-spec);
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+
+.metaValue,
+.statLabel {
+  margin: 8px 0 0;
+}
+
+.metaValue {
+  color: var(--case-ink);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-card-body);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.statValue {
+  margin: 0;
+  color: var(--case-ink);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-stat);
+  font-weight: var(--case-weight-medium);
+  letter-spacing: var(--case-tracking-stat);
+  line-height: 1;
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.page .caption:global([data-case-type='caption']) {
+  max-width: min(var(--case-content-reading, 768px), 100%);
+  margin: 0;
+  color: var(--case-muted);
+}
+
+.quote {
+  margin: 0;
+  padding: 2px 0 2px 18px;
+  border-left: 2px solid var(--case-accent);
+}
+
+.page .quote p:global([data-case-type='quote-compact']) {
+  max-width: min(34em, 100%) !important;
+  margin: 0;
+  color: var(--case-ink);
+}
+
+.back {
+  width: fit-content;
+  color: var(--case-ink);
+  font-family: var(--mei-font-primary), Geist, sans-serif;
+  font-size: var(--case-type-card-body);
+  font-weight: 400;
+  line-height: var(--case-leading-spec);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--case-accent);
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--case-accent);
+  outline-offset: 4px;
+}
+
+@media (max-width: 900px) {
+  .glanceCards {
+    grid-template-columns: 1fr;
+  }
+
+  .deliverables {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .meta,
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .heroFacts {
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
+  }
+}
+
+@media (max-width: 520px) {
+  .meta {
+    grid-template-columns: 1fr;
+  }
+}

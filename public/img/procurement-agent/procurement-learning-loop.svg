@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram" viewBox="0 0 1080 720" role="img" aria-labelledby="procurement-learning-loop-light-title procurement-learning-loop-light-desc" id="procurement-learning-loop-light-root">
+    <title id="procurement-learning-loop-light-title">How the Agent grows from closed purchase outcomes</title>
+    <desc id="procurement-learning-loop-light-desc">Supplier confirmation, DDT, receiving, variance, outcome and learning form a continuous loop that improves future procurement decisions.</desc>
+    <defs>
+      <style>#procurement-learning-loop-light-root { color: #161616; font-family: Inter, Arial, sans-serif; }</style>
+      <marker id="procurement-learning-loop-light-loop-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" fill="#777777" />
+      </marker>
+      <marker id="procurement-learning-loop-light-spoke-arrow" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+        <polygon points="0 0, 7 3, 0 6" fill="#b1b1b1" />
+      </marker>
+    </defs>
+
+    <g fill="none" stroke="#777777" stroke-width="1.2" marker-end="url(#procurement-learning-loop-light-loop-arrow)">
+      <path d="M 636.000 80.000 A 296 296 0 0 1 757.398 159.117" />
+      <path d="M 820.000 264.000 A 296 296 0 0 1 820.387 454.864" />
+      <path d="M 758.211 560.000 A 296 296 0 0 1 637.134 639.609" />
+      <path d="M 444.000 640.000 A 296 296 0 0 1 322.602 560.883" />
+      <path d="M 260.000 456.000 A 296 296 0 0 1 259.613 265.136" />
+      <path d="M 321.789 160.000 A 296 296 0 0 1 442.866 80.391" />
+    </g>
+
+    <g fill="none" stroke="#b1b1b1" stroke-width="1.2" stroke-dasharray="6 5" marker-end="url(#procurement-learning-loop-light-spoke-arrow)">
+      <line x1="540" y1="116" x2="540" y2="292" />
+      <line x1="706.054" y1="264" x2="650.710" y2="295.996" />
+      <line x1="706.054" y1="456" x2="650.710" y2="424.004" />
+      <line x1="540" y1="604" x2="540" y2="428" />
+      <line x1="373.946" y1="456" x2="429.290" y2="424.004" />
+      <line x1="373.946" y1="264" x2="429.290" y2="295.996" />
+    </g>
+
+    <g>
+      <rect x="444" y="12" width="192" height="104" rx="6" fill="#ffffff" stroke="#d5d5d5" />
+      <text x="460" y="40" fill="#777777" font-size="12" font-weight="700">01</text>
+      <text x="492" y="40" fill="#161616" font-size="12" font-weight="700">Supplier confirmation</text>
+      <text x="460" y="76" fill="#161616" font-size="24" font-weight="700">30</text>
+      <text x="460" y="100" fill="#666666" font-size="12" font-weight="500">Supplier commitment</text>
+    </g>
+    <g>
+      <rect x="700" y="160" width="192" height="104" rx="6" fill="#ffffff" stroke="#d5d5d5" />
+      <text x="716" y="188" fill="#777777" font-size="12" font-weight="700">02</text>
+      <text x="748" y="188" fill="#161616" font-size="12" font-weight="700">DDT</text>
+      <text x="716" y="224" fill="#161616" font-size="24" font-weight="700">30</text>
+      <text x="716" y="248" fill="#666666" font-size="12" font-weight="500">Shipment evidence</text>
+    </g>
+    <g>
+      <rect x="700" y="456" width="192" height="104" rx="6" fill="#ffffff" stroke="#d5d5d5" />
+      <text x="716" y="484" fill="#777777" font-size="12" font-weight="700">03</text>
+      <text x="748" y="484" fill="#161616" font-size="12" font-weight="700">Receiving</text>
+      <text x="716" y="520" fill="#161616" font-size="24" font-weight="700">33</text>
+      <text x="716" y="544" fill="#666666" font-size="12" font-weight="500">Physical quantity</text>
+    </g>
+    <g>
+      <rect x="444" y="604" width="192" height="104" rx="6" fill="#ffffff" stroke="#d5d5d5" />
+      <text x="460" y="632" fill="#777777" font-size="12" font-weight="700">04</text>
+      <text x="492" y="632" fill="#161616" font-size="12" font-weight="700">Variance</text>
+      <text x="460" y="668" fill="#161616" font-size="24" font-weight="700">+3</text>
+      <text x="460" y="692" fill="#666666" font-size="12" font-weight="500">Compared with DDT</text>
+    </g>
+    <g>
+      <rect x="188" y="456" width="192" height="104" rx="6" fill="#ffffff" stroke="#d5d5d5" />
+      <text x="204" y="484" fill="#777777" font-size="12" font-weight="700">05</text>
+      <text x="236" y="484" fill="#161616" font-size="12" font-weight="700">Outcome</text>
+      <text x="204" y="520" fill="#161616" font-size="20" font-weight="700">Over-delivered</text>
+      <text x="204" y="544" fill="#666666" font-size="12" font-weight="500">Future evidence</text>
+    </g>
+    <g>
+      <rect x="188" y="160" width="192" height="104" rx="6" fill="#eaf0ff" stroke="#2155e8" stroke-width="1.2" />
+      <text x="204" y="188" fill="#2155e8" font-size="12" font-weight="700">06</text>
+      <text x="236" y="188" fill="#2155e8" font-size="12" font-weight="700">Learn</text>
+      <text x="204" y="224" fill="#161616" font-size="24" font-weight="700">Review</text>
+      <text x="204" y="248" fill="#355eaf" font-size="12" font-weight="500">Candidate, not truth</text>
+    </g>
+
+    <g>
+      <rect x="428" y="300" width="224" height="120" rx="6" fill="#161616" stroke="#161616" />
+      <text x="540" y="336" text-anchor="middle" fill="#a9a9a9" font-size="12" font-weight="700">ACCUMULATED STATE</text>
+      <text x="540" y="376" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="700">Decision evidence</text>
+      <text x="540" y="404" text-anchor="middle" fill="#c7c7c7" font-size="12" font-weight="600">recommendation · override · outcome</text>
+    </g>
+  </svg>

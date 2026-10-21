@@ -32,7 +32,10 @@ import type { CSSProperties } from 'react';
 import type { WorkProject } from '@/lib/work-projects';
 import styles from './WorkProjectRows.module.css';
 
-const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
+const fontDisplay: React.CSSProperties = {
+  fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
+  fontWeight: 400,
+};
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 
 const motifIcons: Record<NonNullable<WorkProject['coverMotif']>, [LucideIcon, LucideIcon]> = {
@@ -156,14 +159,14 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
 
             <div className="flex flex-col gap-1.5">
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                <h3 className="text-[18px] text-[#0a0a0a] md:text-[20px]" style={fontDisplay}>
+                <h3 className="text-[22px] leading-none text-[#0a0a0a] md:text-[26px]" style={fontDisplay}>
                   {project.title}
                 </h3>
                 <div className="flex flex-wrap items-center justify-end gap-2">
                   {project.tags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md bg-[#ed5b2b] px-1.5 py-0.5 text-[10px] text-white"
+                      className="rounded-md bg-[#f2f2f2] px-1.5 py-0.5 text-[10px] text-[#000]"
                       style={fontBody}
                     >
                       {tag}

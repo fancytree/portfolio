@@ -21,8 +21,8 @@ function getCursorVariant(target: EventTarget | null) {
   return 'pill';
 }
 
-function isFooterTarget(target: EventTarget | null) {
-  return target instanceof Element && Boolean(target.closest('footer'));
+function isLightCursorSurface(target: EventTarget | null) {
+  return target instanceof Element && Boolean(target.closest('footer, #strategy'));
 }
 
 export default function CustomCursor() {
@@ -59,7 +59,7 @@ export default function CustomCursor() {
       targetY = event.clientY;
       cursor.dataset.visible = 'true';
       cursor.dataset.variant = getCursorVariant(event.target);
-      cursor.dataset.surface = isFooterTarget(event.target) ? 'footer' : 'default';
+      cursor.dataset.surface = isLightCursorSurface(event.target) ? 'light' : 'default';
 
       const nextLabel = getCursorLabel(event.target);
       cursor.dataset.hasLabel = nextLabel ? 'true' : 'false';

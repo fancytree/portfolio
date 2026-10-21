@@ -19,6 +19,14 @@ type CaseStudyControlsProps = {
   navLabels?: string[];
   tldrPoints?: CaseStudyTldrPoint[];
   accentColor?: string;
+  /** 为 true 时左侧导航从页面顶部就显示，滚到底也不收起。默认仍是滚过开场后再出现。 */
+  alwaysVisible?: boolean;
+  /** 为 false 时不画导航右侧分隔线。默认保留，现有案例页不受影响。 */
+  showDivider?: boolean;
+  /** 样式页用的侧栏：返回、案例名、带编号的章节。不画圆点和连线。 */
+  editorial?: boolean;
+  railKicker?: string;
+  railTitle?: string;
 };
 
 function normalizeLabel(text: string) {
@@ -40,10 +48,14 @@ function getDirectProjectSections() {
   const root = document.querySelector<HTMLElement>('.mei-project-page');
   if (!root) return [];
 
+  // 样式页把章节放进槽里，侧栏才能和内容并排。其他案例页仍是外壳的直接子章节。
+  const slot = root.querySelector<HTMLElement>(':scope > [data-case-sections]');
+  const parent = slot ?? root;
+
   try {
-    return Array.from(root.querySelectorAll<HTMLElement>(':scope > section'));
+    return Array.from(parent.querySelectorAll<HTMLElement>(':scope > section'));
   } catch {
-    return Array.from(root.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.tagName.toLowerCase() === 'section');
+    return Array.from(parent.children).filter((child): child is HTMLElement => child instanceof HTMLElement && child.tagName.toLowerCase() === 'section');
   }
 }
 
@@ -108,7 +120,19 @@ function scrollToTarget(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible: boolean; activeId: string; items: CaseStudyNavItem[]; accentColor: string }) {
+function CaseStudyQuickNav({
+  visible,
+  activeId,
+  items,
+  accentColor,
+  showDivider,
+}: {
+  visible: boolean;
+  activeId: string;
+  items: CaseStudyNavItem[];
+  accentColor: string;
+  showDivider: boolean;
+}) {
   const router = useRouter();
 
   const handleBackClick = () => {
@@ -130,7 +154,7 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
         flexDirection: 'column',
         gap: '12px',
         padding: '30px 24px 24px',
-        borderRight: '1px solid rgb(10 10 10 / 0.07)',
+        borderRight: showDivider ? '1px solid rgb(10 10 10 / 0.07)' : 'none',
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? 'auto' : 'none',
         transform: visible ? 'translateX(0)' : 'translateX(-16px)',
@@ -227,6 +251,187 @@ function CaseStudyQuickNav({ visible, activeId, items, accentColor }: { visible:
           );
         })}
       </nav>
+    </aside>
+  );
+}
+
+function splitNumberedLabel(label: string) {
+  const match = label.match(/^(\d+)\s*\/\s*(.+)$/);
+  if (!match) return null;
+  return { index: match[1], name: match[2] };
+}
+
+/** 样式页侧栏。结构对齐参考稿：返回、眉题、案例名、章节。每行左侧不放圆点或连线，编号保留。 */
+function CaseStudyEditorialNav({
+  visible,
+  activeId,
+  items,
+  showDivider,
+  kicker,
+  title,
+}: {
+  visible: boolean;
+  activeId: string;
+  items: CaseStudyNavItem[];
+  showDivider: boolean;
+  kicker: string;
+  title: string;
+}) {
+  const router = useRouter();
+  const idleColor = 'var(--case-nav-idle)';
+  const backColor = 'var(--case-nav-back)';
+  const activeColor = 'var(--case-nav-active)';
+  void showDivider;
+
+  return (
+    <aside
+      className="mei-case-study-rail hidden xl:block"
+      aria-label="Case study quick navigation"
+      style={{
+        position: 'relative',
+        width: '240px',
+        alignSelf: 'stretch',
+        boxSizing: 'border-box',
+        background: 'transparent',
+      }}
+    >
+      <div
+        style={{
+          position: 'sticky',
+          top: '68px',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '20px 28px 24px',
+          opacity: visible ? 1 : 0,
+          pointerEvents: visible ? 'auto' : 'none',
+          transition: 'opacity 0.32s ease',
+        }}
+      >
+      <button
+        type="button"
+        onClick={() => router.push('/#work')}
+        style={{
+          fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
+          alignSelf: 'flex-start',
+          border: 0,
+          background: 'transparent',
+          color: backColor,
+          cursor: 'pointer',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          fontSize: 'var(--case-type-nav-meta)',
+          fontWeight: 500,
+          letterSpacing: 'var(--case-tracking-nav-back)',
+          lineHeight: 'var(--case-leading-nav-meta)',
+          padding: 0,
+          textAlign: 'left',
+          textTransform: 'uppercase',
+        }}
+        onMouseEnter={(event) => {
+          event.currentTarget.style.color = activeColor;
+        }}
+        onMouseLeave={(event) => {
+          event.currentTarget.style.color = backColor;
+        }}
+      >
+        <span aria-hidden>‹</span>
+        <span>Back to Work</span>
+      </button>
+
+      <div style={{ marginTop: '28px' }}>
+        <p
+          style={{
+            margin: 0,
+            color: 'var(--case-nav-kicker)',
+            fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
+            fontSize: 'var(--case-type-nav-meta)',
+            fontWeight: 500,
+            letterSpacing: 'var(--case-tracking-nav-kicker)',
+            lineHeight: 'var(--case-leading-nav-meta)',
+            textTransform: 'uppercase',
+          }}
+        >
+          {kicker}
+        </p>
+        <p
+          style={{
+            margin: '6px 0 0',
+            color: activeColor,
+            fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
+            fontSize: 'var(--case-type-card-body)',
+            fontWeight: 400,
+            letterSpacing: 'var(--case-tracking-nav-title)',
+            lineHeight: 'var(--case-leading-nav-title)',
+            textTransform: 'uppercase',
+          }}
+        >
+          {title}
+        </p>
+      </div>
+
+      <nav
+        style={{
+          display: 'flex',
+          minHeight: 0,
+          flex: 1,
+          flexDirection: 'column',
+          gap: '22px',
+          marginTop: '48px',
+          overflowY: 'auto',
+        }}
+      >
+        {items.map((item) => {
+          const isActive = item.id === activeId;
+          const parts = splitNumberedLabel(item.label);
+          const color = isActive ? activeColor : idleColor;
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => scrollToTarget(item.id)}
+              aria-current={isActive ? 'true' : undefined}
+              style={{
+                fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
+                width: '100%',
+                maxWidth: '100%',
+                border: 0,
+                background: 'transparent',
+                color,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '8px',
+                fontSize: 'var(--case-type-spec)',
+                fontWeight: 500,
+                letterSpacing: 'var(--case-tracking-nav-item)',
+                lineHeight: 'var(--case-leading-nav-item)',
+                padding: 0,
+                textAlign: 'left',
+                textTransform: 'uppercase',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={(event) => {
+                event.currentTarget.style.color = activeColor;
+              }}
+              onMouseLeave={(event) => {
+                event.currentTarget.style.color = color;
+              }}
+            >
+              {parts ? (
+                <>
+                  <span style={{ flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>{parts.index}</span>
+                  <span style={{ minWidth: 0 }}>{parts.name}</span>
+                </>
+              ) : (
+                <span style={{ minWidth: 0 }}>{item.label}</span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
+      </div>
     </aside>
   );
 }
@@ -351,8 +556,17 @@ function CaseStudyTldrModal({ open, onClose, points, accentColor }: { open: bool
   );
 }
 
-export default function CaseStudyControls({ navLabels, tldrPoints, accentColor = '#ed5b2b' }: CaseStudyControlsProps) {
-  const [visible, setVisible] = useState(false);
+export default function CaseStudyControls({
+  navLabels,
+  tldrPoints,
+  accentColor = '#ed5b2b',
+  alwaysVisible = false,
+  showDivider = true,
+  editorial = false,
+  railKicker = 'Case study',
+  railTitle,
+}: CaseStudyControlsProps) {
+  const [visible, setVisible] = useState(alwaysVisible);
   const [activeId, setActiveId] = useState('');
   const [navItems, setNavItems] = useState<CaseStudyNavItem[]>([]);
   const [pageTitle, setPageTitle] = useState('This project');
@@ -408,7 +622,7 @@ export default function CaseStudyControls({ navLabels, tldrPoints, accentColor =
       const projectRoot = document.querySelector('.mei-project-page');
       const footerIsEntering = projectRoot ? projectRoot.getBoundingClientRect().bottom <= window.innerHeight : false;
       const hasPassedHero = hero ? hero.getBoundingClientRect().bottom <= 220 : window.scrollY > window.innerHeight * 0.75;
-      setVisible(hasPassedHero && !footerIsEntering);
+      setVisible(alwaysVisible || (hasPassedHero && !footerIsEntering));
 
       let current: CaseStudyNavItem | undefined;
       for (const item of navItems) {
@@ -429,7 +643,7 @@ export default function CaseStudyControls({ navLabels, tldrPoints, accentColor =
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, [navItems]);
+  }, [alwaysVisible, navItems]);
 
   useEffect(() => {
     if (!open) return;
@@ -469,7 +683,18 @@ export default function CaseStudyControls({ navLabels, tldrPoints, accentColor =
 
   return (
     <>
-      <CaseStudyQuickNav visible={visible} activeId={activeId} items={navItems} accentColor={accentColor} />
+      {editorial ? (
+        <CaseStudyEditorialNav
+          visible={visible}
+          activeId={activeId}
+          items={navItems}
+          showDivider={showDivider}
+          kicker={railKicker}
+          title={railTitle || pageTitle}
+        />
+      ) : (
+        <CaseStudyQuickNav visible={visible} activeId={activeId} items={navItems} accentColor={accentColor} showDivider={showDivider} />
+      )}
       <CaseStudyTldrButton visible={visible} onOpen={() => setOpen(true)} />
       <CaseStudyTldrModal open={open} onClose={() => setOpen(false)} points={modalPoints} accentColor={accentColor} />
     </>

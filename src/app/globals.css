@@ -51,14 +51,15 @@
 :root {
   --background: #f3f1ea;
   --foreground: #0a0a0a;
-  --mei-ink: #0a0a0a;
+  --mei-ink: #000000;
   --mei-paper: #f3f1ea;
   --mei-surface: #ffffff;
   --mei-line: #cccccc;
   --mei-orange: #ed5b2b;
-  --mei-muted: rgb(10 10 10 / 0.62);
-  --mei-font-primary: var(--font-inter), Inter, sans-serif;
-  --mei-font-secondary: var(--font-inter), Inter, sans-serif;
+  --mei-muted: rgb(0 0 0 / 0.58);
+  --mei-font-primary: var(--font-geist-sans), Geist, sans-serif;
+  --mei-font-display: var(--font-oswald), Oswald, sans-serif;
+  --mei-font-secondary: var(--font-oswald), Oswald, sans-serif;
 }
 
 @theme inline {
@@ -164,9 +165,9 @@ body.no-scroll {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border: 1px solid rgb(237 91 43 / 0.9);
+    border: 1px solid rgb(10 10 10 / 0.9);
     border-radius: 999px;
-    background: #ed5b2b;
+    background: #0a0a0a;
     color: #ffffff;
     font-family: var(--mei-font-primary);
     font-size: 11px;
@@ -187,9 +188,9 @@ body.no-scroll {
   .mei-custom-cursor[data-variant='pill'] .mei-custom-cursor__body {
     width: 52px;
     height: 26px;
-    border-color: rgb(237 91 43 / 0.7);
-    background: rgb(237 91 43 / 0.92);
-    box-shadow: 0 8px 22px rgb(237 91 43 / 0.16);
+    border-color: rgb(10 10 10 / 0.7);
+    background: rgb(10 10 10 / 0.92);
+    box-shadow: 0 8px 22px rgb(10 10 10 / 0.16);
   }
 
   .mei-custom-cursor[data-variant='pill'][data-has-label='true'] .mei-custom-cursor__body {
@@ -198,11 +199,16 @@ body.no-scroll {
     padding: 0 9px;
   }
 
-  /* The orange footer needs a high-contrast cursor surface. */
-  .mei-custom-cursor[data-surface='footer'] .mei-custom-cursor__body {
-    border-color: rgb(17 17 17 / 0.9);
-    background: #111111;
-    box-shadow: 0 8px 22px rgb(17 17 17 / 0.2);
+  /* 黑底区域用浅色光标，避免深色光标融进背景。 */
+  .mei-custom-cursor[data-surface='light'] .mei-custom-cursor__body {
+    border-color: rgb(255 255 255 / 0.9);
+    background: #ffffff;
+    color: #0a0a0a;
+    box-shadow: 0 8px 22px rgb(0 0 0 / 0.28);
+  }
+
+  .mei-custom-cursor[data-surface='light'] .mei-custom-cursor__label {
+    color: #0a0a0a;
   }
 
   .mei-custom-cursor__label {
@@ -1306,24 +1312,62 @@ body.no-scroll {
   --case-accent: var(--mei-orange);
   --case-bg: #fcfcfb;
   --case-surface: #f4f4f1;
-  --case-ink: #171717;
-  --case-copy: #3f3f3f;
-  --case-muted: #686868;
-  --case-rule: rgb(23 23 23 / 0.16);
-  --case-content-wide: 1080px;
-  --case-content-reading: 760px;
+  --case-ink: #000000;
+  --case-copy: rgb(0 0 0 / 0.75);
+  --case-muted: rgb(0 0 0 / 0.58);
+  --case-rule: rgb(0 0 0 / 0.16);
+  --case-content-wide: 1120px;
+  --case-content-reading: 768px;
+  --case-content-title: 896px;
   --case-space-section: clamp(72px, 9vw, 112px);
   --case-space-section-compact: clamp(52px, 7vw, 80px);
   --case-space-stack: clamp(24px, 4vw, 40px);
-  --case-type-hero: clamp(34px, 4vw, 52px);
-  --case-type-section: clamp(30px, 4.2vw, 48px);
-  --case-type-subsection: clamp(23px, 2.8vw, 32px);
-  --case-type-small-title: clamp(18px, 1.8vw, 22px);
-  --case-type-quote: clamp(24px, 3.2vw, 38px);
-  --case-type-quote-compact: clamp(18px, 2vw, 24px);
-  --case-type-lead: clamp(17px, 1.45vw, 20px);
-  --case-type-body: clamp(16px, 1.1vw, 18px);
-  --case-type-caption: clamp(14px, 1vw, 15px);
+  --case-space-page-x: 24px;
+  --case-space-page-bottom: 64px;
+  /* 一套字号。同一尺寸只留一个变量。 */
+  --case-type-hero: 36px;
+  --case-type-section: 36px;
+  --case-type-subsection: 24px;
+  --case-type-small-title: 20px;
+  --case-type-quote: 24px;
+  --case-type-quote-compact: 20px;
+  --case-type-lead: 18px;
+  --case-type-body: 18px;
+  --case-type-caption: 14px;
+  --case-type-eyebrow: 16px;
+  --case-type-card-body: 15px;
+  --case-type-spec: 11px;
+  --case-type-stat: clamp(28px, 3vw, 36px);
+  --case-type-stat-label: 12px;
+  --case-type-nav-meta: 10px;
+  --case-leading-title: 1.05;
+  --case-leading-chapter: 1.14;
+  --case-leading-body: 1.625;
+  --case-leading-meta: 24px;
+  --case-leading-spec: 1.4;
+  --case-leading-nav-meta: 14px;
+  --case-leading-nav-title: 1.25;
+  --case-leading-nav-item: 16px;
+  --case-tracking-label: 0.8px;
+  --case-tracking-glance: -0.025em;
+  --case-tracking-tag: 0.05em;
+  --case-tracking-spec: 0.14em;
+  --case-tracking-stat: -0.03em;
+  --case-tracking-stat-label: 0.08em;
+  --case-tracking-nav-back: 0.08em;
+  --case-tracking-nav-kicker: 0.12em;
+  --case-tracking-nav-title: -0.02em;
+  --case-tracking-nav-item: 0.06em;
+  --case-space-chapter: clamp(120px, 12vw, 168px);
+  --case-space-kit-stack: clamp(28px, 4vw, 44px);
+  --case-tag-border: #e3e3e3;
+  --case-radius-tag: 4px;
+  --case-on-ink: #ffffff;
+  --case-nav-back: #808080;
+  --case-nav-kicker: #c4c4c4;
+  --case-nav-idle: #a3a3a3;
+  --case-nav-active: #171717;
+  --case-weight-medium: 500;
   /* 案例页圆角体系：只从这组 token 选取，禁止页面内混用任意半径 */
   --case-radius-sm: 8px;
   --case-radius-md: 12px;
@@ -1377,81 +1421,86 @@ body.no-scroll {
 .mei-project-page [data-case-nav-label] > header > :is(h1, h2),
 .mei-project-page [data-case-nav-label] > :first-child > :is(h1, h2),
 .mei-project-page > section:not(.mei-case-study-hero) > div > :is(h1, h2) {
-  max-width: 940px;
-  font-family: var(--mei-font-primary) !important;
+  max-width: var(--case-content-title);
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
   font-weight: 400 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.025em !important;
+  line-height: var(--case-leading-chapter) !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .case-study-section-title {
-  max-width: 940px;
+  max-width: var(--case-content-title);
   color: var(--case-ink) !important;
-  font-family: var(--mei-font-primary) !important;
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
   font-weight: 400 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.025em !important;
+  line-height: var(--case-leading-chapter) !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 /* Semantic content roles. Pages opt into these explicitly with
    data-case-type so a type-scale change updates every matching passage. */
 .mei-project-page [data-case-type='hero'] {
-  font-family: var(--mei-font-primary) !important;
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-hero) !important;
   font-weight: 400 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.025em !important;
+  line-height: var(--case-leading-title) !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .mei-project-page [data-case-type='display'] {
-  max-width: 940px;
-  font-family: var(--mei-font-primary) !important;
+  max-width: var(--case-content-title);
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
   font-weight: 400 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.025em !important;
+  line-height: var(--case-leading-chapter) !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .mei-project-page [data-case-type='title'] {
-  font-family: var(--mei-font-primary) !important;
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-subsection) !important;
-  font-weight: 500 !important;
-  line-height: 1.18 !important;
-  letter-spacing: -0.018em !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .mei-project-page [data-case-type='small-title'] {
-  font-family: var(--mei-font-primary) !important;
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-small-title) !important;
-  font-weight: 500 !important;
-  line-height: 1.3 !important;
-  letter-spacing: -0.01em !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
 }
 
 .mei-project-page [data-case-type='quote'] {
-  max-width: 920px;
+  max-width: var(--case-content-reading);
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-quote) !important;
   font-weight: 400 !important;
-  line-height: 1.18 !important;
-  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
   text-wrap: balance;
 }
 
 .mei-project-page [data-case-type='quote-compact'] {
-  max-width: 920px;
+  max-width: var(--case-content-reading);
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-quote-compact) !important;
   font-weight: 400 !important;
-  line-height: 1.42 !important;
-  letter-spacing: -0.012em !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
   text-wrap: balance;
 }
 
@@ -1459,31 +1508,37 @@ body.no-scroll {
   max-width: var(--case-content-reading);
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-lead) !important;
-  font-weight: 300 !important;
-  line-height: 1.6 !important;
+  font-weight: 400 !important;
+  line-height: var(--case-leading-body) !important;
 }
 
 .mei-project-page [data-case-type='body'] {
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-body) !important;
-  font-weight: 300 !important;
-  line-height: 1.62 !important;
+  font-weight: 400 !important;
+  line-height: var(--case-leading-body) !important;
 }
 
 .mei-project-page [data-case-type='caption'] {
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-caption) !important;
-  font-weight: 300 !important;
-  line-height: 1.55 !important;
+  font-weight: 400 !important;
+  line-height: var(--case-leading-body) !important;
 }
 
 .mei-project-page [data-case-type='eyebrow'] {
-  font-family: var(--mei-font-primary) !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  line-height: 18px !important;
-  letter-spacing: 0.08em !important;
+  font-family: var(--mei-font-display) !important;
+  font-size: var(--case-type-eyebrow) !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: var(--case-tracking-label) !important;
   text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .mei-project-page {
+    --case-type-hero: 60px;
+  }
 }
 
 /* Mono uses a slightly firmer editorial hierarchy across the full case study. */
@@ -1507,21 +1562,22 @@ body.no-scroll {
    diagrams or embedded product UI. Explicit data-case-type always wins.
    Live DEF ERP components (.def-erp-live) keep the product's own card titles. */
 .mei-project-page [data-case-nav-label] h2:not([data-case-type]):not(.def-erp-live *) {
-  max-width: 940px;
-  font-family: var(--mei-font-primary) !important;
+  max-width: var(--case-content-title);
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
   font-weight: 400 !important;
-  line-height: 1.08 !important;
-  letter-spacing: -0.025em !important;
+  line-height: var(--case-leading-chapter) !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .mei-project-page [data-case-nav-label] :is(h3, h4, h5):not([data-case-type]) {
-  font-family: var(--mei-font-primary) !important;
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-small-title) !important;
-  font-weight: 500 !important;
-  line-height: 1.3 !important;
-  letter-spacing: -0.01em !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
 }
 
 .mei-project-page [data-case-nav-label] blockquote > p:first-of-type:not([data-case-type]) {
@@ -1546,38 +1602,39 @@ body.no-scroll {
 
 .case-study-subsection-title {
   color: var(--case-ink) !important;
-  font-family: var(--mei-font-primary) !important;
+  font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-subsection) !important;
-  font-weight: 500 !important;
-  line-height: 1.18 !important;
-  letter-spacing: -0.018em !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 
 .case-study-lead {
   max-width: var(--case-content-reading);
-  color: var(--case-copy) !important;
+  color: var(--case-muted) !important;
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-lead) !important;
-  font-weight: 300 !important;
-  line-height: 1.6 !important;
+  font-weight: 400 !important;
+  line-height: var(--case-leading-body) !important;
 }
 
 .case-study-body {
-  color: var(--case-copy) !important;
+  color: var(--case-ink) !important;
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-body) !important;
-  font-weight: 300 !important;
-  line-height: 1.62 !important;
+  font-weight: 400 !important;
+  line-height: var(--case-leading-body) !important;
 }
 
 .case-study-eyebrow {
-  color: var(--case-accent);
-  font-family: var(--mei-font-primary) !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  line-height: 18px !important;
-  letter-spacing: 0.08em !important;
+  color: var(--case-muted);
+  font-family: var(--mei-font-display) !important;
+  font-size: var(--case-type-eyebrow) !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  letter-spacing: var(--case-tracking-label) !important;
   text-transform: uppercase;
 }
 
@@ -1636,16 +1693,17 @@ body.no-scroll {
 }
 
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) h1 {
-  font-family: var(--mei-font-secondary) !important;
-  font-size: clamp(4rem, 11vw, 8.75rem) !important;
-  font-weight: 500 !important;
-  line-height: 0.92 !important;
+  font-family: var(--mei-font-display) !important;
+  font-size: var(--case-type-hero) !important;
+  font-weight: 400 !important;
+  line-height: var(--case-leading-title) !important;
   letter-spacing: 0 !important;
-  color: var(--mei-ink) !important;
+  text-transform: uppercase;
+  color: var(--case-ink) !important;
 }
 
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) p {
-  max-width: 860px;
+  max-width: var(--case-content-reading);
 }
 
 .mei-project-page > section:first-of-type:not(.mei-case-study-hero) a {
@@ -1875,7 +1933,7 @@ body.no-scroll {
   }
 
   .mei-project-page > section:first-of-type:not(.mei-case-study-hero) h1 {
-    font-size: clamp(3.5rem, 18vw, 5.8rem) !important;
+    font-size: var(--case-type-hero) !important;
   }
 
   .mei-tool-cloud span {

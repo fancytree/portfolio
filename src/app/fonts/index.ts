@@ -31,6 +31,13 @@ export const inter = localFont({
   display: "swap",
 });
 
+export const oswald = localFont({
+  src: "./oswald-latin-wght-normal.woff2",
+  variable: "--font-oswald",
+  weight: "200 700",
+  display: "swap",
+});
+
 export const dmMono = localFont({
   src: [
     {

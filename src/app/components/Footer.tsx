@@ -1,7 +1,7 @@
 'use client';
 
-// 页脚组件 —— 按 Figma node 27:892 实现：整版橘色，社交链接 + 回到顶部，
-// "Let's work together" 大标题 + 徽章印章（黑底橙色弧形文字 + 信封图标），版权栏收尾。
+// 页脚组件 —— 整版黑色，社交链接 + 回到顶部，
+// "Let's work together" 大标题 + 徽章印章，版权栏收尾。
 
 import { ArrowRight, ArrowUp } from 'lucide-react';
 import ReachOutBadge from './ReachOutBadge';
@@ -22,10 +22,10 @@ export default function Footer() {
   };
 
   return (
-    <footer className="flex w-full flex-col items-center gap-10 bg-[#ed5b2b] px-6 py-3 sm:px-8 md:gap-16">
+    <footer className="flex w-full flex-col items-center gap-10 bg-[#0a0a0a] px-6 py-3 sm:px-8 md:gap-16">
       {/* 顶部：社交链接 + 回到顶部 */}
       <div className="flex w-full items-center justify-between py-2">
-        <p className="text-[12px] text-[#0a0a0a]" style={fontBody}>
+        <p className="text-[12px] text-white" style={fontBody}>
           {socialLinks.map((link, i) => (
             <span key={link.label}>
               <a
@@ -43,7 +43,7 @@ export default function Footer() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="mei-back-to-top flex items-center justify-end gap-2 text-[16px] font-light text-[#070707]"
+          className="mei-back-to-top flex items-center justify-end gap-2 text-[16px] font-light text-white"
           style={fontBody}
         >
           <span className="mei-back-to-top-text whitespace-nowrap">Scroll to top</span>
@@ -58,7 +58,7 @@ export default function Footer() {
         <div className="flex flex-col items-start justify-between gap-10 sm:flex-row sm:items-end">
           <a href="mailto:mei.chai@mail.polimi.it" className="group flex items-center gap-3">
             <h2
-              className="text-[40px] leading-[1.05] text-[#0a0a0a] sm:text-[56px] md:text-[72px]"
+              className="text-[40px] leading-[1.05] text-white sm:text-[56px] md:text-[72px]"
               style={fontDisplay}
             >
               Let&apos;s work together
@@ -66,15 +66,15 @@ export default function Footer() {
             <ArrowRight
               size={40}
               strokeWidth={1.5}
-              className="shrink-0 text-[#0a0a0a] transition-transform duration-300 group-hover:translate-x-2 md:size-[55px]"
+              className="shrink-0 text-white transition-transform duration-300 group-hover:translate-x-2 md:size-[55px]"
             />
           </a>
 
           <ReachOutBadge className="size-[140px] self-center sm:size-[170px] md:size-[214px]" />
         </div>
 
-        <div className="flex w-full items-end justify-center border-t border-[#0a0a0a] py-2">
-          <p className="flex-1 text-[16px] text-[#0a0a0a]" style={fontBody}>
+        <div className="flex w-full items-end justify-center border-t border-white/25 py-2">
+          <p className="flex-1 text-[16px] text-white" style={fontBody}>
             © {new Date().getFullYear()} Mei Chai. Designed with intention.
           </p>
         </div>

@@ -37,6 +37,9 @@ export default function Layout({ children }: LayoutProps) {
     return <>{children}</>;
   }
 
+  // 样式页自己排左侧导航和内容，不再套全站的居中窄容器。
+  const caseFrame = pathname === "/projects/case-kit";
+
   return (
     // 外层容器：全屏高度，背景色和基础字体
     <div className="min-h-screen text-zinc-900" style={{ backgroundColor: '#FFFFFF' }}>
@@ -48,7 +51,13 @@ export default function Layout({ children }: LayoutProps) {
           margin 不属于白色背景区域，所以滚动到底时不会把 fixed footer 遮住。 */}
       <div className="relative z-10 bg-white" style={{ marginBottom: footerHeight }}>
         {/* 主体内容区域：为 fixed 导航预留顶部内边距（pt-12 = 48px，适应 48px 高度的导航栏），水平居中、限制最大宽度 max-w-7xl */}
-        <main className="mx-auto flex min-w-0 max-w-7xl flex-1 px-4 pt-12 pb-0 sm:px-6 lg:px-8">
+        <main
+          className={
+            caseFrame
+              ? "flex w-full min-w-0 flex-1 pt-12"
+              : "mx-auto flex min-w-0 max-w-7xl flex-1 px-4 pt-12 pb-0 sm:px-6 lg:px-8"
+          }
+        >
           {/* min-w-0：flex 子项可窄于内容最小宽度，子页面内视口全宽突破计算才正确 */}
           <div className="w-full min-w-0">{children}</div>
         </main>

@@ -10,27 +10,33 @@
  *   <h1 style={{ ...textStyle.h1, color: textColor.primary }}>Title</h1>
  */
 
-// Tier 1 —— 原子 token
+// Tier 1 —— 原子 token。字号对齐案例内容区：正文 Geist，标题 Oswald。
 export const fontFamily = {
-  sans: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
-  system: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
-  display: 'var(--font-inter), Inter, system-ui, -apple-system, sans-serif',
+  sans: 'var(--font-geist-sans), Geist, system-ui, sans-serif',
+  system: 'var(--font-geist-sans), Geist, system-ui, sans-serif',
+  display: 'var(--font-oswald), Oswald, sans-serif',
   mono: 'ui-monospace, SFMono-Regular, Menlo, monospace',
 } as const;
 
 export const fontSize = {
+  /** 左侧导航眉题、返回 */
+  '2xs': '10px',
+  /** 块名和左侧导航章节 */
+  spec: '11px',
   xs: '12px',
   sm: '14px',
+  /** 卡片内文、导航标题、文末链接 */
+  card: '15px',
   base: '16px',
   md: '18px',
   lg: '20px',
   xl: '24px',
-  '2xl': '28px',
-  '3xl': '30px',
-  '4xl': '32px',
-  '5xl': '36px',
-  '6xl': '40px',
-  '7xl': '48px',
+  '2xl': '24px',
+  '3xl': '36px',
+  '4xl': '36px',
+  '5xl': '48px',
+  '6xl': '60px',
+  '7xl': '60px',
 } as const;
 
 export const fontWeight = {
@@ -43,6 +49,7 @@ export const fontWeight = {
 
 export const lineHeight = {
   // 绝对值（与 Figma 对齐）
+  '14': '14px',
   '16': '16px',
   '20': '20px',
   '22': '22px',
@@ -57,30 +64,53 @@ export const lineHeight = {
   '44': '44px',
   '48': '48px',
   '52': '52px',
-  // 比例（正文类）
+  // 比例。relaxed 是 18px 正文的 1.625（29.25px），title 是 60px 标题的 1.05（63px）。
+  none: 1,
+  title: 1.05,
+  /** 样式页章节标题 */
+  chapter: 1.14,
+  /** 左侧导航项目名 */
+  navTitle: 1.25,
+  /** 样式页块名、统计说明 */
+  spec: 1.4,
   tight: 1.2,
   snug: 1.3,
   normal: 1.5,
-  relaxed: 1.6,
+  relaxed: 1.625,
 } as const;
 
 export const letterSpacing = {
   tight: '-0.32px',
   normal: '0',
+  label: '0.8px',
+  /** At a glance */
+  glance: '-0.025em',
+  /** 按钮下的标签 */
+  tag: '0.05em',
+  /** Prose / Stats 块名 */
+  spec: '0.14em',
+  /** 统计数字 */
+  stat: '-0.03em',
+  /** 统计说明 */
+  statLabel: '0.08em',
+  navBack: '0.08em',
+  navKicker: '0.12em',
+  navTitle: '-0.02em',
+  navItem: '0.06em',
   wide: '1px',
   wider: '2px',
 } as const;
 
 // Tier 2 —— 语义文字色别名
 export const textColor = {
-  /** 正文主色（非纯黑，降低对比度刺眼） */
-  primary: '#0a0a0a',
-  /** 纯黑，用于 H1/强调 */
-  strong: '#0a0a0a',
-  /** 次级/辅助，如副标题、说明 */
-  secondary: 'rgb(10 10 10 / 0.68)',
-  /** 更轻的静默灰 */
-  muted: 'rgb(10 10 10 / 0.58)',
+  /** 正文主色 */
+  primary: '#000000',
+  /** 纯黑，用于标题 */
+  strong: '#000000',
+  /** 卡片正文，约 75% 黑 */
+  secondary: 'rgb(0 0 0 / 0.75)',
+  /** 眉题、介绍、说明 */
+  muted: 'rgb(0 0 0 / 0.58)',
   /** 引用等深灰 */
   subtle: 'oklch(0.4 0 0)',
   /** 在暗色背景上的文字 */
@@ -90,108 +120,167 @@ export const textColor = {
 } as const;
 
 // Tier 3 —— 文字样式预设（纯 typography scale）
-// 重要：preset 故意不包含 fontFamily / color / margin；
-//   - fontFamily：各详情页按自己的品牌调性注入（jobnova=Manrope，其余=system-ui）
-//   - color / margin：由具体布局上下文决定
-// 这样可以安全地在任意页面展开 `...textStyle.body`，不改变现有字体与布局
+// preset 不写 color 和 margin。字体由 fontFamily.display（标题）和 fontFamily.sans（正文）决定。
 export const textStyle = {
-  /** Hero 大标 40/52 light — 多数详情页顶部主标题 */
+  /** 开场标题 60 / 1.05，桌面主标题 */
   displayXl: {
     fontSize: fontSize['6xl'],
-    lineHeight: lineHeight['52'],
-    fontWeight: fontWeight.light,
+    lineHeight: lineHeight.title,
+    fontWeight: fontWeight.regular,
   },
-  /** Section Display 40 + 2px 字距 — 如 Problems & solutions */
+  /** 次级大标题 36 / 1.05 */
   displayLg: {
-    fontSize: fontSize['6xl'],
-    lineHeight: 'normal' as const,
-    fontWeight: fontWeight.medium,
-    letterSpacing: letterSpacing.wider,
+    fontSize: fontSize['3xl'],
+    lineHeight: lineHeight.title,
+    fontWeight: fontWeight.regular,
   },
-  /** H1 36/44 medium */
+  /** H1 60 / 1.05 */
   h1: {
-    fontSize: fontSize['5xl'],
-    lineHeight: lineHeight['44'],
-    fontWeight: fontWeight.medium,
+    fontSize: fontSize['6xl'],
+    lineHeight: lineHeight.title,
+    fontWeight: fontWeight.regular,
   },
-  /** H2 30/38 medium */
+  /** H2 36 / 1.05 */
   h2: {
     fontSize: fontSize['3xl'],
-    lineHeight: lineHeight['38'],
-    fontWeight: fontWeight.medium,
+    lineHeight: lineHeight.title,
+    fontWeight: fontWeight.regular,
   },
-  /** H3 28/36 light — 章节内大标题 */
+  /** 卡片标题 24 / 1 */
   h3: {
-    fontSize: fontSize['2xl'],
-    lineHeight: lineHeight['36'],
-    fontWeight: fontWeight.light,
+    fontSize: fontSize.xl,
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.regular,
   },
-  /** H3 24/32 medium — 子模块标题 */
+  /** 卡片标题 24 / 1 */
   h3Medium: {
     fontSize: fontSize.xl,
-    lineHeight: lineHeight['32'],
-    fontWeight: fontWeight.medium,
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.regular,
   },
-  /** H4 20/28 medium */
+  /** 问句标题 20 / 1.15 */
   h4: {
     fontSize: fontSize.lg,
-    lineHeight: lineHeight['28'],
-    fontWeight: fontWeight.medium,
+    lineHeight: 1.15,
+    fontWeight: fontWeight.regular,
   },
-  /** 卡片标题 18/24 semibold */
+  /** 信息值 18 / 1 */
   h5: {
     fontSize: fontSize.md,
-    lineHeight: lineHeight['24'],
-    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.regular,
   },
-  /** Hero / Section Lead 18/32 light — 长段落引语 */
+  /** 标题下介绍 18 / 1.625 */
   lead: {
     fontSize: fontSize.md,
-    lineHeight: lineHeight['32'],
-    fontWeight: fontWeight.light,
+    lineHeight: lineHeight.relaxed,
+    fontWeight: fontWeight.regular,
   },
-  /** 次级 Lead 18/30 light */
+  /** 介绍 18 / 1.625 */
   leadSm: {
     fontSize: fontSize.md,
-    lineHeight: lineHeight['30'],
-    fontWeight: fontWeight.light,
+    lineHeight: lineHeight.relaxed,
+    fontWeight: fontWeight.regular,
   },
-  /** 正文 16/24 regular */
+  /** 正文 18 / 1.625 */
   body: {
-    fontSize: fontSize.base,
-    lineHeight: lineHeight['24'],
+    fontSize: fontSize.md,
+    lineHeight: lineHeight.relaxed,
     fontWeight: fontWeight.regular,
   },
-  /** 正文 16/24 light — hero 区下常用的 meta 段落 */
+  /** 正文 18 / 1.625 */
   bodyLight: {
-    fontSize: fontSize.base,
-    lineHeight: lineHeight['24'],
-    fontWeight: fontWeight.light,
-  },
-  /** 正文 16/26 light — 阅读节奏偏舒缓 */
-  bodyReading: {
-    fontSize: fontSize.base,
-    lineHeight: lineHeight['26'],
-    fontWeight: fontWeight.light,
-  },
-  /** 小正文 14/22 regular */
-  bodySm: {
-    fontSize: fontSize.sm,
-    lineHeight: lineHeight['22'],
+    fontSize: fontSize.md,
+    lineHeight: lineHeight.relaxed,
     fontWeight: fontWeight.regular,
   },
-  /** Caption 14/20 light — meta 辅助文案 */
+  /** 正文 18 / 1.625 */
+  bodyReading: {
+    fontSize: fontSize.md,
+    lineHeight: lineHeight.relaxed,
+    fontWeight: fontWeight.regular,
+  },
+  /** 卡片内文 15 / 1.625 */
+  bodySm: {
+    fontSize: fontSize.card,
+    lineHeight: lineHeight.relaxed,
+    fontWeight: fontWeight.regular,
+  },
+  /** 图注 14 / 1.625 */
   caption: {
     fontSize: fontSize.sm,
-    lineHeight: lineHeight['20'],
-    fontWeight: fontWeight.light,
+    lineHeight: lineHeight.relaxed,
+    fontWeight: fontWeight.regular,
   },
-  /** Overline 12 semibold uppercase — 模块 eyebrow */
+  /** 眉题 16 / 1，字距 0.8px */
   overline: {
+    fontSize: fontSize.base,
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.regular,
+    letterSpacing: letterSpacing.label,
+    textTransform: 'uppercase' as const,
+  },
+  /** 样式页 At a glance，16 / 1 */
+  caseGlance: {
+    fontSize: fontSize.base,
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.regular,
+    letterSpacing: letterSpacing.glance,
+    textTransform: 'uppercase' as const,
+  },
+  /** 按钮下的描边标签，14 / 1 */
+  caseTag: {
+    fontSize: fontSize.sm,
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.regular,
+    letterSpacing: letterSpacing.tag,
+    textTransform: 'uppercase' as const,
+  },
+  /** 样式页块名，11 / 1.4 */
+  caseSpec: {
+    fontSize: fontSize.spec,
+    lineHeight: lineHeight.spec,
+    fontWeight: fontWeight.regular,
+    letterSpacing: letterSpacing.spec,
+    textTransform: 'uppercase' as const,
+  },
+  /** 统计数字 */
+  caseStat: {
+    fontSize: 'clamp(28px, 3vw, 36px)',
+    lineHeight: lineHeight.none,
+    fontWeight: fontWeight.medium,
+    letterSpacing: letterSpacing.stat,
+  },
+  /** 统计说明，12 / 1.4 */
+  caseStatLabel: {
     fontSize: fontSize.xs,
+    lineHeight: lineHeight.spec,
+    fontWeight: fontWeight.medium,
+    letterSpacing: letterSpacing.statLabel,
+    textTransform: 'uppercase' as const,
+  },
+  /** 左侧导航返回，10px。眉题同字号，字距用 letterSpacing.navKicker。 */
+  caseNavMeta: {
+    fontSize: fontSize['2xs'],
+    lineHeight: lineHeight['14'],
+    fontWeight: fontWeight.medium,
+    letterSpacing: letterSpacing.navBack,
+    textTransform: 'uppercase' as const,
+  },
+  /** 左侧导航项目名，15px */
+  caseNavTitle: {
+    fontSize: fontSize.card,
+    lineHeight: lineHeight.navTitle,
+    fontWeight: fontWeight.regular,
+    letterSpacing: letterSpacing.navTitle,
+    textTransform: 'uppercase' as const,
+  },
+  /** 左侧导航章节，11px */
+  caseNavItem: {
+    fontSize: fontSize.spec,
     lineHeight: lineHeight['16'],
-    fontWeight: fontWeight.semibold,
-    letterSpacing: letterSpacing.wider,
+    fontWeight: fontWeight.medium,
+    letterSpacing: letterSpacing.navItem,
     textTransform: 'uppercase' as const,
   },
   /** 数字 statistic 40-64 medium — 大统计数字 */

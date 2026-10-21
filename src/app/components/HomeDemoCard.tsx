@@ -74,7 +74,7 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
           aspect rather than a fixed px height that would crop it. */}
       <div
         ref={frameRef}
-        className="mei-demo-frame relative overflow-hidden rounded-[14px] border border-[#0a0a0a]/12 bg-[#f5f7fb]"
+        className="mei-demo-frame relative overflow-hidden rounded-[8px] border border-[#0a0a0a]/12 bg-[#f5f7fb]"
         style={isFullscreen ? undefined : { aspectRatio: `${PREVIEW_VIEWPORT_WIDTH} / ${PREVIEW_VIEWPORT_HEIGHT}` }}
       >
         <iframe
@@ -126,11 +126,14 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
       </div>
 
       <figcaption className="flex flex-col gap-1.5">
-        <p className="m-0 text-[17px] text-[#0a0a0a] md:text-[19px]" style={{ fontFamily: 'var(--mei-font-primary)' }}>
+        <p
+          className="m-0 text-[22px] leading-none text-[#0a0a0a] md:text-[26px]"
+          style={{ fontFamily: 'var(--mei-font-display), Oswald, sans-serif', fontWeight: 400 }}
+        >
           {title}
         </p>
         <p
-          className="m-0 text-[14px] font-light leading-snug text-[#0a0a0a]/58"
+          className="m-0 text-[14px] font-light leading-snug text-[#0a0a0a]/58 md:text-[15px]"
           style={{ fontFamily: 'var(--mei-font-primary)' }}
         >
           {blurb}

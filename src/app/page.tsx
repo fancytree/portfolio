@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { AudioWaveform, ArrowUpRight, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
+import { AudioWaveform, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
 import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
 import { productProjects, researchProjects } from '@/lib/work-projects';
@@ -154,6 +154,10 @@ const fullBleed: React.CSSProperties = {
 };
 
 const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)', fontWeight: 400 };
+const fontTitle: React.CSSProperties = {
+  fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
+  fontWeight: 400,
+};
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
@@ -218,7 +222,7 @@ function HeroTypedHeading() {
             >
               {character}
               {carriesCursor && (
-                <span className="mei-type-cursor mei-type-cursor-follow text-[#ed5b2b]" />
+                <span className="mei-type-cursor mei-type-cursor-follow text-[#0a0a0a]" />
               )}
             </span>
           );
@@ -233,7 +237,7 @@ function HeroTypedHeading() {
         className="mb-4 flex items-center gap-2 text-[12px] leading-none text-[#0a0a0a]/65 sm:mb-5 sm:text-[13px]"
         style={fontMono}
       >
-        <span className="text-[#ed5b2b]" aria-hidden="true">
+        <span className="text-[#0a0a0a]" aria-hidden="true">
           &gt;
         </span>
         {heroGreeting}
@@ -255,9 +259,9 @@ function HeroTypedHeading() {
         aria-label="UX, product strategy, and systems thinking"
       >
         <span>UX</span>
-        <span className="text-[#ed5b2b]" aria-hidden="true">/</span>
+        <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
         <span>PRODUCT STRATEGY</span>
-        <span className="text-[#ed5b2b]" aria-hidden="true">/</span>
+        <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
         <span>SYSTEMS THINKING</span>
       </div>
     </div>
@@ -355,11 +359,11 @@ const processSteps = [
 
 function ToolBadge({ item }: { item: ToolItem }) {
   if (item.type === 'plus') {
-    return <Plus size={16} strokeWidth={1.5} className="shrink-0 text-[#f3f1ea]/50" />;
+    return <Plus size={16} strokeWidth={1.5} className="shrink-0 text-white/50" />;
   }
   if (item.type === 'skillmd') {
     return (
-      <div className="relative flex size-10 shrink-0 flex-col items-center justify-center gap-0.5 rounded-[10px] bg-white">
+      <div className="relative flex size-10 shrink-0 flex-col items-center justify-center gap-0.5 rounded-[10px] bg-[#f4f4f1]">
         <FileText size={16} strokeWidth={1.5} className="text-[#0a0a0a]" />
         <span className="text-[6px] leading-none text-[#0a0a0a]" style={fontMono}>
           skill.md
@@ -369,7 +373,7 @@ function ToolBadge({ item }: { item: ToolItem }) {
   }
   if (item.type === 'ship-icon') {
     return (
-      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-white">
+      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-[#f4f4f1]">
         <div className={`absolute ${item.innerClassName}`}>
           <img src={item.src} alt={item.alt} className={`block max-w-none ${item.imageClassName}`} />
         </div>
@@ -378,7 +382,7 @@ function ToolBadge({ item }: { item: ToolItem }) {
   }
   if (item.type === 'ship-storybook') {
     return (
-      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-white">
+      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-[#f4f4f1]">
         <div className="absolute inset-[12.5%] overflow-hidden">
           <img
             src="/img/strategy/ship-storybook-vector.svg"
@@ -395,7 +399,7 @@ function ToolBadge({ item }: { item: ToolItem }) {
     );
   }
   return item.wrap ? (
-    <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-white">
+    <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#f4f4f1]">
       <img src={item.src} alt={item.alt} className="h-[65%] w-[65%] object-contain" />
     </div>
   ) : (
@@ -499,15 +503,11 @@ export default function Home() {
               <div className="pt-6">
                 <Link
                   href="/works"
-                  className="mei-view-all-work-link group inline-flex items-center gap-2.5 rounded-full border border-[#0a0a0a]/72 px-4 py-2.5 text-[14px]"
-                  style={fontBody}
+                  className="inline-flex w-fit items-center gap-2 bg-black px-4 py-2 text-[16px] leading-6 text-white uppercase no-underline opacity-100 transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:opacity-85 focus-visible:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#ed5b2b]"
+                  style={{ fontFamily: 'var(--mei-font-display), Oswald, sans-serif', fontWeight: 400, letterSpacing: 0 }}
                 >
-                  <span className="relative z-10">View all works</span>
-                  <ArrowUpRight
-                    aria-hidden
-                    strokeWidth={1.6}
-                    className="mei-view-all-work-icon relative z-10 size-4 shrink-0"
-                  />
+                  <span>View all works</span>
+                  <span aria-hidden>→</span>
                 </Link>
               </div>
             </Reveal>
@@ -545,7 +545,7 @@ export default function Home() {
         <Reveal>
           <h2
             className="text-center text-[40px] leading-none text-white md:text-[56px]"
-            style={{ ...fontDisplay, fontStyle: 'italic', fontWeight: 400 }}
+            style={fontDisplay}
           >
             Strategy
           </h2>
@@ -554,11 +554,11 @@ export default function Home() {
         <div className="flex w-full max-w-[1200px] flex-col gap-12 md:flex-row md:items-start md:gap-16">
           <div className="w-full md:sticky md:top-24 md:w-[40%] md:self-start">
             <Reveal>
-              <div className="flex flex-col gap-5 text-[#ed5b2b]">
-                <h3 className="max-w-[480px] text-[22px] md:text-[24px]" style={fontBody}>
+              <div className="flex flex-col gap-5">
+                <h3 className="max-w-[480px] text-[22px] text-white md:text-[24px]" style={fontTitle}>
                   Design behavior, not only interfaces
                 </h3>
-                <p className="max-w-[380px] text-[15px] font-light md:text-[16px]" style={fontBody}>
+                <p className="max-w-[380px] text-[15px] font-light text-white/70 md:text-[16px]" style={fontBody}>
                   With generative AI, cause and effect is no longer fixed: the same intent can produce different
                   outcomes. I design the rules around that uncertainty—what the product should understand, how people
                   can steer it, and when human judgment takes over.
@@ -569,13 +569,13 @@ export default function Home() {
 
           <div className="relative flex flex-1 flex-col gap-10 md:gap-28 md:pb-24">
             {/* 贯穿全部步骤的单根竖线（不再按行分段，行与行之间不再断开） */}
-            <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-[#f3f1ea]/20" />
+            <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-white/20" />
 
             {processSteps.map((step, i) => {
               const Icon = step.icon;
               const reversed = i % 2 === 1;
               const iconBadge = (
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#f4f4f1]">
                   <Icon size={22} strokeWidth={1.5} className="text-[#0a0a0a]" />
                 </div>
               );
@@ -583,10 +583,10 @@ export default function Home() {
                 <div
                   className={`flex flex-col gap-3 py-2 ${reversed ? 'items-end text-right' : 'items-start text-left'}`}
                 >
-                  <h4 className="text-[20px] text-[#f3f1ea] md:text-[24px]" style={fontBody}>
+                  <h4 className="text-[20px] text-white md:text-[24px]" style={fontTitle}>
                     {step.title}
                   </h4>
-                  <p className="max-w-[380px] text-[15px] font-light text-[#f3f1ea]/85 md:text-[16px]" style={fontBody}>
+                  <p className="max-w-[380px] text-[15px] font-light text-white/70 md:text-[16px]" style={fontBody}>
                     {step.body}
                   </p>
                   <div
@@ -606,7 +606,7 @@ export default function Home() {
                   <div className="mei-process-step grid grid-cols-[1fr_auto_1fr] items-center">
                     <div className="flex justify-end pr-6 md:pr-10">{reversed ? contentBlock : iconBadge}</div>
                     <div className="flex w-4 shrink-0 items-center justify-center">
-                      <div className="size-2.5 shrink-0 rounded-full border border-[#f3f1ea]/50 bg-[#0a0a0a]" />
+                      <div className="size-2.5 shrink-0 rounded-full border border-white/50 bg-[#0a0a0a]" />
                     </div>
                     <div className="flex justify-start pl-6 md:pl-10">{reversed ? iconBadge : contentBlock}</div>
                   </div>
@@ -620,7 +620,7 @@ export default function Home() {
       {/* About + How Can I Help */}
       <MotionSection
         id="about"
-        className="mei-section-screen flex w-screen flex-col items-center bg-[#f3f1ea] px-6 py-16 sm:px-10 md:px-16 md:py-28"
+        className="mei-section-screen flex w-screen flex-col items-center bg-white px-6 py-16 sm:px-10 md:px-16 md:py-28"
         style={fullBleed}
         pinned
       >
@@ -641,18 +641,18 @@ export default function Home() {
           <div className="flex flex-col gap-16 pt-16 md:gap-20">
             <Reveal>
               <div className="flex flex-col gap-6 md:flex-row md:gap-16">
-                <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontBody}>
+                <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontTitle}>
                   Experience
                 </p>
                 <div className="flex-1 divide-y divide-[#cccccc]">
                   {experienceItems.map((item) => (
                     <div key={`${item.company}-${item.role}`} className="grid gap-3 py-5 first:pt-0 md:grid-cols-[150px_1fr] md:gap-8">
-                      <p className="text-[13px] text-[#ed5b2b] md:text-[14px]" style={fontBody}>
+                      <p className="text-[13px] text-[#0a0a0a]/58 md:text-[14px]" style={fontBody}>
                         {item.period}
                       </p>
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between md:gap-4">
-                          <h3 className="text-[17px] text-[#0a0a0a] md:text-[19px]" style={fontBody}>
+                          <h3 className="text-[17px] text-[#0a0a0a] md:text-[19px]" style={fontTitle}>
                             {item.role}
                           </h3>
                           <span className="text-[14px] font-light text-[#0a0a0a]/60 md:text-[15px]" style={fontBody}>
@@ -671,12 +671,12 @@ export default function Home() {
 
             <Reveal>
               <div className="flex flex-col gap-6 pt-10 md:flex-row md:gap-16 md:pt-12">
-                <h2 className="w-full shrink-0 text-[24px] leading-tight md:w-[300px] md:text-[34px]" style={fontDisplay}>
+                <h2 className="w-full shrink-0 text-[24px] leading-tight md:w-[300px] md:text-[34px]" style={fontTitle}>
                   What I bring
                 </h2>
                 <div className="grid flex-1 grid-cols-1 gap-8 sm:grid-cols-2 md:gap-10">
                   <div className="flex flex-col gap-3">
-                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontBody}>
+                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontTitle}>
                       Skills
                     </h3>
                     <ul className="flex flex-col text-[15px] font-light text-[#0a0a0a] md:text-[16px]" style={fontBody}>
@@ -688,7 +688,7 @@ export default function Home() {
                     </ul>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontBody}>
+                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontTitle}>
                       Toolkit
                     </h3>
                     <ul className="flex flex-col text-[15px] font-light text-[#0a0a0a] md:text-[16px]" style={fontBody}>

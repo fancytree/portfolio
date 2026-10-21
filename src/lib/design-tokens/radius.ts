@@ -1,4 +1,5 @@
 export const caseRadiusPx = {
+  tag: 4,
   sm: 8,
   md: 12,
   lg: 16,
@@ -7,6 +8,7 @@ export const caseRadiusPx = {
 } as const;
 
 export const caseRadius = {
+  tag: 'var(--case-radius-tag)',
   sm: 'var(--case-radius-sm)',
   md: 'var(--case-radius-md)',
   lg: 'var(--case-radius-lg)',
