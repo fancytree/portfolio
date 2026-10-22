@@ -700,3 +700,6 @@ export default function CaseStudyControls({
     </>
   );
 }
+
+// Opt-in navigation for the shared Case Kit shell.
+export { default as CaseKitControls } from './case-kit/CaseKitControls';

@@ -39,7 +39,7 @@ export const productProjects: WorkProject[] = [
     category: 'Product / UX Designer',
     time: '2026',
     tags: ['Systems Design', 'Full stack'],
-    description: 'One skeleton, five roles: redesigning a wholesaler’s ERP as a small set of rules.',
+    description: 'Connecting fragmented wholesale operations around shared ERP records.',
     image: '/img/def-erp/def-erp-cover-v5.webp',
     imageFit: 'cover',
     imageScale: 1,
@@ -49,7 +49,7 @@ export const productProjects: WorkProject[] = [
     coverDevice: 'laptop',
     coverAccent: '#2274ff',
     coverMotif: 'beauty',
-    href: '/projects/def-erp',
+    href: '/projects/def-erp-kit',
   },
   {
     title: 'Procurement Agent',

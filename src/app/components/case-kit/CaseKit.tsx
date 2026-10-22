@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
-import Link from 'next/link';
+import { Children, isValidElement, type ReactNode } from 'react';
+import { CaseButton } from './CaseButton';
 import styles from './case-kit.module.css';
 
 export type CaseMetaItem = {
   label: string;
-  value: string;
+  value: ReactNode;
 };
 
 export type CaseStatItem = {
@@ -13,8 +13,6 @@ export type CaseStatItem = {
 };
 
 type CaseKitPageProps = {
-  /** 项目强调色。样式页用作品集橙色，正式案例再换成各自的品牌色。 */
-  accent?: string;
   children: ReactNode;
 };
 
@@ -33,16 +31,16 @@ export function CaseKitSections({ children }: { children: ReactNode }) {
   return (
     <div className={styles.sections} data-case-sections>
       {children}
+      <CaseEnd />
     </div>
   );
 }
 
 /** 整页外壳。侧边导航要放在这个节点里面，它才会找到章节。 */
-export function CaseKitPage({ accent = '#ed5b2b', children }: CaseKitPageProps) {
+export function CaseKitPage({ children }: CaseKitPageProps) {
   return (
     <div
       className={`case-kit mei-project-page ${styles.page}`}
-      style={{ '--case-accent': accent } as React.CSSProperties}
     >
       {children}
     </div>
@@ -52,6 +50,7 @@ export function CaseKitPage({ accent = '#ed5b2b', children }: CaseKitPageProps) 
 type CaseHeroAction = {
   label: string;
   href: string;
+  onClick?: () => void;
 };
 
 export type CaseGlanceItem = {
@@ -79,25 +78,10 @@ type CaseHeroProps = {
   glance?: CaseHeroGlance;
 };
 
-function HeroActionLink({ href, label }: CaseHeroAction) {
-  const content = (
-    <>
-      <span>{label}</span>
-      <span aria-hidden>→</span>
-    </>
-  );
-  if (href.startsWith('http')) {
-    return (
-      <a className={styles.heroAction} href={href} target="_blank" rel="noopener noreferrer">
-        {content}
-      </a>
-    );
-  }
-  return (
-    <Link className={styles.heroAction} href={href}>
-      {content}
-    </Link>
-  );
+function HeroActionLink({ href, label, onClick }: CaseHeroAction) {
+  return onClick
+    ? <CaseButton className={styles.heroAction} onClick={onClick}>{label}</CaseButton>
+    : <CaseButton className={styles.heroAction} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>{label}</CaseButton>;
 }
 
 /** 开场：眉题、标题、介绍、项目信息、按钮、标签，下半部分可接摘要卡。返回只放在左侧导航。 */
@@ -120,7 +104,7 @@ export function CaseHero({ eyebrow, title, intro, meta, action, tags, glance }: 
             </div>
           ))}
         </dl>
-        {action ? <HeroActionLink href={action.href} label={action.label} /> : null}
+        {action ? <HeroActionLink {...action} /> : null}
         {tags?.length ? (
           <ul className={styles.heroTags}>
             {tags.map((tag) => (
@@ -170,24 +154,30 @@ type CaseChapterProps = {
 
 /** 章节标题只有两层：眉题和一句标题。导语算正文，不进标题。 */
 export function CaseChapter({ label, title, lead, children }: CaseChapterProps) {
+  const blocks = Children.toArray(children);
+  const firstBlock = blocks[0];
+  const openingProse = isValidElement(firstBlock) && firstBlock.type === CaseProse ? blocks.shift() : null;
   return (
     <section className={styles.chapter} data-case-nav-label={label}>
       <div className={styles.column}>
         <div className={styles.stack}>
-          <header className={styles.heading}>
-            <p data-case-type="eyebrow" className={styles.eyebrow}>
-              {label}
-            </p>
-            <h2 data-case-type="display" className={styles.title}>
-              {title}
-            </h2>
-          </header>
-          {lead ? (
-            <p data-case-type="lead" className={styles.lead}>
-              {lead}
-            </p>
-          ) : null}
-          {children}
+          <div className="case-text-group">
+            <header className={styles.heading}>
+              <p data-case-type="eyebrow" className={styles.eyebrow}>
+                {label}
+              </p>
+              <h2 data-case-type="display" className={styles.title}>
+                {title}
+              </h2>
+            </header>
+            {lead ? (
+              <p data-case-type="lead" className={styles.lead}>
+                {lead}
+              </p>
+            ) : null}
+            {openingProse}
+          </div>
+          {blocks}
         </div>
       </div>
     </section>
@@ -212,6 +202,20 @@ type CaseFigureProps = SpecProps & {
   caption: string;
   children: ReactNode;
 };
+
+/** Numbered narrative points, each with a heading and its own explanation. */
+export function CaseSteps({ items }: { items: { title: string; body: string }[] }) {
+  return (
+    <ol className={styles.steps}>
+      {items.map((item, index) => (
+        <li key={item.title} className={styles.step}>
+          <h3 className={styles.stepTitle}>{index + 1}. {item.title}</h3>
+          <p data-case-type="body" className={styles.stepBody}>{item.body}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 /** 宽栏图。截图、图表、演示都放在 children，下面只留一行说明。 */
 export function CaseFigure({ spec, caption, children }: CaseFigureProps) {
@@ -239,7 +243,7 @@ export function CaseStats({ spec, items }: CaseStatsProps) {
         {items.map((item) => (
           <div key={item.label}>
             <dt className={styles.statLabel}>{item.label}</dt>
-            <dd className={styles.statValue}>{item.value}</dd>
+            <dd data-case-type="stat" className={styles.statValue}>{item.value}</dd>
           </div>
         ))}
       </dl>
@@ -269,14 +273,24 @@ type CaseCloseProps = {
   children?: ReactNode;
 };
 
-/** 收束：这一篇留下的判断，以及回到作品列表。 */
+/** 收束：这一篇留下的判断。页面末尾返回由 CaseEnd 统一处理。 */
 export function CaseClose({ label, title, children }: CaseCloseProps) {
   return (
     <CaseChapter label={label} title={title}>
       {children}
-      <Link className={styles.back} href="/#work">
-        Back to work
-      </Link>
     </CaseChapter>
+  );
+}
+
+/** 所有案例共用的文末返回区，与 Hero 使用相同的分割线。 */
+export function CaseEnd() {
+  return (
+    <div className={styles.end} data-case-end data-case-tone="default">
+      <div className={styles.column}>
+        <div className={styles.endInner}>
+          <CaseButton variant="text" arrow="left" href="/#work">Back to work</CaseButton>
+        </div>
+      </div>
+    </div>
   );
 }

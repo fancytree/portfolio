@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { fontFamily } from '@/lib/design-tokens';
+import { CaseButton } from './case-kit/CaseButton';
 
 type CaseStudyBackButtonProps = {
   /** 'light' renders the idle label in a light color for use on dark hero backgrounds. Defaults to the original dark-on-light look. */
@@ -46,4 +47,10 @@ export default function CaseStudyBackButton({ tone, hoverColor = '#ed5b2b' }: Ca
       ← Back to Work
     </button>
   );
+}
+
+/** Shared token-based return action for Case Kit callers. */
+export function CaseKitBackButton() {
+  const router = useRouter();
+  return <CaseButton variant="back" arrow="left" onClick={() => router.push('/#work')}>Back to Work</CaseButton>;
 }

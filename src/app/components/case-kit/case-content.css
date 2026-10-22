@@ -1,0 +1,274 @@
+/* Narrative roles shared by Case Kit and every case. Product screenshots,
+   SVG drawings and live demos are evidence, with their own internal coordinates. */
+.case-kit.mei-project-page [data-case-type] {
+  font-weight: var(--case-weight-regular);
+  letter-spacing: var(--case-tracking-normal);
+}
+.case-kit.mei-project-page :is([data-case-type='hero'], [data-case-type='display'], [data-case-type='title'], [data-case-type='small-title'], [data-case-type='eyebrow']) {
+  font-family: var(--case-font-heading);
+  text-transform: uppercase;
+}
+.case-kit.mei-project-page :is([data-case-type='body'], [data-case-type='lead'], [data-case-type='caption'], [data-case-type='quote'], [data-case-type='quote-compact']) {
+  font-family: var(--case-font-body);
+  line-height: var(--case-leading-body);
+}
+.case-kit.mei-project-page [data-case-type='body'] { font-size: var(--case-type-body); }
+.case-kit.mei-project-page [data-case-type='caption'] { font-size: var(--case-type-caption); }
+.case-kit.mei-project-page [data-case-type='title'] { font-size: var(--case-type-subsection); }
+.case-kit.mei-project-page [data-case-type='eyebrow'] {
+  font-size: var(--case-type-eyebrow);
+  line-height: var(--case-leading-none);
+  letter-spacing: var(--case-tracking-label);
+}
+
+/* A case has one content canvas. Old viewport breakout coordinates no longer
+   determine gutters or chapter rhythm. The rail ends with this canvas. */
+.case-kit.mei-project-page:not(.case-kit) {
+  position: relative;
+  min-width: 0;
+  padding-inline-start: 0;
+}
+.case-kit.mei-project-page:not(.case-kit) > section {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100%;
+  margin-inline: 0 !important;
+  padding: calc(var(--case-space-chapter) / 2) var(--case-space-page-x) !important;
+}
+.case-kit.mei-project-page:not(.case-kit) > section > div {
+  min-width: 0;
+  max-width: var(--case-content-wide);
+  margin-inline: auto;
+}
+.case-kit.mei-project-page:not(.case-kit) > section:first-of-type {
+  padding-top: var(--case-space-32) !important;
+}
+.case-kit.mei-project-page:not(.case-kit) > section:last-of-type {
+  padding-bottom: 0 !important;
+}
+@media (min-width: 1280px) {
+  .case-kit.mei-project-page:not(.case-kit) {
+    padding-inline-start: var(--case-rail-width);
+  }
+  .case-kit.mei-project-page:not(.case-kit) > .mei-case-study-rail {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--case-rail-width);
+  }
+}
+.case-kit .case-hero-about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-space-16);
+  margin-top: var(--case-space-glance);
+}
+.case-kit .case-meta-icons { display: flex; flex-wrap: wrap; gap: var(--case-space-24); }
+.case-kit .case-meta-icons img { max-width: 100%; object-fit: contain; }
+.case-kit .case-hero-visual {
+  position: relative;
+  overflow: hidden;
+  min-height: var(--case-visual-height);
+  margin-top: var(--case-space-glance);
+  border-radius: var(--case-radius-media);
+  background: var(--case-surface);
+}
+.case-kit .case-mobile-back { margin-bottom: var(--case-space-24); }
+@media (min-width: 1280px) { .case-kit .case-mobile-back { display: none; } }
+.case-kit .case-rail { display: none; width: var(--case-rail-width); align-self: stretch; min-width: 0; }
+.case-kit .case-rail-sticky {
+  position: sticky;
+  top: var(--case-rail-top);
+  display: flex;
+  flex-direction: column;
+  padding: var(--case-space-20) var(--case-space-28) var(--case-space-24);
+  max-height: calc(100dvh - var(--case-rail-top));
+}
+.case-kit .case-rail-heading { margin-top: var(--case-space-28); }
+.case-kit .case-rail-kicker {
+  margin: 0;
+  color: var(--case-nav-kicker);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-nav-meta);
+  font-weight: var(--case-weight-medium);
+  letter-spacing: var(--case-tracking-nav-kicker);
+  line-height: var(--case-leading-nav-meta);
+  text-transform: uppercase;
+}
+.case-kit .case-rail-title {
+  margin: var(--case-space-6) 0 0;
+  color: var(--case-nav-active);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-card-body);
+  font-weight: var(--case-weight-regular);
+  letter-spacing: var(--case-tracking-nav-title);
+  line-height: var(--case-leading-nav-title);
+  text-transform: uppercase;
+}
+.case-kit .case-rail-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-space-20);
+  margin-top: var(--case-space-48);
+  overflow-y: auto;
+  min-height: 0;
+}
+.case-kit .case-rail-links a {
+  display: flex;
+  align-items: baseline;
+  gap: var(--case-space-8);
+  color: var(--case-nav-idle);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-spec);
+  font-weight: var(--case-weight-medium);
+  letter-spacing: var(--case-tracking-nav-item);
+  line-height: var(--case-leading-nav-item);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.case-kit .case-rail-links a > :first-child { flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.case-kit .case-rail-links a[aria-current], .case-kit .case-rail-links a:hover { color: var(--case-nav-active); }
+.case-kit .case-rail :is(a, button):focus-visible, .case-kit .case-back-button:focus-visible {
+  outline: var(--case-focus-width) solid var(--case-ink);
+  outline-offset: var(--case-focus-offset);
+}
+@media (min-width: 1280px) { .case-kit .case-rail { display: block; } }
+.case-kit.mei-project-page {
+  /* Next route navigation aligns the page root as well as chapter anchors. */
+  scroll-margin-top: var(--case-scroll-offset);
+  background: var(--case-bg);
+  color: var(--case-ink);
+  font-family: var(--case-font-body);
+}
+.case-kit.mei-project-page [data-case-nav-label], .case-kit.mei-project-page section[id] { scroll-margin-top: var(--case-scroll-offset); }
+.case-kit.mei-project-page [data-case-type='hero'] {
+  font-size: var(--case-type-hero);
+  line-height: var(--case-leading-title);
+}
+.case-kit.mei-project-page [data-case-type='display'], .case-kit .case-study-section-title {
+  max-width: var(--case-content-title);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-section);
+  line-height: var(--case-leading-chapter);
+  font-weight: var(--case-weight-regular);
+  text-transform: uppercase;
+}
+.case-kit.mei-project-page :is([data-case-type='title'], [data-case-type='small-title']), .case-kit .case-study-subsection-title {
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-subsection);
+  line-height: var(--case-leading-none);
+  font-weight: var(--case-weight-regular);
+  text-transform: uppercase;
+}
+.case-kit.mei-project-page :is([data-case-type='quote'], [data-case-type='quote-compact']) {
+  max-width: var(--case-content-reading);
+  font-size: var(--case-type-quote-compact);
+  line-height: var(--case-leading-quote);
+}
+.case-kit.mei-project-page [data-case-type='lead'], .case-kit .case-study-lead {
+  max-width: var(--case-content-reading);
+  font-size: var(--case-type-body);
+  line-height: var(--case-leading-body);
+}
+.case-kit.mei-project-page [data-case-type='card-body'] {
+  font-family: var(--case-font-body);
+  font-size: var(--case-type-card-body);
+  line-height: var(--case-leading-body);
+}
+.case-kit.mei-project-page :is([data-case-type='body'], [data-case-type='card-body'], [data-case-type='quote'], [data-case-type='quote-compact']) {
+  color: var(--case-copy);
+}
+.case-kit .case-radius-sm { border-radius: var(--case-radius-sm); }
+.case-kit .case-radius-md { border-radius: var(--case-radius-md); }
+.case-kit .case-radius-lg { border-radius: var(--case-radius-lg); }
+.case-kit .case-radius-media { border-radius: var(--case-radius-media); }
+.case-kit .case-radius-xl { border-radius: var(--case-radius-xl); }
+.case-kit .case-radius-full { border-radius: var(--case-radius-full); }
+.case-kit .case-study-section-space { padding-block: var(--case-space-chapter); }
+
+/* One palette with contextual text roles for existing light/dark evidence bands. */
+.case-kit.mei-project-page [data-case-tone='inverse'] {
+  --case-ink: var(--case-color-white);
+  --case-muted: var(--case-muted-inverse);
+  --case-copy: var(--case-copy-inverse);
+  --case-subtle: var(--case-subtle-inverse);
+  color: var(--case-ink);
+}
+.case-kit.mei-project-page [data-case-tone='default'] {
+  --case-ink: var(--case-color-black);
+  --case-muted: var(--case-muted-default);
+  --case-copy: var(--case-copy-default);
+  --case-subtle: var(--case-subtle-default);
+  color: var(--case-ink);
+}
+/* Narrative flex/grid children may shrink below a word's intrinsic width. */
+.case-kit.mei-project-page :where(div, section, article, header, figure, figcaption, dl, ul, ol, p, [data-case-type]):not([data-case-visual], [data-case-visual] *) {
+  min-width: 0;
+}
+.case-kit.mei-project-page :where([data-case-type], td, th):not([data-case-visual] *) {
+  overflow-wrap: anywhere;
+}
+.case-kit .case-summary-button {
+  position: fixed;
+  right: var(--case-space-24);
+  bottom: var(--case-space-24);
+  z-index: 50;
+}
+.case-kit.mei-project-page [data-case-type='display'] {
+  max-width: min(var(--case-title-measure), 100%);
+}
+.case-kit.mei-project-page :is([data-case-type='body'], [data-case-type='lead'], [data-case-type='caption']) {
+  max-width: min(var(--case-content-reading), 100%);
+}
+.case-kit .case-paragraphs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-space-paragraph);
+}
+
+/* Preserve readable diagram labels and contain horizontal scrolling. */
+.case-kit .case-diagram-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+.case-kit .case-diagram-scroll:focus-visible {
+  outline: var(--case-focus-width) solid var(--case-ink);
+  outline-offset: calc(0px - var(--case-focus-offset));
+}
+.case-kit .case-diagram-scroll > svg {
+  display: block;
+  width: 100%;
+  min-width: var(--case-diagram-inline-width);
+}
+@media print {
+  .case-kit .case-diagram-scroll { overflow: visible; }
+  .case-kit .case-diagram-scroll > svg { min-width: 0; }
+}
+.case-kit .case-paragraphs > p {
+  margin: 0;
+}
+
+/* Keep a heading attached to its opening text; media retain the module rhythm. */
+.case-kit .case-text-group {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--case-space-paragraph);
+}
+.case-kit .case-text-group > * {
+  margin-block: 0;
+}
+.case-kit .case-text-group > :first-child {
+  margin-bottom: calc(var(--case-space-heading-body) - var(--case-space-paragraph));
+}
+
+/* Narrative text uses exactly three neutral tones, independent of titles. */
+.case-kit.mei-project-page [data-case-type='lead'] { color: var(--case-muted); }
+.case-kit.mei-project-page [data-case-type='caption'] { color: var(--case-subtle); }
+.case-kit.mei-project-page :is([data-case-type='body'], [data-case-type='lead'], [data-case-type='card-body'], [data-case-type='caption'], [data-case-type='quote'], [data-case-type='quote-compact']) :where(strong, b, em, span):not([data-case-visual] *) {
+  color: inherit;
+}
+
+/* Prominent statistics share the heading face; labels keep the body face. */
+.case-kit.mei-project-page [data-case-type='stat'] { font-family: var(--case-font-heading); }

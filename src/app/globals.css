@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "./connectnova-demo.css";
+@import "../lib/design-tokens/case.css";
+@import "./components/case-kit/case-content.css";
 
 /* Dark variant is class-based, not media-based. The embedded ConnectNova demo
    is a light-only design whose `dark:` utilities resolve --input to transparent;
@@ -1308,7 +1310,7 @@ body.no-scroll {
   line-height: 1.1;
 }
 
-.mei-project-page {
+.mei-project-page:not(.case-kit) {
   --case-accent: var(--mei-orange);
   --case-bg: #fcfcfb;
   --case-surface: #f4f4f1;
@@ -1381,46 +1383,46 @@ body.no-scroll {
 
 /* JobNova 案例页：取消 #fcfcfb 极浅底色，整页纯白。
    覆盖 token 而非 background，这样 hero 的 var(--case-bg) 一起变，不会出现色差接缝。
-   双类选择器把作用域限定在本页，其他 .mei-project-page 案例页不受影响。 */
-.jobnova-case-study.mei-project-page {
+   双类选择器把作用域限定在本页，其他 .mei-project-page:not(.case-kit) 案例页不受影响。 */
+.jobnova-case-study.mei-project-page:not(.case-kit) {
   --case-bg: #ffffff;
 }
 
 /* 采购 Agent：每一章上下各分一半 --case-space-section。
    相邻章节无论同色还是换底，上一章末尾到下一章标题都是一段间距。 */
-.procurement-case.mei-project-page .procurement-section {
+.procurement-case.mei-project-page:not(.case-kit) .procurement-section {
   padding-block: calc(var(--case-space-section) / 2);
 }
 
-.procurement-case.mei-project-page > .procurement-section:last-of-type {
+.procurement-case.mei-project-page:not(.case-kit) > .procurement-section:last-of-type {
   padding-bottom: var(--case-space-section);
 }
 
 /* DEF ERP case study: same half-section-per-chapter rhythm as the Procurement Agent page. */
-.def-erp-case.mei-project-page .def-erp-section {
+.def-erp-case.mei-project-page:not(.case-kit) .def-erp-section {
   padding-block: calc(var(--case-space-section) / 2);
 }
 
-.def-erp-case.mei-project-page > .def-erp-section:last-of-type {
+.def-erp-case.mei-project-page:not(.case-kit) > .def-erp-section:last-of-type {
   padding-bottom: var(--case-space-section);
 }
 
-.mei-project-page > section:first-of-type:not(.mei-case-study-hero) {
+.mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) {
   background: var(--case-bg) !important;
 }
 
-.mei-project-page [data-case-nav-label] {
+.mei-project-page:not(.case-kit) [data-case-nav-label] {
   scroll-margin-top: 104px;
 }
 
 /* Shared case-study content hierarchy. The selectors intentionally stop at
    the section header so diagrams, screenshots and embedded product UI retain
    their own internal type scale. */
-.mei-project-page :is(h1, h2, h3)[data-case-nav-label],
-.mei-project-page [data-case-nav-label] > :is(h1, h2),
-.mei-project-page [data-case-nav-label] > header > :is(h1, h2),
-.mei-project-page [data-case-nav-label] > :first-child > :is(h1, h2),
-.mei-project-page > section:not(.mei-case-study-hero) > div > :is(h1, h2) {
+.mei-project-page:not(.case-kit) :is(h1, h2, h3)[data-case-nav-label],
+.mei-project-page:not(.case-kit) [data-case-nav-label] > :is(h1, h2),
+.mei-project-page:not(.case-kit) [data-case-nav-label] > header > :is(h1, h2),
+.mei-project-page:not(.case-kit) [data-case-nav-label] > :first-child > :is(h1, h2),
+.mei-project-page:not(.case-kit) > section:not(.mei-case-study-hero) > div > :is(h1, h2) {
   max-width: var(--case-content-title);
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
@@ -1445,7 +1447,7 @@ body.no-scroll {
 
 /* Semantic content roles. Pages opt into these explicitly with
    data-case-type so a type-scale change updates every matching passage. */
-.mei-project-page [data-case-type='hero'] {
+.mei-project-page:not(.case-kit) [data-case-type='hero'] {
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-hero) !important;
   font-weight: 400 !important;
@@ -1455,7 +1457,7 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-.mei-project-page [data-case-type='display'] {
+.mei-project-page:not(.case-kit) [data-case-type='display'] {
   max-width: var(--case-content-title);
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
@@ -1466,7 +1468,7 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-.mei-project-page [data-case-type='title'] {
+.mei-project-page:not(.case-kit) [data-case-type='title'] {
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-subsection) !important;
   font-weight: 400 !important;
@@ -1476,7 +1478,7 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-.mei-project-page [data-case-type='small-title'] {
+.mei-project-page:not(.case-kit) [data-case-type='small-title'] {
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-small-title) !important;
   font-weight: 400 !important;
@@ -1484,7 +1486,7 @@ body.no-scroll {
   letter-spacing: 0 !important;
 }
 
-.mei-project-page [data-case-type='quote'] {
+.mei-project-page:not(.case-kit) [data-case-type='quote'] {
   max-width: var(--case-content-reading);
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-quote) !important;
@@ -1494,7 +1496,7 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-.mei-project-page [data-case-type='quote-compact'] {
+.mei-project-page:not(.case-kit) [data-case-type='quote-compact'] {
   max-width: var(--case-content-reading);
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-quote-compact) !important;
@@ -1504,7 +1506,7 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-.mei-project-page [data-case-type='lead'] {
+.mei-project-page:not(.case-kit) [data-case-type='lead'] {
   max-width: var(--case-content-reading);
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-lead) !important;
@@ -1512,21 +1514,21 @@ body.no-scroll {
   line-height: var(--case-leading-body) !important;
 }
 
-.mei-project-page [data-case-type='body'] {
+.mei-project-page:not(.case-kit) [data-case-type='body'] {
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-body) !important;
   font-weight: 400 !important;
   line-height: var(--case-leading-body) !important;
 }
 
-.mei-project-page [data-case-type='caption'] {
+.mei-project-page:not(.case-kit) [data-case-type='caption'] {
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-caption) !important;
   font-weight: 400 !important;
   line-height: var(--case-leading-body) !important;
 }
 
-.mei-project-page [data-case-type='eyebrow'] {
+.mei-project-page:not(.case-kit) [data-case-type='eyebrow'] {
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-eyebrow) !important;
   font-weight: 400 !important;
@@ -1536,7 +1538,7 @@ body.no-scroll {
 }
 
 @media (min-width: 768px) {
-  .mei-project-page {
+  .mei-project-page:not(.case-kit) {
     --case-type-hero: 60px;
   }
 }
@@ -1561,7 +1563,7 @@ body.no-scroll {
 /* Legacy narrative markup can opt into the same scale without touching
    diagrams or embedded product UI. Explicit data-case-type always wins.
    Live DEF ERP components (.def-erp-live) keep the product's own card titles. */
-.mei-project-page [data-case-nav-label] h2:not([data-case-type]):not(.def-erp-live *) {
+.mei-project-page:not(.case-kit) [data-case-nav-label] h2:not([data-case-type]):not(.def-erp-live *) {
   max-width: var(--case-content-title);
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-section) !important;
@@ -1572,7 +1574,7 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-.mei-project-page [data-case-nav-label] :is(h3, h4, h5):not([data-case-type]) {
+.mei-project-page:not(.case-kit) [data-case-nav-label] :is(h3, h4, h5):not([data-case-type]) {
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-small-title) !important;
   font-weight: 400 !important;
@@ -1580,7 +1582,7 @@ body.no-scroll {
   letter-spacing: 0 !important;
 }
 
-.mei-project-page [data-case-nav-label] blockquote > p:first-of-type:not([data-case-type]) {
+.mei-project-page:not(.case-kit) [data-case-nav-label] blockquote > p:first-of-type:not([data-case-type]) {
   max-width: 920px;
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-quote) !important;
@@ -1592,7 +1594,7 @@ body.no-scroll {
 
 /* Walnut's narrative cards use inline legacy styles. Keep their titles on the
    shared small-title scale while leaving the product mockups untouched. */
-.mei-project-page:is(.walnut-coding-case, .walnut-sharing-case) > section :is(h3, h4) {
+.mei-project-page:not(.case-kit):is(.walnut-coding-case, .walnut-sharing-case) > section :is(h3, h4) {
   font-family: var(--mei-font-primary) !important;
   font-size: var(--case-type-small-title) !important;
   font-weight: 500 !important;
@@ -1663,7 +1665,7 @@ body.no-scroll {
   border-radius: var(--case-radius-full, 999px);
 }
 
-.mei-project-page > section:not(.mei-case-study-hero) > div {
+.mei-project-page:not(.case-kit) > section:not(.mei-case-study-hero) > div {
   width: 100%;
   max-width: var(--case-content-wide) !important;
   margin-right: auto !important;
@@ -1678,13 +1680,13 @@ body.no-scroll {
 }
 
 @media (min-width: 1280px) {
-  .mei-project-page > section:not(:first-of-type) {
+  .mei-project-page:not(.case-kit) > section:not(:first-of-type) {
     width: calc(100vw - 240px) !important;
     margin-right: 0 !important;
     margin-left: calc(-50vw + 50% + 240px) !important;
   }
 
-  .mei-project-page > section:not(:first-of-type) > div {
+  .mei-project-page:not(.case-kit) > section:not(:first-of-type) > div {
     width: 100%;
     max-width: var(--case-content-wide) !important;
     margin-right: auto !important;
@@ -1692,7 +1694,7 @@ body.no-scroll {
   }
 }
 
-.mei-project-page > section:first-of-type:not(.mei-case-study-hero) h1 {
+.mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) h1 {
   font-family: var(--mei-font-display) !important;
   font-size: var(--case-type-hero) !important;
   font-weight: 400 !important;
@@ -1702,16 +1704,16 @@ body.no-scroll {
   color: var(--case-ink) !important;
 }
 
-.mei-project-page > section:first-of-type:not(.mei-case-study-hero) p {
+.mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) p {
   max-width: var(--case-content-reading);
 }
 
-.mei-project-page > section:first-of-type:not(.mei-case-study-hero) a {
+.mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) a {
   transition: color 0.24s ease, transform 0.24s ease;
 }
 
-.mei-project-page > section:first-of-type:not(.mei-case-study-hero) a:hover,
-.mei-project-page > section:first-of-type:not(.mei-case-study-hero) a:focus-visible {
+.mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) a:hover,
+.mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) a:focus-visible {
   color: var(--mei-orange) !important;
   outline: none;
   transform: translateY(-1px);
@@ -1932,7 +1934,7 @@ body.no-scroll {
     gap: 1rem;
   }
 
-  .mei-project-page > section:first-of-type:not(.mei-case-study-hero) h1 {
+  .mei-project-page:not(.case-kit) > section:first-of-type:not(.mei-case-study-hero) h1 {
     font-size: var(--case-type-hero) !important;
   }
 
