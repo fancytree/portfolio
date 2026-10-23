@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/projects/procurement-agent",
-        destination: "/projects/procurement-agent-v2",
+        destination: "/projects/procurement-agent-kit",
         permanent: false,
       },
     ];

@@ -198,7 +198,7 @@ export default function DefErpKitPage() {
           <CaseProse>
             <h3>Purchasing and receiving</h3>
             <p>Purchase orders carry product and quantity information through supplier confirmation and receiving. Staff check delivery documents against actual arrivals, record differences, and receive partial deliveries against the same purchase record.</p>
-            <p>For the complete procurement workflow and its AI-assisted optimisation, see <a href="/projects/procurement-agent-v2">AI Procurement Agent for DEF Beauty Supply</a>.</p>
+            <p>For the complete procurement workflow and its AI-assisted optimisation, see <a href="/projects/procurement-agent-kit">AI Procurement Agent for DEF Beauty Supply</a>.</p>
           </CaseProse>
           <CaseVideo
             src="/videos/def-erp/purchase-order.mp4"
@@ -300,7 +300,7 @@ export default function DefErpKitPage() {
             </ul>
           </CaseProse>
           <CaseProse>
-            <p>The purchasing and receiving workflow, including document checks, partial arrivals, and discrepancy handling, is covered in <a href="/projects/procurement-agent-v2">AI Procurement Agent for DEF Beauty Supply</a>.</p>
+            <p>The purchasing and receiving workflow, including document checks, partial arrivals, and discrepancy handling, is covered in <a href="/projects/procurement-agent-kit">AI Procurement Agent for DEF Beauty Supply</a>.</p>
           </CaseProse>
         </CaseClose>
       </CaseKitSections>

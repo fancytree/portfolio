@@ -739,7 +739,7 @@ function HonestStatusSection() {
       </div>
 
       <p className="m-0 max-w-[880px] text-[15px] font-normal leading-[1.6] text-[#686868]" style={bodyStyle}>
-        A separate, deeper case study covers the AI procurement agent built on top of this same platform: <a href="/projects/procurement-agent-v2" className="underline" style={{ color: accent }}>Procurement Agent for DEF Beauty Supply</a>. This page is about the platform underneath it.
+        A separate, deeper case study covers the AI procurement agent built on top of this same platform: <a href="/projects/procurement-agent-kit" className="underline" style={{ color: accent }}>Procurement Agent for DEF Beauty Supply</a>. This page is about the platform underneath it.
       </p>
     </div>
   );
