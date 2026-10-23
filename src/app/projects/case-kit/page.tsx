@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { ScanSearch, Workflow, UserCheck } from 'lucide-react';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import {
   CaseChapter,
+  CaseEvidenceCards,
   CaseClose,
   CaseFigure,
   CaseHero,
@@ -87,6 +89,11 @@ export default function CaseKitStylePage() {
             that was one system.
           </p>
         </CaseProse>
+        <CaseEvidenceCards label="Evidence card module examples" items={[
+          { icon: <ScanSearch />, title: 'Research', body: 'Name the observed task and the evidence behind the decision.' },
+          { icon: <Workflow />, title: 'Design', body: 'Describe the behavior or workflow you specified.' },
+          { icon: <UserCheck />, title: 'Validate', body: 'Connect a test finding to a concrete change.' },
+        ]} />
         <CaseStats
           spec="Stats"
           items={[

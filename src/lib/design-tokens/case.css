@@ -46,6 +46,7 @@
   --case-type-stat-label: 12px;
   --case-type-nav-meta: 10px;
   --case-icon-nav-size: var(--case-space-14);
+  --case-icon-evidence-size: var(--case-space-24);
   --case-icon-stroke: 1.5;
   --case-button-height: 44px;
   --case-button-icon-size: var(--case-space-20);

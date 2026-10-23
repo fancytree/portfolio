@@ -38,7 +38,7 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   // 样式页自己排左侧导航和内容，不再套全站的居中窄容器。
-  const caseFrame = pathname === "/projects/case-kit" || pathname === "/projects/def-erp-kit";
+  const caseFrame = pathname === "/projects/case-kit" || pathname === "/projects/def-erp-kit" || pathname === "/projects/procurement-agent-kit";
 
   return (
     // 外层容器：全屏高度，背景色和基础字体

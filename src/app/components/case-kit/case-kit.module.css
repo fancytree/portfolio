@@ -385,6 +385,50 @@
   padding: 0;
   list-style: none;
 }
+
+.evidenceCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--case-grid-column-min)), 1fr));
+  gap: var(--case-space-24);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.evidenceCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--case-space-16);
+  padding: var(--case-space-24);
+  border-radius: var(--case-radius-md);
+  background: var(--case-surface);
+}
+.evidenceIcon {
+  display: inline-flex;
+  color: var(--case-copy);
+}
+.evidenceIcon svg {
+  width: var(--case-icon-evidence-size);
+  height: var(--case-icon-evidence-size);
+  stroke-width: var(--case-icon-stroke);
+}
+.evidenceTitle {
+  margin: 0;
+  color: var(--case-ink);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-subsection);
+  font-weight: var(--case-weight-regular);
+  line-height: var(--case-leading-chapter);
+  text-transform: uppercase;
+}
+.evidenceBody {
+  margin: 0;
+  color: var(--case-copy);
+  font-family: var(--case-font-body);
+  font-size: var(--case-type-card-body);
+  font-weight: var(--case-weight-regular);
+  line-height: var(--case-leading-body);
+}
 .step {
   display: flex;
   flex-direction: column;

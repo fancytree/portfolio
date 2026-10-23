@@ -200,6 +200,24 @@ export function CaseProse({ spec, children }: CaseProseProps) {
   );
 }
 
+/** Short decisions or responsibilities, with decorative icons and visible labels. */
+export function CaseEvidenceCards({ items, label }: {
+  label: string;
+  items: { icon: ReactNode; title: string; body: string }[];
+}) {
+  return (
+    <ul className={styles.evidenceCards} aria-label={label}>
+      {items.map((item) => (
+        <li key={item.title} className={styles.evidenceCard}>
+          <span className={styles.evidenceIcon} aria-hidden="true">{item.icon}</span>
+          <h3 className={styles.evidenceTitle}>{item.title}</h3>
+          <p className={styles.evidenceBody}>{item.body}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 type CaseFigureProps = SpecProps & {
   caption: string;
   children: ReactNode;
