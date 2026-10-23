@@ -546,3 +546,10 @@
   border: 0;
   background: transparent;
 }
+
+.interactivePreview {
+  display: block;
+  width: 100%;
+  height: var(--case-visual-height);
+  border: 0;
+}

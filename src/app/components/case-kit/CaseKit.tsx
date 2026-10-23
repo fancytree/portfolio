@@ -2,6 +2,7 @@ import { Children, isValidElement, type ReactNode } from 'react';
 import { CaseButton } from './CaseButton';
 import CaseViewportVideo from './CaseViewportVideo';
 import styles from './case-kit.module.css';
+export { default as CaseInteractivePreview } from './CaseInteractivePreview';
 
 export type CaseMetaItem = {
   label: string;

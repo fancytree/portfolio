@@ -6,6 +6,7 @@ import {
   CaseClose,
   CaseFigure,
   CaseHero,
+  CaseInteractivePreview,
   CaseKitPage,
   CaseKitSections,
   CaseProse,
@@ -119,6 +120,10 @@ export default function CaseKitStylePage() {
           from what each role actually does daily.
         </CasePullquote>
       </CaseChapter>
+
+      <CaseFigure caption="Interactive product evidence uses the product’s own components and reports its content height.">
+        <CaseInteractivePreview src="/demos/def-design-system/index.html?view=controls" title="Case Kit — interactive ERP controls" />
+      </CaseFigure>
 
       <CaseClose label="03 / Recap" title="Four rules, not forty screens.">
         <CaseProse>

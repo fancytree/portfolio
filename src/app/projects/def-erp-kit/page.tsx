@@ -10,6 +10,7 @@ import {
   CaseDevicePreview,
   CaseFigure,
   CaseHero,
+  CaseInteractivePreview,
   CaseKitPage,
   CaseKitSections,
   CaseProse,
@@ -32,9 +33,10 @@ const navLabels = [
   '04 / Research',
   '05 / Goals',
   '06 / Approach',
-  '07 / The solution',
-  '08 / Results',
-  '09 / Reflection',
+  '07 / Design system',
+  '08 / The solution',
+  '09 / Results',
+  '10 / Reflection',
 ];
 
 export default function DefErpKitPage() {
@@ -141,7 +143,43 @@ export default function DefErpKitPage() {
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="07 / The solution" title="Connect each step to the information already available.">
+        <CaseChapter label="07 / Design system" title="A shared system, from design to code.">
+          <CaseProse>
+            <p>I paired reusable UI foundations with written experience rules, giving design and Codex a shared reference across sales, warehouse, and finance.</p>
+            <ul>
+              <li><strong>UX.md:</strong> records role-specific needs and interaction decisions, including recoverable drafts and clear confirmation for stock and financial actions.</li>
+              <li><strong>AGENTS.md:</strong> directs Codex to follow the experience and design guidelines, reuse existing components, and run the required checks.</li>
+              <li><strong>Semantic tokens:</strong> keep surfaces, text, actions, and status colours consistent through shared CSS variables.</li>
+              <li><strong>Reusable components:</strong> carry those rules into buttons, inputs, status badges, and tables, including focus, disabled, loading, and error states.</li>
+            </ul>
+          </CaseProse>
+          <CaseProse>
+            <h3>Shared visual foundations</h3>
+            <p>Type, colour, spacing, and shape work together as a shared visual language. The examples below use the ERP’s current tokens, including its rounded surface hierarchy.</p>
+          </CaseProse>
+          <CaseFigure caption="Typography, semantic colours, spacing, and shape tokens from the current ERP source.">
+            <picture>
+              <source media="(max-width: 767px)" srcSet="/img/def-erp/system-foundations-mobile.webp" width={804} height={1986} />
+              <Image src="/img/def-erp/system-foundations-desktop.webp" alt="Typography, semantic colours, spacing, and shape tokens from the current ERP source." width={2160} height={1106} sizes="(min-width: 1280px) 1120px, 100vw" />
+            </picture>
+          </CaseFigure>
+          <CaseProse>
+            <h3>Selected controls and states</h3>
+            <p>Explore a selection from the ERP’s wider component library: buttons, form validation, selection controls, search, payment options, and quantity input. The preview uses demonstration data.</p>
+          </CaseProse>
+          <CaseFigure caption="Selected controls — edit fields, validate and save, toggle selections, and change quantities.">
+            <CaseInteractivePreview src="/demos/def-design-system/index.html?view=controls" title="DEF ERP — interactive controls" />
+          </CaseFigure>
+          <CaseProse>
+            <h3>Selected business patterns</h3>
+            <p>These examples show a selection of the component combinations used across the ERP. Switch receipt states, then filter, search, and page through the demonstration orders to explore how shared components work together.</p>
+          </CaseProse>
+          <CaseFigure caption="Selected business patterns — document progress, rounded cards, status filters, search, and pagination.">
+            <CaseInteractivePreview src="/demos/def-design-system/index.html?view=patterns" title="DEF ERP — interactive business components" />
+          </CaseFigure>
+        </CaseChapter>
+
+        <CaseChapter label="08 / The solution" title="Connect each step to the information already available.">
           <CaseProse>
             <p>The storefront and internal teams now work from shared ERP records. Product and inventory data support customer ordering, and the same order continues into fulfilment and invoicing.</p>
           </CaseProse>
@@ -276,7 +314,7 @@ export default function DefErpKitPage() {
 
         </CaseChapter>
 
-        <CaseChapter label="08 / Results" title="Results">
+        <CaseChapter label="09 / Results" title="Results">
           <CaseProse>
             <ul>
               <li>A connected ERP for customer ordering and internal operations, delivered in four months and now in use.</li>
@@ -289,7 +327,7 @@ export default function DefErpKitPage() {
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="09 / Reflection" title="What We Learned">
+        <CaseClose label="10 / Reflection" title="What We Learned">
           <CaseProse>
             <ul>
               <li>A shared source of truth depends on connected records and clear handoffs, so information stays useful as work moves between roles.</li>

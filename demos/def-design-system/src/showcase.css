@@ -1,0 +1,4 @@
+@import "./product/index.css";
+@source "./";
+html{color-scheme:light;}body{margin:0;}.board{width:100%;padding:calc(var(--spacing)*12);background:var(--background);color:var(--foreground);font-family:var(--font-sans);}.board .spec-heading{font-size:var(--text-xs);line-height:var(--text-xs--line-height);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-wide);color:var(--muted-foreground);text-transform:uppercase;}.sample-row{display:flex;align-items:center;gap:calc(var(--spacing)*4);}@media(max-width:767px){.board{padding:calc(var(--spacing)*6)}.board .grid{grid-template-columns:minmax(0,1fr)}.board .sample-row{gap:calc(var(--spacing)*3)}}
+html,body,#root{height:auto;min-height:0;overflow:visible;}
