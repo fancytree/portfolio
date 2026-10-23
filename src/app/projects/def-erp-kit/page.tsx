@@ -227,6 +227,22 @@ export default function DefErpKitPage() {
             <h3>WeChat storefront and builder</h3>
             <p>Customers browse products with ERP-backed stock, euro prices, and product-specific tax rates. Checkout determines delivery options and shipping costs from the address, goods weight, and regional free-shipping rules. Orders enter the ERP directly, without sales staff checking stock or re-entering details. Staff configure storefront modules in the builder with a live preview.</p>
           </CaseProse>
+          <CaseVideo
+            src="/videos/def-erp/wechat-builder.mp4"
+            poster="/videos/def-erp/wechat-builder.webp"
+            label="WeChat storefront builder demonstration"
+            caption="WeChat storefront builder — modules and live preview."
+            width={1828} height={1080}
+          />
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] items-center gap-[var(--case-space-24)]">
+            <CaseFigure caption="Account pairing in the ERP.">
+              <Image src="/img/def-erp/wechat-account-pairing.webp" alt="ERP customer account pairing screen with a WeChat code, expiry date, and linked account status." width={1554} height={1370} sizes="(min-width: 768px) 50vw, 100vw" />
+            </CaseFigure>
+            <CaseProse>
+              <h3>Link each customer to their ERP account</h3>
+              <p>Staff generate a pairing code from the customer&apos;s ERP profile. The customer scans it or enters the code in the WeChat mini-program (a storefront within WeChat) to link their account.</p>
+            </CaseProse>
+          </div>
           <CaseProse>
             <p>Explore the customer-facing screens below. Each phone keeps its header and bottom navigation in place while its content scrolls independently; customer support stays within reach on Home. These read-only previews use demonstration data.</p>
           </CaseProse>
@@ -256,22 +272,6 @@ export default function DefErpKitPage() {
               <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=order" title="DEF mini-program — Order details" />
             </CaseFigure>
           </div>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] items-center gap-[var(--case-space-24)]">
-            <CaseFigure caption="Account pairing in the ERP.">
-              <Image src="/img/def-erp/wechat-account-pairing.webp" alt="ERP customer account pairing screen with a WeChat code, expiry date, and linked account status." width={1554} height={1370} sizes="(min-width: 768px) 50vw, 100vw" />
-            </CaseFigure>
-            <CaseProse>
-              <h3>Link each customer to their ERP account</h3>
-              <p>Staff generate a pairing code from the customer&apos;s ERP profile. The customer scans it or enters the code in the WeChat mini-program (a storefront within WeChat) to link their account.</p>
-            </CaseProse>
-          </div>
-          <CaseVideo
-            src="/videos/def-erp/wechat-builder.mp4"
-            poster="/videos/def-erp/wechat-builder.webp"
-            label="WeChat storefront builder demonstration"
-            caption="WeChat storefront builder — modules and live preview."
-            width={1828} height={1080}
-          />
 
 
         </CaseChapter>
