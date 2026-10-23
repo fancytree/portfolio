@@ -1,0 +1,6 @@
+.home-announcement__icon>*{display:none!important}
+.home-announcement__icon::before{content:'';display:block;flex:none;width:.9rem;height:.9rem;background:currentColor;mask:url('/demos/def-mini-program/storefront-icons/announcement.svg') center/contain no-repeat}
+.home-floating-service>*{display:none!important}
+.home-floating-service::before{content:'';display:block;width:1.3rem;height:1.3rem;background:currentColor;mask:url('/demos/def-mini-program/storefront-icons/support.svg') center/contain no-repeat}
+.home-category .home-cat-icon{transform:scale(.95)}
+.def-storefront-preview .home-category__title{font-size:.5225rem}

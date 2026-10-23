@@ -18,6 +18,8 @@
   --case-subtle-inverse: rgb(255 255 255 / 0.5);
   --case-subtle: var(--case-subtle-default);
   --case-rule: rgb(0 0 0 / 0.16);
+  --case-device-preview-width: 320px;
+  --case-device-preview-ratio: 402 / 874;
   --case-content-wide: 1120px;
   --case-diagram-inline-width: 960px;
   --case-content-reading: 768px;

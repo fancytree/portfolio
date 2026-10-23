@@ -107,7 +107,8 @@
 }
 
 .visual :global(img),
-.frame :global(img) {
+.frame :global(img),
+.frame :global(video) {
   display: block;
   width: 100%;
   max-width: 100%;
@@ -528,4 +529,20 @@
 .endInner {
   padding-top: var(--case-space-24);
   text-align: left;
+}
+
+/* Shared, isolated device evidence; the embedded product owns its own shell. */
+.devicePreview {
+  display: flex;
+  justify-content: center;
+  padding: var(--case-space-24);
+}
+.devicePreviewFrame {
+  display: block;
+  width: 100%;
+  max-width: var(--case-device-preview-width);
+  height: auto;
+  aspect-ratio: var(--case-device-preview-ratio);
+  border: 0;
+  background: transparent;
 }

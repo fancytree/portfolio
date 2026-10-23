@@ -1,0 +1,1 @@
+import{b as t,t as s,v as e,j as o,a5 as n}from"/demos/def-mini-program/storefront-preview/js/vendors.66e83498.js";function a(){const[a,r]=t.useState("");return s.useLoad(t=>{const s="string"===typeof t.url?decodeURIComponent(t.url):"";/^https:\/\//i.test(s)?r(s):e({title:"\u5916\u90e8\u94fe\u63a5\u65e0\u6548",icon:"none"})}),a?o.jsx(n,{src:a}):null}export{a as default};

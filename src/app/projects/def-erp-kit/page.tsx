@@ -7,6 +7,7 @@ import UnifiedOperationsDiagram from './UnifiedOperationsDiagram';
 import {
   CaseChapter,
   CaseClose,
+  CaseDevicePreview,
   CaseFigure,
   CaseHero,
   CaseKitPage,
@@ -14,6 +15,7 @@ import {
   CaseProse,
   CasePullquote,
   CaseSteps,
+  CaseVideo,
 } from '../../components/case-kit/CaseKit';
 
 export const metadata: Metadata = {
@@ -177,14 +179,20 @@ export default function DefErpKitPage() {
             <h3>Sales ordering and order details</h3>
             <p>Staff create in-store and sales-assisted orders with customer, product, stock, and pricing information in one workspace. The order detail then brings payment, shipment, and invoice status together, giving sales, warehouse, and finance a shared record to work from.</p>
           </CaseProse>
-          <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-2">
-          <CaseFigure caption="Sales order entry — customer, products, stock, and pricing.">
-            <Image src="/img/def-erp/sales-order-create-v5.png" alt="Sales order entry screen with customer selection, searchable products, packaging, available stock, prices, quantities, and order totals." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
-          </CaseFigure>
-          <CaseFigure caption="Order details — payment, shipment, and invoice status in one record.">
-            <Image src="/img/def-erp/sales-order-detail-v5.png" alt="ERP sales order detail with separate shipment progress, payment status, delivery records, and invoice status." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
-          </CaseFigure>
-          </div>
+          <CaseVideo
+            src="/videos/def-erp/sales-order.mp4"
+            poster="/videos/def-erp/sales-order.webp"
+            label="Sales order creation demonstration"
+            caption="Sales order entry — customer, products, stock, and pricing."
+            width={1828} height={1080}
+          />
+          <CaseVideo
+            src="/videos/def-erp/order-detail.mp4"
+            poster="/videos/def-erp/order-detail.webp"
+            label="Sales order detail demonstration"
+            caption="Order details — payment, shipment, and invoice status."
+            width={1828} height={1080}
+          />
 
 
           <CaseProse>
@@ -192,32 +200,78 @@ export default function DefErpKitPage() {
             <p>Purchase orders carry product and quantity information through supplier confirmation and receiving. Staff check delivery documents against actual arrivals, record differences, and receive partial deliveries against the same purchase record.</p>
             <p>For the complete procurement workflow and its AI-assisted optimisation, see <a href="/projects/procurement-agent-v2">AI Procurement Agent for DEF Beauty Supply</a>.</p>
           </CaseProse>
-          <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-2">
-            <CaseFigure caption="Purchase order — products, quantities, and confirmed pricing.">
-              <Image src="/img/def-erp/po-detail-expanded-v5.png" alt="Purchase order detail with expanded product variants, quantities, and supplier-confirmed prices." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
-            </CaseFigure>
-            <CaseFigure caption="Receiving — delivery records, actual quantities, and differences.">
-              <Image src="/img/def-erp/receiving-workspace-v5.png" alt="Receiving workspace linking purchase quantities, delivery notes, actual counts, and partial arrival progress." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
-            </CaseFigure>
-          </div>
+          <CaseVideo
+            src="/videos/def-erp/purchase-order.mp4"
+            poster="/videos/def-erp/purchase-order.webp"
+            label="Purchase order workflow demonstration"
+            caption="Purchase order — products, quantities, and supplier confirmation."
+            width={1828} height={1080}
+          />
+          <CaseFigure caption="Receiving — delivery records, actual quantities, and differences.">
+            <Image src="/img/def-erp/receiving-workspace-current.webp" alt="Receiving workspace linking purchase quantities, delivery notes, actual counts, and partial arrival progress." width={3024} height={1897} sizes="(min-width: 1280px) 1120px, 100vw" />
+          </CaseFigure>
 
           <CaseProse>
             <h3>Order-based invoicing</h3>
             <p>Finance creates invoices from existing sales orders, reusing product details, quantities, prices, and tax rates. Staff can combine orders, enter a target amount, and review the suggested lines before adjusting amounts and payment methods. Previously invoiced products are excluded from future selection.</p>
           </CaseProse>
-          <CaseFigure caption="Invoice preparation — reuse order lines and review amounts and payment details.">
-            <Image src="/img/def-erp/finance-invoice-edit-v5.png" alt="Invoice preparation dialog showing order products, quantities, editable invoice amounts, an additional shipping line, and payment method controls." width={3200} height={2000} sizes="(min-width: 1280px) 1120px, 100vw" />
-          </CaseFigure>
+          <CaseVideo
+            src="/videos/def-erp/invoice.mp4"
+            poster="/videos/def-erp/invoice.webp"
+            label="Invoice preparation demonstration"
+            caption="Invoice preparation — order lines, amounts, and payment details."
+            width={1828} height={1080}
+          />
 
           <CaseProse>
-            <h3>Customer self-service ordering</h3>
-            <p>Customers browse products with ERP-backed stock, euro prices, and product-specific tax rates. Checkout determines delivery options and shipping costs from the address, goods weight, and regional free-shipping rules. Orders enter the ERP directly, without sales staff checking stock or re-entering details.</p>
+            <h3>WeChat storefront and builder</h3>
+            <p>Customers browse products with ERP-backed stock, euro prices, and product-specific tax rates. Checkout determines delivery options and shipping costs from the address, goods weight, and regional free-shipping rules. Orders enter the ERP directly, without sales staff checking stock or re-entering details. Staff configure storefront modules in the builder with a live preview.</p>
           </CaseProse>
-          <CaseFigure caption="Customer storefront inside WeChat.">
-            <div className="flex min-h-[var(--case-visual-height)] items-center justify-center p-[var(--case-space-24)]">
-              <p data-case-type="caption" className="m-0">WeChat mini-program storefront — screenshots to be added.</p>
-            </div>
-          </CaseFigure>
+          <CaseProse>
+            <p>Explore the customer-facing screens below. Each phone keeps its header and bottom navigation in place while its content scrolls independently; customer support stays within reach on Home. These read-only previews use demonstration data.</p>
+          </CaseProse>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] gap-[var(--case-space-24)]" aria-label="WeChat mini-program screens">
+            <CaseFigure caption="Home — curated categories and salon products.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=home" title="DEF mini-program — Home" />
+            </CaseFigure>
+            <CaseFigure caption="Catalog — browse products by category.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=catalog" title="DEF mini-program — Catalog" />
+            </CaseFigure>
+            <CaseFigure caption="Product — capacity, customer price, and product details.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=product" title="DEF mini-program — Product" />
+            </CaseFigure>
+            <CaseFigure caption="Cart — quantities and VAT-inclusive totals.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=cart" title="DEF mini-program — Cart" />
+            </CaseFigure>
+            <CaseFigure caption="Sign in — customer access and account benefits.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=signin" title="DEF mini-program — Sign in" />
+            </CaseFigure>
+            <CaseFigure caption="Account — customer balances and order progress.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=account" title="DEF mini-program — Account" />
+            </CaseFigure>
+            <CaseFigure caption="Link account — pair the mini-program with an ERP customer.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=bind" title="DEF mini-program — Link account" />
+            </CaseFigure>
+            <CaseFigure caption="Order details — payment, dispatch, and tracking.">
+              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=order" title="DEF mini-program — Order details" />
+            </CaseFigure>
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] items-center gap-[var(--case-space-24)]">
+            <CaseFigure caption="Account pairing in the ERP.">
+              <Image src="/img/def-erp/wechat-account-pairing.webp" alt="ERP customer account pairing screen with a WeChat code, expiry date, and linked account status." width={1554} height={1370} sizes="(min-width: 768px) 50vw, 100vw" />
+            </CaseFigure>
+            <CaseProse>
+              <h3>Link each customer to their ERP account</h3>
+              <p>Staff generate a pairing code from the customer&apos;s ERP profile. The customer scans it or enters the code in the WeChat mini-program (a storefront within WeChat) to link their account.</p>
+            </CaseProse>
+          </div>
+          <CaseVideo
+            src="/videos/def-erp/wechat-builder.mp4"
+            poster="/videos/def-erp/wechat-builder.webp"
+            label="WeChat storefront builder demonstration"
+            caption="WeChat storefront builder — modules and live preview."
+            width={1828} height={1080}
+          />
 
 
         </CaseChapter>

@@ -1,5 +1,6 @@
 import { Children, isValidElement, type ReactNode } from 'react';
 import { CaseButton } from './CaseButton';
+import CaseViewportVideo from './CaseViewportVideo';
 import styles from './case-kit.module.css';
 
 export type CaseMetaItem = {
@@ -203,6 +204,22 @@ type CaseFigureProps = SpecProps & {
   children: ReactNode;
 };
 
+/** Full-width video evidence, automatically played while visible. */
+export function CaseVideo({ src, poster, caption, label, width, height }: {
+  src: string;
+  poster: string;
+  caption: string;
+  label: string;
+  width: number;
+  height: number;
+}) {
+  return (
+    <CaseFigure caption={caption}>
+      <CaseViewportVideo src={src} poster={poster} label={label} width={width} height={height} />
+    </CaseFigure>
+  );
+}
+
 /** Numbered narrative points, each with a heading and its own explanation. */
 export function CaseSteps({ items }: { items: { title: string; body: string }[] }) {
   return (
@@ -293,4 +310,11 @@ export function CaseEnd() {
       </div>
     </div>
   );
+}
+
+/** A local, independently scrollable device preview with the product's own chrome. */
+export function CaseDevicePreview({ src, title }: { src: string; title: string }) {
+  return <div className={styles.devicePreview}>
+    <iframe className={styles.devicePreviewFrame} src={src} title={title} loading="lazy" sandbox="allow-scripts allow-same-origin" referrerPolicy="no-referrer" />
+  </div>;
 }

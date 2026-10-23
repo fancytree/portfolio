@@ -1,0 +1,615 @@
+{
+  "editable": false,
+  "draggingId": null,
+  "home": {
+    "layout": [
+      "carousel",
+      "announcement",
+      "quick-links",
+      "brand-zone",
+      "product-group",
+      "customer-service"
+    ],
+    "banners": [
+      {
+        "id": "banner-0",
+        "imageUrl": "/demos/def-mini-program/portfolio/storefront-assets/home-hero.jpg",
+        "linkUrl": null,
+        "title": "专业美业好物\n一站轻松配齐",
+        "subtitle": "美甲 · 美睫 · 美发 · 美容",
+        "actionLabel": "立即选购"
+      }
+    ],
+    "quickLinks": [
+      {
+        "id": "nail",
+        "name": "美甲产品",
+        "iconUrl": "/assets/images/home-cats/nail.png",
+        "linkUrl": "/pages/catalog/index?categoryId=nail"
+      },
+      {
+        "id": "lash",
+        "name": "美睫产品",
+        "iconUrl": "/assets/images/home-cats/lash.png",
+        "linkUrl": "/pages/catalog/index?categoryId=lash"
+      },
+      {
+        "id": "wax",
+        "name": "脱毛产品",
+        "iconUrl": "/assets/images/home-cats/wax.png",
+        "linkUrl": "/pages/catalog/index?categoryId=wax"
+      },
+      {
+        "id": "hair",
+        "name": "美发产品",
+        "iconUrl": "/assets/images/home-cats/hair.png",
+        "linkUrl": "/pages/catalog/index?categoryId=hair"
+      },
+      {
+        "id": "beauty",
+        "name": "美容产品",
+        "iconUrl": "/assets/images/home-cats/beauty.png",
+        "linkUrl": "/pages/catalog/index?categoryId=beauty"
+      },
+      {
+        "id": "furniture",
+        "name": "沙龙家具",
+        "iconUrl": "/assets/images/home-cats/furniture.png",
+        "linkUrl": "/pages/catalog/index?categoryId=furniture"
+      },
+      {
+        "id": "sterilize",
+        "name": "灭菌清洁",
+        "iconUrl": "/assets/images/home-cats/sterilize.png",
+        "linkUrl": "/pages/catalog/index?categoryId=sterilize"
+      },
+      {
+        "id": "supplies",
+        "name": "日常耗材",
+        "iconUrl": "/assets/images/home-cats/supplies.png",
+        "linkUrl": "/pages/catalog/index?categoryId=supplies"
+      }
+    ],
+    "announcement": {
+      "content": "Free shipping in Italy on orders over €150",
+      "linkUrl": null,
+      "updatedAt": ""
+    },
+    "brands": [
+      {
+        "id": "brand-0",
+        "name": "L’Oréal Professionnel",
+        "logoUrl": "/demos/def-mini-program/portfolio/storefront-assets/brand-0.svg"
+      },
+      {
+        "id": "brand-1",
+        "name": "Olaplex",
+        "logoUrl": "/demos/def-mini-program/portfolio/storefront-assets/brand-1.svg"
+      },
+      {
+        "id": "brand-2",
+        "name": "OPI",
+        "logoUrl": "/demos/def-mini-program/portfolio/storefront-assets/brand-2.svg"
+      }
+    ],
+    "singleProduct": {
+      "id": "demo-product-0",
+      "productId": "demo-product-0",
+      "skuId": "demo-sku-0",
+      "skuCode": "DEF-1001",
+      "productCode": "DEF-1001",
+      "specifications": {
+        "Volume": "300 ml"
+      },
+      "name": "Absolut Repair",
+      "productName": "Absolut Repair",
+      "subtitle": null,
+      "brand": "L’Oréal Professionnel",
+      "unit": "PZ",
+      "salesUnitId": null,
+      "qtyPerBase": 1,
+      "imageUrl": "/demos/def-mini-program/portfolio/products/absolut-repair.jpg",
+      "categoryId": null,
+      "ivaRate": 22,
+      "price": 12.9,
+      "originalPrice": null,
+      "discountRate": null,
+      "availableQty": 80,
+      "skuCount": 1,
+      "hasMultipleSkus": false
+    },
+    "recommendations": [
+      {
+        "id": "demo-product-0",
+        "productId": "demo-product-0",
+        "skuId": "demo-sku-0",
+        "skuCode": "DEF-1001",
+        "productCode": "DEF-1001",
+        "specifications": {
+          "Volume": "300 ml"
+        },
+        "name": "Absolut Repair",
+        "productName": "Absolut Repair",
+        "subtitle": null,
+        "brand": "L’Oréal Professionnel",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/absolut-repair.jpg",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 12.9,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      },
+      {
+        "id": "demo-product-1",
+        "productId": "demo-product-1",
+        "skuId": "demo-sku-1",
+        "skuCode": "DEF-1002",
+        "productCode": "DEF-1002",
+        "specifications": {
+          "Volume": "300 ml"
+        },
+        "name": "Vitamino Color",
+        "productName": "Vitamino Color",
+        "subtitle": null,
+        "brand": "L’Oréal Professionnel",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/vitamino-color.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 11.5,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      },
+      {
+        "id": "demo-product-2",
+        "productId": "demo-product-2",
+        "skuId": "demo-sku-2",
+        "skuCode": "DEF-1003",
+        "productCode": "DEF-1003",
+        "specifications": {
+          "Volume": "30 ml"
+        },
+        "name": "N°7 Bonding Oil",
+        "productName": "N°7 Bonding Oil",
+        "subtitle": null,
+        "brand": "Olaplex",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/olaplex-n7.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 18.9,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      },
+      {
+        "id": "demo-product-3",
+        "productId": "demo-product-3",
+        "skuId": "demo-sku-3",
+        "skuCode": "DEF-1004",
+        "productCode": "DEF-1004",
+        "specifications": {
+          "Volume": "30 ml"
+        },
+        "name": "Pro Spa Cuticle Oil",
+        "productName": "Pro Spa Cuticle Oil",
+        "subtitle": null,
+        "brand": "OPI",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/opi-cuticle-oil.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 9.8,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      }
+    ],
+    "promotions": [
+      {
+        "id": "demo-product-0",
+        "productId": "demo-product-0",
+        "skuId": "demo-sku-0",
+        "skuCode": "DEF-1001",
+        "productCode": "DEF-1001",
+        "specifications": {
+          "Volume": "300 ml"
+        },
+        "name": "Absolut Repair",
+        "productName": "Absolut Repair",
+        "subtitle": null,
+        "brand": "L’Oréal Professionnel",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/absolut-repair.jpg",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 12.9,
+        "originalPrice": 15.48,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false,
+        "isPromo": true
+      },
+      {
+        "id": "demo-product-1",
+        "productId": "demo-product-1",
+        "skuId": "demo-sku-1",
+        "skuCode": "DEF-1002",
+        "productCode": "DEF-1002",
+        "specifications": {
+          "Volume": "300 ml"
+        },
+        "name": "Vitamino Color",
+        "productName": "Vitamino Color",
+        "subtitle": null,
+        "brand": "L’Oréal Professionnel",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/vitamino-color.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 11.5,
+        "originalPrice": 13.799999999999999,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false,
+        "isPromo": true
+      },
+      {
+        "id": "demo-product-2",
+        "productId": "demo-product-2",
+        "skuId": "demo-sku-2",
+        "skuCode": "DEF-1003",
+        "productCode": "DEF-1003",
+        "specifications": {
+          "Volume": "30 ml"
+        },
+        "name": "N°7 Bonding Oil",
+        "productName": "N°7 Bonding Oil",
+        "subtitle": null,
+        "brand": "Olaplex",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/olaplex-n7.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 18.9,
+        "originalPrice": 22.679999999999996,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false,
+        "isPromo": true
+      },
+      {
+        "id": "demo-product-3",
+        "productId": "demo-product-3",
+        "skuId": "demo-sku-3",
+        "skuCode": "DEF-1004",
+        "productCode": "DEF-1004",
+        "specifications": {
+          "Volume": "30 ml"
+        },
+        "name": "Pro Spa Cuticle Oil",
+        "productName": "Pro Spa Cuticle Oil",
+        "subtitle": null,
+        "brand": "OPI",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/opi-cuticle-oil.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 9.8,
+        "originalPrice": 11.76,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false,
+        "isPromo": true
+      }
+    ],
+    "frequentProducts": [
+      {
+        "id": "demo-product-0",
+        "productId": "demo-product-0",
+        "skuId": "demo-sku-0",
+        "skuCode": "DEF-1001",
+        "productCode": "DEF-1001",
+        "specifications": {
+          "Volume": "300 ml"
+        },
+        "name": "Absolut Repair",
+        "productName": "Absolut Repair",
+        "subtitle": null,
+        "brand": "L’Oréal Professionnel",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/absolut-repair.jpg",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 12.9,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      },
+      {
+        "id": "demo-product-1",
+        "productId": "demo-product-1",
+        "skuId": "demo-sku-1",
+        "skuCode": "DEF-1002",
+        "productCode": "DEF-1002",
+        "specifications": {
+          "Volume": "300 ml"
+        },
+        "name": "Vitamino Color",
+        "productName": "Vitamino Color",
+        "subtitle": null,
+        "brand": "L’Oréal Professionnel",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/vitamino-color.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 11.5,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      },
+      {
+        "id": "demo-product-2",
+        "productId": "demo-product-2",
+        "skuId": "demo-sku-2",
+        "skuCode": "DEF-1003",
+        "productCode": "DEF-1003",
+        "specifications": {
+          "Volume": "30 ml"
+        },
+        "name": "N°7 Bonding Oil",
+        "productName": "N°7 Bonding Oil",
+        "subtitle": null,
+        "brand": "Olaplex",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/olaplex-n7.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 18.9,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      },
+      {
+        "id": "demo-product-3",
+        "productId": "demo-product-3",
+        "skuId": "demo-sku-3",
+        "skuCode": "DEF-1004",
+        "productCode": "DEF-1004",
+        "specifications": {
+          "Volume": "30 ml"
+        },
+        "name": "Pro Spa Cuticle Oil",
+        "productName": "Pro Spa Cuticle Oil",
+        "subtitle": null,
+        "brand": "OPI",
+        "unit": "PZ",
+        "salesUnitId": null,
+        "qtyPerBase": 1,
+        "imageUrl": "/demos/def-mini-program/portfolio/products/opi-cuticle-oil.webp",
+        "categoryId": null,
+        "ivaRate": 22,
+        "price": 9.8,
+        "originalPrice": null,
+        "discountRate": null,
+        "availableQty": 80,
+        "skuCount": 1,
+        "hasMultipleSkus": false
+      }
+    ],
+    "productGroups": [
+      {
+        "groupId": "home",
+        "moduleId": "product-group",
+        "config": {
+          "title": "Salon essentials",
+          "displayStyle": "grid",
+          "updatedAt": null
+        },
+        "products": [
+          {
+            "id": "demo-product-0",
+            "productId": "demo-product-0",
+            "skuId": "demo-sku-0",
+            "skuCode": "DEF-1001",
+            "productCode": "DEF-1001",
+            "specifications": {
+              "Volume": "300 ml"
+            },
+            "name": "Absolut Repair",
+            "productName": "Absolut Repair",
+            "subtitle": null,
+            "brand": "L’Oréal Professionnel",
+            "unit": "PZ",
+            "salesUnitId": null,
+            "qtyPerBase": 1,
+            "imageUrl": "/demos/def-mini-program/portfolio/products/absolut-repair.jpg",
+            "categoryId": null,
+            "ivaRate": 22,
+            "price": 12.9,
+            "originalPrice": null,
+            "discountRate": null,
+            "availableQty": 80,
+            "skuCount": 1,
+            "hasMultipleSkus": false
+          },
+          {
+            "id": "demo-product-1",
+            "productId": "demo-product-1",
+            "skuId": "demo-sku-1",
+            "skuCode": "DEF-1002",
+            "productCode": "DEF-1002",
+            "specifications": {
+              "Volume": "300 ml"
+            },
+            "name": "Vitamino Color",
+            "productName": "Vitamino Color",
+            "subtitle": null,
+            "brand": "L’Oréal Professionnel",
+            "unit": "PZ",
+            "salesUnitId": null,
+            "qtyPerBase": 1,
+            "imageUrl": "/demos/def-mini-program/portfolio/products/vitamino-color.webp",
+            "categoryId": null,
+            "ivaRate": 22,
+            "price": 11.5,
+            "originalPrice": null,
+            "discountRate": null,
+            "availableQty": 80,
+            "skuCount": 1,
+            "hasMultipleSkus": false
+          },
+          {
+            "id": "demo-product-2",
+            "productId": "demo-product-2",
+            "skuId": "demo-sku-2",
+            "skuCode": "DEF-1003",
+            "productCode": "DEF-1003",
+            "specifications": {
+              "Volume": "30 ml"
+            },
+            "name": "N°7 Bonding Oil",
+            "productName": "N°7 Bonding Oil",
+            "subtitle": null,
+            "brand": "Olaplex",
+            "unit": "PZ",
+            "salesUnitId": null,
+            "qtyPerBase": 1,
+            "imageUrl": "/demos/def-mini-program/portfolio/products/olaplex-n7.webp",
+            "categoryId": null,
+            "ivaRate": 22,
+            "price": 18.9,
+            "originalPrice": null,
+            "discountRate": null,
+            "availableQty": 80,
+            "skuCount": 1,
+            "hasMultipleSkus": false
+          },
+          {
+            "id": "demo-product-3",
+            "productId": "demo-product-3",
+            "skuId": "demo-sku-3",
+            "skuCode": "DEF-1004",
+            "productCode": "DEF-1004",
+            "specifications": {
+              "Volume": "30 ml"
+            },
+            "name": "Pro Spa Cuticle Oil",
+            "productName": "Pro Spa Cuticle Oil",
+            "subtitle": null,
+            "brand": "OPI",
+            "unit": "PZ",
+            "salesUnitId": null,
+            "qtyPerBase": 1,
+            "imageUrl": "/demos/def-mini-program/portfolio/products/opi-cuticle-oil.webp",
+            "categoryId": null,
+            "ivaRate": 22,
+            "price": 9.8,
+            "originalPrice": null,
+            "discountRate": null,
+            "availableQty": 80,
+            "skuCount": 1,
+            "hasMultipleSkus": false
+          }
+        ]
+      }
+    ],
+    "productGroupConfig": {
+      "title": "Salon essentials",
+      "displayStyle": "grid",
+      "updatedAt": null
+    },
+    "limitedTimeConfig": {
+      "title": "Special offers",
+      "displayStyle": "grid",
+      "displayCount": 6,
+      "updatedAt": null
+    },
+    "frequentProductsConfig": {
+      "displayStyle": "grid",
+      "displayCount": 6,
+      "updatedAt": null
+    }
+  },
+  "tabBar": [
+    {
+      "key": "home",
+      "pagePath": "pages/home/index",
+      "label": "首页",
+      "iconUrl": "builtin:home",
+      "activeIconUrl": "builtin:home-active",
+      "sortOrder": 0,
+      "updatedAt": ""
+    },
+    {
+      "key": "catalog",
+      "pagePath": "pages/catalog/index",
+      "label": "分类",
+      "iconUrl": "builtin:catalog",
+      "activeIconUrl": "builtin:catalog-active",
+      "sortOrder": 1,
+      "updatedAt": ""
+    },
+    {
+      "key": "cart",
+      "pagePath": "pages/cart/index",
+      "label": "购物车",
+      "iconUrl": "builtin:cart",
+      "activeIconUrl": "builtin:cart-active",
+      "sortOrder": 2,
+      "updatedAt": ""
+    },
+    {
+      "key": "account",
+      "pagePath": "pages/account/index",
+      "label": "我的",
+      "iconUrl": "builtin:account",
+      "activeIconUrl": "builtin:account-active",
+      "sortOrder": 3,
+      "updatedAt": ""
+    }
+  ]
+}
