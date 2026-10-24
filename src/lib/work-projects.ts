@@ -81,7 +81,7 @@ export const productProjects: WorkProject[] = [
     coverAccent: '#1768e5',
     coverScreenFit: 'contain',
     coverMotif: 'recruiting',
-    href: '/projects/connectnova',
+    href: '/projects/connectnova-kit',
   },
   {
     title: 'JobNova',
@@ -94,7 +94,7 @@ export const productProjects: WorkProject[] = [
     coverDevice: 'laptop',
     coverAccent: '#2553d8',
     coverMotif: 'job-search',
-    href: '/projects/jobnova-ai-platform-v3',
+    href: '/projects/jobnova-kit',
   },
   {
     title: 'MemQ',

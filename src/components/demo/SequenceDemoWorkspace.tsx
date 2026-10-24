@@ -242,8 +242,8 @@ function ExploreNavigation({
   )
 }
 
-export function SequenceDemoWorkspace() {
-  const [mode, setMode] = useState<ExploreMode>('free')
+export function SequenceDemoWorkspace({ initialMode = 'free' }: { initialMode?: ExploreMode }) {
+  const [mode, setMode] = useState<ExploreMode>(initialMode)
   // Every canvas keeps its own edited copy of the workflow, so remounting the
   // three of them by key is what returns the whole demo to its starting state.
   const [resetKey, setResetKey] = useState(0)

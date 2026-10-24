@@ -5,6 +5,8 @@ import {
   CaseChapter,
   CaseClose,
   CaseFigure,
+  CaseVideo,
+  CaseEvidenceCards,
   CaseHero,
   CaseInteractivePreview,
   CaseKitPage,
@@ -124,6 +126,19 @@ export default function CaseKitStylePage() {
       <CaseFigure caption="Interactive product evidence uses the product’s own components and reports its content height.">
         <CaseInteractivePreview src="/demos/def-design-system/index.html?view=controls" title="Case Kit — interactive ERP controls" />
       </CaseFigure>
+
+      <CaseChapter label="Media controls" title="Interactive and recorded evidence">
+        <CaseEvidenceCards label="Related decisions" layout="pairs" items={[
+          { icon: null, title: 'Define', body: 'Connect the design decision to the project goal.' },
+          { icon: null, title: 'Explain', body: 'Show the evidence behind the chosen direction.' },
+          { icon: null, title: 'Build', body: 'Carry the interaction into a working experience.' },
+          { icon: null, title: 'Review', body: 'State what changed and what still needs evidence.' },
+        ]} />
+        <CaseFigure caption="An embedded canvas uses shared viewport sizing and the product’s own controls.">
+          <CaseInteractivePreview src="/demos/connectnova-sequence?mode=workflow&embedded=1" title="Case Kit — interactive Sequence canvas" layout="canvas" />
+        </CaseFigure>
+        <CaseVideo src="/videos/connectnova/source-to-review.mp4" poster="/videos/connectnova/source-to-review.webp" label="ConnectNova Version 1 recording" caption="Muted autoplay with optional native playback and audio controls." width={1920} height={1080} controls />
+      </CaseChapter>
 
       <CaseClose label="03 / Recap" title="Four rules, not forty screens.">
         <CaseProse>

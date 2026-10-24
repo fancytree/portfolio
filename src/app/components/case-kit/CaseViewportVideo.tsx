@@ -8,10 +8,11 @@ type CaseViewportVideoProps = {
   label: string;
   width: number;
   height: number;
+  controls?: boolean;
 };
 
-/** Play only while the recording is visible, without browser playback controls. */
-export default function CaseViewportVideo({ src, poster, label, width, height }: CaseViewportVideoProps) {
+/** Play while visible; optional native controls preserve manual pause and audio choices. */
+export default function CaseViewportVideo({ src, poster, label, width, height, controls = false }: CaseViewportVideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -19,13 +20,18 @@ export default function CaseViewportVideo({ src, poster, label, width, height }:
     if (!video) return;
     let inView = false;
     let disposed = false;
+    let userPaused = false;
+    const onPause = () => {
+      if (controls && inView && !document.hidden && !disposed) userPaused = true;
+    };
+    const onPlay = () => { userPaused = false; };
 
     const syncPlayback = () => {
       if (!inView || document.hidden || disposed) {
         video.pause();
         return;
       }
-      video.muted = true;
+      if (userPaused) return;
       void video.play().then(() => {
         if (!inView || document.hidden || disposed) video.pause();
       }).catch(() => {
@@ -38,18 +44,22 @@ export default function CaseViewportVideo({ src, poster, label, width, height }:
       syncPlayback();
     }, { threshold: [0, 0.25] });
     observer.observe(video);
+    video.addEventListener('pause', onPause);
+    video.addEventListener('play', onPlay);
     document.addEventListener('visibilitychange', syncPlayback);
 
     return () => {
       disposed = true;
       observer.disconnect();
+      video.removeEventListener('pause', onPause);
+      video.removeEventListener('play', onPlay);
       document.removeEventListener('visibilitychange', syncPlayback);
       video.pause();
     };
-  }, [src]);
+  }, [src, controls]);
 
   return (
-    <video ref={ref} muted loop playsInline controls={false} preload="none" poster={poster} width={width} height={height} aria-label={label}>
+    <video ref={ref} muted loop playsInline controls={controls} preload="none" poster={poster} width={width} height={height} aria-label={label}>
       <source src={src} type="video/mp4" />
       Your browser does not support embedded video. <a href={src}>Open the recording</a>.
     </video>

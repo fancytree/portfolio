@@ -10,6 +10,7 @@ export const metadata: Metadata = {
  * Standalone stage for the sequence builder, so the homepage and the case study
  * can embed it in an iframe instead of mounting three React Flow canvases inline.
  */
-export default function ConnectnovaSequenceDemoPage() {
-  return <SequenceDemoStage />;
+export default async function ConnectnovaSequenceDemoPage({ searchParams }: { searchParams: Promise<{ mode?: string; embedded?: string }> }) {
+  const params = await searchParams;
+  return <SequenceDemoStage initialMode={params.mode === 'workflow' ? 'workflow' : 'free'} embedded={params.embedded === '1'} />;
 }

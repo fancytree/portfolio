@@ -8,7 +8,7 @@ const SequenceDemoWorkspace = dynamic(
   { ssr: false },
 );
 
-export default function SequenceDemoStage() {
+export default function SequenceDemoStage({ initialMode = 'free', embedded = false }: { initialMode?: 'free' | 'workflow'; embedded?: boolean }) {
   return (
     <div className="flex h-[100svh] w-screen flex-col overflow-hidden bg-[#eef0f4]">
       {/* Window chrome, deliberately matching the Procurement Agent demo so the
@@ -16,7 +16,7 @@ export default function SequenceDemoStage() {
           not ConnectNova brand colour, so they stay outside the token scope. */}
       <div className="flex h-11 shrink-0 items-center gap-3 border-b border-[#e8eaef] bg-[#f6f7f9] px-4">
         <div className="flex items-center gap-1.5">
-          <button
+          {!embedded && <button
             type="button"
             onClick={() => window.parent?.postMessage({ type: DEMO_CLOSE_MESSAGE }, window.location.origin)}
             aria-label="Close the demo"
@@ -35,7 +35,7 @@ export default function SequenceDemoStage() {
                 strokeLinecap="round"
               />
             </svg>
-          </button>
+          </button>}
           <span className="size-[11px] rounded-full bg-[#febc2e]" aria-hidden="true" />
           <span className="size-[11px] rounded-full bg-[#28c840]" aria-hidden="true" />
         </div>
@@ -45,7 +45,7 @@ export default function SequenceDemoStage() {
       </div>
 
       <div className="cn-demo-scope min-h-0 flex-1 bg-[var(--cn-surface-subtle)]">
-        <SequenceDemoWorkspace />
+        <SequenceDemoWorkspace initialMode={initialMode} />
       </div>
     </div>
   );

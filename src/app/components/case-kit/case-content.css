@@ -236,14 +236,14 @@
   outline: var(--case-focus-width) solid var(--case-ink);
   outline-offset: calc(0px - var(--case-focus-offset));
 }
-.case-kit .case-diagram-scroll > svg {
+.case-kit .case-diagram-scroll > :is(svg, img) {
   display: block;
   width: 100%;
   min-width: var(--case-diagram-inline-width);
 }
 @media print {
   .case-kit .case-diagram-scroll { overflow: visible; }
-  .case-kit .case-diagram-scroll > svg { min-width: 0; }
+  .case-kit .case-diagram-scroll > :is(svg, img) { min-width: 0; }
 }
 .case-kit .case-paragraphs > p {
   margin: 0;
@@ -264,7 +264,7 @@
 }
 
 /* Narrative text uses exactly three neutral tones, independent of titles. */
-.case-kit.mei-project-page [data-case-type='lead'] { color: var(--case-muted); }
+.case-kit.mei-project-page [data-case-type='lead'] { color: var(--case-copy); }
 .case-kit.mei-project-page [data-case-type='caption'] { color: var(--case-subtle); }
 .case-kit.mei-project-page :is([data-case-type='body'], [data-case-type='lead'], [data-case-type='card-body'], [data-case-type='caption'], [data-case-type='quote'], [data-case-type='quote-compact']) :where(strong, b, em, span):not([data-case-visual] *) {
   color: inherit;

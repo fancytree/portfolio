@@ -46,6 +46,7 @@
   --case-type-stat-label: 12px;
   --case-type-nav-meta: 10px;
   --case-icon-nav-size: var(--case-space-14);
+  --case-icon-evidence-size: var(--case-space-24);
   --case-icon-stroke: 1.5;
   --case-button-height: 44px;
   --case-button-icon-size: var(--case-space-20);
@@ -99,6 +100,7 @@
   --case-tracking-normal: 0;
   --case-title-measure: 18em;
   --case-quote-measure: 34em;
+  --case-canvas-height: clamp(560px, 75svh, 800px);
   --case-visual-height: clamp(300px, 38vw, 540px);
   --case-grid-column-min: 320px;
   --case-meta-column: 154px;

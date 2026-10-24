@@ -200,23 +200,44 @@ export function CaseProse({ spec, children }: CaseProseProps) {
   );
 }
 
+/** Short decisions or responsibilities, with decorative icons and visible labels. */
+export function CaseEvidenceCards({ items, label, layout = 'auto' }: {
+  label: string;
+  /** Pair related decisions without leaving a fourth item on its own row. */
+  layout?: 'auto' | 'pairs';
+  items: { icon: ReactNode; title: string; body: string }[];
+}) {
+  return (
+    <ul className={`${styles.evidenceCards} ${layout === 'pairs' ? styles.evidencePairs : ''}`} aria-label={label}>
+      {items.map((item) => (
+        <li key={item.title} className={styles.evidenceCard}>
+          <span className={styles.evidenceIcon} aria-hidden="true">{item.icon}</span>
+          <h3 className={styles.evidenceTitle}>{item.title}</h3>
+          <p className={styles.evidenceBody}>{item.body}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 type CaseFigureProps = SpecProps & {
   caption: string;
   children: ReactNode;
 };
 
 /** Full-width video evidence, automatically played while visible. */
-export function CaseVideo({ src, poster, caption, label, width, height }: {
+export function CaseVideo({ src, poster, caption, label, width, height, controls = false }: {
   src: string;
   poster: string;
   caption: string;
   label: string;
   width: number;
   height: number;
+  controls?: boolean;
 }) {
   return (
     <CaseFigure caption={caption}>
-      <CaseViewportVideo src={src} poster={poster} label={label} width={width} height={height} />
+      <CaseViewportVideo src={src} poster={poster} label={label} width={width} height={height} controls={controls} />
     </CaseFigure>
   );
 }

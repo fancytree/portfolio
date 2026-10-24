@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './case-kit.module.css';
 
 /** Same-origin product evidence that reports its content height as controls change. */
-export default function CaseInteractivePreview({ src, title }: { src: string; title: string }) {
+export default function CaseInteractivePreview({ src, title, layout = 'content' }: { src: string; title: string; layout?: 'content' | 'canvas' }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [height, setHeight] = useState<number>();
 
   useEffect(() => {
     const element = frame.current;
-    if (!element) return;
+    if (!element || layout === 'canvas') return;
     let observer: ResizeObserver | undefined;
     let mutations: MutationObserver | undefined;
     let disposed = false;
@@ -64,8 +64,8 @@ export default function CaseInteractivePreview({ src, title }: { src: string; ti
       window.removeEventListener('message', resize);
       window.removeEventListener('resize', measure);
     };
-  }, [src]);
+  }, [src, layout]);
 
-  return <iframe ref={frame} className={styles.interactivePreview} src={src} title={title} loading="lazy"
-    sandbox="allow-scripts allow-same-origin" referrerPolicy="no-referrer" style={height ? { height } : undefined} />;
+  return <iframe ref={frame} className={layout === 'canvas' ? `${styles.interactivePreview} ${styles.interactiveCanvas}` : styles.interactivePreview} src={src} title={title} loading="lazy"
+    sandbox="allow-scripts allow-same-origin" referrerPolicy="no-referrer" style={layout === 'content' && height ? { height } : undefined} />;
 }
