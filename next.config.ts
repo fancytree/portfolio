@@ -4,6 +4,9 @@ const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST;
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  experimental: {
+    agentUpgrade: "security",
+  },
   async redirects() {
     return [
       {
