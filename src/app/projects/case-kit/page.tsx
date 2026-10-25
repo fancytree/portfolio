@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { MonoAgentWorkflow } from '../mono/MonoWorkflowDiagrams';
 import CaseStudyControls from '../../components/CaseStudyControls';
 import {
   CaseChapter,
@@ -116,6 +117,9 @@ export default function CaseKitStylePage() {
             height={2000}
             sizes="(min-width: 1280px) 1080px, 100vw"
           />
+        </CaseFigure>
+        <CaseFigure caption="Stage focus keeps the complete workflow visible. Shared tab buttons highlight the selected nodes and connections; small screens scroll the diagram locally.">
+          <MonoAgentWorkflow />
         </CaseFigure>
         <CasePullquote spec="Pull quote">
           The thing I designed is not four dashboards. It is one rule: same skeleton, reweighted content, sourced

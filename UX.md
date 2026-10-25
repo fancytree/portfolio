@@ -1,5 +1,16 @@
 # UX：案例阅读与内容组织
 
+
+## Mono 叙事页
+
+`/projects/mono` 使用 My role、Design direction、Agent workflow、UI contract、Human handoff、Exploration outcomes、Reflection 七章。主叙事是用户意图如何进入 LangChain 路由、由产品代码分派到任务链或业务服务、缺信息时如何追问、结构化输出如何映射为 UI，以及用户确认何时允许写入。用户最新要求不逐项介绍功能，因此移除记账、记录、预算三张功能截图及相应说明，也不再展示组件功能目录；保留开场整体录屏作为运行证据。
+
+Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routing、Execute & clarify、UI composition。每次只强调对应节点与连线，不移动或隐藏其余流程；阶段说明通过 polite live region 更新，按钮提供 pressed 状态，支持键盘原生 Tab／Enter／Space 操作。手机按钮自然换行，宽图仍在自身容器滚动。Human handoff 保持独立的确认／保存图。
+
+两张流程图由 `MonoWorkflowDiagrams.tsx` 提供：第一张概括结构化 UI 主路径与追问回路，并注明纯文本回复跳过 UI composition；第二张只解释交易创建/编辑的确认与保存，不将查询或删除动作误画成同一保存闸门。LangChain 承担路由和部分任务链，产品代码承担 dispatcher、服务调用、响应检查和渲染，不声称是自主多 Agent 或 LangGraph 工作流。固定 960px 画布在手机上使用共享可聚焦的 `.case-diagram-scroll` 局部滚动，不缩小标签或撑开整页。
+
+用户确认产品已上线，但本篇以独立设计探索为主：上线只放元信息，结果按交互词汇、可执行的设计系统和生成边界组织，不以用户规模、增长或商业指标评价探索。后续问题围绕组件词汇如何扩展、何时追问与何时回退。线上入口说明需要登录，本页录屏和流程图无需账号即可阅读。
+
 ## ConnectNova 新叙事草稿
 
 `/projects/connectnova-kit` 独立于旧案例，作品集首页及 Work 列表入口现指向新页，旧页保留。九章依次为 My role、Reframe the brief、Capture in context、Design the evaluation、Compare in one place、Continue into outreach、System & delivery、Results & evidence、Reflection。主线是 Founding Designer 如何把一次性排名需求改成 Project 模型，并组织评估、比较与后续动作；和 Jobnova 的授权/执行主线区分重点。
