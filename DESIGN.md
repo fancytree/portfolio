@@ -1,5 +1,16 @@
 # DESIGN：Case Kit 统一视觉规范
 
+
+## Mono 的共享模块应用
+
+Mono 使用 Case Kit 外壳、Hero、Chapter、Prose、EvidenceCards、Figure、Video、Pullquote 与 Close，无独立案例样式表。文末由共享外壳添加唯一 `CaseEnd`。用户要求移除功能介绍后，页面不再渲染三张功能截图、`MonoComponentShowcase` 或 `MonoTokenEvidence`；保留整体录屏。
+
+`src/app/projects/mono/MonoWorkflowDiagrams.tsx` 使用 diagram-design 的流程图约束，按当前 Case Kit 规则映射视觉角色，覆盖旧 JobNova profile 的项目色。960 × 600 只作为 SVG 绘图坐标；字体、灰度、线宽、圆角均引用 case token。箭头先于节点绘制，折线为直角圆弯，分支标签的白色遮罩与线段留有可见距离，底部保留线型图例。节点标题用正文家族与 body 大小，辅助文字用 caption 和 copy，技术分组标签用 spec 与 muted，不新增本地色值或重复 token。
+
+阶段聚焦复用共享 `CaseWorkflow.tsx` 与 `case-workflow.module.css`，按钮沿用 `CaseButton variant="tab"`。活动节点使用 surface 填充、ink 描边和 focus-width；非活动节点辅助文字保留 muted，不叠加透明度。活动连线和箭头同步变为 ink。`--case-workflow-description-height`（5em）为阶段说明预留空间，内容超长时自然撑高。Case Kit 展示同一交互实例；共享组件及其样式均纳入 token 检查。项目 `.diagram-design` 仍选择旧 JobNova profile，本次按项目规则将视觉角色映射到 Case Kit，不引入旧项目色。
+
+两个 SVG 均提供唯一 title/desc ID，并置于共享 `.case-diagram-scroll` 容器中。该叙事辅助文件已加入 `scripts/check-case-tokens.mjs` 检查范围，未标记 `data-case-visual`。独立 HTML 与截图保留在本地 `output/mono-workflow`，不包含在本次网站发布中。
+
 ## ConnectNova 新页
 
 `/projects/connectnova-kit` 使用 Case Kit 共享外壳、Hero、Chapter、EvidenceCards、Figure、Video、Pullquote、Close 和 CaseButton；无独立样式表或新的产品演示实现。叙事全部位于新 `page.tsx`，由 token 检查自动覆盖。Project 模型和前后导航结构用现有成对证据卡呈现，三种编辑方案用同一共享图注层级。

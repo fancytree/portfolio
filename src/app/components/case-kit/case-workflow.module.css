@@ -1,0 +1,43 @@
+.workflow {
+  padding: var(--case-space-24);
+  background: var(--case-bg);
+  color: var(--case-copy);
+}
+.title {
+  margin: 0 0 var(--case-space-24);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-subsection);
+  font-weight: var(--case-weight-regular);
+  line-height: var(--case-leading-chapter);
+  color: var(--case-ink);
+}
+.controls { display: flex; flex-wrap: wrap; gap: var(--case-space-8); }
+.description {
+  max-width: var(--case-content-reading);
+  min-height: var(--case-workflow-description-height);
+  margin: var(--case-space-24) 0 var(--case-space-8);
+  font-family: var(--case-font-body);
+  font-size: var(--case-type-card-body);
+  line-height: var(--case-leading-body);
+  color: var(--case-copy);
+}
+.description strong { font-weight: var(--case-weight-strong); }
+.diagram { min-width: 0; }
+.diagram :global([data-workflow-node] > rect) {
+  fill: var(--case-bg);
+  stroke: var(--case-rule);
+  stroke-width: var(--case-border-width);
+}
+.diagram :global([data-workflow-node='true'] > rect) {
+  fill: var(--case-surface);
+  stroke: var(--case-ink);
+  stroke-width: var(--case-focus-width);
+}
+.diagram :global([data-workflow-node='false'] > text) { fill: var(--case-muted); }
+.diagram :global([data-workflow-edge]) { stroke: var(--case-rule); }
+.diagram :global([data-workflow-edge='true']) { stroke: var(--case-ink); }
+@media print {
+  .controls { display: none; }
+  .description { min-height: 0; }
+  .diagram :global([data-workflow-node] > text) { fill: var(--case-copy); }
+}

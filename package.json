@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check:def-erp": "node scripts/check-def-erp.mjs"
+    "check:def-erp": "node scripts/check-def-erp.mjs",
+    "check:case-tokens": "node scripts/check-case-tokens.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",

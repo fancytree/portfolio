@@ -22,6 +22,7 @@
   --case-device-preview-ratio: 402 / 874;
   --case-content-wide: 1120px;
   --case-diagram-inline-width: 960px;
+  --case-workflow-description-height: 5em;
   --case-content-reading: 768px;
   --case-content-title: 896px;
   --case-space-section: var(--case-space-chapter);
