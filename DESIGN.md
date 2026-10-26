@@ -35,3 +35,7 @@ Mono 使用 Case Kit 外壳、Hero、Chapter、Prose、EvidenceCards、Figure、
 - 导航与返回复用现有 Case Kit 专用导出，保留历史案例入口和组件兼容性。
 
 新案例不创建独立叙事 token、复制组件样式或更改产品演示自身的视觉系统。共享扩展在 `/projects/case-kit` 展示。
+
+## 采购案例发布
+
+`/projects/procurement-agent-kit` 复用 Case Kit 外壳、专用导航与返回、Hero、Chapter、Prose、EvidenceCards、Figure、Video、Pullquote、Close 和 CaseButton；不新增案例专属 token 或样式。素材由已有采购演示截图及已发布的 ERP 采购单视频、收货截图组成。布局允许该新路由使用共享全宽案例外壳。

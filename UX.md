@@ -30,3 +30,7 @@ Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routin
 ## 发布入口与阅读规则
 
 首页和 `/works` 复用 `src/lib/work-projects.ts`，JobNova 与 ConnectNova 分别指向 `/projects/jobnova-kit`、`/projects/connectnova-kit`。旧路由保留。章节导航、手机返回和文末唯一 CaseEnd 继续使用现有共享入口；截图、图注与视频复用 Case Kit 阅读宽度和响应式字号。
+
+## 采购案例发布入口
+
+首页及 `/works` 的 Procurement Agent 指向 `/projects/procurement-agent-kit`；旧 `/projects/procurement-agent-v2` 保留。新页按 My role、Research、The foundation、Agent strategy、The experience、Validation、Results、Reflection 八章组织。职责、可复算推荐、人机分工、供应商确认差异、审批交接和收货核对由现有截图与视频支持；用户已确认 Agent 上线并由采购员使用，演示中的数量和价格不作为成效指标。开场和方案末尾复用现有采购演示入口，文末由 CaseKitSections 自动添加唯一 CaseEnd。
