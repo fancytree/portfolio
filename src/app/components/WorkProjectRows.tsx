@@ -87,6 +87,8 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
             href={project.href}
             className={`${styles.card} flex flex-col gap-4`}
             data-project={project.title}
+            // Live product sites open in a new tab so the portfolio stays where the reader left it.
+            {...(/^https?:\/\//.test(project.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             data-cursor="pill"
             data-cursor-label="View project"
           >

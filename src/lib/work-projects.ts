@@ -108,7 +108,8 @@ export const productProjects: WorkProject[] = [
     coverDevice: 'phone-stack',
     coverAccent: '#ff7557',
     coverMotif: 'learning',
-    href: '/projects/memq',
+    // No case study: the card goes straight to the live product site.
+    href: 'https://memq.riverstudio.cc/',
   },
   {
     title: 'Beikemama',
@@ -147,6 +148,21 @@ export const productProjects: WorkProject[] = [
     coverScreenFit: 'fill',
     coverMotif: 'finance',
     href: '/projects/mono',
+  },
+  {
+    title: 'SenseFlow',
+    category: 'Product Designer',
+    time: '2026 · Concept',
+    tags: ['AI Builder', 'No-code'],
+    description: 'Flow canvas where an HR team turns its own policy docs into an AI assistant and tests answers before publishing.',
+    image: '/img/senseflow/cover.webp',
+    coverScreen: '/img/senseflow/cover.webp',
+    coverDevice: 'laptop',
+    coverAccent: '#f43f5e',
+    coverScreenFit: 'cover',
+    coverScreenPosition: 'top left',
+    // No case study: the card opens the interactive design itself.
+    href: '/demos/senseflow/index.html',
   },
   {
     title: 'CrackInterview.AI',

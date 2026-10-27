@@ -6,8 +6,6 @@ import { AudioWaveform, ChartSpline, FileText, Plus, Search, Star, Tangent } fro
 import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
 import { productProjects, researchProjects } from '@/lib/work-projects';
-import { PROCUREMENT_AGENT_DEMO_URL } from '@/lib/demoUrls';
-import HomeDemoCard from './components/HomeDemoCard';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -282,6 +280,10 @@ const homeWorkItems = [
   ...homeResearchItems,
 ];
 
+const homeExperimentItems = ['Mono', 'MemQ', 'SenseFlow'].flatMap((title) =>
+  productProjects.filter((project) => project.title === title)
+);
+
 type ToolItem =
   | { type: 'icon'; src: string; alt: string; wrap?: boolean }
   | { type: 'plus' }
@@ -515,23 +517,16 @@ export default function Home() {
 
           <Reveal delay={140}>
             <div className="flex flex-col gap-6 pt-16 md:pt-24">
-              <h3 className="text-[22px] leading-none md:text-[28px]" style={fontDisplay}>
-                Demos
-              </h3>
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
-                <HomeDemoCard
-                  title="Procurement Agent"
-                  blurb="An agent workspace for purchase planning — review a proposal, check documents, and approve."
-                  src={PROCUREMENT_AGENT_DEMO_URL}
-                  poster="/img/procurement-agent/demo-poster.webp"
-                />
-                <HomeDemoCard
-                  title="ConnectNova Sequence Builder"
-                  blurb="Build an outreach sequence on the canvas, walk a complete flow, or inspect execution results."
-                  src="/demos/connectnova-sequence"
-                  poster="/img/connectnova/sequence-demo-poster.webp"
-                />
+              <div className="flex flex-col gap-3">
+                <h3 className="text-[22px] leading-none md:text-[28px]" style={fontDisplay}>
+                  Experiments
+                </h3>
+                <p className="max-w-[620px] text-[15px] font-light leading-[1.6] text-[#0a0a0a]/75 md:text-[17px]" style={fontBody}>
+                  Self-initiated products I designed and built end to end, where I try out new AI interaction
+                  patterns on my own.
+                </p>
               </div>
+              <WorkProjectRows items={homeExperimentItems} />
             </div>
           </Reveal>
         </div>
