@@ -42,3 +42,11 @@ Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routin
 ## 首页案例可见性
 
 首页不展示 Beikemama 和核桃编程用户研究案例（Walnut Coding: From Trial to Trust）。仅从首页精选列表移除；`/works` 的作品分组和案例路由保留。
+
+## MemQ 作品入口
+
+首页 Experiments 和全部作品页中的 MemQ 均直接打开 App Store：https://apps.apple.com/us/app/memq-smart-quiz-memory/id6757248312。继续沿用外链新标签页行为，不先进入官网或案例页。
+
+## Mono 首页分组
+
+Mono 仅在首页 Experiments 中展示，不再重复进入上方 Work 列表。`/works` 的完整作品入口保留。

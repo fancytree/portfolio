@@ -108,8 +108,8 @@ export const productProjects: WorkProject[] = [
     coverDevice: 'phone-stack',
     coverAccent: '#ff7557',
     coverMotif: 'learning',
-    // No case study: the card goes straight to the live product site.
-    href: 'https://memq.riverstudio.cc/',
+    // No case study: the card goes straight to the App Store listing.
+    href: 'https://apps.apple.com/us/app/memq-smart-quiz-memory/id6757248312',
   },
   {
     title: 'Beikemama',
