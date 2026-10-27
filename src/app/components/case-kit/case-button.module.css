@@ -77,3 +77,6 @@
 .samples { display: flex; flex-wrap: wrap; align-items: center; gap: var(--case-space-16); }
 .sampleLabel { margin: 0 0 var(--case-space-12); font-family: var(--case-font-heading); font-size: var(--case-type-spec); letter-spacing: var(--case-tracking-spec); color: var(--case-subtle); text-transform: uppercase; }
 .primary:disabled:hover { background: var(--case-button-primary); }
+
+.icon[data-tone='dark'] { background: var(--case-button-primary); color: var(--case-color-white); }
+.icon[data-tone='dark']:hover { background: var(--case-button-primary-hover); }

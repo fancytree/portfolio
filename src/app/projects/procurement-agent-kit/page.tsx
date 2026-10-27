@@ -117,7 +117,6 @@ export default function ProcurementAgentKitPage() {
           ]} />
           <CaseProse><h3>The design behind each handoff</h3><p>The 12 steps follow a purchase before, during, and after a task, then over time. The six themes check safety, coordination, language, documents and devices, resources, and experience quality across that journey. Each card keeps the project’s real interface above its user need, design decision, and Goal.</p></CaseProse>
           <ProcurementExperienceMap />
-          <CaseButton variant="primary" href={PROCUREMENT_AGENT_DEMO_URL} target="_blank" rel="noreferrer">Try the full workflow</CaseButton>
         </CaseChapter>
 
         <CaseChapter label="06 / Validation" title="A prepared order looked like a placed order.">

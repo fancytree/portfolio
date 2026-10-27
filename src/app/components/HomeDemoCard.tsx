@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { useFullscreen } from '@/lib/useFullscreen';
+import { CaseButton } from './case-kit/CaseButton';
 import { DEMO_CLOSE_MESSAGE } from '@/lib/demoMessages';
 import posthog from 'posthog-js';
 
@@ -85,32 +86,19 @@ export default function HomeDemoCard({ title, blurb, src, poster }: Props) {
 
         {/* 预览态整卡可点；桌面用鼠标胶囊提示，不在卡片上画按钮 */}
         {!isFullscreen ? (
-          <button
-            type="button"
-            onClick={toggleFullscreen}
-            disabled={!supported}
-            className="mei-demo-frame__cta absolute inset-0 disabled:cursor-default"
-            data-cursor={supported ? 'pill' : undefined}
-            data-cursor-label={supported ? 'Open fullscreen' : undefined}
-            aria-label={supported ? `Open the ${title} demo fullscreen` : `${title} demo preview`}
-          >
-            {supported ? (
-              <span className="mei-demo-frame__cta-label">
-                <Maximize2 aria-hidden size={14} />
-                Open fullscreen
-              </span>
-            ) : null}
-          </button>
+          <>
+            <button type="button" onClick={toggleFullscreen} disabled={!supported}
+              className="mei-demo-frame__cta absolute inset-0 disabled:cursor-default" tabIndex={-1} aria-hidden="true" />
+            <CaseButton variant="icon" data-tone="dark" onClick={toggleFullscreen} disabled={!supported}
+              className="absolute bottom-4 left-4 z-10" title="Open fullscreen" aria-label={`Open the ${title} demo fullscreen`}>
+              <Maximize2 aria-hidden />
+            </CaseButton>
+          </>
         ) : (
-          <button
-            type="button"
-            onClick={toggleFullscreen}
-            className="absolute bottom-4 left-4 z-10 inline-flex items-center gap-2 rounded-full bg-[#0a0a0a]/82 px-3.5 py-2 text-[13px] font-medium text-white backdrop-blur-sm"
-            style={{ fontFamily: 'var(--mei-font-primary)' }}
-          >
-            <Minimize2 aria-hidden size={14} />
-            Exit fullscreen
-          </button>
+          <CaseButton variant="icon" data-tone="dark" onClick={toggleFullscreen}
+            className="absolute bottom-4 left-4 z-10" title="Exit fullscreen" aria-label="Exit fullscreen">
+            <Minimize2 aria-hidden />
+          </CaseButton>
         )}
       </div>
 

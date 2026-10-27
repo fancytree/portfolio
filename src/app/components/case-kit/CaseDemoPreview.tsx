@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import { useFullscreen } from '@/lib/useFullscreen';
 import { DEMO_CLOSE_MESSAGE } from '@/lib/demoMessages';
 import { CaseButton } from './CaseButton';
@@ -43,12 +44,13 @@ export default function CaseDemoPreview({ src, title }: { src: string; title: st
     else window.location.assign(src);
   };
 
-  return <div ref={container} className={styles.demoPreview} data-case-demo-preview>
+  return <div ref={container} className={styles.demoPreview} data-case-demo-preview data-case-demo-src={src}>
     <iframe ref={frame} src={src} title={`${title} full workflow demo`} loading="lazy" className={styles.demoPreviewFrame}
       allow="fullscreen" style={{ transform: isFullscreen ? undefined : `scale(${scale})` }} />
     {!isFullscreen && <>
       <CaseButton variant="overlay" arrow="none" className={styles.demoPreviewLaunch} onClick={open} tabIndex={-1} aria-hidden="true" />
-      <CaseButton variant="primary" className={styles.demoPreviewLabel} onClick={open} aria-label={`Open ${title} demo fullscreen`}>Open fullscreen</CaseButton>
+      <CaseButton variant="icon" data-tone="dark" className={styles.demoPreviewLabel} onClick={open} title="Open fullscreen" aria-label={`Open ${title} demo fullscreen`}><Maximize2 aria-hidden /></CaseButton>
     </>}
+    {isFullscreen && <CaseButton variant="icon" data-tone="dark" className={styles.demoPreviewLabel} onClick={() => void toggle()} title="Exit fullscreen" aria-label="Exit fullscreen"><Minimize2 aria-hidden /></CaseButton>}
   </div>;
 }

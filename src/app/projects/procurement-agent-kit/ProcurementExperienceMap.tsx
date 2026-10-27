@@ -36,11 +36,6 @@ const phases = [
   { id: 'over-time', range: '11—12', title: 'Over time', description: 'Keep supplier information separate from order notes, and surface the next purchase at the right moment.', items: steps.slice(10) },
   { id: 'themes', range: 'A—F', title: 'Cross-cutting themes', description: 'Check safety, coordination, language, context, resources, and experience quality across the entire workflow.', items: themes },
 ];
-const priority: Record<string, string[]> = {
- '01':['A','C','E'],'02':['A','B','D'],'03':['A','C','E'],'04':['B','C','F'],
- '05':['A','B','F'],'06':['A','B','D','E'],'07':['A','C','E','F'],'08':['B','C','D','F'],
- '09':['A','C','D','E'],'10':['A','B','F'],'11':['A','B','C','F'],'12':['A','C','D','E','F'],
-};
 const checks: Record<string, [string, string]> = {
  '01':['Organize entry points by business object, rather than by AI feature.','Keep supplier opportunities distinct from existing purchase drafts.'],
  '02':['Fix the coverage of a calculated opportunity; let a self-initiated purchase set its own window.','Start the list conversation broadly and carry the selected supplier into creation.'],
@@ -61,7 +56,7 @@ const checks: Record<string, [string, string]> = {
  'E':['Control the checking cadence instead of exposing internal resource machinery.','Avoid duplicate drafts; history preview should not regenerate the plan.'],
  'F':['Use task scenarios, activity, and role feedback to evaluate the design.','Observe outcomes, process, trust, and recovery separately; do not invent measured impact.'],
 };
-function ExperienceCard({item,notes}:{item:Facet;notes:boolean}) {
+function ExperienceCard({item}:{item:Facet}) {
  const [revision,setRevision]=useState(0);
  return <article id={`experience-facet-${item.id}`} className="min-w-0 overflow-hidden rounded-[var(--case-radius-media)] border border-[var(--case-rule)] bg-[var(--case-bg)]" aria-label={`${item.id} / ${item.title}`}>
    <div className="flex items-center justify-between gap-[var(--case-space-8)] border-b border-[var(--case-rule)] px-[var(--case-space-24)] py-[var(--case-space-8)]">
@@ -71,19 +66,17 @@ function ExperienceCard({item,notes}:{item:Facet;notes:boolean}) {
    <CaseInteractivePreview key={revision} src={`/demos/procurement-agent/index.html?facet=${item.id}&revision=${revision}`} title={`Interactive design: ${item.title}`} />
    <div className="flex flex-col gap-[var(--case-space-16)] border-t border-[var(--case-rule)] p-[var(--case-space-24)]">
      <h4 data-case-type="small-title">{item.id} / {item.title}</h4>
-     {notes&&<div data-case-type="card-body" className="flex flex-col gap-[var(--case-space-16)]">
+     <div data-case-type="card-body" className="flex flex-col gap-[var(--case-space-16)]">
        <p><strong>User need.</strong> {item.problem}</p>
        <p><strong>Design.</strong> {item.design}</p>
        <p><strong>Goal.</strong> {item.goal}</p>
        <p><strong>Trade-off.</strong> {checks[item.id][0]}</p>
        <p><strong>Experience check.</strong> {checks[item.id][1]}</p>
-     </div>}
+     </div>
    </div>
  </article>;
 }
 export default function ProcurementExperienceMap() {
- const [notes,setNotes]=useState(true);const [theme,setTheme]=useState('A');
- const selected=themes.find(item=>item.id===theme)!;
  return <div className="flex min-w-0 flex-col gap-[var(--case-space-64)]" aria-label="Agent UX Map: 12 Steps + 6 Themes">
   <CaseEvidenceCards label="Four experience goals" items={[
    {icon:<Eye/>,title:'Explainable',body:'Show the basis for a quantity and state the result clearly.'},
@@ -91,20 +84,10 @@ export default function ProcurementExperienceMap() {
    {icon:<Compass/>,title:'Predictable',body:'Set expectations for the output and the next action.'},
    {icon:<RotateCcw/>,title:'Recoverable',body:'Preserve completed work and let users safely continue.'},
   ]}/>
-  <div className="flex flex-wrap items-center justify-between gap-[var(--case-space-16)]">
-   <nav className="flex flex-wrap gap-[var(--case-space-8)]" aria-label="Experience map phases">{phases.map(phase=><CaseButton key={phase.id} variant="text" href={`#experience-${phase.id}`}>{phase.title}</CaseButton>)}</nav>
-   <CaseButton variant="secondary" arrow="none" aria-pressed={notes} onClick={()=>setNotes(value=>!value)}>{notes?'Compact view':'Show design notes'}</CaseButton>
-  </div>
   {phases.map(phase=><section id={`experience-${phase.id}`} key={phase.id} className="flex min-w-0 scroll-mt-[var(--case-space-chapter)] flex-col gap-[var(--case-space-24)]" aria-label={phase.title}>
    <CaseProse><h3>{phase.range} / {phase.title}</h3><p>{phase.description}</p></CaseProse>
-   <div className="grid min-w-0 gap-[var(--case-space-24)] grid-cols-1 md:grid-cols-2">{phase.items.map(item=><ExperienceCard key={item.id} item={item} notes={notes}/>)}</div>
+   <div className="grid min-w-0 gap-[var(--case-space-24)] grid-cols-1 md:grid-cols-2">{phase.items.map(item=><ExperienceCard key={item.id} item={item}/>)}</div>
   </section>)}
-  <section className="flex min-w-0 flex-col gap-[var(--case-space-24)]" aria-label="Experience cross-check">
-   <CaseProse><h3>12 × 6 / Check the boundaries again</h3><p>Dots mark the intersections I prioritized for this purchase workflow. Select a theme to revisit the design question across steps.</p></CaseProse>
-   <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="Steps and themes matrix">
-    <table className="w-full border-collapse" data-case-type="card-body"><thead><tr><th className="p-[var(--case-space-8)] text-left">Step</th>{themes.map(item=><th className="p-[var(--case-space-8)]" key={item.id}><CaseButton variant="tab" aria-label={`Explore theme ${item.title}`} aria-pressed={theme===item.id} onClick={()=>setTheme(item.id)}>{item.id}</CaseButton></th>)}</tr></thead><tbody>{steps.map(item=><tr className="border-t border-[var(--case-rule)]" key={item.id}><th className="p-[var(--case-space-8)] text-left">{item.id} / {item.label}</th>{themes.map(cross=><td className="p-[var(--case-space-8)] text-center" key={cross.id}>{priority[item.id]?.includes(cross.id)?'•':'—'}</td>)}</tr>)}</tbody></table>
-   </div>
-   <CaseProse><h3>{selected.id} / {selected.title}</h3><p>{selected.design}</p><p><strong>Goal.</strong> {selected.goal}</p></CaseProse>
-  </section>
+
  </div>;
 }

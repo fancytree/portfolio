@@ -41,3 +41,5 @@ Mono 使用 Case Kit 外壳、Hero、Chapter、Prose、EvidenceCards、Figure、
 `/projects/procurement-agent-kit` 复用 Case Kit 外壳、专用导航与返回、Hero、Chapter、Prose、EvidenceCards、Figure、Video、Pullquote、Close 和 CaseButton；不新增案例专属 token 或样式。素材由已有采购演示截图及已发布的 ERP 采购单视频、收货截图组成。布局允许该新路由使用共享全宽案例外壳。
 
 采购案例使用 2 倍像素无损截图，保持 ERP 导航收起，图片跳过二次有损压缩。CaseFigure 外框承担单层统一描边，内部媒体按钮不重复绘制边框。共享 CaseDemoPreview 用 --case-demo-viewport-* token 展示完整桌面界面，左下角共享主按钮进入全屏。
+
+Demo 全屏入口和退出入口统一使用左下角共享 icon 按钮，data-tone="dark" 消费主按钮背景及白色图标 token，不展示文字主按钮。

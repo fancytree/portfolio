@@ -1,6 +1,7 @@
 import { Children, isValidElement, type ReactNode } from 'react';
 import { CaseButton } from './CaseButton';
 import CaseViewportVideo from './CaseViewportVideo';
+import CaseDemoLink from './CaseDemoLink';
 import styles from './case-kit.module.css';
 export { default as CaseInteractivePreview } from './CaseInteractivePreview';
 
@@ -83,6 +84,7 @@ type CaseHeroProps = {
 function HeroActionLink({ href, label, onClick }: CaseHeroAction) {
   return onClick
     ? <CaseButton className={styles.heroAction} onClick={onClick}>{label}</CaseButton>
+    : href.startsWith('/demos/') ? <CaseDemoLink className={styles.heroAction} href={href} label={label} />
     : <CaseButton className={styles.heroAction} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}>{label}</CaseButton>;
 }
 

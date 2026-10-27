@@ -21,7 +21,7 @@ function walk(dir) {
   }
 }
 walk('src/app/projects');
-files.push('src/app/components/CaseStudyHero.tsx', 'src/app/components/CaseStudyControls.tsx', 'src/app/components/CaseStudyBackButton.tsx', 'src/app/components/case-kit/CaseKit.tsx', 'src/app/components/case-kit/CaseWorkflow.tsx', 'src/app/components/case-kit/CaseButton.tsx', 'src/app/components/case-kit/CaseViewportVideo.tsx', 'src/app/components/case-kit/CaseInteractivePreview.tsx', 'src/app/components/case-kit/CaseDemoPreview.tsx', 'src/lib/design-tokens/typography.ts', 'src/lib/design-tokens/radius.ts');
+files.push('src/app/components/CaseStudyHero.tsx', 'src/app/components/CaseStudyControls.tsx', 'src/app/components/CaseStudyBackButton.tsx', 'src/app/components/case-kit/CaseKit.tsx', 'src/app/components/case-kit/CaseWorkflow.tsx', 'src/app/components/case-kit/CaseButton.tsx', 'src/app/components/case-kit/CaseViewportVideo.tsx', 'src/app/components/case-kit/CaseInteractivePreview.tsx', 'src/app/components/case-kit/CaseDemoPreview.tsx', 'src/app/components/case-kit/CaseDemoLink.tsx', 'src/lib/design-tokens/typography.ts', 'src/lib/design-tokens/radius.ts');
 const properties = /^(fontSize|fontWeight|fontFamily|lineHeight|letterSpacing|borderRadius|color|backgroundColor|border(?:Top|Bottom|Left|Right)?(?:Color|Width)?|boxShadow|padding\w*|margin\w*|gap|rowGap|columnGap)$/;
 const structural = /^(?:0|auto|none|transparent|inherit|currentColor|collapse|[-\d.]+%)(?:\s+(?:0|auto))*$/;
 function branches(node, callback) {

@@ -17,7 +17,8 @@ export function useFullscreen(ref: RefObject<HTMLElement | null>) {
   const [supported, setSupported] = useState(true);
 
   useEffect(() => {
-    setSupported(typeof document !== 'undefined' && document.fullscreenEnabled);
+    const frame = requestAnimationFrame(() => setSupported(Boolean(document.fullscreenEnabled)));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {
@@ -45,6 +46,37 @@ export function useFullscreen(ref: RefObject<HTMLElement | null>) {
       restoreCursor();
     };
   }, [ref]);
+
+  // Keyboard events inside a same-origin demo iframe do not bubble to its parent.
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const element = ref.current;
+    if (!element) return;
+    const documents = new Set<Document>();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && document.fullscreenElement === element) {
+        void document.exitFullscreen().catch(() => undefined);
+      }
+    };
+    const connect = (doc: Document | null) => {
+      if (!doc || documents.has(doc)) return;
+      documents.add(doc);
+      doc.addEventListener('keydown', onKeyDown, true);
+    };
+    connect(document);
+    const frames = [...element.querySelectorAll('iframe')];
+    const connectFrame = () => {
+      for (const frame of frames) {
+        try { connect(frame.contentDocument); } catch { /* Native Escape handles cross-origin frames. */ }
+      }
+    };
+    connectFrame();
+    frames.forEach(frame => frame.addEventListener('load', connectFrame));
+    return () => {
+      documents.forEach(doc => doc.removeEventListener('keydown', onKeyDown, true));
+      frames.forEach(frame => frame.removeEventListener('load', connectFrame));
+    };
+  }, [isFullscreen, ref]);
 
   const toggle = useCallback(async () => {
     const el = ref.current;
