@@ -5,8 +5,8 @@ import "./globals.css";
 import Layout from "./components/Layout";
 
 export const metadata: Metadata = {
-  title: "Mei Chai — UX & Product Designer",
-  description: "Portfolio of Mei Chai, a UX and Product Designer specializing in AI-powered products and 0-to-1 design.",
+  title: "Mei Chai — Product Designer · AI-Native Products & Design Systems",
+  description: "Product designer with 6+ years in UX and user research. Selected work in AI-native SaaS, design systems, human-in-the-loop workflows, and data-informed iteration.",
   // 浏览器 Tab 图标
   icons: {
     icon: "/logo.svg",

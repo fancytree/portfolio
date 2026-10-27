@@ -61,7 +61,11 @@ export default function Navbar() {
     const target = document.getElementById(hash);
     if (!target) return;
     e.preventDefault();
-    const top = target.getBoundingClientRect().top + window.scrollY;
+    // Layout offsets stay stable while the section's entrance transform animates.
+    let top = 0;
+    for (let node: HTMLElement | null = target; node; node = node.offsetParent as HTMLElement | null) {
+      top += node.offsetTop;
+    }
     window.scrollTo({ top, behavior: 'smooth' });
     history.replaceState(null, '', href);
   };

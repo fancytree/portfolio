@@ -47,3 +47,11 @@ Demo 全屏入口和退出入口统一使用左下角共享 icon 按钮，data-t
 ## MemQ 封面强调色
 
 MemQ 的 `coverAccent` 使用项目设计系统主色 `#1A8A72`。封面 hover 与键盘焦点的浅色背景、光晕及装饰继续由共享 WorkProjectRows 的 `--cover-accent` 派生，不新增项目专属样式；首页与全部作品页一致。
+
+## 首页定位更新
+
+首页继续使用用户已确认的定制视觉，不把案例 token 规则扩大成首页重设计。定位文案复用现有标题、正文、眉题和网格样式，不新增色板、字体、卡片系统或 token。首屏去掉固定 `100vh` 高度，依靠 `.mei-section-screen` 的 `min-height: 100svh`，小屏文字较长时自然撑高、不被裁切。页面 title 和 description 同步为 AI-native products、Design systems 和数据驱动迭代的定位。
+
+## 旧案例路由
+
+采购、DEF、JobNova、ConnectNova 在首页和 `/works` 指向 kit 新页。其余旧路由沿用 `globals.css` 中 `.mei-project-page:not(.case-kit)` 的兼容样式，尚未迁移到 Case Kit token：包括仍在 `/works` 列出的 `crackinterview`、`customer-service-system`、`milano-partecipa`、`clarity`、`beikemama`、`walnut-*`，以及被 kit 页取代的旧版。重写或新增案例时从 Case Kit 模块组装，不以旧页为样式模板。

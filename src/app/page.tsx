@@ -160,7 +160,7 @@ const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
 const heroGreeting = "Hey, I'm Mei Chai (River).";
-const heroIntroText = 'Beyond screens, I shape intelligent systems for meaningful human–AI collaboration';
+const heroIntroText = 'I design AI-native products that put people in control.';
 const heroIntroTokens = heroIntroText.match(/\S+\s*/g) ?? [heroIntroText];
 
 function HeroTypedHeading() {
@@ -169,8 +169,8 @@ function HeroTypedHeading() {
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) {
-      setVisibleCharacters(heroIntroText.length);
-      return;
+      const frame = window.requestAnimationFrame(() => setVisibleCharacters(heroIntroText.length));
+      return () => window.cancelAnimationFrame(frame);
     }
 
     let animationFrame = 0;
@@ -200,10 +200,8 @@ function HeroTypedHeading() {
   }, []);
 
   const isComplete = visibleCharacters === heroIntroText.length;
-  let characterOffset = 0;
   const typedTokens = heroIntroTokens.map((token, tokenIndex) => {
-    const tokenStart = characterOffset;
-    characterOffset += token.length;
+    const tokenStart = heroIntroTokens.slice(0, tokenIndex).join('').length;
 
     return (
       <span key={`${token}-${tokenIndex}`} className="inline-block whitespace-pre">
@@ -249,18 +247,26 @@ function HeroTypedHeading() {
         <span aria-hidden="true">{typedTokens}</span>
       </h1>
 
+      <p
+        className="mt-5 max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a]/75 md:text-[20px]"
+        style={fontBody}
+      >
+        Product designer with 6+ years in UX and user research. I turn complex workflows into usable products,
+        build the systems behind them, and iterate with real usage data.
+      </p>
+
       <div
         className={`mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] tracking-[0.08em] text-[#0a0a0a]/55 transition-all duration-500 sm:mt-6 sm:text-[11px] ${
           isComplete ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
         }`}
         style={fontMono}
-        aria-label="UX, product strategy, and systems thinking"
+        aria-label="AI-native products, design systems, and data-informed design"
       >
-        <span>UX</span>
+        <span>AI-NATIVE PRODUCTS</span>
         <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
-        <span>PRODUCT STRATEGY</span>
+        <span>DESIGN SYSTEMS</span>
         <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
-        <span>SYSTEMS THINKING</span>
+        <span>DATA-INFORMED DESIGN</span>
       </div>
     </div>
   );
@@ -280,8 +286,7 @@ type ToolItem =
   | { type: 'icon'; src: string; alt: string; wrap?: boolean }
   | { type: 'plus' }
   | { type: 'skillmd' }
-  | { type: 'ship-icon'; src: string; alt: string; innerClassName?: string; imageClassName?: string }
-  | { type: 'ship-storybook' };
+  | { type: 'ship-icon'; src: string; alt: string; innerClassName?: string; imageClassName?: string };
 
 const tool = (src: string, alt: string, wrap?: boolean): ToolItem => ({ type: 'icon', src, alt, wrap });
 const plusTool: ToolItem = { type: 'plus' };
@@ -292,13 +297,12 @@ const shipIcon = (
   innerClassName: string = 'inset-[12.5%]',
   imageClassName: string = 'h-full w-full'
 ): ToolItem => ({ type: 'ship-icon', src, alt, innerClassName, imageClassName });
-const shipStorybookTool: ToolItem = { type: 'ship-storybook' };
 
 const processSteps = [
   {
     icon: Search,
     title: 'Find the decision',
-    body: 'Combine interviews, behavior, and domain evidence to identify the decision the product must support—not only the feature users ask for.',
+    body: 'Use interviews, workflow observation, and product behavior to understand where people get stuck. Connect those findings to a problem the team can act on.',
     tools: [
       tool('/img/strategy/notion.svg', 'Notion'),
       tool('/img/strategy/claude.svg', 'Claude'),
@@ -310,13 +314,13 @@ const processSteps = [
   {
     icon: Star,
     title: 'Frame the product',
-    body: 'Align user value, business goals, system constraints, and risk. Define what deserves automation and what should remain a human choice.',
+    body: 'Map the workflow, decision points, states, and exceptions with product and engineering. Define what an agent can do and where people need to review, edit, or approve.',
     tools: [tool('/img/strategy/figma.svg', 'Figma'), tool('/img/strategy/notion.svg', 'Notion')],
   },
   {
     icon: Tangent,
-    title: 'Model the system',
-    body: 'Map inputs, states, recommendations, actions, and failure paths before committing to interface details.',
+    title: 'Make the system reusable',
+    body: 'Build tokens, components, states, and usage rules for each product. Keep design and code aligned so engineers and AI coding tools can reuse the same foundations.',
     tools: [
       tool('/img/strategy/figma.svg', 'Figma'),
       tool('/img/strategy/openai.svg', 'OpenAI', true),
@@ -328,7 +332,7 @@ const processSteps = [
   {
     icon: AudioWaveform,
     title: 'Prototype the behavior',
-    body: 'Build working interactions that reveal how the product responds, then test comprehension, control, and edge cases.',
+    body: 'Make the workflow tangible in Figma or code. Test how people understand recommendations, make changes, and recover when something goes wrong.',
     tools: [
       tool('/img/strategy/research-tool.png', 'User research tool'),
       tool('/img/strategy/trello.svg', 'Trello'),
@@ -340,12 +344,12 @@ const processSteps = [
   },
   {
     icon: ChartSpline,
-    title: 'Ship and learn',
-    body: 'Partner with engineering or build directly, measure real behavior, and use the evidence to refine the experience and its underlying rules.',
+    title: 'Let evidence guide the next step',
+    body: 'Use PostHog funnels, heatmaps, and session recordings to inform iteration. At JobNova, a one-week onboarding A/B test with 100+ users helped choose the flow we shipped.',
     toolGapClassName: 'gap-[29px]',
     tools: [
       shipIcon('/img/strategy/ship-github.svg', 'GitHub'),
-      shipStorybookTool,
+      shipIcon('/img/strategy/figma.svg', 'Figma'),
       shipIcon('/img/strategy/ship-tool.svg', 'Deployment tool', 'inset-y-[27.5%] inset-x-[7.5%]', 'h-full w-full -rotate-180 -scale-x-100'),
     ],
   },
@@ -374,24 +378,6 @@ function ToolBadge({ item }: { item: ToolItem }) {
       </div>
     );
   }
-  if (item.type === 'ship-storybook') {
-    return (
-      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-[#f4f4f1]">
-        <div className="absolute inset-[12.5%] overflow-hidden">
-          <img
-            src="/img/strategy/ship-storybook-vector.svg"
-            alt="Storybook"
-            className="absolute inset-[1.04%_10.7%] block h-[97.92%] w-[78.6%] max-w-none"
-          />
-          <img
-            src="/img/strategy/ship-storybook-mark.svg"
-            alt=""
-            className="absolute inset-[1.04%_20.94%_19.6%_30.94%] block h-[79.36%] w-[48.12%] max-w-none"
-          />
-        </div>
-      </div>
-    );
-  }
   return item.wrap ? (
     <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#f4f4f1]">
       <img src={item.src} alt={item.alt} className="h-[65%] w-[65%] object-contain" />
@@ -406,13 +392,7 @@ const experienceItems = [
     period: 'Nov 2024 - Present',
     role: 'Lead UX Designer',
     company: 'Liba Space',
-    body: 'Lead UX strategy and interaction design across the Nova AI ecosystem: ConnectNova, JobNova, and CrackInterview.',
-  },
-  {
-    period: '2026 - Present',
-    role: 'Independent Designer',
-    company: 'River Studio',
-    body: 'Design and ship AI products solo, end-to-end — MemQ (an iOS study app live on the App Store), Mono (a personal finance AI agent), and client work rebuilding a distributor’s ordering platform.',
+    body: 'Lead UX across ConnectNova, JobNova, and CrackInterview, from AI workflows to design systems and front-end delivery. Built Design Lab for documentation, release reviews, and iteration; mentored two interns for six months each as they progressed to independent design and delivery.',
   },
   {
     period: 'Jun 2020 - Jun 2022',
@@ -428,8 +408,8 @@ const experienceItems = [
   },
 ];
 
-const skills = ['User Research', 'Product Strategy', 'Interaction Design', 'Information Architecture', 'AI UX', 'Design Systems', 'Data Visualization', 'Prototyping'];
-const toolkit = ['Figma', 'Cursor', 'Claude Code', 'Maze', 'ProtoPie', 'n8n', 'Arduino', 'TouchDesigner'];
+const skills = ['AI Product Design', 'Design Systems', 'User Research', 'Interaction Design', 'Information Architecture', 'Product Analytics & A/B Testing', 'Design-to-Code', 'Design Mentoring'];
+const toolkit = ['Figma', 'Figma MCP', 'Cursor', 'Claude Code', 'PostHog', 'GitHub'];
 
 export default function Home() {
   useEffect(() => {
@@ -439,12 +419,12 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero — 整屏高度（100vh）；左右内边距与导航栏一致（px-6 sm:px-8）。
+      {/* Hero — 保留整屏最小高度，文字较长时允许内容撑高。
           负 marginTop 抵消 Layout 的 pt-12（导航栏高度），让 hero 顶到视口顶部，
           导航栏悬浮在 hero 上方（半透明 + 模糊），而不是与 hero 之间留白 */}
       <section
         className="mei-section-screen relative flex w-screen flex-col justify-between overflow-hidden bg-[#f3f1ea] px-6 pt-14 pb-6 sm:px-8 md:pt-16 md:pb-8"
-        style={{ ...fullBleed, marginTop: '-48px', height: '100vh' }}
+        style={{ ...fullBleed, marginTop: '-48px' }}
       >
         {/* 背景：可交互的池塘（点击水面放鱼、点击鱼弹俏皮话），纯 canvas 无 3D 依赖 */}
         <InteractivePond className="absolute inset-0 z-0 block" />
@@ -454,8 +434,8 @@ export default function Home() {
           className="pointer-events-none relative z-10 text-[13px] leading-relaxed text-[#0a0a0a]/70 sm:text-[15px]"
           style={fontMono}
         >
-          <p>const experience = &quot;7+ years&quot;;</p>
-          <p>const passion = Infinity;</p>
+          <p>const role = &quot;Product Designer&quot;;</p>
+          <p>const experience = &quot;6+ years&quot;;</p>
         </div>
 
         {/* 左边距对齐 Work 区域：先用负 margin 抵消 Hero 自身的 px-6 sm:px-8，
@@ -486,8 +466,12 @@ export default function Home() {
           <Reveal>
             <div className="flex flex-col gap-6 pt-12 md:pt-16">
               <h2 className="text-[40px] leading-none md:text-[56px]" style={fontDisplay}>
-                Work
+                Selected work
               </h2>
+              <p className="max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a]/75 md:text-[20px]" style={fontBody}>
+                Shipped work across AI recruiting, job search, and business operations. Each case connects the problem,
+                my design decisions, and the evidence behind the outcome.
+              </p>
             </div>
           </Reveal>
 
@@ -545,12 +529,12 @@ export default function Home() {
             <Reveal>
               <div className="flex flex-col gap-5">
                 <h3 className="max-w-[480px] text-[22px] text-white md:text-[24px]" style={fontTitle}>
-                  Design behavior, not only interfaces
+                  From evidence to working products
                 </h3>
                 <p className="max-w-[380px] text-[15px] font-light text-white/70 md:text-[16px]" style={fontBody}>
-                  With generative AI, cause and effect is no longer fixed: the same intent can produce different
-                  outcomes. I design the rules around that uncertainty—what the product should understand, how people
-                  can steer it, and when human judgment takes over.
+                  My work connects research, AI interaction design, reusable systems, and implementation.
+                  I make the human decisions explicit, work with engineering on the constraints, and use what happens
+                  after launch to decide what needs to change.
                 </p>
               </div>
             </Reveal>
@@ -620,9 +604,9 @@ export default function Home() {
                 About
               </h2>
               <p className="max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a] md:text-[20px]" style={fontBody}>
-                My path runs from user research and interaction design to product ownership and code-based delivery.
-                I am most effective when a problem is still ambiguous: creating a shared model, making the behavior
-                tangible, and helping the team move from an idea to something people can use.
+                I’m a product designer based in Milan, with a background in interaction design at Sohu and user
+                research at Smart Walnut. Today, I design AI-native SaaS products and complex business workflows,
+                build reusable design systems, and carry decisions through to working code.
               </p>
             </div>
           </Reveal>
