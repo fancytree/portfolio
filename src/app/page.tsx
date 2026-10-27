@@ -523,11 +523,13 @@ export default function Home() {
                   title="Procurement Agent"
                   blurb="An agent workspace for purchase planning — review a proposal, check documents, and approve."
                   src={PROCUREMENT_AGENT_DEMO_URL}
+                  poster="/img/procurement-agent/demo-poster.webp"
                 />
                 <HomeDemoCard
                   title="ConnectNova Sequence Builder"
                   blurb="Build an outreach sequence on the canvas, walk a complete flow, or inspect execution results."
                   src="/demos/connectnova-sequence"
+                  poster="/img/connectnova/sequence-demo-poster.webp"
                 />
               </div>
             </div>

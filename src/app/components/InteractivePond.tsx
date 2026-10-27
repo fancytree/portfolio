@@ -15,6 +15,19 @@ const BUBBLE_HIT_RADIUS = 46;
 const RIPPLE_TEX_REF_RADIUS_X = 100;
 const RIPPLE_TEX_REF_RADIUS_Y = RIPPLE_TEX_REF_RADIUS_X * 0.66;
 const RIPPLE_TEX_SIZE = 240;
+// The pond is ambient motion: 60fps is plenty, and a 120Hz display would
+// otherwise redraw the whole canvas twice as often for no visible gain.
+const FRAME_INTERVAL = 1000 / 60;
+// Baked textures only hold soft, blurred strokes, so going past this many
+// pixels per world unit would cost memory without adding visible detail.
+const BAKED_MAX_RESOLUTION = 1.5;
+const ISLAND_RIPPLE_KEYFRAMES = 9;
+const ISLAND_SEGMENT_STARTS = [0.08, 1.62, 3.18, 4.74];
+const ISLAND_SEGMENT_LENGTHS = [1.18, 1.06, 1.16, 1.02];
+const INTERFERENCE_BEND_LEVELS = 16;
+const HOVER_KEYFRAMES = 5;
+const HOVER_MIN_RADIUS_X = 15;
+const HOVER_PULSE_RADIUS_X = 6;
 
 // `filter: blur()` is by far the most expensive canvas op, and drawRipple used to
 // pay for it on 3 strokes per ripple, every frame. The ripple's per-ripple "seed"
@@ -47,6 +60,158 @@ function buildRippleTexture() {
 
   return texture;
 }
+
+// The island rings, the interference ticks and the hover ring used to set
+// `filter: blur()` on every stroke, every frame. Each filtered draw makes the
+// GPU allocate a scratch texture sized to that stroke, and with ~30 of them per
+// frame those textures piled up into hundreds of MB. They are baked once here
+// instead (and again only when the canvas resolution changes), so the frame
+// loop only ever calls drawImage.
+type BakedTexture = { image: HTMLCanvasElement; x: number; y: number; width: number; height: number };
+
+type PondTextures = {
+  screenResolution: number;
+  islandRipples: BakedTexture[][];
+  interference: BakedTexture[];
+  hover: BakedTexture[];
+};
+
+function bakeTexture(
+  bounds: { x: number; y: number; width: number; height: number },
+  resolution: number,
+  paint: (context: CanvasRenderingContext2D) => void,
+): BakedTexture {
+  const image = document.createElement('canvas');
+  image.width = Math.max(1, Math.ceil(bounds.width * resolution));
+  image.height = Math.max(1, Math.ceil(bounds.height * resolution));
+  const context = image.getContext('2d');
+  if (context) {
+    context.scale(resolution, resolution);
+    context.translate(-bounds.x, -bounds.y);
+    paint(context);
+  }
+  return { image, x: bounds.x, y: bounds.y, width: image.width / resolution, height: image.height / resolution };
+}
+
+function drawBaked(context: CanvasRenderingContext2D, texture: BakedTexture) {
+  context.drawImage(texture.image, texture.x, texture.y, texture.width, texture.height);
+}
+
+function releaseCanvas(canvas: HTMLCanvasElement) {
+  canvas.width = 0;
+  canvas.height = 0;
+}
+
+function releasePondTextures(textures: PondTextures) {
+  for (const texture of [...textures.islandRipples.flat(), ...textures.interference, ...textures.hover]) {
+    releaseCanvas(texture.image);
+  }
+}
+
+function islandRippleRadii(progress: number) {
+  return { x: 177.6 + progress * 49.6, y: 75.2 + progress * 25.6 };
+}
+
+function hoverKeyframeRadius(index: number) {
+  return HOVER_MIN_RADIUS_X + (index / (HOVER_KEYFRAMES - 1)) * HOVER_PULSE_RADIUS_X;
+}
+
+// `screenResolution` is canvas pixels per world unit. Canvas blur is measured in
+// canvas pixels and ignores the transform, so each blur is rescaled to land at
+// the same on-screen softness as the old per-frame filter once the texture is
+// drawn back at screen resolution.
+function bakePondTextures(screenResolution: number): PondTextures {
+  const resolution = Math.min(screenResolution, BAKED_MAX_RESOLUTION);
+  const blur = (pixels: number) => `blur(${(pixels * resolution) / screenResolution}px)`;
+  const blurReach = (pixels: number) => (3 * pixels) / screenResolution;
+
+  // Each ring keyframe is drawn back scaled to the exact radius of the current
+  // progress, so stepping between keyframes only changes the line width by a
+  // fraction of a pixel.
+  const islandPad = 1.68 + (2.08 * 1.6) / 2 + blurReach(1.2) + 1;
+  const islandRipples = [0, 1].map((wave) =>
+    Array.from({ length: ISLAND_RIPPLE_KEYFRAMES }, (_, keyframe) => {
+      const progress = keyframe / (ISLAND_RIPPLE_KEYFRAMES - 1);
+      const radius = islandRippleRadii(progress);
+      return bakeTexture(
+        {
+          x: -radius.x - islandPad,
+          y: -radius.y - islandPad,
+          width: (radius.x + islandPad) * 2,
+          height: (radius.y + islandPad) * 2,
+        },
+        resolution,
+        (context) => {
+          context.strokeStyle = '#90bbca';
+          context.lineCap = 'round';
+          context.lineJoin = 'round';
+          context.filter = blur(1.2);
+          for (let segment = 0; segment < ISLAND_SEGMENT_STARTS.length; segment++) {
+            const start = ISLAND_SEGMENT_STARTS[segment];
+            const end = start + ISLAND_SEGMENT_LENGTHS[segment];
+            context.beginPath();
+            for (let step = 0; step <= 24; step++) {
+              const angle = start + (step / 24) * (end - start);
+              const irregularity = Math.sin(angle * 3 + segment * 1.7 + wave * 2.1) * 1.68;
+              const x = Math.cos(angle) * (radius.x + irregularity);
+              const y = Math.sin(angle) * (radius.y + irregularity * 0.42);
+              if (step === 0) context.moveTo(x, y);
+              else context.lineTo(x, y);
+            }
+            context.globalAlpha = 0.18 - segment * 0.012;
+            context.lineWidth = (2.08 - segment * 0.24) * (0.6 + progress);
+            context.stroke();
+          }
+        },
+      );
+    }),
+  );
+
+  // An interference tick is a short curve along one ripple's tangent, bowed
+  // towards the other ripple's tangent. Its shape depends only on the angle
+  // between the two tangents, so one texture per angle step covers every case;
+  // negative angles reuse the same texture mirrored.
+  const interferencePad = 1.7 / 2 + blurReach(0.9) + 1;
+  const interference = Array.from({ length: INTERFERENCE_BEND_LEVELS }, (_, level) => {
+    const angle = (level / (INTERFERENCE_BEND_LEVELS - 1)) * Math.PI;
+    return bakeTexture(
+      { x: -17 - interferencePad, y: -interferencePad, width: 34 + interferencePad * 2, height: 1.6 + interferencePad * 2 },
+      resolution,
+      (context) => {
+        context.strokeStyle = '#83b4c7';
+        context.lineCap = 'round';
+        context.lineWidth = 1.7;
+        context.filter = blur(0.9);
+        context.beginPath();
+        context.moveTo(-17, 0);
+        context.quadraticCurveTo(3.2 * (Math.cos(angle) - 1), 3.2 * Math.sin(angle), 17, 0);
+        context.stroke();
+      },
+    );
+  });
+
+  const hoverPad = 1.3 / 2 + blurReach(0.5) + 1;
+  const hover = Array.from({ length: HOVER_KEYFRAMES }, (_, keyframe) => {
+    const radiusX = hoverKeyframeRadius(keyframe);
+    const radiusY = radiusX * 0.66;
+    return bakeTexture(
+      { x: -radiusX - hoverPad, y: -radiusY - hoverPad, width: (radiusX + hoverPad) * 2, height: (radiusY + hoverPad) * 2 },
+      resolution,
+      (context) => {
+        context.strokeStyle = '#8fb9c9';
+        context.lineCap = 'round';
+        context.lineWidth = 1.3;
+        context.filter = blur(0.5);
+        context.beginPath();
+        context.ellipse(0, 0, radiusX, radiusY, 0, 0, Math.PI * 2);
+        context.stroke();
+      },
+    );
+  });
+
+  return { screenResolution, islandRipples, interference, hover };
+}
+
 const BUBBLE_PHRASES = [
   'We see you',
   'Stop poking me',
@@ -204,7 +369,15 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     let frameId = 0;
     let nextFishId = 4;
     let lastTime = performance.now();
+    let lastFrameAt = 0;
     let viewport = { width: 1, height: 1, dpr: 1, scale: 1, offsetX: 0, offsetY: 0 };
+    let assets: LoadedAssets | null = null;
+    let textures: PondTextures | null = null;
+    let rebakeTimer = 0;
+    // Only built while a gold fish is in the pond, so the tint is applied once
+    // instead of as a per-frame filter.
+    let goldSprite: HTMLCanvasElement | null = null;
+    let inView = false;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const motionFactor = reducedMotion ? 0.18 : 1;
 
@@ -266,6 +439,24 @@ export function InteractivePond({ className = '' }: { className?: string }) {
         offsetX: (rect.width - WORLD.width * scale) / 2,
         offsetY: (rect.height - WORLD.height * scale) / 2,
       };
+
+      const screenResolution = scale * dpr;
+      if (!textures) {
+        textures = bakePondTextures(screenResolution);
+      } else if (Math.abs(textures.screenResolution - screenResolution) > 0.01) {
+        // Debounced so dragging the window edge does not rebake every event.
+        window.clearTimeout(rebakeTimer);
+        rebakeTimer = window.setTimeout(() => {
+          if (disposed) return;
+          const next = bakePondTextures(viewport.scale * viewport.dpr);
+          if (textures) releasePondTextures(textures);
+          textures = next;
+        }, 200);
+      }
+
+      // Resizing clears the canvas. While the loop is paused nothing would
+      // redraw it, so paint one frame now instead of leaving it blank.
+      if (assets && !frameId) render(assets, performance.now());
     }
 
     function isOnIsland(x: number, y: number) {
@@ -487,6 +678,7 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function drawRippleInterference() {
+      if (!textures) return;
       let renderedPairs = 0;
       const verticalScale = 0.66;
 
@@ -540,23 +732,25 @@ export function InteractivePond({ className = '' }: { className?: string }) {
               return { x: tangentX / length, y: tangentY / length };
             });
 
-            context.save();
-            context.globalCompositeOperation = 'multiply';
-            context.strokeStyle = '#83b4c7';
-            context.lineCap = 'round';
-            context.filter = 'blur(0.9px)';
-            context.lineWidth = 1.7;
             for (let tangentIndex = 0; tangentIndex < tangents.length; tangentIndex++) {
               const tangent = tangents[tangentIndex];
-              const bendX = (tangents[1 - tangentIndex].x - tangent.x) * 3.2;
-              const bendY = (tangents[1 - tangentIndex].y - tangent.y) * 3.2;
-              context.beginPath();
-              context.moveTo(x - tangent.x * 17, y - tangent.y * 17);
-              context.quadraticCurveTo(x + bendX, y + bendY, x + tangent.x * 17, y + tangent.y * 17);
+              const other = tangents[1 - tangentIndex];
+              // Signed angle from this tangent to the other one; the baked curve
+              // bows by its sine, mirrored for negative angles.
+              const bend = Math.atan2(
+                tangent.x * other.y - tangent.y * other.x,
+                tangent.x * other.x + tangent.y * other.y,
+              );
+              const level = Math.round((Math.abs(bend) / Math.PI) * (INTERFERENCE_BEND_LEVELS - 1));
+              context.save();
+              context.translate(x, y);
+              context.rotate(Math.atan2(tangent.y, tangent.x));
+              if (bend < 0) context.scale(1, -1);
+              context.globalCompositeOperation = 'multiply';
               context.globalAlpha = intensity * 0.3;
-              context.stroke();
+              drawBaked(context, textures.interference[level]);
+              context.restore();
             }
-            context.restore();
           }
 
           renderedPairs++;
@@ -565,21 +759,18 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function drawHoverPreview(time: number) {
-      if (!hover) return;
+      if (!hover || !textures) return;
       const pulse = 0.5 + Math.sin(time * 0.0042) * 0.5;
-      const radiusX = 15 + pulse * 6;
+      const radiusX = HOVER_MIN_RADIUS_X + pulse * HOVER_PULSE_RADIUS_X;
+      const keyframe = Math.round(pulse * (HOVER_KEYFRAMES - 1));
+      const scale = radiusX / hoverKeyframeRadius(keyframe);
 
       context.save();
       context.translate(hover.x, hover.y);
+      context.scale(scale, scale);
       context.globalCompositeOperation = 'multiply';
-      context.strokeStyle = '#8fb9c9';
-      context.lineCap = 'round';
-      context.filter = 'blur(0.5px)';
       context.globalAlpha = 0.18 + pulse * 0.14;
-      context.lineWidth = 1.3;
-      context.beginPath();
-      context.ellipse(0, 0, radiusX, radiusX * 0.66, 0, 0, Math.PI * 2);
-      context.stroke();
+      drawBaked(context, textures.hover[keyframe]);
       context.restore();
     }
 
@@ -626,46 +817,49 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     }
 
     function drawIslandRipples(time: number) {
+      if (!textures) return;
       const cycle = (time * 0.00018 * motionFactor) % 1;
 
       context.save();
       context.translate(1127, 412);
       context.rotate(0.23);
       context.globalCompositeOperation = 'multiply';
-      context.lineCap = 'round';
-      context.lineJoin = 'round';
 
-      const segmentStarts = [0.08, 1.62, 3.18, 4.74];
-      const segmentLengths = [1.18, 1.06, 1.16, 1.02];
       for (let wave = 0; wave < 2; wave++) {
         const progress = (cycle + wave * 0.5) % 1;
         const fade = rippleFade(progress) * (wave === 0 ? 1 : 0.72);
-        const radiusX = 177.6 + progress * 49.6;
-        const radiusY = 75.2 + progress * 25.6;
+        if (fade < 0.01) continue;
+        const keyframe = Math.round(progress * (ISLAND_RIPPLE_KEYFRAMES - 1));
+        const keyRadius = islandRippleRadii(keyframe / (ISLAND_RIPPLE_KEYFRAMES - 1));
+        const radius = islandRippleRadii(progress);
 
-        for (let segment = 0; segment < segmentStarts.length; segment++) {
-          const start = segmentStarts[segment] + Math.sin(time * 0.0002 + segment) * 0.015;
-          const end = start + segmentLengths[segment];
-          context.beginPath();
-          for (let step = 0; step <= 24; step++) {
-            const angle = start + (step / 24) * (end - start);
-            const irregularity = Math.sin(angle * 3 + segment * 1.7 + wave * 2.1) * 1.68;
-            const x = Math.cos(angle) * (radiusX + irregularity);
-            const y = Math.sin(angle) * (radiusY + irregularity * 0.42);
-            if (step === 0) context.moveTo(x, y);
-            else context.lineTo(x, y);
-          }
-
-          context.setLineDash([]);
-          context.strokeStyle = '#90bbca';
-          context.filter = 'blur(1.2px)';
-          context.globalAlpha = fade * (0.18 - segment * 0.012);
-          context.lineWidth = (2.08 - segment * 0.24) * (0.6 + progress * 1);
-          context.stroke();
-        }
+        context.save();
+        context.scale(radius.x / keyRadius.x, radius.y / keyRadius.y);
+        context.globalAlpha = fade;
+        drawBaked(context, textures.islandRipples[wave][keyframe]);
+        context.restore();
       }
 
       context.restore();
+    }
+
+    function goldSpriteFor(image: HTMLImageElement): CanvasImageSource {
+      if (goldSprite) return goldSprite;
+      const sprite = document.createElement('canvas');
+      sprite.width = image.naturalWidth;
+      sprite.height = image.naturalHeight;
+      const spriteContext = sprite.getContext('2d');
+      if (!spriteContext) return image;
+      spriteContext.filter = `hue-rotate(${GOLD_HUE}deg) saturate(1.18)`;
+      spriteContext.drawImage(image, 0, 0);
+      goldSprite = sprite;
+      return sprite;
+    }
+
+    function releaseGoldSprite() {
+      if (!goldSprite) return;
+      releaseCanvas(goldSprite);
+      goldSprite = null;
     }
 
     function drawFish(item: Fish, image: HTMLImageElement, time: number) {
@@ -674,17 +868,18 @@ export function InteractivePond({ className = '' }: { className?: string }) {
       context.rotate(item.heading);
       context.scale(item.scale, item.scale);
       context.globalAlpha = 0.96;
-      context.filter = item.isGold ? `hue-rotate(${GOLD_HUE}deg) saturate(1.18)` : 'none';
       context.imageSmoothingEnabled = true;
       const frame = (Math.floor((time / 1000) * 24) + item.phase) % 104;
       const sourceX = (frame % 13) * 320;
       const sourceY = Math.floor(frame / 13) * 180;
-      context.drawImage(image, sourceX, sourceY, 320, 180, -64, -36, 128, 72);
+      const source = item.isGold ? goldSpriteFor(image) : image;
+      context.drawImage(source, sourceX, sourceY, 320, 180, -64, -36, 128, 72);
       context.restore();
     }
 
     function render(assets: LoadedAssets, time: number) {
-      const dt = Math.min(0.04, (time - lastTime) / 1000);
+      // rAF timestamps can trail performance.now() slightly right after a resume.
+      const dt = Math.max(0, Math.min(0.04, (time - lastTime) / 1000));
       lastTime = time;
 
       context.setTransform(viewport.dpr, 0, 0, viewport.dpr, 0, 0);
@@ -707,7 +902,10 @@ export function InteractivePond({ className = '' }: { className?: string }) {
             item.y < -EXIT_MARGIN ||
             item.y > WORLD.height + EXIT_MARGIN)
         ) {
-          if (item.isGold) goldFishAlive = false;
+          if (item.isGold) {
+            goldFishAlive = false;
+            releaseGoldSprite();
+          }
           fish.splice(index, 1);
         }
       }
@@ -737,8 +935,35 @@ export function InteractivePond({ className = '' }: { className?: string }) {
       drawImageAroundPivot(context, assets.plantsA, 959, 125, 1074, 368, wind * motionFactor, 0.8);
       drawImageAroundPivot(context, assets.plantsB, 1159, 297, 1232, 460, -wind * 0.75 * motionFactor, 0.8);
       for (const bubble of bubbles) drawBubble(bubble);
+    }
 
-      frameId = requestAnimationFrame((nextTime) => render(assets, nextTime));
+    function tick(time: number) {
+      frameId = requestAnimationFrame(tick);
+      // The 1ms slack keeps a 60Hz display on every frame despite timestamp jitter.
+      if (time - lastFrameAt < FRAME_INTERVAL - 1) return;
+      lastFrameAt = time;
+      if (assets) render(assets, time);
+    }
+
+    // The loop only runs while the hero is on screen and the tab is visible.
+    // Resuming resets the clock so the fish pick up where they were instead of
+    // jumping ahead by the time spent away.
+    function start() {
+      if (frameId || disposed || !assets || !inView || document.hidden) return;
+      lastTime = performance.now();
+      lastFrameAt = 0;
+      frameId = requestAnimationFrame(tick);
+    }
+
+    function stop() {
+      if (!frameId) return;
+      cancelAnimationFrame(frameId);
+      frameId = 0;
+    }
+
+    function onVisibilityChange() {
+      if (document.hidden) stop();
+      else start();
     }
 
     resize();
@@ -747,6 +972,14 @@ export function InteractivePond({ className = '' }: { className?: string }) {
     canvas.addEventListener('pointermove', onPointerMove);
     canvas.addEventListener('pointerleave', onPointerLeave);
     canvas.addEventListener('keydown', onKeyDown);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    const visibility = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      if (inView) start();
+      else stop();
+    });
+    visibility.observe(canvas);
 
     Promise.all([
       loadImage('/pond/island.png'),
@@ -754,17 +987,24 @@ export function InteractivePond({ className = '' }: { className?: string }) {
       loadImage('/pond/plants-b.png'),
       loadImage('/pond/fish-swim-sprite-clean.png'),
     ]).then(([island, plantsA, plantsB, fishImage]) => {
-      if (!disposed) render({ island, plantsA, plantsB, fish: fishImage }, performance.now());
+      if (disposed) return;
+      assets = { island, plantsA, plantsB, fish: fishImage };
+      start();
     });
 
     return () => {
       disposed = true;
-      cancelAnimationFrame(frameId);
+      stop();
+      visibility.disconnect();
+      window.clearTimeout(rebakeTimer);
       window.removeEventListener('resize', resize);
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerleave', onPointerLeave);
       canvas.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (textures) releasePondTextures(textures);
+      releaseGoldSprite();
     };
   }, []);
 

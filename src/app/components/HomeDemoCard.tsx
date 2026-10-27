@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Maximize2, Minimize2 } from 'lucide-react';
 import { useFullscreen } from '@/lib/useFullscreen';
 import { DEMO_CLOSE_MESSAGE } from '@/lib/demoMessages';
@@ -14,36 +14,22 @@ type Props = {
   title: string;
   blurb: string;
   src: string;
+  /** Still of the demo at PREVIEW_VIEWPORT_WIDTH × PREVIEW_VIEWPORT_HEIGHT,
+   *  made with `node scripts/capture-demo-posters.mjs`. */
+  poster: string;
 };
 
 /**
- * The preview renders the demo at a real desktop viewport and scales that down
- * to the card. Sizing the iframe as a percentage of the card instead would tie
- * the viewport to the card's width, so the app would lay itself out for a narrow
- * screen and the preview would read as zoomed-in and cropped.
- *
- * 1024 rather than a wider desktop width: it clears the md breakpoint both demos
- * use for their full layout, without shrinking the miniature so far that nothing
- * in it is legible.
+ * The card shows a still of the demo at a real desktop viewport, scaled down to
+ * the card. 1024 clears the md breakpoint both demos use for their full layout
+ * without shrinking the miniature so far that nothing in it is legible.
  */
 const PREVIEW_VIEWPORT_WIDTH = 1024;
 const PREVIEW_VIEWPORT_HEIGHT = 720;
 
-export default function HomeDemoCard({ title, blurb, src }: Props) {
+export default function HomeDemoCard({ title, blurb, src, poster }: Props) {
   const frameRef = useRef<HTMLDivElement | null>(null);
-  const [previewScale, setPreviewScale] = useState(0);
   const { isFullscreen, supported, toggle } = useFullscreen(frameRef);
-
-  useEffect(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(() => {
-      const width = el.clientWidth;
-      if (width > 0) setPreviewScale(width / PREVIEW_VIEWPORT_WIDTH);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
 
   // The demo's mock browser chrome has a working close button, but it lives in
   // an iframe and cannot exit a fullscreen this page owns — it asks us instead.
@@ -77,22 +63,25 @@ export default function HomeDemoCard({ title, blurb, src }: Props) {
         className="mei-demo-frame relative overflow-hidden rounded-[8px] border border-[#0a0a0a]/12 bg-[#f5f7fb]"
         style={isFullscreen ? undefined : { aspectRatio: `${PREVIEW_VIEWPORT_WIDTH} / ${PREVIEW_VIEWPORT_HEIGHT}` }}
       >
-        <iframe
-          title={`${title} demo`}
-          src={src}
-          loading="lazy"
-          className="mei-demo-frame__stage block border-0"
-          style={
-            isFullscreen || previewScale === 0
-              ? { height: '100%', width: '100%' }
-              : {
-                  height: `${PREVIEW_VIEWPORT_HEIGHT}px`,
-                  width: `${PREVIEW_VIEWPORT_WIDTH}px`,
-                  transform: `scale(${previewScale})`,
-                  transformOrigin: 'top left',
-                }
-          }
-        />
+        {/* Each demo is a whole app that keeps running once loaded, so the card
+            only shows a still. The iframe mounts when the reader opens it
+            fullscreen — laying out at full size from the start — and unmounts
+            again on exit. */}
+        {isFullscreen ? (
+          <iframe title={`${title} demo`} src={src} className="mei-demo-frame__stage block h-full w-full border-0" />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element -- a fixed-size still; next/image would only add a resize pipeline
+          <img
+            src={poster}
+            alt={`${title} demo preview`}
+            width={PREVIEW_VIEWPORT_WIDTH}
+            height={PREVIEW_VIEWPORT_HEIGHT}
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            className="block h-full w-full object-cover"
+          />
+        )}
 
         {/* 预览态整卡可点；桌面用鼠标胶囊提示，不在卡片上画按钮 */}
         {!isFullscreen ? (
