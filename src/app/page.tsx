@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { AudioWaveform, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
 import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
-import { productProjects, researchProjects } from '@/lib/work-projects';
+import { productProjects } from '@/lib/work-projects';
 
 // 滚动进入视口时的淡入 + 上浮动画（沿用全站已有的交互模式）
 function useScrollAnimation(initialDelay: number = 0) {
@@ -266,18 +266,10 @@ function HeroTypedHeading() {
   );
 }
 
-const homeResearchItems = researchProjects
-  .filter((project) => project.href === '/projects/walnut-coding')
-  .map((project) => ({
-    ...project,
-    title: 'Walnut Coding: From Trial to Trust',
-  }));
-
 const homeWorkItems = [
-  ...['Procurement Agent', 'DEF Beauty ERP', 'JobNova', 'ConnectNova', 'Mono', 'Beikemama'].flatMap((title) =>
+  ...['Procurement Agent', 'DEF Beauty ERP', 'JobNova', 'ConnectNova', 'Mono'].flatMap((title) =>
     productProjects.filter((project) => project.title === title)
   ),
-  ...homeResearchItems,
 ];
 
 const homeExperimentItems = ['Mono', 'MemQ', 'SenseFlow'].flatMap((title) =>

@@ -38,3 +38,7 @@ Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routin
 采购 Agent 的 The experience 首小节前提供完整 Demo 预览，点击进入全屏，退出回到原处。Demo 保留 Introduction、采购单列表、计划、审批、收货与复盘的步骤引导。Procurement Agent 在全部作品列表置顶，封面采用机会发现小节的采购列表截图。
 
 采购体验说明移除阶段快捷导航、Compact view、重复的 12×6 交叉矩阵与末尾 Demo 按钮，保留各切面界面与说明。开场 Demo 入口复用本页全屏预览；左上关闭、左下收起图标与 Esc 支持退出并回到原处。
+
+## 首页案例可见性
+
+首页不展示 Beikemama 和核桃编程用户研究案例（Walnut Coding: From Trial to Trust）。仅从首页精选列表移除；`/works` 的作品分组和案例路由保留。
