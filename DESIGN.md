@@ -43,3 +43,7 @@ Mono 使用 Case Kit 外壳、Hero、Chapter、Prose、EvidenceCards、Figure、
 采购案例使用 2 倍像素无损截图，保持 ERP 导航收起，图片跳过二次有损压缩。CaseFigure 外框承担单层统一描边，内部媒体按钮不重复绘制边框。共享 CaseDemoPreview 用 --case-demo-viewport-* token 展示完整桌面界面，左下角共享主按钮进入全屏。
 
 Demo 全屏入口和退出入口统一使用左下角共享 icon 按钮，data-tone="dark" 消费主按钮背景及白色图标 token，不展示文字主按钮。
+
+## MemQ 封面强调色
+
+MemQ 的 `coverAccent` 使用项目设计系统主色 `#1A8A72`。封面 hover 与键盘焦点的浅色背景、光晕及装饰继续由共享 WorkProjectRows 的 `--cover-accent` 派生，不新增项目专属样式；首页与全部作品页一致。

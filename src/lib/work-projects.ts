@@ -106,7 +106,7 @@ export const productProjects: WorkProject[] = [
     coverScreen: '/img/MemQ/Home.PNG',
     coverScreens: ['/img/MemQ/Home.PNG', '/img/MemQ/Explore1.PNG', '/img/MemQ/AI1.PNG'],
     coverDevice: 'phone-stack',
-    coverAccent: '#ff7557',
+    coverAccent: '#1A8A72',
     coverMotif: 'learning',
     // No case study: the card goes straight to the App Store listing.
     href: 'https://apps.apple.com/us/app/memq-smart-quiz-memory/id6757248312',

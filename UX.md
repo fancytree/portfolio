@@ -50,3 +50,7 @@ Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routin
 ## Mono 首页分组
 
 Mono 仅在首页 Experiments 中展示，不再重复进入上方 Work 列表。`/works` 的完整作品入口保留。
+
+## MemQ 封面反馈
+
+MemQ 卡片 hover 和键盘焦点使用品牌青绿色反馈，默认封面布局与 App Store 跳转保持现有行为。
