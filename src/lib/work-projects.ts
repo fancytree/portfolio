@@ -62,7 +62,7 @@ export const productProjects: WorkProject[] = [
     imageScale: 1.68,
     imageTranslateY: '0%',
     imageBackground: '#161616',
-    coverScreen: '/img/procurement-agent/procurement-agent-workspace-cover.png',
+    coverScreen: '/img/procurement-agent/evidence/workspace-collapsed-7db194e4f04e.webp',
     coverDevice: 'laptop',
     coverAccent: '#6c5ce7',
     coverScreenFit: 'contain',
@@ -261,7 +261,10 @@ export function sortProjectsByTimeDesc(projects: WorkProject[]) {
 export const allWorkGroups = [
   {
     label: 'Product',
-    items: sortProjectsByTimeDesc(productProjects.filter((project) => project.title !== 'This Portfolio')),
+    items: [
+      ...productProjects.filter((project) => project.title === 'Procurement Agent'),
+      ...sortProjectsByTimeDesc(productProjects.filter((project) => !['This Portfolio', 'Procurement Agent'].includes(project.title))),
+    ],
   },
   {
     label: 'Research',

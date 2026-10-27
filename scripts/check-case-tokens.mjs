@@ -17,11 +17,11 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const file = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(file);
-    else if (entry.name === 'page.tsx' || entry.name === 'ConnectnovaNarrative.tsx' || entry.name === 'FragmentedOperationsDiagram.tsx' || entry.name === 'UnifiedOperationsDiagram.tsx' || entry.name === 'MonoWorkflowDiagrams.tsx') files.push(file);
+    else if (entry.name === 'page.tsx' || entry.name === 'ConnectnovaNarrative.tsx' || entry.name === 'FragmentedOperationsDiagram.tsx' || entry.name === 'UnifiedOperationsDiagram.tsx' || entry.name === 'MonoWorkflowDiagrams.tsx' || entry.name === 'ProcurementExperienceMap.tsx') files.push(file);
   }
 }
 walk('src/app/projects');
-files.push('src/app/components/CaseStudyHero.tsx', 'src/app/components/CaseStudyControls.tsx', 'src/app/components/CaseStudyBackButton.tsx', 'src/app/components/case-kit/CaseKit.tsx', 'src/app/components/case-kit/CaseWorkflow.tsx', 'src/app/components/case-kit/CaseButton.tsx', 'src/app/components/case-kit/CaseViewportVideo.tsx', 'src/app/components/case-kit/CaseInteractivePreview.tsx', 'src/lib/design-tokens/typography.ts', 'src/lib/design-tokens/radius.ts');
+files.push('src/app/components/CaseStudyHero.tsx', 'src/app/components/CaseStudyControls.tsx', 'src/app/components/CaseStudyBackButton.tsx', 'src/app/components/case-kit/CaseKit.tsx', 'src/app/components/case-kit/CaseWorkflow.tsx', 'src/app/components/case-kit/CaseButton.tsx', 'src/app/components/case-kit/CaseViewportVideo.tsx', 'src/app/components/case-kit/CaseInteractivePreview.tsx', 'src/app/components/case-kit/CaseDemoPreview.tsx', 'src/lib/design-tokens/typography.ts', 'src/lib/design-tokens/radius.ts');
 const properties = /^(fontSize|fontWeight|fontFamily|lineHeight|letterSpacing|borderRadius|color|backgroundColor|border(?:Top|Bottom|Left|Right)?(?:Color|Width)?|boxShadow|padding\w*|margin\w*|gap|rowGap|columnGap)$/;
 const structural = /^(?:0|auto|none|transparent|inherit|currentColor|collapse|[-\d.]+%)(?:\s+(?:0|auto))*$/;
 function branches(node, callback) {

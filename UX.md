@@ -34,3 +34,5 @@ Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routin
 ## 采购案例发布入口
 
 首页及 `/works` 的 Procurement Agent 指向 `/projects/procurement-agent-kit`；旧 `/projects/procurement-agent-v2` 保留。新页按 My role、Research、The foundation、Agent strategy、The experience、Validation、Results、Reflection 八章组织。职责、可复算推荐、人机分工、供应商确认差异、审批交接和收货核对由现有截图与视频支持；用户已确认 Agent 上线并由采购员使用，演示中的数量和价格不作为成效指标。开场和方案末尾复用现有采购演示入口，文末由 CaseKitSections 自动添加唯一 CaseEnd。
+
+采购 Agent 的 The experience 首小节前提供完整 Demo 预览，点击进入全屏，退出回到原处。Demo 保留 Introduction、采购单列表、计划、审批、收货与复盘的步骤引导。Procurement Agent 在全部作品列表置顶，封面采用机会发现小节的采购列表截图。

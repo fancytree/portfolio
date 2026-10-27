@@ -1,10 +1,3 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
-import './index.css';
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+import{StrictMode}from'react';import{createRoot}from'react-dom/client';import{MemoryRouter}from'react-router-dom';import{Toaster}from'sonner';import GuidedDemo from'./GuidedDemo';import DesignInteractions from'./product/pages/portfolio/agent-ux-map/DesignInteractions';import'./product/index.css';import'./product/pages/portfolio/agent-ux-map/agent-ux-map.css';import'./standalone.css';
+const facet=new URLSearchParams(window.location.search).get('facet');const ids=['01','02','03','04','05','06','07','08','09','10','11','12','A','B','C','D','E','F'];
+createRoot(document.getElementById('root')!).render(<StrictMode><MemoryRouter initialEntries={['/portfolio/agent-workspace']}>{facet&&ids.includes(facet)?<main className="ux-demo-body standalone-facet"><DesignInteractions id={facet}/></main>:<GuidedDemo/>}<Toaster position="top-right"/></MemoryRouter></StrictMode>);
