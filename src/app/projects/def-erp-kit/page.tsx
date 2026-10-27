@@ -327,7 +327,7 @@ export default function DefErpKitPage() {
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="10 / Reflection" title="What We Learned">
+        <CaseClose label="10 / Reflection" title="What I Learned">
           <CaseProse>
             <ul>
               <li>A shared source of truth depends on connected records and clear handoffs, so information stays useful as work moves between roles.</li>
