@@ -57,7 +57,7 @@ MemQ 卡片 hover 和键盘焦点使用品牌青绿色反馈，默认封面布�
 
 ## 首页求职定位
 
-首页文案与 2026-10-27 确认的简历一致：首屏写明 Product Designer 和 6+ 年 UX／用研经验，标签为 AI-native products、Design systems、Data-informed design；不再出现 7+ 年或抽象口号。精选区标题为 Selected work，顺序保持 Procurement Agent、DEF Beauty ERP、JobNova、ConnectNova。四张卡片的摘要和标签只写已有交付或决策，由 `src/lib/work-projects.ts` 同时供首页和 `/works` 使用。
+首屏按用户偏好恢复原文案：标题“Beyond screens, I shape intelligent systems for meaningful human–AI collaboration”，标签 UX／Product strategy／Systems thinking，手机和桌面同一套，不加经历说明段落。其余首页文案与 2026-10-27 确认的简历一致，不再出现 7+ 年。精选区标题为 Selected work，顺序保持 Procurement Agent、DEF Beauty ERP、JobNova、ConnectNova。四张卡片的摘要和标签只写已有交付或决策，由 `src/lib/work-projects.ts` 同时供首页和 `/works` 使用。
 
 Strategy 用研究、工作流与人机职责、设计系统、原型验证和上线数据说明工作方式。PostHog 只写 funnel、heatmap、session recording 和 JobNova 的单次 onboarding A/B test，不声称持续实验或统计显著。工具图标不包含 Storybook。About 只列 Liba、核桃、搜狐三段正式经历，Liba 写明 Design Lab 和两位实习生各六个月的指导；MemQ、Mono 作为自发项目只出现在 Experiments，不以 River Studio 任职的形式出现。
 

@@ -160,7 +160,7 @@ const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
 const heroGreeting = "Hey, I'm Mei Chai (River).";
-const heroIntroText = 'I design AI-native products that put people in control.';
+const heroIntroText = 'Beyond screens, I shape intelligent systems for meaningful human–AI collaboration';
 const heroIntroTokens = heroIntroText.match(/\S+\s*/g) ?? [heroIntroText];
 
 function HeroTypedHeading() {
@@ -247,26 +247,18 @@ function HeroTypedHeading() {
         <span aria-hidden="true">{typedTokens}</span>
       </h1>
 
-      <p
-        className="mt-5 max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a]/75 md:text-[20px]"
-        style={fontBody}
-      >
-        Product designer with 6+ years in UX and user research. I turn complex workflows into usable products,
-        build the systems behind them, and iterate with real usage data.
-      </p>
-
       <div
         className={`mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] tracking-[0.08em] text-[#0a0a0a]/55 transition-all duration-500 sm:mt-6 sm:text-[11px] ${
           isComplete ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
         }`}
         style={fontMono}
-        aria-label="AI-native products, design systems, and data-informed design"
+        aria-label="UX, product strategy, and systems thinking"
       >
-        <span>AI-NATIVE PRODUCTS</span>
+        <span>UX</span>
         <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
-        <span>DESIGN SYSTEMS</span>
+        <span>PRODUCT STRATEGY</span>
         <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
-        <span>DATA-INFORMED DESIGN</span>
+        <span>SYSTEMS THINKING</span>
       </div>
     </div>
   );
