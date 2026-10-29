@@ -62,7 +62,7 @@ export const productProjects: WorkProject[] = [
     imageScale: 1.68,
     imageTranslateY: '0%',
     imageBackground: '#161616',
-    coverScreen: '/img/procurement-agent/evidence/workspace-collapsed-7db194e4f04e.webp',
+    coverScreen: '/img/procurement-agent/evidence/workspace-collapsed-ba5ea4fe4bae.webp',
     coverDevice: 'laptop',
     coverAccent: '#6c5ce7',
     coverScreenFit: 'contain',
