@@ -201,16 +201,16 @@ export default function DefErpKitPage() {
           </CaseProse>
           <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-2">
             <CaseFigure caption="Admin — business performance and outstanding work.">
-              <Image src="/img/def-erp/dashboard-admin-v7.png" alt="Admin dashboard with business metrics, sales trends, customer mix, and outstanding tasks." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
+              <Image src="/img/def-erp/evidence/dashboard-admin-expanded-cda6a15dd4c6.webp" alt="Admin dashboard with business metrics, sales trends, customer mix, and outstanding tasks." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseFigure caption="Sales — orders, receivables, and customer follow-ups.">
-              <Image src="/img/def-erp/dashboard-sales-v7.png" alt="Sales dashboard showing orders to ship, overdue customers, customer follow-ups, and sales performance." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
+              <Image src="/img/def-erp/evidence/dashboard-sales-expanded-d1b865afd04a.webp" alt="Sales dashboard showing orders to ship, overdue customers, customer follow-ups, and sales performance." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseFigure caption="Warehouse — stock, dispatch, and incoming goods.">
-              <Image src="/img/def-erp/dashboard-warehouse-v5.png" alt="Warehouse dashboard with stock tasks, orders to ship, incoming receipts, and near-expiry products." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
+              <Image src="/img/def-erp/evidence/dashboard-warehouse-expanded-d66c463bfbde.webp" alt="Warehouse dashboard with stock tasks, orders to ship, incoming receipts, and near-expiry products." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseFigure caption="Finance — payment approvals, invoices, and receivables.">
-              <Image src="/img/def-erp/dashboard-finance-v5.png" alt="Finance dashboard showing payment approvals, invoices to issue, and overdue receivables." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" />
+              <Image src="/img/def-erp/evidence/dashboard-finance-expanded-68bdda22969e.webp" alt="Finance dashboard showing payment approvals, invoices to issue, and overdue receivables." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
           </div>
           <CaseProse>
@@ -246,7 +246,7 @@ export default function DefErpKitPage() {
             width={1828} height={1080}
           />
           <CaseFigure caption="Receiving — delivery records, actual quantities, and differences.">
-            <Image src="/img/def-erp/receiving-workspace-current.webp" alt="Receiving workspace linking purchase quantities, delivery notes, actual counts, and partial arrival progress." width={3024} height={1897} sizes="(min-width: 1280px) 1120px, 100vw" />
+            <Image src="/img/def-erp/evidence/receiving-collapsed-4c751c3d1fd0.webp" alt="Receiving workspace linking purchase quantities, delivery notes, actual counts, and partial arrival progress." width={3200} height={2000} sizes="(min-width: 1280px) 1120px, 100vw" unoptimized />
           </CaseFigure>
 
           <CaseProse>
@@ -274,7 +274,7 @@ export default function DefErpKitPage() {
           />
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] items-center gap-[var(--case-space-24)]">
             <CaseFigure caption="Account pairing in the ERP.">
-              <Image src="/img/def-erp/wechat-account-pairing.webp" alt="ERP customer account pairing screen with a WeChat code, expiry date, and linked account status." width={1554} height={1370} sizes="(min-width: 768px) 50vw, 100vw" />
+              <Image src="/img/def-erp/evidence/account-pairing-collapsed-eb0e79b5cca9.webp" alt="ERP customer account pairing screen with a WeChat code, expiry date, and linked account status." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseProse>
               <h3>Link each customer to their ERP account</h3>

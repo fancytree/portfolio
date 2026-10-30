@@ -12,7 +12,7 @@ export type WorkProject = {
   coverScreen?: string;
   coverScreenHover?: string;
   coverScreens?: string[];
-  coverDevice?: 'laptop' | 'phone' | 'phone-stack' | 'tablet' | 'freeform';
+  coverDevice?: 'laptop' | 'phone' | 'phone-stack' | 'tablet' | 'freeform' | 'interface';
   coverAccent?: string;
   coverMotif?:
     | 'beauty'
@@ -45,8 +45,8 @@ export const productProjects: WorkProject[] = [
     imageScale: 1,
     imageTranslateY: '0%',
     imageBackground: '#f1f3f5',
-    coverScreen: '/img/def-erp/dashboard-admin-v7.png',
-    coverDevice: 'laptop',
+    coverScreen: '/img/def-erp/evidence/dashboard-admin-expanded-cda6a15dd4c6.webp',
+    coverDevice: 'interface',
     coverAccent: '#2274ff',
     coverMotif: 'beauty',
     href: '/projects/def-erp-kit',
@@ -62,8 +62,8 @@ export const productProjects: WorkProject[] = [
     imageScale: 1.68,
     imageTranslateY: '0%',
     imageBackground: '#161616',
-    coverScreen: '/img/procurement-agent/evidence/workspace-collapsed-ba5ea4fe4bae.webp',
-    coverDevice: 'laptop',
+    coverScreen: '/img/procurement-agent/evidence/purchase-order-cover-ca407eb3a9b8.webp',
+    coverDevice: 'interface',
     coverAccent: '#6c5ce7',
     coverScreenFit: 'contain',
     coverMotif: 'procurement',

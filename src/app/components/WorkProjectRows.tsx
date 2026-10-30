@@ -92,7 +92,7 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
             data-cursor="pill"
             data-cursor-label="View project"
           >
-            <div className={styles.cover} style={coverStyle}>
+            <div className={styles.cover} data-presentation={device} style={coverStyle}>
               <span className={styles.wash} aria-hidden="true" />
               <span className={styles.orbit} aria-hidden="true" />
               <span className={styles.orb} aria-hidden="true" />
@@ -121,10 +121,10 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
                         src={project.coverScreen ?? project.image}
                         alt={`${project.title} product interface`}
                         fill
-                        unoptimized={Boolean(project.coverScreenHover)}
+                        unoptimized={device === 'interface' || Boolean(project.coverScreenHover)}
                         sizes="(min-width: 640px) 46vw, 92vw"
                         style={{
-                          objectFit: project.coverScreenFit ?? 'cover',
+                          objectFit: project.coverScreenFit ?? (device === 'interface' ? 'contain' : 'cover'),
                           objectPosition: project.coverScreenPosition ?? 'center',
                         }}
                         className={project.coverScreenHover ? styles.coverImageDefault : undefined}
@@ -139,12 +139,12 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
                           sizes="(min-width: 640px) 46vw, 92vw"
                           className={styles.coverImageHover}
                           style={{
-                            objectFit: project.coverScreenFit ?? 'cover',
+                            objectFit: project.coverScreenFit ?? (device === 'interface' ? 'contain' : 'cover'),
                             objectPosition: project.coverScreenPosition ?? 'center',
                           }}
                         />
                       )}
-                      {device !== 'freeform' && <span className={styles.glare} aria-hidden="true" />}
+                      {device !== 'freeform' && device !== 'interface' && <span className={styles.glare} aria-hidden="true" />}
                     </div>
                     {device === 'laptop' && <span className={styles.laptopBase} aria-hidden="true" />}
                     {device === 'phone' && <span className={styles.phoneNotch} aria-hidden="true" />}
@@ -154,7 +154,7 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
               </div>
 
               <CoverDecorations motif={project.coverMotif} />
-              <span className={`${styles.arrow} flex size-9 items-center justify-center rounded-full bg-white/90 text-[#0a0a0a] shadow-sm backdrop-blur`}>
+              <span className={`${styles.arrow} flex size-9 items-center justify-center rounded-full bg-black text-white shadow-sm`}>
                 <ArrowUpRight size={18} strokeWidth={1.75} />
               </span>
             </div>

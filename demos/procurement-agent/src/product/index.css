@@ -450,17 +450,12 @@
   .customer-category-badge {
     border-color: transparent;
     background-color: color-mix(in srgb, var(--customer-category-color) 14%, var(--surface-raised));
-    color: var(
-      --customer-category-text-color,
-      color-mix(in srgb, var(--customer-category-color) 72%, var(--foreground))
-    );
+    color: var(--foreground);
+    border-radius: var(--shape-sm);
   }
   .dark .customer-category-badge {
     background-color: color-mix(in srgb, var(--customer-category-color) 22%, var(--surface-raised));
-    color: var(
-      --customer-category-text-color,
-      color-mix(in srgb, var(--customer-category-color) 78%, var(--foreground))
-    );
+    color: var(--foreground);
   }
   .customer-category-source-wechat { --customer-category-color: var(--source-wechat); }
   .customer-category-source-walk-in { --customer-category-color: var(--source-walk-in); }
@@ -1696,14 +1691,14 @@ html[data-visual-agent-canvas] .app-main-outlet {
     --customer-type-hair: var(--data-orange);
     --customer-type-wholesale: var(--data-blue);
     --customer-type-other: var(--data-neutral);
-    --payment-cash: var(--data-green);
+    --payment-cash: color-mix(in oklch, var(--data-purple) 65%, var(--primary));
     --payment-bank-transfer: var(--data-blue);
-    --payment-check: var(--data-purple);
-    --payment-card: var(--data-cyan);
-    --payment-post-office: var(--data-orange);
-    --payment-alipay: var(--data-blue);
-    --payment-wechat-pay: var(--data-green);
-    --payment-balance: var(--data-neutral);
+    --payment-check: color-mix(in oklch, var(--data-purple) 70%, var(--destructive));
+    --payment-card: color-mix(in oklch, var(--primary) 65%, var(--surface-raised));
+    --payment-post-office: color-mix(in oklch, var(--data-purple) 40%, var(--destructive));
+    --payment-alipay: color-mix(in oklch, var(--primary) 60%, var(--data-cyan));
+    --payment-wechat-pay: var(--data-purple);
+    --payment-balance: color-mix(in oklch, var(--data-purple) 65%, var(--surface-raised));
     /* 唯一圆角源：5 档足以覆盖直角、控件、容器和胶囊形态。 */
     --shape-none: 0px;
     --shape-sm: 0.25rem;
@@ -1763,14 +1758,14 @@ html[data-visual-agent-canvas] .app-main-outlet {
     --customer-type-hair: var(--data-orange);
     --customer-type-wholesale: var(--data-blue);
     --customer-type-other: var(--data-neutral);
-    --payment-cash: var(--data-green);
+    --payment-cash: color-mix(in oklch, var(--data-purple) 65%, var(--primary));
     --payment-bank-transfer: var(--data-blue);
-    --payment-check: var(--data-purple);
-    --payment-card: var(--data-cyan);
-    --payment-post-office: var(--data-orange);
-    --payment-alipay: var(--data-blue);
-    --payment-wechat-pay: var(--data-green);
-    --payment-balance: var(--data-neutral);
+    --payment-check: color-mix(in oklch, var(--data-purple) 70%, var(--destructive));
+    --payment-card: color-mix(in oklch, var(--primary) 65%, var(--surface-raised));
+    --payment-post-office: color-mix(in oklch, var(--data-purple) 40%, var(--destructive));
+    --payment-alipay: color-mix(in oklch, var(--primary) 60%, var(--data-cyan));
+    --payment-wechat-pay: var(--data-purple);
+    --payment-balance: color-mix(in oklch, var(--data-purple) 65%, var(--surface-raised));
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
     --sidebar-border: var(--border);
@@ -1877,4 +1872,15 @@ html[data-visual-agent-canvas] .app-main-outlet {
 .sales-chart-area {
   /* 等曲线画完（sales-line-draw 620ms）再淡入；both 让延迟期间保持透明 */
   animation: sales-area-fade 420ms ease-out 620ms both;
+}
+
+/* Shared tag surface: pale semantic background, neutral text, rectangular corners. */
+@layer utilities {
+  span.def-tag,
+  [data-slot="badge"][data-variant],
+  span.customer-category-badge {
+    color: var(--foreground);
+    border-color: transparent;
+    border-radius: var(--shape-sm);
+  }
 }

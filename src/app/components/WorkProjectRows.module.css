@@ -542,3 +542,42 @@
     transition-duration: 1ms !important;
   }
 }
+
+/* Direct product screenshots keep dense ERP interfaces readable. */
+.cover[data-presentation='interface'] {
+  background: #f1f3f5;
+}
+
+.cover[data-presentation='interface']::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  border: 1px solid #d8dde3;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.interface {
+  /* Equal top/right spacing; the enlarged interface extends off the lower-left edges. */
+  top: 11.2%;
+  left: auto;
+  right: 7%;
+  bottom: auto;
+  width: 104%;
+  aspect-ratio: 3024 / 1964;
+  filter: none;
+  transform: none;
+}
+
+.interface .screen {
+  border: 1px solid #dfe3e8;
+  border-radius: 6px;
+  background: white;
+}
+
+.card:hover .interface,
+.card:focus-visible .interface {
+  filter: drop-shadow(0 26px 24px rgb(38 45 56 / 0.22));
+  transform: translateY(-4%) scale(1.035) rotate(-0.45deg);
+}
