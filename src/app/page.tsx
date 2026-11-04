@@ -469,7 +469,7 @@ export default function Home() {
 
           <div className="pt-8 md:pt-10">
             <Reveal>
-              <WorkProjectRows items={homeWorkItems} />
+              <WorkProjectRows items={homeWorkItems} animatedCovers />
               <div className="pt-6">
                 <Link
                   href="/works"

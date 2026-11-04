@@ -581,3 +581,25 @@
   filter: drop-shadow(0 26px 24px rgb(38 45 56 / 0.22));
   transform: translateY(-4%) scale(1.035) rotate(-0.45deg);
 }
+
+.cover[data-presentation='animation'] {
+  background: #f4f4f3;
+}
+
+.animatedCover {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cover[data-presentation='animation'] .arrow {
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+}
+
+.cover[data-presentation='animation'] .arrow svg {
+  width: 14px;
+  height: 14px;
+}

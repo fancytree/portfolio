@@ -31,6 +31,8 @@ import {
 import type { CSSProperties } from 'react';
 import type { WorkProject } from '@/lib/work-projects';
 import styles from './WorkProjectRows.module.css';
+import ProcurementCover from './procurement-cover/ProcurementCover';
+import DefErpCover from './def-erp-cover/DefErpCover';
 
 const fontDisplay: React.CSSProperties = {
   fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
@@ -72,11 +74,13 @@ function CoverDecorations({ motif }: { motif?: WorkProject['coverMotif'] }) {
   );
 }
 
-export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
+export default function WorkProjectRows({ items, animatedCovers = false }: { items: WorkProject[]; animatedCovers?: boolean }) {
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2">
       {items.map((project) => {
         const device = project.coverDevice ?? 'laptop';
+        const procurementCover = animatedCovers && project.href === '/projects/procurement-agent-kit';
+        const defErpCover = animatedCovers && project.href === '/projects/def-erp-kit';
         const coverStyle = {
           '--cover-accent': project.coverAccent ?? '#64748b',
         } as CSSProperties;
@@ -92,7 +96,12 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
             data-cursor="pill"
             data-cursor-label="View project"
           >
-            <div className={styles.cover} data-presentation={device} style={coverStyle}>
+            <div className={styles.cover} data-presentation={procurementCover || defErpCover ? 'animation' : device} style={coverStyle}>
+              {defErpCover ? (
+                <div className={styles.animatedCover} inert aria-hidden="true"><DefErpCover /></div>
+              ) : procurementCover ? (
+                <div className={styles.animatedCover} inert aria-hidden="true"><ProcurementCover /></div>
+              ) : (<>
               <span className={styles.wash} aria-hidden="true" />
               <span className={styles.orbit} aria-hidden="true" />
               <span className={styles.orb} aria-hidden="true" />
@@ -154,6 +163,7 @@ export default function WorkProjectRows({ items }: { items: WorkProject[] }) {
               </div>
 
               <CoverDecorations motif={project.coverMotif} />
+              </>)}
               <span className={`${styles.arrow} flex size-9 items-center justify-center rounded-full bg-black text-white shadow-sm`}>
                 <ArrowUpRight size={18} strokeWidth={1.75} />
               </span>
