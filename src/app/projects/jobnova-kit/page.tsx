@@ -76,6 +76,7 @@ export default function JobnovaKitPage() {
 
         <CaseChapter label="03 / Workflow strategy" title="One application journey. Four different AI responsibilities.">
           <CaseProse><p>I connected matching, customization, application, and tracking. At each handoff, I defined the information AI supplies and the decision that remains with the person.</p></CaseProse>
+          <CaseVideo src="/videos/jobnova/product-overview.mp4" poster="/videos/jobnova/product-overview.webp" width={1828} height={1080} label="Recorded JobNova website and connected job-search workflow walkthrough" caption="Recorded product walkthrough · Move from JobNova’s landing page into matched jobs, filter opportunities, and review a role. Interface counts are demonstration content." />
           <CaseEvidenceCards label="The human and AI responsibilities across the workflow" layout="pairs" items={[
             { icon: <ScanSearch />, title: '01 · Explain', body: 'AI surfaces fit and gaps. The person decides which opportunity is worth pursuing.' },
             { icon: <FilePenLine />, title: '02 · Collaborate', body: 'AI proposes resume changes. The person can inspect and edit the content.' },
@@ -100,6 +101,7 @@ export default function JobnovaKitPage() {
 
         <CaseChapter label="06 / Govern the action" title="Automation needs permissions that people can understand.">
           <CaseProse><p>I organized Auto Apply into matching criteria, autonomy, materials, and notifications. A person can decide which roles qualify, whether approval is needed, and which documents the system may send.</p></CaseProse>
+          <CaseVideo src="/videos/jobnova/auto-apply.mp4" poster="/videos/jobnova/auto-apply.webp" width={1828} height={1080} label="Recorded JobNova Auto Apply settings and application workflow walkthrough" caption="Recorded product walkthrough · Set matching criteria, choose an autonomy level, configure application materials, and review submitted applications. Interface counts are demonstration content." />
           <Screenshot src="/img/jobnova/evidence/auto-apply-rules.webp" width={2400} height={1462} alt="Auto Apply settings with match strategies, three approval modes, material controls, and notification settings" caption="The permission model · Immediate submission, a review window, and explicit approval are different commitments. Match thresholds shown here are configuration values, not performance results." />
           <CaseEvidenceCards label="The design boundaries in Auto Apply" items={[
             { icon: <ScanSearch />, title: 'Which opportunities?', body: 'Matching strategy and job preferences bound the roles automation can pursue.' },
