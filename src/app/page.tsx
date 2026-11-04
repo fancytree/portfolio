@@ -160,7 +160,7 @@ const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
 const heroGreeting = "Hey, I'm Mei Chai (River).";
-const heroIntroText = 'Beyond screens, I shape intelligent systems for meaningful human–AI collaboration';
+const heroIntroText = 'Beyond screens, I design products people can understand and trust, from AI tools to business software, and build the systems behind them';
 const heroIntroTokens = heroIntroText.match(/\S+\s*/g) ?? [heroIntroText];
 
 function HeroTypedHeading() {
