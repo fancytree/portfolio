@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import resumeReviewScreenshot from '../../../../public/img/jobnova/evidence/resume-overview-editor.webp';
+import matchedJobsScreenshot from '../../../../public/img/jobnova/evidence/matched-jobs-current.webp';
+import applicationDashboardScreenshot from '../../../../public/img/jobnova/evidence/application-dashboard-current.webp';
 import { ChartNoAxesCombined, ClipboardCheck, Compass, FilePenLine, GitBranch, Layers3, ListChecks, MessageSquareText, ScanSearch, ShieldCheck, SlidersHorizontal, UserRoundCheck, Users, Waypoints } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
@@ -50,7 +52,7 @@ export default function JobnovaKitPage() {
 
         <CaseChapter label="01 / My role" title="I owned the decisions between a recommendation and an action.">
           <CaseProse><p>JobNova helps job seekers evaluate roles, tailor materials, and manage applications in one place. I worked with product and engineering from discovery through interaction design, the UI system, and release review.</p></CaseProse>
-          <Screenshot src="/img/jobnova/evidence/matched-jobs.webp" width={2400} height={1501} alt="JobNova matched jobs workspace with fit scores, role details, and Auto Apply activity" caption="The connected workspace · Job discovery and application activity share one context. Interface numbers are demonstration content, not outcome metrics." />
+          <Screenshot src={matchedJobsScreenshot.src} width={matchedJobsScreenshot.width} height={matchedJobsScreenshot.height} alt="JobNova recommended jobs with match scores, manual and automatic application states, and live Auto Apply activity" caption="The connected workspace · Job discovery and application activity share one context. Interface numbers are demonstration content, not outcome metrics." />
           <CaseEvidenceCards label="My responsibilities and their deliverables" items={[
             { icon: <Compass />, title: 'Product direction', body: 'Use research and the application journey to shape scope with the founder.' },
             { icon: <ShieldCheck />, title: 'AI interaction', body: 'Define explanations, review points, permissions, and recovery states.' },
@@ -113,7 +115,8 @@ export default function JobnovaKitPage() {
 
         <CaseChapter label="07 / Follow the outcome" title="The system must stay legible after the person steps away.">
           <CaseProse><p>I connected application progress, submitted material versions, and replies to the application record. Queueing, submitting, waiting for approval, and failure need different feedback and next actions.</p></CaseProse>
-          <CaseVideo src="/videos/jobnova/application-tracking.mp4" poster="/videos/jobnova/application-tracking.webp" width={1280} height={904} label="Recorded JobNova application dashboard and detail walkthrough" caption="Recorded product walkthrough · Follow application status and open the application detail. Screen counts and messages are demonstration content." />
+          <CaseVideo src="/videos/jobnova/application-tracking.mp4" poster="/videos/jobnova/application-tracking.webp" width={1828} height={1080} label="Recorded JobNova Auto Apply queue and application status walkthrough" caption="Recorded product walkthrough · Review queued and submitted applications alongside Auto Apply activity. Interface counts are demonstration content." />
+          <Screenshot src={applicationDashboardScreenshot.src} width={applicationDashboardScreenshot.width} height={applicationDashboardScreenshot.height} alt="JobNova application dashboard with submitted applications, conversion funnel, status filters, and live Auto Apply queue" caption="Following execution · Application states, submitted records, and live activity stay visible together. Dashboard numbers are demonstration content, not measured project outcomes." />
           <CaseEvidenceCards label="The states I designed for the automation handoff" items={[
             { icon: <Waypoints />, title: 'In progress', body: 'Distinguish queued work from active submission so waiting has a clear meaning.' },
             { icon: <UserRoundCheck />, title: 'Needs a person', body: 'Separate pending approval and manual steps from unattended execution.' },
