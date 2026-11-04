@@ -2027,7 +2027,7 @@ I led the 0–1 design of the Chrome extension and web platform.`}
           },
           { label: 'Team', value: ['Founding Team', '1 Product Designer', '1 Founder', 'Engineering Team'] },
           { label: 'Tool', value: ['Figma', 'PostHog', 'Claude Code'] },
-          { label: 'Company', value: ['Nova AI'] },
+          { label: 'Company', value: ['Liba Space'] },
           { label: 'Year', value: ['2026 — Present'] },
         ]}
         visualLabel="ConnectNova AI sourcing workflow"

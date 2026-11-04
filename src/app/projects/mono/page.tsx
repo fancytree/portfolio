@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Blocks, Bot, Braces, CheckCheck, Compass, Database, FileCheck, Layers3, PanelTop, ShieldCheck } from 'lucide-react';
-import CaseStudyBackButton from '../../components/CaseStudyBackButton';
-import CaseStudyControls from '../../components/CaseStudyControls';
+import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
+import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
 import { CaseChapter, CaseClose, CaseEvidenceCards, CaseFigure, CaseHero, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseVideo } from '../../components/case-kit/CaseKit';
 import { MonoAgentWorkflow, MonoConfirmationWorkflow } from './MonoWorkflowDiagrams';
@@ -24,11 +24,11 @@ export default function MonoProjectPage() {
           title="Mono"
           intro="I explored how to give a finance agent a controlled way to interpret intent, choose a workflow, and return an interface people can inspect."
           meta={[
-            { label: 'Studio', value: 'River Studio' },
             { label: 'Year', value: '2026' },
             { label: 'Role', value: 'Solo product designer & builder' },
-            { label: 'Focus', value: 'Generative UI · personal finance' },
-            { label: 'Status', value: 'Live · independent exploration' },
+            { label: 'Duration', value: '2 weeks' },
+            { label: 'Industry', value: 'Personal finance' },
+            { label: 'Tools', value: 'LangChain · React' },
           ]}
           action={{ label: 'Visit Mono', href: 'https://mono.riverstudio.cc/' }}
           tags={['AI interaction design', 'Generative UI', 'Design systems']}

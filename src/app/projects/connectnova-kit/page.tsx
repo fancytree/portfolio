@@ -31,7 +31,7 @@ export default function ConnectnovaKitPage() {
         title="ConnectNova: turning AI ranking into a reusable sourcing workspace"
         intro="As founding product designer, I introduced Project as the context connecting collection, evaluation, comparison, and outreach across a Chrome extension and web platform."
         meta={[
-          { label: 'Company', value: 'Nova AI' },
+          { label: 'Company', value: 'Liba Space' },
           { label: 'Year', value: '2026 – present' },
           { label: 'Role', value: 'Founding Product Designer' },
           { label: 'Partners', value: 'Founder · engineering team' },

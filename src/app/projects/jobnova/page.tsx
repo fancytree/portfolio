@@ -338,7 +338,7 @@ export default function JobnovaProjectPage() {
           { label: 'Role', value: ['Founding Designer,', 'UX Strategy, Product Design'] },
           { label: 'Team', value: ['1 Designer,', '1 Product Lead,', 'Engineering team'] },
           { label: 'Tool', value: ['Figma,', 'Cursor, Lovable,', 'React prototype'] },
-          { label: 'Company', value: ['Nova AI'] },
+          { label: 'Company', value: ['Liba Space'] },
           { label: 'Year', value: ['2025 – Ongoing'] },
         ]}
       />

@@ -2643,7 +2643,7 @@ export default function JobnovaAIPlatformPage() {
               },
             ],
           },
-          { label: 'Company', value: ['Nova AI'] },
+          { label: 'Company', value: ['Liba Space'] },
           { label: 'Year', value: ['2025 - Ongoing'] },
         ]}
         visualLabel="JobNova product system"

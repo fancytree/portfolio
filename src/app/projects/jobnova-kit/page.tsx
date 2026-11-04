@@ -35,7 +35,7 @@ export default function JobnovaKitPage() {
           title="JobNova: giving people control over AI job applications"
           intro="As founding designer, I shaped a connected job-search experience where AI explains a match, helps revise a resume, and applies within boundaries the job seeker chooses."
           meta={[
-            { label: 'Company', value: 'Nova AI' },
+            { label: 'Company', value: 'Liba Space' },
             { label: 'Year', value: '2025 – ongoing' },
             { label: 'Role', value: 'Founding Designer' },
             { label: 'Partners', value: 'Product · ML · full-stack engineering' },
