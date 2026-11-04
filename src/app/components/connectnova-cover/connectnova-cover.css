@@ -1,0 +1,94 @@
+.cnc-cover {
+  margin: 0;
+  position: absolute;
+  inset: 0;
+  .cnc-scene { width: 100%; height: 100%; }
+
+  /* The stage is the card itself, as in the other covers: margins come from the windows' own inset, not from a smaller frame. */
+  .ss-stage { overflow: hidden; border-radius: 0; background: radial-gradient(ellipse at 0 100%, #c9d8f7a8, transparent 46%), radial-gradient(ellipse at 100% 0, #dfe8fbb0, transparent 40%), #f1f4fa; color: #3b4658; --ss-text-strong: #0d1c2e; --ss-text: #6b7385; }
+  .cnc-composition { display: contents; }
+  .cnc-rest { position: absolute; left: 687px; top: 93px; width: 6px; height: 6px; }
+
+  /* ConnectNova web app */
+  .cnc-app { position: absolute; left: 270px; top: 28px; width: 498px; height: 560px; box-shadow: var(--ss-shadow-hero); background: #fff; --ss-radius-window: 12px; }
+  .cnc-app__body { display: flex; flex-direction: column; gap: 8px; padding: 14px 24px 0 67.5px; background: #f5f9ff; overflow: hidden; }
+  .cnc-app__body > * { flex: none; }
+  .cnc-ext__head img { width: 16px; height: 16px; flex: none; border-radius: 4px; }
+
+  .cnc-head { display: flex; flex-direction: column; gap: 6px; }
+  .cnc-title { font-size: 14px; line-height: 18px; font-weight: 650; letter-spacing: -0.015em; color: #0d1c2e; white-space: nowrap; }
+  .cnc-sub { display: flex; align-items: center; gap: 4px; font-size: 10.5px; line-height: 14px; color: #6b7385; font-variant-numeric: tabular-nums; }
+  .cnc-sub i { font-style: normal; margin-inline: 3px; color: #b7bdca; }
+
+  .cnc-card { background: #fff; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(13, 28, 46, 0.08); }
+  .cnc-req { padding: 16px; }
+  .cnc-req .ss-field { width: 100%; }
+
+  .cnc-list { position: relative; padding: 8px; overflow: hidden; }
+  .cnc-slot { position: absolute; left: 8px; right: 8px; top: 8px; height: 50px; transition: transform 0.85s cubic-bezier(0.32, 0.72, 0.24, 1); will-change: transform; }
+  .cnc-skeleton { position: absolute; inset: 0; display: flex; align-items: center; gap: 10px; padding: 0 10px; opacity: 1; transition: opacity 0.35s ease; }
+  .cnc-skeleton__lines { display: flex; flex-direction: column; gap: 7px; }
+  .cnc-slot[data-real] .cnc-skeleton { opacity: 0; }
+  .cnc-row { height: 50px; box-sizing: border-box; opacity: 0; transform: translateY(4px); transition: opacity 0.45s ease, transform 0.45s ease, background-color 0.3s; --ss-row-title: 12px; }
+  .cnc-slot[data-real] .cnc-row { opacity: 1; transform: none; }
+  .cnc-name { font-size: 12px; font-weight: 600; color: #0d1c2e; }
+  .cnc-role { font-size: 10px; color: #7b8294; }
+  .cnc-trail { position: relative; display: block; flex: none; width: 92px; height: 20px; margin-left: auto; }
+  .cnc-trail__score { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; gap: 8px; opacity: 0; transition: opacity 0.35s ease; }
+  .cnc-trail__score[data-on] { opacity: 1; }
+  .cnc-meter { width: 44px; height: 4px; flex: none; }
+  .cnc-trail b { width: 26px; text-align: right; font-size: 12px; font-weight: 650; color: #3b4658; font-variant-numeric: tabular-nums; }
+  .cnc-trail b[data-best] { color: #0b4fd1; }
+
+  /* LinkedIn: the source window, cropped off the left and bottom */
+  .cnc-li { position: absolute; left: 28px; top: 74px; width: 290px; height: 520px; box-shadow: var(--ss-shadow-window); --ss-radius-window: 12px; }
+  .cnc-li__body { background: #fff; overflow: hidden; }
+  .cnc-li__main { padding: 34px 14px 0; }
+  .cnc-li .ss-window__url { justify-content: center; text-align: center; }
+  .cnc-li__search { display: flex; align-items: center; height: 30px; padding: 0 12px; border-radius: 15px; background: var(--ss-ink-2); }
+  
+  .cnc-li__row { display: flex; align-items: center; gap: 10px; height: 66px; box-sizing: border-box; margin: 0 -14px; padding: 0 14px; border-top: 1px solid var(--ss-line); }
+  .cnc-li__lead { flex: none; display: flex; }
+  .cnc-li__who { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+  .cnc-li__name { font-size: 11.5px; font-weight: 600; color: #262b36; }
+  .cnc-li__role { font-size: 9.5px; color: #7b8294; }
+
+  /* The extension popup: the real extension's structure (logo header, one white
+     card per step, a status pill per profile, a full-width blue action). */
+  .cnc-ext { position: absolute; left: 116px; top: 118px; width: 198px; display: flex; flex-direction: column; gap: 8px; box-sizing: border-box; padding: 10px; border-radius: 12px; background: #f1f6fe; box-shadow: inset 0 0 0 1px rgba(13, 28, 46, 0.1), var(--ss-shadow-float); }
+  .cnc-ext__head { display: flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; letter-spacing: -0.02em; color: #0d1c2e; }
+  .cnc-ext__head > svg { margin-left: auto; color: #9aa1b0; }
+  .cnc-ext__card { box-sizing: border-box; height: 158px; padding: 10px; border-radius: 8px; background: #fff; box-shadow: inset 0 0 0 1px rgba(13, 28, 46, 0.06); }
+  .cnc-ext__states { width: 100%; align-items: start; }
+  .cnc-ext__pane { display: flex; flex-direction: column; gap: 6px; width: 158px; }
+  .cnc-ext__detected { display: flex; align-items: center; gap: 5px; font-size: 9px; line-height: 12px; font-weight: 600; color: #0d1c2e; }
+  .cnc-ext__detected > i { width: 5px; height: 5px; flex: none; border-radius: 50%; background: #0b8a7a; }
+  .cnc-ext__field { display: flex; flex-direction: column; gap: 3px; }
+  .cnc-ext small, .cnc-ext__step { font-size: 7px; line-height: 10px; font-weight: 600; letter-spacing: 0.08em; color: #8a91a2; }
+  .cnc-ext__step { color: #0b4fd1; }
+  .cnc-ext__step[data-done] { color: #0b8a7a; }
+  .cnc-ext__field > span { display: flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 6px; background: #f3f5f9; font-size: 9px; color: #6b7385; white-space: nowrap; }
+  .cnc-ext__seg { padding: 2px !important; gap: 2px; }
+  .cnc-ext__seg > * { flex: 1; display: flex; align-items: center; justify-content: center; height: 20px; border-radius: 5px; font-style: normal; font-size: 9px; color: #6b7385; }
+  .cnc-ext__seg > b { background: #fff; font-weight: 500; color: #0d1c2e; box-shadow: 0 0 0 1px rgba(13, 28, 46, 0.05); }
+  .cnc-ext__title { font-size: 13px; line-height: 16px; font-weight: 650; letter-spacing: -0.01em; color: #0d1c2e; }
+  .cnc-ext__where { font-size: 8.5px; line-height: 12px; color: #0b4fd1; white-space: nowrap; }
+  .cnc-ext__progress { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; font-size: 9px; line-height: 12px; color: #6b7385; }
+  .cnc-ext__progress b { font-weight: 600; color: #0b4fd1; font-variant-numeric: tabular-nums; }
+  .cnc-ext__meter { width: 100%; height: 4px; }
+  .cnc-ext__people { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+  .cnc-ext__person { display: flex; align-items: center; gap: 6px; box-sizing: border-box; height: 28px; padding: 0 6px; border-radius: 6px; background: #f5f8fc; }
+  .cnc-ext__person > span { flex: 1; min-width: 0; }
+  .cnc-ext__person .ss-badge { flex: none; }
+  .cnc-ext__pname { font-size: 9.5px; font-weight: 600; color: #0d1c2e; }
+  .cnc-ext__saved { display: flex; align-items: center; gap: 5px; margin-top: 2px; font-size: 9px; line-height: 12px; font-weight: 500; color: #0b6f63; }
+  .cnc-ext__saved > svg { flex: none; }
+  .cnc-ext__total { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; padding: 8px 10px; border-radius: 6px; background: #e8f6f3; }
+  .cnc-ext__total small { color: #0b8a7a; }
+  .cnc-ext__total b { font-size: 20px; line-height: 22px; font-weight: 700; color: #0b6f63; }
+  .cnc-ext__button { width: 100%; }
+
+  .cnc-composition > :is(.cnc-app, .cnc-li, .cnc-ext) { transition: none; }
+  .cnc-app__body > *, .cnc-li__body > *, .cnc-ext { transition: opacity 0.3s ease; }
+  .cnc-composition[data-resetting] :is(.cnc-app__body, .cnc-li__body) > *, .cnc-composition[data-resetting] .cnc-ext { opacity: 0; }
+}

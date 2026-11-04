@@ -33,6 +33,8 @@ import type { WorkProject } from '@/lib/work-projects';
 import styles from './WorkProjectRows.module.css';
 import ProcurementCover from './procurement-cover/ProcurementCover';
 import DefErpCover from './def-erp-cover/DefErpCover';
+import ConnectNovaCover from './connectnova-cover/ConnectNovaCover';
+import JobNovaCover from './jobnova-cover/JobNovaCover';
 
 const fontDisplay: React.CSSProperties = {
   fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
@@ -81,6 +83,8 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
         const device = project.coverDevice ?? 'laptop';
         const procurementCover = animatedCovers && project.href === '/projects/procurement-agent-kit';
         const defErpCover = animatedCovers && project.href === '/projects/def-erp-kit';
+        const connectNovaCover = animatedCovers && project.href === '/projects/connectnova-kit';
+        const jobNovaCover = animatedCovers && project.href === '/projects/jobnova-kit';
         const coverStyle = {
           '--cover-accent': project.coverAccent ?? '#64748b',
         } as CSSProperties;
@@ -96,8 +100,12 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
             data-cursor="pill"
             data-cursor-label="View project"
           >
-            <div className={styles.cover} data-presentation={procurementCover || defErpCover ? 'animation' : device} style={coverStyle}>
-              {defErpCover ? (
+            <div className={styles.cover} data-presentation={procurementCover || defErpCover || connectNovaCover || jobNovaCover ? 'animation' : device} style={coverStyle}>
+              {jobNovaCover ? (
+                <div className={styles.animatedCover} inert aria-hidden="true"><JobNovaCover /></div>
+              ) : connectNovaCover ? (
+                <div className={styles.animatedCover} inert aria-hidden="true"><ConnectNovaCover /></div>
+              ) : defErpCover ? (
                 <div className={styles.animatedCover} inert aria-hidden="true"><DefErpCover /></div>
               ) : procurementCover ? (
                 <div className={styles.animatedCover} inert aria-hidden="true"><ProcurementCover /></div>
