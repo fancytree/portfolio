@@ -6,42 +6,42 @@ jobs on its own, filling in each application and marking it submitted, one
 after another. Loops. Same hover-only playback and inert cover as the
 Procurement and ConnectNova covers.
 
-## Source of the look
+## Concept, not a copy of the page
 
-The real product, from `public/img/jobnova/evidence/matched-jobs.webp`,
-`auto-apply-rules.webp` and `application-states.webp`: black pill tabs, lime
-accent, white cards on a pale gray, a match ring per job, state chips
-(Queued purple, Applying lime, Applied green), the footer texts and buttons
-the real states use ("Move to Front", "View Application"), the Auto Apply
-panel with Scanning / Queued / Submitting, and the three Job Matching options.
-The JobNova logo is the project's `page-design/logo.png`; Cursor and
-Accenture logos are the project's own `auto-apply-state-assets` files (the
-Accenture mark is cropped from the 3840x2160 original). The third company is a
-neutral tile and fictional, not a made-up mark.
+An earlier version recreated the product's matched-jobs page (browser window,
+logo, tabs, match rings, real company logos). That read as a mock of the real
+screen, which can never be exact, so it was replaced. This version keeps only
+the idea: a list of jobs and one small control card, in JobNova's black and
+lime. No browser chrome, no logo, no company marks. Real words are only on
+what the story touches: "Matched jobs", four role titles, the state words
+(Queued, Filling in…, Submitted), "Auto Apply", "Resume.pdf", "Match at least"
+with 30/55/80%, and the "submitted" count. Everything else is placeholder bars.
 
 ## Story (about 14s)
 
-1. Idle: three matched jobs with Apply Now; the panel shows the resume being read.
-2. The resume is read (check), the cursor picks Balanced (>55% Match).
-3. Cursor turns Auto Apply on: the panel runs Scanning, Queued; the queue counts to 12 and each card becomes Queued.
-4. One at a time: Applying with the form steps (reading, filling in, attaching the resume) and a progress bar, then Applied with "View Application"; Submitted counts up, In queue counts down.
-5. Holds 2.4s on three submitted, then the cards and panel fade, reset hidden and the run starts again. A hover also starts with that same fade from the poster.
+1. A list of matched jobs, all Queued. The resume in the control card is read (check).
+2. The cursor picks a match threshold (55%), then switches Auto Apply on.
+3. One job at a time opens a small form under its row; three fields fill in
+   one after another, the row is ticked and marked Submitted, the form closes.
+4. The counter in the card rolls up and its bar fills; three jobs are submitted, more wait below.
+5. Holds 2.4s, then the card and list fade, reset hidden, and the run starts again.
 
-Poster (reduced motion and the resting card) is step 5: three jobs Applied,
-Submitted 3, In queue 9.
+Poster (reduced motion and the resting card) is step 4: three Submitted, the
+fourth Queued, "3 submitted".
 
 ## Layout
 
-800 x 500 stage that fills the card, like the other covers. The browser window
-is inset 28px at the sides and bleeds off the bottom; the list shows three whole
-cards, the panel runs past the bottom.
+800 x 500 stage that fills the card, like the other covers. The list card is
+inset 48px from the left and runs off the bottom; the control card sits to its
+right with one 54px gutter to the list, the right edge and the bottom.
 
 ## Verification
 
 - Wide still at design size: only the filming harness's card-radius `double corner`.
 - Loop: `--hover --gate` at design size ends `rehearsal passed`. Motion coverage
-  is inconclusive (sampling gaps). Remaining notes come from `Count` strips and
-  `Roll` internals; the number parts are keyed per run so a reset remounts them.
+  is inconclusive (sampling gaps). Remaining notes are the hover-start cut from
+  the poster to the first frame and `Count` internals; the number is keyed per
+  run so a reset remounts it.
 - tsc: no errors in these files.
 
 Not checked: Safari/Firefox, touch devices, a production build.
