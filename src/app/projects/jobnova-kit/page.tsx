@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import resumeReviewScreenshot from '../../../../public/img/jobnova/evidence/resume-overview-editor.webp';
 import { ChartNoAxesCombined, ClipboardCheck, Compass, FilePenLine, GitBranch, Layers3, ListChecks, MessageSquareText, ScanSearch, ShieldCheck, SlidersHorizontal, UserRoundCheck, Users, Waypoints } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
@@ -93,7 +94,7 @@ export default function JobnovaKitPage() {
         <CaseChapter label="05 / Review the changes" title="AI can rewrite the resume. The user stays its author.">
           <CaseProse><p>I designed two review levels: an overview of what changed, followed by section-level editing. This lets people check the output and correct their story before using it.</p></CaseProse>
           <CaseVideo src="/videos/jobnova/resume-review.mp4" poster="/videos/jobnova/resume-review.webp" width={1828} height={1080} label="Recorded JobNova resume generation and editing walkthrough" caption="Recorded product walkthrough · Generate a tailored resume, inspect changes, and move into editing. The recording demonstrates the interaction; it is not a timed usability test." />
-          <Screenshot src="/img/jobnova/evidence/resume-overview-editor.webp" width={2400} height={944} alt="Resume overview with change summaries beside the section editor and highlighted document preview" caption="Overview → editor · Change summaries support initial review; editable sections support precise corrections. Preview content is sample copy." />
+          <Screenshot src={resumeReviewScreenshot.src} width={resumeReviewScreenshot.width} height={resumeReviewScreenshot.height} alt="Resume overview with change summaries beside the section editor and highlighted document preview" caption="Overview → editor · Change summaries support initial review; editable sections support precise corrections. Preview content is sample copy." />
           <CaseProse><p><strong>The tradeoff:</strong> a finished document hides the work needed to verify it. I exposed changes and editing controls rather than treating generation as completion.</p></CaseProse>
         </CaseChapter>
 
