@@ -1472,7 +1472,7 @@ export default function AgentNewPage({
               }}
               onUploadConfirmation={() => handlePrompt(PORTFOLIO_COPY.uploadConfirmation)}
               onUploadInvoice={() => handlePrompt(PORTFOLIO_COPY.uploadInvoice)}
-              onApproveDirect={() => handlePrompt(PORTFOLIO_COPY.approveDirect)}
+              onApproveDirect={() => handlePrompt(state.approvalSubmitted ? PORTFOLIO_COPY.approve : PORTFOLIO_COPY.approveDirect)}
               onPushToOwner={() => handlePrompt(PORTFOLIO_COPY.approvePushOwner)}
               onMarkOrdered={(meta: MarkOrderMeta) => {
                 if (!state.confirmationUploaded) {
@@ -1663,7 +1663,7 @@ export default function AgentNewPage({
               }}
               onUploadConfirmation={() => handlePrompt(PORTFOLIO_COPY.uploadConfirmation)}
               onUploadInvoice={() => handlePrompt(PORTFOLIO_COPY.uploadInvoice)}
-              onApproveDirect={() => handlePrompt(PORTFOLIO_COPY.approveDirect)}
+              onApproveDirect={() => handlePrompt(state.approvalSubmitted ? PORTFOLIO_COPY.approve : PORTFOLIO_COPY.approveDirect)}
               onPushToOwner={() => handlePrompt(PORTFOLIO_COPY.approvePushOwner)}
               onMarkOrdered={(meta: MarkOrderMeta) => {
                 if (!state.confirmationUploaded) {

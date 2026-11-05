@@ -1,17 +1,20 @@
 import { useSupplierRules } from '../agent-new/supplierRulesStore';
-import { ArrowRight, Building2, Clock3, PackageCheck } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowRight, Building2, Clock3, PackageCheck, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatBusinessDate } from '@/lib/dateTime';
 import { replenishmentOpportunities, timingUrgency, type WorkspaceState } from './workspaceStore';
 
 const money=(value:number)=>new Intl.NumberFormat('en-IE',{style:'currency',currency:'EUR'}).format(value);
-export default function SupplierOpportunities({workspace,onPrepare,limit}:{workspace:WorkspaceState;onPrepare:(opportunityId:string)=>void;limit?:number}){
+export default function SupplierOpportunities({workspace,onPrepare,onCheck,limit}:{workspace:WorkspaceState;onPrepare:(opportunityId:string)=>void;onCheck?:()=>void;limit?:number}){
  useSupplierRules();
+ const [checking,setChecking]=useState(false);
+ const check=()=>{if(checking||!onCheck)return;setChecking(true);onCheck();window.setTimeout(()=>setChecking(false),700);};
  const available=replenishmentOpportunities(workspace);
  const opportunities=limit?available.slice(0,limit):available;
  return <section className="workspace-supplier-panel" aria-label="Suppliers to replenish">
-  <header><h2>Suppliers to replenish</h2><Badge variant="secondary">{opportunities.length}</Badge></header>
+  <header><h2>Suppliers to replenish</h2><div className="flex items-center gap-1.5">{onCheck&&<Button size="icon-sm" variant="ghost" className="text-muted-foreground" aria-label="Check now" title="Check now" onClick={check}><RefreshCw size={14} className={checking?'animate-spin':undefined} aria-hidden/></Button>}<Badge variant="secondary">{opportunities.length}</Badge></div></header>
   <div className="workspace-supplier-list">
    {opportunities.length?opportunities.map(opportunity=>{
     const free=opportunity.amount>=opportunity.freeShippingFrom;const minimum=opportunity.amount>=opportunity.minOrder;const timing=timingUrgency(opportunity);
