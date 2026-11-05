@@ -115,7 +115,7 @@ export function createAmbience(){
     button.dataset.mix=JSON.stringify(ambientMix(hour,scene).map(x=>Number(x.toFixed(3))));
   }
   async function prepare(){
-    const urls=['./assets/ambience-stream-clear.mp3','./assets/ambience-birds.mp3','./assets/ambience-night.mp3'];
+    const urls=['./assets/ambience-stream-calm.mp3','./assets/ambience-birds.mp3','./assets/ambience-night.mp3'];
     const buffers=await Promise.all(urls.map(async (url,index)=>{
       const response=await fetch(url,{signal:AbortSignal.timeout(30000)});
       if(!response.ok)throw new Error('Audio unavailable');
