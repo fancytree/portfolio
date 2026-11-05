@@ -1,0 +1,1698 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Designer Workstation</title>
+<style>
+  /* Layout: one full-bleed WebGL stage over a dusk gradient. Nothing else on the page. */
+  :root {
+    --dusk-top: #a9b6c3;
+    --dusk-mid: #dcd2c8;
+    --dusk-low: #eec8aa;
+    --ink: #3a3f46;
+    --ink-strong: #23272e;
+    --ink-soft: #5c6a78;
+    --coral: #ea7a5a;
+    --coral-deep: #b9502f;
+    --card: rgba(255, 255, 255, .78);
+    --card-line: rgba(255, 255, 255, .85);
+    --card-font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: none; }
+  body {
+    background: linear-gradient(172deg, var(--dusk-top) 0%, var(--dusk-mid) 52%, var(--dusk-low) 100%);
+    color: var(--ink);
+  }
+  #stage {
+    position: fixed; top: 0; left: 0;
+    width: 100vw; height: 100vh; height: 100dvh;
+    display: block; touch-action: none; cursor: grab;
+    -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  #stage.dragging { cursor: grabbing; }
+  #stage.rotating { cursor: move; }
+  /* Hotspots: a 44px target around a small glowing dot */
+  .marker {
+    position: fixed; top: 0; left: 0; width: 44px; height: 44px; margin: 0; padding: 0;
+    border: 0; border-radius: 50%; background: transparent; cursor: pointer; touch-action: none;
+    -webkit-tap-highlight-color: transparent; will-change: transform; z-index: 2;
+  }
+  .marker[hidden] { display: none; }
+  .marker::before, .marker::after { content: ""; position: absolute; left: 50%; top: 50%; border-radius: 50%; }
+  .marker::before {
+    width: 14px; height: 14px; margin: -7px 0 0 -7px; background: var(--coral);
+    border: 2px solid #fff; box-sizing: border-box; box-shadow: 0 0 10px 3px rgba(234, 122, 90, .85);
+    transition: transform .2s ease;
+  }
+  .marker::after {
+    width: 30px; height: 30px; margin: -15px 0 0 -15px; background: rgba(234, 122, 90, .34);
+    animation: marker-breathe 2.4s ease-in-out infinite;
+  }
+  .marker:hover::before { transform: scale(1.25); }
+  .marker.active { opacity: 0; pointer-events: none; }
+  .marker:focus-visible { outline: 2px solid var(--ink-strong); outline-offset: -4px; }
+  @keyframes marker-breathe { 0%, 100% { transform: scale(.55); opacity: .95; } 50% { transform: scale(1.1); opacity: .25; } }
+
+  /* Info card */
+  #info-card {
+    position: fixed; z-index: 3; left: 0; right: 0;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    width: min(460px, calc(100vw - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
+    margin-inline: auto; box-sizing: border-box; padding: 14px 20px 18px;
+    background: var(--card); border: 1px solid var(--card-line); border-radius: 18px;
+    -webkit-backdrop-filter: blur(14px) saturate(1.25); backdrop-filter: blur(14px) saturate(1.25);
+    box-shadow: 0 14px 40px rgba(60, 50, 40, .22);
+    color: var(--ink); font-family: var(--card-font);
+    visibility: hidden; transform: translateY(calc(100% + 40px));
+    transition: transform .38s cubic-bezier(.3, .8, .3, 1), visibility 0s linear .38s;
+  }
+  #info-card.open { visibility: visible; transform: none; transition: transform .38s cubic-bezier(.3, .8, .3, 1), visibility 0s; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; min-height: 36px; }
+  .card-tag { font-size: 12px; letter-spacing: .04em; color: var(--ink-soft); }
+  #card-close {
+    width: 44px; height: 44px; margin: -4px -12px -4px 0; border: 0; border-radius: 50%; background: transparent;
+    color: var(--ink-strong); font: 400 26px/1 var(--card-font); cursor: pointer;
+  }
+  #card-close:hover { background: rgba(35, 39, 46, .08); }
+  #card-close:focus-visible { outline: 2px solid var(--ink-strong); outline-offset: -4px; }
+  #card-title { margin: 0 0 6px; font-size: 20px; line-height: 1.25; font-weight: 700; color: var(--ink-strong); text-wrap: balance; }
+  #card-desc { margin: 0; font-size: 14px; line-height: 1.6; }
+  #card-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 4px; margin: 2px 0 10px; padding: 0; list-style: none; }
+  #card-steps li { display: flex; align-items: center; gap: 4px; font-size: 13px; line-height: 1.3; color: var(--ink-strong); }
+  #card-steps li span { padding: 4px 9px; border-radius: 999px; background: rgba(92, 106, 120, .13); white-space: nowrap; }
+  #card-steps li + li::before { content: "→"; color: var(--ink-soft); }
+  #card-steps li:last-child span { background: rgba(234, 122, 90, .2); color: var(--coral-deep); font-weight: 600; }
+  /* Compact layout when embedded as a small card (?embed) */
+  html.embed, html.embed body { overscroll-behavior: auto; }
+  html.embed #stage { touch-action: pan-y; }
+  html.embed #info-card { bottom: 8px; width: calc(100vw - 16px); max-height: 66vh; overflow-y: auto; padding: 6px 14px 34px; border-radius: 14px; }
+  html.embed .card-head { min-height: 28px; }
+  html.embed .card-tag { font-size: 11px; }
+  html.embed #card-close { width: 36px; height: 36px; margin: -4px -10px -4px 0; font-size: 22px; }
+  html.embed #card-title { margin-bottom: 5px; font-size: 16px; }
+  html.embed #card-steps { margin-bottom: 6px; gap: 4px 2px; }
+  html.embed #card-steps li { gap: 2px; font-size: 11px; }
+  html.embed #card-steps li span { padding: 2px 6px; }
+  html.embed #card-desc { font-size: 12px; line-height: 1.45; }
+  @media (prefers-reduced-motion: reduce) {
+    .marker::after { animation: none; transform: scale(.9); opacity: .6; }
+    #info-card, #info-card.open { transition: none; }
+  }
+  #fallback[hidden] { display: none; }
+  #fallback { position: fixed; inset: 0; display: grid; place-items: center; padding-inline: 24px; text-align: center; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<canvas id="stage" role="img" aria-label="3D scene in warm evening light: a cartoon product designer with a ponytail sits at a light wood desk, using a mouse to work in design software on a large monitor."></canvas>
+<div id="fallback" hidden>This browser can't load the 3D scene. Turn on WebGL, then refresh the page.</div>
+
+<button class="marker" id="marker-monitor" type="button" aria-label="View design process" hidden></button>
+<button class="marker" id="marker-phone" type="button" aria-label="View prototype testing" hidden></button>
+<button class="marker" id="marker-notes" type="button" aria-label="View user research" hidden></button>
+<section id="info-card" role="dialog" aria-labelledby="card-title" aria-live="polite">
+  <div class="card-head">
+    <span class="card-tag">Design method</span>
+    <button id="card-close" type="button" aria-label="Close card">×</button>
+  </div>
+  <div class="card-body">
+    <div class="card-text">
+      <h2 id="card-title"></h2>
+      <ol id="card-steps"></ol>
+      <p id="card-desc"></p>
+    </div>
+  </div>
+</section>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const canvas = document.getElementById('stage');
+  /* Embedded in a scrolling page: the page keeps its scroll until the viewer engages with the scene. */
+  const EMBED = new URLSearchParams(location.search).has('embed');
+  document.documentElement.classList.toggle('embed', EMBED);
+  let engaged = false;
+  const wheelBelongsToPage = (e) => EMBED && !engaged && !e.ctrlKey;
+  function fail() { document.getElementById('fallback').hidden = false; canvas.hidden = true; }
+  if (!window.THREE || !THREE.OrbitControls) { fail(); return; }
+
+  /* ================================================================
+     1. PALETTE & CORE HELPERS
+     ================================================================ */
+  const PAL = {
+    warmWhite: 0xf5efe5, paper: 0xfbf7ef, oat: 0xdccbb0, oatDeep: 0xc4b08f,
+    wood: 0xdcbd93, woodDeep: 0xb48f62, floor: 0xc9a67c,
+    mist: 0x8d9dac, mistDeep: 0x5c6a78, mistPale: 0xc3ced7,
+    coral: 0xea7a5a, ink: 0x23272e, hair: 0x18171c, trouser: 0x2c3039,
+    skin: 0xebc5a6, lip: 0xc0766c, leaf: 0x6a8561, leafDeep: 0x4d6b55, metal: 0xb7bcc0
+  };
+  const srgb = (h) => new THREE.Color(h).convertSRGBToLinear();
+  const matCache = new Map();
+  function mat(color, o) {
+    o = o || {};
+    const key = [color, o.r, o.m, o.flat, o.side].join('|');
+    if (!o.map && matCache.has(key)) return matCache.get(key);
+    const m = new THREE.MeshStandardMaterial({
+      color: srgb(color),
+      roughness: o.r === undefined ? 0.9 : o.r,
+      metalness: o.m || 0,
+      flatShading: o.flat === undefined ? true : o.flat,
+      side: o.side || THREE.FrontSide,
+      map: o.map || null
+    });
+    if (!o.map) matCache.set(key, m);
+    return m;
+  }
+  const asMat = (c) => (typeof c === 'number' ? mat(c) : c);
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+
+  function place(parent, geo, material, x, y, z, o) {
+    o = o || {};
+    const m = new THREE.Mesh(geo, Array.isArray(material) ? material : asMat(material));
+    m.position.set(x || 0, y || 0, z || 0);
+    if (o.rx || o.ry || o.rz) m.rotation.set(o.rx || 0, o.ry || 0, o.rz || 0, o.order || 'XYZ');
+    m.castShadow = o.cast !== false;
+    m.receiveShadow = o.recv !== false;
+    if (o.noPick) m.userData.noPick = true;
+    parent.add(m);
+    return m;
+  }
+  const box = (p, w, h, d, c, x, y, z, o) => place(p, new THREE.BoxGeometry(w, h, d), c, x, y, z, o);
+  const cyl = (p, rt, rb, h, c, x, y, z, seg, o) => place(p, new THREE.CylinderGeometry(rt, rb, h, seg || 12), c, x, y, z, o);
+  function ball(p, sx, sy, sz, c, x, y, z, o, detail) {
+    const m = place(p, new THREE.IcosahedronGeometry(1, detail === undefined ? 1 : detail), c, x, y, z, o);
+    m.scale.set(sx, sy, sz);
+    return m;
+  }
+  /* Rounded plate: footprint w x d, thickness h along Y, centred. */
+  function plateGeo(w, h, d, r, seg) {
+    const s = new THREE.Shape();
+    const x = -w / 2, y = -d / 2;
+    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+    s.lineTo(x + w, y + d - r); s.quadraticCurveTo(x + w, y + d, x + w - r, y + d);
+    s.lineTo(x + r, y + d); s.quadraticCurveTo(x, y + d, x, y + d - r);
+    s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+    const g = new THREE.ExtrudeGeometry(s, { depth: h, bevelEnabled: false, curveSegments: seg || 3 });
+    g.rotateX(-Math.PI / 2);
+    g.translate(0, -h / 2, 0);
+    return g;
+  }
+  const plate = (p, w, h, d, r, c, x, y, z, o) => place(p, plateGeo(w, h, d, r), c, x, y, z, o);
+  /* Tapered cylinder between two points. */
+  function limb(p, a, b, ra, rb, c, seg, o) {
+    const dir = b.clone().sub(a);
+    const len = dir.length();
+    const m = place(p, new THREE.CylinderGeometry(rb, ra, len, seg || 8), c, 0, 0, 0, o);
+    m.position.copy(a).addScaledVector(dir, 0.5);
+    m.quaternion.setFromUnitVectors(V(0, 1, 0), dir.normalize());
+    return m;
+  }
+  /* Skinned tube through rings; each ring is centre + two radial axes. */
+  function loftGeo(rings, seg) {
+    const pos = [], uv = [], idx = [];
+    rings.forEach((r, i) => {
+      for (let j = 0; j <= seg; j++) {
+        const a = (j / seg) * Math.PI * 2;
+        const pt = r.c.clone().addScaledVector(r.u, Math.cos(a)).addScaledVector(r.v, Math.sin(a));
+        pos.push(pt.x, pt.y, pt.z);
+        uv.push(j / seg, i / (rings.length - 1));
+      }
+    });
+    const row = seg + 1;
+    for (let i = 0; i < rings.length - 1; i++) {
+      for (let j = 0; j < seg; j++) {
+        const a = i * row + j, b = a + 1, c = a + row, d = c + 1;
+        idx.push(a, c, b, b, c, d);
+      }
+    }
+    const cap = (ring, flip) => {
+      const c = rings[ring].c;
+      const n = pos.length / 3;
+      pos.push(c.x, c.y, c.z); uv.push(0.5, 0.5);
+      for (let j = 0; j < seg; j++) {
+        const a = ring * row + j;
+        if (flip) idx.push(n, a + 1, a); else idx.push(n, a, a + 1);
+      }
+    };
+    cap(0, false); cap(rings.length - 1, true);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  /* Tube along a smooth path with a radius profile. */
+  function tubeGeo(points, radii, samples, seg) {
+    const curve = new THREE.CatmullRomCurve3(points);
+    const rings = [];
+    const ref = V(1, 0, 0.2).normalize();
+    for (let i = 0; i <= samples; i++) {
+      const t = i / samples;
+      const c = curve.getPoint(t);
+      const T = curve.getTangent(t);
+      const u0 = ref.clone().cross(T).normalize();
+      const v0 = u0.clone().cross(T).normalize();
+      const f = t * (radii.length - 1);
+      const k = Math.min(radii.length - 2, Math.floor(f));
+      const r = THREE.MathUtils.lerp(radii[k], radii[k + 1], f - k);
+      rings.push({ c, u: u0.multiplyScalar(r), v: v0.multiplyScalar(r) });
+    }
+    return loftGeo(rings, seg);
+  }
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* ================================================================
+     2. RENDERER, SCENE, CAMERA, CONTROLS SETUP
+     ================================================================ */
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+  } catch (e) { fail(); return; }
+  renderer.setClearColor(0x000000, 0);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.autoUpdate = false;
+  const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 90);
+  const controls = new THREE.OrbitControls(camera, canvas);
+
+  /* ================================================================
+     3. CANVAS TEXTURES
+     ================================================================ */
+  const F = '"Inter","Helvetica Neue",Arial,"Noto Sans",sans-serif';
+  const HAND = '"Bradley Hand","Segoe Print","Comic Sans MS","Noto Sans",cursive';
+  function tex(w, h, draw, o) {
+    o = o || {};
+    const c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    draw(c.getContext('2d'), w, h);
+    const t = new THREE.CanvasTexture(c);
+    t.encoding = THREE.sRGBEncoding;
+    t.anisotropy = o.aniso || Math.min(4, maxAniso);
+    if (o.repeat) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(o.repeat[0], o.repeat[1]); }
+    return t;
+  }
+  function rr(c, x, y, w, h, r, fill, stroke, lw) {
+    c.beginPath();
+    c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+    if (fill) { c.fillStyle = fill; c.fill(); }
+    if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw || 1; c.stroke(); }
+  }
+  function label(c, s, x, y, size, color, weight, align, font) {
+    c.font = (weight || 400) + ' ' + size + 'px ' + (font || F);
+    c.fillStyle = color; c.textAlign = align || 'left'; c.textBaseline = 'middle';
+    c.fillText(s, x, y);
+  }
+  function arrow(c, x1, y1, cx1, cy1, cx2, cy2, x2, y2, color, lw) {
+    c.strokeStyle = color; c.lineWidth = lw;
+    c.beginPath(); c.moveTo(x1, y1); c.bezierCurveTo(cx1, cy1, cx2, cy2, x2, y2); c.stroke();
+    const a = Math.atan2(y2 - cy2, x2 - cx2), s = lw * 4.2;
+    c.fillStyle = color;
+    c.beginPath(); c.moveTo(x2, y2);
+    c.lineTo(x2 - s * Math.cos(a - 0.42), y2 - s * Math.sin(a - 0.42));
+    c.lineTo(x2 - s * Math.cos(a + 0.42), y2 - s * Math.sin(a + 0.42));
+    c.closePath(); c.fill();
+    c.beginPath(); c.arc(x1, y1, lw * 1.7, 0, 7); c.fill();
+  }
+
+  /* --- Phone UI, shared by the main screen and the phone on its stand --- */
+  function drawPhoneUI(c, x, y, w, h, kind) {
+    const u = w / 100; // layout unit: 1% of artboard width
+    const CORAL = '#ea7a5a', INK = '#2a2f37', MUTE = '#8d8a84', OAT = '#e8dcc8', MIST = '#a9b8c6', LINE = '#ece5d8';
+    rr(c, x, y, w, h, u * 7, '#fbf8f3');
+    c.save(); rr(c, x, y, w, h, u * 7); c.clip();
+    label(c, '9:41', x + u * 8, y + u * 6, u * 4.6, INK, 600);
+    const cta = (s, cy) => {
+      rr(c, x + u * 8, cy, u * 84, u * 13, u * 3.5, CORAL);
+      label(c, s, x + u * 50, cy + u * 6.6, u * 5.2, '#fff', 600, 'center');
+    };
+    if (kind === 'welcome') {
+      c.fillStyle = OAT; c.fillRect(x, y + u * 12, w, u * 88);
+      c.fillStyle = '#f0b79f'; c.beginPath(); c.arc(x + u * 66, y + u * 44, u * 19, 0, 7); c.fill();
+      c.fillStyle = MIST; c.fillRect(x + u * 12, y + u * 60, u * 76, u * 40);
+      c.fillStyle = '#7f90a0'; c.fillRect(x + u * 22, y + u * 72, u * 18, u * 28); c.fillRect(x + u * 52, y + u * 66, u * 24, u * 34);
+      label(c, 'Find a quiet', x + u * 8, y + u * 116, u * 9, INK, 700);
+      label(c, 'place to work', x + u * 8, y + u * 128, u * 9, INK, 700);
+      label(c, 'Book a desk near you by the hour.', x + u * 8, y + u * 141, u * 4.4, MUTE);
+      cta('Get started', y + u * 170);
+      label(c, 'I already have an account', x + u * 50, y + u * 194, u * 4.2, MUTE, 500, 'center');
+    } else if (kind === 'search') {
+      label(c, 'Nearby', x + u * 8, y + u * 20, u * 9, INK, 700);
+      rr(c, x + u * 8, y + u * 30, u * 84, u * 12, u * 3.5, '#f2ece1');
+      label(c, 'Search area or date', x + u * 15, y + u * 36, u * 4.4, MUTE);
+      [['Today', 21, 1], ['Quiet', 20, 0], ['Window', 25, 0]].reduce((px, a) => {
+        rr(c, x + u * px, y + u * 47, u * a[1], u * 9, u * 4.5, a[2] ? INK : '#f2ece1');
+        label(c, a[0], x + u * (px + a[1] / 2), y + u * 51.6, u * 3.9, a[2] ? '#fff' : INK, 500, 'center');
+        return px + a[1] + 3;
+      }, 8);
+      [['North Loft', '€6 / hour', '#c8d3dc'], ['Garden Room', '€8 / hour', '#e6cfae'], ['Corner Desk', '€4 / hour', '#eab9a3']].forEach((r, i) => {
+        const cy = y + u * (62 + i * 46);
+        c.fillStyle = r[2]; rr(c, x + u * 8, cy, u * 84, u * 27, u * 3, r[2]);
+        label(c, r[0], x + u * 8, cy + u * 33, u * 5, INK, 600);
+        label(c, r[1], x + u * 92, cy + u * 33, u * 4.3, MUTE, 500, 'right');
+      });
+    } else if (kind === 'detail') {
+      c.fillStyle = '#c8d3dc'; c.fillRect(x, y, w, u * 76);
+      c.fillStyle = '#9fb0bf'; c.fillRect(x + u * 14, y + u * 28, u * 34, u * 48);
+      c.fillStyle = '#f3e4cf'; c.fillRect(x + u * 56, y + u * 22, u * 30, u * 32);
+      label(c, 'North Loft', x + u * 8, y + u * 88, u * 9, INK, 700);
+      label(c, '4.8 · 126 reviews · 300 m away', x + u * 8, y + u * 99, u * 4.2, MUTE);
+      [['Wi-Fi', 18], ['Monitor', 23], ['Coffee', 21]].reduce((px, a) => {
+        rr(c, x + u * px, y + u * 106, u * a[1], u * 9, u * 2.5, '#f2ece1');
+        label(c, a[0], x + u * (px + a[1] / 2), y + u * 110.6, u * 3.8, INK, 500, 'center');
+        return px + a[1] + 3;
+      }, 8);
+      c.fillStyle = LINE;
+      [122, 129, 136, 143].forEach((ly, i) => c.fillRect(x + u * 8, y + u * ly, u * (i === 3 ? 52 : 84), u * 2.2));
+      label(c, '€6', x + u * 8, y + u * 170, u * 8, INK, 700);
+      label(c, 'per hour', x + u * 8, y + u * 179, u * 3.8, MUTE);
+      rr(c, x + u * 42, y + u * 165, u * 50, u * 13, u * 3.5, CORAL);
+      label(c, 'Reserve', x + u * 67, y + u * 171.6, u * 5.2, '#fff', 600, 'center');
+    } else {
+      label(c, 'Confirm', x + u * 8, y + u * 20, u * 9, INK, 700);
+      rr(c, x + u * 8, y + u * 32, u * 84, u * 44, u * 3, '#f5efe5');
+      [['North Loft', ''], ['Thu 12 Nov', '14:00–17:00'], ['3 hours', '€18.00'], ['Service', '€1.20']].forEach((r, i) => {
+        label(c, r[0], x + u * 13, y + u * (40 + i * 10), u * 4.3, i ? MUTE : INK, i ? 400 : 600);
+        label(c, r[1], x + u * 87, y + u * (40 + i * 10), u * 4.3, INK, 500, 'right');
+      });
+      label(c, 'Pay with', x + u * 8, y + u * 88, u * 4.6, INK, 600);
+      rr(c, x + u * 8, y + u * 94, u * 84, u * 14, u * 3, null, '#ea7a5a', u * 0.7);
+      label(c, 'Card ending 4242', x + u * 13, y + u * 101, u * 4.3, INK);
+      rr(c, x + u * 8, y + u * 112, u * 84, u * 14, u * 3, null, LINE, u * 0.5);
+      label(c, 'Company invoice', x + u * 13, y + u * 119, u * 4.3, MUTE);
+      label(c, 'Total', x + u * 8, y + u * 148, u * 5, MUTE, 500);
+      label(c, '€19.20', x + u * 92, y + u * 148, u * 8, INK, 700, 'right');
+      cta('Pay and reserve', y + u * 170);
+    }
+    c.restore();
+  }
+
+  /* --- Main monitor: generic design tool --- */
+  const screenTex = tex(2048, 1184, (c, W, H) => {
+    const CH = '#1f2329', PANEL = '#262b33', LINE = '#39404b', TXT = '#dfe3e8', MUTE = '#8f99a5', BLUE = '#7fb2e8', CORAL = '#ee7f5f';
+    c.fillStyle = '#353b45'; c.fillRect(0, 0, W, H);
+    const LEFT = 300, RIGHT = 320, TOP = 56;
+    /* canvas dots */
+    c.fillStyle = '#414854';
+    for (let gx = LEFT + 12; gx < W - RIGHT; gx += 28) for (let gy = TOP + 12; gy < H; gy += 28) c.fillRect(gx, gy, 2, 2);
+
+    /* artboards */
+    const P = [['01 Welcome', 'welcome'], ['02 Search', 'search'], ['03 Detail', 'detail'], ['04 Confirm', 'confirm']];
+    const pw = 222, ph = 450, gap = 88, x0 = LEFT + 66, y0 = 118;
+    P.forEach((p, i) => {
+      const x = x0 + i * (pw + gap);
+      label(c, p[0], x, y0 - 18, 17, i === 2 ? BLUE : MUTE, 500);
+      drawPhoneUI(c, x, y0, pw, ph, p[1]);
+    });
+    /* web boards */
+    const wy = 668, wh = 440, w1 = 640, x1 = x0, x2 = x0 + w1 + 66, w2 = 1150 + 66 - w1 - 66 + 88 + 60;
+    label(c, '05 Host dashboard / 1440', x1, wy - 18, 17, MUTE, 500);
+    rr(c, x1, wy, w1, wh, 8, '#fbf8f3');
+    c.fillStyle = '#f0e9dc'; c.fillRect(x1, wy + 4, 112, wh - 8);
+    ['Overview', 'Bookings', 'Spaces', 'Payouts', 'Reviews'].forEach((s, i) => {
+      if (!i) rr(c, x1 + 10, wy + 40, 92, 30, 6, '#fff');
+      label(c, s, x1 + 22, wy + 55 + i * 38, 14, i ? '#7c786f' : '#2a2f37', i ? 400 : 600);
+    });
+    label(c, 'Overview', x1 + 136, wy + 42, 26, '#2a2f37', 700);
+    [['Occupancy', '74%', '+6 pts'], ['Bookings', '318', '+12%'], ['Rating', '4.8', 'stable']].forEach((k, i) => {
+      const kx = x1 + 136 + i * 162;
+      rr(c, kx, wy + 70, 150, 92, 8, '#f5efe5');
+      label(c, k[0], kx + 14, wy + 92, 13, '#7c786f');
+      label(c, k[1], kx + 14, wy + 124, 30, '#2a2f37', 700);
+      label(c, k[2], kx + 136, wy + 146, 12, i === 2 ? '#7c786f' : CORAL, 600, 'right');
+    });
+    rr(c, x1 + 136, wy + 176, 474, 240, 8, null, '#ece5d8', 2);
+    c.strokeStyle = '#efe9dd'; c.lineWidth = 2;
+    for (let i = 1; i < 5; i++) { c.beginPath(); c.moveTo(x1 + 152, wy + 190 + i * 40); c.lineTo(x1 + 594, wy + 190 + i * 40); c.stroke(); }
+    const pts = [30, 62, 48, 88, 74, 112, 96, 136, 118, 152, 146, 170];
+    c.strokeStyle = '#7f90a0'; c.lineWidth = 4; c.beginPath();
+    pts.forEach((v, i) => { const px = x1 + 156 + i * 39, py = wy + 396 - v; if (i) c.lineTo(px, py); else c.moveTo(px, py); });
+    c.stroke();
+    c.fillStyle = CORAL; c.beginPath(); c.arc(x1 + 156 + 11 * 39, wy + 396 - 170, 7, 0, 7); c.fill();
+
+    label(c, '06 Landing / 1280', x2, wy - 18, 17, MUTE, 500);
+    rr(c, x2, wy, w2, wh, 8, '#fbf8f3');
+    rr(c, x2 + 26, wy + 22, 34, 18, 4, '#2a2f37');
+    ['Spaces', 'Hosts', 'Pricing'].forEach((s, i) => label(c, s, x2 + 330 + i * 76, wy + 31, 13, '#7c786f'));
+    label(c, 'Work somewhere', x2 + 30, wy + 96, 40, '#2a2f37', 700);
+    label(c, 'you can think.', x2 + 30, wy + 144, 40, '#2a2f37', 700);
+    label(c, 'Quiet desks by the hour, close to home.', x2 + 30, wy + 188, 16, '#7c786f');
+    rr(c, x2 + 30, wy + 214, 158, 44, 8, CORAL);
+    label(c, 'Find a desk', x2 + 109, wy + 236, 16, '#fff', 600, 'center');
+    rr(c, x2 + 30, wy + 282, w2 - 60, 132, 8, '#e8dcc8');
+    c.fillStyle = '#a9b8c6'; c.fillRect(x2 + 60, wy + 322, 130, 92); c.fillRect(x2 + 210, wy + 300, 90, 114);
+    c.fillStyle = '#f0b79f'; c.beginPath(); c.arc(x2 + w2 - 96, wy + 334, 30, 0, 7); c.fill();
+
+    /* prototype links */
+    for (let i = 0; i < 3; i++) {
+      const sx = x0 + i * (pw + gap) + pw, tx = sx + gap, sy = y0 + 150 + i * 70, ty = y0 + 110 + i * 30;
+      arrow(c, sx, sy, sx + 56, sy, tx - 56, ty, tx - 3, ty, i === 1 ? CORAL : BLUE, 3.5);
+    }
+    arrow(c, x0 + 111, y0 + ph, x0 + 111, y0 + ph + 50, x1 + 320, wy - 66, x1 + 320, wy - 3, BLUE, 3.5);
+    arrow(c, x0 + 3 * (pw + gap) + 110, y0 + ph, x0 + 3 * (pw + gap) + 110, y0 + ph + 50, x2 + w2 - 90, wy - 60, x2 + w2 - 90, wy - 3, CORAL, 3.5);
+
+    /* selection on 03 Detail > Reserve */
+    const sx = x0 + 2 * (pw + gap) + pw * 0.42, sy = y0 + pw * 1.65, sw = pw * 0.5, sh = pw * 0.13;
+    c.strokeStyle = BLUE; c.lineWidth = 2.5; c.strokeRect(sx, sy, sw, sh);
+    c.fillStyle = '#fff';
+    [[sx, sy], [sx + sw, sy], [sx, sy + sh], [sx + sw, sy + sh]].forEach((q) => { c.fillRect(q[0] - 4, q[1] - 4, 8, 8); c.strokeRect(q[0] - 4, q[1] - 4, 8, 8); });
+    /* top bar */
+    c.fillStyle = CH; c.fillRect(0, 0, W, TOP);
+    rr(c, 18, 14, 28, 28, 7, CORAL);
+    ['Move', 'Frame', 'Pen', 'Text', 'Comment'].forEach((s, i) => {
+      rr(c, 66 + i * 86, 12, 78, 32, 6, i ? null : '#3a4350');
+      label(c, s, 105 + i * 86, 28, 15, i ? MUTE : TXT, 500, 'center');
+    });
+    label(c, 'Desk booking  /  Reserve flow  v3', W / 2, 28, 18, TXT, 500, 'center');
+    rr(c, W - 268, 12, 92, 32, 6, BLUE); label(c, 'Prototype', W - 222, 28, 14, '#14181d', 600, 'center');
+    label(c, '64%', W - 130, 28, 16, TXT, 500, 'center');
+    ['#ea7a5a', '#8d9dac'].forEach((col, i) => { c.fillStyle = col; c.beginPath(); c.arc(W - 72 + i * 28, 28, 14, 0, 7); c.fill(); });
+
+    /* layers */
+    c.fillStyle = PANEL; c.fillRect(0, TOP, LEFT, H - TOP);
+    c.fillStyle = LINE; c.fillRect(LEFT - 2, TOP, 2, H - TOP);
+    label(c, 'Layers', 20, TOP + 30, 17, TXT, 600); label(c, 'Assets', 90, TOP + 30, 17, MUTE, 500);
+    c.fillStyle = LINE; c.fillRect(0, TOP + 56, LEFT, 2);
+    label(c, 'PAGES', 20, TOP + 80, 13, MUTE, 600);
+    ['Reserve flow', 'Components', 'Research notes'].forEach((s, i) => {
+      if (!i) rr(c, 10, TOP + 94, LEFT - 22, 32, 5, '#333a45');
+      label(c, s, 22, TOP + 110 + i * 36, 15, i ? MUTE : TXT, i ? 400 : 500);
+    });
+    c.fillStyle = LINE; c.fillRect(0, TOP + 208, LEFT, 2);
+    const tree = [[0, '01 Welcome'], [0, '02 Search'], [0, '03 Detail'], [1, 'Hero image'], [1, 'Title block'], [1, 'Amenity chips'], [2, 'Chip / Wi-Fi'], [2, 'Chip / Monitor'], [2, 'Chip / Coffee'], [1, 'Description'], [1, 'Booking bar'], [2, 'Price'], [2, 'Button / Reserve'], [0, '04 Confirm'], [0, '05 Host dashboard'], [0, '06 Landing'], [0, 'Sticky notes'], [0, 'Flow annotations']];
+    tree.forEach((t, i) => {
+      const ty = TOP + 236 + i * 45;
+      if (t[1] === 'Button / Reserve') rr(c, 6, ty - 18, LEFT - 16, 36, 5, '#2f5c8c');
+      const ix = 20 + t[0] * 22;
+      rr(c, ix, ty - 7, 14, 14, 3, null, t[0] === 0 ? BLUE : MUTE, 2);
+      label(c, t[1], ix + 24, ty, 15, t[1] === 'Button / Reserve' ? '#fff' : (t[0] ? '#b5bcc5' : TXT), t[0] ? 400 : 500);
+    });
+
+    /* properties */
+    const rx = W - RIGHT;
+    c.fillStyle = PANEL; c.fillRect(rx, TOP, RIGHT, H - TOP);
+    c.fillStyle = LINE; c.fillRect(rx, TOP, 2, H - TOP);
+    label(c, 'Design', rx + 22, TOP + 30, 17, TXT, 600); label(c, 'Prototype', rx + 92, TOP + 30, 17, MUTE, 500);
+    let py = TOP + 72;
+    const section = (t) => { c.fillStyle = LINE; c.fillRect(rx, py - 24, RIGHT, 2); label(c, t, rx + 22, py, 15, TXT, 600); py += 34; };
+    const field = (a, b, fx) => {
+      rr(c, fx, py - 16, 132, 32, 5, '#333a45');
+      label(c, a, fx + 11, py, 14, MUTE); label(c, b, fx + 122, py, 14, TXT, 500, 'right');
+    };
+    py += 2; section('Frame');
+    field('X', '164', rx + 22); field('Y', '736', rx + 166); py += 40;
+    field('W', '196', rx + 22); field('H', '52', rx + 166); py += 40;
+    field('Radius', '12', rx + 22); field('Rotate', '0°', rx + 166); py += 62;
+    section('Auto layout');
+    field('Gap', '8', rx + 22); field('Padding', '16', rx + 166); py += 62;
+    section('Fill');
+    rr(c, rx + 22, py - 15, 30, 30, 5, CORAL); label(c, 'accent/coral-500', rx + 64, py, 15, TXT); label(c, '100%', rx + 296, py, 14, MUTE, 400, 'right'); py += 58;
+    section('Text');
+    label(c, 'Label / Medium', rx + 22, py, 16, TXT, 500); py += 30;
+    field('Size', '16', rx + 22); field('Line', '24', rx + 166); py += 62;
+    section('Contrast');
+    label(c, 'White on coral', rx + 22, py, 15, '#b5bcc5'); label(c, 'AA Large', rx + 296, py, 14, BLUE, 600, 'right'); py += 58;
+    section('Interaction');
+    label(c, 'On tap', rx + 22, py, 15, '#b5bcc5'); label(c, 'Navigate to 04', rx + 296, py, 15, TXT, 500, 'right'); py += 30;
+    label(c, 'Animate', rx + 22, py, 15, '#b5bcc5'); label(c, 'Ease out, 240 ms', rx + 296, py, 15, TXT, 500, 'right');
+  }, { aniso: maxAniso });
+
+  const PHONE_FLOW = ['welcome', 'search', 'detail', 'confirm'];
+  const phoneTexes = PHONE_FLOW.map((kind) => tex(360, 780, (c, W, H) => { c.fillStyle = '#fbf8f3'; c.fillRect(0, 0, W, H); drawPhoneUI(c, 0, 0, W, H, kind); }));
+  function sketchTex(variant) {
+    return tex(520, 380, (c, W, H) => {
+      c.fillStyle = '#fbf7ef'; c.fillRect(0, 0, W, H);
+      const r = rng(11 + variant);
+      const j = () => (r() - 0.5) * 2.4;
+      const sk = (pts) => { c.beginPath(); pts.forEach((p, i) => { if (i) c.lineTo(p[0] + j(), p[1] + j()); else c.moveTo(p[0] + j(), p[1] + j()); }); c.stroke(); };
+      const rect = (x, y, w, h) => sk([[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]]);
+      c.strokeStyle = '#4d5560'; c.lineWidth = 2.2; c.lineCap = 'round';
+      for (let i = 0; i < 3; i++) {
+        const x = 30 + i * 160;
+        rect(x, 44, 112, 216);
+        rect(x + 12, 62, 88, 62);
+        sk([[x + 12, 62], [x + 100, 124]]); sk([[x + 100, 62], [x + 12, 124]]);
+        for (let k = 0; k < 3; k++) sk([[x + 12, 142 + k * 18], [x + 12 + 88 - k * 16, 142 + k * 18]]);
+        rect(x + 12, 216, 88, 28);
+        if (i < 2) { c.strokeStyle = '#ea7a5a'; sk([[x + 116, 150], [x + 152, 150]]); sk([[x + 144, 143], [x + 154, 150], [x + 144, 157]]); c.strokeStyle = '#4d5560'; }
+      }
+      label(c, variant ? 'empty state?' : 'reserve flow', 30, 22, 24, '#4d5560', 400, 'left', HAND);
+      label(c, 'keep CTA in thumb zone', 30, 300, 24, '#ea7a5a', 400, 'left', HAND);
+      label(c, '44 pt min. tap target', 30, 340, 24, '#4d5560', 400, 'left', HAND);
+    });
+  }
+  const noteTexCache = {};
+  function noteTex(text, bg) {
+    const key = text + bg;
+    if (noteTexCache[key]) return noteTexCache[key];
+    const t = tex(192, 192, (c, W, H) => {
+      c.fillStyle = bg; c.fillRect(0, 0, W, H);
+      c.fillStyle = 'rgba(40,30,20,.07)'; c.fillRect(0, 0, W, 16);
+      const words = text.split(' '); const lines = []; let line = '';
+      c.font = '400 31px ' + HAND;
+      words.forEach((w) => { const n = line ? line + ' ' + w : w; if (c.measureText(n).width > W - 28) { lines.push(line); line = w; } else line = n; });
+      lines.push(line);
+      lines.forEach((l, i) => label(c, l, 14, H / 2 - (lines.length - 1) * 18 + i * 36, 31, '#39352f', 400, 'left', HAND));
+    });
+    noteTexCache[key] = t;
+    return t;
+  }
+  const woodTex = tex(1536, 576, (c, W, H) => {
+    c.fillStyle = '#dcbf97'; c.fillRect(0, 0, W, H);
+    const r = rng(3);
+    for (let i = 0; i < 240; i++) {
+      const y = r() * H, a = 0.03 + r() * 0.075;
+      c.strokeStyle = r() > .5 ? 'rgba(137,96,54,' + a + ')' : 'rgba(255,235,205,' + a + ')';
+      c.lineWidth = 0.8 + r() * 2.6;
+      c.beginPath(); c.moveTo(-10, y);
+      c.bezierCurveTo(W * .3, y + (r() - .5) * 18, W * .7, y + (r() - .5) * 18, W + 10, y + (r() - .5) * 8);
+      c.stroke();
+    }
+    c.fillStyle = 'rgba(120,84,45,.09)';
+    [192, 384].forEach((y) => c.fillRect(0, y, W, 2));
+  }, { aniso: maxAniso });
+  const floorTex = tex(1600, 1024, (c, W, H) => {
+    c.fillStyle = '#c8a67e'; c.fillRect(0, 0, W, H);
+    const r = rng(9), ph = H / 12;
+    for (let row = 0; row < 12; row++) {
+      let x = -r() * 400;
+      while (x < W) {
+        const w = 340 + r() * 380, v = r();
+        c.fillStyle = v > .66 ? '#cdab83' : v > .33 ? '#c29f76' : '#c6a47b';
+        c.fillRect(x, row * ph, w, ph);
+        for (let k = 0; k < 7; k++) {
+          c.strokeStyle = 'rgba(110,76,40,' + (0.03 + r() * .05) + ')'; c.lineWidth = 1.2;
+          const y = row * ph + r() * ph;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + (r() - .5) * 5); c.stroke();
+        }
+        c.fillStyle = 'rgba(80,55,30,.22)'; c.fillRect(x, row * ph, 2, ph);
+        x += w;
+      }
+      c.fillStyle = 'rgba(80,55,30,.2)'; c.fillRect(0, row * ph, W, 2);
+    }
+  }, { aniso: maxAniso });
+  const glowTex = tex(256, 256, (c, W) => {
+    const g = c.createRadialGradient(W / 2, W / 2, 0, W / 2, W / 2, W / 2);
+    g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(.4, 'rgba(255,255,255,.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    c.fillStyle = g; c.fillRect(0, 0, W, W);
+  });
+  function glow(parent, color, opacity, sx, sy, x, y, z) {
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: srgb(color), opacity, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    s.scale.set(sx, sy, 1); s.position.set(x, y, z); s.userData.noPick = true;
+    parent.add(s);
+    return s;
+  }
+  function glowPlane(parent, color, opacity, w, h, x, y, z, ry) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: glowTex, color: srgb(color), opacity, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    m.position.set(x, y, z); m.rotation.y = ry || 0; m.userData.noPick = true;
+    parent.add(m);
+    return m;
+  }
+  const texMat = (t, o) => mat(0xffffff, Object.assign({ map: t, flat: false }, o || {}));
+  /* Thin sheet lying on a surface, texture on its top face. */
+  function sheet(p, w, d, t, x, y, z, ry, edge) {
+    const e = mat(edge || PAL.paper);
+    const m = texMat(t);
+    return place(p, new THREE.BoxGeometry(w, 0.002, d), [e, e, m, e, e, e], x, y + 0.001, z, { ry: ry || 0 });
+  }
+  /* ================================================================
+     4. GROUND
+     ================================================================ */
+  const pickables = [];
+  const FLOOR_R = 1.6, FLOOR_Z = 0.3;
+  function buildFloor() {
+    const fm = texMat(floorTex), fe = mat(PAL.woodDeep, { flat: false });
+    place(scene, new THREE.CylinderGeometry(FLOOR_R, FLOOR_R, 0.12, 64), [fe, fm, fe], 0, -0.06, FLOOR_Z, { cast: false });
+  }
+  function leafGeo(len, w) {
+    const v = [0, 0, 0, w, len * .32, -len * .03, w * .78, len * .68, -len * .1, 0, len, -len * .25, -w * .78, len * .68, -len * .1, -w, len * .32, -len * .03, 0, len * .5, len * .03];
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+    g.setIndex([0, 1, 6, 1, 2, 6, 2, 3, 6, 3, 4, 6, 4, 5, 6, 5, 0, 6]);
+    g.computeVertexNormals();
+    return g;
+  }
+
+  /* ================================================================
+     5. WORKSTATION
+     ================================================================ */
+  const DESK_Y = 0.76;
+  function buildDesk() {
+    const d = new THREE.Group(); scene.add(d);
+    const top = texMat(woodTex);
+    const edge = mat(0xcaa77c);
+    place(d, new THREE.BoxGeometry(1.9, 0.04, 0.9), [edge, edge, top, edge, edge, edge], 0, DESK_Y - 0.02, 0);
+    /* trestle legs */
+    const legCol = mat(PAL.mistDeep, { r: 0.7 });
+    [-0.82, 0.82].forEach((x) => {
+      limb(d, V(x, DESK_Y - 0.04, -0.32), V(x, 0.02, -0.38), 0.016, 0.016, legCol, 6);
+      limb(d, V(x, DESK_Y - 0.04, 0.32), V(x, 0.02, 0.38), 0.016, 0.016, legCol, 6);
+      box(d, 0.03, 0.03, 0.72, legCol, x, DESK_Y - 0.055, 0);
+      box(d, 0.03, 0.025, 0.8, legCol, x, 0.02, 0);
+    });
+    box(d, 1.64, 0.025, 0.03, legCol, 0, DESK_Y - 0.06, -0.33);
+    /* drawer pedestal */
+    plate(d, 0.36, 0.56, 0.56, 0.012, PAL.warmWhite, -0.58, 0.33, -0.08);
+    [0.17, 0.35, 0.53].forEach((y) => {
+      box(d, 0.33, 0.16, 0.006, PAL.paper, -0.58, y, 0.2, { cast: false });
+      box(d, 0.09, 0.008, 0.012, PAL.mistDeep, -0.58, y + 0.04, 0.208, { cast: false });
+    });
+    [-0.72, -0.44].forEach((x) => [-0.3, 0.14].forEach((z) => ball(d, 0.024, 0.024, 0.024, PAL.mistDeep, x, 0.026, z, {}, 0)));
+
+    /* --- monitor --- */
+    const mon = new THREE.Group();
+    mon.position.set(0, 0, -0.22);
+    mon.rotation.y = 0.16;
+    d.add(mon);
+    const silver = mat(PAL.metal, { r: 0.42, m: 0.35 });
+    plate(mon, 0.3, 0.012, 0.22, 0.03, silver, 0, DESK_Y + 0.006, -0.02);
+    limb(mon, V(0, DESK_Y + 0.01, -0.06), V(0, 1.14, -0.055), 0.02, 0.017, silver, 10);
+    box(mon, 0.12, 0.08, 0.03, silver, 0, 1.15, -0.035);
+    const housing = plateGeo(1.04, 0.032, 0.62, 0.012);
+    housing.rotateX(Math.PI / 2);
+    place(mon, housing, mat(0x2d3138, { r: 0.65 }), 0, 1.18, 0);
+    box(mon, 0.72, 0.42, 0.012, 0xb5b9bd, 0, 1.18, -0.022);
+    place(mon, new THREE.PlaneGeometry(1.0, 0.578), new THREE.MeshBasicMaterial({ map: screenTex, color: 0xf0f0f0 }), 0, 1.18, 0.0172, { cast: false, recv: false });
+    glowPlane(mon, 0xb9d1ee, 0.13, 1.8, 1.25, 0, 1.18, 0.024);
+
+    /* --- keyboard, instanced keys --- */
+    const kb = new THREE.Group();
+    kb.position.set(-0.2, DESK_Y, 0.33);
+    d.add(kb);
+    plate(kb, 0.37, 0.014, 0.135, 0.012, PAL.warmWhite, 0, 0.007, 0);
+    const counts = [13, 13, 12, 11];
+    const keyGeo = new THREE.BoxGeometry(0.0225, 0.007, 0.0225);
+    const total = counts.reduce((a, b) => a + b, 0) + 1;
+    const keys = new THREE.InstancedMesh(keyGeo, mat(PAL.paper), total);
+    keys.castShadow = false; keys.receiveShadow = true;
+    const dummy = new THREE.Object3D();
+    let ki = 0;
+    counts.forEach((n, r) => {
+      const span = 0.026;
+      for (let i = 0; i < n; i++) {
+        dummy.position.set(-0.156 + (r * 0.007) + i * span, 0.0175, -0.046 + r * 0.0265);
+        dummy.scale.set(1, 1, 1); dummy.updateMatrix();
+        keys.setMatrixAt(ki++, dummy.matrix);
+      }
+    });
+    dummy.position.set(0, 0.0175, 0.0605); dummy.scale.set(5.5, 1, 0.82); dummy.updateMatrix();
+    keys.setMatrixAt(ki, dummy.matrix);
+    kb.add(keys);
+
+    /* --- mouse --- */
+    const mouse = ball(d, 0.034, 0.018, 0.058, PAL.warmWhite, 0.245, DESK_Y + 0.016, 0.335, {}, 2);
+    mouse.rotation.y = -0.1;
+    const mouseMark = box(d, 0.002, 0.004, 0.03, PAL.mistDeep, 0.245, DESK_Y + 0.033, 0.3, { cast: false });
+
+    /* --- sketches, notes, swatches --- */
+    sheet(d, 0.34, 0.25, sketchTex(0), -0.72, DESK_Y, 0.25, 0.16);
+    sheet(d, 0.34, 0.25, sketchTex(1), -0.7, DESK_Y + 0.002, 0.28, -0.06);
+    limb(d, V(-0.63, DESK_Y + 0.008, 0.36), V(-0.53, DESK_Y + 0.008, 0.2), 0.0045, 0.0045, PAL.oatDeep, 6);
+    const r = rng(61);
+    const noteColors = ['#f7e2b9', '#f3b7a0', '#c7d5e0'];
+    const noteSpots = [[0.72, 0.1], [0.82, 0.05], [0.77, -0.01]];
+    const stickies = ['user needs', 'pain points', 'insights'].map((theme, i) => {
+      const m = sheet(d, 0.09, 0.09, noteTex(theme, noteColors[i]), noteSpots[i][0], DESK_Y + i * 0.001, noteSpots[i][1], (r() - .5) * .4, 0xf1e6d2);
+      m.userData.rest = m.position.clone();
+      m.userData.restRy = m.rotation.y;
+      m.userData.index = i;
+      return m;
+    });
+    const swatch = (col, name, hex) => tex(128, 256, (c, W, H) => {
+      c.fillStyle = '#fbf8f3'; c.fillRect(0, 0, W, H);
+      c.fillStyle = col; c.fillRect(0, 0, W, 180);
+      label(c, name, 10, 206, 17, '#2a2f37', 600); label(c, hex, 10, 232, 15, '#7c786f');
+    });
+    [[0xea7a5a, 'Coral', '#EA7A5A', -.52], [0x8d9dac, 'Mist', '#8D9DAC', -.2], [0xdccbb0, 'Oat', '#DCCBB0', .12], [0xf5efe5, 'Shell', '#F5EFE5', .44]].forEach((s, i) => {
+      const g = new THREE.Group();
+      g.position.set(0.56, DESK_Y + 0.001 + i * 0.0012, 0.04);
+      g.rotation.y = s[3];
+      d.add(g);
+      sheet(g, 0.065, 0.13, swatch('#' + s[0].toString(16), s[1], s[2]), 0, 0, -0.06, 0);
+    });
+
+    /* --- phone on stand --- */
+    const stand = new THREE.Group();
+    stand.position.set(0.62, DESK_Y, -0.2);
+    stand.rotation.y = -0.1;
+    d.add(stand);
+    plate(stand, 0.12, 0.018, 0.1, 0.012, mat(PAL.woodDeep), 0, 0.009, 0);
+    box(stand, 0.1, 0.012, 0.02, mat(PAL.woodDeep), 0, 0.024, 0.035);
+    const tilt = -0.28;
+    box(stand, 0.05, 0.13, 0.012, mat(PAL.woodDeep), 0, 0.075, -0.018, { rx: tilt });
+    const ph = new THREE.Group(); ph.position.set(0, 0.112, 0.008); ph.rotation.x = tilt; stand.add(ph);
+    const phoneBody = plateGeo(0.078, 0.008, 0.164, 0.012);
+    phoneBody.rotateX(Math.PI / 2);
+    place(ph, phoneBody, 0x20242a, 0, 0, 0);
+    const phoneBase = new THREE.MeshBasicMaterial({ map: phoneTexes[2], color: 0xe6e6e6 });
+    const phoneTop = new THREE.MeshBasicMaterial({ map: phoneTexes[2], color: 0xe6e6e6, transparent: true, opacity: 0, depthWrite: false });
+    place(ph, new THREE.PlaneGeometry(0.072, 0.156), phoneBase, 0, 0, 0.0042, { cast: false, recv: false });
+    place(ph, new THREE.PlaneGeometry(0.072, 0.156), phoneTop, 0, 0, 0.0047, { cast: false, recv: false, noPick: true }).renderOrder = 2;
+
+    /* --- pen cup --- */
+    cyl(d, 0.042, 0.038, 0.11, mat(PAL.mistPale), 0.46, DESK_Y + 0.055, -0.3, 10);
+    cyl(d, 0.037, 0.037, 0.003, 0x3d3a37, 0.46, DESK_Y + 0.1, -0.3, 10, { cast: false });
+    [[PAL.ink, 0.012, 0.008, 0.2, 0.09], [PAL.coral, -0.012, 0.01, 0.17, -0.12], [PAL.wood, 0, -0.014, 0.21, 0.05], [PAL.mistDeep, 0.018, -0.008, 0.18, 0.17]].forEach((p) => {
+      const b = V(0.46 + p[1], DESK_Y + 0.02, -0.3 + p[2]);
+      limb(d, b, b.clone().add(V(p[4] * 0.45, p[3], p[2] * 2)), 0.0045, 0.0045, p[0], 6);
+    });
+
+    /* --- coffee --- */
+    cyl(d, 0.075, 0.062, 0.008, mat(PAL.oat), 0.75, DESK_Y + 0.004, 0.31, 14);
+    const mx = 0.75, mz = 0.31;
+    cyl(d, 0.042, 0.036, 0.085, mat(PAL.warmWhite), mx, DESK_Y + 0.05, mz, 12);
+    cyl(d, 0.038, 0.038, 0.002, 0x4a2e1f, mx, DESK_Y + 0.09, mz, 12, { cast: false });
+    place(d, new THREE.TorusGeometry(0.024, 0.006, 6, 12, Math.PI), mat(PAL.warmWhite), mx + 0.038, DESK_Y + 0.05, mz, { rz: -Math.PI / 2, ry: 0.0 });
+
+    /* --- desk plant --- */
+    cyl(d, 0.058, 0.044, 0.09, mat(PAL.warmWhite), -0.78, DESK_Y + 0.045, -0.3, 8);
+    cyl(d, 0.052, 0.052, 0.005, 0x4a3d31, -0.78, DESK_Y + 0.088, -0.3, 8, { cast: false });
+    const lg = mat(PAL.leaf, { side: THREE.DoubleSide }), lg2 = mat(PAL.leafDeep, { side: THREE.DoubleSide });
+    for (let i = 0; i < 9; i++) {
+      const m = place(d, leafGeo(0.13 + (i % 3) * .03, 0.035), i % 2 ? lg : lg2, -0.78, DESK_Y + 0.09, -0.3);
+      m.rotation.set(0, i * 2.4, 0.25 + (i % 4) * .22, 'YXZ');
+    }
+
+    /* --- desk lamp --- */
+    const lx = 0.82, lz = -0.28;
+    const brass = mat(0xc9b28a, { r: 0.5, m: 0.25 });
+    cyl(d, 0.085, 0.09, 0.016, brass, lx, DESK_Y + 0.008, lz, 14);
+    const e1 = V(lx, DESK_Y + 0.016, lz), e2 = V(lx + 0.06, 1.1, lz - 0.02), e3 = V(lx - 0.16, 1.3, lz + 0.14);
+    limb(d, e1, e2, 0.0085, 0.0085, brass, 6);
+    limb(d, e2, e3, 0.0075, 0.0075, brass, 6);
+    ball(d, 0.015, 0.015, 0.015, brass, e2.x, e2.y, e2.z, {}, 0);
+    const shade = place(d, new THREE.ConeGeometry(0.085, 0.1, 12, 1, true), mat(PAL.warmWhite, { side: THREE.DoubleSide }), e3.x - 0.015, e3.y - 0.045, e3.z + 0.015);
+    shade.rotation.set(0.14, 0, 0.12);
+    const bulb = new THREE.MeshBasicMaterial({ color: srgb(0xffe0ad) });
+    ball(d, 0.03, 0.022, 0.03, bulb, e3.x - 0.022, e3.y - 0.078, e3.z + 0.022, { cast: false, recv: false });
+    glow(d, 0xffc38a, 0.42, 0.62, 0.62, e3.x - 0.022, e3.y - 0.08, e3.z + 0.022);
+    return { lampPos: V(e3.x - 0.022, e3.y - 0.08, e3.z + 0.022), mon, mouseParts: [mouse, mouseMark], stickies, phoneBase, phoneTop, mug: V(mx, DESK_Y + 0.092, mz) };
+  }
+
+  /* ================================================================
+     6. CHAIR & DESIGNER
+     ================================================================ */
+  function buildChair() {
+    const c = new THREE.Group(); scene.add(c);
+    const cz = 0.84;
+    const frame = mat(0x3b424c, { r: 0.65 }), fabric = mat(PAL.mist), dark = mat(0x2d323a);
+    limb(c, V(0, 0.09, cz), V(0, 0.44, cz), 0.026, 0.022, mat(PAL.metal, { r: .45, m: .3 }), 8);
+    cyl(c, 0.05, 0.06, 0.05, frame, 0, 0.1, cz, 8);
+    for (let i = 0; i < 5; i++) {
+      const a = i / 5 * Math.PI * 2 + 0.3, ex = Math.cos(a) * 0.29, ez = Math.sin(a) * 0.29;
+      limb(c, V(0, 0.095, cz), V(ex, 0.065, cz + ez), 0.02, 0.014, frame, 5);
+      cyl(c, 0.028, 0.028, 0.026, dark, ex, 0.03, cz + ez, 8, { rx: Math.PI / 2, ry: a });
+    }
+    box(c, 0.2, 0.03, 0.2, frame, 0, 0.44, cz);
+    plate(c, 0.5, 0.05, 0.48, 0.09, fabric, 0, 0.475, cz);
+    plate(c, 0.46, 0.012, 0.44, 0.08, mat(0x9fadba), 0, 0.502, cz);
+    /* spine and curved mesh back */
+    limb(c, V(0, 0.45, cz + 0.2), V(0, 0.54, cz + 0.27), 0.022, 0.022, frame, 6);
+    limb(c, V(0, 0.54, cz + 0.27), V(0, 0.74, cz + 0.2), 0.022, 0.018, frame, 6);
+    const g = new THREE.BoxGeometry(0.42, 0.37, 0.026, 8, 4, 1);
+    const pos = g.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), y = pos.getY(i);
+      pos.setZ(i, pos.getZ(i) - 1.05 * x * x + 0.24 * y);
+      pos.setX(i, x * (1 - 0.13 * Math.max(0, y) * 2));
+    }
+    g.computeVertexNormals();
+    place(c, g, mat(PAL.mistDeep), 0, 0.675, cz + 0.145);
+    /* arm rests */
+    [-1, 1].forEach((s) => {
+      limb(c, V(s * 0.24, 0.45, cz - 0.02), V(s * 0.3, 0.72, cz - 0.1), 0.014, 0.014, frame, 6);
+      plate(c, 0.07, 0.024, 0.24, 0.03, dark, s * 0.305, 0.73, cz - 0.18);
+    });
+  }
+
+  const HEAD = { x: 0.148, y: 0.138, z: 0.142 };
+  const onHead = (ux, uy, uz, k) => V(ux * HEAD.x * (k || 1), uy * HEAD.y * (k || 1), uz * HEAD.z * (k || 1));
+  /* Hair: vertices outside the hair region sink under the skin, which leaves a clean round hairline. */
+  function hairCapGeo() {
+    const g = new THREE.SphereGeometry(1, 72, 54);
+    const p = g.attributes.position;
+    const C = V(0, -0.25, -0.97).normalize(), up = V(0, 0.97, -0.25).normalize();
+    const u = new THREE.Vector3();
+    for (let i = 0; i < p.count; i++) {
+      u.set(p.getX(i), p.getY(i), p.getZ(i));
+      const ang = Math.acos(THREE.MathUtils.clamp(u.dot(C), -1, 1));
+      const uy2 = u.dot(up), t2 = (u.x * u.x) / Math.max(1e-5, u.x * u.x + uy2 * uy2);
+      const h = Math.min(ang - (0.77 + 0.95 * t2), (u.y + 0.55) * 0.9);
+      const v = onHead(u.x, u.y, u.z, 0.94 + 0.12 * THREE.MathUtils.smoothstep(h, -0.11, 0.11));
+      p.setXYZ(i, v.x, v.y, v.z);
+    }
+    g.computeVertexNormals();
+    return g;
+  }
+
+  function buildDesigner(mouseParts) {
+    const person = new THREE.Group(); scene.add(person);
+    const soft = (c, r) => mat(c, { flat: false, r: r === undefined ? 0.85 : r });
+    const skin = soft(PAL.skin, 0.7), knit = soft(PAL.oat), rib = soft(PAL.oatDeep), pants = soft(PAL.trouser);
+    const hairM = mat(PAL.hair, { flat: false, r: 0.5, side: THREE.DoubleSide });
+    const sphere = (sx, sy, sz, c, x, y, z, o, parent) => {
+      const m = place(parent || person, new THREE.SphereGeometry(1, 24, 18), c, x, y, z, o);
+      m.scale.set(sx, sy, sz);
+      return m;
+    };
+    /* Rounded limb: tapered tube with a ball at each end. */
+    const capsule = (a, b, ra, rb, c) => {
+      limb(person, a, b, ra, rb, c, 16);
+      sphere(ra, ra, ra, c, a.x, a.y, a.z);
+      sphere(rb, rb, rb, c, b.x, b.y, b.z);
+    };
+
+    /* body */
+    const ring = (y, z, rx, rz) => ({ c: V(0, y, z), u: V(rx, 0, 0), v: V(0, 0, rz) });
+    place(person, loftGeo([ring(0.51, 0.83, 0.1, 0.09), ring(0.54, 0.83, 0.15, 0.125), ring(0.6, 0.825, 0.172, 0.135)], 24), pants, 0, 0, 0);
+    place(person, loftGeo([ring(0.585, 0.825, 0.184, 0.146), ring(0.63, 0.822, 0.184, 0.146)], 24), rib, 0, 0, 0);
+    const torso = place(person, loftGeo([ring(0.625, 0.822, 0.176, 0.138), ring(0.72, 0.815, 0.172, 0.134), ring(0.82, 0.805, 0.17, 0.126), ring(0.9, 0.795, 0.15, 0.108), ring(0.955, 0.79, 0.095, 0.08), ring(0.985, 0.788, 0.06, 0.056)], 24), knit, 0, 0, 0);
+    const collar = place(person, new THREE.TorusGeometry(0.062, 0.02, 10, 24), rib, 0, 0.985, 0.788, { rx: Math.PI / 2 });
+
+    /* head: big and round, turned to her right so the side of the face reads */
+    const neck = limb(person, V(0, 0.97, 0.788), V(0, 1.03, 0.782), 0.042, 0.042, skin, 12);
+    const hp = new THREE.Group();
+    hp.position.set(0, 1.0, 0.785);
+    hp.rotation.set(-0.08, -0.58, -0.03, 'YXZ');
+    person.add(hp);
+    const head = new THREE.Group(); head.position.set(0, 0.13, -0.008); hp.add(head);
+    sphere(HEAD.x, HEAD.y, HEAD.z, skin, 0, 0, 0, {}, head);
+    const black = mat(0x1c1a1e, { flat: false, r: 0.3 }), white = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const blush = soft(0xf0a18c), lip = soft(0xa9554c);
+    const eyes = [];
+    [-1, 1].forEach((s) => {
+      const eye = onHead(s * 0.44, -0.04, -0.9);
+      eyes.push(sphere(0.0165, 0.0225, 0.007, black, eye.x, eye.y, eye.z, { ry: -s * 0.45, cast: false }, head));
+      eyes.push(sphere(0.0058, 0.0058, 0.003, white, eye.x + 0.0035, eye.y + 0.009, eye.z - 0.0065, { cast: false, recv: false }, head));
+      const brow = onHead(s * 0.45, 0.27, -0.86, 1.01);
+      sphere(0.0175, 0.0034, 0.004, soft(0x2b2526), brow.x, brow.y, brow.z, { ry: -s * 0.45, rz: s * 0.1, cast: false }, head);
+      const c = onHead(s * 0.62, -0.32, -0.72);
+      sphere(0.024, 0.0135, 0.005, blush, c.x, c.y, c.z, { ry: -s * 0.68, cast: false }, head);
+      sphere(0.014, 0.026, 0.021, skin, s * HEAD.x, -0.012, 0.012, {}, head);
+    });
+    const n = onHead(0, -0.2, -0.98);
+    sphere(0.0105, 0.009, 0.013, skin, n.x, n.y, n.z, {}, head);
+    const mouth = onHead(0, -0.48, -0.875);
+    place(head, new THREE.TorusGeometry(0.0145, 0.0026, 8, 16, Math.PI), lip, mouth.x, mouth.y + 0.008, mouth.z, { rz: Math.PI, rx: 0.42, order: 'ZXY', cast: false });
+
+    /* hair and side-swept fringe */
+    place(head, hairCapGeo(), hairM, 0, 0, 0);
+    const swoop = (pts, radii) => place(head, tubeGeo(pts.map((q) => onHead(q[0], q[1], q[2], 1.03)), radii, 18, 12), hairM, 0, 0, 0);
+    swoop([[-0.14, 0.76, -0.63], [0.3, 0.7, -0.65], [0.66, 0.46, -0.6], [0.86, 0.2, -0.46]], [0.016, 0.024, 0.02, 0.004]);
+    swoop([[-0.1, 0.76, -0.64], [-0.45, 0.68, -0.58], [-0.72, 0.42, -0.55], [-0.88, 0.16, -0.44]], [0.014, 0.022, 0.018, 0.004]);
+
+    /* chunky ponytail with a curled tip, in body space so it falls with gravity */
+    person.updateMatrixWorld(true);
+    const T = head.localToWorld(onHead(0, 0.36, 0.94, 1.03));
+    const tieAxis = head.localToWorld(V(0, 0.05, 0.3)).sub(T).normalize();
+    const tie = place(person, new THREE.TorusGeometry(0.026, 0.01, 10, 20), soft(PAL.coral, 0.6), T.x, T.y, T.z);
+    tie.quaternion.setFromUnitVectors(V(0, 0, 1), tieAxis);
+    const tail = [T, T.clone().add(V(.012, .045, .055)), T.clone().add(V(.038, .01, .118)), T.clone().add(V(.062, -.09, .125)), T.clone().add(V(.074, -.2, .1)), T.clone().add(V(.094, -.285, .085)), T.clone().add(V(.126, -.318, .09))];
+    const tailMesh = place(person, tubeGeo(tail, [.022, .05, .064, .064, .052, .03, .004], 28, 14), hairM, 0, 0, 0);
+
+    /* Motion pivots. attach() keeps every part exactly where it was built. */
+    const chest = new THREE.Group(); chest.position.set(0, 0.62, 0.82); person.add(chest);
+    [torso, collar, neck, hp].forEach((m) => chest.attach(m));
+    const tailPivot = new THREE.Group(); tailPivot.position.copy(T); person.add(tailPivot);
+    [tailMesh, tie].forEach((m) => tailPivot.attach(m));
+    head.attach(tailPivot);
+    const tailRest = tailPivot.quaternion.clone();
+
+    /* mitten-like arms */
+    const arm = (S, E, W) => {
+      capsule(S, E, 0.056, 0.05, knit);
+      const from = person.children.length;
+      capsule(E, W, 0.05, 0.043, knit);
+      const cuff = place(person, new THREE.TorusGeometry(0.041, 0.011, 8, 18), rib, W.x, W.y, W.z);
+      cuff.quaternion.setFromUnitVectors(V(0, 0, 1), W.clone().sub(E).normalize());
+      return person.children.slice(from);
+    };
+    /* right hand rests on the mouse */
+    const rightForearm = arm(V(0.172, 0.885, 0.79), V(0.275, 0.8, 0.68), V(0.252, 0.815, 0.44));
+    rightForearm.push(sphere(0.038, 0.032, 0.047, skin, 0.246, 0.81, 0.38, { ry: 0.12 }));
+    rightForearm.push(sphere(0.014, 0.012, 0.024, skin, 0.207, 0.79, 0.365, { ry: 0.3 }));
+    /* forearm, hand and mouse swing together around the elbow */
+    const forearm = new THREE.Group(); forearm.position.set(0.275, 0.8, 0.68); person.add(forearm);
+    rightForearm.concat(mouseParts).forEach((m) => forearm.attach(m));
+    /* left hand rests beside the keyboard */
+    const leftParts = arm(V(-0.172, 0.885, 0.79), V(-0.285, 0.8, 0.68), V(-0.44, 0.805, 0.49));
+    leftParts.push(sphere(0.04, 0.024, 0.052, skin, -0.47, 0.787, 0.42, { ry: 0.42 }));
+    leftParts.push(sphere(0.014, 0.012, 0.024, skin, -0.43, 0.783, 0.405, { ry: 0.1 }));
+    /* swings over to the keyboard while she types */
+    const leftForearm = new THREE.Group(); leftForearm.position.set(-0.285, 0.8, 0.68); person.add(leftForearm);
+    leftParts.forEach((m) => leftForearm.attach(m));
+
+    /* short, rounded legs and shoes */
+    [[1, 0.42, 0.44], [-1, 0.43, 0.5]].forEach((l) => {
+      const s = l[0];
+      const H = V(s * 0.09, 0.575, 0.8), K = V(s * 0.115, 0.535, l[1]), Ank = V(s * 0.125, 0.12, l[2]);
+      capsule(H, K, 0.086, 0.07, pants);
+      capsule(K, Ank, 0.067, 0.05, pants);
+      sphere(0.058, 0.05, 0.102, soft(PAL.warmWhite), Ank.x, 0.058, Ank.z - 0.05);
+      plate(person, 0.104, 0.016, 0.2, 0.05, soft(PAL.oatDeep), Ank.x, 0.01, Ank.z - 0.05);
+    });
+    return { person, hp, chest, tailPivot, tailRest, forearm, leftForearm, eyes, hpYaw: hp.rotation.y, hpPitch: hp.rotation.x };
+  }
+
+  /* ================================================================
+     7. LIGHTS
+     ================================================================ */
+  function buildLights(lampPos) {
+    scene.add(new THREE.HemisphereLight(srgb(0xf1e4d6), srgb(0xa49482), 0.8));
+
+    /* low evening key from the side */
+    const sun = new THREE.DirectionalLight(srgb(0xffc08c), 0.85);
+    sun.target.position.set(0, 0.6, 0.3);
+    sun.position.copy(sun.target.position).addScaledVector(V(1, -0.62, 0.3).normalize(), -9);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 1, far: 18 });
+    sun.shadow.radius = 3;
+    sun.shadow.bias = -0.0004;
+    sun.shadow.normalBias = 0.012;
+    scene.add(sun, sun.target);
+
+    /* soft, wide skylight: contact shadows outside the sun patch */
+    const sky = new THREE.DirectionalLight(srgb(0xfff0e0), 0.3);
+    sky.position.set(1.4, 6, 2.4);
+    sky.target.position.set(0, 0.5, 0.4);
+    sky.castShadow = true;
+    sky.shadow.mapSize.set(2048, 2048);
+    Object.assign(sky.shadow.camera, { left: -4.5, right: 4.5, top: 4.5, bottom: -4.5, near: 1, far: 12 });
+    sky.shadow.radius = 5;
+    sky.shadow.bias = -0.0005;
+    sky.shadow.normalBias = 0.014;
+    scene.add(sky, sky.target);
+
+    /* cold fill from the room side */
+    const fill = new THREE.DirectionalLight(srgb(0xa8bfd8), 0.34);
+    fill.position.set(4.5, 2.6, 4.2);
+    fill.target.position.set(0, 0.9, 0.3);
+    scene.add(fill, fill.target);
+
+    /* desk lamp: small warm pool */
+    const lamp = new THREE.SpotLight(srgb(0xffc98f), 1.75, 2.1, 0.72, 0.85, 1.4);
+    lamp.position.copy(lampPos);
+    lamp.target.position.set(lampPos.x - 0.28, DESK_Y, lampPos.z + 0.28);
+    lamp.castShadow = true;
+    lamp.shadow.mapSize.set(1024, 1024);
+    lamp.shadow.camera.near = 0.04; lamp.shadow.camera.far = 2.2;
+    lamp.shadow.radius = 3; lamp.shadow.bias = -0.0008; lamp.shadow.normalBias = 0.006;
+    scene.add(lamp, lamp.target);
+    const bounce = new THREE.PointLight(srgb(0xffc695), 0.42, 1.5, 1.8);
+    bounce.position.set(0.62, 1.22, 0.42);
+    scene.add(bounce);
+
+    /* faint screen glow on her face and hands */
+    const scr = new THREE.PointLight(srgb(0xb8d1ef), 0.4, 1.5, 1.8);
+    scr.position.set(0.02, 1.16, 0.08);
+    scene.add(scr);
+  }
+
+  /* ================================================================
+     8. BUILD
+     ================================================================ */
+  buildFloor();
+  const deskInfo = buildDesk();
+  buildChair();
+  const designer = buildDesigner(deskInfo.mouseParts);
+  buildLights(deskInfo.lampPos);
+  scene.traverse((o) => { if (o.isMesh && !o.userData.noPick) pickables.push(o); });
+
+  /* ================================================================
+     9. CAMERA FIT
+     ================================================================ */
+  const VIEW = { az: 0.8, polar: 1.3 };
+  const fit = { distance: 7 };
+  /* Framing cylinder around the platform's axis. Tall phone screens keep desk and designer whole at every turn;
+     elsewhere the view sits closer, and the ends of the desk may touch the frame edge at some angles. */
+  function framingPoints(radius, y0, y1) {
+    const pts = [];
+    [y0, y1].forEach((y) => {
+      for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2; pts.push(V(Math.cos(a) * radius, y, FLOOR_Z + Math.sin(a) * radius)); }
+    });
+    return pts;
+  }
+  const FRAME_WHOLE = framingPoints(1.25, 0, 1.52);
+  const FRAME_CLOSE = framingPoints(1.0, 0.3, 1.5);
+  let userMoved = false;
+
+  function fitView() {
+    const a = camera.aspect;
+    const dir = new THREE.Vector3().setFromSphericalCoords(1, VIEW.polar, VIEW.az);
+    const right = V(0, 1, 0).cross(dir).normalize();
+    const up = dir.clone().cross(right).normalize();
+    const margin = a < 1.25 ? 0.95 : 0.97;
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * margin;
+    const tanH = tanV * a;
+    const target = V(0, 0.75, 0.25);
+    const FOCUS_POINTS = a < 0.8 && !EMBED ? FRAME_WHOLE : FRAME_CLOSE;
+    const fitPts = FOCUS_POINTS;
+    let dist = 7;
+    for (let iter = 0; iter < 8; iter++) {
+      let need = 0, xmin = 1e9, xmax = -1e9, ymin = 1e9, ymax = -1e9;
+      fitPts.forEach((p) => {
+        const v = p.clone().sub(target);
+        need = Math.max(need, v.dot(dir) + Math.abs(v.dot(right)) / tanH, v.dot(dir) + Math.abs(v.dot(up)) / tanV);
+      });
+      FOCUS_POINTS.forEach((p) => {
+        const v = p.clone().sub(target);
+        const depth = dist - v.dot(dir);
+        const x = v.dot(right) / depth, y = v.dot(up) / depth;
+        xmin = Math.min(xmin, x); xmax = Math.max(xmax, x);
+        ymin = Math.min(ymin, y); ymax = Math.max(ymax, y);
+      });
+      dist = need;
+      target.addScaledVector(right, (xmin + xmax) / 2 * dist).addScaledVector(up, (ymin + ymax) / 2 * dist);
+    }
+    fit.distance = dist;
+    controls.target.copy(target);
+    camera.position.copy(target).addScaledVector(dir, dist);
+    controls.maxDistance = dist * 2.1;
+    camera.lookAt(target);
+    controls.update();
+    invalidate();
+  }
+
+  /* ================================================================
+     10. MAP-STYLE CONTROLS
+     drag = pan · wheel / pinch = zoom at pointer · right drag or Shift drag = rotate
+     ================================================================ */
+  const MIN_DIST = 0.32, CAM_TO_POINT_MIN = 0.16;
+  const BOUNDS = { min: V(-2.6, 0.02, -2.3), max: V(2.6, 2.2, 2.9) };
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.12;
+  controls.enableZoom = false;              // replaced by zoomAbout()
+  controls.enablePan = true;
+  controls.enableRotate = true;
+  controls.screenSpacePanning = true;
+  controls.rotateSpeed = 0.75;
+  controls.minDistance = MIN_DIST;
+  controls.minPolarAngle = 0.06;
+  controls.maxPolarAngle = 1.54;            // keeps the camera above the floor
+  controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+  controls.touches = { ONE: THREE.TOUCH.PAN, TWO: -1 }; // two fingers handled below
+
+  const ray = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  const tmpPlane = new THREE.Plane();
+  const viewDir = new THREE.Vector3();
+  const tmp = new THREE.Vector3();
+  let needsRender = true;
+  function invalidate() { needsRender = true; }
+
+  function eventNdc(clientX, clientY) {
+    const r = canvas.getBoundingClientRect();
+    ndc.set(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1);
+    return ndc;
+  }
+  function isShown(o) { while (o) { if (!o.visible) return false; o = o.parent; } return true; }
+  function planePointAt(clientX, clientY, through) {
+    camera.updateMatrixWorld();
+    ray.setFromCamera(eventNdc(clientX, clientY), camera);
+    camera.getWorldDirection(viewDir);
+    tmpPlane.setFromNormalAndCoplanarPoint(viewDir, through);
+    const hit = ray.ray.intersectPlane(tmpPlane, new THREE.Vector3());
+    return hit || through.clone();
+  }
+  /* What is under the pointer: the first visible surface, or else the orbit plane. */
+  function worldPointAt(clientX, clientY) {
+    camera.updateMatrixWorld();
+    ray.setFromCamera(eventNdc(clientX, clientY), camera);
+    const hits = ray.intersectObjects(pickables, false);
+    for (let i = 0; i < hits.length; i++) if (isShown(hits[i].object)) return hits[i].point.clone();
+    return planePointAt(clientX, clientY, controls.target);
+  }
+  /* Scales camera and target around P. P sits on the pointer ray, so it stays under the pointer. */
+  function zoomAbout(P, s) {
+    const d = camera.position.distanceTo(controls.target);
+    let k = THREE.MathUtils.clamp(d * s, controls.minDistance, controls.maxDistance) / d;
+    if (k < 1) {
+      const dP = camera.position.distanceTo(P);
+      if (dP * k < CAM_TO_POINT_MIN) k = Math.min(1, CAM_TO_POINT_MIN / dP);
+    }
+    if (k === 1) return;
+    camera.position.sub(P).multiplyScalar(k).add(P);
+    controls.target.sub(P).multiplyScalar(k).add(P);
+    keepInBounds();
+    invalidate();
+  }
+  function keepInBounds() {
+    tmp.copy(controls.target).clamp(BOUNDS.min, BOUNDS.max).sub(controls.target);
+    if (tmp.lengthSq() > 0) { controls.target.add(tmp); camera.position.add(tmp); }
+  }
+
+  /* --- wheel / trackpad --- */
+  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wheel = { pending: 0, point: null, x: -1, y: -1, t: 0 };
+  canvas.addEventListener('wheel', (e) => {
+    if (wheelBelongsToPage(e)) return;
+    e.preventDefault();
+    userMoved = true;
+    cancelFlight();
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 100 : 1;
+    const amount = THREE.MathUtils.clamp(e.deltaY * unit * (e.ctrlKey ? 0.011 : 0.0017), -0.7, 0.7);
+    const now = performance.now();
+    if (!wheel.point || now - wheel.t > 140 || Math.hypot(e.clientX - wheel.x, e.clientY - wheel.y) > 3) {
+      wheel.point = worldPointAt(e.clientX, e.clientY);
+      wheel.x = e.clientX; wheel.y = e.clientY;
+    }
+    wheel.t = now;
+    wheel.pending += amount;
+    invalidate();
+  }, { passive: false });
+  function stepWheel() {
+    if (!wheel.point || Math.abs(wheel.pending) < 0.0004) { wheel.pending = 0; return; }
+    const step = reduceMotion ? wheel.pending : wheel.pending * 0.3;
+    wheel.pending -= step;
+    zoomAbout(wheel.point, Math.exp(step));
+  }
+
+  /* --- Embedded: click the scene to let the wheel zoom it; leaving hands the wheel back.
+         One finger scrolls the page; two fingers still pan, pinch and twist. --- */
+  if (EMBED) {
+    canvas.addEventListener('pointerdown', () => { engaged = true; });
+    document.documentElement.addEventListener('mouseleave', () => { engaged = false; });
+    ['touchstart', 'touchmove'].forEach((n) => window.addEventListener(n, (e) => {
+      if (e.target === canvas && e.touches.length < 2) e.stopPropagation();
+    }, { capture: true, passive: true }));
+  }
+
+  /* --- Shift always means rotate: OrbitControls flips PAN and ROTATE when Shift is held,
+         so the right button is swapped before it sees the event. --- */
+  window.addEventListener('pointerdown', (e) => {
+    if (e.target !== canvas) return;
+    userMoved = true;
+    cancelFlight();
+    wheel.pending = 0;
+    controls.mouseButtons.RIGHT = e.shiftKey ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
+    if (e.pointerType === 'mouse') {
+      canvas.classList.add((e.shiftKey || e.button === 2) ? 'rotating' : 'dragging');
+    }
+  }, true);
+  window.addEventListener('pointerup', () => canvas.classList.remove('rotating', 'dragging'));
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  /* --- two fingers: pinch around the midpoint, drag follows the midpoint, a clear twist rotates --- */
+  const pinch = { active: false, dist: 0, x: 0, y: 0, angle: 0, depth: new THREE.Vector3(), twist: 0, twisting: false };
+  function readTouches(e) {
+    const a = e.touches[0], b = e.touches[1];
+    const x = (a.clientX + b.clientX) / 2, y = (a.clientY + b.clientY) / 2;
+    return { x, y, dist: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), angle: Math.atan2(b.clientY - a.clientY, b.clientX - a.clientX) };
+  }
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    userMoved = true;
+    cancelFlight();
+    wheel.pending = 0;
+    if (e.touches.length === 2) {
+      const t = readTouches(e);
+      Object.assign(pinch, { active: true, dist: t.dist, x: t.x, y: t.y, angle: t.angle, twist: 0, twisting: false });
+      pinch.depth.copy(worldPointAt(t.x, t.y));
+    } else {
+      pinch.active = false;
+    }
+  }, { passive: false });
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (!pinch.active || e.touches.length !== 2) return;
+    const t = readTouches(e);
+    /* midpoint drag */
+    const from = planePointAt(pinch.x, pinch.y, pinch.depth);
+    const to = planePointAt(t.x, t.y, pinch.depth);
+    tmp.copy(from).sub(to);
+    camera.position.add(tmp); controls.target.add(tmp);
+    /* pinch */
+    const center = planePointAt(t.x, t.y, pinch.depth);
+    if (t.dist > 1 && pinch.dist > 1) zoomAbout(center, pinch.dist / t.dist);
+    /* twist, ignored until it is clearly intentional */
+    let da = t.angle - pinch.angle;
+    if (da > Math.PI) da -= Math.PI * 2; else if (da < -Math.PI) da += Math.PI * 2;
+    pinch.twist += da;
+    if (!pinch.twisting && Math.abs(pinch.twist) > 0.16) pinch.twisting = true;
+    if (pinch.twisting) {
+      const c = planePointAt(t.x, t.y, pinch.depth);
+      const axis = V(0, 1, 0);
+      camera.position.sub(c).applyAxisAngle(axis, -da).add(c);
+      controls.target.sub(c).applyAxisAngle(axis, -da).add(c);
+    }
+    keepInBounds();
+    Object.assign(pinch, { dist: t.dist, x: t.x, y: t.y, angle: t.angle });
+    invalidate();
+  }, { passive: false });
+  const endTouch = (e) => { if (e.touches.length < 2) pinch.active = false; };
+  canvas.addEventListener('touchend', endTouch);
+  canvas.addEventListener('touchcancel', endTouch);
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
+  document.addEventListener('gesturechange', (e) => e.preventDefault());
+
+  controls.addEventListener('change', invalidate);
+
+  /* ================================================================
+     11. AMBIENT MOTION
+     ================================================================ */
+  const screenFx = new THREE.Group();
+  deskInfo.mon.add(screenFx);
+  /* Monitor texture pixels to monitor space. Same layout numbers as the screen texture. */
+  const UI = { W: 2048, H: 1184, x0: 366, y0: 118, pw: 222, ph: 450, gap: 88, wy: 668, wh: 440, w1: 640, x2: 1072, w2: 658 };
+  const pxToMon = (x, y, z) => V((x / UI.W - 0.5) * 1.0, 1.18 + (0.5 - y / UI.H) * 0.578, z);
+  const BOARDS = [];
+  for (let i = 0; i < 4; i++) BOARDS.push([UI.x0 + i * (UI.pw + UI.gap), UI.y0, UI.pw, UI.ph]);
+  BOARDS.push([UI.x0, UI.wy, UI.w1, UI.wh], [UI.x2, UI.wy, UI.w2, UI.wh]);
+  const LINKS = [];
+  for (let i = 0; i < 3; i++) {
+    const sx = UI.x0 + i * (UI.pw + UI.gap) + UI.pw, tx = sx + UI.gap, sy = UI.y0 + 150 + i * 70, ty = UI.y0 + 110 + i * 30;
+    LINKS.push({ pts: [sx, sy, sx + 56, sy, tx - 56, ty, tx - 3, ty], color: i === 1 ? '#ee7f5f' : '#7fb2e8' });
+  }
+  { const a = UI.x0 + 111, b = UI.y0 + UI.ph, c = UI.x0 + 320;
+    LINKS.push({ pts: [a, b, a, b + 50, c, UI.wy - 66, c, UI.wy - 3], color: '#7fb2e8' });
+    const a2 = UI.x0 + 3 * (UI.pw + UI.gap) + 110, c2 = UI.x2 + UI.w2 - 90;
+    LINKS.push({ pts: [a2, b, a2, b + 50, c2, UI.wy - 60, c2, UI.wy - 3], color: '#ee7f5f' }); }
+  function bezier(p, t) {
+    const m = 1 - t, a = m * m * m, b = 3 * m * m * t, c = 3 * m * t * t, d = t * t * t;
+    return [a * p[0] + b * p[2] + c * p[4] + d * p[6], a * p[1] + b * p[3] + c * p[5] + d * p[7]];
+  }
+  /* travelling lights on the prototype links */
+  const flowDots = LINKS.map((l, i) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(0.02, 0.02), new THREE.MeshBasicMaterial({ map: glowTex, color: new THREE.Color(l.color).lerp(new THREE.Color(0xffffff), 0.35), transparent: true, depthWrite: false }));
+    m.renderOrder = 3; m.userData.offset = i * 0.21; m.userData.noPick = true;
+    screenFx.add(m);
+    return m;
+  });
+  /* on-screen cursor */
+  const cursorTex = tex(64, 64, (c) => {
+    c.beginPath(); c.moveTo(6, 4); c.lineTo(20, 56); c.lineTo(31, 35); c.lineTo(54, 30); c.closePath();
+    c.fillStyle = '#fff'; c.fill(); c.lineWidth = 4; c.strokeStyle = '#1f2329'; c.stroke();
+  });
+  const cursorGeo = new THREE.PlaneGeometry(0.024, 0.024); cursorGeo.translate(0.012, -0.012, 0);
+  const cursorMesh = new THREE.Mesh(cursorGeo, new THREE.MeshBasicMaterial({ map: cursorTex, transparent: true, depthWrite: false }));
+  cursorMesh.renderOrder = 4; cursorMesh.userData.noPick = true;
+  screenFx.add(cursorMesh);
+  const CURSOR_STOPS = [[1000, 900], [1060, 500], [760, 420], [500, 505], [1250, 540], [1450, 500], [1180, 900], [660, 880]];
+  /* coffee steam */
+  const steam = [];
+  for (let i = 0; i < 8; i++) {
+    const m = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffffff, transparent: true, opacity: 0, depthWrite: false }));
+    m.userData.noPick = true; m.userData.seed = i / 8;
+    m.position.copy(deskInfo.mug);
+    scene.add(m);
+    steam.push(m);
+  }
+  const quatSway = new THREE.Quaternion(), eulerSway = new THREE.Euler();
+  const smooth = (x) => { x = THREE.MathUtils.clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+
+  /* phone screens, cross-faded */
+  const phoneState = { shown: 2, next: 2, fade: 1, wait: 4.2 };
+  function setPhoneScreen(i, instant) {
+    if (i === phoneState.shown && phoneState.fade >= 1) return;
+    deskInfo.phoneBase.map = phoneTexes[phoneState.next];
+    deskInfo.phoneTop.map = phoneTexes[i];
+    phoneState.shown = phoneState.next; phoneState.next = i; phoneState.fade = 0;
+    if (instant) stepPhoneFade(1);
+  }
+  function stepPhoneFade(dt) {
+    if (phoneState.fade >= 1) return;
+    phoneState.fade = Math.min(1, phoneState.fade + dt / 0.38);
+    deskInfo.phoneTop.opacity = smooth(phoneState.fade);
+    if (phoneState.fade >= 1) {
+      deskInfo.phoneBase.map = phoneTexes[phoneState.next];
+      deskInfo.phoneTop.opacity = 0;
+      phoneState.shown = phoneState.next;
+    }
+  }
+
+  let cursorClock = 0;
+  function ambient(t, dt) {
+    /* work cycle: about 10 s with the mouse, then a burst of typing */
+    const cyc = t % 15;
+    const typing = smooth((cyc - 9.5) / 0.7) * (1 - smooth((cyc - 14.3) / 0.7));
+    cursorClock += dt * (1 - typing);
+    /* the on-screen cursor drives the hand and her gaze */
+    const seg = cursorClock / 3.4, n = Math.floor(seg), f = smooth((seg - n) / 0.62);
+    const a = CURSOR_STOPS[n % CURSOR_STOPS.length], b = CURSOR_STOPS[(n + 1) % CURSOR_STOPS.length];
+    const px = a[0] + (b[0] - a[0]) * f, py = a[1] + (b[1] - a[1]) * f;
+    const across = (px - 975) / 475;
+    cursorMesh.position.copy(pxToMon(px, py, 0.0186));
+    designer.forearm.rotation.y = -0.07 * across;
+    designer.forearm.position.z = 0.68 + (py - 700) / 400 * 0.014;
+    /* a short click after each move */
+    const rest = (seg - n - 0.66) / 0.08;
+    designer.forearm.position.y = 0.8 - (rest > 0 && rest < 1 ? Math.sin(rest * Math.PI) * 0.0035 : 0);
+    /* left hand over the keys, tapping */
+    designer.leftForearm.rotation.y = -0.42 * typing;
+    designer.leftForearm.position.y = 0.8 + typing * (0.03 + 0.006 * Math.abs(Math.sin(t * 13 + Math.sin(t * 4.3) * 2)));
+    designer.chest.rotation.x = -0.035 * typing - 0.012 * Math.sin(t * 0.37);
+    /* blink */
+    const blink = t % 4.3 < 0.11 || (t % 12.9 > 0.26 && t % 12.9 < 0.36) ? 0.12 : 1;
+    designer.eyes.forEach((m, i) => { m.visible = i % 2 === 0 || blink === 1; m.scale.y = i % 2 === 0 ? 0.0225 * blink : m.scale.y; });
+    /* breathing, head and ponytail */
+    const br = Math.sin(t * 1.5);
+    designer.chest.scale.set(1 + br * 0.004, 1 + br * 0.008, 1 + br * 0.009);
+    designer.hp.rotation.y = designer.hpYaw + (1 - typing) * -0.1 * across + typing * 0.1 + 0.03 * Math.sin(t * 0.31);
+    designer.hp.rotation.x = designer.hpPitch - 0.13 * typing + 0.018 * Math.sin(t * 0.21);
+    eulerSway.set(0.022 * Math.sin(t * 0.63), 0, 0.045 * Math.sin(t * 0.92));
+    designer.tailPivot.quaternion.copy(designer.tailRest).multiply(quatSway.setFromEuler(eulerSway));
+    /* prototype link lights */
+    const linksBusy = active === 'monitor' && monitorAnim.running;
+    flowDots.forEach((m, i) => {
+      m.visible = !linksBusy;
+      const u = (t * 0.16 + m.userData.offset) % 1;
+      const q = bezier(LINKS[i].pts, u);
+      m.position.copy(pxToMon(q[0], q[1], 0.0182));
+    });
+    /* steam */
+    steam.forEach((m) => {
+      const k = (t * 0.17 + m.userData.seed) % 1;
+      const side = m.userData.seed * 12;
+      m.position.set(deskInfo.mug.x + Math.sin(k * 5 + side) * 0.012 * (0.3 + k * 2), deskInfo.mug.y + k * 0.2, deskInfo.mug.z + Math.cos(k * 4 + side) * 0.01 * (0.3 + k * 2));
+      const size = 0.018 + k * 0.05;
+      m.scale.set(size, size * 1.5, 1);
+      /* fades out when the camera is close, so it never smears across a close-up */
+      const near = smooth((camera.position.distanceTo(deskInfo.mug) - 0.8) / 1.0);
+      m.material.opacity = 0.5 * near * smooth(k / 0.16) * (1 - smooth((k - 0.35) / 0.65));
+    });
+    /* phone browses by itself unless its hotspot is playing */
+    if (active !== 'phone') {
+      phoneState.wait -= dt;
+      if (phoneState.wait <= 0) { phoneState.wait = 4.2; setPhoneScreen((phoneState.next + 1) % PHONE_FLOW.length); }
+    }
+  }
+
+  /* ================================================================
+     12. HOTSPOT ACTIONS
+     ================================================================ */
+  /* monitor: artboards light up, then the links draw themselves */
+  const actionCanvas = document.createElement('canvas');
+  actionCanvas.width = 1024; actionCanvas.height = 592;
+  const actionCtx = actionCanvas.getContext('2d');
+  const actionTex = new THREE.CanvasTexture(actionCanvas);
+  actionTex.encoding = THREE.sRGBEncoding;
+  const actionMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.578), new THREE.MeshBasicMaterial({ map: actionTex, transparent: true, depthWrite: false }));
+  actionMesh.position.set(0, 1.18, 0.0178); actionMesh.visible = false; actionMesh.renderOrder = 2; actionMesh.userData.noPick = true;
+  screenFx.add(actionMesh);
+  const monitorAnim = { running: false, t: 0, end: 0 };
+  function startMonitorAnim() {
+    monitorAnim.t = 0; monitorAnim.end = BOARDS.length * 0.28 + 0.4;
+    monitorAnim.end = Math.max(monitorAnim.end, 0.5 + LINKS.length * 0.34 + 0.42);
+    monitorAnim.running = !reduceMotion;
+    actionMesh.visible = !reduceMotion;
+  }
+  function stopMonitorAnim() { monitorAnim.running = false; actionMesh.visible = false; }
+  function drawMonitorAnim(dt) {
+    if (!monitorAnim.running) return;
+    monitorAnim.t += dt;
+    const t = monitorAnim.t, c = actionCtx;
+    c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, 1024, 592);
+    c.setTransform(0.5, 0, 0, 0.5, 0, 0);
+    c.lineCap = 'round';
+    LINKS.forEach((l, i) => {
+      const k = smooth((t - 0.5 - i * 0.34) / 0.42);
+      if (k >= 1) return;                     // finished: the real link on the screen shows through
+      c.beginPath();
+      for (let n = 0; n <= 24; n++) { const q = bezier(l.pts, n / 24); if (n) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }
+      c.strokeStyle = '#353b45'; c.lineWidth = 15; c.stroke();
+      if (k > 0) {
+        c.beginPath();
+        for (let n = 0; n <= 30; n++) { const q = bezier(l.pts, (n / 30) * k); if (n) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }
+        c.strokeStyle = l.color; c.lineWidth = 4; c.stroke();
+      }
+    });
+    BOARDS.forEach((b, i) => {
+      const a = 0.78 * (1 - smooth((t - i * 0.28) / 0.34));
+      if (a <= 0.002) return;
+      rr(c, b[0] - 3, b[1] - 3, b[2] + 6, b[3] + 6, 12, 'rgba(38,43,51,' + a + ')');
+    });
+    actionTex.needsUpdate = true;
+    if (t >= monitorAnim.end) stopMonitorAnim();
+  }
+  /* phone: plays the four screens in order */
+  const phoneAnim = { running: false, step: 0, wait: 0 };
+  function startPhoneAnim() {
+    if (reduceMotion) { setPhoneScreen(3, true); return; }
+    phoneAnim.running = true; phoneAnim.step = 0; phoneAnim.wait = 1.15;
+    setPhoneScreen(0);
+  }
+  function stepPhoneAnim(dt) {
+    if (!phoneAnim.running) return;
+    phoneAnim.wait -= dt;
+    if (phoneAnim.wait > 0) return;
+    phoneAnim.step++;
+    if (phoneAnim.step >= PHONE_FLOW.length) { phoneAnim.running = false; return; }
+    phoneAnim.wait = 1.15;
+    setPhoneScreen(phoneAnim.step);
+  }
+  /* sticky notes: lift and fan out */
+  const notesAnim = { k: 0 };
+  function stepNotes(dt) {
+    const want = active === 'notes' ? 1 : 0;
+    if (notesAnim.k === want) return false;
+    notesAnim.k = reduceMotion ? want : THREE.MathUtils.clamp(notesAnim.k + Math.sign(want - notesAnim.k) * dt / 0.75, 0, 1);
+    const k = smooth(notesAnim.k);
+    deskInfo.stickies.forEach((m) => {
+      const i = m.userData.index, r = m.userData.rest;
+      m.position.set(r.x + (0.77 + (i - 1) * 0.098 - r.x) * k, r.y + (0.05 + (i === 1 ? 0.012 : 0)) * k, r.z + (0.045 - r.z + 0.02) * k);
+      m.rotation.set(0.72 * k, m.userData.restRy * (1 - k), (i - 1) * -0.1 * k);
+    });
+    return true;
+  }
+
+  /* ================================================================
+     13. CAMERA FLIGHT
+     ================================================================ */
+  let flight = null;
+  function cancelFlight() { flight = null; lastInput = performance.now(); }
+  function flyTo(pos, target) {
+    if (reduceMotion) { camera.position.copy(pos); controls.target.copy(target); controls.update(); invalidate(); return; }
+    const from = new THREE.Spherical().setFromVector3(camera.position.clone().sub(controls.target));
+    const to = new THREE.Spherical().setFromVector3(pos.clone().sub(target));
+    let dTheta = to.theta - from.theta;
+    if (dTheta > Math.PI) dTheta -= Math.PI * 2; else if (dTheta < -Math.PI) dTheta += Math.PI * 2;
+    flight = { t: 0, dur: 1.2, from, to, dTheta, t0: controls.target.clone(), t1: target.clone() };
+  }
+  const flySph = new THREE.Spherical();
+  function stepFlight(dt) {
+    if (!flight) return;
+    flight.t = Math.min(1, flight.t + dt / flight.dur);
+    const x = flight.t, k = x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    const a = flight.from, b = flight.to;
+    flySph.set(a.radius + (b.radius - a.radius) * k, a.phi + (b.phi - a.phi) * k, a.theta + flight.dTheta * k);
+    controls.target.lerpVectors(flight.t0, flight.t1, k);
+    camera.position.setFromSpherical(flySph).add(controls.target);
+    invalidate();
+    if (flight.t >= 1) flight = null;
+  }
+
+  /* ================================================================
+     13b. TURNTABLE: the platform turns slowly around its own centre.
+     The view orbits the floor's axis, which looks identical on screen and
+     leaves hotspots, shadows and picking untouched. It pauses during input
+     and while a card is open, then eases back in.
+     ================================================================ */
+  const TURN = { speed: 0.085, resumeAfter: 2500, angle: 0, spin: 0 };   // 0.085 rad/s: about 74 s per turn
+  const turnAxisY = V(0, 1, 0);
+  const turnCentre = V(0, 0, FLOOR_Z);
+  let lastInput = -1e9, holding = false;
+  function turnAbout(v, a) { return v.sub(turnCentre).applyAxisAngle(turnAxisY, a).add(turnCentre); }
+  function stepTurntable(dt, now) {
+    if (reduceMotion) return;
+    const go = !active && !flight && !holding && now - lastInput > TURN.resumeAfter;
+    TURN.spin += ((go ? 1 : 0) - TURN.spin) * Math.min(1, dt * 1.6);
+    if (TURN.spin < 0.002) return;
+    const a = -TURN.speed * TURN.spin * dt;
+    TURN.angle += a;
+    turnAbout(camera.position, a);
+    turnAbout(controls.target, a);
+    invalidate();
+  }
+  window.addEventListener('pointerdown', (e) => { if (e.target === canvas) holding = true; }, true);
+  ['pointerup', 'pointercancel'].forEach((n) => window.addEventListener(n, () => { if (holding) lastInput = performance.now(); holding = false; }));
+
+  /* ================================================================
+     14. MARKERS & INFO CARD
+     ================================================================ */
+  const HOTSPOTS = {
+    monitor: {
+      anchor: V(0, 1.52, -0.22), focus: V(0, 1.18, -0.22), radius: 0.6, az: 0.62, polar: 1.42,
+      title: 'Design process',
+      steps: ['Understand', 'Define', 'Explore', 'Prototype', 'Test', 'Iterate'],
+      desc: 'A design process gives every decision a reason. Confirm the problem first, test ideas early with prototypes, and keep refining from feedback. This reduces rework and keeps the team aligned.',
+      start: startMonitorAnim, stop: stopMonitorAnim
+    },
+    phone: {
+      anchor: V(0.62, 1.0, -0.2), focus: V(0.625, 0.88, -0.19), radius: 0.13, az: 0.25, polar: 1.32,
+      title: 'Prototype testing',
+      steps: ['Set tasks', 'Observe', 'Log issues', 'Synthesize', 'Refine'],
+      desc: 'Prototype testing shows how people really use a design before development starts. Teams can see what works and where people get stuck, then fix it early and at lower cost.',
+      start: startPhoneAnim, stop: () => { phoneAnim.running = false; }
+    },
+    notes: {
+      anchor: V(0.77, 0.815, 0.05), focus: V(0.77, 0.81, 0.06), radius: 0.17, az: 0.3, polar: 0.95,
+      title: 'User research',
+      steps: ['Frame questions', 'Interview', 'Organize notes', 'Find insights', 'Guide decisions'],
+      desc: 'User research helps teams understand real needs and problems instead of designing from assumptions. Turning scattered observations into insights shows what to solve first, and why.',
+      start: () => {}, stop: () => {}
+    }
+  };
+  const card = document.getElementById('info-card');
+  const cardClose = document.getElementById('card-close');
+  const cardEls = { title: 'card-title', desc: 'card-desc' };
+  Object.keys(cardEls).forEach((k) => { cardEls[k] = document.getElementById(cardEls[k]); });
+  let active = null, savedView = null;
+  const projected = new THREE.Vector3();
+
+  Object.keys(HOTSPOTS).forEach((id) => {
+    const h = HOTSPOTS[id];
+    h.el = document.getElementById('marker-' + id);
+    h.el.hidden = false;
+    ['pointerenter', 'focus'].forEach((n) => h.el.addEventListener(n, () => { lastInput = performance.now() + 4000; }));
+    h.el.addEventListener('click', () => (active === id ? closeCard() : openCard(id)));
+    /* a wheel turn over a marker still zooms the scene */
+    h.el.addEventListener('wheel', (e) => { if (wheelBelongsToPage(e)) return; e.preventDefault(); canvas.dispatchEvent(new WheelEvent('wheel', e)); }, { passive: false });
+  });
+  function positionMarkers() {
+    const w = canvas.clientWidth, hgt = canvas.clientHeight;
+    Object.keys(HOTSPOTS).forEach((id) => {
+      const h = HOTSPOTS[id];
+      projected.copy(h.anchor).project(camera);
+      const show = projected.z < 1 && Math.abs(projected.x) < 1.15 && Math.abs(projected.y) < 1.15;
+      if (h.el.hidden === show) h.el.hidden = !show;
+      if (show) h.el.style.transform = 'translate(' + ((projected.x + 1) / 2 * w - 22).toFixed(1) + 'px,' + ((1 - projected.y) / 2 * hgt - 22).toFixed(1) + 'px)';
+    });
+  }
+  /* Frames the object in the free area above the card. */
+  function focusView(h) {
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const H = canvas.clientHeight;
+    const free = Math.max(0.4, (H - card.offsetHeight - 40) / H);
+    const dist = Math.max(h.radius / (tanV * free * 0.92), h.radius / (tanV * camera.aspect * 0.92));
+    const dir = new THREE.Vector3().setFromSphericalCoords(1, h.polar, h.az);
+    const right = V(0, 1, 0).cross(dir).normalize();
+    const up = dir.clone().cross(right).normalize();
+    const target = h.focus.clone().addScaledVector(up, -(1 - free) * tanV * dist);
+    return { pos: target.clone().addScaledVector(dir, dist), target };
+  }
+  function openCard(id) {
+    if (!savedView) savedView = { pos: camera.position.clone(), target: controls.target.clone() };
+    if (active) { HOTSPOTS[active].stop(); HOTSPOTS[active].el.classList.remove('active'); }
+    active = id;
+    const h = HOTSPOTS[id];
+    cardEls.title.textContent = h.title;
+    cardEls.desc.textContent = h.desc;
+    const stepsEl = document.getElementById('card-steps');
+    stepsEl.innerHTML = '';
+    h.steps.forEach((name) => {
+      const li = document.createElement('li'), span = document.createElement('span');
+      span.textContent = name; li.appendChild(span); stepsEl.appendChild(li);
+    });
+    h.el.classList.add('active');
+    card.classList.add('open');
+    const v = focusView(h);
+    flyTo(v.pos, v.target);
+    h.start();
+    cardClose.focus({ preventScroll: true });
+    invalidate();
+  }
+  function closeCard() {
+    if (!active) return;
+    const h = HOTSPOTS[active];
+    h.stop(); h.el.classList.remove('active');
+    active = null;
+    card.classList.remove('open');
+    let back = savedView;
+    if (!userMoved) {
+      /* nothing was moved by hand: return to the fitted view for the current window size */
+      const c = camera.position.clone(), t = controls.target.clone();
+      fitView();
+      back = { pos: turnAbout(camera.position.clone(), TURN.angle), target: turnAbout(controls.target.clone(), TURN.angle) };
+      camera.position.copy(c); controls.target.copy(t); controls.update();
+    }
+    flyTo(back.pos, back.target);
+    savedView = null;
+    h.el.focus({ preventScroll: true });
+    invalidate();
+  }
+  cardClose.addEventListener('click', closeCard);
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCard(); });
+
+  /* ================================================================
+     15. RESIZE & LOOP
+     ================================================================ */
+  function resize() {
+    const w = canvas.clientWidth || window.innerWidth, h = canvas.clientHeight || window.innerHeight;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    if (active) { const v = focusView(HOTSPOTS[active]); flyTo(v.pos, v.target); }
+    else if (!userMoved) {
+      fitView();
+      turnAbout(camera.position, TURN.angle); turnAbout(controls.target, TURN.angle);
+      controls.update();
+    }
+    invalidate();
+  }
+  window.addEventListener('resize', resize);
+  if (window.ResizeObserver) new ResizeObserver(resize).observe(canvas);
+  resize();
+  renderer.shadowMap.needsUpdate = true;
+
+  let lastTime = performance.now(), motionTime = 0, frameNo = 0, onScreen = true;
+  if (EMBED && window.IntersectionObserver) new IntersectionObserver((list) => { onScreen = list[list.length - 1].isIntersecting; }).observe(canvas);
+  if (!reduceMotion) ambient(0, 0);
+  function frame(now) {
+    requestAnimationFrame(frame);
+    now = now || performance.now();
+    if (!onScreen) { lastTime = now; return; }
+    const dt = Math.max(0, Math.min(0.1, (now - lastTime) / 1000));
+    lastTime = now;
+    stepWheel();
+    stepFlight(dt);
+    stepTurntable(dt, now);
+    keepInBounds();
+    controls.update();
+    frameNo++;
+
+    const wasPhoneFading = phoneState.fade < 1;
+    drawMonitorAnim(dt);
+    stepPhoneAnim(dt);
+    stepPhoneFade(dt);
+    const notesMoving = stepNotes(dt);
+    const actionBusy = monitorAnim.running || wasPhoneFading || notesMoving || !!flight;
+    if (notesMoving) renderer.shadowMap.needsUpdate = true;
+    if (actionBusy) invalidate();
+
+    if (!reduceMotion) {
+      motionTime += dt;
+      /* ambient motion at half rate; shadows refresh only a few times a second */
+      if (frameNo % 2 === 0) { ambient(motionTime, dt * 2); invalidate(); }
+      if (frameNo % 10 === 0) renderer.shadowMap.needsUpdate = true;
+    }
+    positionMarkers();
+    if (!needsRender) return;
+    needsRender = false;
+    renderer.render(scene, camera);
+  }
+  frame();
+
+  /* Handle for later scene additions */
+  window.Studio = { scene, camera, controls, renderer, designer, invalidate, fitView, worldPointAt, zoomAbout, openCard, closeCard, TURN, seekMotion: (t) => { motionTime = t; } };
+})();
+</script>
+</body>
+</html>

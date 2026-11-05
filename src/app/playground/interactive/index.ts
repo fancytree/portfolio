@@ -3,12 +3,14 @@
 
 import type { ComponentType } from 'react';
 import BubblePop from './BubblePop';
+import DesignerWorkstation from './DesignerWorkstation';
 import HoldCheckbox from './HoldCheckbox';
 import ProjectButton from './ProjectButton';
 import TornMesh from './TornMesh';
 
 export const interactiveComponents = {
   'torn-mesh': TornMesh,
+  'designer-workstation': DesignerWorkstation,
   'bubble-pop': BubblePop,
   'project-button': ProjectButton,
   'hold-checkbox': HoldCheckbox,

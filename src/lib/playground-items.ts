@@ -65,6 +65,11 @@ export const playgroundItems: PlaygroundItem[] = [
   },
   // 顺序即排布顺序：视觉卡片与引用交错放，让每一列都有图也有字、引用不会全挤在下面
   {
+    id: 'interactive-designer-workstation',
+    kind: 'interactive',
+    component: 'designer-workstation',
+  },
+  {
     id: 'interactive-bubble-pop',
     kind: 'interactive',
     component: 'bubble-pop',
