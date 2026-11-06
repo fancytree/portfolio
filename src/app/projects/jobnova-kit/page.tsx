@@ -3,7 +3,7 @@ import Image from 'next/image';
 import resumeReviewScreenshot from '../../../../public/img/jobnova/evidence/resume-overview-editor.webp';
 import matchedJobsScreenshot from '../../../../public/img/jobnova/evidence/matched-jobs-current.webp';
 import applicationDashboardScreenshot from '../../../../public/img/jobnova/evidence/application-dashboard-current.webp';
-import { ChartNoAxesCombined, ClipboardCheck, Compass, FilePenLine, GitBranch, Layers3, ListChecks, MessageSquareText, ScanSearch, ShieldCheck, SlidersHorizontal, UserRoundCheck, Users, Waypoints } from 'lucide-react';
+import { ClipboardCheck, Compass, FilePenLine, GitBranch, Layers3, ListChecks, MessageSquareText, ScanSearch, ShieldCheck, SlidersHorizontal, UserRoundCheck, Waypoints } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
@@ -133,22 +133,17 @@ export default function JobnovaKitPage() {
           <CaseProse><p><strong>Delivery evidence to add:</strong> one annotated handoff or QA example showing an issue I identified, the decision made with engineering, and the final change.</p></CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="09 / Results" title="Early adoption, with an activation gap worth investigating.">
-          <CaseProse><p>Historical data snapshot · These figures come from the existing project report. Reporting dates and current values are pending a refresh with engineering; the totals and 30-day cohort below have different scopes.</p></CaseProse>
+        <CaseChapter label="09 / Results" title="Strong early adoption; the gap is the step to Auto Apply.">
           <CaseStats items={[
-            { value: '1,240', label: 'Registered users · reported total' },
-            { value: '8,700+', label: 'Completed applications · reported total' },
-            { value: '68.06%', label: 'Setup completion · 179 of 263 new users / 30 days' },
-            { value: '19.39%', label: 'Auto Apply activation · 51 of 263 new users / 30 days' },
+            { value: '1,240', label: 'Registered users' },
+            { value: '8,700+', label: 'Completed applications' },
+            { value: '68%', label: 'Finished setup · 179 of 263 new users' },
+            { value: '19%', label: 'Enabled Auto Apply · 51 of 263 new users' },
           ]} />
-          <CaseProse><p>Among the 179 people who completed setup, 28.5% enabled Auto Apply. This points to a second handoff to investigate: moving from a completed profile to granting automation permission.</p></CaseProse>
-          <CaseEvidenceCards label="Evidence still needed to evaluate impact" layout="pairs" items={[
-            { icon: <Users />, title: 'Current reach · to add', body: 'Refresh registered and active users, audience segments, and the reporting date.' },
-            { icon: <ClipboardCheck />, title: 'Design impact · to add', body: 'Compare setup and first-application completion before and after a dated release.' },
-            { icon: <ShieldCheck />, title: 'Trust & quality · to add', body: 'Connect approval choices and unwanted applications to verified user feedback.' },
-            { icon: <ChartNoAxesCombined />, title: 'Growth & retention · to add', body: 'Add monthly growth, acquisition channels, retained cohorts, and paid conversion.' },
-          ]} />
-          <CaseProse><p>These figures establish scale and adoption; they do not isolate the effect of design. Growth comparisons need the acquisition mix, concurrent releases, and job-market seasonality alongside a consistent cohort.</p></CaseProse>
+          <CaseProse>
+            <p>Of the 179 people who finished setup, 28.5% turned on Auto Apply. The next drop-off to investigate is the move from a completed profile to granting automation permission.</p>
+            <p><em>Historical report; totals and the 30-day cohort have different scopes. Current figures and design-specific impact (before/after comparisons, trust and retention data) are pending a refresh with engineering.</em></p>
+          </CaseProse>
         </CaseChapter>
 
         <CaseClose label="10 / Reflection" title="The next iteration starts with the handoff people hesitate to complete.">
