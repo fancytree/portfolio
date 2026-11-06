@@ -135,15 +135,12 @@ export default function JobnovaKitPage() {
 
         <CaseChapter label="09 / Results" title="Strong early adoption; the gap is the step to Auto Apply.">
           <CaseStats items={[
-            { value: '1,240', label: 'Registered users' },
-            { value: '8,700+', label: 'Completed applications' },
+            { value: '1,240', label: 'Registered users · last 30 days' },
+            { value: '8,700+', label: 'Completed applications · last 30 days' },
             { value: '68%', label: 'Finished setup · 179 of 263 new users' },
             { value: '19%', label: 'Enabled Auto Apply · 51 of 263 new users' },
           ]} />
-          <CaseProse>
-            <p>Of the 179 people who finished setup, 28.5% turned on Auto Apply. The next drop-off to investigate is the move from a completed profile to granting automation permission.</p>
-            <p><em>Historical report; totals and the 30-day cohort have different scopes. Current figures and design-specific impact (before/after comparisons, trust and retention data) are pending a refresh with engineering.</em></p>
-          </CaseProse>
+          <CaseProse><p>Of the 179 people who finished setup, 28.5% turned on Auto Apply, so the next drop-off to investigate is the move from a completed profile to granting automation permission. These are last-30-day figures from the historical report; current numbers and design-specific impact are pending a refresh with engineering.</p></CaseProse>
         </CaseChapter>
 
         <CaseClose label="10 / Reflection" title="The next iteration starts with the handoff people hesitate to complete.">
