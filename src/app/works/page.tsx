@@ -27,7 +27,7 @@ export default function WorksPage() {
         </div>
 
         <div className="pt-16 md:pt-24">
-          <WorkProjectRows items={allWorkGroups.flatMap((group) => group.items)} />
+          <WorkProjectRows items={allWorkGroups.flatMap((group) => group.items)} animatedCovers />
         </div>
 
         <div className="pt-16">
