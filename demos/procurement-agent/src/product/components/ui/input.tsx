@@ -24,7 +24,9 @@ export type InputProps = Omit<React.ComponentProps<"input">, "size"> &
   VariantProps<typeof inputVariants>
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, inputSize, onWheel, ...props }, ref) => {
+  ({ className, type, inputSize, onWheel, onFocus, onMouseUp, ...props }, ref) => {
+    // 数字框聚焦时全选，方便直接覆盖输入；鼠标抬起时不要取消选区
+    const selectOnFocus = React.useRef(false)
     const inFilterBar = React.useContext(FilterBarContext)
     const autoLgInFilterBar =
       inFilterBar && type !== "checkbox" && type !== "radio"
@@ -45,6 +47,20 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         onWheel={(event) => {
           blurAmountInputOnWheel(event)
           onWheel?.(event)
+        }}
+        onFocus={(event) => {
+          if (type === "number") {
+            selectOnFocus.current = true
+            event.currentTarget.select()
+          }
+          onFocus?.(event)
+        }}
+        onMouseUp={(event) => {
+          if (selectOnFocus.current) {
+            selectOnFocus.current = false
+            event.preventDefault()
+          }
+          onMouseUp?.(event)
         }}
         {...props}
       />

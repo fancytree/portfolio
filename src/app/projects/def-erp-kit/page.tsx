@@ -214,22 +214,42 @@ export default function DefErpKitPage() {
             </CaseFigure>
           </div>
           <CaseProse>
-            <h3>Sales ordering and order details</h3>
-            <p>Staff create in-store and sales-assisted orders with customer, product, stock, and pricing information in one workspace. The order detail then brings payment, shipment, and invoice status together, giving sales, warehouse, and finance a shared record to work from.</p>
+            <h3>Find one shade or add several together</h3>
+            <p>Beauty products can have dozens of similar variants. I kept product discovery and shade selection in one search field: a broad search such as “dye” groups results by product and brand, with capacity shown at product level and shade codes shown on each variant.</p>
+            <p>Staff can narrow the search to a shade and click one result to add it directly, or expand a product to select several shades and add them together. For long lists, the product information, selection count, and Add action stay visible while the variants scroll. Price and stock remain beside each shade to support the choice.</p>
           </CaseProse>
           <CaseVideo
-            src="/videos/def-erp/sales-order.mp4"
-            poster="/videos/def-erp/sales-order.webp"
-            label="Sales order creation demonstration"
-            caption="Sales order entry — customer, products, stock, and pricing."
+            src="/videos/def-erp/sales-order-product-selection.mp4"
+            poster="/videos/def-erp/sales-order-product-selection.webp"
+            label="Product search with single and multiple shade selection"
+            caption="Product selection — search across brands, select multiple shades, or narrow the query to add one variant. Demonstration data."
             width={1828} height={1080}
+            controls
           />
+          <CaseProse>
+            <h3>Review the order before saving</h3>
+            <p>The sales workspace keeps customer context, stock, packaging, and prices beside the order lines. Staff can switch between individual units, boxes, and cartons, adjust quantities and discounts, or mark an item as a gift. Line totals and the order summary update as they work, while stock warnings remain visible.</p>
+            <p>I separated line editing from the final confirmation. A salesperson must be selected before saving; the confirmation then brings together payment collection, partial or split payments, pickup quantities, and notes. Staff can review these decisions against the order total without leaving the workflow.</p>
+          </CaseProse>
           <CaseVideo
-            src="/videos/def-erp/order-detail.mp4"
-            poster="/videos/def-erp/order-detail.webp"
-            label="Sales order detail demonstration"
-            caption="Order details — payment, shipment, and invoice status."
+            src="/videos/def-erp/sales-order-full-process.mp4"
+            poster="/videos/def-erp/sales-order-full-process.webp"
+            label="Sales order editing and save confirmation workflow"
+            caption="Sales order workflow — packaging, quantities, pricing, gifts, and the payment and pickup options in the save confirmation. Demonstration data."
             width={1828} height={1080}
+            controls
+          />
+          <CaseProse>
+            <h3>Follow the order across teams</h3>
+            <p>The order detail brings payment, shipment, and invoice status together, giving sales, warehouse, and finance a shared record to work from after the order is created.</p>
+          </CaseProse>
+          <CaseVideo
+            src="/videos/def-erp/order-detail-20261106.mp4"
+            poster="/videos/def-erp/order-detail-20261106.webp"
+            label="Order details with partial shipments and delivery options"
+            caption="Order details — review partial shipments and configure pickup or courier deliveries. Demonstration data."
+            width={1828} height={1080}
+            controls
           />
 
 
@@ -239,11 +259,12 @@ export default function DefErpKitPage() {
             <p>For the complete procurement workflow and its AI-assisted optimisation, see <a href="/projects/procurement-agent-v2">AI Procurement Agent for DEF Beauty Supply</a>.</p>
           </CaseProse>
           <CaseVideo
-            src="/videos/def-erp/purchase-order.mp4"
-            poster="/videos/def-erp/purchase-order.webp"
-            label="Purchase order workflow demonstration"
-            caption="Purchase order — products, quantities, and supplier confirmation."
+            src="/videos/def-erp/purchase-order-20261106.mp4"
+            poster="/videos/def-erp/purchase-order-20261106.webp"
+            label="Purchase order and supplier confirmation review"
+            caption="Purchase order — review quantities and prices, upload supplier confirmation, and check differences. Demonstration data."
             width={1828} height={1080}
+            controls
           />
           <CaseFigure caption="Receiving — delivery records, actual quantities, and differences.">
             <Image src="/img/def-erp/evidence/receiving-collapsed-4c751c3d1fd0.webp" alt="Receiving workspace linking purchase quantities, delivery notes, actual counts, and partial arrival progress." width={3200} height={2000} sizes="(min-width: 1280px) 1120px, 100vw" unoptimized />

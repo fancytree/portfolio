@@ -1520,6 +1520,35 @@ export function ActionLinks({
   );
 }
 
+/** 数字输入：编辑时保留草稿字符串，清空后不会立刻变成 0，也不会出现 "090" */
+function NumberDraftInput({
+  value,
+  onValue,
+  ...props
+}: Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange' | 'type'> & {
+  value: number | null;
+  onValue: (next: number) => void;
+}) {
+  const [draft, setDraft] = useState<string | null>(null);
+  return (
+    <Input
+      {...props}
+      type="number"
+      value={draft ?? (value ?? '')}
+      onBlur={(event) => {
+        setDraft(null);
+        props.onBlur?.(event);
+      }}
+      onChange={(event) => {
+        const raw = event.target.value.replace(/^0+(?=\d)/, '');
+        setDraft(raw);
+        const next = Number(raw);
+        onValue(raw === '' || !Number.isFinite(next) ? 0 : next);
+      }}
+    />
+  );
+}
+
 export function EstQtyCell({
   line,
   editable,
@@ -1535,15 +1564,14 @@ export function EstQtyCell({
 
   if (editable) {
     return (
-      <Input
-        type="number"
+      <NumberDraftInput
         min={0}
         value={line.plannedQty}
         className={cn(
           'ml-auto h-8 w-[68px] rounded-lg text-right text-[13px] tabular-nums',
           qtyDiffers(line) && 'border-[#ffd7b8] bg-[#fffaf5]',
         )}
-        onChange={(event) => onUpdateEstQty(line.sku, Number(event.target.value) || 0)}
+        onValue={(qty) => onUpdateEstQty(line.sku, qty)}
       />
     );
   }
@@ -1562,26 +1590,32 @@ export function EstQtyCell({
 function ConfQtyCell({
   line,
   editable,
+  confirmed,
   onUpdateConfQty,
 }: {
   line: DemoLine;
   editable: boolean;
+  /** 未上传确认单时没有供应商确认数量，Conf. qty 留空（与 Conf. price 一致） */
+  confirmed: boolean;
   onUpdateConfQty: (sku: string, qty: number) => void;
 }) {
+  if (!confirmed) {
+    return <span className="text-[12px] tabular-nums text-[#8b93a7]">—</span>;
+  }
+
   const changed = qtyDiffers(line) || line.risk === 'missing' || line.risk === 'extra';
 
   if (editable) {
     return (
-      <Input
-        type="number"
+      <NumberDraftInput
         min={0}
-        value={line.risk === 'missing' && line.qty === 0 ? '' : line.qty}
+        value={line.risk === 'missing' && line.qty === 0 ? null : line.qty}
         placeholder="—"
         className={cn(
           'ml-auto h-8 w-[68px] rounded-lg text-right text-[13px] tabular-nums',
           changed && 'border-[#ffd7b8] bg-[#fffaf5]',
         )}
-        onChange={(event) => onUpdateConfQty(line.sku, Number(event.target.value) || 0)}
+        onValue={(qty) => onUpdateConfQty(line.sku, qty)}
       />
     );
   }
@@ -1617,8 +1651,7 @@ export function EstPriceCell({
   if (editable) {
     return (
       <div className="text-right">
-        <Input
-          type="number"
+        <NumberDraftInput
           min={0}
           step="0.01"
           value={line.estimatedPrice}
@@ -1626,10 +1659,7 @@ export function EstPriceCell({
             'ml-auto h-8 w-[84px] rounded-lg text-right text-[13px] tabular-nums',
             priceDiffers(line) && 'border-[#ffd7b8] bg-[#fffaf5]',
           )}
-          onChange={(event) => {
-            const next = Number(event.target.value);
-            onUpdateEstPrice(line.sku, Number.isFinite(next) ? next : 0);
-          }}
+          onValue={(price) => onUpdateEstPrice(line.sku, price)}
         />
       </div>
     );
@@ -1762,6 +1792,7 @@ function matchesProductQuery(line:{sku:string;name:string;nameIt?:string;product
 function LineTable({
   lines,
   editable,
+  confirmed,
   stickyOffsetTop = 0,
   onUpdateEstQty,
   onUpdateConfQty,
@@ -1773,6 +1804,8 @@ function LineTable({
 }: {
   lines: DemoLine[];
   editable: boolean;
+  /** 是否已上传供应商确认单；未上传时 Conf. qty 显示 — */
+  confirmed: boolean;
   /** 上方吸顶操作栏高度，表格 meta / 列头叠在其下 */
   stickyOffsetTop?: number;
   onUpdateEstQty: (sku: string, qty: number) => void;
@@ -1991,7 +2024,7 @@ function LineTable({
                     {agg.plannedQty}
                   </TableCell>
                   <TableCell align="right" className="px-3 py-2.5 text-[12px] font-semibold tabular-nums text-[#1a1d26]">
-                    {agg.qty}
+                    {confirmed ? agg.qty : <span className="font-normal text-[#8b93a7]">—</span>}
                   </TableCell>
                   <TableCell align="right" className="px-3 py-2.5 text-[12px] tabular-nums text-[#5c6478]">
                     {agg.stock}
@@ -2070,6 +2103,7 @@ function LineTable({
                           <ConfQtyCell
                             line={line}
                             editable={editable}
+                            confirmed={confirmed}
                             onUpdateConfQty={onUpdateConfQty}
                           />
                         </TableCell>
@@ -2477,7 +2511,8 @@ function ReplenishmentView({
             <Button
               type="button"
               className="h-10 rounded-xl bg-[#1366d6] text-white hover:bg-[#0f58bd]"
-              onClick={() => setApproveOpen(true)}
+              // 已推给 Owner（Owner approval 阶段）时直接以 Owner 身份批准，不再选择路径
+              onClick={() => (approvalSubmitted ? onApproveDirect() : setApproveOpen(true))}
             >
               {PORTFOLIO_COPY.approve}
             </Button>
@@ -2514,6 +2549,7 @@ function ReplenishmentView({
         <LineTable
           lines={lines}
           editable={!orderRecorded&&!previewMode}
+          confirmed={confirmationUploaded}
           stickyOffsetTop={actionBar.stickTop}
           onUpdateEstQty={onUpdateEstQty}
           onUpdateConfQty={onUpdateConfQty}
@@ -2809,6 +2845,7 @@ function ApprovalView({
         <LineTable
           lines={lines}
           editable={false}
+          confirmed={confirmationUploaded}
           stickyOffsetTop={actionBar.stickTop}
           onUpdateEstQty={() => undefined}
           onUpdateConfQty={() => undefined}
@@ -3568,15 +3605,14 @@ function ReceivingWorkspaceView({
                                     {values.ddt || '—'}
                                   </span>
                                   {values.editable ? (
-                                    <Input
-                                      type="number"
+                                    <NumberDraftInput
                                       value={line.counted}
                                       className={cn(
                                         'h-8 w-[68px] justify-self-end rounded-lg text-right text-[13px] tabular-nums',
                                         // Actual≠DDT 时暖色描边；仅 DDT vs 下单时不标 Actual
                                         actualVsDdtGap && 'border-[#ffd7b8] bg-[#fffaf5]',
                                       )}
-                                      onChange={(event) => onUpdateCounted(line.sku, Number(event.target.value) || 0)}
+                                      onValue={(counted) => onUpdateCounted(line.sku, counted)}
                                     />
                                   ) : (
                                     <span className="text-right tabular-nums text-[13px]">
