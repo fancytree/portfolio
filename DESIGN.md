@@ -55,3 +55,7 @@ MemQ 的 `coverAccent` 使用项目设计系统主色 `#1A8A72`。封面 hover �
 ## 旧案例路由
 
 采购、DEF、JobNova、ConnectNova 在首页和 `/works` 指向 kit 新页。其余旧路由沿用 `globals.css` 中 `.mei-project-page:not(.case-kit)` 的兼容样式，尚未迁移到 Case Kit token：包括仍在 `/works` 列出的 `crackinterview`、`customer-service-system`、`milano-partecipa`、`clarity`、`beikemama`、`walnut-*`，以及被 kit 页取代的旧版。重写或新增案例时从 Case Kit 模块组装，不以旧页为样式模板。
+
+## Device previews
+
+The DEF ERP case places all eight mini-program screens inside the WeChat storefront and builder subsection, before the existing builder video. Each item uses CaseFigure and the shared CaseDevicePreview module. The device width and aspect ratio come from --case-device-preview-width and --case-device-preview-ratio in case.css; surrounding gutters and captions use existing Case Kit tokens. Product chrome and internal UI remain isolated inside local HTML frames exported from DEF, including the latest product, account, quantity stepper, and icon styles. Case Kit demonstrates the same shared module.

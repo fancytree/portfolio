@@ -62,3 +62,7 @@ MemQ 卡片 hover 和键盘焦点使用品牌青绿色反馈，默认封面布�
 Strategy 用研究、工作流与人机职责、设计系统、原型验证和上线数据说明工作方式。PostHog 只写 funnel、heatmap、session recording 和 JobNova 的单次 onboarding A/B test，不声称持续实验或统计显著。工具图标不包含 Storybook。About 只列 Liba、核桃、搜狐三段正式经历，Liba 写明 Design Lab 和两位实习生各六个月的指导；MemQ、Mono 作为自发项目只出现在 Experiments，不以 River Studio 任职的形式出现。
 
 导航和页脚的 Resume 指向 `/MeiChai_Product_Designer_Resume.pdf`，文件内容为最新确认版。同页锚点按布局偏移（`offsetTop`）计算落点，避免章节入场 transform 让标题停在固定导航后面。
+
+## Scrollable mini-program evidence
+
+The WeChat storefront and builder subsection in /projects/def-erp-kit includes Home, Catalog, Product, Cart, Sign in, Account, Link account, and Order details. Each screen scrolls independently within a fixed device shell: system chrome, page header and applicable bottom tabs stay visible. Home retains a fixed support entry. Product action bars remain inside their own screen. All data and media are served locally and interactions remain read-only; no customer or ERP API is contacted. Screen names and captions remain outside the demo in Case Kit styling. Keyboard users can focus each titled frame and scroll its contents. The existing builder video remains after the screen gallery.

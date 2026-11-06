@@ -13,11 +13,11 @@
     "banners": [
       {
         "id": "banner-0",
-        "imageUrl": "/demos/def-mini-program/portfolio/storefront-assets/home-hero.jpg",
+        "imageUrl": "/demos/def-mini-program/portfolio/storefront-assets/home-hero-complete.webp",
         "linkUrl": null,
-        "title": "专业美业好物\n一站轻松配齐",
-        "subtitle": "美甲 · 美睫 · 美发 · 美容",
-        "actionLabel": "立即选购"
+        "title": "",
+        "subtitle": "",
+        "actionLabel": ""
       }
     ],
     "quickLinks": [

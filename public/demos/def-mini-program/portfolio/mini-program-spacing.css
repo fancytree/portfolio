@@ -1,0 +1,29 @@
+/* Shared horizontal spacing for the isolated mini-program portfolio previews. */
+:root {
+  --def-preview-page-gutter: .45rem;
+}
+
+.def-storefront-preview .def-page:not(.catalog-page),
+.def-storefront-preview .account-page,
+.def-storefront-preview .product-detail-page {
+  padding-inline: var(--def-preview-page-gutter);
+}
+
+.def-storefront-preview .catalog-search {
+  margin-inline: var(--def-preview-page-gutter);
+}
+
+.def-storefront-preview .catalog-content {
+  padding-inline: 0;
+}
+
+.def-storefront-preview .catalog-root-section,
+.def-storefront-preview .catalog-products {
+  padding-inline: var(--def-preview-page-gutter);
+}
+
+.def-storefront-preview .cart-checkout,
+.def-storefront-preview .product-detail-action,
+.def-storefront-preview .account-login-dock {
+  padding-inline: var(--def-preview-page-gutter);
+}
