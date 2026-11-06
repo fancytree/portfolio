@@ -1,4 +1,5 @@
 import { Children, isValidElement, type ReactNode } from 'react';
+import Image from 'next/image';
 import { CaseButton } from './CaseButton';
 import CaseViewportVideo from './CaseViewportVideo';
 import CaseDemoLink from './CaseDemoLink';
@@ -267,6 +268,39 @@ export function CaseFigure({ spec, caption, children }: CaseFigureProps) {
       <figcaption data-case-type="caption" className={styles.caption}>
         {caption}
       </figcaption>
+    </figure>
+  );
+}
+
+/** 小图证据条。原始资料只作佐证，点开看大图，不占整栏宽度。 */
+export function CaseEvidenceThumbs({ label, items, caption, enlarge = true }: {
+  label: string;
+  /** false 时缩略图只作佐证，不可点击放大。 */
+  enlarge?: boolean;
+  caption?: string;
+  /** badge 标出这一张是重点证据，并给缩略图加粗描边。 */
+  items: { src: string; alt: string; title: string; width: number; height: number; badge?: string }[];
+}) {
+  return (
+    <figure className={styles.figure}>
+      <ul className={styles.thumbs} aria-label={label}>
+        {items.map((item) => (
+          <li key={item.src} className={`${styles.thumb} ${item.badge ? styles.thumbMarked : ''}`}>
+            {enlarge ? (
+              <CaseButton variant="media" href={item.src} target="_blank" rel="noreferrer" aria-label={`Open full-size image: ${item.title}`}>
+                <Image className={styles.thumbImage} src={item.src} alt={item.alt} width={item.width} height={item.height} sizes="(min-width: 1024px) 240px, 45vw" unoptimized />
+              </CaseButton>
+            ) : (
+              <div className={styles.thumbFrame}>
+                <Image className={styles.thumbImage} src={item.src} alt={item.alt} width={item.width} height={item.height} sizes="(min-width: 1024px) 240px, 45vw" unoptimized />
+              </div>
+            )}
+            <span data-case-type="caption" className={styles.thumbTitle}>{item.title}</span>
+            {item.badge ? <span className={styles.thumbBadge}>{item.badge}</span> : null}
+          </li>
+        ))}
+      </ul>
+      {caption ? <figcaption data-case-type="caption" className={styles.caption}>{caption}</figcaption> : null}
     </figure>
   );
 }

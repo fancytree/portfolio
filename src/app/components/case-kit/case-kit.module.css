@@ -634,3 +634,56 @@
 .demoPreview:fullscreen .demoPreviewFrame { width: 100%; height: 100%; transform: none; }
 .demoPreviewLaunch { position: absolute; inset: 0; cursor: zoom-in; }
 .demoPreviewLabel { position: absolute; left: var(--case-space-16); bottom: var(--case-space-16); }
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--case-space-12);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.thumb {
+  display: flex;
+  flex-direction: column;
+  gap: var(--case-space-6);
+  min-width: 0;
+}
+
+.thumbImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: top left;
+}
+
+.thumbTitle:global([data-case-type='caption']) {
+  color: var(--case-subtle);
+}
+
+.thumbMarked a,
+.thumbMarked button,
+.thumbMarked .thumbFrame {
+  border-color: var(--case-ink);
+  outline: var(--case-focus-width) solid var(--case-ink);
+  outline-offset: 0;
+}
+
+.thumb .thumbBadge {
+  align-self: flex-start;
+  padding: 2px var(--case-space-6);
+  background: var(--case-ink);
+  color: var(--case-bg);
+  font-family: var(--case-font-heading);
+  font-size: var(--case-type-caption);
+}
+
+.thumbFrame {
+  overflow: hidden;
+  border: var(--case-border-width) solid var(--case-rule);
+  border-radius: var(--case-radius-media);
+  background: var(--case-surface);
+}
