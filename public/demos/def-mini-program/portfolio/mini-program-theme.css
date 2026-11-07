@@ -1,0 +1,78 @@
+/*
+ * Small visual adjustments for the isolated mini-program portfolio previews.
+ *
+ * Loaded after the compiled runtime stylesheets in both
+ * `customer-runtime/index.html` and `storefront-runtime/index.html`, and
+ * re-emitted by both generation scripts, so a tweak here needs no Taro
+ * rebuild. The real mini-program source keeps its own styles and is never
+ * edited by this file.
+ *
+ * The previews otherwise keep the shipped design, brand red included. Add
+ * only deliberate, narrow overrides here.
+ *
+ * Note on specificity: Taro's runtime injects some of its own rules after
+ * this stylesheet, so an override may need an extra level to win.
+ */
+
+/* ------------------------------------------------------------------ cards */
+
+/* The screens grew five different card treatments: radii from .4rem to .7rem,
+   three border colours (one of them transparent) and three shadows, some
+   cards having none. They are unified on the account order card's values,
+   the most restrained of the set. */
+:root,
+page {
+  --def-card-radius: .55rem;
+  --def-card-border: .025rem solid rgba(50, 34, 27, .07);
+  --def-card-shadow: 0 .175rem .55rem rgba(50, 34, 27, .035);
+}
+
+.def-storefront-preview .def-card,
+.def-storefront-preview .bind-card,
+.def-storefront-preview .bind-support,
+.def-storefront-preview .guest-benefits,
+.def-storefront-preview .account-order,
+.def-storefront-preview .account-service-entry,
+.def-storefront-preview .cart-item,
+.def-storefront-preview .product-detail-heading,
+.def-storefront-preview .product-detail-summary,
+.def-storefront-preview .product-detail-about,
+.def-storefront-preview .product-detail-section,
+.def-storefront-preview .order-detail__shipping-entry,
+.def-storefront-preview .order-detail__summary,
+.def-storefront-preview .order-detail__payment-entry,
+.def-storefront-preview .order-detail__information {
+  border: var(--def-card-border);
+  border-radius: var(--def-card-radius);
+  box-shadow: var(--def-card-shadow);
+}
+
+/* Rows nested inside a card share the border and radius but take no shadow of
+   their own — a card inside a card should not look lifted twice. */
+.def-storefront-preview .bind-scan,
+.def-storefront-preview .bind-code {
+  border: var(--def-card-border);
+  border-radius: var(--def-card-radius);
+  box-shadow: none;
+}
+
+/* The gallery card keeps its square bottom so the last detail image sits
+   flush with the card edge. */
+.def-storefront-preview .product-detail-gallery {
+  border-radius: var(--def-card-radius) var(--def-card-radius) 0 0;
+}
+
+/* The membership pass is a hero panel, not a plain card, and keeps its own
+   radius and lift. */
+
+/* Featured brands: the logo carries the brand, so the repeated name below it
+   is dropped. The scroller's 4.9rem height was sized for logo plus name, so it
+   comes down to the logo and its own padding — otherwise the next module sits
+   a whole text line too low. */
+.def-storefront-preview .home-brand__name {
+  display: none;
+}
+
+.def-storefront-preview .home-brands {
+  height: 3.4rem;
+}
