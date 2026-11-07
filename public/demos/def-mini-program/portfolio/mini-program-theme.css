@@ -111,7 +111,8 @@ page {
   line-height: 1.5;
 }
 .def-storefront-preview .order-detail .order-detail__summary > taro-view-core > taro-text-core:last-child,
-.def-storefront-preview .order-detail .order-detail__information-value {
+.def-storefront-preview .order-detail .order-detail__information-value,
+.def-storefront-preview .order-detail .order-detail__information-stack {
   font-size: .64rem;
   font-weight: 500;
   line-height: 1.5;
@@ -134,4 +135,28 @@ page {
   font-size: .5rem;
   font-weight: 400;
   line-height: 1.5;
+}
+
+/* Invoice and amount rows share spacing, text baseline and value styling. */
+.def-storefront-preview .order-detail {
+  --def-order-row-space: .16rem;
+}
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core,
+.def-storefront-preview .order-detail .order-detail__information-row {
+  align-items: baseline;
+  gap: .6rem;
+  padding-block: var(--def-order-row-space);
+}
+.def-storefront-preview .order-detail .order-detail__summary > .order-detail__total {
+  padding-block: var(--def-order-row-space) !important;
+}
+.def-storefront-preview .order-detail .order-detail__invoice-state {
+  font-size: .6rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Address source is internal metadata, not customer-facing information. */
+.def-storefront-preview .order-detail .order-detail__address-source {
+  display: none;
 }
