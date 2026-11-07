@@ -76,3 +76,29 @@ page {
 .def-storefront-preview .home-brands {
   height: 3.4rem;
 }
+
+/* Compact payment entry: flexible copy column and an intrinsic status column. */
+.def-storefront-preview .order-detail__payment-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .4rem;
+}
+.def-storefront-preview .order-detail__payment-entry > :first-child {
+  min-width: 0;
+}
+.def-storefront-preview .order-detail__payment-entry .order-detail__payment-title {
+  font-size: .62rem;
+  line-height: 1.35;
+}
+.def-storefront-preview .order-detail__payment-entry .order-detail__payment-copy {
+  margin-top: .12rem;
+  font-size: .46rem;
+  line-height: 1.4;
+  white-space: normal;
+}
+.def-storefront-preview .order-detail__payment-entry .order-detail__payment-status {
+  font-size: .54rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
