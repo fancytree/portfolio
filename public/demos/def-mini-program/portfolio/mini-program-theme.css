@@ -102,3 +102,36 @@ page {
   font-weight: 600;
   line-height: 1.35;
 }
+
+/* Order details: more readable labels with a lighter text hierarchy. */
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core > taro-text-core:first-child,
+.def-storefront-preview .order-detail .order-detail__information-label {
+  font-size: .5rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core > taro-text-core:last-child,
+.def-storefront-preview .order-detail .order-detail__information-value {
+  font-size: .64rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core:nth-child(2) > taro-text-core:last-child {
+  font-size: .54rem;
+}
+.def-storefront-preview .order-detail .order-detail__summary > .order-detail__total > taro-text-core:last-child {
+  font-size: .8rem;
+  font-weight: 650;
+}
+.def-storefront-preview .order-detail .order-detail__section-title,
+.def-storefront-preview .order-detail .order-detail__summary-title,
+.def-storefront-preview .order-detail .order-detail__payment-title {
+  font-size: .66rem;
+  font-weight: 600;
+}
+.def-storefront-preview .order-detail .order-detail__progress-meta,
+.def-storefront-preview .order-detail .order-detail__payment-copy {
+  font-size: .5rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
