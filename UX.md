@@ -66,3 +66,7 @@ Strategy 用研究、工作流与人机职责、设计系统、原型验证和�
 ## Scrollable mini-program evidence
 
 The WeChat storefront and builder subsection in /projects/def-erp-kit includes Home, Catalog, Product, Cart, Sign in, Account, Link account, and Order details. Each screen scrolls independently within a fixed device shell: system chrome, page header and applicable bottom tabs stay visible. Home retains a fixed support entry. Product action bars remain inside their own screen. All data and media are served locally and interactions remain read-only; no customer or ERP API is contacted. Screen names and captions remain outside the demo in Case Kit styling. Keyboard users can focus each titled frame and scroll its contents. The existing builder video remains after the screen gallery.
+
+## Team HQ 作品入口
+
+Team HQ 在首页 Experiments 中展示（与 Mono、MemQ、SenseFlow 同组），无案例页，卡片直接打开 `/demos/team-hq/index.html`。进入后先创建主角（名字、外观），选择保存在浏览器 `localStorage`（键 `teamhq.profile.v1`），再次进入显示 Welcome back。点击进入后才加载 Three.js 和场景，并显示加载动画。

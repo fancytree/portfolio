@@ -270,7 +270,7 @@ const homeWorkItems = [
   ),
 ];
 
-const homeExperimentItems = ['Mono', 'MemQ', 'SenseFlow'].flatMap((title) =>
+const homeExperimentItems = ['Mono', 'MemQ', 'SenseFlow', 'Team HQ'].flatMap((title) =>
   productProjects.filter((project) => project.title === title)
 );
 

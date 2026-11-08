@@ -165,6 +165,20 @@ export const productProjects: WorkProject[] = [
     href: '/demos/senseflow/index.html',
   },
   {
+    title: 'Team HQ',
+    category: 'Product Designer / Builder',
+    time: '2026 · Playable',
+    tags: ['3D Office', 'Human + AI'],
+    description: 'A three-floor office where you create a character and work alongside human and AI colleagues.',
+    image: '/img/team-hq/cover.webp',
+    coverScreen: '/img/team-hq/cover.webp',
+    coverDevice: 'laptop',
+    coverAccent: '#7b5cd6',
+    coverScreenFit: 'cover',
+    // No case study: the card opens the playable office itself.
+    href: '/demos/team-hq/index.html',
+  },
+  {
     title: 'CrackInterview.AI',
     category: 'AI Builder',
     time: '2025 · 8 weeks',
