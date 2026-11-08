@@ -129,7 +129,8 @@
   #panelClose, #panelOpen {
     border: 0; cursor: pointer; font: 600 14px Fredoka, system-ui, sans-serif; border-radius: 999px;
   }
-  #panelClose { width: 30px; height: 30px; background: #ece4ff; color: #5a46b8; font-size: 18px; line-height: 1; }
+  #panelClose { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; background: #ece4ff; color: #5a46b8; }
+  #panelClose svg { display: block; width: 12px; height: 12px; }
   #panelOpen {
     position: fixed; top: 16px; right: 16px; padding: 10px 16px; background: #2e2470; color: #fff;
     box-shadow: 0 6px 20px rgba(46, 36, 112, .35); display: none;
@@ -511,7 +512,7 @@
   <header>
     <div><h1>Team progress</h1><p id="meta"></p></div>
     <div class="ptabs"><button data-tab="mine" class="on">Mine</button><button data-tab="all">All</button></div>
-    <button id="panelClose" title="Collapse">×</button>
+    <button id="panelClose" title="Collapse" aria-label="Collapse"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
   </header>
   <div id="membersView">
     <div id="summary"></div>
