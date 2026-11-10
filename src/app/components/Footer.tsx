@@ -25,7 +25,7 @@ export default function Footer() {
     <footer className="flex w-full flex-col items-center gap-10 bg-[#0a0a0a] px-6 py-3 sm:px-8 md:gap-16">
       {/* 顶部：社交链接 + 回到顶部 */}
       <div className="flex w-full items-center justify-between py-2">
-        <p className="text-[12px] text-white" style={fontBody}>
+        <p className="text-[12px] text-[#f3f1ea]/65" style={fontBody}>
           {socialLinks.map((link, i) => (
             <span key={link.label}>
               <a
@@ -43,7 +43,7 @@ export default function Footer() {
         <button
           type="button"
           onClick={scrollToTop}
-          className="mei-back-to-top flex items-center justify-end gap-2 text-[16px] font-light text-white"
+          className="mei-back-to-top flex items-center justify-end gap-2 text-[16px] font-light text-[#f3f1ea]/65"
           style={fontBody}
         >
           <span className="mei-back-to-top-text whitespace-nowrap">Scroll to top</span>
@@ -58,7 +58,7 @@ export default function Footer() {
         <div className="flex flex-col items-start justify-between gap-10 sm:flex-row sm:items-end">
           <a href="mailto:mei.chai@mail.polimi.it" className="group flex items-center gap-3">
             <h2
-              className="text-[40px] leading-[1.05] text-white sm:text-[56px] md:text-[72px]"
+              className="text-[40px] leading-[1.05] text-[#f3f1ea]/85 sm:text-[56px] md:text-[72px]"
               style={fontDisplay}
             >
               Let&apos;s work together
@@ -66,15 +66,15 @@ export default function Footer() {
             <ArrowRight
               size={40}
               strokeWidth={1.5}
-              className="shrink-0 text-white transition-transform duration-300 group-hover:translate-x-2 md:size-[55px]"
+              className="shrink-0 text-[#f3f1ea]/85 transition-transform duration-300 group-hover:translate-x-2 md:size-[55px]"
             />
           </a>
 
-          <ReachOutBadge className="size-[140px] self-center sm:size-[170px] md:size-[214px]" />
+          <ReachOutBadge className="size-[140px] self-center [filter:brightness(0.8)] sm:size-[170px] md:size-[214px]" />
         </div>
 
-        <div className="flex w-full items-end justify-center border-t border-white/25 py-2">
-          <p className="flex-1 text-[16px] text-white" style={fontBody}>
+        <div className="flex w-full items-end justify-center border-t border-white/15 py-2">
+          <p className="flex-1 text-[16px] text-[#f3f1ea]/65" style={fontBody}>
             © {new Date().getFullYear()} Mei Chai. Designed with intention.
           </p>
         </div>
