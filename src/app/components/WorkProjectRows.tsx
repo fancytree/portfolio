@@ -161,7 +161,7 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
                           }}
                         />
                       )}
-                      {device !== 'freeform' && device !== 'interface' && <span className={styles.glare} aria-hidden="true" />}
+                      {device !== 'freeform' && device !== 'interface' && device !== 'screenshot' && <span className={styles.glare} aria-hidden="true" />}
                     </div>
                     {device === 'laptop' && <span className={styles.laptopBase} aria-hidden="true" />}
                     {device === 'phone' && <span className={styles.phoneNotch} aria-hidden="true" />}

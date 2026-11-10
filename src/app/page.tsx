@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
 import { AudioWaveform, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
 import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
@@ -270,7 +269,7 @@ const homeWorkItems = [
   ),
 ];
 
-const homeExperimentItems = ['Mono', 'MemQ', 'SenseFlow', 'Team HQ'].flatMap((title) =>
+const homeExperimentItems = ['Mono', 'MemQ', 'SenseFlow', 'Team HQ', 'Milan Site Selection'].flatMap((title) =>
   productProjects.filter((project) => project.title === title)
 );
 
@@ -470,16 +469,6 @@ export default function Home() {
           <div className="pt-8 md:pt-10">
             <Reveal>
               <WorkProjectRows items={homeWorkItems} animatedCovers />
-              <div className="pt-6">
-                <Link
-                  href="/works"
-                  className="inline-flex w-fit items-center gap-2 bg-black px-4 py-2 text-[16px] leading-6 text-white uppercase no-underline opacity-100 transition-opacity duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:opacity-85 focus-visible:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#ed5b2b]"
-                  style={{ fontFamily: 'var(--mei-font-display), Oswald, sans-serif', fontWeight: 400, letterSpacing: 0 }}
-                >
-                  <span>View all works</span>
-                  <span aria-hidden>→</span>
-                </Link>
-              </div>
             </Reveal>
           </div>
 

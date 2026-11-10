@@ -70,3 +70,7 @@ The WeChat storefront and builder subsection in /projects/def-erp-kit includes H
 ## Team HQ 作品入口
 
 Team HQ 在首页 Experiments 中展示（与 Mono、MemQ、SenseFlow 同组），无案例页，卡片直接打开 `/demos/team-hq/index.html`。进入后先创建主角（名字、外观），选择保存在浏览器 `localStorage`（键 `teamhq.profile.v1`），再次进入显示 Welcome back。点击进入后才加载 Three.js 和场景，并显示加载动画。
+
+## Milan Site Selection 作品入口
+
+Milan Site Selection（原名 Milan Café Map）在首页 Experiments 中展示（与 Mono、MemQ、SenseFlow、Team HQ 同组），无案例页，卡片直接打开 `/demos/milan-cafe-map/index.html`（单文件 MapLibre 应用，数据为同目录的 `milan-*.json`）。功能：选址评分（面向新店选址，目前先开放咖啡店类别）（居民密度、竞争、地铁与人流、租金）、前 10 名推荐、街区 / 多边形 / 圆形范围统计、地标卡片。配色为报纸风格（米黄纸色 + 墨黑）。地图底图来自 OpenFreeMap，地标照片运行时取自英文维基百科（需联网），数据来自米兰市开放数据与 OpenStreetMap。

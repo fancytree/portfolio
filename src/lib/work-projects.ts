@@ -12,7 +12,7 @@ export type WorkProject = {
   coverScreen?: string;
   coverScreenHover?: string;
   coverScreens?: string[];
-  coverDevice?: 'laptop' | 'phone' | 'phone-stack' | 'tablet' | 'freeform' | 'interface';
+  coverDevice?: 'laptop' | 'phone' | 'phone-stack' | 'tablet' | 'freeform' | 'interface' | 'screenshot';
   coverAccent?: string;
   coverMotif?:
     | 'beauty'
@@ -157,10 +157,9 @@ export const productProjects: WorkProject[] = [
     description: 'Flow canvas where an HR team turns its own policy docs into an AI assistant and tests answers before publishing.',
     image: '/img/senseflow/cover.webp',
     coverScreen: '/img/senseflow/cover.webp',
-    coverDevice: 'laptop',
+    coverDevice: 'screenshot',
     coverAccent: '#f43f5e',
     coverScreenFit: 'cover',
-    coverScreenPosition: 'top left',
     // No case study: the card opens the interactive design itself.
     href: '/demos/senseflow/index.html',
   },
@@ -172,11 +171,25 @@ export const productProjects: WorkProject[] = [
     description: 'A three-floor office where you create a character and work alongside human and AI colleagues.',
     image: '/img/team-hq/cover.webp',
     coverScreen: '/img/team-hq/cover.webp',
-    coverDevice: 'laptop',
+    coverDevice: 'screenshot',
     coverAccent: '#7b5cd6',
     coverScreenFit: 'cover',
     // No case study: the card opens the playable office itself.
     href: '/demos/team-hq/index.html',
+  },
+  {
+    title: 'Milan Site Selection',
+    category: 'Product Designer / Builder',
+    time: '2026 · Interactive',
+    tags: ['3D Map', 'Data Viz'],
+    description: 'Scores Milan neighbourhoods in 3D for opening a new store: residents, competition, metro and footfall.',
+    image: '/img/milan-cafe-map/cover.webp',
+    coverScreen: '/img/milan-cafe-map/cover.webp',
+    coverDevice: 'screenshot',
+    coverAccent: '#8a7a55',
+    coverScreenFit: 'cover',
+    // No case study: the card opens the interactive map itself.
+    href: '/demos/milan-cafe-map/index.html',
   },
   {
     title: 'CrackInterview.AI',
