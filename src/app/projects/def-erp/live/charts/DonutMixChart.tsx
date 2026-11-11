@@ -17,11 +17,16 @@ type DonutMixChartProps = {
   emptyLabel?: string;
   className?: string;
   chartClassName?: string;
+  legendClassName?: string;
+  chartContainerClassName?: string;
   chartStyle?: CSSProperties;
   /** hover 时环心内容；返回 null 则不展示 */
   renderCenter?: (active: DonutMixSegment | null) => ReactNode;
   /** 上下排列：环在上、图例在下，用于窄卡片，避免图例文字被截断 */
   stacked?: boolean;
+  renderLegendValue?: (segment: DonutMixSegment) => ReactNode;
+  /** 环与图例放进同一块灰底面板并撑满卡片高度，与相邻的排名条卡片上下对齐 */
+  panel?: boolean;
 };
 
 /** SVG 环形占比图：hover 加粗、其余变淡，右侧图例显示整数百分比 */
@@ -31,9 +36,13 @@ export function DonutMixChart({
   emptyLabel = '暂无数据',
   className,
   chartClassName = 'size-40',
+  legendClassName,
+  chartContainerClassName,
   chartStyle,
   renderCenter,
   stacked = false,
+  renderLegendValue,
+  panel = false,
 }: DonutMixChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const active = activeIndex == null ? null : (segments[activeIndex] ?? null);
@@ -57,11 +66,17 @@ export function DonutMixChart({
   }
 
   return (
-    <div className={cn('flex min-h-[160px] flex-1 items-center gap-5', stacked && 'flex-col gap-4', className)}>
+    <div className={cn(
+      'flex min-h-[160px] flex-1 items-center gap-5',
+      stacked && 'flex-col gap-4',
+      panel && 'justify-between rounded-xl bg-muted p-4',
+      className,
+    )}>
       <div
-        className={cn('relative flex shrink-0 items-center justify-center', chartClassName)}
-        style={chartStyle}
+        data-slot="donut-chart-container"
+        className={cn('flex shrink-0 items-center justify-center', chartClassName, chartContainerClassName)}
       >
+        <div className={cn('relative flex shrink-0 items-center justify-center', chartClassName)} style={chartStyle}>
         <svg viewBox="0 0 100 100" className={cn(chartClassName, '-rotate-90')} aria-label={ariaLabel}>
           {segments.map((segment, index) => {
             const segmentOffset = offsets[index];
@@ -99,8 +114,9 @@ export function DonutMixChart({
             {renderCenter(active)}
           </div>
         ) : null}
+        </div>
       </div>
-      <div className={cn('min-w-0 flex-1 space-y-2', stacked && 'w-full flex-none')}>
+      <div data-slot="donut-legend" className={cn('min-w-0 flex-1 space-y-2', stacked && 'w-full flex-none', legendClassName)}>
         {segments.map((segment, index) => (
           <button
             key={segment.key}
@@ -118,7 +134,7 @@ export function DonutMixChart({
               <span className="size-2 shrink-0 rounded-full" style={{ background: segment.color }} />
               <span className="truncate">{segment.label}</span>
             </span>
-            <span className="font-semibold tabular-nums text-foreground">{Math.round(segment.percent)}%</span>
+            <span className="shrink-0 font-semibold tabular-nums text-foreground">{renderLegendValue ? renderLegendValue(segment) : `${Math.round(segment.percent)}%`}</span>
           </button>
         ))}
       </div>

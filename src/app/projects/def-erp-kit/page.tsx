@@ -4,6 +4,7 @@ import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseS
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
 import FragmentedOperationsDiagram from './FragmentedOperationsDiagram';
 import UnifiedOperationsDiagram from './UnifiedOperationsDiagram';
+import BeforeAfterSlider from '../def-erp/BeforeAfterSlider';
 import {
   CaseChapter,
   CaseClose,
@@ -199,18 +200,30 @@ export default function DefErpKitPage() {
             <h3>Role-based dashboards</h3>
             <p>Each role sees a different view of the same business data. Admin monitors the business overall, sales focuses on orders and customer follow-ups, warehouse tracks stock and dispatch tasks, and finance reviews payments and invoices. A shared layout keeps the system familiar while making each role’s priorities visible.</p>
           </CaseProse>
+          <BeforeAfterSlider
+            beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
+            beforeAlt="Legacy ordering system Dashboard: one undifferentiated view mixing sales KPIs, pending approvals, and promotional panels for every user."
+            beforeLabel="Before"
+            afterSrc="/img/def-erp/evidence/dashboard-admin-expanded-v2.webp"
+            afterAlt="New Admin dashboard: sales, orders, new customers and receivables with trend lines, sales performance, customer mix, and tasks to handle."
+            afterLabel="After"
+            aspectRatio={1.6}
+          />
+          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">
+            Before: one Dashboard page for every login, mixing task types that belonged to different jobs. After: the same shell, reweighted per role — this is the Admin view.
+          </p>
           <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-2">
             <CaseFigure caption="Admin — business performance and outstanding work.">
-              <Image src="/img/def-erp/evidence/dashboard-admin-expanded-cda6a15dd4c6.webp" alt="Admin dashboard with business metrics, sales trends, customer mix, and outstanding tasks." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
+              <Image src="/img/def-erp/evidence/dashboard-admin-expanded-v2.webp" alt="Admin dashboard with business metrics, sales trends, customer mix, and outstanding tasks." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseFigure caption="Sales — orders, receivables, and customer follow-ups.">
-              <Image src="/img/def-erp/evidence/dashboard-sales-expanded-d1b865afd04a.webp" alt="Sales dashboard showing orders to ship, overdue customers, customer follow-ups, and sales performance." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
+              <Image src="/img/def-erp/evidence/dashboard-sales-expanded-v2.webp" alt="Sales dashboard showing orders to ship, overdue customers, customer follow-ups, and sales performance." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseFigure caption="Warehouse — stock, dispatch, and incoming goods.">
-              <Image src="/img/def-erp/evidence/dashboard-warehouse-expanded-d66c463bfbde.webp" alt="Warehouse dashboard with stock tasks, orders to ship, incoming receipts, and near-expiry products." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
+              <Image src="/img/def-erp/evidence/dashboard-warehouse-expanded-v2.webp" alt="Warehouse dashboard with stock tasks, orders to ship, incoming receipts, and near-expiry products." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
             <CaseFigure caption="Finance — payment approvals, invoices, and receivables.">
-              <Image src="/img/def-erp/evidence/dashboard-finance-expanded-68bdda22969e.webp" alt="Finance dashboard showing payment approvals, invoices to issue, and overdue receivables." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
+              <Image src="/img/def-erp/evidence/dashboard-finance-expanded-v2.webp" alt="Finance dashboard showing payment approvals, invoices to issue, and overdue receivables." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
             </CaseFigure>
           </div>
           <CaseProse>
@@ -302,6 +315,60 @@ export default function DefErpKitPage() {
               <p>Staff generate a pairing code from the customer&apos;s ERP profile. The customer scans it or enters the code in the WeChat mini-program (a storefront within WeChat) to link their account.</p>
             </CaseProse>
           </div>
+          <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-3">
+            {([
+              {
+                name: 'Home',
+                before: '/img/def-erp/storefront-home-legacy-full.webp',
+                after: '/img/def-erp/storefront-home-new-v2.webp',
+                beforeAlt: 'The old WeChat mini-program home page: search, banner carousel, eight category icons, and a scrolling row of brand logos, with the bottom tab bar.',
+                afterAlt: 'The rebuilt mini-program home page: search, banner carousel, announcement strip, the same eight categories, a featured brands row, and a salon essentials group, with the bottom tab bar.',
+              },
+              {
+                name: 'Sign in',
+                before: '/img/def-erp/storefront-signin-legacy.webp',
+                after: '/img/def-erp/storefront-signin-new-v2.webp',
+                beforeAlt: 'The old mini-program login page: the shop logo, WeChat authorisation and account sign-in buttons, and a terms checkbox.',
+                afterAlt: 'The rebuilt sign-in screen: a customer channel banner, three reasons to sign in, and a Sign in with WeChat button above the bottom tab bar.',
+              },
+              {
+                name: 'Account',
+                before: '/img/def-erp/storefront-account-legacy.webp',
+                after: '/img/def-erp/storefront-account-new-v2.webp',
+                beforeAlt: 'The old mini-program personal centre: member name, coin balances, order shortcuts, and a grid of colourful function icons.',
+                afterAlt: 'The rebuilt account screen: account overview with outstanding and prepaid balances, restock requests, and a list of orders with status filters.',
+              },
+            ] as const).map((item) => (
+              <div key={item.name} className="mx-auto flex w-full flex-col items-center gap-3" style={{ maxWidth: 330 }}>
+                {/* 手机外壳：深色粗边 + 大圆角，让对比图看起来是在真机屏幕里 */}
+                <div
+                  className="w-full"
+                  style={{
+                    border: '8px solid #1b1d21',
+                    borderRadius: 40,
+                    overflow: 'hidden',
+                    background: '#1b1d21',
+                    boxShadow: '0 12px 28px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.08)',
+                  }}
+                >
+                <BeforeAfterSlider
+                  beforeSrc={item.before}
+                  beforeAlt={item.beforeAlt}
+                  beforeLabel="Before"
+                  afterSrc={item.after}
+                  afterAlt={item.afterAlt}
+                  afterLabel="After"
+                  aspectRatio={0.4615}
+                  hideHint
+                />
+                </div>
+                <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">{item.name}</p>
+              </div>
+            ))}
+          </div>
+          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">
+            The mini-program Home, Sign in and Account screens, before and after. Drag the handle to compare. The layout stayed familiar on purpose, while each block is now configured from the ERP.
+          </p>
           <CaseProse>
             <p>Explore the customer-facing screens below. Each phone keeps its header and bottom navigation in place while its content scrolls independently; customer support stays within reach on Home. These read-only previews use demonstration data.</p>
           </CaseProse>

@@ -45,7 +45,7 @@ export const productProjects: WorkProject[] = [
     imageScale: 1,
     imageTranslateY: '0%',
     imageBackground: '#f1f3f5',
-    coverScreen: '/img/def-erp/evidence/dashboard-admin-expanded-cda6a15dd4c6.webp',
+    coverScreen: '/img/def-erp/evidence/dashboard-admin-expanded-v2.webp',
     coverDevice: 'interface',
     coverAccent: '#2274ff',
     coverMotif: 'beauty',

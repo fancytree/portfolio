@@ -222,7 +222,26 @@ export function CustomerMixCard({
       <DonutMixChart
         className="mt-4"
         stacked
+        panel
         ariaLabel={`${title} chart`}
+        chartContainerClassName="w-full h-auto py-2"
+        renderLegendValue={(segment) => {
+          const row = source.find((item) => item.label === segment.key);
+          const isAmount = metricToggle && metric === 'amount';
+          const first = isAmount ? formatMixAmount(row?.amount ?? 0) : (row?.count ?? 0);
+          // 非金额口径：灰色「数量 + 单位」，百分比加粗深色（与 Customer source 同一版式）
+          return isAmount ? (
+            <span className="inline-flex items-center gap-2 text-right text-[11px]">
+              <span className="min-w-16 text-right">{first}</span>
+              <span className="min-w-8 font-normal text-muted-foreground">{Math.round(segment.percent)}%</span>
+            </span>
+          ) : (
+            <span className="inline-flex items-baseline gap-2 text-right text-[11px]">
+              <span className="font-normal text-muted-foreground">{first} customers</span>
+              <span className="min-w-8 font-semibold">{Math.round(segment.percent)}%</span>
+            </span>
+          );
+        }}
         chartStyle={{
           transform: `scale(${0.82 + 0.18 * progress}) rotate(${-22 * (1 - progress)}deg)`,
         }}

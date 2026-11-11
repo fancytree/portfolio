@@ -17,6 +17,8 @@ type BeforeAfterSliderProps = {
   afterLabel: string;
   /** width / height, defaults to a common wide-screenshot ratio */
   aspectRatio?: number;
+  /** Hide the built-in "Drag the handle…" line, for tight layouts such as phone frames. */
+  hideHint?: boolean;
 };
 
 /**
@@ -33,6 +35,7 @@ export default function BeforeAfterSlider({
   afterAlt,
   afterLabel,
   aspectRatio = 1.6,
+  hideHint = false,
 }: BeforeAfterSliderProps) {
   const [position, setPosition] = useState(50);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -136,9 +139,11 @@ export default function BeforeAfterSlider({
           {afterLabel}
         </span>
       </div>
-      <figcaption className="text-center text-[12px] font-normal text-[#8b93a7]" style={bodyStyle}>
-        Drag the handle, or use the arrow keys, to compare.
-      </figcaption>
+      {hideHint ? null : (
+        <figcaption className="text-center text-[12px] font-normal text-[#8b93a7]" style={bodyStyle}>
+          Drag the handle, or use the arrow keys, to compare.
+        </figcaption>
+      )}
     </figure>
   );
 }
