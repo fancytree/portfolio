@@ -40,7 +40,7 @@ export default function ProcurementAgentKitPage() {
           glance={{ items: [
             { label: 'The challenge', body: 'Purchasing was split across Excel, supplier messages, and delivery notes. Even after the ERP, stockouts, seasonality, and customer growth lived in the buyer’s memory.' },
             { label: 'My approach', body: 'Connect the purchase lifecycle first. Then give an Agent those signals, draft one editable plan, and keep every handoff explicit.' },
-            { label: 'The outcome', body: 'A purchase plan that took 30 minutes to 2 hours across suppliers now takes about 2 minutes, and three staff members use it daily. AI prepares the recommendation; the buyer commits the order.' },
+            { label: 'The outcome', body: 'A purchase plan that took 30 minutes to 2 hours across suppliers now takes 5 to 10 minutes, and three staff members use it daily. AI prepares the recommendation; the buyer commits the order.' },
           ] }}
         />
 
@@ -224,9 +224,9 @@ export default function ProcurementAgentKitPage() {
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="09 / Results" title="A purchase plan in about 2 minutes, down from 30 minutes to 2 hours.">
+        <CaseChapter label="09 / Results" title="A purchase plan in 5 to 10 minutes, down from 30 minutes to 2 hours.">
           <CaseStats items={[
-            { value: '~2 min', label: 'To prepare a purchase plan, down from 30 minutes to 2 hours across suppliers' },
+            { value: '5–10 min', label: 'To prepare a purchase plan, down from 30 minutes to 2 hours across suppliers' },
             { value: '3', label: 'Staff members using the Agent daily' },
           ]} />
           <CaseProse><p>The Agent is in production and used by procurement. It drafts quantities; the buyer keeps the supplier commitment.</p></CaseProse>

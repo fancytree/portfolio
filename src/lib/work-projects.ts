@@ -60,7 +60,7 @@ export const productProjects: WorkProject[] = [
     time: '2026',
     tags: ['AI Product Design', 'Human Control'],
     description: 'Turned fragmented procurement data into explainable recommendations, with human review before purchasing decisions.',
-    impact: { value: '30 min–2 h → ~2 min', label: 'per purchase plan, used daily by 3 staff' },
+    impact: { value: '30 min–2 h → 5–10 min', label: 'per purchase plan, used daily by 3 staff' },
     image: '/img/procurement-agent/Procurement Agent.avif',
     imageFit: 'cover',
     imageScale: 1.68,
