@@ -1,6 +1,6 @@
 'use client';
 
-// 顶部导航栏组件 —— Logo + 词标，右侧大写文字链接，透明磨砂背景。
+// 顶部导航栏组件 —— Logo + 词标，右侧文字链接（句首大写），透明磨砂背景。
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -102,7 +102,7 @@ export default function Navbar() {
               target={target}
               rel={target ? 'noopener noreferrer' : undefined}
               onClick={handleNavClick(href)}
-              className="relative text-[13px] text-[#0a0a0a] uppercase transition-opacity hover:opacity-60"
+              className="relative rounded-[6px] text-[13px] text-[#0a0a0a] transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
               style={{ ...fontBody, color: navInk, opacity: isActive(href) ? 1 : 0.75, transition: 'color 0.24s ease, opacity 0.2s ease' }}
               aria-current={isActive(href) ? 'page' : undefined}
             >
@@ -154,10 +154,10 @@ export default function Navbar() {
       </nav>
 
       {/* 移动端下拉菜单 */}
+      {menuOpen && (
       <div
-        className="overflow-hidden transition-all duration-300 ease-in-out md:hidden"
+        className="mei-nav-menu md:hidden"
         style={{
-          maxHeight: menuOpen ? '240px' : '0px',
           backgroundColor: isNavLight ? 'rgba(10, 10, 10, 0.22)' : 'rgba(255, 255, 255, 0.2)',
           backdropFilter: 'blur(12px)',
         }}
@@ -170,7 +170,7 @@ export default function Navbar() {
               target={target}
               rel={target ? 'noopener noreferrer' : undefined}
               onClick={handleNavClick(href)}
-              className="text-[14px] text-[#0a0a0a] uppercase"
+              className="text-[14px] text-[#0a0a0a]"
               style={{ ...fontBody, color: navInk, opacity: isActive(href) ? 1 : 0.75 }}
               aria-current={isActive(href) ? 'page' : undefined}
             >
@@ -179,6 +179,7 @@ export default function Navbar() {
           ))}
         </div>
       </div>
+      )}
     </header>
   );
 }

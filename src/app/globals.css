@@ -228,32 +228,21 @@ body.no-scroll {
 }
 
 .mei-motion-section {
-  --mei-section-shift: 0px;
   opacity: 0.001;
-  transform: translate3d(0, calc(30px + var(--mei-section-shift)), 0) scale(0.992);
-  filter: blur(5px);
+  transform: translate3d(0, 16px, 0);
   transition:
-    opacity 0.56s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.72s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform, filter;
+    opacity 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
 }
 
 .mei-motion-section[data-visible='true'] {
   opacity: 1;
-  transform: translate3d(0, var(--mei-section-shift), 0) scale(1);
-  filter: blur(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .mei-interactive-row {
   transition: background-color 0.2s ease;
-}
-
-.mei-process-step {
-  transition:
-    transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.32s ease;
-  will-change: transform;
 }
 
 .mei-email-pill {
@@ -293,8 +282,27 @@ body.no-scroll {
 }
 
 @media (hover: hover) {
-  .mei-process-step:hover {
-    transform: translate3d(0, -4px, 0) scale(1.01);
+}
+
+/* 移动端导航菜单：打开时一次性淡入上浮，不动 max-height 这类布局属性 */
+.mei-nav-menu {
+  animation: mei-nav-menu-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mei-nav-menu-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mei-nav-menu {
+    animation: none;
   }
 }
 
@@ -307,12 +315,12 @@ body.no-scroll {
   display: block;
   width: auto;
   height: 40px;
-  transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: opacity 0.2s ease;
 }
 
 .mei-logo-link:hover .mei-logo-img,
 .mei-logo-link:focus-visible .mei-logo-img {
-  transform: scale(1.1);
+  opacity: 0.6;
 }
 
 .mei-logo-link:focus-visible {
@@ -1822,6 +1830,16 @@ body.no-scroll {
 
 @keyframes meiBadgeSpin {
   to { transform: rotate(360deg); }
+}
+
+/* 印章只做安静的 hover 反馈，不再整块放大 */
+.mei-reach-out {
+  transition: opacity 0.2s ease;
+}
+
+.mei-reach-out:hover,
+.mei-reach-out:focus-visible {
+  opacity: 0.78;
 }
 
 /* Footer 印章徽标：外圈弧形文字持续旋转，中间信封图标保持静止不动 */

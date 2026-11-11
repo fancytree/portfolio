@@ -1,33 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Activity,
-  ArrowUpRight,
-  Blocks,
-  Brain,
-  CalendarDays,
-  ChartNoAxesCombined,
-  Coins,
-  FileText,
-  Headphones,
-  Heart,
-  Layers3,
-  Link2,
-  LockKeyhole,
-  MapPin,
-  MessageCircle,
-  MessagesSquare,
-  Mic2,
-  Package,
-  Search,
-  Share2,
-  Sparkles,
-  Target,
-  UsersRound,
-  Vote,
-  Zap,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import type { WorkProject } from '@/lib/work-projects';
 import styles from './WorkProjectRows.module.css';
@@ -36,45 +9,11 @@ import DefErpCover from './def-erp-cover/DefErpCover';
 import ConnectNovaCover from './connectnova-cover/ConnectNovaCover';
 import JobNovaCover from './jobnova-cover/JobNovaCover';
 
-const fontDisplay: React.CSSProperties = {
+const fontName: React.CSSProperties = {
   fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
   fontWeight: 400,
 };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
-
-const motifIcons: Record<NonNullable<WorkProject['coverMotif']>, [LucideIcon, LucideIcon]> = {
-  beauty: [Sparkles, Package],
-  procurement: [Package, FileText],
-  recruiting: [UsersRound, Link2],
-  'job-search': [Target, Zap],
-  learning: [Brain, Layers3],
-  parenting: [Heart, MessageCircle],
-  finance: [Coins, ChartNoAxesCombined],
-  interview: [Mic2, MessageCircle],
-  support: [Headphones, MessagesSquare],
-  civic: [MapPin, Vote],
-  health: [Activity, CalendarDays],
-  'research-sharing': [LockKeyhole, Share2],
-  'research-coding': [Blocks, Search],
-};
-
-function CoverDecorations({ motif }: { motif?: WorkProject['coverMotif'] }) {
-  if (!motif) return null;
-
-  const [PrimaryIcon, SecondaryIcon] = motifIcons[motif];
-
-  return (
-    <div className={styles.decorations} data-motif={motif} aria-hidden="true">
-      <span className={`${styles.decorObject} ${styles.decorPrimary}`}>
-        <PrimaryIcon />
-      </span>
-      <span className={`${styles.decorObject} ${styles.decorSecondary}`}>
-        <SecondaryIcon />
-      </span>
-      <span className={styles.decorDash} />
-    </div>
-  );
-}
 
 export default function WorkProjectRows({ items, animatedCovers = false }: { items: WorkProject[]; animatedCovers?: boolean }) {
   return (
@@ -110,11 +49,6 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
               ) : procurementCover ? (
                 <div className={styles.animatedCover} inert aria-hidden="true"><ProcurementCover /></div>
               ) : (<>
-              <span className={styles.wash} aria-hidden="true" />
-              <span className={styles.orbit} aria-hidden="true" />
-              <span className={styles.orb} aria-hidden="true" />
-              <span className={styles.dots} aria-hidden="true" />
-
               <div className={`${styles.device} ${styles[device]}`}>
                 {device === 'phone-stack' ? (
                   (project.coverScreens ?? [project.coverScreen ?? project.image]).slice(0, 3).map((screen, index) => (
@@ -127,7 +61,6 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
                           sizes="(min-width: 640px) 15vw, 29vw"
                           style={{ objectFit: 'cover', objectPosition: 'top' }}
                         />
-                        <span className={styles.glare} aria-hidden="true" />
                       </div>
                     </div>
                   ))
@@ -161,7 +94,6 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
                           }}
                         />
                       )}
-                      {device !== 'freeform' && device !== 'interface' && device !== 'screenshot' && <span className={styles.glare} aria-hidden="true" />}
                     </div>
                     {device === 'laptop' && <span className={styles.laptopBase} aria-hidden="true" />}
                     {device === 'phone' && <span className={styles.phoneNotch} aria-hidden="true" />}
@@ -170,16 +102,15 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
                 )}
               </div>
 
-              <CoverDecorations motif={project.coverMotif} />
               </>)}
               <span className={`${styles.arrow} flex size-9 items-center justify-center rounded-full bg-black text-white shadow-sm`}>
-                <ArrowUpRight size={18} strokeWidth={1.75} />
+                <ArrowUpRight size={18} strokeWidth={1.5} />
               </span>
             </div>
 
             <div className="flex flex-col gap-1.5">
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                <h3 className="text-[22px] leading-none text-[#0a0a0a] md:text-[26px]" style={fontDisplay}>
+                <h3 className="text-[22px] leading-none text-[#0a0a0a] md:text-[26px]" style={fontName}>
                   {project.title}
                 </h3>
                 <div className="flex flex-wrap items-center justify-end gap-2">

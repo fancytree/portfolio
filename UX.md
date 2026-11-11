@@ -59,7 +59,7 @@ MemQ 卡片 hover 和键盘焦点使用品牌青绿色反馈，默认封面布�
 
 首屏标题仍是一句话（2026-11-04 按简历优化，保留 “Beyond screens” 开头）：“Beyond screens, I design products people can understand and trust, from AI tools to business software, and build the systems behind them”（不绑定 AI agent：用户同时在投非 agent 岗位），标签 UX／Product strategy／Systems thinking，手机和桌面同一套，不加经历说明段落。其余首页文案与 2026-10-27 确认的简历一致，不再出现 7+ 年。精选区标题为 Selected work，顺序保持 Procurement Agent、DEF Beauty ERP、JobNova、ConnectNova。四张卡片的摘要和标签只写已有交付或决策，由 `src/lib/work-projects.ts` 同时供首页和 `/works` 使用。
 
-Strategy 用研究、工作流与人机职责、设计系统、原型验证和上线数据说明工作方式。PostHog 只写 funnel、heatmap、session recording 和 JobNova 的单次 onboarding A/B test，不声称持续实验或统计显著。工具图标不包含 Storybook。About 只列 Liba、核桃、搜狐三段正式经历，Liba 写明 Design Lab 和两位实习生各六个月的指导；MemQ、Mono 作为自发项目只出现在 Experiments，不以 River Studio 任职的形式出现。
+Strategy 按方法组织，不是按流程：五块仍是研究、工作流与人机职责、设计系统、原型验证和上线数据，但每块写成「方法名 + 它定下什么决定（等宽一行）+ 具名项目」，并列排版、无编号无连线，不暗示先后顺序。新增 Journey and service mapping 一块。每块下方挂 1–3 件真实方法产出，统一 16:10 白底框 + 等宽图注，图注注明物料类型和出处项目：访谈手记与亲和图、用户旅程图与 Clarity／Milano Partecipa 服务蓝图、Mono 的人机确认边界图与客服系统跨角色泳道图、JobNova 与 DEF ERP 的设计系统基础。缩略图由 scripts 之外的一次性处理生成于 public/img/strategy/method，服务蓝图直接使用原 SVG。Prototyping 用 CrackInterview 线框流程图和 Clarity 的现场可用性测试照片。Behavioral evidence 不配图：Milano Partecipa 的热力图与该块正文讲的 PostHog 证据不是同一个项目，已按用户要求移除，待补 PostHog 自身截图。Beikemama 的 Hi-Fi 原型不使用，保持首页不出现该案例。PostHog 只写 funnel、heatmap、session recording 和 JobNova 的单次 onboarding A/B test，不声称持续实验或统计显著。工具图标不包含 Storybook。About 只列 Liba、核桃、搜狐三段正式经历，Liba 写明 Design Lab 和两位实习生各六个月的指导；MemQ、Mono 作为自发项目只出现在 Experiments，不以 River Studio 任职的形式出现。
 
 导航和页脚的 Resume 指向 `/MeiChai_Product_Designer_Resume.pdf`，文件内容为最新确认版。同页锚点按布局偏移（`offsetTop`）计算落点，避免章节入场 transform 让标题停在固定导航后面。
 

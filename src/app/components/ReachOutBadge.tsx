@@ -9,7 +9,7 @@ export default function ReachOutBadge({ className = '', style }: { className?: s
       href="mailto:mei.chai@mail.polimi.it"
       aria-label="Email Mei"
       style={style}
-      className={`relative flex shrink-0 items-center justify-center transition-transform duration-300 hover:scale-105 ${className}`}
+      className={`mei-reach-out relative flex shrink-0 items-center justify-center ${className}`}
     >
       <img src="/img/footer/reach-out-badge.svg?v=paper" alt="" className="mei-badge-spin absolute inset-0 size-full" />
       <Mail size={28} strokeWidth={1.5} className="relative text-[#0a0a0a] md:size-8" />

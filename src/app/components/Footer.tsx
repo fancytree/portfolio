@@ -22,9 +22,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="flex w-full flex-col items-center gap-10 bg-[#0a0a0a] px-6 py-3 sm:px-8 md:gap-16">
+    <footer className="flex w-full flex-col items-center gap-10 bg-[#0a0a0a] px-6 py-6 sm:px-8 md:gap-16 md:py-8">
       {/* 顶部：社交链接 + 回到顶部 */}
-      <div className="flex w-full items-center justify-between py-2">
+      <div className="flex w-full items-center justify-between">
         <p className="text-[12px] text-[#f3f1ea]/65" style={fontBody}>
           {socialLinks.map((link, i) => (
             <span key={link.label}>
@@ -73,9 +73,9 @@ export default function Footer() {
           <ReachOutBadge className="size-[140px] self-center [filter:brightness(0.8)] sm:size-[170px] md:size-[214px]" />
         </div>
 
-        <div className="flex w-full items-end justify-center border-t border-white/15 py-2">
+        <div className="flex w-full items-end justify-center border-t border-white/15 pt-4">
           <p className="flex-1 text-[16px] text-[#f3f1ea]/65" style={fontBody}>
-            © {new Date().getFullYear()} Mei Chai. Designed with intention.
+            © {new Date().getFullYear()} Mei Chai · Designed and built in Milan
           </p>
         </div>
       </div>

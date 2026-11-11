@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { AudioWaveform, ChartSpline, FileText, Plus, Search, Star, Tangent } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { InteractivePond } from './components/InteractivePond';
 import WorkProjectRows from './components/WorkProjectRows';
 import { productProjects } from '@/lib/work-projects';
@@ -64,80 +64,46 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
-function useSectionMotion(options?: { pinned?: boolean }) {
-  const pinned = options?.pinned ?? false;
+// 每个区块只入场一次：淡入 + 上浮，滚回去不再重播，也不跟着滚动做视差位移。
+function useSectionMotion() {
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [shift, setShift] = useState(0);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const nowVisible = entry.isIntersecting || entry.intersectionRatio > 0;
-        // pinned：只淡入一次，永不再淡出/位移——这是页面最后一屏，紧贴着 fixed footer，
-        // 若在滚出视口时被重新判定为不可见，视差位移和透明度衰减会露出下方正文容器的白色背景。
-        setIsVisible((prev) => (pinned ? prev || nowVisible : nowVisible));
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
       },
       { threshold: 0.12, rootMargin: '0px 0px -12% 0px' }
     );
 
     observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
-    if (reduceMotion || pinned) {
-      return () => observer.disconnect();
-    }
-
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const rect = node.getBoundingClientRect();
-      const viewportHeight = window.innerHeight || 1;
-      const progress = Math.min(Math.max((viewportHeight - rect.top) / (viewportHeight + rect.height), 0), 1);
-      setShift((0.5 - progress) * 14);
-    };
-    const requestUpdate = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(update);
-    };
-
-    requestUpdate();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', requestUpdate);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, [pinned]);
-
-  return { ref, isVisible, shift };
+  return { ref, isVisible };
 }
 
 function MotionSection({
   children,
   className = '',
   style,
-  pinned,
   ...props
-}: React.ComponentPropsWithoutRef<'section'> & { pinned?: boolean }) {
-  const { ref, isVisible, shift } = useSectionMotion({ pinned });
-  const motionStyle = {
-    ...style,
-    '--mei-section-shift': `${shift.toFixed(2)}px`,
-  } as React.CSSProperties;
+}: React.ComponentPropsWithoutRef<'section'>) {
+  const { ref, isVisible } = useSectionMotion();
 
   return (
     <section
       ref={ref}
       data-visible={isVisible ? 'true' : 'false'}
       className={`mei-motion-section ${className}`}
-      style={motionStyle}
+      style={style}
       {...props}
     >
       {children}
@@ -150,11 +116,13 @@ const fullBleed: React.CSSProperties = {
   marginRight: 'calc(-50vw + 50%)',
 };
 
-const fontDisplay: React.CSSProperties = { fontFamily: 'var(--font-inter)', fontWeight: 400 };
-const fontTitle: React.CSSProperties = {
+// 字体规则：Oswald 写「名字」（章节名、作品名、步骤名、职位名），
+// Inter 写「句子」（首屏那句话和所有正文），DM Mono 只写批注。
+const fontName: React.CSSProperties = {
   fontFamily: 'var(--mei-font-display), Oswald, sans-serif',
   fontWeight: 400,
 };
+const fontSentence: React.CSSProperties = { fontFamily: 'var(--font-inter)', fontWeight: 400 };
 const fontBody: React.CSSProperties = { fontFamily: 'var(--font-inter)' };
 const fontMono: React.CSSProperties = { fontFamily: 'var(--font-dm-mono)' };
 
@@ -241,13 +209,13 @@ function HeroTypedHeading() {
       <h1
         aria-label={heroIntroText}
         className="relative text-[34px] leading-[1.08] tracking-[-0.035em] text-[#0a0a0a] sm:text-[44px] md:text-[54px]"
-        style={fontDisplay}
+        style={fontSentence}
       >
         <span aria-hidden="true">{typedTokens}</span>
       </h1>
 
       <div
-        className={`mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] tracking-[0.08em] text-[#0a0a0a]/55 transition-all duration-500 sm:mt-6 sm:text-[11px] ${
+        className={`mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] tracking-[0.02em] text-[#0a0a0a]/60 transition-[opacity,transform] duration-500 sm:mt-6 sm:text-[12px] ${
           isComplete ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
         }`}
         style={fontMono}
@@ -255,9 +223,9 @@ function HeroTypedHeading() {
       >
         <span>UX</span>
         <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
-        <span>PRODUCT STRATEGY</span>
+        <span>Product strategy</span>
         <span className="text-[#0a0a0a]" aria-hidden="true">/</span>
-        <span>SYSTEMS THINKING</span>
+        <span>Systems thinking</span>
       </div>
     </div>
   );
@@ -289,11 +257,25 @@ const shipIcon = (
   imageClassName: string = 'h-full w-full'
 ): ToolItem => ({ type: 'ship-icon', src, alt, innerClassName, imageClassName });
 
-const processSteps = [
+// Strategy 按方法组织，不是按流程：每块是「方法 + 它定下什么决定 + 具名项目」。
+// settles 一行用等宽写，和首屏的批注层同一个签名。
+const methods = [
   {
-    icon: Search,
-    title: 'Find the decision',
-    body: 'Use interviews, workflow observation, and product behavior to understand where people get stuck. Connect those findings to a problem the team can act on.',
+    title: 'Workflow observation and interviews',
+    settles: 'Which problem is worth solving',
+    artifacts: [
+      {
+        src: '/img/strategy/method/interviews.webp',
+        alt: 'Printed interview scripts spread across a desk, with handwritten notes in blue ink.',
+        caption: 'Interview scripts with handwritten notes \u00b7 DEF ERP',
+      },
+      {
+        src: '/img/strategy/method/affinity-map.webp',
+        alt: 'Affinity board with five participant rows of notes clustered into themed columns.',
+        caption: 'Affinity map across five participant interviews',
+      },
+    ],
+    body: 'Interviews, workflow observation, and product behavior show where people get stuck. It is how fragmented procurement data turned into explainable recommendations, and how DEF ERP\u2019s role-based workflows got drawn.',
     tools: [
       tool('/img/strategy/notion.svg', 'Notion'),
       tool('/img/strategy/claude.svg', 'Claude'),
@@ -303,15 +285,62 @@ const processSteps = [
     ],
   },
   {
-    icon: Star,
-    title: 'Frame the product',
-    body: 'Map the workflow, decision points, states, and exceptions with product and engineering. Define what an agent can do and where people need to review, edit, or approve.',
+    title: 'Journey and service mapping',
+    settles: 'Where the service breaks between people and systems',
+    body: 'A journey or a service map puts the whole chain in one picture: what a person does at each step, what each system returns, and who picks up the next move. It is where the gaps between roles and channels become visible before anything is designed.',
+    artifacts: [
+      {
+        src: '/img/strategy/method/journey-map.webp',
+        alt: 'User journey map with steps, actions, touchpoints, an emotion curve, and opportunities.',
+        caption: 'User journey with emotion and opportunities \u00b7 Customer Service System',
+      },
+      {
+        src: '/img/Clarity/User flow.svg',
+        alt: 'Service map connecting a user, a tracking device, the app, a doctor, and the national health service.',
+        caption: 'Service map across device, app, doctor, and health service \u00b7 Clarity',
+      },
+      {
+        src: '/img/Milano Partecipa/Service Map.svg',
+        alt: 'Service blueprint connecting citizens, an AI chatbot, city projects, the municipality, and partners.',
+        caption: 'Service blueprint across citizens, city, and partners \u00b7 Milano Partecipa',
+      },
+    ],
     tools: [tool('/img/strategy/figma.svg', 'Figma'), tool('/img/strategy/notion.svg', 'Notion')],
   },
   {
-    icon: Tangent,
-    title: 'Make the system reusable',
-    body: 'Build tokens, components, states, and usage rules for each product. Keep design and code aligned so engineers and AI coding tools can reuse the same foundations.',
+    title: 'Human and AI responsibility mapping',
+    settles: 'What the agent does, where a person decides',
+    artifacts: [
+      {
+        src: '/img/strategy/method/human-handoff.webp',
+        alt: 'Diagram: agent output, then a person reviews or dismisses, then product code saves the change.',
+        caption: 'Where the agent stops and a person confirms \u00b7 Mono',
+      },
+      {
+        src: '/img/strategy/method/swimlane.webp',
+        alt: 'Three-lane swimlane flow across end user, chat system, and support agent.',
+        caption: 'Cross-role swimlane: user, system, support agent \u00b7 Customer Service System',
+      },
+    ],
+    body: 'Decision points, states, and exceptions mapped with product and engineering. JobNova\u2019s review and authorization controls and the Procurement Agent\u2019s human check before a purchase come out of that map.',
+    tools: [tool('/img/strategy/figma.svg', 'Figma'), tool('/img/strategy/notion.svg', 'Notion')],
+  },
+  {
+    title: 'Design systems',
+    settles: 'What gets reused instead of rebuilt',
+    artifacts: [
+      {
+        src: '/img/strategy/method/design-system-jobnova.webp',
+        alt: 'Design system board with colours, typography, spacing tokens, buttons, icons, and cards.',
+        caption: 'Visual foundations and component vocabulary \u00b7 JobNova',
+      },
+      {
+        src: '/img/strategy/method/design-system-def.webp',
+        alt: 'Typography, semantic colours, spacing, and shape tokens taken from the ERP source.',
+        caption: 'Typography, colour, spacing, and shape tokens \u00b7 DEF ERP',
+      },
+    ],
+    body: 'Tokens, components, states, and usage rules, kept aligned between design and code so engineers and AI coding tools work from the same foundations. DEF ERP runs on them; at Liba, Design Lab holds the documentation and release reviews.',
     tools: [
       tool('/img/strategy/figma.svg', 'Figma'),
       tool('/img/strategy/openai.svg', 'OpenAI', true),
@@ -321,9 +350,21 @@ const processSteps = [
     ],
   },
   {
-    icon: AudioWaveform,
-    title: 'Prototype the behavior',
-    body: 'Make the workflow tangible in Figma or code. Test how people understand recommendations, make changes, and recover when something goes wrong.',
+    title: 'Prototyping in Figma and code',
+    settles: 'Whether people understand it before it ships',
+    body: 'The workflow gets made tangible early, to test how people read a recommendation, change it, and recover when something goes wrong. At Clarity the app went in front of people in person, with a board on the table to capture how the experience felt.',
+    artifacts: [
+      {
+        src: '/img/strategy/method/wireframes.webp',
+        alt: 'Wireframe board connecting landing, sign-up, matching, and interview screens with flow arrows.',
+        caption: 'Wireframe flow from sign-up to matching \u00b7 CrackInterview',
+      },
+      {
+        src: '/img/strategy/method/user-test.webp',
+        alt: 'A participant at a test table with the app on two phones, a feedback board, and a researcher taking notes.',
+        caption: 'Testing the app in person, with a board for how it felt \u00b7 Clarity',
+      },
+    ],
     tools: [
       tool('/img/strategy/research-tool.png', 'User research tool'),
       tool('/img/strategy/trello.svg', 'Trello'),
@@ -334,10 +375,10 @@ const processSteps = [
     ],
   },
   {
-    icon: ChartSpline,
-    title: 'Let evidence guide the next step',
-    body: 'Use PostHog funnels, heatmaps, and session recordings to inform iteration. At JobNova, a one-week onboarding A/B test with 100+ users helped choose the flow we shipped.',
-    toolGapClassName: 'gap-[29px]',
+    title: 'Behavioral evidence',
+    settles: 'What to change next',
+    artifacts: [],
+    body: 'PostHog funnels, heatmaps, and session recordings show where people drop out. At JobNova, a one-week onboarding A/B test with 100+ users chose the flow we shipped.',
     tools: [
       shipIcon('/img/strategy/ship-github.svg', 'GitHub'),
       shipIcon('/img/strategy/figma.svg', 'Figma'),
@@ -348,11 +389,11 @@ const processSteps = [
 
 function ToolBadge({ item }: { item: ToolItem }) {
   if (item.type === 'plus') {
-    return <Plus size={16} strokeWidth={1.5} className="shrink-0 text-white/50" />;
+    return <Plus size={16} strokeWidth={1.5} className="shrink-0 text-white/45" />;
   }
   if (item.type === 'skillmd') {
     return (
-      <div className="relative flex size-10 shrink-0 flex-col items-center justify-center gap-0.5 rounded-[10px] bg-[#f4f4f1]">
+      <div className="relative flex size-10 shrink-0 flex-col items-center justify-center gap-0.5 rounded-[10px] bg-[#ebe8e0]">
         <FileText size={16} strokeWidth={1.5} className="text-[#0a0a0a]" />
         <span className="text-[6px] leading-none text-[#0a0a0a]" style={fontMono}>
           skill.md
@@ -362,7 +403,7 @@ function ToolBadge({ item }: { item: ToolItem }) {
   }
   if (item.type === 'ship-icon') {
     return (
-      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-[#f4f4f1]">
+      <div className="relative size-10 shrink-0 overflow-hidden rounded-[10px] bg-[#ebe8e0]">
         <div className={`absolute ${item.innerClassName}`}>
           <img src={item.src} alt={item.alt} className={`block max-w-none ${item.imageClassName}`} />
         </div>
@@ -370,7 +411,7 @@ function ToolBadge({ item }: { item: ToolItem }) {
     );
   }
   return item.wrap ? (
-    <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#f4f4f1]">
+    <div className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#ebe8e0]">
       <img src={item.src} alt={item.alt} className="h-[65%] w-[65%] object-contain" />
     </div>
   ) : (
@@ -441,7 +482,7 @@ export default function Home() {
         <div className="pointer-events-none relative z-10 flex items-end justify-between gap-4 text-[13px] text-[#0a0a0a] sm:text-[15px]">
           <p style={fontBody}>Based in Milan, IT</p>
           <div className="flex items-center gap-1.5" style={fontBody}>
-            <span>Scroll Down</span>
+            <span>Scroll</span>
             <span className="mei-hero-scroll-down-line" aria-hidden="true" />
           </div>
         </div>
@@ -456,7 +497,7 @@ export default function Home() {
         <div className="w-full max-w-[1000px]">
           <Reveal>
             <div className="flex flex-col gap-6 pt-12 md:pt-16">
-              <h2 className="text-[40px] leading-none md:text-[56px]" style={fontDisplay}>
+              <h2 className="text-[40px] leading-none md:text-[56px]" style={fontName}>
                 Selected work
               </h2>
               <p className="max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a]/75 md:text-[20px]" style={fontBody}>
@@ -475,7 +516,7 @@ export default function Home() {
           <Reveal delay={140}>
             <div className="flex flex-col gap-6 pt-16 md:pt-24">
               <div className="flex flex-col gap-3">
-                <h3 className="text-[22px] leading-none md:text-[28px]" style={fontDisplay}>
+                <h3 className="text-[26px] leading-none md:text-[32px]" style={fontName}>
                   Experiments
                 </h3>
                 <p className="max-w-[620px] text-[15px] font-light leading-[1.6] text-[#0a0a0a]/75 md:text-[17px]" style={fontBody}>
@@ -493,80 +534,79 @@ export default function Home() {
       {/* Strategy */}
       <section
         id="strategy"
-        className="mei-section-screen flex w-screen flex-col items-center gap-16 bg-[#0a0a0a] px-6 py-16 sm:px-8 md:gap-24 md:py-28"
+        className="mei-section-screen flex w-screen flex-col items-center bg-[#0a0a0a] px-6 py-16 sm:px-10 md:px-16 md:py-28"
         style={fullBleed}
       >
-        <Reveal>
-          <h2
-            className="text-center text-[40px] leading-none text-white md:text-[56px]"
-            style={fontDisplay}
-          >
-            Strategy
-          </h2>
-        </Reveal>
-
-        <div className="flex w-full max-w-[1200px] flex-col gap-12 md:flex-row md:items-start md:gap-16">
-          <div className="w-full md:sticky md:top-24 md:w-[40%] md:self-start">
+        <div className="flex w-full max-w-[1200px] flex-col gap-12 md:flex-row md:items-start md:gap-24">
+          {/* 左栏固定：章节名 + 一句话定位 + 说明，正文全部左对齐 */}
+          <div className="w-full md:sticky md:top-24 md:w-[36%] md:self-start">
             <Reveal>
-              <div className="flex flex-col gap-5">
-                <h3 className="max-w-[480px] text-[22px] text-white md:text-[24px]" style={fontTitle}>
-                  From evidence to working products
-                </h3>
-                <p className="max-w-[380px] text-[15px] font-light text-white/70 md:text-[16px]" style={fontBody}>
-                  My work connects research, AI interaction design, reusable systems, and implementation.
-                  I make the human decisions explicit, work with engineering on the constraints, and use what happens
-                  after launch to decide what needs to change.
-                </p>
+              <div className="flex flex-col gap-6">
+                <h2 className="text-[40px] leading-none text-white md:text-[56px]" style={fontName}>
+                  Strategy
+                </h2>
+                <div className="flex flex-col gap-4">
+                  <h3 className="max-w-[420px] text-[20px] leading-[1.3] text-white md:text-[24px]" style={fontSentence}>
+                    From evidence to working products
+                  </h3>
+                  <p className="max-w-[420px] text-[15px] font-light leading-[1.6] text-white/70 md:text-[16px]" style={fontBody}>
+                    My work connects research, AI interaction design, reusable systems, and implementation.
+                    I make the human decisions explicit, work with engineering on the constraints, and use what happens
+                    after launch to decide what needs to change.
+                  </p>
+                </div>
               </div>
             </Reveal>
           </div>
 
-          <div className="relative flex flex-1 flex-col gap-10 md:gap-28 md:pb-24">
-            {/* 贯穿全部步骤的单根竖线（不再按行分段，行与行之间不再断开） */}
-            <div className="pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-white/20" />
-
-            {processSteps.map((step, i) => {
-              const Icon = step.icon;
-              const reversed = i % 2 === 1;
-              const iconBadge = (
-                <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#f4f4f1]">
-                  <Icon size={22} strokeWidth={1.5} className="text-[#0a0a0a]" />
-                </div>
-              );
-              const contentBlock = (
-                <div
-                  className={`flex flex-col gap-3 py-2 ${reversed ? 'items-end text-right' : 'items-start text-left'}`}
-                >
-                  <h4 className="text-[20px] text-white md:text-[24px]" style={fontTitle}>
-                    {step.title}
-                  </h4>
-                  <p className="max-w-[380px] text-[15px] font-light text-white/70 md:text-[16px]" style={fontBody}>
-                    {step.body}
-                  </p>
-                  <div
-                    className={`flex flex-wrap items-center ${step.toolGapClassName ?? 'gap-3'} ${
-                      reversed ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
-                    {step.tools.map((t, ti) => (
-                      <ToolBadge key={ti} item={t} />
-                    ))}
-                  </div>
-                </div>
-              );
-              return (
-                <Reveal key={step.title} delay={i * 60}>
-                  {/* 三栏等宽网格：左右两栏永远各占 1fr，圆点始终落在正中间那根竖线上 */}
-                  <div className="mei-process-step grid grid-cols-[1fr_auto_1fr] items-center">
-                    <div className="flex justify-end pr-6 md:pr-10">{reversed ? contentBlock : iconBadge}</div>
-                    <div className="flex w-4 shrink-0 items-center justify-center">
-                      <div className="size-2.5 shrink-0 rounded-full border border-white/50 bg-[#0a0a0a]" />
+          {/* 右栏：五种方法并列，每块一条分隔细线，不编号也不连竖线——它们不是顺序 */}
+          <div className="flex-1">
+            <ul className="flex flex-col">
+              {methods.map((method, i) => (
+                <li key={method.title}>
+                  <Reveal delay={i * 60}>
+                    <div className="flex flex-col gap-3 border-t border-white/15 pt-6 pb-10 md:pt-8 md:pb-12">
+                      <div className="flex flex-col gap-1.5">
+                        <h4 className="text-[20px] leading-tight text-white md:text-[24px]" style={fontName}>
+                          {method.title}
+                        </h4>
+                        <p className="text-[12px] leading-normal text-white/55 md:text-[13px]" style={fontMono}>
+                          {method.settles}
+                        </p>
+                      </div>
+                      <p className="max-w-[560px] text-[15px] font-light leading-[1.6] text-white/70 md:text-[16px]" style={fontBody}>
+                        {method.body}
+                      </p>
+                      {method.artifacts.length > 0 && (
+                        <div className="grid gap-4 pt-2 sm:grid-cols-2">
+                          {method.artifacts.map((artifact) => (
+                            <figure key={artifact.src} className="flex flex-col gap-2">
+                              <div className="overflow-hidden rounded-[10px] bg-white ring-1 ring-white/10">
+                                <img
+                                  src={artifact.src}
+                                  alt={artifact.alt}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="aspect-[16/10] w-full object-contain"
+                                />
+                              </div>
+                              <figcaption className="text-[11px] leading-normal text-white/50" style={fontMono}>
+                                {artifact.caption}
+                              </figcaption>
+                            </figure>
+                          ))}
+                        </div>
+                      )}
+                      <div className="flex flex-wrap items-center gap-3 pt-1">
+                        {method.tools.map((t, ti) => (
+                          <ToolBadge key={ti} item={t} />
+                        ))}
+                      </div>
                     </div>
-                    <div className="flex justify-start pl-6 md:pl-10">{reversed ? iconBadge : contentBlock}</div>
-                  </div>
-                </Reveal>
-              );
-            })}
+                  </Reveal>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -576,12 +616,11 @@ export default function Home() {
         id="about"
         className="mei-section-screen flex w-screen flex-col items-center bg-white px-6 py-16 sm:px-10 md:px-16 md:py-28"
         style={fullBleed}
-        pinned
       >
         <div className="w-full max-w-[1200px]">
           <Reveal>
             <div className="flex flex-col gap-6 border-b border-[#cccccc] pb-12 md:flex-row md:items-end md:justify-between md:pb-16">
-              <h2 className="text-[40px] leading-none md:text-[56px]" style={fontDisplay}>
+              <h2 className="text-[40px] leading-none md:text-[56px]" style={fontName}>
                 About
               </h2>
               <p className="max-w-[620px] text-[16px] font-light leading-[1.6] text-[#0a0a0a] md:text-[20px]" style={fontBody}>
@@ -595,7 +634,7 @@ export default function Home() {
           <div className="flex flex-col gap-16 pt-16 md:gap-20">
             <Reveal>
               <div className="flex flex-col gap-6 md:flex-row md:gap-16">
-                <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontTitle}>
+                <p className="w-full shrink-0 text-[22px] text-[#0a0a0a] md:w-[140px] md:text-[32px]" style={fontName}>
                   Experience
                 </p>
                 <div className="flex-1 divide-y divide-[#cccccc]">
@@ -606,7 +645,7 @@ export default function Home() {
                       </p>
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-1 md:flex-row md:items-baseline md:justify-between md:gap-4">
-                          <h3 className="text-[17px] text-[#0a0a0a] md:text-[19px]" style={fontTitle}>
+                          <h3 className="text-[17px] text-[#0a0a0a] md:text-[19px]" style={fontName}>
                             {item.role}
                           </h3>
                           <span className="text-[14px] font-light text-[#0a0a0a]/60 md:text-[15px]" style={fontBody}>
@@ -625,12 +664,12 @@ export default function Home() {
 
             <Reveal>
               <div className="flex flex-col gap-6 pt-10 md:flex-row md:gap-16 md:pt-12">
-                <h2 className="w-full shrink-0 text-[24px] leading-tight md:w-[300px] md:text-[34px]" style={fontTitle}>
+                <h2 className="w-full shrink-0 text-[24px] leading-tight md:w-[300px] md:text-[34px]" style={fontName}>
                   What I bring
                 </h2>
                 <div className="grid flex-1 grid-cols-1 gap-8 sm:grid-cols-2 md:gap-10">
                   <div className="flex flex-col gap-3">
-                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontTitle}>
+                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontName}>
                       Skills
                     </h3>
                     <ul className="flex flex-col text-[15px] font-light text-[#0a0a0a] md:text-[16px]" style={fontBody}>
@@ -642,7 +681,7 @@ export default function Home() {
                     </ul>
                   </div>
                   <div className="flex flex-col gap-3">
-                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontTitle}>
+                    <h3 className="border-b border-[#cccccc] pb-2 text-[17px] font-medium md:text-[18px]" style={fontName}>
                       Toolkit
                     </h3>
                     <ul className="flex flex-col text-[15px] font-light text-[#0a0a0a] md:text-[16px]" style={fontBody}>
