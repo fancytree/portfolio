@@ -42,7 +42,7 @@ export const productProjects: WorkProject[] = [
     time: '2026',
     tags: ['Design Systems', 'B2B Workflows'],
     description: 'Connected sales, inventory, procurement, and finance in one ERP, with role-based workflows and reusable components.',
-    impact: { value: '86%', label: 'of orders placed by customers (1-week sample)' },
+    impact: { value: 'Manual → 86%', label: 'self-service via mini-program (1-week sample)' },
     image: '/img/def-erp/def-erp-cover-v5.webp',
     imageFit: 'cover',
     imageScale: 1,
