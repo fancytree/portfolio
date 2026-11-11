@@ -46,7 +46,7 @@ export default function JobnovaKitPage() {
           glance={{ items: [
             { label: 'The problem', body: 'Matching and generation still left people judging, checking, submitting, and tracking each application.' },
             { label: 'My contribution', body: 'Connect the journey and define what AI explains, what people review, and when automation may act.' },
-            { label: 'Early signal', body: '1,240 registered users and 8,700+ completed applications in the historical report. Current figures are awaiting a refresh.' },
+            { label: 'Impact', body: '2,700+ users enabled Auto Apply, about 1,300 of them paying. Onboarding completion rose from 73% to 96% after a one-week A/B test.' },
           ] }}
         />
 
@@ -133,14 +133,14 @@ export default function JobnovaKitPage() {
           <CaseProse><p><strong>Delivery evidence to add:</strong> one annotated handoff or QA example showing an issue I identified, the decision made with engineering, and the final change.</p></CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="09 / Results" title="Strong early adoption; the gap is the step to Auto Apply.">
+        <CaseChapter label="09 / Results" title="Auto Apply reached 2,700+ users and about 40k applications.">
           <CaseStats items={[
-            { value: '1,240', label: 'Registered users · last 30 days' },
-            { value: '8,700+', label: 'Completed applications · last 30 days' },
-            { value: '68%', label: 'Finished setup · 179 of 263 new users' },
-            { value: '19%', label: 'Enabled Auto Apply · 51 of 263 new users' },
+            { value: '2,700+', label: 'Users enabled Auto Apply, about 1,300 of them paying' },
+            { value: '~40k', label: 'Applications submitted by June 2026' },
+            { value: '4.1%', label: 'Interview-invitation rate, detected from email' },
+            { value: '73% → 96%', label: 'Onboarding completion · one-week A/B test, 100+ users' },
           ]} />
-          <CaseProse><p>Of the 179 people who finished setup, 28.5% turned on Auto Apply, so the next drop-off to investigate is the move from a completed profile to granting automation permission. These are last-30-day figures from the historical report; current numbers and design-specific impact are pending a refresh with engineering.</p></CaseProse>
+          <CaseProse><p>I redesigned onboarding from a single screen into a step-by-step flow and shipped it after a one-week PostHog A/B test. The earlier 30-day cohort in section 02 had already located the largest drop-off: the step from a finished profile to granting automation permission.</p></CaseProse>
         </CaseChapter>
 
         <CaseClose label="10 / Reflection" title="The next iteration starts with the handoff people hesitate to complete.">

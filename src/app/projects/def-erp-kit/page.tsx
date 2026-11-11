@@ -16,6 +16,7 @@ import {
   CaseKitSections,
   CaseProse,
   CasePullquote,
+  CaseStats,
   CaseSteps,
   CaseVideo,
 } from '../../components/case-kit/CaseKit';
@@ -63,7 +64,7 @@ export default function DefErpKitPage() {
             items: [
               { label: 'Challenge', body: 'Separate systems left staff checking inventory, re-entering orders, and carrying information between sales and finance.' },
               { label: 'Solution', body: 'A connected customer storefront and ERP, with local delivery rules and records that continue from ordering through fulfilment and invoicing.' },
-              { label: 'Outcome', body: 'Customer orders now enter the ERP directly. The owner reported less repetitive work for sales and warehouse staff, freeing sales to focus on customers.' },
+              { label: 'Outcome', body: 'In a one-week sample about a month after launch, 86% of orders were placed by customers themselves. Orders now enter the ERP directly, order errors have almost disappeared, and sales can focus on customers.' },
             ],
             deliverables: ['Connected ordering', 'Delivery rules', 'Sales workflow', 'Order-based invoicing'],
           }}
@@ -402,16 +403,22 @@ export default function DefErpKitPage() {
 
         </CaseChapter>
 
-        <CaseChapter label="09 / Results" title="Results">
+        <CaseChapter label="09 / Results" title="Customers now place most orders themselves.">
+          <CaseStats items={[
+            { value: '86%', label: 'Orders placed by customers themselves · one-week sample, about a month after launch' },
+            { value: '5 → 3', label: 'Steps in the wholesale ordering flow' },
+            { value: '40–70', label: 'Daily orders that 4 to 5 salespeople used to key in by hand; they now arrive without re-entry' },
+          ]} />
           <CaseProse>
             <ul>
               <li>A connected ERP for customer ordering and internal operations, delivered in four months and now in use.</li>
-              <li>Mini-program orders enter the ERP directly, without sales repeating stock checks or entering the order again.</li>
+              <li>Mini-program orders enter the ERP directly, without sales repeating stock checks or entering the order again. Customers order against real ERP stock, prices and delivery costs, so stockouts after ordering have almost disappeared.</li>
+              <li>Order errors almost disappeared and customer back-and-forth dropped, freeing salespeople to develop and maintain customer accounts.</li>
               <li>Finance reuses sales order details for invoicing, with previously invoiced products excluded from future selection.</li>
               <li>Customers can check dispatched status and tracking numbers in the mini-program.</li>
               <li>The owner reported less repetitive work across sales and warehouse operations, giving sales more time for customer relationships and new business.</li>
             </ul>
-            <p>These outcomes reflect shipped workflows and owner feedback. Time savings, error reduction, and customer acquisition gains have not yet been measured.</p>
+            <p>The 86% comes from a one-week sample about a month after launch. Improvements in order errors and stockouts are reported qualitatively, not as counts, and customer acquisition gains have not been measured.</p>
           </CaseProse>
         </CaseChapter>
 

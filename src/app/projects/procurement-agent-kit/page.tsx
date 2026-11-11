@@ -4,7 +4,7 @@ import { Bot, Calculator, ClipboardCheck, FileSearch, History, Layers, MessageSq
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
-import { CaseChapter, CaseClose, CaseEvidenceCards, CaseEvidenceThumbs, CaseFigure, CaseHero, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseVideo } from '../../components/case-kit/CaseKit';
+import { CaseChapter, CaseClose, CaseEvidenceCards, CaseEvidenceThumbs, CaseFigure, CaseHero, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseStats, CaseVideo } from '../../components/case-kit/CaseKit';
 import ProcurementExperienceMap from './ProcurementExperienceMap';
 import { AgentMemoryLoop, ConnectedProcurementFlow, LegacyProcurementFlow } from './ProcurementFlowDiagrams';
 import CaseDemoPreview from '../../components/case-kit/CaseDemoPreview';
@@ -40,7 +40,7 @@ export default function ProcurementAgentKitPage() {
           glance={{ items: [
             { label: 'The challenge', body: 'Purchasing was split across Excel, supplier messages, and delivery notes. Even after the ERP, stockouts, seasonality, and customer growth lived in the buyer’s memory.' },
             { label: 'My approach', body: 'Connect the purchase lifecycle first. Then give an Agent those signals, draft one editable plan, and keep every handoff explicit.' },
-            { label: 'The outcome', body: 'A live procurement workspace. AI prepares the recommendation; the buyer commits the order.' },
+            { label: 'The outcome', body: 'A purchase plan that took 30 minutes to 2 hours across suppliers now takes about 2 minutes, and three staff members use it daily. AI prepares the recommendation; the buyer commits the order.' },
           ] }}
         />
 
@@ -224,18 +224,22 @@ export default function ProcurementAgentKitPage() {
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="09 / Results" title="Live with procurement. Impact still needs measurement.">
+        <CaseChapter label="09 / Results" title="A purchase plan in about 2 minutes, down from 30 minutes to 2 hours.">
+          <CaseStats items={[
+            { value: '~2 min', label: 'To prepare a purchase plan, down from 30 minutes to 2 hours across suppliers' },
+            { value: '3', label: 'Staff members using the Agent daily' },
+          ]} />
           <CaseProse><p>The Agent is in production and used by procurement. It drafts quantities; the buyer keeps the supplier commitment.</p></CaseProse>
           <CaseEvidenceCards label="Delivery status and measurement boundaries" items={[
             { icon: <PackageCheck />, title: 'In use', body: 'Connected purchasing records and an Agent-assisted quantity plan.' },
             { icon: <ShieldCheck />, title: 'Human authority', body: 'Buyers edit, approve, place the order, and confirm learning.' },
-            { icon: <ScanSearch />, title: 'Not yet measured', body: 'Planning time, recommendation acceptance, and correct escalation rates.' },
+            { icon: <ScanSearch />, title: 'Not yet measured', body: 'Recommendation acceptance and correct escalation rates.' },
           ]} />
-          <CaseProse><p>The evidence is the delivered workflow and qualitative feedback. Usage, observation period, and a before/after baseline are not yet documented.</p></CaseProse>
+          <CaseProse><p>Planning time is the measured result. Recommendation acceptance and whether the Agent stops at the right approval boundary are still to be measured.</p></CaseProse>
         </CaseChapter>
 
         <CaseClose label="10 / Reflection" title="My contribution was designing the conditions for delegation.">
-          <CaseProse><p>I moved from connecting purchase records to defining what the Agent can infer, calculate, propose, and hand back.</p><p>Next, I would measure planning time, buyer edits, and whether the Agent stops at the right approval boundary.</p></CaseProse>
+          <CaseProse><p>I moved from connecting purchase records to defining what the Agent can infer, calculate, propose, and hand back.</p><p>Next, I would measure buyer edits, recommendation acceptance, and whether the Agent stops at the right approval boundary.</p></CaseProse>
         </CaseClose>
       </CaseKitSections>
     </CaseKitPage>

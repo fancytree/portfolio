@@ -128,6 +128,12 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
               <p className="line-clamp-2 text-[14px] leading-snug font-light text-[#0a0a0a]/70 md:text-[15px]" style={fontBody}>
                 {project.description}
               </p>
+              {project.impact && (
+                <p className="m-0 mt-1 flex flex-wrap items-baseline gap-x-2 border-t border-[#0a0a0a]/10 pt-2.5 text-[13px] leading-snug text-[#0a0a0a]/60" style={fontBody}>
+                  <span className="text-[15px] font-medium text-[#0a0a0a]">{project.impact.value}</span>
+                  <span>{project.impact.label}</span>
+                </p>
+              )}
             </div>
           </Link>
         );

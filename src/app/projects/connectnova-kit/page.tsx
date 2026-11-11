@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { ArrowRightLeft, Blocks, BriefcaseBusiness, ClipboardCheck, Compass, FolderKanban, Layers3, ListFilter, MessageSquareText, PanelLeft, ScanSearch, SlidersHorizontal, Users, Waypoints } from 'lucide-react';
+import { ArrowRightLeft, Blocks, BriefcaseBusiness, ClipboardCheck, Compass, FolderKanban, Layers3, ListFilter, PanelLeft, SlidersHorizontal, Users, Waypoints } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
-import { CaseChapter, CaseClose, CaseEvidenceCards, CaseFigure, CaseHero, CaseInteractivePreview, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseVideo } from '../../components/case-kit/CaseKit';
+import { CaseChapter, CaseClose, CaseEvidenceCards, CaseFigure, CaseHero, CaseInteractivePreview, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseStats, CaseVideo } from '../../components/case-kit/CaseKit';
 
 export const metadata: Metadata = {
   title: 'ConnectNova — From AI Ranking to a Reusable Workspace | Mei Chai',
@@ -43,7 +43,7 @@ export default function ConnectnovaKitPage() {
         glance={{ items: [
           { label: 'The brief', body: 'Collect LinkedIn profiles and produce an AI-ranked shortlist.' },
           { label: 'My decision', body: 'Preserve the sourcing goal, people, criteria, and rankings inside a reusable Project.' },
-          { label: 'Delivered scope', body: 'Collection → Project → AI evaluation → Outreach / Sequence. Impact metrics remain to be verified.' },
+          { label: 'Delivered scope', body: 'Collection → Project → AI evaluation → Outreach / Sequence. The platform ranks about 500 candidates in 5 to 10 minutes, against an estimated 2 to 5 hours of manual screening, and was tested by 70+ beta users.' },
         ] }}
       />
 
@@ -123,15 +123,14 @@ export default function ConnectnovaKitPage() {
         ]} />
       </CaseChapter>
 
-      <CaseChapter label="08 / Results & evidence" title="The product is live. The impact evidence needs its source.">
-        <CaseProse><p>The delivered workflow connects collection, evaluation, and outreach around Project context. Previous case-study percentages are excluded here until their task definitions, samples, and observation periods can be checked.</p></CaseProse>
-        <CaseEvidenceCards label="Evidence to add before making impact claims" layout="pairs" items={[
-          { icon: <ScanSearch />, title: 'Task performance · to add', body: 'Collection and save completion before → after, with task definitions and participant counts.' },
-          { icon: <SlidersHorizontal />, title: 'Evaluation quality · to add', body: 'Criteria adoption, editing, comprehension, and correction behavior for the same cohort.' },
-          { icon: <FolderKanban />, title: 'Repeated use · to add', body: 'Project return rate, additional collection sessions, and time to a reviewed shortlist.' },
-          { icon: <MessageSquareText />, title: 'Business outcomes · to add', body: 'Active users, growth, retention, campaign activation, and qualified replies, with reporting scope.' },
+      <CaseChapter label="08 / Results & evidence" title="About 500 candidates ranked in 5 to 10 minutes.">
+        <CaseStats items={[
+          { value: '5–10 min', label: 'To rank a batch of about 500 candidates, against an estimated 2 to 5 hours of manual screening' },
+          { value: '70+', label: 'Beta users who tested the platform' },
+          { value: '40%+', label: 'Tracked Outreach responses · connection accepted or message replied' },
         ]} />
-        <CaseProse><p>Add a verified quote from a recruiter or sales user alongside the behavior data. Changes in collected profile volume, model quality, acquisition, and campaign audience must be considered before attributing improvement to design.</p></CaseProse>
+        <CaseProse><p>The delivered workflow connects collection, evaluation, and outreach around Project context. I designed and implemented the Outreach workflow in one week, covering branches, failure states, and LinkedIn’s limit of about 20 messages a day, then refined message editing from post-launch behavior observed in PostHog.</p></CaseProse>
+        <CaseProse><p>The 2 to 5 hour figure is an estimate of manual screening, not a measured baseline. Repeat use of Projects and time to a reviewed shortlist are not documented here yet.</p></CaseProse>
       </CaseChapter>
 
       <CaseClose label="09 / Reflection" title="The product model determines what the AI result can become.">

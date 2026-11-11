@@ -4,6 +4,8 @@ export type WorkProject = {
   time: string;
   tags: string[];
   description: string;
+  /** One headline result, shown on the entry card. Wording follows the CV; do not extend the numbers. */
+  impact?: { value: string; label: string };
   image: string;
   imageFit?: 'cover' | 'contain';
   imageScale?: number;
@@ -40,6 +42,7 @@ export const productProjects: WorkProject[] = [
     time: '2026',
     tags: ['Design Systems', 'B2B Workflows'],
     description: 'Connected sales, inventory, procurement, and finance in one ERP, with role-based workflows and reusable components.',
+    impact: { value: '86%', label: 'of orders placed by customers (1-week sample)' },
     image: '/img/def-erp/def-erp-cover-v5.webp',
     imageFit: 'cover',
     imageScale: 1,
@@ -57,6 +60,7 @@ export const productProjects: WorkProject[] = [
     time: '2026',
     tags: ['AI Product Design', 'Human Control'],
     description: 'Turned fragmented procurement data into explainable recommendations, with human review before purchasing decisions.',
+    impact: { value: '30 min–2 h → ~2 min', label: 'per purchase plan, used daily by 3 staff' },
     image: '/img/procurement-agent/Procurement Agent.avif',
     imageFit: 'cover',
     imageScale: 1.68,
@@ -75,6 +79,7 @@ export const productProjects: WorkProject[] = [
     time: '2026 – Present',
     tags: ['AI Recruiting', 'Design-to-Code'],
     description: 'Designed and built a recruiting workflow from candidate collection and AI ranking to human review and outreach.',
+    impact: { value: '~500 in 5–10 min', label: 'candidates ranked, vs an estimated 2–5 h by hand' },
     image: '/img/Connectnova.avif',
     coverScreen: '/img/connectnova/connectnova-dashboard-cover.webp',
     coverDevice: 'laptop',
@@ -89,6 +94,7 @@ export const productProjects: WorkProject[] = [
     time: '2025 – Present',
     tags: ['AI Agents', 'Data-Informed UX'],
     description: 'Designed a job-search agent with review and authorization controls; used an onboarding A/B test to choose the shipped flow.',
+    impact: { value: '73% → 96%', label: 'onboarding completion in a one-week A/B test (100+ users)' },
     image: '/img/Jobnova.avif',
     coverScreen: '/img/jobnova/jobnova-matched-jobs-cover.png',
     coverDevice: 'laptop',
