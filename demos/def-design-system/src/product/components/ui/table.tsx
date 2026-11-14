@@ -199,7 +199,7 @@ function Table({
         ref={containerRef}
         tabIndex={needsScroll ? 0 : undefined}
         role={needsScroll ? "region" : undefined}
-        aria-label={needsScroll ? "可横向滚动的表格" : undefined}
+        aria-label={needsScroll ? "Scrollable table" : undefined}
         data-scroll-start-shadow={hasStartShadow ? "" : undefined}
         className={cn(
           "def-table-scroll-frame relative w-full outline-none focus-visible:ring-2 focus-visible:ring-ring",
@@ -343,7 +343,7 @@ function TableHeadFilter({
   options,
   className,
   disabled,
-  allLabel = "全部",
+  allLabel = "All",
   allValue = "all",
 }: TableHeadFilterProps) {
   const active = value !== allValue && value !== ""
@@ -360,7 +360,7 @@ function TableHeadFilter({
             type="button"
             data-filter-active={active ? "" : undefined}
             className="def-table-head-filter-trigger"
-            aria-label={`筛选${label}`}
+            aria-label={`Filter ${label}`}
           >
             <span className="whitespace-nowrap">{label}</span>
             <ListFilter className="size-3 shrink-0" strokeWidth={2} aria-hidden />

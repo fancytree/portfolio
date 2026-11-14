@@ -37,7 +37,7 @@ const QuantityStepper = React.forwardRef<HTMLInputElement, QuantityStepperProps>
       onStep,
       canIncrease = true,
       canDecrease = true,
-      label = "数量",
+      label = "Quantity",
       containerClassName,
       className,
       disabled,
@@ -70,8 +70,8 @@ const QuantityStepper = React.forwardRef<HTMLInputElement, QuantityStepperProps>
       <div className="flex w-5 flex-col border-l border-input">
         <button
           type="button"
-          aria-label={`增加${label}`}
-          title={`增加${label}`}
+          aria-label={`Increase ${label}`}
+          title={`Increase ${label}`}
           disabled={disabled || !canIncrease}
           onClick={() => onStep(1)}
           className={stepButtonCls}
@@ -80,8 +80,8 @@ const QuantityStepper = React.forwardRef<HTMLInputElement, QuantityStepperProps>
         </button>
         <button
           type="button"
-          aria-label={`减少${label}`}
-          title={`减少${label}`}
+          aria-label={`Decrease ${label}`}
+          title={`Decrease ${label}`}
           disabled={disabled || !canDecrease}
           onClick={() => onStep(-1)}
           className={cn(stepButtonCls, "border-t border-input")}

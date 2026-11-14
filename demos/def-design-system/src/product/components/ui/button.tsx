@@ -40,16 +40,19 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
+type ButtonProps = React.ComponentPropsWithoutRef<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }
+
+// React 18 drops refs on plain function components; popper triggers need the ref.
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button({
   className,
   variant = "default",
   size = "default",
   asChild = false,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
+}, ref) {
   const inFilterBar = React.useContext(FilterBarContext)
   const resolvedSize =
     inFilterBar && size === "default" && variant !== "link" ? "lg" : size
@@ -61,9 +64,10 @@ function Button({
       data-variant={variant}
       data-size={resolvedSize}
       className={cn(buttonVariants({ variant, size: resolvedSize, className }))}
+      ref={ref}
       {...props}
     />
   )
-}
+})
 
 export { Button, buttonVariants }

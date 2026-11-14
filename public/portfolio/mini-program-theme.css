@@ -1,0 +1,162 @@
+/*
+ * Small visual adjustments for the isolated mini-program portfolio previews.
+ *
+ * Loaded after the compiled runtime stylesheets in both
+ * `customer-runtime/index.html` and `storefront-runtime/index.html`, and
+ * re-emitted by both generation scripts, so a tweak here needs no Taro
+ * rebuild. The real mini-program source keeps its own styles and is never
+ * edited by this file.
+ *
+ * The previews otherwise keep the shipped design, brand red included. Add
+ * only deliberate, narrow overrides here.
+ *
+ * Note on specificity: Taro's runtime injects some of its own rules after
+ * this stylesheet, so an override may need an extra level to win.
+ */
+
+/* ------------------------------------------------------------------ cards */
+
+/* The screens grew five different card treatments: radii from .4rem to .7rem,
+   three border colours (one of them transparent) and three shadows, some
+   cards having none. They are unified on the account order card's values,
+   the most restrained of the set. */
+:root,
+page {
+  --def-card-radius: .55rem;
+  --def-card-border: .025rem solid rgba(50, 34, 27, .07);
+  --def-card-shadow: 0 .175rem .55rem rgba(50, 34, 27, .035);
+}
+
+.def-storefront-preview .def-card,
+.def-storefront-preview .bind-card,
+.def-storefront-preview .bind-support,
+.def-storefront-preview .guest-benefits,
+.def-storefront-preview .account-order,
+.def-storefront-preview .account-service-entry,
+.def-storefront-preview .cart-item,
+.def-storefront-preview .product-detail-heading,
+.def-storefront-preview .product-detail-summary,
+.def-storefront-preview .product-detail-about,
+.def-storefront-preview .product-detail-section,
+.def-storefront-preview .order-detail__shipping-entry,
+.def-storefront-preview .order-detail__summary,
+.def-storefront-preview .order-detail__payment-entry,
+.def-storefront-preview .order-detail__information {
+  border: var(--def-card-border);
+  border-radius: var(--def-card-radius);
+  box-shadow: var(--def-card-shadow);
+}
+
+/* Rows nested inside a card share the border and radius but take no shadow of
+   their own — a card inside a card should not look lifted twice. */
+.def-storefront-preview .bind-scan,
+.def-storefront-preview .bind-code {
+  border: var(--def-card-border);
+  border-radius: var(--def-card-radius);
+  box-shadow: none;
+}
+
+/* The gallery card keeps its square bottom so the last detail image sits
+   flush with the card edge. */
+.def-storefront-preview .product-detail-gallery {
+  border-radius: var(--def-card-radius) var(--def-card-radius) 0 0;
+}
+
+/* The membership pass is a hero panel, not a plain card, and keeps its own
+   radius and lift. */
+
+/* Featured brands: the logo carries the brand, so the repeated name below it
+   is dropped. The scroller's 4.9rem height was sized for logo plus name, so it
+   comes down to the logo and its own padding — otherwise the next module sits
+   a whole text line too low. */
+.def-storefront-preview .home-brand__name {
+  display: none;
+}
+
+.def-storefront-preview .home-brands {
+  height: 3.4rem;
+}
+
+/* Compact payment entry: flexible copy column and an intrinsic status column. */
+.def-storefront-preview .order-detail__payment-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .4rem;
+}
+.def-storefront-preview .order-detail__payment-entry > :first-child {
+  min-width: 0;
+}
+.def-storefront-preview .order-detail__payment-entry .order-detail__payment-title {
+  font-size: .62rem;
+  line-height: 1.35;
+}
+.def-storefront-preview .order-detail__payment-entry .order-detail__payment-copy {
+  margin-top: .12rem;
+  font-size: .46rem;
+  line-height: 1.4;
+  white-space: normal;
+}
+.def-storefront-preview .order-detail__payment-entry .order-detail__payment-status {
+  font-size: .54rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Order details: more readable labels with a lighter text hierarchy. */
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core > taro-text-core:first-child,
+.def-storefront-preview .order-detail .order-detail__information-label {
+  font-size: .5rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core > taro-text-core:last-child,
+.def-storefront-preview .order-detail .order-detail__information-value,
+.def-storefront-preview .order-detail .order-detail__information-stack {
+  font-size: .64rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core:nth-child(2) > taro-text-core:last-child {
+  font-size: .54rem;
+}
+.def-storefront-preview .order-detail .order-detail__summary > .order-detail__total > taro-text-core:last-child {
+  font-size: .8rem;
+  font-weight: 650;
+}
+.def-storefront-preview .order-detail .order-detail__section-title,
+.def-storefront-preview .order-detail .order-detail__summary-title,
+.def-storefront-preview .order-detail .order-detail__payment-title {
+  font-size: .66rem;
+  font-weight: 600;
+}
+.def-storefront-preview .order-detail .order-detail__progress-meta,
+.def-storefront-preview .order-detail .order-detail__payment-copy {
+  font-size: .5rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Invoice and amount rows share spacing, text baseline and value styling. */
+.def-storefront-preview .order-detail {
+  --def-order-row-space: .16rem;
+}
+.def-storefront-preview .order-detail .order-detail__summary > taro-view-core,
+.def-storefront-preview .order-detail .order-detail__information-row {
+  align-items: baseline;
+  gap: .6rem;
+  padding-block: var(--def-order-row-space);
+}
+.def-storefront-preview .order-detail .order-detail__summary > .order-detail__total {
+  padding-block: var(--def-order-row-space) !important;
+}
+.def-storefront-preview .order-detail .order-detail__invoice-state {
+  font-size: .6rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Address source is internal metadata, not customer-facing information. */
+.def-storefront-preview .order-detail .order-detail__address-source {
+  display: none;
+}

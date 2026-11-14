@@ -1,3 +1,5 @@
+import styles from './FragmentedOperationsDiagram.module.css';
+
 /** The legacy information landscape, not the connected ERP topology. */
 export default function FragmentedOperationsDiagram() {
   return (
@@ -24,27 +26,30 @@ export default function FragmentedOperationsDiagram() {
           <text x="688" y="124">INTERNAL OPERATIONS</text>
         </g>
 
-        {/* The stock relationship is deliberately interrupted, with no arrow. */}
+        {/* The stock relationship is deliberately interrupted, with no arrow. Pulses travel in from both sides and hit the gap. */}
         <g fill="none" stroke="var(--case-ink)" strokeWidth="var(--case-focus-width)">
           <path d="M224 152 V72 Q224 64 232 64 H456" />
           <path d="M504 64 H880 Q888 64 888 72 V152" />
-          <path d="M468 56 L480 72 M480 56 L492 72" />
+          <path d="M468 56 L480 72 M480 56 L492 72" className={styles.gapMark} />
         </g>
+        <path d="M224 152 V72 Q224 64 232 64 H456" pathLength={1} className={styles.stock} />
+        <path d="M888 152 V72 Q888 64 880 64 H504" pathLength={1} className={`${styles.stock} ${styles.stockRight}`} />
+        <circle cx="480" cy="64" r="10" fill="none" stroke="var(--case-flow-break)" strokeWidth="2" className={styles.gapFlash} />
         <rect x="384" y="28" width="192" height="24" fill="var(--case-bg)" />
-        <text x="480" y="44" textAnchor="middle" fill="var(--case-copy)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">NO STOCK SYNC</text>
+        <text x="480" y="44" textAnchor="middle" fill="var(--case-copy)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)" className={styles.gapLabel}>NO STOCK SYNC</text>
 
         {/* Dashed arrows always mean a person transfers information. */}
-        <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" strokeDasharray="5 4" markerEnd="url(#def-fragmented-arrow)">
+        <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" strokeDasharray="5 4" markerEnd="url(#def-fragmented-arrow)" className={styles.march}>
           <path d="M264 200 H368" />
           <path d="M592 200 H688" />
           <path d="M800 264 V368" />
           <path d="M752 264 V312 Q752 320 744 320 H488 Q480 320 480 328 V368" />
         </g>
         <g fill="var(--case-bg)">
-          <rect x="268" y="160" width="96" height="28" />
-          <rect x="596" y="160" width="88" height="28" />
-          <rect x="812" y="284" width="112" height="44" />
-          <rect x="548" y="280" width="120" height="28" />
+          <rect x="268" y="160" width="96" height="28" className={`${styles.handoff} ${styles.h1}`} />
+          <rect x="596" y="160" width="88" height="28" className={`${styles.handoff} ${styles.h2}`} />
+          <rect x="812" y="284" width="112" height="44" className={`${styles.handoff} ${styles.h4}`} />
+          <rect x="548" y="280" width="120" height="28" className={`${styles.handoff} ${styles.h3}`} />
         </g>
         <g fill="var(--case-copy)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-stat-label)" textAnchor="middle">
           <text x="316" y="178">MESSAGE SALES</text>
@@ -77,7 +82,7 @@ export default function FragmentedOperationsDiagram() {
           <text x="480" y="440">Sales message customers</text>
           <text x="800" y="440">Finance inputs each product</text>
         </g>
-        <text x="152" y="344" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" textAnchor="middle">
+        <text className={styles.dupe} x="152" y="344" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" textAnchor="middle">
           <tspan x="152">Product details are</tspan>
           <tspan x="152" dy="24">maintained twice.</tspan>
         </text>

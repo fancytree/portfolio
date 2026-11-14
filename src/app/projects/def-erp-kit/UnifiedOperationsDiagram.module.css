@@ -1,0 +1,39 @@
+/* Motion for the connected diagram: records flow through shared data. Colours from case.css tokens. */
+.pulse {
+  fill: none;
+  stroke: var(--case-flow-link);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.08 2;
+  stroke-dashoffset: 0.08;
+  opacity: 0;
+  animation: travel 8s ease-in-out infinite;
+}
+.p1 { animation-delay: 0s; }
+.p2 { animation-delay: 1.4s; }
+.p3 { animation-delay: 2.8s; }
+.p4 { animation-delay: 4.2s; }
+.p5 { animation-delay: 5.6s; }
+
+.node { animation: node 8s ease-out infinite; }
+.n1 { animation-delay: 0s; }
+.n2 { animation-delay: 1.4s; }
+.n3 { animation-delay: 2.8s; }
+.n4 { animation-delay: 4.2s; }
+.n5 { animation-delay: 5.6s; }
+
+@keyframes travel {
+  0% { stroke-dashoffset: 0.08; opacity: 1; }
+  16% { stroke-dashoffset: -1.02; opacity: 1; }
+  18%, 100% { stroke-dashoffset: -1.02; opacity: 0; }
+}
+@keyframes node {
+  0%, 14% { stroke: var(--case-copy); stroke-width: var(--case-border-width); }
+  18%, 28% { stroke: var(--case-flow-link); stroke-width: 3; }
+  36%, 100% { stroke: var(--case-copy); stroke-width: var(--case-border-width); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse { display: none; }
+  .node { animation: none; }
+}

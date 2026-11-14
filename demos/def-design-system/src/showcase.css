@@ -2,3 +2,32 @@
 @source "./";
 html{color-scheme:light;}body{margin:0;}.board{width:100%;padding:calc(var(--spacing)*12);background:var(--background);color:var(--foreground);font-family:var(--font-sans);}.board .spec-heading{font-size:var(--text-xs);line-height:var(--text-xs--line-height);font-weight:var(--font-weight-semibold);letter-spacing:var(--tracking-wide);color:var(--muted-foreground);text-transform:uppercase;}.sample-row{display:flex;align-items:center;gap:calc(var(--spacing)*4);}@media(max-width:767px){.board{padding:calc(var(--spacing)*6)}.board .grid{grid-template-columns:minmax(0,1fr)}.board .sample-row{gap:calc(var(--spacing)*3)}}
 html,body,#root{height:auto;min-height:0;overflow:visible;}
+
+/* Chart lines draw in from the left each time a chart comes into view or its period changes. */
+[data-draw] .recharts-curve{clip-path:inset(0 100% 0 0);}
+[data-draw="on"] .recharts-curve{animation:draw-in 1.4s cubic-bezier(.22,1,.36,1) forwards;}
+[data-draw="on"] .recharts-area-area{animation-duration:1.6s;}
+@keyframes draw-in{from{clip-path:inset(0 100% 0 0);}to{clip-path:inset(0 -2% 0 0);}}
+@media (prefers-reduced-motion:reduce){[data-draw] .recharts-curve{clip-path:none;animation:none;}}
+
+/* Donut sweeps clockwise from the top; ranking bars grow from the left in order. */
+@property --sweep{syntax:'<angle>';inherits:false;initial-value:0deg;}
+[data-draw-donut] [data-slot="donut-chart-container"] svg{-webkit-mask:conic-gradient(from 90deg,#000 var(--sweep),transparent 0);mask:conic-gradient(from 90deg,#000 var(--sweep),transparent 0);}
+[data-draw-donut="on"] [data-slot="donut-chart-container"] svg{animation:sweep 1.2s cubic-bezier(.22,1,.36,1) forwards;}
+@keyframes sweep{to{--sweep:360deg;}}
+[data-draw-donut] [data-slot="donut-legend"] button{opacity:0;}
+[data-draw-donut="on"] [data-slot="donut-legend"] button{animation:fade-up .4s ease-out forwards;}
+[data-draw-donut="on"] [data-slot="donut-legend"] button:nth-child(2){animation-delay:.08s}
+[data-draw-donut="on"] [data-slot="donut-legend"] button:nth-child(3){animation-delay:.16s}
+[data-draw-donut="on"] [data-slot="donut-legend"] button:nth-child(4){animation-delay:.24s}
+[data-draw-donut="on"] [data-slot="donut-legend"] button:nth-child(5){animation-delay:.32s}
+[data-draw-donut="on"] [data-slot="donut-legend"] button:nth-child(6){animation-delay:.4s}
+@keyframes fade-up{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+[data-draw-bars] [role="meter"]>div{transform:scaleX(0);transform-origin:left;}
+[data-draw-bars="on"] [role="meter"]>div{animation:grow .9s cubic-bezier(.22,1,.36,1) forwards;}
+[data-draw-bars="on"] [data-share-row]:nth-child(2) [role="meter"]>div{animation-delay:.1s}
+[data-draw-bars="on"] [data-share-row]:nth-child(3) [role="meter"]>div{animation-delay:.2s}
+[data-draw-bars="on"] [data-share-row]:nth-child(4) [role="meter"]>div{animation-delay:.3s}
+[data-draw-bars="on"] [data-share-row]:nth-child(5) [role="meter"]>div{animation-delay:.4s}
+@keyframes grow{to{transform:scaleX(1);}}
+@media (prefers-reduced-motion:reduce){[data-draw-donut] [data-slot="donut-chart-container"] svg{-webkit-mask:none;mask:none;animation:none}[data-draw-donut] [data-slot="donut-legend"] button{opacity:1;animation:none}[data-draw-bars] [role="meter"]>div{transform:none;animation:none}}

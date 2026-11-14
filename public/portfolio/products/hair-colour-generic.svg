@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+  <rect width="160" height="160" rx="12" fill="white"/>
+  <path d="M58 20h44l-5 106H63z" fill="#ece9e2" stroke="#b6b2aa"/>
+  <path d="M58 20h44v7H58z" fill="#d6d2c8"/>
+  <path d="M63 126h34v16H63z" fill="#33302b"/>
+  <path d="M61 78h38l-1 30H62z" fill="#a3855a"/>
+  <text x="80" y="47" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="700" fill="#33302b">DYE</text>
+  <text x="80" y="60" text-anchor="middle" font-family="sans-serif" font-size="5" fill="#33302b">PROFESSIONAL</text>
+  <text x="80" y="96" text-anchor="middle" font-family="sans-serif" font-size="7" fill="white">COLOUR</text>
+  <text x="80" y="118" text-anchor="middle" font-family="sans-serif" font-size="5" fill="#33302b">CREAM</text>
+</svg>

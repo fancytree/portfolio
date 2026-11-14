@@ -23,8 +23,14 @@ const nextConfig: NextConfig = {
     ];
   },
   async rewrites() {
+    // The DEF ERP live demo is a single-page app; its demo routes all serve the same shell.
+    const erpDemo = [
+      { source: "/portfolio/live/:path*", destination: "/demos/def-erp/index.html" },
+      // Purchasing, receiving and storefront-builder showcase pages of the same app.
+      { source: "/portfolio/:page(po-detail|po-inbound|receiving|miniprogram-decoration|store-accounts)", destination: "/demos/def-erp/index.html" },
+    ];
     if (!posthogHost) {
-      return [];
+      return erpDemo;
     }
 
     const posthogAssetsHost = new URL(posthogHost);
@@ -34,6 +40,7 @@ const nextConfig: NextConfig = {
     );
 
     return [
+      ...erpDemo,
       {
         source: "/hzn/static/:path*",
         destination: `${posthogAssetsHost.origin}/static/:path*`,

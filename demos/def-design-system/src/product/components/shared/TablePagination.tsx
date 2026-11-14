@@ -81,9 +81,9 @@ export default function TablePagination({
         {pageSize != null && pageSizeOptions && onPageSizeChange ? (
           <>
             <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>每页</span>
+              <span>Per page</span>
               <Select
-                ariaLabel="每页条数"
+                ariaLabel="Rows per page"
                 value={String(pageSize)}
                 onValueChange={(v) => onPageSizeChange(Number(v))}
                 size="sm"
@@ -93,7 +93,7 @@ export default function TablePagination({
                   label: String(n),
                 }))}
               />
-              <span>条</span>
+              <span>rows</span>
             </div>
             <span className="text-muted-foreground/60">|</span>
           </>
@@ -104,7 +104,7 @@ export default function TablePagination({
             <PaginationItem>
               <PaginationPrevious
                 href="#"
-                text="上一页"
+                text="Previous"
                 aria-disabled={!canPrev || undefined}
                 tabIndex={canPrev ? undefined : -1}
                 className={cn(!canPrev && 'pointer-events-none opacity-50')}
@@ -133,7 +133,7 @@ export default function TablePagination({
             <PaginationItem>
               <PaginationNext
                 href="#"
-                text="下一页"
+                text="Next"
                 aria-disabled={!canNext || undefined}
                 tabIndex={canNext ? undefined : -1}
                 className={cn(!canNext && 'pointer-events-none opacity-50')}

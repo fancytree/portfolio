@@ -1,0 +1,61 @@
+/* Motion for the legacy diagram: where the information breaks. Colours from case.css tokens. */
+.march { animation: march 1s linear infinite; }
+
+/* Stock pulses run toward the gap from both sides, then collide with it. */
+.stock {
+  fill: none;
+  stroke: var(--case-ink);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.07 2;
+  stroke-dashoffset: 0.07;
+  animation: stock 6s ease-in infinite;
+}
+.stockRight { animation-delay: 0s; }
+
+.gapFlash {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: gap 6s ease-out infinite;
+}
+.gapMark { stroke: var(--case-flow-break); }
+.gapLabel { animation: gapLabel 6s ease-out infinite; }
+
+/* Each manual handoff lights up in turn, as a person has to step in. */
+.handoff { animation: handoff 8s ease-in-out infinite; }
+.h1 { animation-delay: 0s; }
+.h2 { animation-delay: 2s; }
+.h3 { animation-delay: 4s; }
+.h4 { animation-delay: 6s; }
+
+.dupe { animation: dupe 4s ease-in-out infinite; }
+
+@keyframes march { to { stroke-dashoffset: -9; } }
+@keyframes stock {
+  0% { stroke-dashoffset: 0.07; opacity: 1; }
+  55% { stroke-dashoffset: -0.5; opacity: 1; }
+  60%, 100% { stroke-dashoffset: -0.5; opacity: 0; }
+}
+@keyframes gap {
+  0%, 52% { transform: scale(1); }
+  58% { transform: scale(1.6); }
+  70%, 100% { transform: scale(1); }
+}
+@keyframes gapLabel {
+  0%, 52% { fill: var(--case-copy); }
+  58%, 85% { fill: var(--case-flow-break); }
+  100% { fill: var(--case-copy); }
+}
+@keyframes handoff {
+  0%, 24%, 100% { stroke: transparent; stroke-width: 0; }
+  6%, 18% { stroke: var(--case-flow-break); stroke-width: 2; }
+}
+@keyframes dupe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .march, .gapFlash, .handoff, .dupe, .gapLabel { animation: none; }
+  .stock { display: none; }
+}

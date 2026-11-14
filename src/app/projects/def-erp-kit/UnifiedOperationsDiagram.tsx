@@ -1,3 +1,5 @@
+import styles from './UnifiedOperationsDiagram.module.css';
+
 /** Same canvas and node positions as the legacy map, with connected records. */
 export default function UnifiedOperationsDiagram() {
   return (
@@ -32,6 +34,13 @@ export default function UnifiedOperationsDiagram() {
           <path d="M800 264 V368" />
           <path d="M752 264 V312 Q752 320 744 320 H488 Q480 320 480 328 V368" />
         </g>
+        <g fill="none" pathLength={1}>
+          <path d="M888 152 V72 Q888 64 880 64 H232 Q224 64 224 72 V152" pathLength={1} className={`${styles.pulse} ${styles.p1}`} />
+          <path d="M264 200 H368" pathLength={1} className={`${styles.pulse} ${styles.p2}`} />
+          <path d="M592 200 H688" pathLength={1} className={`${styles.pulse} ${styles.p3}`} />
+          <path d="M800 264 V368" pathLength={1} className={`${styles.pulse} ${styles.p4}`} />
+          <path d="M752 264 V312 Q752 320 744 320 H488 Q480 320 480 328 V368" pathLength={1} className={`${styles.pulse} ${styles.p5}`} />
+        </g>
         <g fill="var(--case-bg)">
           <rect x="268" y="160" width="96" height="28" />
           <rect x="596" y="160" width="88" height="28" />
@@ -46,11 +55,11 @@ export default function UnifiedOperationsDiagram() {
         </g>
 
         <g fill="var(--case-bg)" stroke="var(--case-copy)" strokeWidth="var(--case-border-width)">
-          <rect x="40" y="152" width="224" height="112" rx="8" />
-          <rect x="368" y="152" width="224" height="112" rx="8" />
-          <rect x="688" y="152" width="224" height="112" rx="8" />
-          <rect x="368" y="368" width="224" height="104" rx="8" />
-          <rect x="688" y="368" width="224" height="104" rx="8" />
+          <rect x="40" y="152" width="224" height="112" rx="8" className={`${styles.node} ${styles.n1}`} />
+          <rect x="368" y="152" width="224" height="112" rx="8" className={`${styles.node} ${styles.n2}`} />
+          <rect x="688" y="152" width="224" height="112" rx="8" className={`${styles.node} ${styles.n3}`} />
+          <rect x="368" y="368" width="224" height="104" rx="8" className={`${styles.node} ${styles.n5}`} />
+          <rect x="688" y="368" width="224" height="104" rx="8" className={`${styles.node} ${styles.n4}`} />
         </g>
         <g fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)" textAnchor="middle">
           <text x="152" y="208">Product catalogue</text>

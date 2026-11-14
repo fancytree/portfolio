@@ -5,20 +5,23 @@ import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudy
 import FragmentedOperationsDiagram from './FragmentedOperationsDiagram';
 import UnifiedOperationsDiagram from './UnifiedOperationsDiagram';
 import BeforeAfterSlider from '../def-erp/BeforeAfterSlider';
+import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
+import DesignSystemShowcase from './DesignSystemShowcase';
+import wide from './DefDecisions.module.css';
+import { InvoicingLiveDemo, PurchasingLiveDemo, SalesOrderLiveDemo, StorefrontBuilderLiveDemo } from './ErpLiveDemo';
+import { ArchitectureOptions, CapabilityMatrix, ConfirmationLadder, IterationLog, InvoiceCadence, type IterationItem } from './DefDecisions';
 import {
   CaseChapter,
   CaseClose,
   CaseDevicePreview,
   CaseFigure,
   CaseHero,
-  CaseInteractivePreview,
   CaseKitPage,
   CaseKitSections,
   CaseProse,
   CasePullquote,
   CaseStats,
   CaseSteps,
-  CaseVideo,
 } from '../../components/case-kit/CaseKit';
 
 export const metadata: Metadata = {
@@ -31,18 +34,110 @@ export const metadata: Metadata = {
 const navLabels = [
   '01 / Overview',
   '02 / The problem',
-  '03 / The challenge',
-  '04 / Research',
-  '05 / Goals',
-  '06 / Approach',
-  '07 / Design system',
-  '08 / The solution',
-  '09 / Results',
-  '10 / Reflection',
+  '03 / Research',
+  '04 / Principles',
+  '05 / Iteration',
+  '06 / Design system',
+  '07 / The solution',
+  '08 / Results',
+  '09 / Reflection',
+];
+
+const reversals: Reversal[] = [
+  { before: 'Hide real stock from customers.', evidence: 'The owner disagreed: customers can see it, opened up by login and order history later.', after: 'Visibility is a per-identity policy (anonymous, signed in, has ordered), never hard-coded.', source: 'UX.md · sales → owner' },
+  { before: 'Invoice the moment an order closes.', evidence: 'Finance: B2B customers pay in batches, then ask for an invoice.', after: 'Invoice from paid orders, merge several orders, skip lines already invoiced.', source: 'UX.md · finance' },
+  { before: 'Lock the order after approval, then issue the delivery note.', evidence: 'Customers add goods until the second before loading. Staff cope by reopening a new order.', after: 'Delivery notes are decoupled from the order; shipments are tracked per delivery, partial included.', source: 'UX.md · sales' },
+  { before: 'The owner’s top pain is the whole picture.', evidence: 'Sales named a different pain: order and delivery-note coupling. Neither was wrong.', after: 'Solve both. The channel gap (stock, orders) and the loading-day edits each got a fix.', source: 'UX.md · owner vs sales' },
+];
+
+const miniProgramDecisions: Decision[] = [
+  {
+    question: 'Redesign the storefront, or keep the look salons know?',
+    source: 'Mini-program · home, sign-in, account',
+    options: [
+      { label: 'A fresh visual redesign', verdict: 'More to show, but salons reorder from habit and would have to relearn it.' },
+      { label: 'Keep the layout, replace what is behind it', verdict: 'Same blocks in the same places; each now reads live ERP stock, euro prices and tax rates.', chosen: true },
+    ],
+    evidence: 'Customers already ordered from the old home page; the problem was the data behind it, not the layout.',
+    tradeoff: 'The before and after look alike. The change is in what the blocks are connected to.',
+  },
+  {
+    question: 'What to build it on?',
+    source: 'Mini-program code · Taro 4, React, TypeScript',
+    options: [
+      { label: 'Native WeChat code, from scratch', verdict: 'Full control, but every screen and the login flow would be written by hand.' },
+      { label: 'Taro with WeChat’s own login', verdict: 'React and TypeScript like the ERP, and customers sign in with their WeChat account. No separate accounts, passwords or SMS.', chosen: true },
+    ],
+    evidence: 'The same React and TypeScript skills build both the ERP and the storefront, and WeChat login was already there to use.',
+    tradeoff: 'The storefront lives inside WeChat. Customers who do not use WeChat still order through staff.',
+  },
+  {
+    question: 'How does a customer reach their own prices and history?',
+    source: 'Mini-program code · registration and binding',
+    options: [
+      { label: 'Phone number and SMS sign-up', verdict: 'Familiar, but creates a new account that still has to be matched to the ERP by hand.' },
+      { label: 'A one-time code from the ERP', verdict: 'Staff generate a code on the customer’s record; scanning it binds WeChat to that record, prices and orders included.', chosen: true },
+    ],
+    evidence: 'Every salon already had an ERP customer record with its own prices. The SMS step was removed once binding by code worked.',
+    tradeoff: 'Staff create one code per customer before the customer can see their own prices.',
+  },
+  {
+    question: 'Rebrand now, or launch fast and validate the data first?',
+    source: 'Mini-program commits · 24 Aug – 28 Sep 2026',
+    options: [
+      { label: 'Redesign the brand before launch', verdict: 'A stronger first impression, but months before any real order reaches the ERP.' },
+      { label: 'Phase 1: launch fast, connect and validate the data', verdict: 'Browsing, cart, checkout, orders and account binding went live on the existing look, so real orders could prove the data flow.', chosen: true },
+    ],
+    evidence: 'The value was orders arriving in the ERP without re-entry. The full brand redesign is scheduled as the focus of phase 2.',
+    tradeoff: 'The brand stays as it was until phase 2.',
+  },
+];
+
+const builderDecision: Decision = {
+  question: 'A free-form canvas, or a fixed set of modules?',
+  source: 'Storefront builder code · home layout schema',
+  options: [
+    { label: 'Free-form page editor', verdict: 'Any layout is possible, but staff are not designers, and a broken page goes straight to every salon.' },
+    { label: 'Stacked modules, draft before publish', verdict: 'Staff add, reorder and configure ready-made modules. Edits stay in a draft until someone publishes them.', chosen: true },
+  ],
+  evidence: 'Draft and live layouts are stored separately. Products come from ERP records, and Frequent products fills itself from order history.',
+  tradeoff: 'Less layout freedom, and every new module type needs development: video and coupons are still marked planned.',
+};
+
+const procurementDecision: Decision = {
+    question: 'Keep the purchase request → approval → order chain?',
+    source: 'Procurement redesign doc · decision log',
+    options: [
+      { label: 'Keep request, approval and order as separate stages', verdict: 'Three demand lines were half-wired; with a small team it becomes approving your own request.' },
+      { label: 'Delete the request tables', verdict: 'Loses data and the room to grow if the team scales.' },
+      { label: 'Fold approval into placing the order', verdict: 'Placing an order requires confirmed prices and an uploaded supplier confirmation. Tables stay, hidden.', chosen: true },
+    ],
+    evidence: 'Request routes were unreachable from navigation, and no one reviews amounts full-time.',
+    tradeoff: 'Control applies to the whole order, not each line request. A return-to-draft safety valve is admin-only.',
+  };
+
+const packagingDecision: Decision = {
+    question: 'Where do packaging units (piece, box, carton) live?',
+    source: 'Packaging units code spec',
+    options: [
+      { label: 'On the product, shared by every SKU', verdict: 'Shades of one product can be priced differently.' },
+      { label: 'On each SKU, with stock counted in one base unit', verdict: 'One stock number; split sales convert automatically; each tier has its own price.', chosen: true },
+    ],
+    evidence: 'The same SKU is sold by piece, box and carton at separate prices.',
+    tradeoff: 'Legacy SKUs that stored a box as their unit needed migrating, and the model was reworked in 48 commits.',
+  };
+
+const iterations: IterationItem[] = [
+  { date: 'Jun 2026', area: 'Returns', before: 'Pick a sales order first; one return per order.', after: 'Pick the customer, search SKUs into a cart, return across several orders.' },
+  { date: 'Jul – Oct', area: 'Packaging units', before: 'Units attached loosely to products; fields drifted.', after: 'Pricing fields consolidated; default unit synced with SKU price and barcode.' },
+  { date: 'Oct 6 – 12', area: 'Sales product picker', before: 'Tested standalone product rows against the SPU / SKU picker.', after: 'Ended the trial and removed the variant; kept the original picker and row-merging rules.' },
+  { date: 'Sep 2026', area: 'Confirmations', before: 'Browser confirms with “Are you sure?”.', after: 'A shared dialog that lists consequences before stock or money moves.' },
+  { date: 'Jun – Sep', area: 'Dashboards', before: 'One page for every login.', after: 'Role dashboards on one skeleton, then real data, chart and filter polish.' },
 ];
 
 export default function DefErpKitPage() {
   return (
+    <div className={wide.widePage}>
     <CaseKitPage>
       <CaseStudyControls navLabels={navLabels} railTitle="DEF Beauty ERP" />
       <CaseKitSections>
@@ -72,45 +167,32 @@ export default function DefErpKitPage() {
 
         <CaseChapter label="01 / Overview" title="A wholesale business ready for customers to order directly.">
           <CaseProse>
-            <p>DEF Beauty Supply sells professional beauty products to salons in Italy. It used WeChat (a messaging app) and a WeChat mini-program (a lightweight app accessed within WeChat) to reach customers. The mini-program served mainly as a product catalogue. Customers browsed there, then messaged sales staff on WeChat to place orders.</p>
-            <p>I designed and implemented an ERP connected to the mini-program, covering customer ordering and the internal work needed to fulfil it: sales, inventory, fulfilment, and invoicing. The platform is live, and mini-program orders now enter the ERP directly.</p>
+            <p>DEF Beauty Supply sells professional beauty products to salons in Italy. Customers browsed a WeChat mini-program catalogue, then messaged sales to order. I designed and built the ERP behind a new storefront: ordering, sales, inventory, fulfilment and invoicing on shared records. It is live.</p>
           </CaseProse>
+          <CaseStats items={[
+            { value: '15', label: 'People across 8 real jobs, mapped to 5 permission roles' },
+            { value: '2 → 1', label: 'Disconnected systems replaced by one platform' },
+            { value: '5', label: 'Role interviews: sales, warehouse, finance, procurement, owner' },
+          ]} />
         </CaseChapter>
 
         <CaseChapter label="02 / The problem" title="Staff were doing the work between disconnected systems.">
-          <CaseProse>
-            <p>The storefront and inventory platform operated separately. Staff carried information between them and filled the gaps throughout the order lifecycle.</p>
-            <ul>
-              <li><strong>Duplicate product maintenance:</strong> the same product information had to be updated in both the inventory platform and the mini-program backend.</li>
-              <li><strong>Stock out of sync:</strong> frequent sales changed inventory without updating the storefront. Actual availability was only checked when sales entered the order; shortages meant another conversation with the customer.</li>
-              <li><strong>Manual order entry:</strong> customers ordered through WeChat messages, then sales recreated those orders in the inventory platform.</li>
-              <li><strong>Dispatch updates through chat:</strong> sales had to message customers with delivery information instead of customers checking it themselves.</li>
-              <li><strong>Invoice details entered again:</strong> finance added products one by one rather than carrying the existing sales order into invoice preparation.</li>
-            </ul>
-          </CaseProse>
-          <CasePullquote>The same product information was repeatedly checked, communicated, and entered as work moved from one person to the next.</CasePullquote>
-          <CaseFigure caption="Before the ERP: stock did not sync between the catalogue and inventory platform. Dashed arrows show the manual handoffs for orders, dispatch updates, and invoice items. Scroll horizontally on smaller screens.">
+          <CaseFigure caption="Before the ERP: stock did not sync between the catalogue and inventory platform. Dashed arrows are manual handoffs for orders, dispatch updates, and invoice items. Scroll horizontally on smaller screens.">
             <FragmentedOperationsDiagram />
+          </CaseFigure>
+          <CasePullquote>The same product information was repeatedly checked, communicated, and entered as work moved from one person to the next.</CasePullquote>
+          <CaseProse>
+            <h3>I audited both systems before drawing anything</h3>
+            <p>Of 12 business domains, 7 existed in only one system. The other 5 existed in both, with different data.</p>
+          </CaseProse>
+          <CaseFigure caption="Function audit of the WeChat ordering backend and the MPSOFT inventory tool, from screenshots of every module. Source: my research analysis report, May 2026.">
+            <CapabilityMatrix />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="03 / The challenge" title="Connect customer ordering with the way DEF works in Italy.">
+        <CaseChapter label="03 / Research" title="Five interviews, and what they overturned.">
           <CaseProse>
-            <p>I needed to bring separate tools into one connected system, with shared information that customers and staff could rely on throughout an order’s lifecycle.</p>
-            <ul>
-              <li><strong>One source of truth:</strong> align product and inventory information across the storefront and internal operations, so staff no longer maintain and verify separate versions.</li>
-              <li><strong>Different roles, shared records:</strong> let sales, warehouse, and finance work from the same order while seeing the information and actions relevant to their responsibilities.</li>
-              <li><strong>Local business rules:</strong> support Italian addresses, delivery coverage, shipping costs, euro prices, and product-specific tax rates that the existing tools could not represent.</li>
-              <li><strong>Real-world exceptions:</strong> accommodate payment review, established customers who can ship before verification, mixed payments, and invoices spanning multiple orders.</li>
-            </ul>
-          </CaseProse>
-        </CaseChapter>
-
-        <CaseChapter label="04 / Research" title="Understand the system through the people doing the work.">
-          <CaseProse>
-            <p>To understand how the business operated across its separate tools, I spoke with people in sales, procurement, warehouse, management, and finance.</p>
-            <p>I recorded and transcribed the interviews, then used AI tools to quickly summarise the conversations and help identify repeated problems, contradictions, and manual workarounds across roles. I reviewed these findings against the original transcripts.</p>
-            <p>I used that evidence to shape the ERP’s structure and priorities, grounding the design in how people actually handled orders, stock, and invoicing.</p>
+            <p>I interviewed one person per role, recorded and transcribed each, used AI to cluster repeated problems, then checked every finding against the transcript. Findings went into one file, UX.md, with every line tagged: interview, code, decision or assumption. Tags let a rule be overturned cleanly when a later interview contradicts it.</p>
           </CaseProse>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] gap-[var(--case-space-24)]">
             <CaseFigure caption="Interview scripts with handwritten notes.">
@@ -120,68 +202,42 @@ export default function DefErpKitPage() {
               <Image src="/img/def-erp/research-recordings-transcripts.webp" alt="Audio recordings and text transcripts labelled by warehouse, management, finance, and sales roles." width={823} height={380} sizes="(min-width: 768px) 50vw, 100vw" />
             </CaseFigure>
           </div>
+          <CasePullquote>Often a customer is still adding items right up to the second before loading. The system only gets in the way.</CasePullquote>
+          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">Sales interview, May 2026, translated from the transcript.</p>
+          <CaseProse>
+            <h3>Four assumptions the evidence changed</h3>
+          </CaseProse>
+          <ReversalList items={reversals} />
         </CaseChapter>
 
-        <CaseChapter label="05 / Goals" title="Let customers place orders. Let staff move them forward.">
-          <CaseProse>
-            <p>My goal was to make shared business records the foundation for customer ordering and day-to-day operations.</p>
-            <ul>
-              <li><strong>Unify product and stock information:</strong> give the storefront and internal teams one reliable source, reducing duplicate maintenance and manual checks.</li>
-              <li><strong>Enable direct customer ordering:</strong> let customers select products, confirm availability, and see delivery options and costs before submitting an order.</li>
-              <li><strong>Carry orders through the business:</strong> reuse customer orders for fulfilment and invoicing, without staff recreating the same information.</li>
-              <li><strong>Make progress visible:</strong> keep payment, dispatch, and invoice status clear, so each role knows what has happened and what needs attention.</li>
-            </ul>
-          </CaseProse>
-        </CaseChapter>
-
-        <CaseChapter label="06 / Approach" title="Three principles connect the experience.">
-          <CaseProse>
-            <p>Three principles run through the solution, connecting customer ordering with the work staff do behind it.</p>
-          </CaseProse>
+        <CaseChapter label="04 / Principles" title="Five principles, each traced to evidence.">
           <CaseSteps items={[
-            { title: 'Enter once, reuse across the workflow', body: 'I carried product and order information into sales processing, dispatch, and invoicing, reducing repeated entry as work moved between roles.' },
-            { title: 'Make routine decisions automatic', body: 'I used business rules for stock availability, delivery options, shipping costs, and free-shipping thresholds, so customers could order without staff checking each detail.' },
-            { title: 'Keep exceptions under human control', body: 'I left payment review, fulfilment exceptions, and invoice adjustments to staff, with their decisions recorded in the workflow.' },
+            { title: 'Enter once, reuse across the workflow', body: 'Product and order data carry through sales, dispatch and invoicing. No retyping between roles.' },
+            { title: 'Automate the routine, keep exceptions human', body: 'Stock, delivery options and shipping costs are rules. Payment review, fulfilment exceptions and invoice adjustments stay with staff, and are recorded.' },
+            { title: 'Built to balance, not just to be fast', body: 'Purchase totals copy the supplier invoice’s rounding order, because a €0.03 gap breaks every reconciliation. Simplifying the maths would defeat the page.' },
+            { title: 'The counter has a queue', body: 'Anything on the sales path is timed by the customers waiting behind. Hold and resume stay one step; no dialogs there.' },
+            { title: 'AI fills the field; people decide', body: 'OCR writes into editable inputs and flags gaps. It never submits.' },
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="07 / Design system" title="A shared system, from design to code.">
-          <CaseProse>
-            <p>I paired reusable UI foundations with written experience rules, giving design and Codex a shared reference across sales, warehouse, and finance.</p>
-            <ul>
-              <li><strong>UX.md:</strong> records role-specific needs and interaction decisions, including recoverable drafts and clear confirmation for stock and financial actions.</li>
-              <li><strong>AGENTS.md:</strong> directs Codex to follow the experience and design guidelines, reuse existing components, and run the required checks.</li>
-              <li><strong>Semantic tokens:</strong> keep surfaces, text, actions, and status colours consistent through shared CSS variables.</li>
-              <li><strong>Reusable components:</strong> carry those rules into buttons, inputs, status badges, and tables, including focus, disabled, loading, and error states.</li>
-            </ul>
-          </CaseProse>
-          <CaseProse>
-            <h3>Shared visual foundations</h3>
-            <p>Type, colour, spacing, and shape work together as a shared visual language. The examples below use the ERP’s current tokens, including its rounded surface hierarchy.</p>
-          </CaseProse>
-          <CaseFigure caption="Typography, semantic colours, spacing, and shape tokens from the current ERP source.">
-            <picture>
-              <source media="(max-width: 767px)" srcSet="/img/def-erp/system-foundations-mobile.webp" width={804} height={1986} />
-              <Image src="/img/def-erp/system-foundations-desktop.webp" alt="Typography, semantic colours, spacing, and shape tokens from the current ERP source." width={2160} height={1106} sizes="(min-width: 1280px) 1120px, 100vw" />
-            </picture>
-          </CaseFigure>
-          <CaseProse>
-            <h3>Selected controls and states</h3>
-            <p>Explore a selection from the ERP’s wider component library: buttons, form validation, selection controls, search, payment options, and quantity input. The preview uses demonstration data.</p>
-          </CaseProse>
-          <CaseFigure caption="Selected controls — edit fields, validate and save, toggle selections, and change quantities.">
-            <CaseInteractivePreview src="/demos/def-design-system/index.html?view=controls" title="DEF ERP — interactive controls" />
-          </CaseFigure>
-          <CaseProse>
-            <h3>Selected business patterns</h3>
-            <p>These examples show a selection of the component combinations used across the ERP. Switch receipt states, then filter, search, and page through the demonstration orders to explore how shared components work together.</p>
-          </CaseProse>
-          <CaseFigure caption="Selected business patterns — document progress, rounded cards, status filters, search, and pagination.">
-            <CaseInteractivePreview src="/demos/def-design-system/index.html?view=patterns" title="DEF ERP — interactive business components" />
-          </CaseFigure>
+        <CaseChapter label="05 / Iteration" title="381 commits in 5 months. Some went the other way.">
+          <CaseStats items={[
+            { value: '48', label: 'Commits on packaging units, the most reworked model' },
+            { value: '39', label: 'Commits on invoicing' },
+            { value: '37', label: 'Commits on returns and refunds' },
+          ]} />
+          <IterationLog items={iterations} />
+          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">Counts and dates from the project’s git history, 25 May to 7 Nov 2026, matched by commit-message keyword.</p>
         </CaseChapter>
 
-        <CaseChapter label="08 / The solution" title="Connect each step to the information already available.">
+        <CaseChapter label="06 / Design system" title="A shared system, from design to code.">
+          <CaseProse>
+            <p>Written rules plus reusable components give design and the coding agent one shared reference. Step through it below; the controls and patterns are live and use demonstration data.</p>
+          </CaseProse>
+          <DesignSystemShowcase />
+        </CaseChapter>
+
+        <CaseChapter label="07 / The solution" title="Connect each step to the information already available.">
           <CaseProse>
             <p>The storefront and internal teams now work from shared ERP records. Product and inventory data support customer ordering, and the same order continues into fulfilment and invoicing.</p>
           </CaseProse>
@@ -194,7 +250,13 @@ export default function DefErpKitPage() {
               <li><strong>Sales-assisted orders:</strong> sales staff create orders on a customer’s behalf.</li>
             </ul>
           </CaseProse>
-          <CaseFigure caption="After: shared ERP records connect ordering, fulfilment, and invoicing, with staff retaining review and approval.">
+          <CaseProse>
+            <p><strong>Trade-off: how to join two systems.</strong> Linking the two tools would have been quicker; one platform meant a longer build but a single set of records.</p>
+          </CaseProse>
+          <CaseFigure caption="Three options considered. Evidence: five entities duplicated across both systems, and roughly 50+ daily stock re-entries in my diagnosis. Cost I accepted: a four-month build, and a full stocktake as the go-live baseline, because the owner’s biggest worry was losing data.">
+            <ArchitectureOptions />
+          </CaseFigure>
+          <CaseFigure caption="The result: shared ERP records connect ordering, fulfilment, and invoicing, with staff retaining review and approval.">
             <UnifiedOperationsDiagram />
           </CaseFigure>
           <CaseProse>
@@ -228,94 +290,52 @@ export default function DefErpKitPage() {
             </CaseFigure>
           </div>
           <CaseProse>
-            <h3>Find one shade or add several together</h3>
-            <p>Beauty products can have dozens of similar variants. I kept product discovery and shade selection in one search field: a broad search such as “dye” groups results by product and brand, with capacity shown at product level and shade codes shown on each variant.</p>
-            <p>Staff can narrow the search to a shade and click one result to add it directly, or expand a product to select several shades and add them together. For long lists, the product information, selection count, and Add action stay visible while the variants scroll. Price and stock remain beside each shade to support the choice.</p>
+            <h3>One order, from search to delivery</h3>
+            <p>Two trade-offs shaped the sales screens: how packaging units are modelled, and when the system asks before acting.</p>
           </CaseProse>
-          <CaseVideo
-            src="/videos/def-erp/sales-order-product-selection.mp4"
-            poster="/videos/def-erp/sales-order-product-selection.webp"
-            label="Product search with single and multiple shade selection"
-            caption="Product selection — search across brands, select multiple shades, or narrow the query to add one variant. Demonstration data."
-            width={1828} height={1080}
-            controls
-          />
+          <DecisionCards items={[packagingDecision]} />
           <CaseProse>
-            <h3>Review the order before saving</h3>
-            <p>The sales workspace keeps customer context, stock, packaging, and prices beside the order lines. Staff can switch between individual units, boxes, and cartons, adjust quantities and discounts, or mark an item as a gift. Line totals and the order summary update as they work, while stock warnings remain visible.</p>
-            <p>I separated line editing from the final confirmation. A salesperson must be selected before saving; the confirmation then brings together payment collection, partial or split payments, pickup quantities, and notes. Staff can review these decisions against the order total without leaving the workflow.</p>
+            <p><strong>Trade-off: when to ask “are you sure?”</strong> Committed stock and money actions have no undo, so the default is to confirm and state the consequence. The sales counter breaks the rule on purpose: a customer is waiting.</p>
           </CaseProse>
-          <CaseVideo
-            src="/videos/def-erp/sales-order-full-process.mp4"
-            poster="/videos/def-erp/sales-order-full-process.webp"
-            label="Sales order editing and save confirmation workflow"
-            caption="Sales order workflow — packaging, quantities, pricing, gifts, and the payment and pickup options in the save confirmation. Demonstration data."
-            width={1828} height={1080}
-            controls
-          />
+          <CaseFigure caption="Confirmation policy by consequence. Level 4 is logged as an exception. 21 native browser confirms still break the policy, tracked by file; none may be added.">
+            <ConfirmationLadder />
+          </CaseFigure>
           <CaseProse>
-            <h3>Follow the order across teams</h3>
-            <p>The order detail brings payment, shipment, and invoice status together, giving sales, warehouse, and finance a shared record to work from after the order is created.</p>
+            <p>These are the real pages running on demonstration data, played one module at a time. Watch, or move your pointer in and use them yourself. Nothing is saved.</p>
           </CaseProse>
-          <CaseVideo
-            src="/videos/def-erp/order-detail-20261106.mp4"
-            poster="/videos/def-erp/order-detail-20261106.webp"
-            label="Order details with partial shipments and delivery options"
-            caption="Order details — review partial shipments and configure pickup or courier deliveries. Demonstration data."
-            width={1828} height={1080}
-            controls
-          />
-
+          <SalesOrderLiveDemo />
 
           <CaseProse>
             <h3>Purchasing and receiving</h3>
-            <p>Purchase orders carry product and quantity information through supplier confirmation and receiving. Staff check delivery documents against actual arrivals, record differences, and receive partial deliveries against the same purchase record.</p>
-            <p>For the complete procurement workflow and its AI-assisted optimisation, see <a href="/projects/procurement-agent-v2">AI Procurement Agent for DEF Beauty Supply</a>.</p>
+            <p>Purchase orders carry product and quantity information through supplier confirmation and receiving. The main trade-off was how much approval a small team needs. The demo below uses the real pages on demonstration data; nothing is saved. For the complete procurement workflow and its AI-assisted optimisation, see <a href="/projects/procurement-agent-v2">AI Procurement Agent for DEF Beauty Supply</a>.</p>
           </CaseProse>
-          <CaseVideo
-            src="/videos/def-erp/purchase-order-20261106.mp4"
-            poster="/videos/def-erp/purchase-order-20261106.webp"
-            label="Purchase order and supplier confirmation review"
-            caption="Purchase order — review quantities and prices, upload supplier confirmation, and check differences. Demonstration data."
-            width={1828} height={1080}
-            controls
-          />
-          <CaseFigure caption="Receiving — delivery records, actual quantities, and differences.">
-            <Image src="/img/def-erp/evidence/receiving-collapsed-4c751c3d1fd0.webp" alt="Receiving workspace linking purchase quantities, delivery notes, actual counts, and partial arrival progress." width={3200} height={2000} sizes="(min-width: 1280px) 1120px, 100vw" unoptimized />
-          </CaseFigure>
+          <DecisionCards items={[procurementDecision]} />
+          <PurchasingLiveDemo />
 
           <CaseProse>
             <h3>Order-based invoicing</h3>
-            <p>Finance creates invoices from existing sales orders, reusing product details, quantities, prices, and tax rates. Staff can combine orders, enter a target amount, and review the suggested lines before adjusting amounts and payment methods. Previously invoiced products are excluded from future selection.</p>
+            <p>Finance creates invoices from existing sales orders, reusing product details, quantities, prices and tax rates.</p>
+            <p><strong>Trade-off: when an order becomes an invoice.</strong> The one documented conflict between roles. I did not side with either.</p>
           </CaseProse>
-          <CaseVideo
-            src="/videos/def-erp/invoice.mp4"
-            poster="/videos/def-erp/invoice.webp"
-            label="Invoice preparation demonstration"
-            caption="Invoice preparation — order lines, amounts, and payment details."
-            width={1828} height={1080}
-          />
+          <CaseFigure caption="Sales wanted to invoice at close; finance invoices after customers settle in batches. Both cadences work in the product.">
+            <InvoiceCadence />
+          </CaseFigure>
+          <CaseProse>
+            <p>The real invoicing page on demonstration data; nothing is issued.</p>
+          </CaseProse>
+          <InvoicingLiveDemo />
 
           <CaseProse>
-            <h3>WeChat storefront and builder</h3>
-            <p>Customers browse products with ERP-backed stock, euro prices, and product-specific tax rates. Checkout determines delivery options and shipping costs from the address, goods weight, and regional free-shipping rules. Orders enter the ERP directly, without sales staff checking stock or re-entering details. Staff configure storefront modules in the builder with a live preview.</p>
+            <h3>Storefront builder</h3>
+            <p>Staff edit the mini-program home page module by module, with the real mini-program as the preview, and link each customer’s WeChat account to their ERP record.</p>
           </CaseProse>
-          <CaseVideo
-            src="/videos/def-erp/wechat-builder.mp4"
-            poster="/videos/def-erp/wechat-builder.webp"
-            label="WeChat storefront builder demonstration"
-            caption="WeChat storefront builder — modules and live preview."
-            width={1828} height={1080}
-          />
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] items-center gap-[var(--case-space-24)]">
-            <CaseFigure caption="Account pairing in the ERP.">
-              <Image src="/img/def-erp/evidence/account-pairing-collapsed-eb0e79b5cca9.webp" alt="ERP customer account pairing screen with a WeChat code, expiry date, and linked account status." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
-            </CaseFigure>
-            <CaseProse>
-              <h3>Link each customer to their ERP account</h3>
-              <p>Staff generate a pairing code from the customer&apos;s ERP profile. The customer scans it or enters the code in the WeChat mini-program (a storefront within WeChat) to link their account.</p>
-            </CaseProse>
-          </div>
+          <DecisionCards items={[builderDecision]} />
+          <StorefrontBuilderLiveDemo />
+          <CaseProse>
+            <h3>WeChat mini-program: the trade-offs</h3>
+            <p>Salons already ordered through a WeChat mini-program. The goal was to get every flow working and live quickly, so each choice below favours speed and familiarity, and names what it gave up.</p>
+          </CaseProse>
+          <DecisionCards items={miniProgramDecisions} />
           <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-3">
             {([
               {
@@ -403,7 +423,7 @@ export default function DefErpKitPage() {
 
         </CaseChapter>
 
-        <CaseChapter label="09 / Results" title="Customers now place most orders themselves.">
+        <CaseChapter label="08 / Results" title="Customers now place most orders themselves.">
           <CaseStats items={[
             { value: '86%', label: 'Orders placed by customers themselves · one-week sample, about a month after launch' },
             { value: '5 → 3', label: 'Steps in the wholesale ordering flow' },
@@ -422,7 +442,7 @@ export default function DefErpKitPage() {
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="10 / Reflection" title="What I Learned">
+        <CaseClose label="09 / Reflection" title="What I Learned">
           <CaseProse>
             <ul>
               <li>A shared source of truth depends on connected records and clear handoffs, so information stays useful as work moves between roles.</li>
@@ -438,5 +458,6 @@ export default function DefErpKitPage() {
         </CaseClose>
       </CaseKitSections>
     </CaseKitPage>
+    </div>
   );
 }
