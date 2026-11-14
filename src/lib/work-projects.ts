@@ -94,7 +94,7 @@ export const productProjects: WorkProject[] = [
     time: '2025 – Jun 2026',
     tags: ['AI Agents', 'Data-Informed UX'],
     description: 'Designed a job-search agent with review and authorization controls; used an onboarding A/B test to choose the shipped flow.',
-    impact: { value: '73% → 96%', label: 'onboarding completion in a one-week A/B test (100+ users)' },
+    impact: { value: '~40k applications', label: 'sent by Auto Apply for 2,700+ users (to Jun 2026)' },
     image: '/img/Jobnova.avif',
     coverScreen: '/img/jobnova/jobnova-matched-jobs-cover.png',
     coverDevice: 'laptop',
