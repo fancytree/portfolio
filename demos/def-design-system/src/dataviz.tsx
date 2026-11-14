@@ -168,7 +168,7 @@ export function DataViz() {
           <Sub>Share of a whole: a donut, six slices at most</Sub>
           <div ref={donutRef} className="flex flex-1 flex-col"><div key={`donut-${donutInView}`} data-draw-donut={donutInView ? 'on' : 'off'} className="flex flex-1 flex-col">
           <DonutMixChart panel segments={customerTypes} ariaLabel="Customers by type" chartClassName="size-36"
-            renderLegendValue={(seg) => <>{counts[seg.key]}<span className="ml-2 font-normal text-muted-foreground">{seg.percent}%</span></>}
+            renderLegendValue={(seg) => <>{counts[seg.key]}<span className="ml-2 inline-block w-9 text-right font-normal text-muted-foreground">{seg.percent}%</span></>}
             renderCenter={(a) => (a ? <><span className="text-lg font-semibold tabular-nums">{counts[a.key]}</span><span className="text-[10px] text-muted-foreground">{a.label}</span></> : <><span className="text-lg font-semibold tabular-nums">760</span><span className="text-[10px] text-muted-foreground">customers</span></>)} />
           </div></div>
         </div>
