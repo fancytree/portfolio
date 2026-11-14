@@ -15,7 +15,6 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className={s.brandLogo} src="/logo.gif" alt="" width={33} height={20} />
           <span className={s.brandMark}>Mei Chai°</span>
-          <span className={s.brandRole}>Product Designer</span>
         </a>
         <nav aria-label="Primary">
           <ul className={s.nav}>

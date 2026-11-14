@@ -20,7 +20,7 @@ import s from "./river.module.css";
 export const metadata: Metadata = {
   title: "Mei Chai — Product Designer",
   description:
-    "Mei Chai is a product designer with 6+ years in UX and user research, designing AI-native products and agentic workflows that keep people in control.",
+    "Mei Chai is a product designer with 6+ years in UX and user research, designing B2B SaaS, AI agents and enterprise workflows: human-in-the-loop by design, built on design systems, shipped in code.",
 };
 
 // The four featured projects use the same animated covers as the homepage, in the
@@ -70,9 +70,9 @@ export default function RiverHome() {
                 products that <em>flow.</em>
               </h1>
               <p className={s.lead}>
-                Product designer with 6+ years in UX and user research. I design AI-native products
-                and agentic workflows that keep people in control, build the design systems behind
-                them, and ship them in code.
+                Product designer with 6+ years in UX and user research. I design B2B SaaS, AI agents
+                and enterprise workflows: human-in-the-loop by design, built on design systems, and
+                shipped in code.
               </p>
               {/* an invitation to scroll rather than buttons: the page is the journey */}
               <a className={s.scrollCue} href="#work">
@@ -111,8 +111,8 @@ export default function RiverHome() {
                 <Label>SELECTED WORK</Label>
                 <h2 id="work-title" className={s.h2}>Selected Work.</h2>
                 <p className={s.sectionIntro}>
-                  AI-powered products and the systems behind them, where I turn complex problems
-                  into thoughtful, usable experiences.
+                  AI agents, B2B SaaS and enterprise systems, taken from research to shipped
+                  product, with the numbers they moved.
                 </p>
               </div>
             </div>
@@ -206,13 +206,14 @@ export default function RiverHome() {
                   Designer by <em>practice.</em>
                 </h2>
                 <p className={s.bodyLarge}>
-                  I’m a Product Designer with a background in user research and experience designing
-                  AI-powered products. I bring together human-centered thinking, interaction design,
-                  and hands-on development to create useful, thoughtful digital experiences.
+                  I design AI-native SaaS and enterprise products, with a background in interaction
+                  design at Sohu and user research at Smart Walnut. Most of my work is complex B2B
+                  workflows: agents that act for people, and the review, approval and control that
+                  keep those people in charge.
                 </p>
                 <p className={s.body}>
-                  I enjoy exploring complex problems, translating insights into clear design
-                  decisions, and bringing ideas to life through rapid prototyping.
+                  I work end to end: research and problem framing, interaction design, design systems
+                  in Figma and code, and front-end delivery with AI-assisted development.
                 </p>
                 {/* how she works: six methods, one open at a time */}
                 <div className={s.methods}>

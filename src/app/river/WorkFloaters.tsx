@@ -70,7 +70,8 @@ export default function WorkFloaters() {
         if (!place || !cue || !spot) return { x: 0, y: 0, w: 1, h: 1, turn: 0, visible: false };
         const to = place.getBoundingClientRect();
         // 0 while its card is still below the screen, 1 once the card's top is well into view
-        const land = clamp((vh * 0.95 - cue.getBoundingClientRect().top) / (vh * 0.55) - (i >= 2 ? 0.2 : 0) - (i % 2) * 0.07);
+        // (all four have landed by the time the section sits at the top of the screen, where the Work link stops)
+        const land = clamp((vh * 0.98 - cue.getBoundingClientRect().top) / (vh * 0.42) - (i >= 2 ? 0.15 : 0) - (i % 2) * 0.05);
         const go = ease(land);
         const grow = Math.pow(go, 1.25);
         place.style.opacity = land >= 1 ? "" : clamp((land - 0.72) / 0.28).toFixed(2); // the real card arrives with it

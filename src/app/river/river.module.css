@@ -213,13 +213,6 @@ html:has(.root) {
   letter-spacing: 0;
 }
 
-.brandRole {
-  font-family: var(--river-mono);
-  font-size: 12px;
-  color: var(--river-text-3);
-  letter-spacing: 0.04em;
-}
-
 .nav {
   display: flex;
   align-items: center;
@@ -1387,10 +1380,6 @@ html:has(.root) {
 @media (max-width: 767px) {
   .root {
     --river-header: 64px;
-  }
-
-  .brandRole {
-    display: none;
   }
 
   .nav {
