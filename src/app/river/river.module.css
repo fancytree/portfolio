@@ -1,0 +1,1995 @@
+/* RIVER° homepage — tokens, grid and static layout.
+   Scoped to .root so nothing leaks into the rest of the site. */
+
+.root {
+  --river-bg: #fafaf8;
+  --river-surface: #ffffff;
+  --river-text: #141414;
+  --river-text-2: rgb(0 0 0 / 0.75); /* --case-copy */
+  --river-text-3: rgb(0 0 0 / 0.58); /* --case-muted */
+  --river-border: #d8d8d6;
+  --river-border-strong: #242424;
+  --river-ink: #222222;
+  --river-ink-muted: #a5a5a5;
+
+  /* Case Kit type: Oswald, uppercase, for headings; Geist for copy.
+     The mono stays for the bracketed labels and the small meta lines. */
+  --river-display: var(--font-oswald), Oswald, sans-serif;
+  --river-sans: var(--font-geist-sans), Geist, system-ui, sans-serif;
+  --river-mono: var(--font-river-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+  --river-margin: clamp(20px, 4.17vw, 60px);
+  --river-gap: 24px;
+  --river-header: 80px;
+  --river-section: clamp(96px, 11.5vw, 168px);
+
+  min-height: 100vh;
+  background: var(--river-bg);
+  color: var(--river-text);
+  font-family: var(--river-sans);
+  font-size: 16px;
+  line-height: 1.625;
+  overflow-x: clip;
+}
+
+html:has(.root) {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  background: #fafaf8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.root) {
+    scroll-behavior: auto;
+  }
+}
+
+.root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.root :focus-visible {
+  outline: 2px solid var(--river-border-strong);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.root ul,
+.root ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.root em {
+  font-style: normal;
+}
+
+.skip {
+  position: absolute;
+  left: var(--river-margin);
+  top: -100px;
+  z-index: 60;
+  padding: 10px 14px;
+  background: var(--river-text);
+  color: #fff !important;
+  font-size: 13px;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+/* ---------- Grid ---------- */
+
+.container {
+  width: 100%;
+  max-width: calc(1320px + var(--river-margin) * 2);
+  margin-inline: auto;
+  padding-inline: var(--river-margin);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--river-gap);
+}
+
+/* ---------- Type ---------- */
+
+.label,
+.colLabel,
+.sceneCaption,
+.cardMeta,
+.footerMeta {
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--river-text-3);
+  margin: 0;
+  font-weight: 400;
+}
+
+.h1,
+.h2 {
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.h1 {
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.h2 {
+  font-size: clamp(36px, 3.9vw, 56px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.lead,
+.bodyLarge {
+  font-size: 18px;
+  line-height: 1.625;
+  color: var(--river-text-2);
+  margin: 0;
+}
+
+.bodyLarge {
+  color: var(--river-text);
+}
+
+.body {
+  font-size: 15px;
+  line-height: 1.625;
+  color: var(--river-text-2);
+  margin: 0;
+}
+
+/* ---------- Header ---------- */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--river-header);
+  background: var(--river-bg);
+  border-bottom: 1px solid transparent;
+}
+
+/* Thin rule appears once the page has scrolled; no JS needed. */
+@supports (animation-timeline: scroll()) {
+  .header {
+    animation: headerRule linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 80px;
+  }
+}
+
+@keyframes headerRule {
+  to {
+    border-bottom-color: var(--river-border);
+  }
+}
+
+.headerInner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+/* the site's own logo, as on the live navbar */
+.brandLogo {
+  align-self: center;
+  width: auto;
+  height: 22px;
+  margin-right: -4px;
+}
+
+/* on the dark footer the mark is drawn in white */
+.brandLogoInverse {
+  filter: brightness(0) invert(1);
+  margin-right: -14px; /* the footer's own gap is wider than the header's */
+}
+
+.brandMark {
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.brandRole {
+  font-family: var(--river-mono);
+  font-size: 12px;
+  color: var(--river-text-3);
+  letter-spacing: 0.04em;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav li + li::before {
+  content: "/";
+  margin-inline: 14px;
+  color: var(--river-ink-muted);
+}
+
+.nav a {
+  padding-block: 8px;
+  background: linear-gradient(currentColor, currentColor) 0 calc(100% - 4px) / 0 1px no-repeat;
+  transition: background-size 300ms ease;
+}
+
+.nav a:hover,
+.nav a[aria-current="page"] {
+  background-size: 100% 1px;
+}
+
+/* ---------- Hero ---------- */
+
+.hero {
+  position: relative;
+  /* always a full screen below the header, so the next sheet never peeks in */
+  min-height: max(640px, calc(100vh - var(--river-header)));
+  min-height: max(640px, calc(100svh - var(--river-header)));
+  display: flex;
+  align-items: center;
+  padding-block: 72px 96px;
+}
+
+.heroText {
+  grid-column: 1 / span 6;
+  grid-row: 1;
+  position: relative;
+  z-index: 2;
+  align-self: center;
+}
+
+.heroText .h1 {
+  margin-top: 28px;
+}
+
+.heroText .lead {
+  margin-top: 32px;
+  max-width: 33em;
+  text-wrap: pretty;
+}
+
+/* the top line of the hero: the section label, then where she is */
+.heroMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 28px;
+}
+
+/* where she is: a mono line with a small square marker, like a pin on a map */
+.heroBase {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--river-text);
+}
+
+.heroBase i {
+  width: 7px;
+  height: 7px;
+  background: var(--river-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 44px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding-inline: 22px;
+  border: 1px solid var(--river-text);
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+.button span {
+  transition: transform 250ms ease;
+}
+
+.button:hover span {
+  transform: translate(2px, -2px);
+}
+
+.buttonPrimary {
+  background: var(--river-text);
+  color: #fff !important;
+}
+
+.buttonPrimary:hover {
+  background: #2e2e2e;
+}
+
+.buttonSecondary:hover {
+  background: var(--river-text);
+  color: #fff !important;
+}
+
+.heroScene {
+  grid-column: 6 / -1;
+  grid-row: 1;
+  position: relative;
+  align-self: stretch;
+  min-height: 560px;
+  color: var(--river-ink);
+}
+
+.heroRiver {
+  position: absolute;
+  inset: -40px -60px -140px 0;
+  width: calc(100% + 60px);
+  height: calc(100% + 180px);
+  color: var(--river-ink-muted);
+}
+
+.sceneGlyphs {
+  font-family: var(--river-mono);
+  font-size: 13px;
+  fill: var(--river-ink-muted);
+  letter-spacing: 0.2em;
+}
+
+.heroFish {
+  position: absolute;
+  left: 14%;
+  top: 22%;
+  width: min(420px, 62%);
+  height: auto;
+}
+
+.sceneCaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+  position: relative;
+  padding-block: calc(var(--river-section) * 0.78);
+  background: var(--section-bg, var(--river-bg));
+}
+
+/* One tone per module, stepping from paper toward dusk as the river runs on. */
+.work {
+  --section-bg: #f2f1ec;
+}
+
+.about {
+  --section-bg: #eae9e3;
+  --river-text-3: #666666;
+  --river-border: #cfcec7;
+}
+
+.contact {
+  background: transparent; /* a window onto the river */
+  --river-text-2: #555555;
+  --river-text-3: #5e5e5e;
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--river-gap);
+  padding-bottom: 56px;
+}
+
+.sectionHead .h2 {
+  margin-top: 24px;
+}
+
+.sectionIntro {
+  margin: 20px 0 0;
+  max-width: 34em;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--river-text-2);
+}
+
+.textLink {
+  display: inline-flex;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--river-text);
+  white-space: nowrap;
+}
+
+.textLink span {
+  transition: transform 250ms ease;
+}
+
+.textLink:hover span {
+  transform: translate(2px, -2px);
+}
+
+/* ---------- Project cards ---------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 32px; /* room for the cards' offset shadows */
+}
+
+.cards > li {
+  display: flex;
+}
+
+/* A project card, drawn like a window in the pixel scene: square corners, a
+   heavy outline, a title bar, and a shadow made of dither rather than blur.
+
+   Interaction, in steps rather than eased, so it moves like pixels do:
+     rest   - sits 6px above its shadow; the cover is greyed and dithered
+     hover  - lifts to 10px, the title bar inverts, the cover comes up in colour
+     press  - drops onto its shadow
+     focus  - a second, offset outline */
+.card {
+  --lift: 6px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--river-surface);
+  border: 2px solid var(--river-border-strong);
+  transform: translate(calc(var(--lift) * -1), calc(var(--lift) * -1));
+  transition: transform 180ms steps(4, end);
+}
+
+/* the dithered shadow: a 2px checker, pushed out as the card lifts */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -2; /* under the paper layer below, so it only shows where it sticks out */
+  background-image: repeating-conic-gradient(var(--river-border-strong) 0 25%, transparent 0 50%);
+  background-size: 4px 4px;
+  transform: translate(calc(var(--lift) + 2px), calc(var(--lift) + 2px));
+  transition: transform 180ms steps(4, end);
+}
+
+/* the paper itself, so the shadow only shows where it sticks out */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--river-surface);
+}
+
+.card:hover,
+.card:focus-visible {
+  --lift: 10px;
+}
+
+.card:active {
+  --lift: 0px;
+  transition-duration: 60ms;
+}
+
+.card:active::after {
+  transition-duration: 60ms;
+}
+
+.root .card:focus-visible {
+  outline: 2px solid var(--river-border-strong);
+  outline-offset: 5px;
+  border-radius: 0;
+}
+
+.cardBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 36px;
+  padding-right: 12px;
+  border-bottom: 2px solid var(--river-border-strong);
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--river-text);
+  transition: background-color 120ms steps(2, end), color 120ms steps(2, end);
+}
+
+.cardNo {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  width: 44px;
+  border-right: 2px solid var(--river-border-strong);
+  background: var(--river-text);
+  color: #ffffff;
+}
+
+.cardRole {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardSquares {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.cardSquares i {
+  width: 8px;
+  height: 8px;
+  border: 2px solid currentColor;
+}
+
+.card:hover .cardBar,
+.card:focus-visible .cardBar {
+  background: var(--river-text);
+  color: #ffffff;
+}
+
+.card:hover .cardNo,
+.card:focus-visible .cardNo {
+  background: #ffffff;
+  color: var(--river-text);
+  border-right-color: #ffffff;
+}
+
+.card:hover .cardSquares i:last-child,
+.card:focus-visible .cardSquares i:last-child {
+  background: currentColor;
+}
+
+.cardInner {
+  flex: 1;
+  display: grid;
+  /* fixed rows so titles, copy, numbers, tags and covers line up across cards */
+  grid-template-rows: auto 1fr auto auto auto auto;
+  padding: 24px 26px 22px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.14;
+  letter-spacing: 0;
+}
+
+.cardBody {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.625;
+  color: var(--river-text-2);
+}
+
+/* the one headline result, as written on the homepage: ruled off with a dithered line */
+.cardImpact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 20px 0 0;
+  padding-top: 16px;
+  background: repeating-linear-gradient(90deg, var(--river-border-strong) 0 2px, transparent 2px 6px) 0 0 / 100% 2px no-repeat;
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--river-text-2);
+}
+
+.cardImpact strong {
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--river-text);
+  white-space: nowrap;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 18px !important;
+}
+
+.tags li {
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 3px 8px;
+  border: 1px solid var(--river-border-strong);
+  color: var(--river-text);
+}
+
+/* The cover. At rest it is drained to grey under a dither screen, part of the
+   monochrome page; on hover the screen clears and it comes up in its own colours. */
+.cardImage,
+.cardCover {
+  position: relative;
+  margin-top: 22px;
+  border: 2px solid var(--river-border-strong);
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: grayscale(1) contrast(1.08);
+  transition: filter 240ms steps(4, end);
+}
+
+.cardImage {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #f1f1ee;
+}
+
+.cardImage img {
+  object-fit: cover;
+  object-position: left top;
+}
+
+.cardImage::after,
+.cardCover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  background-image: repeating-conic-gradient(rgb(36 36 36 / 0.5) 0 25%, transparent 0 50%);
+  background-size: 4px 4px;
+  opacity: 0.55;
+  transition: opacity 240ms steps(4, end);
+}
+
+.card:hover .cardImage,
+.card:hover .cardCover,
+.card:focus-visible .cardImage,
+.card:focus-visible .cardCover {
+  filter: none;
+}
+
+.card:hover .cardImage::after,
+.card:hover .cardCover::after,
+.card:focus-visible .cardImage::after,
+.card:focus-visible .cardCover::after {
+  opacity: 0;
+}
+
+.cardFoot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  font-family: var(--river-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* the way in: a square that fills when the card is hovered */
+.cardGo {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--river-border-strong);
+  font-family: var(--river-sans);
+  font-size: 15px;
+  line-height: 1;
+  transition: background-color 120ms steps(2, end), color 120ms steps(2, end);
+}
+
+.card:hover .cardGo,
+.card:focus-visible .cardGo {
+  background: var(--river-text);
+  color: #ffffff;
+}
+
+/* arrow used by the experiments list */
+.cardArrow {
+  font-size: 16px;
+  transition: transform 300ms ease;
+}
+
+/* Experiments: a plain ruled list under the featured four */
+.more {
+  margin-top: 72px;
+}
+
+.moreList a {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 5fr) minmax(0, 4fr) 20px;
+  align-items: baseline;
+  gap: var(--river-gap);
+  padding-block: 18px;
+  border-bottom: 1px solid var(--river-border);
+  transition: border-color 300ms ease;
+}
+
+.moreList a:hover {
+  border-bottom-color: var(--river-border-strong);
+}
+
+.moreList a:hover .cardArrow {
+  transform: translate(3px, -3px);
+}
+
+.moreTitle {
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.moreBody {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--river-text-2);
+}
+
+.moreMeta {
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--river-text-3);
+}
+
+/* Floating preview window for the experiments list */
+.peek {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 46;
+  width: 340px;
+  pointer-events: none;
+  background: var(--river-surface);
+  border: 1px solid var(--river-border-strong);
+  border-radius: 8px;
+  box-shadow: 6px 6px 0 var(--river-border-strong);
+  overflow: hidden;
+  opacity: 0;
+  scale: 0.9;
+  transform-origin: 0 50%;
+  transition:
+    opacity 180ms ease,
+    scale 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.peek[data-open] {
+  opacity: 1;
+  scale: 1;
+}
+
+.peekBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+  padding-inline: 10px;
+  border-bottom: 1px solid var(--river-border-strong);
+  font-family: var(--river-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--river-text);
+}
+
+.peekBar span:first-child {
+  color: var(--river-text-3);
+}
+
+.peekDots {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.peekDots i {
+  width: 6px;
+  height: 6px;
+  border: 1px solid var(--river-border-strong);
+  border-radius: 50%;
+}
+
+.peekFrame {
+  position: relative;
+  height: 218px;
+  background: #f1f1ee;
+}
+
+.peekFrame img {
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.peekFrame img[data-on] {
+  opacity: 1;
+}
+
+/* ---------- About ---------- */
+
+/* intro | portrait
+   tools (full width)
+   The portrait is on the right: she arrives from the river running downstream,
+   left to right, and steps straight down into it. */
+.aboutTop {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--river-gap);
+}
+
+.aboutPortrait {
+  grid-column: 9 / span 4;
+  grid-row: 1;
+  /* she stays put while the text beside her scrolls past */
+  position: sticky;
+  top: calc(var(--river-header) + 32px);
+  align-self: start;
+}
+
+.aboutIntro {
+  grid-column: 1 / span 6;
+  grid-row: 1;
+}
+
+.aboutIntro .h2 {
+  margin-top: 24px;
+}
+
+.aboutIntro .bodyLarge {
+  margin-top: 36px;
+  max-width: 30em;
+}
+
+.aboutIntro .body {
+  margin-top: 20px;
+  max-width: 34em;
+}
+
+.aboutIntro .textLink {
+  margin-top: 36px;
+}
+
+/* How she works: six methods under the introduction, one open at a time */
+.methods {
+  margin-top: 44px;
+  max-width: 34em;
+  border-bottom: 2px solid var(--river-border-strong);
+}
+
+.method {
+  border-top: 2px solid var(--river-border-strong);
+}
+
+.method summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 22px;
+  column-gap: 12px;
+  align-items: baseline;
+  padding: 14px 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.method summary::-webkit-details-marker {
+  display: none;
+}
+
+.methodSettles {
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--river-text-3);
+}
+
+.methodTitle {
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.methodSettles {
+  grid-column: 1;
+  margin-top: 4px;
+}
+
+/* a plus in a square that turns into a cross while its method is open */
+.methodToggle {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--river-border-strong);
+  font-family: var(--river-mono);
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 160ms steps(4), background-color 120ms steps(2), color 120ms steps(2);
+}
+
+.method summary:hover .methodToggle,
+.method[open] .methodToggle {
+  background: var(--river-text);
+  color: #ffffff;
+}
+
+.method[open] .methodToggle {
+  transform: rotate(135deg);
+}
+
+.methodMore {
+  padding: 0 34px 22px 0;
+}
+
+.aboutIntro .methodMore .body {
+  margin-top: 0;
+}
+
+.methodFigures {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.methodFigures figure {
+  margin: 0;
+}
+
+.methodFigures img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  border: 2px solid var(--river-border-strong);
+  background: #ffffff;
+}
+
+.methodFigures figcaption {
+  margin-top: 8px;
+  font-family: var(--river-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--river-text-3);
+}
+
+.aboutTools {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: 72px;
+}
+
+/* The tool shelf: group headings, the 3D cases, a name under each case. All three
+   rows are laid out from the same slot positions (scene3d/toolLayout.ts). */
+.shelf {
+  position: relative;
+  padding-top: 22px;
+}
+
+.shelfGroups {
+  position: relative;
+  height: 30px;
+}
+
+.shelfGroup {
+  position: absolute;
+  top: 0;
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--river-border-strong);
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
+  /* flush with its own cases; the room between categories is what separates the rules */
+}
+
+.shelfFrame {
+  position: relative;
+  aspect-ratio: 5.1 / 1;
+  width: 100%;
+  /* the canvas runs on below the frame to the foot of the sheet (ToolShelf.tsx), so tools can fall out of it */
+}
+
+.shelfFrame canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  max-width: none;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.shelfNames {
+  position: relative;
+  height: 20px;
+  margin-top: 6px !important;
+}
+
+.shelfNames li {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--river-text);
+}
+
+/* The drawn portrait: a tall frame she runs into */
+.portrait {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  border-bottom: 1px solid var(--river-border-strong);
+  cursor: crosshair;
+}
+
+/* Her canvas is fixed to the viewport, not to the frame: it starts over the
+   runner in the river scene and travels into the frame as the page scrolls. */
+.portraitCanvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 44;
+  max-width: none;
+  pointer-events: none;
+  image-rendering: pixelated;
+  transition: opacity 200ms ease;
+}
+
+/* The photograph, shown square by square where the cursor has scanned the drawing
+   away. Portrait.tsx draws it; it sits over the drawing's canvas. */
+.portraitReveal {
+  position: absolute;
+  /* larger than the frame by SPILL (Portrait.tsx) on every side, so the loose pixels are not cut off at its edge */
+  inset: -160px;
+  z-index: 45;
+  width: calc(100% + 320px);
+  height: calc(100% + 320px);
+  max-width: none;
+  pointer-events: none;
+}
+
+/* The invitation: a scan line that crosses her every few seconds, and a tag that says what to do. */
+.portraitScan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 46;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--river-border-strong) 0 6px, transparent 6px 10px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.portrait[data-ready] .portraitScan {
+  animation: portraitScan 4.2s steps(48) infinite;
+}
+
+.portrait:hover .portraitScan,
+.portrait:focus-visible .portraitScan {
+  animation: none;
+}
+
+@keyframes portraitScan {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 1;
+  }
+  58%,
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.portraitHint {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 10px); /* under the frame's rule, clear of the drawing */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 10px 6px 8px;
+  border: 2px solid var(--river-border-strong);
+  background: var(--river-text);
+  color: #ffffff;
+  font-family: var(--river-mono);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 200ms steps(4), background-color 120ms steps(2), color 120ms steps(2);
+}
+
+.portrait[data-ready] .portraitHint {
+  opacity: 1;
+}
+
+/* once she is being scanned the tag steps back */
+.portrait:hover .portraitHint {
+  background: transparent;
+  color: var(--river-text);
+}
+
+.portraitHint i {
+  width: 7px;
+  height: 7px;
+  background: currentColor;
+  animation: portraitBlink 1s steps(2) infinite;
+}
+
+@keyframes portraitBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.hintTouch {
+  display: none;
+}
+
+@media (hover: none) {
+  .hintHover {
+    display: none;
+  }
+
+  .hintTouch {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portrait[data-ready] .portraitScan,
+  .portraitHint i {
+    animation: none;
+  }
+}
+
+.colLabel {
+  text-transform: uppercase;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--river-border-strong);
+}
+
+/* ---------- Works afloat: the bridge from the hero to Selected Work ---------- */
+
+/* The canvas the four project cards are drawn on while they travel from the hero's
+   river to their places in the grid (WorkFloaters.tsx). It sits over the Work sheet
+   and under its cards, so a real card can appear on top of the one that has landed. */
+.floaters {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  max-width: none;
+  pointer-events: none;
+  visibility: hidden;
+  image-rendering: pixelated;
+}
+
+.cards {
+  position: relative;
+  z-index: 31;
+}
+
+/* A stretch of open river after the hero, so the cards have time to rise before the
+   Work sheet arrives. */
+.heroTail {
+  height: 70vh;
+}
+
+@media (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .floaters,
+  .heroTail {
+    display: none;
+  }
+}
+
+/* ---------- Contact ---------- */
+
+/* The last window is mostly river: a full screen of it, with one link in the corner. */
+.contact {
+  /* with the footer under it, this fills the screen exactly when the page is at its end */
+  min-height: calc(100vh - var(--river-header) - 88px);
+  min-height: calc(100svh - var(--river-header) - 88px);
+  padding-block: calc(var(--river-section) * 0.5) var(--river-section);
+}
+
+.contactText {
+  grid-column: 1 / span 6;
+  position: relative;
+  z-index: 2;
+}
+
+.touch {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.22em;
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: 0;
+  color: var(--river-text);
+  /* an underline that draws itself in on hover */
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+  padding-bottom: 0.08em;
+  transition: background-size 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.touch:hover,
+.touch:focus-visible {
+  background-size: 100% 2px;
+}
+
+.touchArrow {
+  font-family: var(--river-sans);
+  font-size: 0.5em;
+  font-weight: 300;
+  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.touch:hover .touchArrow {
+  transform: translate(0.18em, -0.18em);
+}
+
+.touchNote {
+  margin: 18px 0 0;
+  font-family: var(--river-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: var(--river-text-2);
+}
+
+.horizon {
+  grid-column: 7 / -1;
+  position: relative;
+  align-self: stretch;
+  min-height: 420px;
+  color: var(--river-ink-muted);
+}
+
+.horizon svg {
+  position: absolute;
+  inset: 0 calc(var(--river-margin) * -1) 0 0;
+  width: calc(100% + var(--river-margin));
+  height: 100%;
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  background: #141414;
+  color: #ffffff;
+  --river-text-3: #a5a5a5;
+}
+
+.footerInner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 88px;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 28px;
+  margin-left: auto !important;
+  font-size: 13px;
+}
+
+.footerLinks a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---------- Tablet ---------- */
+
+@media (max-width: 1199px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .aboutPortrait {
+    grid-column: 8 / -1;
+    grid-row: 1;
+  }
+
+  .aboutIntro {
+    grid-column: 1 / span 7;
+    grid-row: 1;
+    margin-bottom: 64px;
+  }
+
+  /* twelve cases need room: on narrower screens the shelf scrolls sideways */
+  .aboutTools {
+    overflow-x: auto;
+  }
+
+  .shelf {
+    min-width: 900px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 767px) {
+  .root {
+    --river-header: 64px;
+  }
+
+  .brandRole {
+    display: none;
+  }
+
+  .nav {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .nav li + li::before {
+    margin-inline: 8px;
+  }
+
+  .hero {
+    min-height: calc(100svh - var(--river-header));
+    padding-block: 48px 64px;
+  }
+
+  .heroScene {
+    grid-row: 2;
+  }
+
+  .heroText,
+  .heroScene,
+  .contactText,
+  .horizon,
+  .aboutPortrait,
+  .aboutIntro,
+  .aboutTools {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .methodMore {
+    padding: 0 0 20px;
+  }
+
+  .aboutPortrait {
+    position: static;
+    max-width: 320px;
+    margin-bottom: 40px;
+  }
+
+  .heroScene {
+    min-height: 300px;
+    margin-top: 40px;
+  }
+
+  .heroRiver {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .heroFish {
+    left: 8%;
+    top: 18%;
+    width: 78%;
+  }
+
+  .sectionHead {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 40px;
+  }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .moreList a {
+    grid-template-columns: minmax(0, 1fr) 20px;
+    gap: 6px 12px;
+  }
+
+  .moreBody,
+  .moreMeta {
+    grid-column: 1;
+  }
+
+  .cardInner {
+    padding: 20px 18px 18px;
+  }
+
+  .cardTitle {
+    font-size: 28px;
+  }
+
+  .horizon {
+    min-height: 240px;
+    margin-top: 48px;
+  }
+
+  .footerInner {
+    flex-wrap: wrap;
+    padding-block: 24px;
+  }
+
+  .footerLinks {
+    margin-left: 0 !important;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- Scroll cue (hero) ---------- */
+
+.scrollCue {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  margin-top: 44px;
+}
+
+/* a solid black seal: lettering turning round its rim, an arrow dropping through the middle */
+.cueBadge {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: var(--river-text);
+  color: #ffffff;
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* and a ring that keeps breaking away from it, like a ripple */
+.cueBadge::before,
+.cueBadge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--river-text);
+  border-radius: 50%;
+  animation: cueRipple 2.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+.cueBadge::after {
+  animation-delay: 1.3s;
+}
+
+@keyframes cueRipple {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+.cueRing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: cueTurn 16s linear infinite;
+}
+
+.cueRing text {
+  fill: currentColor;
+  font-family: var(--river-mono);
+  font-size: 9.6px;
+  letter-spacing: 0.06em;
+}
+
+@keyframes cueTurn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cueArrow {
+  position: relative;
+  font-family: var(--river-sans);
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1;
+  animation: cueDrop 1.5s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+}
+
+@keyframes cueDrop {
+  0% {
+    transform: translateY(-16px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+}
+
+.scrollCue:hover .cueBadge {
+  transform: scale(1.06);
+}
+
+.scrollCue:hover .cueRing {
+  animation-duration: 6s;
+}
+
+.scrollText {
+  display: grid;
+  gap: 6px;
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 1.15;
+  color: var(--river-text);
+}
+
+.scrollHint {
+  font-family: var(--river-mono);
+  text-transform: none;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--river-text-2);
+}
+
+/* once the visitor is on their way, the cue bows out */
+@supports (animation-timeline: scroll()) {
+  .scrollCue {
+    animation: cueLeave linear both;
+    animation-timeline: scroll(root);
+    animation-range: 40px 320px;
+  }
+}
+
+@keyframes cueLeave {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cueRing,
+  .cueArrow,
+  .cueBadge::before,
+  .cueBadge::after {
+    animation: none;
+  }
+
+  .cueBadge::before,
+  .cueBadge::after {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .cueBadge {
+    width: 104px;
+    height: 104px;
+  }
+
+  .cueArrow {
+    font-size: 32px;
+  }
+}
+
+/* ---------- The river journey ---------- */
+
+/* One fixed 3D world behind the page. Hero, interlude and contact are windows
+   onto it; Selected Work and About are opaque sheets that slide over it. */
+.journey {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--river-bg);
+  pointer-events: none;
+}
+
+.journey canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  max-width: none;
+  image-rendering: pixelated;
+}
+
+.root main,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+.work,
+.about {
+  /* a hairline where a sheet meets the river */
+  box-shadow: 0 -1px 0 var(--river-border), 0 1px 0 var(--river-border);
+}
+
+/* --- The stretch between Work and About: nothing but the river going by, with the
+   stages of the journey standing on its bank as landmarks. --- */
+
+/* The Experience link scrolls to this point rather than to the top of the window,
+   so the camera has already reached the first stage. */
+.interludeAnchor {
+  position: absolute;
+  left: 0;
+  top: calc(31.3vh + var(--river-header)); /* the first stage's stop, so the link and the snapping agree */
+  width: 1px;
+  height: 1px;
+}
+
+.interlude {
+  position: relative;
+  height: 430vh; /* one screen to arrive; then, for each of the five stages, a stop and a run on to the next; one screen to leave */
+  /* the cards inside are fixed to the viewport; this keeps them within the window,
+     so the sheets above and below cover them just as they cover the scene */
+  clip-path: inset(0);
+}
+
+/* Cards pinned to the 3D node markers. Journey.tsx positions them every frame. */
+.nodes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.node {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: 232px;
+  background: #fafaf8;
+  border: 1px solid #242424;
+  border-radius: 6px;
+  color: #141414;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+  box-shadow: 0 0 0 #242424;
+  /* a spring: overshoots and rings down. Browsers without linear() get a single overshoot. */
+  --node-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* opening: the card springs wider and lifts, then the detail unfolds and settles in */
+  transition:
+    width 620ms var(--node-spring),
+    box-shadow 620ms var(--node-spring);
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  .node {
+    --node-spring: linear(
+      0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163,
+      1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%,
+      1.003 76.9%, 1.004 83.8%, 1
+    );
+  }
+}
+
+.node[data-open] {
+  width: 304px;
+  z-index: 3;
+  box-shadow: 5px 5px 0 #242424;
+}
+
+/* stem down to the marker */
+.node::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 14px;
+  background: #242424;
+}
+
+.nodeButton {
+  display: block;
+  width: 100%;
+  padding: 10px 12px 11px;
+  border: 0;
+  border-radius: 5px;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.nodeButton:hover {
+  background: #f0efea;
+}
+
+.nodeYears {
+  display: flex;
+  gap: 10px;
+  font-family: var(--river-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: #666666;
+}
+
+.nodeToggle {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  margin-top: -2px;
+  border: 1px solid #242424;
+  border-radius: 50%;
+  font-size: 13px;
+  line-height: 1;
+  color: #141414;
+  transition:
+    transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 300ms ease,
+    color 300ms ease;
+}
+
+.nodeButton:hover .nodeToggle {
+  transform: rotate(90deg);
+}
+
+.node[data-open] .nodeToggle {
+  background: #141414;
+  color: #ffffff;
+  transform: rotate(135deg);
+}
+
+.nodeRole {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--river-display);
+  text-transform: uppercase;
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.nodePlace {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--river-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  color: #666666;
+}
+
+/* Height animates through a grid row going from 0fr to 1fr, so it works for any amount of text. */
+.nodeMore {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 620ms var(--node-spring);
+}
+
+.node[data-open] .nodeMore {
+  grid-template-rows: 1fr;
+}
+
+.nodeMoreInner {
+  min-height: 0;
+  overflow: hidden;
+  padding-inline: 12px;
+}
+
+.nodeBody,
+.nodeMethod {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+/* the two blocks arrive one after the other once the card has made room */
+.node[data-open] .nodeBody,
+.node[data-open] .nodeMethod {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 380ms ease 160ms,
+    transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1) 160ms;
+}
+
+.node[data-open] .nodeMethod {
+  transition-delay: 260ms;
+}
+
+.nodeBody {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #d8d8d6;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #444444;
+}
+
+.nodeMethod {
+  display: grid;
+  gap: 3px;
+  margin: 12px 0 0;
+  padding-bottom: 13px;
+  font-family: var(--river-sans);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.nodeMethod span {
+  font-family: var(--river-mono);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: #666666;
+}
+
+/* No WebGL: no scene to pin to, so the stages read as an ordinary list. */
+.interlude[data-river-static] {
+  height: auto;
+  clip-path: none;
+  padding: var(--river-section) var(--river-margin);
+}
+
+.interlude[data-river-static] .nodes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+  gap: var(--river-gap);
+  max-width: 1320px;
+  margin-inline: auto;
+}
+
+.interlude[data-river-static] .node {
+  position: static;
+  width: auto;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.interlude[data-river-static] .node::after {
+  display: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The fish while it is out of the water: a small canvas that flies above the sheets. */
+.flyer {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 45;
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  pointer-events: none;
+  image-rendering: pixelated;
+  will-change: transform;
+}
+
+@media (max-width: 767px) {
+  .heroScene {
+    min-height: 380px;
+  }
+
+  .contact {
+    padding-bottom: 380px;
+  }
+
+  .node {
+    width: 190px;
+  }
+
+  .node[data-open] {
+    width: min(280px, calc(100vw - 32px));
+  }
+
+  .nodeRole {
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+}

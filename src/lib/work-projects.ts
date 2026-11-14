@@ -76,7 +76,7 @@ export const productProjects: WorkProject[] = [
   {
     title: 'ConnectNova',
     category: 'Founding Designer',
-    time: '2026 – Present',
+    time: '2026 – Jun 2026',
     tags: ['AI Recruiting', 'Design-to-Code'],
     description: 'Designed and built a recruiting workflow from candidate collection and AI ranking to human review and outreach.',
     impact: { value: '~500 in 5–10 min', label: 'candidates ranked, vs an estimated 2–5 h by hand' },
@@ -90,8 +90,8 @@ export const productProjects: WorkProject[] = [
   },
   {
     title: 'JobNova',
-    category: 'Lead Designer',
-    time: '2025 – Present',
+    category: 'Founding Designer',
+    time: '2025 – Jun 2026',
     tags: ['AI Agents', 'Data-Informed UX'],
     description: 'Designed a job-search agent with review and authorization controls; used an onboarding A/B test to choose the shipped flow.',
     impact: { value: '73% → 96%', label: 'onboarding completion in a one-week A/B test (100+ users)' },

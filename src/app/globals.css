@@ -2447,3 +2447,9 @@ body.no-scroll {
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='white' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
   cursor: pointer;
 }
+
+/* 首页只用纸和墨两种材质：正文容器跟着 hero 走，白色只留给卡片封面和图框 */
+html.mei-home .mei-page-root,
+html.mei-home .mei-page-surface {
+  background-color: var(--mei-paper);
+}

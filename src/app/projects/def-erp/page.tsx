@@ -701,6 +701,24 @@ function HonestStatusSection() {
         </div>
       </div>
 
+      <p className="m-0 max-w-[880px] text-[17px] font-normal leading-[1.6] text-[#3b3b3b]" style={bodyStyle}>
+        The customer-facing half is the piece still half-moved. <strong className="font-bold text-[#161616]">The storefront salons actually order from is a WeChat mini-program</strong>, and its home page used to be assembled inside a third-party SaaS console: banner, categories, brand row, promo image, edited in a tool that knew nothing about this platform&apos;s products or stock. The new home is built from storefront modules that live in the ERP &#8212; announcement, carousel, category links, brand zone, a limited-time group &#8212; each one configured on the same screens that own the product data.
+      </p>
+      <div className="mx-auto w-full max-w-[420px]">
+        <BeforeAfterSlider
+          beforeSrc="/img/def-erp/storefront-home-before.webp"
+          beforeAlt="The old WeChat mini-program home page, run from a third-party SaaS backend: announcement strip, search, banner carousel, eight category icons, and a scrolling row of brand logos."
+          beforeLabel="Before"
+          afterSrc="/img/def-erp/storefront-home-after.webp"
+          afterAlt="The rebuilt storefront home: search, banner carousel, announcement, the same eight categories, a brand zone, and a limited-time product group, all configured from the ERP's storefront decoration screen."
+          afterLabel="After"
+          aspectRatio={0.597}
+        />
+      </div>
+      <FigureCaption>
+        Both shots are the mini-program home, cropped to the page body. The layout stayed familiar on purpose &#8212; salons re-order from muscle memory &#8212; while every block behind it became something the team edits in the ERP instead of in a separate console.
+      </FigureCaption>
+
       <div className="case-radius-lg overflow-hidden border border-[#e2e2e2]">
         <div className="border-b border-[#e2e2e2] bg-[#eef5ff] px-[clamp(18px,2.6vw,24px)] py-3">
           <p className="m-0 text-[11px] font-bold uppercase tracking-[0.05em]" style={{ ...bodyStyle, color: accent }}>What&apos;s next</p>

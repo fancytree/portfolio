@@ -117,7 +117,7 @@ export default function WorkProjectRows({ items, animatedCovers = false }: { ite
                   {project.tags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md bg-[#f2f2f2] px-1.5 py-0.5 text-[10px] text-[#000]"
+                      className="rounded-md bg-[#0a0a0a]/[0.055] px-1.5 py-0.5 text-[10px] text-[#0a0a0a]"
                       style={fontBody}
                     >
                       {tag}

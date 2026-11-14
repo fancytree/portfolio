@@ -35,9 +35,28 @@ function CardBody({ item }: { item: PlaygroundItem }) {
   }
 }
 
-export default function PlaygroundCard({ item }: { item: PlaygroundItem }) {
+// what the title bar calls each kind of card
+const KIND: Record<PlaygroundItem['kind'], string> = {
+  experience: 'Experience',
+  quote: 'Note',
+  image: 'Image',
+  video: 'Video',
+  interactive: 'Interactive',
+};
+
+export default function PlaygroundCard({ item, index }: { item: PlaygroundItem; index: number }) {
   return (
     <article className={styles.card} data-kind={item.kind}>
+      {/* a window's title bar, as on the homepage's work cards: index, kind, three squares */}
+      <div className={styles.cardBar} aria-hidden="true">
+        <span className={styles.cardNo}>{String(index + 1).padStart(2, '0')}</span>
+        <span>{KIND[item.kind]}</span>
+        <span className={styles.cardSquares}>
+          <i />
+          <i />
+          <i />
+        </span>
+      </div>
       <CardBody item={item} />
     </article>
   );

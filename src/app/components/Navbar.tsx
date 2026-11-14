@@ -8,7 +8,6 @@ import { usePathname } from 'next/navigation';
 
 const navLinks: { href: string; label: string; target?: '_blank' }[] = [
   { href: '/#work', label: 'Work' },
-  { href: '/#strategy', label: 'Strategy' },
   { href: '/#about', label: 'About me' },
   { href: '/playground', label: 'Playground' },
   { href: '/MeiChai_Product_Designer_Resume.pdf', label: 'Resume', target: '_blank' },

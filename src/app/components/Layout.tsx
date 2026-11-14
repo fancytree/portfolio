@@ -33,7 +33,8 @@ export default function Layout({ children }: LayoutProps) {
 
   // /demos/* 是给 iframe 嵌入和全屏体验用的裸舞台：
   // 导航、footer、居中容器都会挤占 demo 的空间，这里一律不渲染。
-  if (pathname?.startsWith("/demos/")) {
+  // 首页（/）和 Playground 用河流首页的独立版面，自带 header / footer。
+  if (pathname?.startsWith("/demos/") || pathname === "/" || pathname === "/playground") {
     return <>{children}</>;
   }
 
@@ -42,14 +43,14 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     // 外层容器：全屏高度，背景色和基础字体
-    <div className="min-h-screen text-zinc-900" style={{ backgroundColor: '#FFFFFF' }}>
+    <div className="mei-page-root min-h-screen bg-white text-zinc-900">
       {/* 顶部导航栏 */}
       <Navbar />
       <CustomCursor />
 
       {/* 正文：相对定位 + 不透明背景，盖住下方 fixed footer；底部用 margin 留出 footer 高度的滚动距离。
           margin 不属于白色背景区域，所以滚动到底时不会把 fixed footer 遮住。 */}
-      <div className="relative z-10 bg-white" style={{ marginBottom: footerHeight }}>
+      <div className="mei-page-surface relative z-10 bg-white" style={{ marginBottom: footerHeight }}>
         {/* 主体内容区域：为 fixed 导航预留顶部内边距（pt-12 = 48px，适应 48px 高度的导航栏），水平居中、限制最大宽度 max-w-7xl */}
         <main
           className={

@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
         destination: "/projects/procurement-agent-v2",
         permanent: false,
       },
+      // the river page was built at /river before it became the homepage
+      {
+        source: "/river",
+        destination: "/",
+        permanent: false,
+      },
     ];
   },
   async rewrites() {

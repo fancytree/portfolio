@@ -101,36 +101,8 @@ export const playgroundItems: PlaygroundItem[] = [
     height: 608,
   },
   {
-    // 同一期 Lenny's Podcast（约 22:22–27:34），他讲人类还剩下什么时的原句
-    id: 'quote-ian-silber-feedback',
-    kind: 'quote',
-    text: 'The human feedback loop of watching people use something and understanding that.',
-    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
-  },
-  {
-    // 摘自 Lenny's Podcast 访谈（约 22:22–27:34），去掉口头语、用省略号拼接原句
-    id: 'quote-ian-silber',
-    kind: 'quote',
-    text: "I think it already is an incredible product designer. That doesn't necessarily mean that it's the best visual designer, or best at information hierarchy, or even interaction design. … Truly understanding what people need. Inventing something new. Somebody had a point of view about this.",
-    source: "Ian Silber, Head of Product Design at OpenAI, on Lenny's Podcast",
-  },
-  {
-    // Lenny's Podcast《AI's third era: the rise of persistent AI coworkers》开场（00:00）的原句
-    id: 'quote-tara-seshan-third-era',
-    kind: 'quote',
-    text: 'That third era that might come soon is how do you work with a persistent coworker who is able to get things done with you?',
-    source: "Tara Seshan, Product Lead for ChatGPT Work at OpenAI, on Lenny's Podcast",
-  },
-  {
     id: 'interactive-torn-mesh',
     kind: 'interactive',
     component: 'torn-mesh',
-  },
-  {
-    // 同一期 Lenny's Podcast（约 27:39）的原句
-    id: 'quote-tara-seshan-build-horizon',
-    kind: 'quote',
-    text: 'You fail if you build for where the models are now. You fail if you build for where you think the models will be in a year. Both outcomes are equally wrong.',
-    source: "Tara Seshan, Product Lead for ChatGPT Work at OpenAI, on Lenny's Podcast",
   },
 ];
