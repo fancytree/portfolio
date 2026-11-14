@@ -1,9 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { Compass, Eye, RotateCcw, ShieldCheck } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { CaseButton } from '../../components/case-kit/CaseButton';
-import { CaseEvidenceCards, CaseInteractivePreview, CaseProse } from '../../components/case-kit/CaseKit';
+import { CaseInteractivePreview } from '../../components/case-kit/CaseKit';
 
 type Facet = { id: string; label: string; title: string; phase: string; problem: string; design: string; goal: string };
 const steps: Facet[] = [
@@ -56,38 +55,71 @@ const checks: Record<string, [string, string]> = {
  'E':['Control the checking cadence instead of exposing internal resource machinery.','Avoid duplicate drafts; history preview should not regenerate the plan.'],
  'F':['Use task scenarios, activity, and role feedback to evaluate the design.','Observe outcomes, process, trust, and recovery separately; do not invent measured impact.'],
 };
-function ExperienceCard({item}:{item:Facet}) {
+function ExperienceCard({item,phase}:{item:Facet;phase:string}) {
  const [revision,setRevision]=useState(0);
  return <article id={`experience-facet-${item.id}`} className="min-w-0 overflow-hidden rounded-[var(--case-radius-media)] border border-[var(--case-rule)] bg-[var(--case-bg)]" aria-label={`${item.id} / ${item.title}`}>
-   <div className="flex items-center justify-between gap-[var(--case-space-8)] border-b border-[var(--case-rule)] px-[var(--case-space-24)] py-[var(--case-space-8)]">
-     <span data-case-type="caption">{item.id} / {item.title}</span>
-     <CaseButton variant="text" aria-label={`Reset ${item.title}`} onClick={()=>setRevision(value=>value+1)}>Reset</CaseButton>
-   </div>
    <CaseInteractivePreview key={revision} src={`/demos/procurement-agent/index.html?facet=${item.id}&revision=${revision}`} title={`Interactive design: ${item.title}`} />
-   <div className="flex flex-col gap-[var(--case-space-16)] border-t border-[var(--case-rule)] p-[var(--case-space-24)]">
-     <h4 data-case-type="small-title">{item.id} / {item.title}</h4>
-     <div data-case-type="card-body" className="flex flex-col gap-[var(--case-space-16)]">
-       <p><strong>User need.</strong> {item.problem}</p>
-       <p><strong>Design.</strong> {item.design}</p>
-       <p><strong>Goal.</strong> {item.goal}</p>
-       <p><strong>Trade-off.</strong> {checks[item.id][0]}</p>
-       <p><strong>Experience check.</strong> {checks[item.id][1]}</p>
+   <div className="flex flex-col gap-[var(--case-space-12)] border-t border-[var(--case-rule)] p-[var(--case-space-24)]">
+     <div className="flex items-center justify-between gap-[var(--case-space-8)]">
+       <span data-case-type="spec">{phase} · {item.id}</span>
+       <CaseButton variant="text" aria-label={`Reset ${item.title}`} onClick={()=>setRevision(value=>value+1)}>Reset</CaseButton>
      </div>
+     <h4 data-case-type="small-title">{item.title}</h4>
+     <p data-case-type="card-body"><strong>{item.goal}</strong></p>
+     <details className="group">
+       <summary data-case-type="caption" className="cursor-pointer list-none underline underline-offset-4">Why and how</summary>
+       <div data-case-type="card-body" className="mt-[var(--case-space-12)] flex flex-col gap-[var(--case-space-12)]">
+         <p><strong>User need.</strong> {item.problem}</p>
+         <p><strong>Design.</strong> {item.design}</p>
+         <p><strong>Trade-off.</strong> {checks[item.id][0]}</p>
+       </div>
+     </details>
    </div>
  </article>;
 }
 export default function ProcurementExperienceMap() {
- return <div className="flex min-w-0 flex-col gap-[var(--case-space-64)]" aria-label="Agent UX Map: 12 Steps + 6 Themes">
-  <CaseEvidenceCards label="Four experience goals" items={[
-   {icon:<Eye/>,title:'Explainable',body:'Show the basis for a quantity and state the result clearly.'},
-   {icon:<ShieldCheck/>,title:'Controllable',body:'Delegate preparation while people confirm responsibility.'},
-   {icon:<Compass/>,title:'Predictable',body:'Set expectations for the output and the next action.'},
-   {icon:<RotateCcw/>,title:'Recoverable',body:'Preserve completed work and let users safely continue.'},
-  ]}/>
-  {phases.map(phase=><section id={`experience-${phase.id}`} key={phase.id} className="flex min-w-0 scroll-mt-[var(--case-space-chapter)] flex-col gap-[var(--case-space-24)]" aria-label={phase.title}>
-   <CaseProse><h3>{phase.range} / {phase.title}</h3><p>{phase.description}</p></CaseProse>
-   <div className="grid min-w-0 gap-[var(--case-space-24)] grid-cols-1 md:grid-cols-2">{phase.items.map(item=><ExperienceCard key={item.id} item={item}/>)}</div>
-  </section>)}
+ const [active,setActive]=useState(phases[0].id);
+ const sections=useRef<Record<string,HTMLElement|null>>({});
+ const strip=useRef<HTMLDivElement>(null);
 
+ // On narrow screens the strip scrolls sideways; keep the active tab in view without moving the page.
+ useEffect(()=>{
+  const bar=strip.current; const tab=bar?.querySelector<HTMLElement>('[aria-pressed="true"]');
+  if(bar&&tab) bar.scrollTo({left:tab.offsetLeft-(bar.clientWidth-tab.offsetWidth)/2,behavior:'smooth'});
+ },[active]);
+
+ // The tab strip follows the reader: whichever phase crosses the upper part of the viewport is active.
+ useEffect(()=>{
+  const visible=new Map<string,number>();
+  const observer=new IntersectionObserver(entries=>{
+   entries.forEach(entry=>{
+    const id=(entry.target as HTMLElement).dataset.phase??'';
+    if(entry.isIntersecting) visible.set(id,entry.boundingClientRect.top); else visible.delete(id);
+   });
+   const first=phases.find(phase=>visible.has(phase.id));
+   if(first) setActive(first.id);
+  },{rootMargin:'-30% 0px -60% 0px'});
+  phases.forEach(phase=>{const el=sections.current[phase.id]; if(el) observer.observe(el);});
+  return ()=>observer.disconnect();
+ },[]);
+
+ const jump=(id:string)=>{
+  setActive(id);
+  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  sections.current[id]?.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+ };
+
+ return <div className="flex min-w-0 flex-col gap-[var(--case-space-32)]" aria-label="Agent UX Map: 12 Steps + 6 Themes">
+  <div className="sticky top-[48px] z-10 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-[var(--case-bg)] before:content-['']">
+   <div ref={strip} className="overflow-x-auto border-b border-[var(--case-rule)] py-[var(--case-space-12)]">
+    <div className="flex w-max gap-[var(--case-space-8)]" role="group" aria-label="Phases of the experience; follows your scroll">
+     {phases.map(item=><CaseButton key={item.id} variant="tab" aria-pressed={item.id===active} onClick={()=>jump(item.id)}>{item.title}</CaseButton>)}
+    </div>
+   </div>
+  </div>
+  {phases.map(phase=><section key={phase.id} id={`experience-${phase.id}`} data-phase={phase.id} ref={el=>{sections.current[phase.id]=el;}} className="flex min-w-0 scroll-mt-[120px] flex-col gap-[var(--case-space-24)]" aria-label={phase.title}>
+   <p data-case-type="body"><strong>{phase.range} · {phase.title}.</strong> {phase.description}</p>
+   <div className="grid min-w-0 grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-2">{phase.items.map(item=><ExperienceCard key={item.id} item={item} phase={phase.title}/>)}</div>
+  </section>)}
  </div>;
 }

@@ -18,6 +18,9 @@
   --case-subtle-inverse: rgb(255 255 255 / 0.5);
   --case-subtle: var(--case-subtle-default);
   --case-rule: rgb(0 0 0 / 0.16);
+  /* Flow diagrams only: where a purchase record breaks, and where it stays connected. */
+  --case-flow-break: #d92d20;
+  --case-flow-link: #1d4ed8;
   --case-demo-viewport-width: 1440px;
   --case-demo-viewport-height: 1000px;
   --case-demo-viewport-ratio: 1440 / 1000;

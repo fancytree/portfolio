@@ -272,3 +272,43 @@
 
 /* Prominent statistics share the heading face; labels keep the body face. */
 .case-kit.mei-project-page [data-case-type='stat'] { font-family: var(--case-font-heading); }
+
+/* Decision cards and reversal list (Procurement Agent case). Tokens only. */
+.case-decisions,
+.case-reversals { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--case-space-24); }
+.case-decision { border: var(--case-border-width) solid var(--case-rule); border-radius: var(--case-radius-md); background: var(--case-bg); overflow: hidden; }
+.case-decision-head { display: grid; grid-template-columns: auto 1fr; gap: var(--case-space-8) var(--case-space-16); align-items: baseline; padding: var(--case-space-24) var(--case-space-24) var(--case-space-16); }
+.case-decision-num { font-family: var(--case-font-heading); font-size: var(--case-type-caption); color: var(--case-muted); }
+.case-decision-question { margin: 0; font-family: var(--case-font-body); font-size: var(--case-type-subsection); font-weight: var(--case-weight-strong); color: var(--case-ink); line-height: 1.25; }
+.case-decision-source { grid-column: 2; font-family: var(--case-font-code); font-size: var(--case-type-spec); color: var(--case-subtle); }
+.case-decision-options { list-style: none; margin: 0; padding: 0 var(--case-space-24); display: flex; flex-direction: column; gap: var(--case-space-8); }
+.case-decision-option { display: grid; grid-template-columns: var(--case-space-24) 1fr; gap: var(--case-space-12); padding: var(--case-space-12) var(--case-space-16); border-radius: var(--case-radius-sm); border-left: var(--case-focus-width) solid transparent; color: var(--case-muted); }
+.case-decision-option.is-chosen { background: var(--case-surface); border-left-color: var(--case-flow-link); color: var(--case-ink); }
+.case-decision-mark { font-weight: var(--case-weight-strong); color: var(--case-subtle); }
+.is-chosen .case-decision-mark { color: var(--case-flow-link); }
+.case-decision-text { display: flex; flex-direction: column; gap: 2px; }
+.case-decision-label { font-family: var(--case-font-body); font-size: var(--case-type-card-body); font-weight: var(--case-weight-strong); display: flex; flex-wrap: wrap; align-items: center; gap: var(--case-space-8); }
+.case-decision-verdict { font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.45; }
+.case-decision-badge { font-style: normal; font-size: var(--case-type-spec); font-weight: var(--case-weight-strong); padding: 2px var(--case-space-8); border-radius: var(--case-radius-tag); background: var(--case-flow-link); color: var(--case-bg); }
+.case-decision-badge.is-reversed { background: var(--case-flow-break); }
+.case-decision-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: var(--case-space-16) 0 0; border-top: var(--case-border-width) solid var(--case-rule); }
+.case-decision-foot > div { padding: var(--case-space-16) var(--case-space-24); }
+.case-decision-foot > div + div { border-left: var(--case-border-width) solid var(--case-rule); }
+.case-decision-foot dt { font-family: var(--case-font-heading); font-size: var(--case-type-caption); color: var(--case-muted); text-transform: uppercase; margin-bottom: var(--case-space-8); }
+.case-decision-foot dd { margin: 0; font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.5; color: var(--case-copy); }
+
+.case-reversal { display: grid; grid-template-columns: 1fr 1fr 1fr; border: var(--case-border-width) solid var(--case-rule); border-radius: var(--case-radius-md); overflow: hidden; }
+.case-reversal-col { padding: var(--case-space-16) var(--case-space-20); display: flex; flex-direction: column; gap: var(--case-space-8); }
+.case-reversal-col + .case-reversal-col { border-left: var(--case-border-width) solid var(--case-rule); }
+.case-reversal-col p { margin: 0; font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.5; color: var(--case-copy); }
+.case-reversal-tag { font-family: var(--case-font-heading); font-size: var(--case-type-caption); color: var(--case-muted); text-transform: uppercase; }
+.case-reversal-evidence .case-reversal-tag { color: var(--case-flow-break); }
+.case-reversal-after { background: var(--case-surface); }
+.case-reversal-after .case-reversal-tag { color: var(--case-flow-link); }
+.case-reversal-after p { color: var(--case-ink); font-weight: var(--case-weight-strong); }
+.case-reversal-source { font-family: var(--case-font-code); font-size: var(--case-type-spec); color: var(--case-subtle); }
+
+@media (max-width: 767px) {
+  .case-decision-foot, .case-reversal { grid-template-columns: 1fr; }
+  .case-decision-foot > div + div, .case-reversal-col + .case-reversal-col { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
+}
