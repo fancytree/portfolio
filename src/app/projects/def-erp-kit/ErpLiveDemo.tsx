@@ -11,6 +11,9 @@ const results = '.sales-order-zone-toolbar-search div.absolute button';
  * The demo shows the workspace, not the navigation: collapse the app sidebar, remove its toggle,
  * and remove the open-pages tab strip that sits directly above the main area on every page.
  */
+/** Written before each frame loads, so the ERP opens with its sidebar already collapsed. */
+const COLLAPSED = { 'portfolio-demo:def.sidebar.collapsed': '1' };
+
 function collapseSidebar(doc: Document) {
   doc.querySelector<HTMLElement>('button[aria-label="Collapse sidebar"]')?.click();
   const style = doc.createElement('style');
@@ -30,6 +33,7 @@ const items: ShowcaseItem[] = [
       const search = h.find('input[placeholder^="Product / brand"]');
       await h.click(search);
       await h.type(search, 'dye');
+      await h.zoom(h.find('.sales-order-zone-toolbar-search'), 1.5);
       await h.wait(1200);
       await h.click(h.all(results).find((b) => b.textContent?.includes('Majirel')) ?? h.all(results)[1]);
       await h.wait(600);
@@ -39,12 +43,14 @@ const items: ShowcaseItem[] = [
       await h.click(h.find('button', 'Add'));
       await h.wait(900);
       h.say('“dye4.1”: the exact SKU');
+
       await h.type(search, 'dye4.1');
       await h.wait(1300);
       await h.click(h.all(results)[0]);
       await h.wait(900);
       h.say('Totals update in place');
       const up = h.all('button[aria-label="Increase"]')[0];
+      await h.zoom(up, 1.8);
       await h.click(up);
       await h.click(up);
       h.say('Mark a gift');
@@ -65,6 +71,7 @@ const items: ShowcaseItem[] = [
       await h.click(h.find('button', 'Save'));
       await h.wait(900);
       h.say('Paid? How?');
+      await h.zoom(h.find('#checkout-paid'), 1.6);
       await h.click(h.find('#checkout-paid'));
       await h.wait(1300);
       h.say('Taken with them?');
@@ -81,14 +88,17 @@ const items: ShowcaseItem[] = [
     body: 'Shipping and payment tracked apart.',
     script: async (h) => {
       h.say('Shipping and payment apart');
+      await h.zoom(h.all('span, div').find((e) => e.childElementCount === 0 && e.textContent?.trim() === 'Partially shipped')!, 1.8);
       await h.hover(h.all('span, div').find((e) => e.childElementCount === 0 && e.textContent?.trim() === 'Partially shipped')!);
       await h.hover(h.all('span, div').find((e) => e.childElementCount === 0 && e.textContent?.trim() === 'Paid')!);
       h.say('34 of 39 shipped');
       await h.hover(h.all('span, div, p').find((e) => e.childElementCount === 0 && e.textContent?.trim() === 'Shipping progress')!);
       h.say('Every delivery listed');
+      await h.zoomOut();
       await h.click(h.find('button', 'Deliveries'));
       await h.wait(1200);
       h.say('Open, draft, shipped');
+      await h.zoom(h.all('span, div, p').find((e) => e.childElementCount === 0 && e.textContent?.trim() === 'Not shipped')!, 1.6);
       await h.hover(h.all('span, div, p').find((e) => e.childElementCount === 0 && e.textContent?.trim() === 'Not shipped')!);
       await h.hover(h.find('button', 'Confirm shipment'));
       await h.hover(h.find('button', 'View DDT'));
@@ -105,6 +115,7 @@ const items: ShowcaseItem[] = [
       await h.wait(900);
       h.say('Pickup: date, then slot');
       await h.click(inDialog('Pickup'));
+      await h.zoom(h.find('#delivery-pickup-time'), 1.6);
       await h.click(h.find('#delivery-pickup-time'));
       await h.wait(500);
       await h.click(h.all('[role="dialog"] button').find((b) => /^\d{2}\/\d{2}\/\d{4}$/.test(b.textContent?.trim() ?? ''))!);
@@ -113,8 +124,10 @@ const items: ShowcaseItem[] = [
       if (slot) await h.click(slot);
       await h.wait(900);
       h.say('Courier: parcels set the fee');
+      await h.zoomOut();
       await h.click(inDialog('Courier'));
       await h.click(inDialog('Add parcel'));
+      await h.zoom(h.find('#package-0-weight'), 1.6);
       await h.click(h.find('#package-0-weight'));
       await h.type(h.find('#package-0-weight'), '6.6');
       await h.type(h.find('#package-0-length'), '40');
@@ -137,6 +150,7 @@ export function SalesOrderLiveDemo() {
       baseWidth={1480}
       ready='input[aria-label="Qty"]'
       prepare={collapseSidebar}
+      storage={COLLAPSED}
     />
   );
 }
@@ -155,12 +169,14 @@ const purchasing: ShowcaseItem[] = [
       await h.click(h.find('main td p', '▸Reinforced bonder'));
       await h.wait(500);
       const inputs = h.all('main tbody input');
+      await h.zoom(inputs[0], 1.8);
       await h.click(inputs[0]);
       await h.type(inputs[0], '120');
       await h.click(inputs[2]);
       await h.type(inputs[2], '5.2');
       await h.wait(800);
       h.say('Add from the library');
+      await h.zoomOut();
       await h.click(h.find('button', '+ Add product'));
       await h.wait(700);
       const search = h.find('input[aria-label="Search product library"]');
@@ -189,8 +205,10 @@ const purchasing: ShowcaseItem[] = [
       await h.type(h.find('#new-product-cost'), '8.5');
       await h.click(h.find('[role="dialog"] button', 'Add new product'));
       await h.wait(800);
+      await h.zoom(h.leaf('New product · no SKU yet'), 1.8);
       await h.hover(h.leaf('New product · no SKU yet'));
       h.say('Create its SKU here');
+      await h.zoomOut();
       await h.click(h.find('main button', 'Create SKU'));
       await h.wait(800);
       await h.click(h.find('#quick-sku-price'));
@@ -215,9 +233,11 @@ const purchasing: ShowcaseItem[] = [
       await h.upload(h.find('[role="dialog"] input[type="file"]'), 'Conferma-ordine-MNP.pdf');
       await h.wait(3600);
       h.say('Differences marked per line');
+      await h.zoom(h.leaf('Qty 96'), 1.7);
       await h.hover(h.leaf('Qty 96'));
       await h.hover(h.leaf('Supplier-added SKU'));
       h.say('New product: create it here');
+      await h.zoomOut();
       await h.click(h.find('main button', 'Create SKU'));
       await h.wait(700);
       await h.click(h.find('#quick-sku-price'));
@@ -227,6 +247,7 @@ const purchasing: ShowcaseItem[] = [
       await h.hover(h.leaf('New SKU created'));
       await h.hover(h.leaf('Price +'));
       h.say('Total shows the change');
+      await h.zoom(h.leaf('€178.80 lower'), 1.7);
       await h.hover(h.leaf('€178.80 lower'));
       await h.hover(h.find('button', 'Mark as ordered'));
       await h.wait(900);
@@ -243,6 +264,7 @@ const purchasing: ShowcaseItem[] = [
       await h.upload(h.find('[role="dialog"] input[type="file"]'), 'DDT-MNP-0113.pdf');
       await h.wait(3000);
       h.say('Short, matching, over');
+      await h.zoom(h.leaf('Short vs confirmation'), 1.7);
       await h.hover(h.leaf('Short vs confirmation'));
       await h.hover(h.leaf('Matches confirmation'));
       await h.hover(h.leaf('More than confirmed'));
@@ -258,6 +280,7 @@ const purchasing: ShowcaseItem[] = [
     body: 'Unconfirmed goods: return, gift or stock.',
     script: async (h) => {
       h.say('Arrived, but never confirmed');
+      await h.zoom(h.leaf('Not on confirmation'), 1.8);
       await h.hover(h.leaf('Not on confirmation'));
       h.say('Three ways to handle it');
       await h.click(h.find('main button', 'Return'));
@@ -268,6 +291,7 @@ const purchasing: ShowcaseItem[] = [
       await h.wait(700);
       await h.hover(h.leaf('Gift · not stocked'));
       h.say('Ready to receive');
+      await h.zoomOut();
       await h.click(h.find('button', 'Confirm receipt'));
       await h.wait(900);
       await h.hover(h.leaf('PO receipt progress'));
@@ -279,8 +303,10 @@ const purchasing: ShowcaseItem[] = [
     body: 'Wait, delay, close or return the rest.',
     script: async (h) => {
       h.say('Some lines didn\'t arrive');
+      await h.zoom(h.leaf('Not on DDT'), 1.8);
       await h.hover(h.leaf('Not on DDT'));
       h.say('Decide what happens');
+      await h.zoomOut();
       await h.click(h.find('button', 'Handle remaining goods'));
       await h.wait(800);
       await h.hover(h.leaf('Wait for next batch'));
@@ -293,6 +319,7 @@ const purchasing: ShowcaseItem[] = [
       await h.click(h.find('[role="dialog"] button', 'Save'));
       await h.wait(900);
       h.say('Decision on the order');
+      await h.zoom(h.find('[data-remaining-decision] p'), 1.7);
       await h.hover(h.find('[data-remaining-decision] p'));
       await h.hover(h.leaf('Delayed'));
       await h.wait(900);
@@ -310,6 +337,7 @@ export function PurchasingLiveDemo() {
       baseWidth={1480}
       ready="main button"
       prepare={collapseSidebar}
+      storage={COLLAPSED}
     />
   );
 }
@@ -329,9 +357,11 @@ const invoicing: ShowcaseItem[] = [
     body: 'Start from orders, not a blank invoice.',
     script: async (h) => {
       h.say('What\'s waiting');
+      await h.zoom(within(h, 'main', 'Orders to invoice'), 1.6);
       await h.hover(within(h, 'main', 'Orders to invoice'));
       await h.hover(within(h, 'main', 'Total to invoice'));
       h.say('One tab per stage');
+      await h.zoomOut();
       await h.click(h.find('main button', 'No number'));
       await h.wait(700);
       await h.click(h.find('main button', 'Invoiced'));
@@ -361,6 +391,7 @@ const invoicing: ShowcaseItem[] = [
       await h.click(h.find('[role="dialog"] [role="tab"]', 'Paid'));
       await h.wait(800);
       h.say('Gifts left out');
+      await h.zoom(within(h, '[role="dialog"]', 'Remainder after'), 1.6);
       await h.hover(within(h, '[role="dialog"]', 'Remainder after'));
       await h.hover(within(h, '[role="dialog"]', 'Gift'));
       h.say('Enter the amount paid');
@@ -394,6 +425,7 @@ const invoicing: ShowcaseItem[] = [
         await h.wait(1300);
       }
       h.say('Who, and how paid');
+      await h.zoom(within(h, '[role="dialog"]', 'Cedente/prestatore'), 1.6);
       await h.hover(within(h, '[role="dialog"]', 'Cedente/prestatore'));
       await h.hover(within(h, '[role="dialog"]', 'Modalità di pagamento'));
       h.say('Tax per line');
@@ -414,6 +446,7 @@ export function InvoicingLiveDemo() {
       baseWidth={1480}
       ready="main table"
       prepare={collapseSidebar}
+      storage={COLLAPSED}
     />
   );
 }
@@ -463,6 +496,9 @@ const builder: ShowcaseItem[] = [
       await h.click(text);
       await h.type(text, 'New: free delivery in Italy over €120');
       await h.wait(900);
+      await h.zoom(h.find('main iframe'), 1.6);
+      await h.wait(900);
+      await h.zoomOut();
       await h.hover(h.find('main iframe'));
       h.say('Hide, don\'t delete');
       await h.click(h.find('main button', 'Banner carousel'));
@@ -500,6 +536,7 @@ const builder: ShowcaseItem[] = [
       await followInPhone(h);
       await h.click(h.find('main button', 'Two per row'));
       await h.wait(700);
+      await h.zoom(h.find('main iframe'), 1.6);
       await h.hover(h.find('main iframe'));
       await h.wait(900);
     },
@@ -516,6 +553,9 @@ const builder: ShowcaseItem[] = [
       await h.wait(900);
       await h.click(h.find('[role="switch"][aria-label="Show shortcut 脱毛产品"]'));
       await h.wait(900);
+      await h.zoom(h.find('main iframe'), 1.6);
+      await h.wait(700);
+      await h.zoomOut();
       await h.hover(h.find('main iframe'));
       h.say('Key brand first');
       await h.click(h.find('main button', 'Brand collection'));
@@ -546,6 +586,9 @@ const builder: ShowcaseItem[] = [
       h.say('Grid or swipe row');
       await h.click(h.find('main button', 'Swipe row'));
       await followInPhone(h);
+      await h.zoom(h.find('main iframe'), 1.6);
+      await h.wait(700);
+      await h.zoomOut();
       h.say('Feature one product');
       await h.click(addOrSelect(h, 'Single product'));
       await h.wait(900);
@@ -575,6 +618,7 @@ const builder: ShowcaseItem[] = [
       // A code may already exist for this customer; regenerating shows the same step.
       await h.click(h.all('main button').find((b) => /^(Generate pairing code|Regenerate)/.test(b.textContent?.trim() ?? ''))!);
       await h.wait(1200);
+      await h.zoom(h.leaf('Waiting to be used'), 1.7);
       await h.hover(h.leaf('Waiting to be used'));
       h.say('7 days, single use');
       await h.hover(h.leaf('Valid until'));
@@ -596,6 +640,7 @@ export function StorefrontBuilderLiveDemo() {
       baseWidth={1480}
       ready="main iframe"
       prepare={collapseSidebar}
+      storage={COLLAPSED}
     />
   );
 }

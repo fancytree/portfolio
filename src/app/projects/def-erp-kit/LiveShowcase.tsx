@@ -20,7 +20,7 @@ export type ShowcaseItem = {
 };
 
 /** A list of modules on the left; the real page on the right, played one module at a time. */
-export default function LiveShowcase({ items, src, label, title, baseWidth, ready, prepare }: {
+export default function LiveShowcase({ items, src, label, title, baseWidth, ready, prepare, storage }: {
   items: ShowcaseItem[];
   src: string;
   label: string;
@@ -28,6 +28,7 @@ export default function LiveShowcase({ items, src, label, title, baseWidth, read
   baseWidth?: number;
   ready?: string;
   prepare?: (doc: Document) => void;
+  storage?: Record<string, string>;
 }) {
   const [active, setActive] = useState(0);
   const [auto, setAuto] = useState(true);
@@ -75,6 +76,7 @@ export default function LiveShowcase({ items, src, label, title, baseWidth, read
         baseWidth={baseWidth}
         ready={item.ready ?? ready}
         prepare={prepare}
+        storage={storage}
         resetKey={nonce}
         onProgress={(value, ms) => setProgress({ value, ms })}
         estimateMs={(item.seconds ?? 20) * 1000}

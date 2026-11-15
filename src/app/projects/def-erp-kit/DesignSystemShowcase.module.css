@@ -46,3 +46,7 @@
 .cursorDown::after { transform: scale(2.4); }
 
 .toast, .hint { position: absolute; right: var(--case-space-16); bottom: var(--case-space-16); z-index: 3; pointer-events: none; font-family: var(--case-font-body); font-size: var(--case-type-caption); padding: 8px 16px; border-radius: 999px; background: color-mix(in srgb, var(--case-ink) 62%, transparent); color: var(--case-bg); }
+
+/* Camera: the frame and cursor zoom together, like a screen recording that moves in on detail. */
+.camera { position: absolute; inset: 0; transform-origin: 0 0; transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .camera { transition: none; } }

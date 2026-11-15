@@ -7,6 +7,7 @@ const SRC = '/demos/def-design-system/index.html?view=docs';
 
 /** Jump with the page's own sidebar, the way a visitor would. */
 const go = async (h: Helpers, id: string) => {
+  await h.zoomOut();
   await h.click(h.find(`[data-nav="${id}"]`));
   await h.wait(900);
 };
@@ -36,6 +37,7 @@ const items: ShowcaseItem[] = [
     script: async (h) => {
       await go(h, 'colour');
       h.say('Blue passes AA');
+      await h.zoom(h.find('[data-detail]'), 1.5);
       await h.click(h.find('[data-token="--primary"]'));
       await h.wait(900);
       h.say('Tint for fills only');
@@ -57,9 +59,11 @@ const items: ShowcaseItem[] = [
       h.say('Five radii');
       await each(h, '[data-radius]', 5);
       h.say('4px steps');
+      await h.zoom(h.find('[data-space-demo]'), 1.7);
       await each(h, '[data-space]', 6);
       await go(h, 'icons');
       h.say('20px slot, 1.5px stroke');
+      await h.zoom(h.find('[data-icon-anatomy]'), 1.5);
       await h.hover(h.find('[data-icon-anatomy]'));
       await h.hover(h.find('[data-icon-stroke]'));
       await each(h, '[data-icon-rule]', 4);
@@ -77,9 +81,11 @@ const items: ShowcaseItem[] = [
       await each(h, '[data-icon-button]', 3);
       await go(h, 'forms');
       h.say('Errors by the field');
+      await h.zoom(h.find('#d-invoice'), 1.8);
       await h.click(h.find('#d-invoice'));
       await h.type(h.find('#d-invoice'), 'INV-2026-018');
       h.say('Fast entry');
+      await h.zoomOut();
       await h.click(h.find('input[aria-label="Search SKU or product"]'));
       await h.type(h.find('input[aria-label="Search SKU or product"]'), 'Shampoo');
       const up = h.find('button[aria-label*="Quantity"]');
@@ -96,6 +102,7 @@ const items: ShowcaseItem[] = [
       await each(h, '[data-tag]', 3);
       await go(h, 'progress');
       h.say('Partial is a state');
+      await h.zoom(h.find('[data-section="progress"] [aria-label="Purchase order progress"]'), 1.6);
       await h.click(h.find('button', 'Fully received'));
       await h.wait(700);
       await h.click(h.find('button', 'Partial receipt'));
@@ -117,10 +124,12 @@ const items: ShowcaseItem[] = [
       await h.wait(900);
       await h.click(h.find('[data-viz="kpi"] button', '30 days'));
       h.say('Hover for exact values');
+      await h.zoom(h.find('[data-trend-chart]'), 1.4);
       const chart = h.find('[data-trend-chart]');
       await h.hover(chart);
       await h.wait(1200);
       h.say('One colour per value');
+      await h.zoomOut();
       await each(h, '[data-viz="donut"] [data-slot="donut-legend"] button', 3);
       await each(h, '[data-share-row]', 3);
     },
@@ -134,6 +143,7 @@ const items: ShowcaseItem[] = [
       await h.click(h.find('[data-state-btn="loading"]'));
       await h.wait(700);
       h.say('Empty: why, and what next');
+      await h.zoom(h.find('[data-state-view]'), 1.5);
       await h.click(h.find('[data-state-btn="empty"]'));
       await h.wait(900);
       h.say('Error: retry');
@@ -164,6 +174,7 @@ const items: ShowcaseItem[] = [
       await h.click(h.find('[data-demo="resume"]'));
       await h.wait(1300);
       await h.click(h.find('[role="dialog"] button', 'Replace'));
+      await h.zoomOut();
       h.say('No undo: list consequences');
       await h.click(h.find('[data-demo="stocktake"]'));
       await h.wait(1500);
@@ -173,6 +184,7 @@ const items: ShowcaseItem[] = [
       await h.wait(1500);
       await go(h, 'formats');
       h.say('Tabular digits hold still');
+      await h.zoom(h.find('[data-tabular-demo]'), 1.4);
       await h.hover(h.find('[data-numerals="proportional"]'));
       await h.hover(h.find('[data-numerals="tabular"]'));
       await h.wait(800);

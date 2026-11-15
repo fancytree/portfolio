@@ -58,6 +58,10 @@ export type Helpers = {
   upload: (input: HTMLElement, fileName: string) => Promise<void>;
   click: (el: HTMLElement) => Promise<void>;
   hover: (el: HTMLElement) => Promise<void>;
+  /** Move the camera in on an element; while zoomed, the camera follows the cursor. */
+  zoom: (el: HTMLElement, level?: number) => Promise<void>;
+  /** Pull the camera back to the whole page. */
+  zoomOut: () => Promise<void>;
   /** Click without moving the cursor: for quietly bringing the page to a starting state. */
   tap: (el: HTMLElement) => Promise<void>;
   /** Choose an option in an open select (these respond to the keyboard, not synthetic pointer events). */
@@ -74,7 +78,7 @@ export type Script = (h: Helpers) => Promise<void>;
  * A real, same-origin product page driven by a scripted cursor. The moment the visitor's pointer
  * enters, the script stops and the page is theirs; it resets and replays when they leave.
  */
-export default function LiveDemo({ src, title, script, label, onDriving, onDone, onProgress, prepare, resetKey = 0, estimateMs = 20000, baseWidth = 1100, ready = '[data-nav]', loop = false }: {
+export default function LiveDemo({ src, title, script, label, onDriving, onDone, onProgress, prepare, storage, resetKey = 0, estimateMs = 20000, baseWidth = 1100, ready = '[data-nav]', loop = false }: {
   src: string; title: string; script: Script;
   /** Text in the window's title pill. */
   label: string;
@@ -90,6 +94,8 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
   onDone?: () => void;
   /** Runs once in the loaded page before anything is shown, e.g. to set its layout. */
   prepare?: (doc: Document) => void;
+  /** Storage the framed app reads on start, written before it loads (e.g. a collapsed sidebar). */
+  storage?: Record<string, string>;
   /** Layout width the page is rendered at before it is scaled to fit. */
   baseWidth?: number;
   /** Selector that exists once the page can be driven. */
@@ -101,6 +107,18 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
   const frame = useRef<HTMLIFrameElement>(null);
   const toastTimer = useRef<number>(undefined);
   const [cursor, setCursor] = useState<{ x: number; y: number; down: boolean } | null>(null);
+  const [camera, setCamera] = useState({ x: 0, y: 0, z: 1 });
+  const cameraRef = useRef(1);
+  /** Centre the camera on a point in view coordinates, without showing past the page edges. */
+  const aim = (cx: number, cy: number, z: number) => {
+    const el = wrap.current;
+    cameraRef.current = z;
+    if (!el || z <= 1) { setCamera({ x: 0, y: 0, z: 1 }); return; }
+    const W = el.clientWidth;
+    const H = el.clientHeight;
+    const clamp = (v: number, min: number) => Math.min(0, Math.max(min, v));
+    setCamera({ x: clamp(W / 2 - cx * z, W - W * z), y: clamp(H / 2 - cy * z, H - H * z), z });
+  };
   const [driving, setDriving] = useState(false);
   const [toast, setToast] = useState(false);
   const [run, setRun] = useState(0);
@@ -139,11 +157,15 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
     clearedFor.current = frameKey;
     try {
       Object.keys(localStorage).filter((k) => k.startsWith('portfolio-demo:')).forEach((k) => localStorage.removeItem(k));
+      Object.entries(storage ?? {}).forEach(([k, v]) => localStorage.setItem(k, v));
     } catch { /* storage unavailable */ }
     // The frame may only exist after storage is cleared, so this ordering has to live in an effect.
     setArmed(frameKey);
-  }, [frameKey, visible]);
+  }, [frameKey, visible, storage]);
   const live = armed === frameKey;
+  // The frame stays invisible until the page is ready and set up, so no setup step is ever seen.
+  const [shownFor, setShownFor] = useState<string | null>(null);
+  const shown = shownFor === `${frameKey}|${src}`;
 
 
   useEffect(() => {
@@ -203,12 +225,11 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
         }
         await sleep(750);
       }
-      const f = frame.current!.getBoundingClientRect();
-      const w = wrap.current!.getBoundingClientRect();
       const r = el.getBoundingClientRect();
       const k = scaleRef.current;
-      const x = f.left - w.left + (r.left + Math.min(r.width / 2, 120)) * k;
-      const y = f.top - w.top + (r.top + r.height / 2) * k;
+      const x = (r.left + Math.min(r.width / 2, 120)) * k;
+      const y = (r.top + r.height / 2) * k;
+      if (cameraRef.current > 1) aim(x, y, cameraRef.current);
       setCursor({ x, y, down: false });
       await sleep(800);
       return { x, y };
@@ -270,6 +291,19 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
         advance(150);
         press(el);
         await sleep(150);
+      },
+      zoom: async (el, level = 1.7) => {
+        advance(1000);
+        const r = el.getBoundingClientRect();
+        const k = scaleRef.current;
+        aim((r.left + r.width / 2) * k, (r.top + r.height / 2) * k, level);
+        await sleep(1000);
+      },
+      zoomOut: async () => {
+        if (cameraRef.current <= 1) return;
+        advance(900);
+        aim(0, 0, 1);
+        await sleep(900);
       },
       hover: async (el) => {
         advance(1300);
@@ -333,11 +367,12 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
     (async () => {
       for (let i = 0; i < 100 && !frame.current?.contentDocument?.querySelector(ready); i += 1) await sleep(100);
       contain(frame.current?.contentWindow as Win | null);
-      const f = frame.current!.getBoundingClientRect();
-      const w = wrap.current!.getBoundingClientRect();
-      setCursor({ x: f.width * 0.8, y: f.height * 0.8 + f.top - w.top, down: false });
+      aim(0, 0, 1);
+      const v = wrap.current!;
+      setCursor({ x: v.clientWidth * 0.8, y: v.clientHeight * 0.8, down: false });
       await sleep(900);
       await script(helpers);
+      if (cameraRef.current > 1) { aim(0, 0, 1); await sleep(900); }
       await sleep(1200);
       setCursor(null);
       if (loop) { await sleep(2500); setRun((r) => r + 1); return; }
@@ -348,6 +383,7 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
     return () => {
       token.stop = true;
       setCursor(null);
+      aim(0, 0, 1);
       userEvents.forEach((type) => window.removeEventListener(type, mark, { capture: true }));
       window.removeEventListener('scroll', onScroll);
     };
@@ -368,25 +404,32 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
 
   // Set the page up as soon as it can be driven, whether or not the script runs.
   useEffect(() => {
-    if (!prepare || !live) return;
+    if (!live) return;
     let tries = 0;
+    let reveal = 0;
+    const key = `${frameKey}|${src}`;
     const timer = window.setInterval(() => {
       const doc = frame.current?.contentDocument;
       tries += 1;
-      if (doc?.querySelector(ready)) { window.clearInterval(timer); prepare(doc); }
-      else if (tries > 80) window.clearInterval(timer);
+      if (doc?.querySelector(ready)) {
+        window.clearInterval(timer);
+        prepare?.(doc);
+        reveal = window.setTimeout(() => setShownFor(key), 150);
+      } else if (tries > 80) { window.clearInterval(timer); setShownFor(key); }
     }, 100);
-    return () => window.clearInterval(timer);
-  }, [run, live, prepare, ready, src]);
+    return () => { window.clearInterval(timer); window.clearTimeout(reveal); };
+  }, [run, live, prepare, ready, src, frameKey]);
 
   return (
     <div className={styles.stage} onMouseEnter={takeOver} onMouseLeave={handBack} onTouchStart={takeOver}>
       <div className={styles.browser}>
         <div className={styles.chrome} aria-hidden="true"><i /><i /><i /><span>{label}</span></div>
         <div ref={wrap} className={styles.view}>
-          {live ? <iframe key={frameKey} ref={frame} onLoad={(e) => contain(e.currentTarget.contentWindow as Win | null)} className={styles.liveFrame} style={{ width: baseWidth, height: `${100 / scale}%`, transform: `scale(${scale})` }} src={src} title={title} sandbox="allow-scripts allow-same-origin" referrerPolicy="no-referrer" /> : null}
-          {toast ? <span className={styles.toast} role="status">You are driving</span> : !driving ? <span className={styles.hint} aria-hidden="true">Move the pointer here to use it</span> : null}
+          <div className={styles.camera} style={{ transform: `translate(${camera.x}px, ${camera.y}px) scale(${camera.z})` }}>
+          {live ? <iframe key={frameKey} ref={frame} onLoad={(e) => contain(e.currentTarget.contentWindow as Win | null)} className={styles.liveFrame} style={{ width: baseWidth, height: `${100 / scale}%`, transform: `scale(${scale})`, opacity: shown ? 1 : 0, transition: 'opacity 0.35s ease' }} src={src} title={title} sandbox="allow-scripts allow-same-origin" referrerPolicy="no-referrer" /> : null}
           {cursor ? <span className={`${styles.cursor} ${cursor.down ? styles.cursorDown : ''}`} style={{ transform: `translate(${cursor.x}px, ${cursor.y}px)` }} aria-hidden="true" /> : null}
+          </div>
+          {toast ? <span className={styles.toast} role="status">You are driving</span> : !driving ? <span className={styles.hint} aria-hidden="true">Move the pointer here to use it</span> : null}
         </div>
       </div>
     </div>
