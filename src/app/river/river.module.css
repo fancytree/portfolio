@@ -1750,7 +1750,7 @@ html:has(.root) {
 }
 
 .node[data-open] {
-  width: 304px;
+  width: 320px;
   z-index: 3;
   box-shadow: 5px 5px 0 #242424;
 }
@@ -1759,7 +1759,7 @@ html:has(.root) {
 .node::after {
   content: "";
   position: absolute;
-  left: 50%;
+  left: calc(50% + var(--stem, 0px));
   top: 100%;
   width: 1px;
   height: 14px;
@@ -1856,8 +1856,21 @@ html:has(.root) {
   padding-inline: 12px;
 }
 
-.nodeBody,
-.nodeMethod {
+/* the place and its numbers, then what she did and how */
+.nodeFacts {
+  padding-top: 12px;
+  border-top: 1px solid #d8d8d6;
+}
+
+.nodeWork {
+  padding: 12px 0 13px;
+}
+
+.nodeWork:first-child {
+  border-top: 1px solid #d8d8d6;
+}
+
+.nodeMoreInner > * {
   opacity: 0;
   transform: translateY(8px);
   transition:
@@ -1865,9 +1878,8 @@ html:has(.root) {
     transform 200ms ease;
 }
 
-/* the two blocks arrive one after the other once the card has made room */
-.node[data-open] .nodeBody,
-.node[data-open] .nodeMethod {
+/* the blocks arrive one after the other once the card has made room */
+.node[data-open] .nodeMoreInner > * {
   opacity: 1;
   transform: none;
   transition:
@@ -1875,37 +1887,95 @@ html:has(.root) {
     transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1) 160ms;
 }
 
-.node[data-open] .nodeMethod {
-  transition-delay: 260ms;
+.node[data-open] .nodeMoreInner > :nth-child(2) {
+  transition-delay: 220ms;
 }
 
-.nodeBody {
+/* what the place is, and how big */
+.nodeCompany {
   margin: 0;
-  padding-top: 10px;
-  border-top: 1px solid #d8d8d6;
   font-size: 13px;
-  line-height: 1.55;
+  line-height: 1.5;
+  color: #666666;
+}
+
+/* the numbers the work moved: the loudest thing on the card */
+.nodeImpact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 10px 14px;
+  margin: 10px 0 0;
+}
+
+.nodeImpact dt {
+  font-family: var(--river-display);
+  font-size: 26px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.nodeImpact dd {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
   color: #444444;
 }
 
-.nodeMethod {
+.nodeDid {
   display: grid;
-  gap: 3px;
-  margin: 12px 0 0;
-  padding-bottom: 13px;
-  font-family: var(--river-sans);
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 1.45;
+  gap: 4px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #333333;
 }
 
-.nodeMethod span {
+.nodeDid span {
   font-family: var(--river-mono);
-  font-weight: 400;
   font-size: 11px;
   line-height: 1.4;
   letter-spacing: 0.04em;
   color: #666666;
+}
+
+.nodeListLabel {
+  display: block;
+  margin-top: 12px;
+}
+
+.nodeListLabel:first-child {
+  margin-top: 0;
+}
+
+.nodeListLabel {
+  font-family: var(--river-mono);
+  font-size: 11px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  color: #666666;
+}
+
+.nodeListLabel + .nodeMethods {
+  margin-top: 6px;
+}
+
+.nodeMethods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 10px 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.nodeMethods li {
+  padding: 3px 7px;
+  border: 1px solid #242424;
+  border-radius: 3px;
+  font-family: var(--river-mono);
+  font-size: 10.5px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
 }
 
 /* No WebGL: no scene to pin to, so the stages read as an ordinary list. */
@@ -1972,8 +2042,10 @@ html:has(.root) {
   }
 
   .node[data-open] {
-    width: min(280px, calc(100vw - 32px));
+    width: min(300px, calc(100vw - 32px));
   }
+
+
 
   .nodeRole {
     font-size: 18px;

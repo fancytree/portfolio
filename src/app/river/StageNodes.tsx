@@ -63,11 +63,35 @@ export default function StageNodes() {
             {/* kept in the DOM so it can animate; inert keeps it out of reach while closed */}
             <div id={`stage-more-${i}`} className={s.nodeMore} inert={!isOpen} aria-hidden={!isOpen}>
               <div className={s.nodeMoreInner}>
-                <p className={s.nodeBody}>{stage.body}</p>
-                <p className={s.nodeMethod}>
-                  <span>How the work got made</span>
-                  {stage.method}
-                </p>
+                {(stage.company || stage.impact.length > 0) && (
+                  <div className={s.nodeFacts}>
+                    {stage.company && <p className={s.nodeCompany}>{stage.company}</p>}
+                    {stage.impact.length > 0 && (
+                      <dl className={s.nodeImpact}>
+                        {stage.impact.map((m) => (
+                          <div key={m.value}>
+                            <dt>{m.value}</dt>
+                            <dd>{m.label}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
+                  </div>
+                )}
+                <div className={s.nodeWork}>
+                  {stage.did && (
+                    <p className={s.nodeDid}>
+                      <span>What I did</span>
+                      {stage.did}
+                    </p>
+                  )}
+                  {stage.methodsLabel && <span className={s.nodeListLabel}>{stage.methodsLabel}</span>}
+                  <ul className={s.nodeMethods} aria-label={stage.methodsLabel ?? "Methods and tools"}>
+                    {stage.methods.map((m) => (
+                      <li key={m}>{m}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </li>
