@@ -53,9 +53,23 @@ export const contact = {
 };
 
 // Stages shown in the transition between Selected Work and About.
-// Years, titles and employers follow the CV. `method` is a one-line reading of
-// how the work got made at each stage: editorial copy, meant to be edited.
-export type Stage = { short: string; years: string; role: string; place: string; body: string; method: string };
+// Every figure, title and employer follows the CV; nothing here is estimated.
+//   company : what the place is and how big, where the CV records it
+//   impact  : the numbers her work moved
+//   did     : what she was responsible for
+//   methods : the methods and tools she used there
+export type Stage = {
+  short: string;
+  years: string;
+  role: string;
+  place: string;
+  company?: string;
+  impact: { value: string; label: string }[];
+  did?: string;
+  methods: string[];
+  /** what the tag list is, read out to screen readers; methods and tools unless said */
+  methodsLabel?: string;
+};
 
 export const stages: Stage[] = [
   {
@@ -63,40 +77,61 @@ export const stages: Stage[] = [
     years: "2017 – 2020",
     role: "UX Designer",
     place: "Sohu, Beijing",
-    body: "Interaction and interface design for consumer products: the chat and feed modules of Huyou, and Moke, a tool that turns long-form posts into shareable images.",
-    method: "Design, spec, hand off.",
+    company: "NASDAQ-listed internet company.",
+    // installs: Sohu News, activated installs as publicly reported for Nov 2015
+    impact: [{ value: "350M+", label: "installs of Sohu News, the app I designed for" }],
+    did: "Interaction design for the social side of the app: chat and feed.",
+    methods: ["Research", "Competitive analysis", "Wireframes", "Interaction prototypes"],
   },
   {
     short: "2020",
     years: "2020 – 2022",
     role: "User Research Specialist",
     place: "Smart Walnut Education, Beijing",
-    body: "Two years on the other side of the table: interviews, behavioural patterns, and turning what people actually do into decisions a product team can use.",
-    method: "Listen, synthesise, frame the problem.",
+    company: "Online coding education for children.",
+    impact: [
+      { value: "+15%", label: "user engagement (contributed)" },
+      { value: "+30%", label: "sales (contributed)" },
+    ],
+    did: "Led the research behind product priorities and brand strategy.",
+    methods: ["Interviews", "Personas", "Journey mapping", "NPS"],
   },
   {
     short: "2022",
     years: "2022 – 2025",
     role: "MSc, Digital and Interaction Design",
     place: "Politecnico di Milano",
-    body: "A move to Milan and back to making. Research and design in the same pair of hands, with prototypes as the way to think.",
-    method: "Prototype, test, iterate.",
+    company: "Two-year MSc taught in English, built around design studios.",
+    // QS World University Rankings by Subject 2025, Art & Design
+    impact: [{ value: "#6", label: "in the world for Art & Design (QS 2025)" }],
+    methodsLabel: "Courses",
+    methods: ["UX Design", "Interaction Design", "Service Design", "Hardware & Software for Design", "Prototyping"],
   },
   {
     short: "2024",
     years: "2024 – 2026",
     role: "Founding Designer",
     place: "Liba Space, remote",
-    body: "AI agents that people stay in control of: JobNova's job-search agent and ConnectNova's recruiting workflow, on a shared design system, designed and built in code.",
-    method: "Design the system, ship it in code.",
+    company: "Three AI products, 2,700+ Auto Apply users.",
+    impact: [
+      { value: "~40k", label: "applications sent by Auto Apply" },
+      { value: "73% → 96%", label: "onboarding completion" },
+    ],
+    did: "Led UX across all three, from agent controls to design systems and front-end.",
+    methods: ["Agentic workflows", "Design systems", "Figma", "PostHog"],
   },
   {
     short: "Now",
     years: "2026 – now",
     role: "Freelance Product Designer",
     place: "Milan",
-    body: "An ERP and a procurement agent for DEF Beauty, alongside MemQ and Mono: products taken from first conversation to shipped build with AI as a working partner.",
-    method: "Describe, build, review.",
+    company: "Client: DEF Beauty, a wholesale distributor.",
+    impact: [
+      { value: "5–10 min", label: "per purchase plan, was up to 2 h" },
+      { value: "86%", label: "of orders self-placed by customers" },
+    ],
+    did: "Researched, designed and built an ERP and an AI procurement agent.",
+    methods: ["Workflow observation", "Human-in-the-loop", "AI-assisted development"],
   },
 ];
 

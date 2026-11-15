@@ -134,7 +134,11 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
     // Through the long stretch the camera does not glide: it stops at each stage, so
     // the stage can be read, and runs on to the next. `s` is how far through the
     // stretch the page has scrolled (0..1); the result is the journey progress.
-    const STAGE_P = [0, 1, 2, 3, 4].map((i) => (14 + i * 6 - 0.35 - 0.7) / 59.3); // camera beside stage i, on a river 0.7..60 long
+    // Camera at each stage, on a river 0.7..60 long. It stops a little downstream of the
+    // plateau's centre (stages stand at 14, 20 … 38; markers at +0.98), so the plateau,
+    // its marker and the card above it sit in the middle of the window, with her
+    // (0.35 ahead of the camera) standing on the plateau between them.
+    const STAGE_P = [0, 1, 2, 3, 4].map((i) => (14 + i * 6 + 0.3 - 0.7) / 59.3);
     const DRIFT = 0.006; // while stopped she still eases along a little, so the scene is not frozen
     const LEGS: { to: number; from: number; weight: number; stop: boolean }[] = [];
     {
@@ -175,20 +179,37 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
     // carries on by itself to the stage ahead (in the direction they were going), so
     // it always comes to rest on a stage. Before the first stage and after the last
     // it lets go, so the stretch can be left in either direction.
+    //
+    // One gesture moves one stage at most. A flick on a trackpad, with its momentum,
+    // would otherwise carry the page past two or three stages: the wheel is held at
+    // the next stage until the gesture ends, and a touch swipe that went too far is
+    // brought back to it.
     let snapTimer = 0;
     let snapTo: number | null = null; // where a snap in flight is heading
     let lastY = window.scrollY;
     let heading = 0; // 1 scrolling down, -1 up
+    let gestureFrom: number | null = null; // where the page was when this scroll began
+    // the next stage on from y, in the direction of travel
+    const stageAfter = (stops: number[], y: number, dir: number) =>
+      dir > 0 ? stops.find((stop) => stop > y + 6) : [...stops].reverse().find((stop) => stop < y - 6);
     const settle = () => {
       snapTo = null;
+      const from = gestureFrom ?? window.scrollY;
+      gestureFrom = null;
       const stops = stageStops();
       if (!stops.length) return;
       const y = window.scrollY;
       const near = stops.find((stop) => Math.abs(stop - y) < 6);
       if (near !== undefined) return; // resting on a stage already
-      let target: number | undefined;
-      if (heading >= 0) target = y < stops[stops.length - 1] && y > stops[0] - window.innerHeight * 0.34 ? stops.find((stop) => stop > y) : undefined;
-      else target = y > stops[0] && y < stops[stops.length - 1] + window.innerHeight * 0.34 ? [...stops].reverse().find((stop) => stop < y) : undefined;
+      const vh = window.innerHeight;
+      // released before the first stage or after the last: let the page go
+      if (heading >= 0 && !(y < stops[stops.length - 1] + vh * 0.34 && y > stops[0] - vh * 0.34)) return;
+      if (heading < 0 && !(y > stops[0] - vh * 0.34 && y < stops[stops.length - 1] + vh * 0.34)) return;
+      // the stage after the one the gesture started from, even if the page ran past it
+      let target = stageAfter(stops, from, heading >= 0 ? 1 : -1);
+      if (target === undefined || (heading >= 0 ? target < y - vh * 0.34 : target > y + vh * 0.34)) {
+        target = stageAfter(stops, y, heading >= 0 ? 1 : -1);
+      }
       if (target === undefined) return;
       snapTo = target;
       window.scrollTo({ top: target, behavior: "smooth" });
@@ -197,7 +218,10 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       const y = window.scrollY;
       if (snapTo !== null) {
         if (Math.abs(y - snapTo) < 2) snapTo = null; // arrived
-      } else if (y !== lastY) heading = y > lastY ? 1 : -1;
+      } else if (y !== lastY) {
+        if (gestureFrom === null) gestureFrom = lastY;
+        heading = y > lastY ? 1 : -1;
+      }
       lastY = y;
       window.clearTimeout(snapTimer);
       if (snapTo === null) snapTimer = window.setTimeout(settle, 140); // scrolling has stopped
@@ -205,6 +229,33 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
     // the visitor taking over mid-snap cancels it
     const onSnapInput = () => {
       snapTo = null;
+    };
+    // The wheel, one stage per gesture. Wheel events keep coming through a trackpad's
+    // momentum, but momentum only ever dies away: a gesture ends when the events
+    // pause, turn round, or grow stronger again, which is a new swipe starting.
+    const wheel = { from: 0, dir: 0, at: 0, size: 0 };
+    const onSnapWheel = (e: WheelEvent) => {
+      snapTo = null;
+      const dir = Math.sign(e.deltaY);
+      if (!dir || e.ctrlKey) return; // pinch-zoom arrives as a wheel with ctrl
+      const now = performance.now();
+      const y = window.scrollY;
+      const size = Math.abs(e.deltaY);
+      if (now - wheel.at > 220 || dir !== wheel.dir || size > wheel.size * 1.3 + 2) Object.assign(wheel, { from: y, dir });
+      wheel.at = now;
+      wheel.size = size;
+      const stops = stageStops();
+      if (!stops.length) return;
+      const vh = window.innerHeight;
+      // only inside the stretch: from just before the first stage to just after the last
+      if (wheel.from < stops[0] - vh * 0.34 && dir > 0 && y + e.deltaY < stops[0] - vh * 0.34) return;
+      if (wheel.from > stops[stops.length - 1] + vh * 0.34) return;
+      const target = stageAfter(stops, wheel.from, dir);
+      if (target === undefined) return;
+      const step = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * vh : e.deltaY;
+      if (dir > 0 ? y + step < target : y + step > target) return; // not there yet
+      e.preventDefault();
+      if (Math.abs(y - target) >= 1) window.scrollTo({ top: target, behavior: "instant" });
     };
     const progress = () => progressAt(window.scrollY);
     const progressAt = (y: number) => {
@@ -267,10 +318,18 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
         if (!el) return;
         el.style.opacity = n.k.toFixed(2);
         el.style.visibility = n.k > 0.05 ? "visible" : "hidden"; // out of reach of clicks and focus when gone
-        // hang above the marker, but never slide up under the header
-        const y = Math.max(n.y - 14, HEADER + el.offsetHeight + 12);
+        // hang above the marker; a card too tall for the sky stops short of the header
+        const y = Math.max(n.y - 14, HEADER + el.offsetHeight + 20);
+        // centred on the pole, unless an open card would be pushed off the side of the window:
+        // then it stays in and its stem slides along to keep pointing at the pole
+        const half = el.offsetWidth / 2;
+        const x = el.dataset.open
+          ? Math.min(Math.max(n.x, 16 + half), Math.max(16 + half, window.innerWidth - 16 - half))
+          : n.x; // a closed card just rides off with its node
+        const stem = n.k > 0.05 ? Math.max(-half + 10, Math.min(half - 10, n.x - x)) : 0;
+        el.style.setProperty("--stem", `${stem.toFixed(0)}px`);
         // open or closed, a card rides with its node and leaves the screen with it
-        el.style.transform = `translate3d(${n.x.toFixed(0)}px, ${y.toFixed(0)}px, 0) translate(-50%, -100%)`;
+        el.style.transform = `translate3d(${x.toFixed(0)}px, ${y.toFixed(0)}px, 0) translate(-50%, -100%)`;
       });
     };
     // the world only needs drawing while some window onto it is on screen
@@ -603,7 +662,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
           window.addEventListener("click", onClick);
           document.addEventListener("visibilitychange", onVisibility);
           window.addEventListener("scroll", onSnapScroll, { passive: true });
-          window.addEventListener("wheel", onSnapInput, { passive: true });
+          window.addEventListener("wheel", onSnapWheel, { passive: false });
           window.addEventListener("touchstart", onSnapInput, { passive: true });
           window.addEventListener("keydown", onSnapInput);
           onVisibility();
@@ -624,7 +683,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       window.removeEventListener("click", onClick);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("scroll", onSnapScroll);
-      window.removeEventListener("wheel", onSnapInput);
+      window.removeEventListener("wheel", onSnapWheel);
       window.removeEventListener("touchstart", onSnapInput);
       window.removeEventListener("keydown", onSnapInput);
       window.clearTimeout(snapTimer);

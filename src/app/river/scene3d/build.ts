@@ -1168,7 +1168,7 @@ type Built = {
   /** Journey only: the river x under the mouse, or null. The fish keeps under it. */
   mouseX?: number | null;
   /** Journey only: camera framing for a progress of 0 (the source) … 1 (the sea). */
-  frame?(p: number): { x: number; y: number; z: number; targetY: number; fov: number; mute: number; side: number };
+  frame?(p: number): { x: number; y: number; z: number; targetY: number; fov: number; mute: number; side: number; centre?: number };
 };
 
 const gauss = (dx: number, sx: number, dz: number, sz: number) => Math.exp(-((dx / sx) ** 2) - (dz / sz) ** 2);
@@ -1556,15 +1556,20 @@ function buildHero(scene: THREE.Scene): Built {
     frame(p) {
       const e = p; // pacing along the river is set by the page, section by section
       const arrive = THREE.MathUtils.smoothstep(p, 0.6, 1);
+      // Along the stages the camera looks higher, which sets the islands lower in the
+      // window and leaves sky above the markers for their cards to open into.
+      const stages = THREE.MathUtils.smoothstep(p, 0.1, 0.19) * (1 - THREE.MathUtils.smoothstep(p, 0.735, 0.8));
       return {
         x: THREE.MathUtils.lerp(0.7, RIVER_LENGTH, e),
         y: THREE.MathUtils.lerp(2.6, 1.7, arrive),
         z: THREE.MathUtils.lerp(15, 14, arrive),
-        targetY: THREE.MathUtils.lerp(1.42, 1.2, arrive), // looking a touch lower keeps a band of river in front
+        targetY: THREE.MathUtils.lerp(1.42, 1.2, arrive) + STAGE_LOOK_UP * stages, // looking a touch lower keeps a band of river in front
         fov: THREE.MathUtils.lerp(30, 30, arrive),
         mute: THREE.MathUtils.lerp(30, 78, arrive),
         // text sits on the left at both ends; in between the scene runs edge to edge
         side: Math.max(1 - THREE.MathUtils.smoothstep(p, 0.02, 0.16), THREE.MathUtils.smoothstep(p, 0.86, 0.98)),
+        // along the stages there is no text beside the scene, so it is composed in the middle of the window
+        centre: stages,
       };
     },
     narrow: false,
@@ -1845,20 +1850,22 @@ function buildHero(scene: THREE.Scene): Built {
 /* ---------------------- stage nodes on the bank ---------------------- */
 
 /** Node marker: a tall pin with a ring at the top. Returns the point its label hangs from. */
-const NODE_TOP = 1.76; // where a card hangs, above the marker's foot
+const STAGE_LOOK_UP = 0.5; // how much higher the camera looks while the stages go by
+const NODE_TOP = 1.2; // where a card hangs, above the marker's foot
+const NODE_RING = NODE_TOP - 0.14; // the ring at the head of the pole
 
 function nodeMarker(parent: THREE.Object3D, x: number, y: number, z: number) {
   const g = new THREE.Group();
   g.position.set(x, y, z);
   parent.add(g);
   mesh(g, cyl(0.07, 0.09, 0.06, 8), M(0.3), 0, 0.03, 0);
-  mesh(g, cyl(0.016, 0.02, 1.5, 5), M(0.15), 0, 0.78, 0);
-  mesh(g, new THREE.TorusGeometry(0.1, 0.028, 6, 16), M(0.1), 0, 1.62, 0, false);
-  mesh(g, new THREE.SphereGeometry(0.05, 8, 6), M(1), 0, 1.62, 0, false);
+  mesh(g, cyl(0.016, 0.02, NODE_RING - 0.12, 5), M(0.15), 0, 0.03 + (NODE_RING - 0.12) / 2, 0);
+  mesh(g, new THREE.TorusGeometry(0.1, 0.028, 6, 16), M(0.1), 0, NODE_RING, 0, false);
+  mesh(g, new THREE.SphereGeometry(0.05, 8, 6), M(1), 0, NODE_RING, 0, false);
   const flag = new THREE.Shape();
-  flag.moveTo(0.02, 1.36);
-  flag.lineTo(0.3, 1.26);
-  flag.lineTo(0.02, 1.16);
+  flag.moveTo(0.02, NODE_RING - 0.26);
+  flag.lineTo(0.3, NODE_RING - 0.36);
+  flag.lineTo(0.02, NODE_RING - 0.46);
   mesh(g, new THREE.ShapeGeometry(flag), M(0.2));
   return { group: g, base: y, top: new THREE.Vector3(x, y + NODE_TOP, z) };
 }
@@ -2906,6 +2913,16 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
     return { p: hit, px: Math.max(1e-3, (Math.abs(y1 - y0) * height) / 2) };
   };
 
+  // The box the scene is composed for (see resize). `centre` slides it from the
+  // right-hand zone (0) to the whole window (1); only the horizontal framing moves.
+  const box = { bx: 0, by: 0, bh: 1, narrow: true };
+  const applyBox = (centre = 0) => {
+    if (box.narrow || built.plain) return;
+    const bx = box.bx * (1 - THREE.MathUtils.clamp(centre, 0, 1));
+    camera.aspect = (width - bx) / box.bh;
+    camera.setViewOffset(width - bx, box.bh, -bx, -box.by, width, height);
+  };
+
   return {
     resize(cssW, cssH, bleed) {
       const W = Math.ceil(cssW / PIXEL);
@@ -2943,6 +2960,7 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
       const bw = cssW - bx;
       const bh = narrow ? band : sectionH;
       built.narrow = narrow;
+      Object.assign(box, { bx, by, bh, narrow });
       camera.fov = built.fov * (narrow ? 0.9 : 1);
       camera.aspect = bw / bh;
       camera.setViewOffset(bw, bh, -bx, -by, cssW, cssH);
@@ -2964,6 +2982,7 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
         camera.position.set(fr.x + px * 0.55, fr.y - py * 0.2, fr.z);
         camera.lookAt(fr.x, fr.targetY - (built.narrow ? 0.3 : 0), 0);
         camera.fov = fr.fov * (built.narrow ? 0.9 : 1);
+        applyBox(fr.centre);
         camera.updateProjectionMatrix();
         post.uniforms.uMute.value = fr.mute;
         post.uniforms.uSide.value = fr.side;
@@ -3049,6 +3068,7 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
       camera.position.set(fr.x, fr.y, fr.z);
       camera.lookAt(fr.x, fr.targetY - (built.narrow ? 0.3 : 0), 0);
       camera.fov = fr.fov * (built.narrow ? 0.9 : 1);
+      applyBox(fr.centre);
       camera.updateProjectionMatrix();
       camera.updateMatrixWorld();
       xs.forEach((sx, i) => {
@@ -3075,6 +3095,7 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
         camera.position.set(fr.x, fr.y, fr.z);
         camera.lookAt(fr.x, fr.targetY - (built.narrow ? 0.3 : 0), 0);
         camera.fov = fr.fov * (built.narrow ? 0.9 : 1);
+        applyBox(fr.centre);
         camera.updateProjectionMatrix();
         camera.updateMatrixWorld();
         // screen x is linear in world x along a line of constant depth: two samples give the line
