@@ -3,6 +3,7 @@ import Image from "next/image";
 import ConnectNovaCover from "../components/connectnova-cover/ConnectNovaCover";
 import DefErpCover from "../components/def-erp-cover/DefErpCover";
 import JobNovaCover from "../components/jobnova-cover/JobNovaCover";
+import MemQCover from "../components/memq-cover/MemQCover";
 import ProcurementCover from "../components/procurement-cover/ProcurementCover";
 import home from "../components/WorkProjectRows.module.css";
 import HashScroll from "./HashScroll";
@@ -30,6 +31,7 @@ const COVERS: Record<string, () => React.JSX.Element> = {
   "/projects/def-erp-kit": DefErpCover,
   "/projects/jobnova-kit": JobNovaCover,
   "/projects/connectnova-kit": ConnectNovaCover,
+  "/projects/memq-kit": MemQCover,
 };
 
 function Label({ children }: { children: string }) {
@@ -162,7 +164,7 @@ export default function RiverHome() {
                       </div>
                     )}
                     <div className={s.cardFoot}>
-                      <span>View case study</span>
+                      <span>{p.external ? "View on App Store" : "View case study"}</span>
                       <span className={s.cardGo} aria-hidden="true">↗</span>
                     </div>
                     </div>

@@ -1,0 +1,143 @@
+/* MemQ case diagrams. Text and rules use case-kit tokens; brand moments use the MemQ 2.0 palette. */
+.loopPair, .evo, .ledge, .rulePair, .sched, .mcp, .palette {
+  --mq-sky: #f6ff7c; --mq-primary: #6c3cbc; --mq-deep: #4b2c78; --mq-darkest: #301a50;
+  --mq-muted: #795ba3; --mq-track: #f0e4fc; --mq-edge: #e5dfeb; --mq-selected: #f4fab1;
+  font-family: inherit;
+  box-sizing: border-box;
+  padding: var(--case-space-24);
+}
+
+/* CaseFigure already draws the outline and surface; inner panels sit on it in white. */
+
+/* ── Ask-again loop ── */
+.loopPair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.loopPanel { margin: 0; padding: 20px; border-radius: 20px; background: var(--case-bg); display: flex; flex-direction: column; gap: 8px; }
+.loopPanel:last-child { background: linear-gradient(180deg, #f3ffa6 0%, #fcfced 100%); }
+.loopTag { font-size: 13px; font-weight: 600; color: var(--case-muted); }
+.loopTagOn { color: var(--mq-primary); }
+.loopSvg { width: 100%; height: auto; overflow: visible; }
+.loopText { font-size: 12px; fill: var(--case-copy); }
+.loopTextPurple { font-size: 12px; fill: var(--mq-darkest); font-weight: 500; }
+.loopTextOn { font-size: 12px; fill: #fff; font-weight: 600; }
+.loopCenter { font-size: 13px; fill: var(--case-muted); font-style: italic; }
+.loopDotGrey { fill: var(--case-muted); }
+.loopDotPurple { fill: var(--mq-sky); stroke: var(--mq-deep); stroke-width: 3; }
+
+/* ── Visual evolution ── */
+.evo { list-style: none; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; }
+.evoCard { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 20px; background: var(--case-bg); }
+.evoCurrent { opacity: 1; background: var(--mq-track); }
+.evoHead { display: flex; align-items: baseline; gap: 8px; }
+.evoV { font-size: 12px; font-weight: 700; color: #fff; background: var(--case-ink); border-radius: 999px; padding: 2px 8px; }
+.evoCurrent .evoV { background: var(--mq-primary); }
+.evoName { font-weight: 600; color: var(--case-ink); }
+.evoDate { margin-left: auto; font-size: 12px; color: var(--case-muted); }
+.evoShot { position: relative; aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden; background: var(--case-surface); }
+.evoShotArt img { padding: 22%; }
+.swatches { display: flex; gap: 6px; }
+.swatches span { width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); }
+.evoKept { margin: 0; font-size: 14px; line-height: 1.45; color: var(--case-ink); }
+.evoGap { margin: 0; font-size: 13px; line-height: 1.45; color: var(--case-muted); }
+
+/* ── Ledge lab ── */
+.ledge { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px; align-items: start; }
+.ledgeStage { padding: 24px; border-radius: 24px; background: linear-gradient(180deg, #f3ffa6 0%, #f6ff7c 30%, #fcfced 100%); display: flex; flex-direction: column; gap: 18px; }
+.ledgeCard { display: flex; flex-direction: column; gap: 2px; padding: 18px 20px; border-radius: 24px; background: #fff; transition: box-shadow .25s, border-color .25s, transform .25s; }
+.ledgeEyebrow { font-size: 12px; color: var(--mq-muted); }
+.ledgeBig { font-size: 30px; line-height: 1.1; color: var(--mq-darkest); }
+.ledgeSub { font-size: 13px; color: var(--mq-muted); }
+.ledgeButton, .ledgeButtonStatic { font: inherit; font-size: 17px; font-weight: 600; color: #fff; background: var(--mq-primary); border: 0; border-radius: 42px; padding: 14px 20px; cursor: pointer; transition: transform .08s, box-shadow .08s, border-color .25s; }
+.ledgeChips { display: flex; gap: 10px; }
+.ledgeChip { flex: 1; text-align: center; font-size: 14px; font-weight: 600; color: var(--mq-darkest); background: #fff; border-radius: 18px; padding: 10px 0; transition: box-shadow .25s, transform .25s; }
+
+.ledgeStage[data-depth='ledge'] .ledgeCard { box-shadow: 0 3px 0 var(--mq-edge); transform: translateY(-3px); }
+.ledgeStage[data-depth='ledge'] .ledgeChip { box-shadow: 0 2px 0 var(--mq-edge); transform: translateY(-2px); }
+.ledgeStage[data-depth='ledge'] .ledgeButton,
+.ledgeButtonStatic { box-shadow: 0 5px 0 var(--mq-deep); transform: translateY(-5px); }
+.ledgeStage[data-depth='ledge'] .ledgeButton:active, .ledgeButtonStatic:active { box-shadow: 0 0 0 var(--mq-deep); transform: none; }
+.ledgeStage[data-depth='shadow'] .ledgeCard,
+.ledgeStage[data-depth='shadow'] .ledgeChip,
+.ledgeStage[data-depth='shadow'] .ledgeButton { box-shadow: 0 10px 24px rgb(48 26 80 / .22); }
+.ledgeStage[data-depth='outline'] .ledgeCard,
+.ledgeStage[data-depth='outline'] .ledgeChip { box-shadow: inset 0 0 0 2.5px var(--mq-deep); }
+.ledgeStage[data-depth='outline'] .ledgeButton { box-shadow: inset 0 0 0 3px var(--mq-darkest); }
+
+.ledgeSide { display: flex; flex-direction: column; gap: 14px; }
+.segmented, .levelPick { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 999px; background: var(--case-bg); align-self: flex-start; }
+.segmented button, .levelPick button { font: inherit; font-size: 13px; border: 0; background: transparent; color: var(--case-copy); padding: 7px 14px; border-radius: 999px; cursor: pointer; }
+.segOn { background: var(--mq-track) !important; color: var(--mq-darkest) !important; font-weight: 600; }
+.ledgeVerdict { margin: 0; font-size: 15px; line-height: 1.5; color: var(--case-copy); min-height: 3em; }
+.ledgeVerdict strong { color: var(--case-ink); }
+.tiers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.tiers li { display: grid; grid-template-columns: 56px auto; column-gap: 12px; font-size: 14px; font-weight: 600; color: var(--case-ink); }
+.tiers em { grid-column: 2; font-style: normal; font-weight: 400; font-size: 13px; color: var(--case-muted); }
+.tiers li > span { grid-row: span 2; align-self: center; height: 28px; border-radius: 14px; background: #fff; }
+.tierLead { background: var(--mq-primary) !important; box-shadow: 0 5px 0 var(--mq-deep); }
+.tierRaised { box-shadow: 0 3px 0 var(--mq-edge), inset 0 0 0 1px var(--mq-edge); }
+.tierControl { box-shadow: 0 2px 0 var(--mq-edge), inset 0 0 0 1px var(--mq-edge); }
+.ledgeHint { margin: 0; font-size: 13px; color: var(--case-muted); }
+
+.rulePair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+.ruleCell { display: flex; flex-direction: column; gap: 6px; padding: 20px; border-radius: 20px; background: var(--case-bg); font-size: 14px; line-height: 1.45; color: var(--case-copy); }
+.ruleCell strong { color: var(--case-ink); font-size: 15px; }
+.ruleDemo { height: 140px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: linear-gradient(180deg, #f3ffa6, #fcfced); margin-bottom: 8px; }
+
+.palette { list-style: none; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px 16px; }
+@media (max-width: 720px) { .palette { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.palette li { display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: var(--case-muted); }
+.palette strong { color: var(--case-ink); font-size: 14px; }
+.palette code { font-size: 12px; color: var(--case-copy); }
+.paletteChip { height: 56px; border-radius: 16px; margin-bottom: 6px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .06); }
+
+/* ── Scheduler ── */
+.sched { display: flex; flex-direction: column; gap: 14px; }
+.schedSvg { width: 100%; height: auto; overflow: visible; }
+.schedTick { font-size: 11px; fill: var(--case-muted); }
+.schedLabel { font-size: 12px; font-weight: 600; fill: var(--mq-deep); }
+.schedCurve { transition: all .4s; }
+.schedDue { transition: transform .6s cubic-bezier(.3, 1.4, .5, 1); }
+.schedControls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.btnPrimary, .btnGhost { font: inherit; font-size: 15px; font-weight: 600; border: 0; border-radius: 42px; padding: 11px 20px; cursor: pointer; transition: transform .08s, box-shadow .08s; }
+.btnPrimary { color: #fff; background: var(--mq-primary); box-shadow: 0 4px 0 var(--mq-deep); transform: translateY(-4px); }
+.btnGhost { color: var(--mq-darkest); background: #fff; box-shadow: 0 4px 0 var(--mq-edge); transform: translateY(-4px); }
+.btnPrimary:active, .btnGhost:active { transform: none; box-shadow: none; }
+.btnLink { font: inherit; font-size: 13px; border: 0; background: none; color: var(--case-muted); text-decoration: underline; cursor: pointer; margin-left: auto; }
+.toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--case-copy); }
+.toggle input { accent-color: var(--mq-primary); width: 16px; height: 16px; }
+.schedStatus { margin: 0; font-size: 14px; color: var(--case-ink); min-height: 1.5em; }
+.stageRow { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.stageRow li { display: flex; flex-direction: column; align-items: center; min-width: 58px; padding: 6px 8px; border-radius: 12px; background: var(--case-bg); font-size: 11px; color: var(--case-muted); transition: background .3s; }
+.stageRow strong { font-size: 15px; color: var(--case-ink); }
+.stagePast { background: var(--mq-track) !important; }
+.stageOn { background: var(--mq-sky) !important; box-shadow: 0 2px 0 #c9d36a; }
+
+/* ── MCP flow ── */
+.mcp { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1.15fr 28px 1fr; gap: 6px; align-items: stretch; }
+.mcpCol { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+.mcpKicker { font-size: 12px; color: var(--case-muted); }
+.mcpClient { font-size: 14px; font-weight: 500; color: var(--case-ink); background: var(--case-bg); border-radius: 14px; padding: 8px 12px; }
+.mcpGate { display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 18px; background: var(--mq-darkest); color: #e9defa; font-size: 12px; }
+.mcpGate strong { color: #fff; font-size: 15px; }
+.mcpTools { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.mcpTools code { display: block; font-size: 12px; padding: 5px 9px; border-radius: 10px; background: var(--mq-track); color: var(--mq-deep); }
+.mcpEnd { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px; border-radius: 18px; background: linear-gradient(180deg, #f3ffa6, #fcfced); font-size: 13px; font-weight: 600; color: var(--mq-darkest); text-align: center; }
+.mcpArrow { position: relative; align-self: center; height: 2px; background: repeating-linear-gradient(90deg, var(--case-rule) 0 4px, transparent 4px 8px); }
+.mcpPulse { position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: var(--mq-primary); animation: mcpPulse 2.4s ease-in-out infinite; }
+@keyframes mcpPulse { 0% { left: 0; opacity: 0; } 15% { opacity: 1; } 70% { left: calc(100% - 10px); opacity: 1; } 100% { left: calc(100% - 10px); opacity: 0; } }
+@media (max-width: 900px) {
+  .mcp { grid-template-columns: 1fr; }
+  .mcpArrow { width: 2px; height: 24px; justify-self: center; background: repeating-linear-gradient(180deg, var(--case-rule) 0 4px, transparent 4px 8px); }
+  .mcpPulse { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcpPulse { animation: none; opacity: 0; }
+  .schedDue, .ledgeCard, .ledgeChip { transition: none; }
+}
+
+/* Figure styles stretch images to full width; these two are fixed-size drawings. */
+.ruleDemo img { width: 112px !important; height: 112px !important; max-width: none; }
+.mcpEnd img { width: 56px !important; height: 56px !important; max-width: none; }
+
+/* Wider column and slimmer rail, matching the DEF ERP case. */
+.widePage { --case-content-wide: 1400px; --case-rail-width: 200px; }

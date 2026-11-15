@@ -104,18 +104,18 @@ export const productProjects: WorkProject[] = [
   },
   {
     title: 'MemQ',
-    category: 'Indie iOS Designer',
-    time: '2026 · 8 weeks',
-    tags: ['AI Learning', 'iOS App'],
-    description: 'iOS app that turns what you ask AI into quizzes and review loops.',
+    category: 'Solo Product Designer & Developer',
+    time: 'Apr – Nov 2026',
+    tags: ['AI Learning', 'iOS App', 'Character & Motion'],
+    description: 'An iOS app that turns what you ask AI into cards and brings each back just before you forget: a spaced-review schedule, five ways of being asked, and a rigged mascot that reacts.',
+    impact: { value: 'Live on the App Store', label: 'designed, built and shipped solo' },
     image: '/img/MemQ.avif',
     coverScreen: '/img/MemQ/Home.PNG',
     coverScreens: ['/img/MemQ/Home.PNG', '/img/MemQ/Explore1.PNG', '/img/MemQ/AI1.PNG'],
     coverDevice: 'phone-stack',
     coverAccent: '#1A8A72',
     coverMotif: 'learning',
-    // No case study: the card goes straight to the App Store listing.
-    href: 'https://apps.apple.com/us/app/memq-smart-quiz-memory/id6757248312',
+    href: '/projects/memq-kit',
   },
   {
     title: 'Beikemama',
@@ -147,11 +147,11 @@ export const productProjects: WorkProject[] = [
     imageTranslateY: '7%',
     imageBackground:
       'radial-gradient(circle at 18% 76%, rgb(16 163 127 / 0.24), transparent 34%), radial-gradient(circle at 82% 18%, rgb(118 197 173 / 0.18), transparent 30%), linear-gradient(135deg, #f4f8f5 0%, #dce8e1 52%, #edf3ef 100%)',
-    coverScreen: '/img/Mono/mono-cover.webp',
-    coverScreenHover: '/img/Mono/mono-cover-hover.webp',
-    coverDevice: 'freeform',
+    // The cover is a still of the live site (mono.riverstudio.cc), like the other demo cards.
+    coverScreen: '/img/Mono/mono-app-cover.webp',
+    coverDevice: 'screenshot',
     coverAccent: '#167f62',
-    coverScreenFit: 'fill',
+    coverScreenFit: 'cover',
     coverMotif: 'finance',
     href: '/projects/mono',
   },
@@ -182,6 +182,20 @@ export const productProjects: WorkProject[] = [
     coverScreenFit: 'cover',
     // No case study: the card opens the playable office itself.
     href: '/demos/team-hq/index.html',
+  },
+  {
+    title: 'ConnectNova Sequence',
+    category: 'Founding Designer',
+    time: '2026 · Interactive',
+    tags: ['Outreach', 'Workflow Builder'],
+    description: 'A playable demo of ConnectNova’s outreach sequence: build the steps, run a full sample, and read the results.',
+    image: '/img/connectnova/sequence-workflow-cover.webp',
+    coverScreen: '/img/connectnova/sequence-workflow-cover.webp',
+    coverDevice: 'screenshot',
+    coverAccent: '#1768e5',
+    coverScreenFit: 'cover',
+    // No case study: the card opens the local demo itself.
+    href: '/demos/connectnova-sequence',
   },
   {
     title: 'Milan Site Selection',

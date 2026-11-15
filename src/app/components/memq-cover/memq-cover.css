@@ -1,0 +1,80 @@
+/* MemQ cover, in the language of the MemQ website hero. Keyframes live outside
+   the block: a nested @keyframes takes the rest of the block down with it. */
+.mq-cover {
+  margin: 0;
+  position: absolute;
+  inset: 0;
+  --mq-ink: #4b2c78; --mq-deep: #301a50; --mq-purple: #6c3cbc; --mq-muted: #795ba3;
+  --mq-line: #e5dfeb; --mq-yellow: #f6ff7c; --mq-green: #176b46; --mq-green-l: #eaf7ef;
+
+  .mq-scene { width: 100%; height: 100%; }
+  .ss-stage { overflow: hidden; border-radius: 0; background: linear-gradient(150deg, #f3ffa6 0%, #f6ff7c 45%, #f4ffb4 100%); color: var(--mq-deep);
+    font-family: var(--font-geist-sans), system-ui, sans-serif; --ss-text-strong: var(--mq-deep); --ss-text: var(--mq-muted); }
+  .mq-rest { position: absolute; left: 327px; top: 467px; width: 6px; height: 6px; }
+
+  /* The hero's ground: two faint orbits; the hills come with Inkling's drawing. */
+  .mq-orbit { position: absolute; border: 1px solid rgb(108 60 188 / .19); border-radius: 50%; pointer-events: none; }
+  .mq-orbit--one { width: 560px; height: 560px; left: 470px; top: -300px; }
+  .mq-orbit--two { width: 720px; height: 720px; left: 390px; top: -380px; }
+  .mq-note { position: absolute; left: 676px; top: 40px; transform: rotate(8deg); color: var(--mq-ink); font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 17px; line-height: 1.05; }
+  .mq-note small { display: block; margin-top: 5px; font-family: var(--font-geist-sans), sans-serif; font-size: 10px; font-weight: 600; }
+
+  .mq-composition { display: contents; }
+
+  /* Inkling between the hills, as on the website: body behind the front hill, face and hands over it. */
+  .mq-inkling { position: absolute; left: 418px; top: 128px; width: 350px; height: 350px; }
+  .mq-inkling svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  /* The card: lipped white, the app's practice question. */
+  .mq-card { position: absolute; left: 52px; top: 60px; box-sizing: border-box; width: 344px; height: 470px; padding: 20px; border-radius: 26px; background: #fff; box-shadow: 0 4px 0 var(--mq-line), 0 22px 44px rgb(48 26 80 / .12); }
+  .mq-card__head { display: flex; align-items: center; gap: 8px; height: 24px; }
+  .mq-topic { font-size: 13px; font-weight: 500; color: var(--mq-muted); }
+  .mq-chip { padding: 4px 10px; border-radius: 14px; background: #f7f5fa; font-size: 11px; font-weight: 600; color: var(--mq-ink); }
+  .mq-term { margin: 12px 0 2px; font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 34px; line-height: 42px; color: var(--mq-ink); }
+  .mq-prompt { margin: 0 0 12px; height: 20px; font-size: 13px; font-weight: 500; line-height: 20px; color: var(--mq-muted); transition: color .25s; }
+  .mq-prompt[data-right] { color: var(--mq-green); }
+  .mq-options { display: flex; flex-direction: column; gap: 8px; }
+  .mq-option { box-sizing: border-box; display: flex; align-items: center; height: 46px; padding: 0 14px; border-radius: 15px; border: 1.5px solid var(--mq-line); background: #fff; transition: border-color .25s, background-color .25s; }
+  .mq-option[data-right] { border-color: var(--mq-green); background: var(--mq-green-l); }
+  .mq-cta { margin-top: 18px; height: 55px; padding-bottom: 5px; border-radius: 100px; background: var(--mq-ink); opacity: .45; transition: opacity .3s; }
+  .mq-cta[data-ready] { opacity: 1; }
+  .mq-cta span { display: flex; height: 100%; align-items: center; justify-content: center; border-radius: 100px; background: var(--mq-purple); color: #fff; font-size: 15px; font-weight: 600; }
+  .mq-option__text { font-size: 13.5px; font-weight: 500; color: var(--mq-deep); white-space: nowrap; }
+
+  /* The website's chips: white, lipped, tilted, bobbing while it plays. */
+  .mq-streak, .mq-nice { position: absolute; display: flex; align-items: center; gap: 8px; padding: 10px 16px 10px 12px; border-radius: 50px; background: #fff; box-shadow: 0 4px 0 var(--mq-line); color: var(--mq-ink); font-size: 14px; font-weight: 700; }
+  .mq-streak { left: 452px; top: 74px; transform: rotate(-8deg); will-change: transform; }
+  .mq-streak b { font-weight: 700; font-size: 20px; line-height: 24px; color: #000; font-variant-numeric: tabular-nums; }
+  .mq-streak__flame { display: grid; place-items: center; transform-origin: 50% 90%; }
+  .mq-streak:has(.mq-pop) .mq-streak__flame { animation: mq-flare 1.15s linear; }
+  .mq-nice { left: 596px; top: 420px; transform: rotate(7deg) scale(.6); opacity: 0; transition: opacity .25s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .mq-nice[data-on] { opacity: 1; transform: rotate(7deg) scale(1); }
+  .mq-nice span { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: var(--mq-yellow); font-size: 13px; }
+  .mq-pop { display: inline-block; animation: mq-pop .34s cubic-bezier(.3, 1.6, .5, 1); }
+
+  &[data-playing] .mq-streak:not(:has(.mq-pop)) { animation: mq-bob-a 5.2s ease-in-out infinite; }
+  &[data-playing] .mq-streak:has(.mq-pop) { animation: mq-bump .7s cubic-bezier(.3, 1.6, .5, 1) .26s; }
+  &[data-playing] .mq-nice[data-on] { animation: mq-bob-b 6.1s ease-in-out infinite .5s; }
+
+  .mq-card, .mq-streak, .mq-nice, .mq-inkling { transition: opacity .32s ease; }
+  .mq-nice { transition: opacity .25s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .mq-composition[data-resetting] :is(.mq-card, .mq-streak, .mq-nice) { opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mq-pop, .mq-streak, .mq-streak__flame, .mq-nice { animation: none !important; }
+  }
+}
+
+@keyframes mq-pop { 0% { transform: scale(1); } 40% { transform: scale(1.28); } 100% { transform: scale(1); } }
+@keyframes mq-bump { 0% { transform: rotate(-8deg) scale(1); } 20% { transform: rotate(-8deg) scale(1.1); } 100% { transform: rotate(-8deg) scale(1); } }
+@keyframes mq-bob-a { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(-6deg) translateY(-7px); } }
+@keyframes mq-bob-b { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(5.5deg) translateY(-6px); } }
+/* The app's flare: taller, then under, then a smaller second lick, leaning as it goes. */
+@keyframes mq-flare {
+  0% { transform: scale(1) rotate(0deg); }
+  14% { transform: translateY(-5.8px) scale(1.55) rotate(-12deg); }
+  32% { transform: translateY(.8px) scale(.92) rotate(9deg); }
+  50% { transform: translateY(-2.3px) scale(1.22) rotate(-6deg); }
+  70% { transform: translateY(.2px) scale(.98) rotate(3deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}

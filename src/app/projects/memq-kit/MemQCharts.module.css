@@ -1,0 +1,65 @@
+/* The You page charts. Values from the app: lipped white cards, one purple ramp, grow once. */
+.board {
+  --mq-deep: #4b2c78; --mq-darkest: #301a50; --mq-muted: #795ba3; --mq-edge: #e5dfeb; --mq-primary: #6c3cbc;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding: var(--case-space-24);
+  background: linear-gradient(180deg, #f3ffa6 0%, #f6ff7c 18%, #f5f7c0 45%, #fcfced 100%);
+}
+.card { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 24px; background: #fff; box-shadow: 0 3px 0 var(--mq-edge); transform: translateY(-3px); min-width: 0; }
+.wide { grid-column: span 2; }
+.head { display: flex; flex-direction: column; gap: 2px; }
+.label { font-size: 13px; font-weight: 600; color: var(--mq-muted); }
+.value { font-family: var(--case-font-heading); font-size: 34px; line-height: 42px; color: var(--mq-deep); font-variant-numeric: tabular-nums; }
+.unit { font-family: inherit; font-size: 15px; color: var(--mq-muted); font-family: var(--case-font-body, inherit); }
+.note { font-size: 14px; line-height: 20px; color: var(--mq-darkest); }
+.muted { color: var(--mq-muted) !important; }
+
+/* Week grid */
+.grid { display: grid; grid-template-columns: repeat(7, 22px); gap: 5px; }
+.weekday { text-align: center; font-size: 10px; font-weight: 600; color: var(--mq-muted); }
+.tile, .tileBlank { position: relative; width: 22px; height: 22px; border-radius: 6px; overflow: hidden; }
+.tileToday { box-shadow: inset 0 0 0 1.5px var(--mq-deep); }
+.tileFill { position: absolute; inset: 0; border-radius: 6px; transition: opacity .38s ease-out, transform .38s ease-out; }
+
+/* Stage bar */
+.stageBar { height: 16px; border-radius: 8px; overflow: hidden; background: #efeaf5; }
+.stageReveal { display: flex; gap: 2px; height: 100%; transition: clip-path 1.1s cubic-bezier(.2, .7, .2, 1); }
+.stageReveal span { height: 100%; }
+.legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 8px; }
+.legendItem { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--mq-muted); }
+.legendItem i { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .05); }
+.legendItem b { font-weight: 600; color: var(--mq-deep); }
+
+/* Forecast */
+.columns { display: flex; gap: 8px; }
+.column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.columnCount { font-size: 12px; font-weight: 600; color: var(--mq-deep); }
+.columnTrack { height: 92px; width: 100%; display: flex; align-items: flex-end; }
+.columnBar { width: 100%; border-radius: 8px; transition: height .7s cubic-bezier(.2, .8, .2, 1); }
+.columnLabel { font-size: 11px; color: var(--mq-muted); }
+.today { font-weight: 600; color: var(--mq-deep); }
+
+/* Goal + accuracy */
+.plot { position: relative; height: 96px; }
+.goalBars { display: flex; align-items: flex-end; gap: 4px; height: 100%; }
+.goalSlot { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+.goalBar { width: 100%; border-radius: 5px; transition: height .7s cubic-bezier(.2, .8, .2, 1); }
+.goalLine { position: absolute; left: 0; right: 0; border-top: 1.5px dashed var(--mq-deep); transition: opacity .3s; }
+.goalLine span { position: absolute; right: 0; top: -19px; font-size: 11px; font-weight: 600; color: var(--mq-deep); background: #fff; padding: 0 4px; }
+.axis { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--mq-muted); }
+.lineSvg { width: 100%; height: 96px; display: block; overflow: visible; }
+.line { stroke-dasharray: 1 1; transition: stroke-dashoffset 1.4s ease-in-out .2s; }
+.dot { position: absolute; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px var(--mq-primary); transition: opacity .2s; }
+.dotLast { width: 10px; height: 10px; margin: -5px 0 0 -5px; background: var(--mq-primary); }
+.gridTag { position: absolute; left: 0; font-size: 10px; color: var(--mq-muted); background: #fff; padding-right: 4px; }
+
+@media (max-width: 900px) {
+  .board { grid-template-columns: 1fr; }
+  .wide { grid-column: auto; }
+}
+@media (max-width: 480px) {
+  .board { padding: 16px; gap: 14px; }
+  .legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tileFill, .stageReveal, .columnBar, .goalBar, .goalLine, .line, .dot { transition: none !important; }
+}

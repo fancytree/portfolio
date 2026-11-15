@@ -1,0 +1,35 @@
+/* Phone frame, the five playable practice forms, and the overview product shot. MemQ 2.0 palette. */
+.frameWrap, .show {
+  --mq-sky: #f6ff7c; --mq-primary: #6c3cbc; --mq-deep: #4b2c78; --mq-darkest: #301a50;
+  --mq-muted: #795ba3; --mq-track: #f0e4fc; --mq-edge: #e5dfeb; --mq-selected: #f4fab1;
+  --mq-right: #1f8a5b; --mq-right-bg: #e6f6ee; --mq-wrong: #c8423b; --mq-wrong-bg: #fdecea;
+  --mq-bezel: #2c1a48;
+}
+
+/* ── Frame: radii in container units, so the bezel is even at any width ── */
+.frameWrap { container-type: inline-size; width: 100%; }
+.frame { background: var(--mq-bezel); padding: 2.6cqw; border-radius: 15.6cqw; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .06); }
+.screen { position: relative; aspect-ratio: 402 / 874; border-radius: 13cqw; overflow: hidden; background: #fcfced; isolation: isolate; }
+.shotFull { object-fit: cover; object-position: top; }
+.shotTop { position: absolute; top: 0; left: 0; width: 100% !important; height: auto !important; max-width: none; }
+
+/* ── Overview product shot: phones run off the bottom edge, so no capture shows its cut ── */
+.show { position: relative; aspect-ratio: 2.1 / 1; overflow: hidden; background: linear-gradient(180deg, #f3ffa6 0%, #f6ff7c 30%, #f5f7c0 60%, #fcfced 100%); }
+.showWave { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 62%; }
+.showPhone { position: absolute; transform: translateX(-50%); animation: showFloat 7s ease-in-out infinite; }
+.center { left: 50%; top: 6%; width: 25%; z-index: 3; }
+.left { left: 30%; top: 20%; width: 20%; z-index: 2; }
+.right { left: 70%; top: 20%; width: 20%; z-index: 2; }
+.farLeft { left: 12.5%; top: 36%; width: 17%; z-index: 1; }
+.farRight { left: 87.5%; top: 36%; width: 17%; z-index: 1; }
+@keyframes showFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@media (max-width: 720px) {
+  .show { aspect-ratio: 1.15 / 1; }
+  .farLeft, .farRight { display: none; }
+  .center { width: 44%; top: 8%; }
+  .left { left: 21%; width: 34%; top: 26%; }
+  .right { left: 79%; width: 34%; top: 26%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showPhone { animation: none; }
+}

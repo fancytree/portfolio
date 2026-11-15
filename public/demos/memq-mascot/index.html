@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inkling rig</title>
+<style>
+:root{--lime1:#f3ffa6;--lime2:#f6ff7c;--canvas:#fcfced;--primary:#6c3cbc;--deep:#4b2c78;--darkest:#301a50;--muted:#795ba3;--track:#f0e4fc;--edge:#e5dfeb;--sel:#f4fab1}
+*{box-sizing:border-box}html,body{margin:0;background:transparent;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--darkest)}
+#evidence{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;padding:24px}
+.stage{position:relative;border-radius:28px;background:linear-gradient(180deg,var(--lime1) 0,var(--lime2) 21%,#f5f7c0 45%,var(--canvas) 100%);min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer}
+.stage>svg.mascot-art{width:min(82%,380px);height:auto;overflow:visible;position:relative;z-index:1}
+.hill{position:absolute;left:-10%;right:-10%;bottom:-40%;height:70%;border-radius:50%;background:#eefc41;opacity:.7}
+.tip{position:absolute;left:16px;bottom:14px;z-index:2;font-size:12px;color:var(--muted);background:#ffffffcc;border-radius:999px;padding:6px 12px}
+.panel{display:flex;flex-direction:column;gap:14px}
+.group h3{margin:0 0 8px;font-size:12px;font-weight:600;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;cursor:pointer;border:0}
+.chip{font-size:13px;font-weight:500;color:var(--darkest);background:#fff;border-radius:16px;padding:8px 13px;box-shadow:0 2px 0 var(--edge);transform:translateY(-2px);transition:transform .08s,box-shadow .08s}
+.chip:active{transform:none;box-shadow:0 0 0 var(--edge)}
+.chip[aria-pressed=true]{background:var(--sel);box-shadow:0 2px 0 #c9d36a}
+.beat{width:100%;font-size:15px;font-weight:600;color:#fff;background:var(--primary);border-radius:42px;padding:14px;box-shadow:0 5px 0 var(--deep);transform:translateY(-5px);transition:transform .08s,box-shadow .08s}
+.beat:active{transform:none;box-shadow:0 0 0 var(--deep)}
+.note{margin:0;font-size:13px;line-height:1.5;color:var(--muted)}
+.note b{color:var(--darkest);font-weight:600}
+@font-face{font-family:Geist;src:url(geist.woff2) format("woff2");font-weight:100 900;font-display:swap}
+.streak{position:absolute;left:20px;top:20px;z-index:2;height:40px;padding-bottom:2px;border-radius:27px;background:#c59af0;box-sizing:border-box;will-change:transform}
+.streakFace{height:38px;border-radius:27px;background:#fff;padding:0 16px;display:flex;align-items:center;gap:8px}
+.flameBox{position:relative;width:17px;height:21px;display:flex;align-items:center;justify-content:center}
+.flameBox img{position:absolute;left:0;top:0;width:17px;height:21px;transform-origin:50% 50%}
+.flameBox .spark{width:6.5px;height:8px;left:5px;top:2px;opacity:0}
+.flameBox .echo{opacity:0}
+.window{position:relative;height:28px;display:flex;align-items:center}
+.num{font-family:Geist,system-ui,sans-serif;font-weight:600;font-size:22px;line-height:28px;color:#000;font-variant-numeric:tabular-nums}
+.pop{display:inline-block;animation:numPop .32s cubic-bezier(.3,1.6,.5,1)}
+@keyframes numPop{0%{transform:scale(1)}40%{transform:scale(1.28)}100%{transform:scale(1)}}
+.chip:focus{outline:none}.chip:focus-visible,.beat:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.beat:focus{outline:none}
+.toggle{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--darkest);cursor:pointer}
+.toggle input{width:18px;height:18px;accent-color:var(--primary)}
+.toggle span{flex-basis:100%;padding-left:26px;font-size:12px;font-weight:400;color:var(--muted)}
+.stage.xray>svg.mascot-art .part{opacity:.82;transition:opacity .2s}
+.mascot-art .part{transition:transform .8s cubic-bezier(.55,0,.2,1)}
+.stage>svg.mascot-art{transition:transform .8s cubic-bezier(.55,0,.2,1)}
+.stage.apart>svg.mascot-art{transform:scale(.78)}
+.apart [data-part=body]{transform:translate(0px,6px)}
+.apart [data-part=hornL]{transform:translate(-26px,-48px)}
+.apart [data-part=hornR]{transform:translate(26px,-48px)}
+.apart [data-part=eyeWhiteL],.apart [data-part=eyeL]{transform:translate(-100px,-6px)}
+.apart [data-part=eyeWhiteR],.apart [data-part=eyeR]{transform:translate(100px,-6px)}
+.apart [data-part=tailCurve]{transform:translate(78px,30px)}
+.apart [data-part=tailTip]{transform:translate(96px,-30px)}
+.apart [data-part=handL]{transform:translate(-46px,52px)}
+.apart [data-part=handR]{transform:translate(30px,62px)}
+.apart [data-part=spark]{transform:translate(40px,-34px)}
+.plabel{font:600 13px/1 system-ui,-apple-system,sans-serif;fill:var(--darkest);paint-order:stroke;stroke:#fff;stroke-width:5px;stroke-linejoin:round;opacity:0;transition:opacity .35s}
+.apart .plabel{opacity:1;transition-delay:.45s}
+.pivot{fill:none;stroke:#e5484d;stroke-width:4;stroke-linecap:round;opacity:0}
+.stage.xray .pivot{opacity:1}
+.stage.apart .bones{opacity:0}
+@media (max-width:640px){#evidence{grid-template-columns:1fr}.stage{min-height:380px}}
+@media (prefers-reduced-motion:reduce){.pop{animation:none}}
+</style></head><body>
+<div id="evidence">
+  <div class="stage" id="stage" role="img" aria-label="Inkling, the MemQ mascot, drawn by the app's own spring rig"><div class="hill"></div><div class="streak" id="streak" role="img" aria-label="21-day streak"><div class="streakFace"><span class="flameBox"><img class="echo" src="flame.svg" alt=""><img class="spark" src="flame.svg" alt=""><img class="spark" src="flame.svg" alt=""><img class="spark" src="flame.svg" alt=""><img class="flame" src="flame.svg" alt=""></span><span class="window"><span class="num" id="streakNum">21</span></span></div></div><svg class="mascot-art" id="art" viewBox="0 0 256 256" aria-hidden="true" focusable="false" data-mascot="todayIdle" data-marks="spark" data-pose='{"level":true,"hands":1,"handOutL":-6,"handTurnL":25,"handTurnR":6,"tailX":6,"tailY":-26}' data-look="-0.7 0.1"><defs><clipPath id="m-whiteL"><ellipse rx="23.5" ry="24.5"/></clipPath><clipPath id="m-lidL"><ellipse rx="25" ry="28.5"/></clipPath><clipPath id="m-whiteR"><ellipse rx="22.5" ry="23.5"/></clipPath><clipPath id="m-lidR"><ellipse rx="24" ry="27.5"/></clipPath></defs><g transform="translate(124 142)"><g class="part" data-part="tailCurve"><path data-d="tailD" d="M50 34.3C72.55 49.42 96.23 37.96 103 8.98" fill="none" stroke="#4B2C78" stroke-width="12" stroke-linecap="round"/><text class="plabel" x="92" y="86" text-anchor="middle">Tail curve</text></g><g class="part" data-part="tailTip"><g data-m="tailTip" transform="matrix(1 0 0 1 103 8.977)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path d="M-12.832 -3.185C-13.939 -3.848 -14.139 -5.369 -13.24 -6.295L0.912 -20.867C4.227 -24.28 6.547 -23.597 7.873 -18.819L14.834 4.733C15.497 8.147 14.171 9.512 10.856 8.829C5.995 7.125 1.34 5.082 -3.186 2.587L-12.832 -3.185Z" fill="#4B2C78"/></g><text class="plabel" x="108" y="-22" text-anchor="middle">Tail tip</text></g><g class="part" data-part="hornL"><g data-m="hornL" transform="matrix(1 0 0 1 -28 -48)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path d="M16.5 0.817C9 10.633 -9.5 11.625 -16.5 9C-23.5 6.375 -29.114 0.817 -29.114 0.817C-37.743 -6.854 -37.743 -20.277 -31.991 -31.783C-26.238 -43.288 -15.691 -50 -8.021 -50C-1.309 -50 -2.268 -45.206 -4.185 -40.412C-6.103 -33.7 -2.268 -28.906 3.485 -25.071C9.5 -22 10 -22 16.5 -20.5C16.5 -20.5 24 -9 16.5 0.817Z" fill="#4B2C78"/></g><text class="plabel" x="-34" y="-104" text-anchor="middle">Horn</text></g><g class="part" data-part="hornR"><g data-m="hornR" transform="matrix(1 0 0 1 32.8 -43)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path d="M-16.5 0.817C-9 10.633 9.5 11.625 16.5 9C23.5 6.375 29.114 0.817 29.114 0.817C37.744 -6.854 37.744 -20.277 31.991 -31.783C26.238 -43.288 15.691 -50 8.021 -50C1.309 -50 2.268 -45.206 4.185 -40.412C6.103 -33.7 2.268 -28.906 -3.485 -25.071C-9.5 -22 -10 -22 -16.5 -20.5C-16.5 -20.5 -24 -9 -16.5 0.817Z" fill="#4B2C78"/></g><text class="plabel" x="38" y="-100" text-anchor="middle">Horn</text></g><g class="part" data-part="body"><g data-m="body" transform="matrix(1 0 0 1 0 0)"><path class="pivot" d="M-7 0H7M0 -7V7"/><ellipse data-rx="bodyRx" data-ry="bodyRy" rx="77" ry="74" fill="#C59AF0" stroke="#4B2C78" stroke-width="12"/></g><text class="plabel" x="0" y="-4" text-anchor="middle">Body</text></g></g><g transform="translate(124 142)"><g class="part" data-part="eyeWhiteL"><g data-m="ballL" transform="matrix(1 0 0 1 -27.5 -7.5)" data-o="whiteL" opacity="1"><ellipse rx="23.5" ry="24.5" fill="#FFFFFF"/><g clip-path="url(#m-whiteL)"><g data-m="pupilL" transform="matrix(1 0 0 1 7 0)"><ellipse rx="10" ry="13" fill="#4B2C78"/></g></g><g clip-path="url(#m-lidL)"><g data-m="lidL" transform="matrix(1 0 0 1 0 -27.5)"><rect x="-60" y="-100" width="120" height="100" fill="#C59AF0"/></g><g data-m="lowL" transform="matrix(1 0 0 1 0 27.5)"><rect x="-60" y="0" width="120" height="100" fill="#C59AF0"/></g></g></g><text class="plabel" x="-27" y="-42" text-anchor="middle">Eye</text></g><g class="part" data-part="eyeL"><g data-m="eyeL" transform="matrix(1 0 0 1 -27.5 -7.5)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path data-d="lashL" d="M-17.5 -0.37C-8.5 4.49 8.5 6.17 17.5 1.31" data-o="lashLO" opacity="0" fill="none" stroke="#4B2C78" stroke-width="8" stroke-linecap="round"/><g data-m="winkL" transform="matrix(0.7 0 0 0.7 5 0)" data-o="winkLO" opacity="0"><path d="M-9.769 -14.5C-4.571 -9.668 4.149 -3.582 8.536 -0.611C9.769 0.224 9.72 2.074 8.443 2.839C4.459 5.226 -3.119 9.863 -9.769 14.5" fill="none" stroke="#4B2C78" stroke-width="8" stroke-linecap="round"/></g></g></g><g class="part" data-part="eyeWhiteR"><g data-m="ballR" transform="matrix(1 0 0 1 27.5 -7.5)" data-o="whiteR" opacity="1"><ellipse rx="22.5" ry="23.5" fill="#FFFFFF"/><g clip-path="url(#m-whiteR)"><g data-m="pupilR" transform="matrix(1 0 0 1 -7 0)"><ellipse rx="10" ry="13" fill="#4B2C78"/></g></g><g clip-path="url(#m-lidR)"><g data-m="lidR" transform="matrix(1 0 0 1 0 -26.5)"><rect x="-60" y="-100" width="120" height="100" fill="#C59AF0"/></g><g data-m="lowR" transform="matrix(1 0 0 1 0 26.5)"><rect x="-60" y="0" width="120" height="100" fill="#C59AF0"/></g></g></g><text class="plabel" x="27" y="-42" text-anchor="middle">Eye</text></g><g class="part" data-part="eyeR"><g data-m="eyeR" transform="matrix(1 0 0 1 27.5 -7.5)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path data-d="lashR" d="M-17.5 1.31C-8.5 6.17 8.5 4.49 17.5 -0.37" data-o="lashRO" opacity="0" fill="none" stroke="#4B2C78" stroke-width="8" stroke-linecap="round"/><g data-m="winkR" transform="matrix(0.7 0 0 0.7 -5 0)" data-o="winkRO" opacity="0"><path d="M9.638 -13.75C4.575 -9.043 -3.83 -3.397 -8.318 -0.495C-9.638 0.359 -9.545 2.356 -8.155 3.09C-4.076 5.244 3.213 9.271 9.638 13.75" fill="none" stroke="#4B2C78" stroke-width="8" stroke-linecap="round"/></g></g></g><g data-m="mouth" transform="matrix(1 0 0 1 0 28.5)" data-o="mouthO" opacity="0"><ellipse data-rx="mouthRx" data-ry="mouthRy" rx="0" ry="0" fill="#4B2C78"/></g><g data-m="mouthArc" transform="matrix(0.6 0 0 0.6 0 28.5)" data-o="mouthArcO" opacity="0"><path d="M-11.617 -0.137C-1.868 -5.877 5.877 -3.872 11.617 5.877" fill="none" stroke="#4B2C78" stroke-width="7" stroke-linecap="round"/></g><g data-m="badge" transform="matrix(0 0 0 0 35.5 57)" data-o="badgeO" opacity="0"><path d="M18.5 -29H-18.5C-24.023 -29 -28.5 -24.523 -28.5 -19V19C-28.5 24.523 -24.023 29 -18.5 29H18.5C24.023 29 28.5 24.523 28.5 19V-19C28.5 -24.523 24.023 -29 18.5 -29Z" fill="#FFFFFF" stroke="#4B2C78" stroke-width="7"/><path d="M-16.5 -1L-6.5 9L16.5 -16" fill="none" stroke="#FFBA00" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></g><g data-o="handsO" opacity="1"><g class="part" data-part="handL"><g data-m="handL" transform="matrix(0.94 0.342 -0.342 0.94 -74.14 20.702)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path d="M20.5 1.946C20.5 11.35 11.322 18 0 18C-11.322 18 -20.5 11.35 -20.5 1.946C-20.5 -11.189 -11.322 -18 0 -18C11.322 -18 20.5 -10.216 20.5 1.946Z" fill="#C59AF0" stroke="#4B2C78" stroke-width="8"/></g><text class="plabel" x="-74" y="84" text-anchor="middle">Hand</text></g><g class="part" data-part="handR"><g data-m="handR" transform="matrix(0.996 0.084 -0.084 0.996 49.054 59.453)"><path class="pivot" d="M-7 0H7M0 -7V7"/><path d="M19.985 3.85C19.095 13.191 9.459 18.939 -1.65 17.88C-12.759 16.821 -21.136 9.357 -20.245 0.016C-19.002 -13.032 -9.352 -18.939 1.758 -17.88C12.867 -16.822 21.136 -8.232 19.985 3.85Z" fill="#C59AF0" stroke="#4B2C78" stroke-width="8"/></g><text class="plabel" x="49" y="98" text-anchor="middle">Hand</text></g></g><g class="part" data-part="spark"><g data-m="spark" transform="matrix(1 0 0 1 86 -54)" data-o="sparkO" opacity="1"><path class="pivot" d="M-7 0H7M0 -7V7"/><path d="M0 -35L9 -52" fill="none" stroke="#FFBA00" stroke-width="10" stroke-linecap="round"/><path d="M14 -20L31 -29" fill="none" stroke="#FFBA00" stroke-width="10" stroke-linecap="round"/><path d="M17 -3L34 0" fill="none" stroke="#FFBA00" stroke-width="10" stroke-linecap="round"/></g></g><g data-m="question" transform="matrix(0 0 0 0 105 -52.4)" data-o="questionO" opacity="0"><path d="M-17 -36C-16 -49 6 -50 11 -39C17 -27 3 -23 0 -17" fill="none" stroke="#FFBA00" stroke-width="9" stroke-linecap="round"/><path d="M-1 0C1.761 0 4 -2.239 4 -5C4 -7.761 1.761 -10 -1 -10C-3.761 -10 -6 -7.761 -6 -5C-6 -2.239 -3.761 0 -1 0Z" fill="#FFBA00"/></g><g data-m="zzz" transform="matrix(1 0 0 1 86 -62)" data-o="zzzO" opacity="0"><path d="M0 -13.228L9.448 -17.855C11.037 -18.633 12.779 -17.117 12.228 -15.436L8.258 -3.328C7.671 -1.535 9.665 0 11.248 -1.028L22 -8.008" fill="none" stroke="#FFBA00" stroke-width="7" stroke-linecap="round"/><path d="M22 -38.787L36.432 -45.855C38.021 -46.633 39.763 -45.117 39.212 -43.436L32.619 -23.328C32.031 -21.535 34.026 -20 35.609 -21.027L52 -31.669" fill="none" stroke="#FFBA00" stroke-width="7" stroke-linecap="round"/></g></g><g transform="translate(124 142)"><path class="bones" data-d="debug" d="" fill="none" stroke="#e5484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg><span class="tip">Move the pointer — it looks. Tap it — it reacts.</span></div>
+  <div class="panel">
+    <div class="group"><h3>States the app enters</h3><div class="chips" id="moments"></div></div>
+    <div class="group"><h3>Expressions</h3><div class="chips" id="expr"></div></div>
+    <div class="group"><h3>Streak</h3><div class="chips" id="streakChips"></div></div>
+    <label class="toggle"><input type="checkbox" id="apart"> Take it apart <span>the Figma parts, still on their springs</span></label>
+    <label class="toggle"><input type="checkbox" id="bones"> Show the skeleton <span>each part’s pivot, the tail’s three bones</span></label>
+    <button class="beat" id="beat">Answer correctly → impulse</button>
+    <p class="note" id="note"></p>
+  </div>
+</div>
+<script src="mascot-rig.js?v=1"></script>
+<script>
+(function(){
+const rig=window.MemQMascot, art=document.getElementById('art'), stage=document.getElementById('stage');
+const moments=[['todayIdle','Today, resting'],['thinking','Waiting for AI'],['happy','Goal met'],['sleepy','Nothing due'],['learningComplete','Round complete'],['oops','Something failed']];
+const expr=[['idle','Idle'],['excited','Excited'],['focused','Focused'],['surprised','Surprised'],['wondering','Wondering'],['searching','Searching']];
+const notes={todayIdle:'Today hero at rest. The target pose drifts on detuned oscillators, so it never reads as a loop.',thinking:'Shown while the first fetch or a generation is out. The character does the waiting instead of a spinner panel.',happy:'Today when the daily goal is met.',sleepy:'Today when nothing is due — an honest empty state.',learningComplete:'A moment the app enters at the end of a round.',streakReward:'The app’s StreakPill: the flame flares from its foot (1150 ms, leaning each way) and throws three sparks; 260 ms later the number counts up in place, and the pill bumps to 1.08. In the app it first waits 480 ms for the screen that covered Today to slide away.',streakReward3:'Coming back after days away: the number counts through every day, capped at 1.3 s. Inkling reacts beside it; the pill is its own element.',oops:'Error states get a face and one next step.'};
+let mood='todayIdle';let showBones=false;
+const tweak=new Array(rig.CHANNEL_COUNT).fill(0);
+const S=rig.createRigState(mood);
+const pick=a=>Array.from(art.querySelectorAll('[data-'+a+']'),el=>[el,el.dataset[a]]);
+const placed=pick('m'),faded=pick('o'),drawn=pick('d'),wide=pick('rx'),tall=pick('ry');
+const r=n=>Math.round(n*1000)/1000;
+const paint=f=>{for(const[e,k]of placed)e.setAttribute('transform','matrix('+f[k].map(r).join(' ')+')');for(const[e,k]of faded)e.setAttribute('opacity',r(f[k]));for(const[e,k]of drawn)e.setAttribute('d',f[k]);for(const[e,k]of wide)e.setAttribute('rx',r(f[k]));for(const[e,k]of tall)e.setAttribute('ry',r(f[k]));};
+const look={x:-.4,y:0,f:false};let pokes=0,idle=0;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const solve=(dt,still)=>rig.solveRig(S,{mood,still,linked:true,drift:true,tweak,dragX:0,dragY:0,lookX:look.x,lookY:look.y,wander:look.f?0:1,blink:0,wink:0,beat:0,poke:pokes,pokePart:0,debug:showBones,level:true,hands:1},dt);
+function chips(id,list){const box=document.getElementById(id);for(const[m,l]of list){const b=document.createElement('button');b.className='chip';b.textContent=l;b.dataset.m=m;b.setAttribute('aria-pressed',m===mood);b.onclick=()=>{mood=m==='streakReward3'?'streakReward':m;if(m==='streakReward')grow(1);if(m==='streakReward3')grow(3);document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.m===m));document.getElementById('note').innerHTML=notes[m]?'<b>'+l+'.</b> '+notes[m]:'<b>'+l+'.</b> One of 23 composable states; a state change only moves the target, and the springs absorb the jump.';if(reduce)paint(solve(0,true));};box.appendChild(b);}}
+chips('moments',moments);chips('expr',expr);chips('streakChips',[['streakReward','Streak grows'],['streakReward3','Back after 3 days']]);
+document.getElementById('note').innerHTML='<b>Today, resting.</b> '+notes.todayIdle;
+
+const STREAK={value:21,count:21,t0:-1,from:21,to:21,roll:0};
+// ARRIVE_MS is 480 in the app: it waits for the screen that covered Today to slide away. Nothing covers it here, so it starts at once.
+const LINE=28,FLAME=21,STEP_MS=320,ROLL_MAX_MS=1300,FLARE_MS=1150,LEAD_MS=260,ARRIVE_MS=0;
+const SPARKS=[{at:.1,x:-11,y:-24},{at:.2,x:3,y:-31},{at:.3,x:13,y:-21}];
+const pill=document.getElementById('streak'),numEl=document.getElementById('streakNum');
+const fl=pill.querySelector('.flame'),echo=pill.querySelector('.echo'),sparks=[...pill.querySelectorAll('.spark')];
+const lerp=(xs,ys,v)=>{for(let i=1;i<xs.length;i++){if(v<=xs[i]){const k=(v-xs[i-1])/(xs[i]-xs[i-1]);return ys[i-1]+(ys[i]-ys[i-1])*k}}return ys[ys.length-1]};
+// The number counts up in place, like every other number on the page; each new value pops.
+function showCount(){const n=String(Math.round(STREAK.count));if(numEl.textContent===n)return;numEl.textContent=n;numEl.classList.remove('pop');void numEl.offsetWidth;numEl.classList.add('pop')}
+// bump: 1 -> 1.08 in 130 ms (ease-out quad), then a spring back (damping 9, stiffness 240)
+let bump={v:1,vel:0,phase:'rest',t:0};
+function grow(days){
+  const from=STREAK.value,to=from+days;STREAK.value=to;pill.setAttribute('aria-label',to+'-day streak');
+  if(reduce){STREAK.count=to;numEl.textContent=to;return}
+  STREAK.from=from;STREAK.to=to;STREAK.roll=Math.min(ROLL_MAX_MS,days*STEP_MS);STREAK.count=from;STREAK.t0=performance.now();bump={v:1,vel:0,phase:'wait',t:0};
+}
+function streakFrame(now,dt){
+  if(STREAK.t0<0)return;
+  const t=now-STREAK.t0;
+  // flare
+  const f=Math.min(1,Math.max(0,(t-ARRIVE_MS)/FLARE_MS));
+  const g=lerp([0,.14,.32,.5,.7,1],[1,1.55,.92,1.22,.98,1],f),lean=lerp([0,.14,.32,.5,.7,1],[0,-12,9,-6,3,0],f);
+  fl.style.transform=`translateY(${-(g-1)*FLAME/2}px) rotate(${lean}deg) scale(${g})`;
+  const p=Math.min(1,f/.55);echo.style.opacity=p<=0||p>=1?0:.42*(1-p);echo.style.transform=`translateY(${-p*FLAME*.6}px) scale(${1+p*1.5})`;
+  SPARKS.forEach((s,i)=>{const q=Math.min(1,Math.max(0,(f-s.at)/.55)),out=1-(1-q)*(1-q);sparks[i].style.opacity=q<=0||q>=1?0:1-q;sparks[i].style.transform=`translate(${s.x*out}px,${s.y*out}px) scale(${1-.45*q})`});
+  // count (ease-out cubic)
+  const r=Math.min(1,Math.max(0,(t-ARRIVE_MS-LEAD_MS)/STREAK.roll));STREAK.count=STREAK.from+(STREAK.to-STREAK.from)*(1-Math.pow(1-r,3));showCount();
+  // bump
+  const bt=t-ARRIVE_MS-LEAD_MS;
+  if(bump.phase==='wait'&&bt>=0)bump.phase='up';
+  if(bump.phase==='up'){const k=Math.min(1,bt/130);bump.v=1+.08*(1-(1-k)*(1-k));if(k>=1){bump.phase='spring';bump.vel=0}}
+  else if(bump.phase==='spring'){const s=Math.min(dt,.032);const a=-240*(bump.v-1)-9*bump.vel;bump.vel+=a*s;bump.v+=bump.vel*s;if(Math.abs(bump.v-1)<.0005&&Math.abs(bump.vel)<.01){bump.v=1;bump.phase='rest'}}
+  pill.style.transform=`scale(${bump.v})`;
+  // settled: let go of the numbers it passed
+  if(t>ARRIVE_MS+LEAD_MS+STREAK.roll+400&&bump.phase==='rest'&&f>=1){STREAK.count=STREAK.to;STREAK.t0=-1;showCount();fl.style.transform='';}
+}
+document.getElementById('apart').addEventListener('change',e=>{stage.classList.toggle('apart',e.target.checked)});
+document.getElementById('bones').addEventListener('change',e=>{showBones=e.target.checked;stage.classList.toggle('xray',showBones);if(reduce)paint(solve(0,true));});
+const poke=()=>{pokes++;if(reduce)paint(solve(0,true));};
+stage.addEventListener('click',poke);
+document.getElementById('beat').onclick=()=>{poke();};
+stage.addEventListener('pointermove',e=>{const b=art.getBoundingClientRect();look.x=Math.max(-1,Math.min(1,(e.clientX-(b.left+b.width/2))/260));look.y=Math.max(-1,Math.min(1,(e.clientY-(b.top+b.height*.5))/260));look.f=true;clearTimeout(idle);idle=setTimeout(()=>{look.f=false},2400)});
+stage.addEventListener('pointerleave',()=>{look.f=false});
+if(reduce){paint(solve(0,true));return;}
+let last=0;const tick=t=>{const dt=last?(t-last)/1000:0;last=t;paint(solve(dt,false));streakFrame(t,dt);requestAnimationFrame(tick)};requestAnimationFrame(tick);
+})();
+</script></body></html>

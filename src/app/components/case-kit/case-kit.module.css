@@ -492,6 +492,11 @@
   padding-top: var(--case-space-4);
 }
 
+/* Phones: four (or three) narrow columns break labels mid-word, so stack them. */
+@media (max-width: 560px) {
+  .stats { grid-template-columns: minmax(0, 1fr); }
+}
+
 .meta > div,
 .stats > div {
   display: flex;
