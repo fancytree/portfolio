@@ -51,6 +51,9 @@
 }
 
 :root {
+  /* height of the site header (the homepage's, used on every page): sticky
+     offsets and anchor scroll margins are measured from it */
+  --site-nav-h: 80px;
   --background: #f3f1ea;
   --foreground: #0a0a0a;
   --mei-ink: #000000;
@@ -1420,7 +1423,7 @@ body.no-scroll {
 }
 
 .mei-project-page:not(.case-kit) [data-case-nav-label] {
-  scroll-margin-top: 104px;
+  scroll-margin-top: calc(var(--site-nav-h) + 56px);
 }
 
 /* Shared case-study content hierarchy. The selectors intentionally stop at
@@ -2452,4 +2455,10 @@ body.no-scroll {
 html.mei-home .mei-page-root,
 html.mei-home .mei-page-surface {
   background-color: var(--mei-paper);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --site-nav-h: 64px;
+  }
 }

@@ -120,7 +120,7 @@ export default function ProcurementDemoEmbed({ src, title }: { src: string; titl
         z-40 lifts the expanded frame over the case-study rail (z-35); both live inside the
         page's z-10 stacking context, which the site header sits above, so the header stays clear.
       */}
-      <div className="sticky top-[48px] z-40 flex h-[calc(100svh-48px)] items-center justify-center">
+      <div className="sticky top-[var(--site-nav-h)] z-40 flex h-[calc(100svh-var(--site-nav-h))] items-center justify-center">
         <div
           ref={frameRef}
           className="overflow-hidden bg-white"
