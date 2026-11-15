@@ -5,8 +5,9 @@
 
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import { SiteFooter, SiteHeader } from "../river/SiteChrome";
+import { plexMono } from "../river/fonts";
+import river from "../river/river.module.css";
 import CustomCursor from "./CustomCursor";
 
 interface LayoutProps {
@@ -39,24 +40,27 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   // 样式页自己排左侧导航和内容，不再套全站的居中窄容器。
-  const caseFrame = ["/projects/case-kit", "/projects/def-erp-kit", "/projects/jobnova-kit", "/projects/connectnova-kit", "/projects/procurement-agent-kit", "/projects/mono"].includes(pathname ?? "");
+  const caseFrame = ["/projects/case-kit", "/projects/def-erp-kit", "/projects/jobnova-kit", "/projects/connectnova-kit", "/projects/procurement-agent-kit", "/projects/memq-kit", "/projects/mono"].includes(pathname ?? "");
 
   return (
     // 外层容器：全屏高度，背景色和基础字体
-    <div className="mei-page-root min-h-screen bg-white text-zinc-900">
-      {/* 顶部导航栏 */}
-      <Navbar />
+    <div id="top" className="mei-page-root min-h-screen bg-white text-zinc-900">
+      {/* 顶部导航栏：与首页同一个 header。外层负责吸顶（header 自己的 sticky 只在
+          它的父元素里生效），river.root 提供配色和字体变量。高度见 --site-nav-h。 */}
+      <div className={`sticky top-0 z-50 ${river.root} ${plexMono.variable}`} style={{ minHeight: 0 }}>
+        <SiteHeader />
+      </div>
       <CustomCursor />
 
       {/* 正文：相对定位 + 不透明背景，盖住下方 fixed footer；底部用 margin 留出 footer 高度的滚动距离。
           margin 不属于白色背景区域，所以滚动到底时不会把 fixed footer 遮住。 */}
       <div className="mei-page-surface relative z-10 bg-white" style={{ marginBottom: footerHeight }}>
-        {/* 主体内容区域：为 fixed 导航预留顶部内边距（pt-12 = 48px，适应 48px 高度的导航栏），水平居中、限制最大宽度 max-w-7xl */}
+        {/* 主体内容区域：导航吸顶且占位，不再需要顶部内边距；水平居中、限制最大宽度 max-w-7xl */}
         <main
           className={
             caseFrame
-              ? "flex w-full min-w-0 flex-1 pt-12"
-              : "mx-auto flex min-w-0 max-w-7xl flex-1 px-4 pt-12 pb-0 sm:px-6 lg:px-8"
+              ? "flex w-full min-w-0 flex-1"
+              : "mx-auto flex min-w-0 max-w-7xl flex-1 px-4 pb-0 sm:px-6 lg:px-8"
           }
         >
           {/* min-w-0：flex 子项可窄于内容最小宽度，子页面内视口全宽突破计算才正确 */}
@@ -64,9 +68,10 @@ export default function Layout({ children }: LayoutProps) {
         </main>
       </div>
 
-      {/* 全站底部：Let's work together + 版权信息，固定贴底，正文滚完后露出 */}
-      <div ref={footerRef} className="fixed inset-x-0 bottom-0 z-0">
-        <Footer />
+      {/* 全站底部：与首页同一个 footer（深色条 + 联系方式），固定贴底，正文滚完后露出。
+          river.root 提供它的配色、字体变量；min-height 归零，免得撑满一屏。 */}
+      <div ref={footerRef} className={`fixed inset-x-0 bottom-0 z-0 ${river.root} ${plexMono.variable}`} style={{ minHeight: 0 }}>
+        <SiteFooter />
       </div>
     </div>
   );

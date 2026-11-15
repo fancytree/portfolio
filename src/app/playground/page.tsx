@@ -20,7 +20,7 @@ export default function PlaygroundPage() {
       <a className={river.skip} href="#main">
         Skip to content
       </a>
-      <SiteHeader />
+      <SiteHeader current="play" />
 
       <main id="main" className={`${river.container} ${styles.page}`}>
         <header className={styles.header}>

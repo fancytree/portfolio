@@ -239,6 +239,69 @@ html:has(.root) {
   background-size: 100% 1px;
 }
 
+/* The Menu button and its panel: only on narrow screens, where the links do not fit in a row. */
+.menu {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .headerInner {
+    position: relative;
+  }
+
+  .headerInner > nav {
+    display: none;
+  }
+
+  .menu {
+    display: block;
+  }
+
+  .menuButton {
+    list-style: none;
+    cursor: pointer;
+    padding: 8px 0;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .menuButton::-webkit-details-marker {
+    display: none;
+  }
+
+  .menuClose,
+  .menu[open] .menuOpen {
+    display: none;
+  }
+
+  .menu[open] .menuClose {
+    display: inline;
+  }
+
+  .menuPanel {
+    position: absolute;
+    top: 100%;
+    left: calc(var(--river-margin) * -1);
+    right: calc(var(--river-margin) * -1);
+    padding: 8px var(--river-margin) 20px;
+    background: var(--river-bg);
+    border-bottom: 1px solid var(--river-border);
+  }
+
+  .menuPanel .nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .menuPanel .nav li + li::before {
+    content: none;
+  }
+}
+
 /* ---------- Hero ---------- */
 
 .hero {

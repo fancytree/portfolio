@@ -112,8 +112,8 @@
   --case-grid-column-min: 320px;
   --case-meta-column: 154px;
   --case-rail-width: 240px;
-  --case-rail-top: 68px;
-  --case-scroll-offset: 104px;
+  --case-rail-top: calc(var(--site-nav-h) + 20px);
+  --case-scroll-offset: calc(var(--site-nav-h) + 56px);
   --case-space-glance: clamp(36px, 5vw, 56px);
   --case-space-paragraph: var(--case-space-32);
   --case-space-heading-body: var(--case-space-36);

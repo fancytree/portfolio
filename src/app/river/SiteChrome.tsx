@@ -5,8 +5,19 @@
 import { contact } from "./content";
 import s from "./river.module.css";
 
-export function SiteHeader({ home = false }: { home?: boolean }) {
+// `current` marks the nav entry for the page being shown (the Playground marks Play).
+export function SiteHeader({ home = false, current }: { home?: boolean; current?: "play" }) {
   const to = (id: string) => (home ? `#${id}` : `/#${id}`);
+  const links = (
+    <ul className={s.nav}>
+      <li><a href={to("work")}>Work</a></li>
+      <li><a href={to("experience")}>Experience</a></li>
+      <li><a href={to("about")}>About</a></li>
+      <li><a href="/playground" aria-current={current === "play" ? "page" : undefined}>Play</a></li>
+      <li><a href={contact.cv} target="_blank" rel="noreferrer">Resume</a></li>
+      <li><a href={to("contact")}>Contact <span aria-hidden="true">↗</span></a></li>
+    </ul>
+  );
   return (
     <header className={s.header}>
       <div className={`${s.container} ${s.headerInner}`}>
@@ -17,15 +28,18 @@ export function SiteHeader({ home = false }: { home?: boolean }) {
           <span className={s.brandMark}>Mei Chai°</span>
         </a>
         <nav aria-label="Primary">
-          <ul className={s.nav}>
-            <li><a href={to("work")}>Work</a></li>
-            <li><a href={to("experience")}>Experience</a></li>
-            <li><a href={to("about")}>About</a></li>
-            <li><a href="/playground" aria-current={home ? undefined : "page"}>Play</a></li>
-            <li><a href={contact.cv} target="_blank" rel="noreferrer">Resume</a></li>
-            <li><a href={to("contact")}>Contact <span aria-hidden="true">↗</span></a></li>
-          </ul>
+          {links}
         </nav>
+        {/* narrow screens: the same links behind a Menu button (a <details>, so it works without JS) */}
+        <details className={s.menu}>
+          <summary className={s.menuButton}>
+            <span className={s.menuOpen}>Menu</span>
+            <span className={s.menuClose}>Close</span>
+          </summary>
+          <nav aria-label="Primary" className={s.menuPanel}>
+            {links}
+          </nav>
+        </details>
       </div>
     </header>
   );

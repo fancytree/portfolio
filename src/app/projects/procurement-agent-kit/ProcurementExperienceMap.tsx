@@ -110,7 +110,7 @@ export default function ProcurementExperienceMap() {
  };
 
  return <div className="flex min-w-0 flex-col gap-[var(--case-space-32)]" aria-label="Agent UX Map: 12 Steps + 6 Themes">
-  <div className="sticky top-[48px] z-10 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-[var(--case-bg)] before:content-['']">
+  <div className="sticky top-[var(--site-nav-h)] z-10 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-[var(--case-bg)] before:content-['']">
    <div ref={strip} className="overflow-x-auto border-b border-[var(--case-rule)] py-[var(--case-space-12)]">
     <div className="flex w-max gap-[var(--case-space-8)]" role="group" aria-label="Phases of the experience; follows your scroll">
      {phases.map(item=><CaseButton key={item.id} variant="tab" aria-pressed={item.id===active} onClick={()=>jump(item.id)}>{item.title}</CaseButton>)}
