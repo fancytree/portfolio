@@ -53,7 +53,7 @@
 :root {
   /* height of the site header (the homepage's, used on every page): sticky
      offsets and anchor scroll margins are measured from it */
-  --site-nav-h: 80px;
+  --site-nav-h: 52px;
   --background: #f3f1ea;
   --foreground: #0a0a0a;
   --mei-ink: #000000;
@@ -2459,6 +2459,6 @@ html.mei-home .mei-page-surface {
 
 @media (max-width: 767px) {
   :root {
-    --site-nav-h: 64px;
+    --site-nav-h: 48px;
   }
 }

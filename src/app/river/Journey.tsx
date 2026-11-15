@@ -19,7 +19,7 @@ import { SHELF_TOOL_FRACTION, SHELF_TOOL_SCALE, SHELF_WIDTH, TOOL_SLOTS, dropSha
 const PAPER = [0xfa, 0xfa, 0xf8];
 const DUSK = [0xe1, 0xe0, 0xd8];
 const FISH_REACH = 64; // css px around the fish that count as clicking it
-const HEADER = 80;
+const HEADER = 52;
 // size of the overlay the airborne fish is drawn in, css px
 const FLYER_W = 300;
 const FLYER_H = 300;
