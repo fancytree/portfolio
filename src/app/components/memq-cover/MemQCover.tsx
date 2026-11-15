@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Stage } from '../stageshow/kit/stage';
 import { Bar } from '../stageshow/kit/window';
 import { useReducedMotion } from '../stageshow/kit/reduced-motion';
@@ -153,13 +153,106 @@ function Inkling({ mood, look, poke, active }: { mood: Mood; look: [number, numb
   return <div ref={host} className="mq-inkling" dangerouslySetInnerHTML={{ __html: RIG_SVG }} />;
 }
 
-function Flame({ size = 18 }: { size?: number }) {
+// The app's StreakPill, as the case study's mascot demo plays it: the flame flares
+// from its foot and throws an echo and three sparks; 260 ms later the number
+// counts up in place, each new value popping, and the pill bumps to 1.08.
+const FLAME_H = 21, STEP_MS = 320, ROLL_MAX_MS = 1300, FLARE_MS = 1150, LEAD_MS = 260;
+const SPARKS = [{ at: 0.1, x: -11, y: -24 }, { at: 0.2, x: 3, y: -31 }, { at: 0.3, x: 13, y: -21 }];
+const FLARE_AT = [0, 0.14, 0.32, 0.5, 0.7, 1];
+const lerp = (xs: number[], ys: number[], v: number) => {
+  for (let i = 1; i < xs.length; i++) if (v <= xs[i]) return ys[i - 1] + (ys[i] - ys[i - 1]) * ((v - xs[i - 1]) / (xs[i] - xs[i - 1]));
+  return ys[ys.length - 1];
+};
+// The same flame.svg the mascot demo uses: five 17px sprites, no optimizer needed.
+/* eslint-disable @next/next/no-img-element */
+const FLAME_SRC = '/demos/memq-mascot/flame.svg';
+
+function Streak({ value, active }: { value: number; active: boolean }) {
+  const reduced = useReducedMotion();
+  const face = useRef<HTMLDivElement>(null);
+  const box = useRef<HTMLSpanElement>(null);
+  const num = useRef<HTMLElement>(null);
+  const shown = useRef(value);
+
+  // React writes the settled value; while it grows, the frames below write the
+  // number in between, before the first paint.
+  useLayoutEffect(() => {
+    const pill = face.current, el = num.current, flames = box.current;
+    if (!pill || !el || !flames) return;
+    const [echo, ...rest] = Array.from(flames.querySelectorAll('img'));
+    const flame = rest.pop()!, sparks = rest;
+    const from = shown.current;
+    shown.current = value;
+    const show = (n: number) => {
+      const text = String(n);
+      if (el.textContent === text) return;
+      el.textContent = text;
+      el.classList.remove('mq-pop');
+      void el.offsetWidth;
+      el.classList.add('mq-pop');
+    };
+    const settle = () => {
+      pill.style.transform = flame.style.transform = '';
+      for (const s of [echo, ...sparks]) s.style.opacity = '0';
+      el.textContent = String(value);
+    };
+    if (value <= from || reduced || !active) { settle(); el.classList.remove('mq-pop'); return; }
+
+    el.textContent = String(from);
+    const roll = Math.min(ROLL_MAX_MS, (value - from) * STEP_MS);
+    const t0 = performance.now();
+    let bump = { v: 1, vel: 0, phase: 'wait' as 'wait' | 'up' | 'spring' | 'rest' };
+    let last = t0, frame = 0;
+    const tick = (now: number) => {
+      const t = Math.max(0, now - t0), dt = Math.max(0, (now - last) / 1000);
+      last = now;
+      const f = Math.min(1, t / FLARE_MS);
+      const g = lerp(FLARE_AT, [1, 1.55, 0.92, 1.22, 0.98, 1], f), lean = lerp(FLARE_AT, [0, -12, 9, -6, 3, 0], f);
+      flame.style.transform = `translateY(${-(g - 1) * FLAME_H / 2}px) rotate(${lean}deg) scale(${g})`;
+      const p = Math.min(1, f / 0.55);
+      echo.style.opacity = String(p <= 0 || p >= 1 ? 0 : 0.42 * (1 - p));
+      echo.style.transform = `translateY(${-p * FLAME_H * 0.6}px) scale(${1 + p * 1.5})`;
+      SPARKS.forEach((s, i) => {
+        const q = Math.min(1, Math.max(0, (f - s.at) / 0.55)), out = 1 - (1 - q) * (1 - q);
+        sparks[i].style.opacity = String(q <= 0 || q >= 1 ? 0 : 1 - q);
+        sparks[i].style.transform = `translate(${s.x * out}px, ${s.y * out}px) scale(${1 - 0.45 * q})`;
+      });
+      const r = Math.min(1, Math.max(0, (t - LEAD_MS) / roll));
+      show(Math.round(from + (value - from) * (1 - Math.pow(1 - r, 3))));
+      const bt = t - LEAD_MS;
+      if (bump.phase === 'wait' && bt >= 0) bump.phase = 'up';
+      if (bump.phase === 'up') {
+        const k = Math.min(1, bt / 130);
+        bump.v = 1 + 0.08 * (1 - (1 - k) * (1 - k));
+        if (k >= 1) bump = { ...bump, phase: 'spring', vel: 0 };
+      } else if (bump.phase === 'spring') {
+        const s = Math.min(dt, 0.032), a = -240 * (bump.v - 1) - 9 * bump.vel;
+        bump.vel += a * s;
+        bump.v += bump.vel * s;
+        if (Math.abs(bump.v - 1) < 0.0005 && Math.abs(bump.vel) < 0.01) bump = { v: 1, vel: 0, phase: 'rest' };
+      }
+      pill.style.transform = `scale(${bump.v})`;
+      if (t > LEAD_MS + roll + 400 && bump.phase === 'rest' && f >= 1) { settle(); return; }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(frame); settle(); };
+  }, [value, active, reduced]);
+
   return (
-    <svg width={size} height={size * 1.24} viewBox="0 0 17.024 21.105" aria-hidden="true">
-      <defs><linearGradient id="mq-cover-flame" x1="2" y1="8.6" x2="9.5" y2="20.6" gradientUnits="userSpaceOnUse"><stop stopColor="#FDAE1C" /><stop offset="1" stopColor="#FE9227" /></linearGradient></defs>
-      <path d="M9.875 1.105C8.875.105 7.733-.181 6.875.105 6.017.391 5.875 2.605 5.875 4.605s-.5 3.5-1.5 3.5c-.707 0-.744-1-1.5-1-.5 0-1 .5-2 2s-1.5 6.5.5 8.5 4 3.5 7 3.5c4.5 0 7.733-3.432 8.5-6.5.5-2-.367-5.235-1-6.5-.5-1-1-1.5-1.5-1.5s-1.5 1.5-2 1c-.5-.5-.732-4.732-2.5-6.5Z" fill="url(#mq-cover-flame)" />
-      <path d="M11.5 15.105c-.203-1.199-2.105-3.773-3-3.476-.791.262.1 2.5-1.5 2.5-2 0-2 1.5-2 2s.5 2.5 3.5 2.5c2.4 0 3.203-2.325 3-3.524Z" fill="#fff" />
-    </svg>
+    <div className="mq-streak" role="img" aria-label={`${value}-day streak`}>
+      <div ref={face} className="mq-streak__face">
+        <span ref={box} className="mq-streak__flame" aria-hidden="true">
+          <img className="mq-streak__echo" src={FLAME_SRC} alt="" />
+          <img className="mq-streak__spark" src={FLAME_SRC} alt="" />
+          <img className="mq-streak__spark" src={FLAME_SRC} alt="" />
+          <img className="mq-streak__spark" src={FLAME_SRC} alt="" />
+          <img src={FLAME_SRC} alt="" />
+        </span>
+        <b ref={num}>{value}</b>
+        <span>day streak</span>
+      </div>
+    </div>
   );
 }
 
@@ -212,11 +305,7 @@ export default function MemQCover() {
             </section>
 
             {/* The website's chips, here doing what they say. */}
-            <div className="mq-streak" data-grew={s.streak > START.streak || undefined}>
-              <span className="mq-streak__flame"><Flame /></span>
-              <b key={s.streak} className={s.streak > START.streak && !s.resetting ? 'mq-pop' : undefined}>{s.streak}</b>
-              <span>day streak</span>
-            </div>
+            <Streak value={s.streak} active={playing} />
             <div className="mq-nice" data-on={s.nice || undefined}><span>✓</span>Nice work!</div>
           </div>
         </>}

@@ -42,18 +42,23 @@
   .mq-option__text { font-size: 13.5px; font-weight: 500; color: var(--mq-deep); white-space: nowrap; }
 
   /* The website's chips: white, lipped, tilted, bobbing while it plays. */
-  .mq-streak, .mq-nice { position: absolute; display: flex; align-items: center; gap: 8px; padding: 10px 16px 10px 12px; border-radius: 50px; background: #fff; box-shadow: 0 4px 0 var(--mq-line); color: var(--mq-ink); font-size: 14px; font-weight: 700; }
-  .mq-streak { left: 452px; top: 74px; transform: rotate(-8deg); will-change: transform; }
-  .mq-streak b { font-weight: 700; font-size: 20px; line-height: 24px; color: #000; font-variant-numeric: tabular-nums; }
-  .mq-streak__flame { display: grid; place-items: center; transform-origin: 50% 90%; }
-  .mq-streak:has(.mq-pop) .mq-streak__flame { animation: mq-flare 1.15s linear; }
+  .mq-streak__face, .mq-nice { display: flex; align-items: center; gap: 8px; padding: 10px 16px 10px 12px; border-radius: 50px; background: #fff; box-shadow: 0 4px 0 var(--mq-line); color: var(--mq-ink); font-size: 14px; font-weight: 700; }
+  .mq-nice { position: absolute; }
+  /* The chip tilts and bobs; its face takes the app's bump, so the two never fight. */
+  .mq-streak { position: absolute; left: 452px; top: 74px; transform: rotate(-8deg); will-change: transform; }
+  .mq-streak__face { will-change: transform; }
+  .mq-streak b { display: inline-block; font-weight: 700; font-size: 20px; line-height: 24px; color: #000; font-variant-numeric: tabular-nums; }
+  /* The app's flame box: the flame, an echo that rises and fades, three sparks. */
+  .mq-streak__flame { position: relative; flex: none; width: 17px; height: 21px; }
+  .mq-streak__flame img { position: absolute; left: 0; top: 0; width: 17px; height: 21px; transform-origin: 50% 50%; }
+  .mq-streak__flame .mq-streak__spark { width: 6.5px; height: 8px; left: 5px; top: 2px; opacity: 0; }
+  .mq-streak__flame .mq-streak__echo { opacity: 0; }
   .mq-nice { left: 596px; top: 420px; transform: rotate(7deg) scale(.6); opacity: 0; transition: opacity .25s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
   .mq-nice[data-on] { opacity: 1; transform: rotate(7deg) scale(1); }
   .mq-nice span { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: var(--mq-yellow); font-size: 13px; }
-  .mq-pop { display: inline-block; animation: mq-pop .34s cubic-bezier(.3, 1.6, .5, 1); }
+  .mq-pop { animation: mq-pop .32s cubic-bezier(.3, 1.6, .5, 1); }
 
-  &[data-playing] .mq-streak:not(:has(.mq-pop)) { animation: mq-bob-a 5.2s ease-in-out infinite; }
-  &[data-playing] .mq-streak:has(.mq-pop) { animation: mq-bump .7s cubic-bezier(.3, 1.6, .5, 1) .26s; }
+  &[data-playing] .mq-streak { animation: mq-bob-a 5.2s ease-in-out infinite; }
   &[data-playing] .mq-nice[data-on] { animation: mq-bob-b 6.1s ease-in-out infinite .5s; }
 
   .mq-card, .mq-streak, .mq-nice, .mq-inkling { transition: opacity .32s ease; }
@@ -61,20 +66,10 @@
   .mq-composition[data-resetting] :is(.mq-card, .mq-streak, .mq-nice) { opacity: 0; }
 
   @media (prefers-reduced-motion: reduce) {
-    .mq-pop, .mq-streak, .mq-streak__flame, .mq-nice { animation: none !important; }
+    .mq-pop, .mq-streak, .mq-nice { animation: none !important; }
   }
 }
 
 @keyframes mq-pop { 0% { transform: scale(1); } 40% { transform: scale(1.28); } 100% { transform: scale(1); } }
-@keyframes mq-bump { 0% { transform: rotate(-8deg) scale(1); } 20% { transform: rotate(-8deg) scale(1.1); } 100% { transform: rotate(-8deg) scale(1); } }
 @keyframes mq-bob-a { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(-6deg) translateY(-7px); } }
 @keyframes mq-bob-b { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(5.5deg) translateY(-6px); } }
-/* The app's flare: taller, then under, then a smaller second lick, leaning as it goes. */
-@keyframes mq-flare {
-  0% { transform: scale(1) rotate(0deg); }
-  14% { transform: translateY(-5.8px) scale(1.55) rotate(-12deg); }
-  32% { transform: translateY(.8px) scale(.92) rotate(9deg); }
-  50% { transform: translateY(-2.3px) scale(1.22) rotate(-6deg); }
-  70% { transform: translateY(.2px) scale(.98) rotate(3deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
