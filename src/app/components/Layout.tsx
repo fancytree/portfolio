@@ -18,8 +18,61 @@ export default function Layout({ children }: LayoutProps) {
   // Footer 固定贴底（z 轴在正文下方），正文预留等高的滚动距离，
   // 滚动到底部时空白让出，正文上滑“露出”固定在底部的 footer。
   const footerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const [footerHeight, setFooterHeight] = useState(0);
   const pathname = usePathname();
+
+  // 导航和 footer 的左右边界跟着当前页面的内容走：页面的版式各不相同
+  // （带左侧目录的 case 页、居中窄版的旧页面，边距也不一样），所以量出来而不是写死。
+  // 左边：有左侧目录时对齐目录里的文字，否则对齐正文；右边：对齐正文。
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const main = root.querySelector("main");
+    if (!main) return;
+    const visible = (el: Element | null): el is HTMLElement => !!el && el.getBoundingClientRect().width > 0;
+    const measure = () => {
+      const vw = document.documentElement.clientWidth;
+      // the text column. Case Kit pages: the first block of a section that sets its
+      // own measure. Older case pages: the block holding the page title.
+      let column: DOMRect | null = null;
+      if (main.querySelector(".case-kit")) {
+        for (const el of main.querySelectorAll<HTMLElement>("section, section > div, section > div > div")) {
+          if (!visible(el)) continue;
+          const max = getComputedStyle(el).maxWidth;
+          if (max !== "none" && !max.endsWith("%")) {
+            column = el.getBoundingClientRect();
+            break;
+          }
+        }
+      }
+      const title = [...main.querySelectorAll("h1")].find(visible)?.parentElement;
+      if (!column && title) {
+        const box = title.getBoundingClientRect();
+        const cs = getComputedStyle(title);
+        column = new DOMRect(box.left + parseFloat(cs.paddingLeft), 0, box.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), 0);
+      }
+      if (!column) {
+        // no title either: the page's own box, inside its padding
+        const box = main.getBoundingClientRect();
+        const cs = getComputedStyle(main);
+        column = new DOMRect(box.left + parseFloat(cs.paddingLeft), 0, box.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), 0);
+      }
+      let left = column.left;
+      const rail = main.querySelector(".case-rail-sticky");
+      if (visible(rail)) left = rail.getBoundingClientRect().left + parseFloat(getComputedStyle(rail).paddingLeft);
+      root.style.setProperty("--nav-left", `${Math.max(16, Math.round(left))}px`);
+      root.style.setProperty("--nav-right", `${Math.max(16, Math.round(vw - column.right))}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(main);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  }, [pathname]);
 
   useLayoutEffect(() => {
     const el = footerRef.current;
@@ -44,11 +97,15 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     // 外层容器：全屏高度，背景色和基础字体
-    <div id="top" className="mei-page-root min-h-screen bg-white text-zinc-900">
+    <div ref={rootRef} id="top" className="mei-page-root min-h-screen bg-white text-zinc-900">
       {/* 顶部导航栏：与首页同一个 header。外层负责吸顶（header 自己的 sticky 只在
           它的父元素里生效），river.root 提供配色和字体变量。高度见 --site-nav-h。 */}
-      <div className={`sticky top-0 z-50 ${river.root} ${plexMono.variable}`} style={{ minHeight: 0 }}>
-        <SiteHeader />
+      {/* --river-bg 换成作品集页面自己的底色，导航和正文是同一张纸 */}
+      <div
+        className={`sticky top-0 z-50 ${river.root} ${plexMono.variable}`}
+        style={{ minHeight: 0, ["--river-bg" as string]: "var(--case-bg, #ffffff)" }}
+      >
+        <SiteHeader frame={river.siteFrame} />
       </div>
       <CustomCursor />
 
@@ -71,7 +128,7 @@ export default function Layout({ children }: LayoutProps) {
       {/* 全站底部：与首页同一个 footer（深色条 + 联系方式），固定贴底，正文滚完后露出。
           river.root 提供它的配色、字体变量；min-height 归零，免得撑满一屏。 */}
       <div ref={footerRef} className={`fixed inset-x-0 bottom-0 z-0 ${river.root} ${plexMono.variable}`} style={{ minHeight: 0 }}>
-        <SiteFooter />
+        <SiteFooter frame={river.siteFrame} />
       </div>
     </div>
   );

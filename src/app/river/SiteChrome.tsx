@@ -6,7 +6,8 @@ import { contact } from "./content";
 import s from "./river.module.css";
 
 // `current` marks the nav entry for the page being shown (the Playground marks Play).
-export function SiteHeader({ home = false, current }: { home?: boolean; current?: "play" }) {
+// `frame` replaces the centred container, for pages that line the header up with their own content.
+export function SiteHeader({ home = false, current, frame }: { home?: boolean; current?: "play"; frame?: string }) {
   const to = (id: string) => (home ? `#${id}` : `/#${id}`);
   const links = (
     <ul className={s.nav}>
@@ -20,7 +21,7 @@ export function SiteHeader({ home = false, current }: { home?: boolean; current?
   );
   return (
     <header className={s.header}>
-      <div className={`${s.container} ${s.headerInner}`}>
+      <div className={`${frame ?? s.container} ${s.headerInner}`}>
         <a className={s.brand} href={home ? "#top" : "/"} aria-label={home ? "Mei Chai, back to top" : "Mei Chai, home"}>
           {/* the same mark as the live site's navbar */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -45,10 +46,10 @@ export function SiteHeader({ home = false, current }: { home?: boolean; current?
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ frame }: { frame?: string } = {}) {
   return (
     <footer className={s.footer}>
-      <div className={`${s.container} ${s.footerInner}`}>
+      <div className={`${frame ?? s.container} ${s.footerInner}`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={`${s.brandLogo} ${s.brandLogoInverse}`} src="/logo.gif" alt="" width={33} height={20} />
         <span className={s.brandMark}>Mei Chai°</span>

@@ -20,7 +20,7 @@
 
   --river-margin: clamp(20px, 4.17vw, 60px);
   --river-gap: 24px;
-  --river-header: 80px;
+  --river-header: 52px;
   --river-section: clamp(96px, 11.5vw, 168px);
 
   min-height: 100vh;
@@ -34,7 +34,7 @@
 
 html:has(.root) {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px;
+  scroll-padding-top: 52px; /* = --river-header */
   background: #fafaf8;
 }
 
@@ -168,7 +168,7 @@ html:has(.root) {
   .header {
     animation: headerRule linear both;
     animation-timeline: scroll(root);
-    animation-range: 0 80px;
+    animation-range: 0 52px;
   }
 }
 
@@ -213,6 +213,20 @@ html:has(.root) {
   letter-spacing: 0;
 }
 
+/* in the slim header the mark is smaller than in the footer */
+.header .brand {
+  gap: 10px;
+}
+
+.header .brandLogo {
+  height: 16px;
+  margin-right: -2px;
+}
+
+.header .brandMark {
+  font-size: 18px;
+}
+
 .nav {
   display: flex;
   align-items: center;
@@ -237,6 +251,14 @@ html:has(.root) {
 .nav a:hover,
 .nav a[aria-current="page"] {
   background-size: 100% 1px;
+}
+
+/* Header and footer on pages other than the homepage: lined up with the page's
+   own content instead of centred (Layout measures it into --nav-left / --nav-right). */
+.siteFrame {
+  width: 100%;
+  padding-left: var(--nav-left, 24px);
+  padding-right: var(--nav-right, 24px);
 }
 
 /* The Menu button and its panel: only on narrow screens, where the links do not fit in a row. */
@@ -283,9 +305,12 @@ html:has(.root) {
   .menuPanel {
     position: absolute;
     top: 100%;
-    left: calc(var(--river-margin) * -1);
-    right: calc(var(--river-margin) * -1);
-    padding: 8px var(--river-margin) 20px;
+    left: 0;
+    right: 0;
+    /* full width, with its links on the header's own left edge */
+    padding: 8px 0 20px;
+    padding-left: inherit;
+    padding-right: inherit;
     background: var(--river-bg);
     border-bottom: 1px solid var(--river-border);
   }
@@ -1442,7 +1467,11 @@ html:has(.root) {
 
 @media (max-width: 767px) {
   .root {
-    --river-header: 64px;
+    --river-header: 48px;
+  }
+
+  html:has(.root) {
+    scroll-padding-top: 48px;
   }
 
   .nav {
