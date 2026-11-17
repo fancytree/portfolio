@@ -19,11 +19,11 @@
   --color-popover-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--surface-base);
+  --color-secondary: var(--surface-sunken);
   --color-secondary-foreground: var(--foreground);
-  --color-muted: var(--surface-base);
+  --color-muted: var(--surface-sunken);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--surface-base);
+  --color-accent: var(--surface-sunken);
   --color-accent-foreground: var(--foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
@@ -36,7 +36,8 @@
   --color-ring: var(--ring);
   --color-document-preview-canvas: var(--document-preview-canvas);
   /* Dashboard 卡片 hover：与 border 同色，不另开色相 */
-  --color-surface-hover: var(--border);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-sunken: var(--surface-sunken);
   /* 唯一的分类数据色板；业务 token 仅作为这些颜色的别名。 */
   --color-data-blue: var(--data-blue);
   --color-data-green: var(--data-green);
@@ -61,7 +62,10 @@
 
   /* 状态浅底 / 描边（badge 边框必须用 *-border，才能作为 utility 盖过 border-transparent） */
   /* 浅底/描边用明亮的 *-tint 色相混合；文字色（--primary/--destructive）已为 AA 对比度加深，直接混合会发灰 */
-  --color-status-info-subtle: color-mix(in oklch, var(--primary-tint) 12%, transparent);
+  --color-success-text: var(--success-text);
+  --color-warning-text: var(--warning-text);
+  --color-primary-strong: var(--primary-strong);
+  --color-status-info-subtle:color-mix(in oklch, var(--primary-tint) 12%, transparent);
   --color-status-info-subtle-border: color-mix(in oklch, var(--primary-tint) 22%, transparent);
   --color-status-warning-subtle-border: color-mix(in oklch, var(--warning) 26%, transparent);
   --color-status-success-subtle-border: color-mix(in oklch, var(--success) 24%, transparent);
@@ -73,11 +77,11 @@
   --radius-none: var(--shape-none);
   --radius-xs: var(--shape-sm);
   --radius-sm: var(--shape-sm);
-  --radius-md: var(--shape-md);
+  --radius-md: var(--shape-sm);
   --radius-lg: var(--shape-md);
   --radius-xl: var(--shape-lg);
-  --radius-2xl: var(--shape-lg);
-  --radius-3xl: var(--shape-lg);
+  --radius-2xl: var(--shape-xl);
+  --radius-3xl: var(--shape-xl);
   --radius-full: var(--shape-full);
 
   /* Woblo token 阴影：仅覆盖 lg/xl（新值是常规柔和阴影，风险低）；
@@ -85,6 +89,7 @@
      直接套用会让全站已有的 26/16 处 shadow-sm/shadow-md 变成异常观感，故不覆盖，保留 Tailwind 默认。
      xs 目前全站零使用，新增无风险，供后续按需选用。 */
   --shadow-xs: var(--elevation-xs);
+  --shadow-card: var(--elevation-card);
   --shadow-lg: var(--elevation-lg);
   --shadow-xl: var(--elevation-xl);
 
@@ -122,9 +127,11 @@
   --tabs-indicator-size: 0.125rem;
 
   /* 可被运行时设计系统读取的 elevation / layer 源 token。 */
-  --elevation-xs: 0 0 0 1px rgb(255 255 255);
-  --elevation-lg: 0 4px 4px 0 rgb(0 0 0 / 0.04);
-  --elevation-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  /* 阴影统一用深蓝灰而非纯黑，叠在冷调底色上不发脏。 */
+  --elevation-xs: 0 1px 2px rgb(24 34 80 / 0.06);
+  --elevation-card: 0 0 0 1px rgb(24 34 80 / 0.05), 0 1px 2px rgb(24 34 80 / 0.04), 0 10px 28px -10px rgb(24 34 80 / 0.12);
+  --elevation-lg: 0 14px 36px -10px rgb(24 34 80 / 0.2), 0 0 0 1px rgb(24 34 80 / 0.05);
+  --elevation-xl: 0 28px 56px -14px rgb(24 34 80 / 0.28), 0 0 0 1px rgb(24 34 80 / 0.06);
   --layer-side-panel: 100;
   --layer-dialog-overlay: 200;
   --layer-dialog: 201;
@@ -1664,53 +1671,81 @@ html[data-visual-agent-canvas] .app-main-outlet {
   h2,
   h3 {
     font-family: var(--font-sans);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.01em;
+  }
+  /* 数字焦点档：大号、紧字距；单位和小数用 .text-display-unit 退成灰色小字 */
+  .text-display {
+    font-size: 2.25rem;
+    line-height: 1.1;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+  }
+  .text-display-unit {
+    font-size: 0.5em;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--muted-foreground);
   }
   :root {
     /* ── 基础色（唯一定义处）── Woblo token 重皮肤：primary 蓝 #197afa / neutral 灰阶 / 状态三色 */
-    --surface-base: #f5f6fa;
+    /* v2 冷调表面：canvas 偏蓝灰、卡片纯白、凹陷区（分段控件/统计小块/hover）再深一档，共四层。 */
+    --surface-base: #f5f6f8;
     --surface-raised: #ffffff;
-    --foreground: #2f3137;
-    --muted-foreground: #666c7c;
-    /* 发丝分割线：在白色卡片上可辨识，但不形成深色网格感。 */
-    --border: #e6e9ef;
-    /* WCAG AA：白字 5.39:1；原品牌蓝 #197afa 仅 4.03:1 */
-    --ring: #1366d6;
-    --primary: #1366d6;
+    --surface-sunken: #f3f5fa;
+    --foreground: #151a2d;
+    --muted-foreground: #5d6580;
+    /* 发丝分割线：在白色卡片内部用，卡片外轮廓由 --elevation-card 负责。 */
+    --border: #e4e8f1;
+    /* WCAG AA：白字 ≥5.8:1 */
+    --ring: #2358e6;
+    --primary: #2358e6;
     --primary-foreground: #ffffff;
     /* 蓝字压在蓝色浅底（选中态侧栏 / 信息面）上用更深一档，保证 ≥4.5:1 */
-    --primary-strong: #0f58bd;
-    /* 浅底色相：原品牌亮蓝/亮红，只用于 12–22% 混合的浅底与描边，不用于文字或实色填充 */
-    --primary-tint: #197afa;
+    --primary-strong: #1b45bd;
+    /* 浅底色相：只用于 12–22% 混合的浅底与描边，不用于文字或实色填充 */
+    --primary-tint: #3d6bff;
     --destructive: #c42727;
     --destructive-tint: #eb4242;
     --destructive-foreground: #ffffff;
     /* 状态色（badge / tag / 提醒）：仅 success + warning，info 用 primary，danger 用 destructive */
-    --success: #00a85f;
+    --success: #1f9d68;
     --success-foreground: #ffffff;
-    --warning: #fe8a4f;
+    --warning: #ee8a3a;
     --warning-foreground: #5e2508;
-    /* 状态文字色：实色底保留品牌亮色，文字/徽标文字用加深色以满足 ≥4.5:1 */
-    --success-text: #006e3e;
-    --warning-text: #a84612;
+    /* 状态文字色：浅底标签上的深色字，≥4.5:1 */
+    --success-text: #0b6a45;
+    --warning-text: #9a4a0c;
+    /* 侧栏等处的待办计数：饱和暖橙实底 + 深色字（参考 Kinby），不用混白的浅底以免发灰 */
+    --attention: #ec9466;
+    --attention-foreground: #231a14;
     /* Surface 只维护 base / raised 两层；组件语义在 @theme 中直接映射。 */
     /* 分割线继续用 --border；控件描边（Input / Checkbox / 描边按钮）用更深的 --input */
     /* 比 --border 深一档，用于按钮/输入框等可操作元素的描边。
        用 srgb 混合：与白色做 oklch 混合会让色相塌成 none（按 0° 即红轴渲染），
        原先 14% 的 oklch 版本实测偏红 1 级，与偏冷的 --border 不同族。 */
     --input: color-mix(in srgb, var(--foreground) 28%, var(--surface-raised));
-    --surface-hover: var(--border);
+    --surface-hover: color-mix(in srgb, var(--primary) 5%, var(--surface-raised));
     --document-preview-canvas: #404040;
     /* 分类数据只维护这一套色板；图表与业务分类 token 全部引用它。 */
     --data-blue: var(--primary);
     --data-green: var(--success);
     --data-orange: var(--warning);
     --data-red: var(--destructive);
-    --data-purple: oklch(0.68 0.16 295);
-    --data-cyan: oklch(0.72 0.13 205);
+    --data-purple: oklch(0.64 0.13 285);
+    --data-cyan: oklch(0.72 0.1 215);
     /* 「其他 / 余额」等中性色块：原先借用 --muted-foreground（正文文字色），
        做大面积色块太重；独立取一档浅灰，与彩色分类拉开主次 */
     --data-neutral: oklch(0.83 0.01 260);
+    /* 数据可视化类别色：固定顺序，已用 dataviz 校验脚本验证（light，相邻 CVD ΔE ≥ 9，常规视觉 ≥ 17）。
+       橙/青对比度 < 3:1，所以每张图必须有图例 + 悬停提示 + 表格视图。 */
+    --viz-1: #2358e6;
+    --viz-2: #e07b24;
+    --viz-3: #3fa9c4;
+    --viz-4: #7b6fd6;
+    --viz-5: #1f9d68;
+    --viz-other: #b9c0d4;
+    --viz-grid: #e9ecf4;
     --data-indigo: color-mix(in oklch, var(--data-purple) 65%, var(--primary));
     --data-periwinkle: color-mix(in oklch, var(--primary) 65%, var(--surface-raised));
     --data-orchid: color-mix(in oklch, var(--data-purple) 70%, var(--destructive));
@@ -1742,9 +1777,10 @@ html[data-visual-agent-canvas] .app-main-outlet {
     --payment-balance: color-mix(in oklch, var(--data-purple) 65%, var(--surface-raised));
     /* 唯一圆角源：5 档足以覆盖直角、控件、容器和胶囊形态。 */
     --shape-none: 0px;
-    --shape-sm: 0.25rem;
-    --shape-md: 0.5rem;
+    --shape-sm: 0.375rem;
+    --shape-md: 0.625rem;
     --shape-lg: 0.75rem;
+    --shape-xl: 1rem;
     --shape-full: 9999px;
     --sidebar-primary: var(--primary);
     --sidebar-primary-foreground: var(--primary-foreground);
@@ -1754,6 +1790,7 @@ html[data-visual-agent-canvas] .app-main-outlet {
   .dark {
     --surface-base: oklch(0.145 0 0);
     --surface-raised: oklch(0.205 0 0);
+    --surface-sunken: oklch(0.175 0 0);
     --foreground: oklch(0.985 0 0);
     --muted-foreground: oklch(0.708 0 0);
     --border: oklch(1 0 0 / 14%);
@@ -1929,3 +1966,47 @@ html[data-visual-agent-canvas] .app-main-outlet {
     border-radius: var(--shape-sm);
   }
 }
+
+/* ───────── Motion：showcase 微交互 ───────── */
+:root {
+  --ease-spring: cubic-bezier(0.3, 1.1, 0.5, 1); /* 轻微回弹，用于选中块滑动 */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 480ms;
+}
+.slide-indicator {
+  transition: transform 400ms var(--ease-spring), width 400ms var(--ease-spring), height var(--dur-base) var(--ease-out);
+  will-change: transform;
+}
+@keyframes bar-grow-x { from { transform: scaleX(0); } }
+@keyframes bar-grow-y { from { transform: scaleY(0); } }
+@keyframes rise-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: scale(0.6); } }
+.bar-grow { transform-origin: left center; animation: bar-grow-x 900ms var(--ease-out) both; transition: width var(--dur-slow) var(--ease-out), background-color var(--dur-base); }
+.rise-in { animation: rise-in 520ms var(--ease-out) both; }
+.fade-in { animation: fade-in 600ms var(--ease-out) both; }
+.pop-in { animation: pop-in 420ms var(--ease-spring) both; }
+/* 子菜单展开：高度从 0 过渡，不是直接出现 */
+.collapse-rows { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out); opacity: 0; }
+.collapse-rows[data-open='true'] { grid-template-rows: 1fr; opacity: 1; }
+.collapse-rows > * { min-height: 0; overflow: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .slide-indicator, .bar-grow, .collapse-rows { transition: none; }
+  .bar-grow, .rise-in, .fade-in, .pop-in { animation: none; }
+}
+.funnel-bar { transform-box: fill-box; transform-origin: center; animation: bar-grow-y 800ms var(--ease-spring) both; }
+@media (prefers-reduced-motion: reduce) { .funnel-bar { animation: none; } }
+@keyframes menu-pop { from { opacity: 0; transform: translateY(-6px) scale(0.97); } }
+.menu-pop { animation: menu-pop 220ms var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) { .menu-pop { animation: none; } }
+/* 侧栏滑动底色 */
+.nav-glide { transition: transform 400ms var(--ease-spring), width 400ms var(--ease-spring), height 300ms var(--ease-out), opacity 200ms ease-out, background-color 300ms ease-out, border-radius 300ms ease-out; will-change: transform; }
+.nav-glide[data-tone='solid'] { background: var(--primary); }
+.nav-glide[data-tone='soft'] { background: color-mix(in srgb, var(--primary) 10%, transparent); }
+@media (prefers-reduced-motion: reduce) { .nav-glide { transition: opacity 150ms; } }
+/* 扫码：横向扫描线在条码图标上上下扫 */
+@keyframes scan-sweep { 0%, 100% { transform: translateY(0); opacity: .35; } 50% { transform: translateY(14px); opacity: 1; } }
+.scan-sweep { animation: scan-sweep 1.2s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .scan-sweep { animation: none; opacity: 0; } }

@@ -96,7 +96,7 @@ const TabsList = React.forwardRef<
       data-variant={variant}
       className={cn(
         "group/tabs-list relative inline-flex w-full items-center [gap:var(--tabs-gap)] rounded-none border-b border-border bg-transparent p-0 text-muted-foreground group-data-vertical/tabs:flex-col",
-        "data-[variant=secondary]:w-fit data-[variant=secondary]:gap-1 data-[variant=secondary]:rounded-lg data-[variant=secondary]:border-0 data-[variant=secondary]:bg-muted data-[variant=secondary]:p-1 data-[variant=secondary]:[--tabs-trigger-padding-block:0.5rem] data-[variant=secondary]:[--tabs-trigger-padding-inline:0.875rem]",
+        "data-[variant=secondary]:w-fit data-[variant=secondary]:gap-1 data-[variant=secondary]:rounded-xl data-[variant=secondary]:border-0 data-[variant=secondary]:bg-muted data-[variant=secondary]:p-1 data-[variant=secondary]:[--tabs-trigger-padding-block:0.5rem] data-[variant=secondary]:[--tabs-trigger-padding-inline:0.875rem]",
         className
       )}
       {...props}
@@ -125,7 +125,7 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       className={cn(
         "group/tabs-trigger relative inline-flex shrink-0 items-center justify-center [gap:var(--tabs-trigger-gap)] rounded-lg bg-transparent [padding-inline:var(--tabs-trigger-padding-inline)] [padding-block:var(--tabs-trigger-padding-block)] text-base leading-normal font-medium whitespace-nowrap text-muted-foreground transition-colors duration-200 group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:bg-muted/60 hover:text-[var(--tabs-active-color)] focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        "group-data-[variant=secondary]/tabs-list:rounded-md group-data-[variant=secondary]/tabs-list:text-sm group-data-[variant=secondary]/tabs-list:font-medium group-data-[variant=secondary]/tabs-list:hover:bg-background/70 group-data-[variant=secondary]/tabs-list:hover:text-foreground group-data-[variant=secondary]/tabs-list:data-[state=active]:bg-card group-data-[variant=secondary]/tabs-list:data-[state=active]:text-foreground group-data-[variant=secondary]/tabs-list:data-[state=active]:shadow-xs",
+        "group-data-[variant=secondary]/tabs-list:rounded-lg group-data-[variant=secondary]/tabs-list:text-sm group-data-[variant=secondary]/tabs-list:font-medium group-data-[variant=secondary]/tabs-list:hover:bg-background/70 group-data-[variant=secondary]/tabs-list:hover:text-foreground group-data-[variant=secondary]/tabs-list:data-[state=active]:bg-card group-data-[variant=secondary]/tabs-list:data-[state=active]:text-foreground group-data-[variant=secondary]/tabs-list:data-[state=active]:shadow-xs",
         "data-[state=active]:text-[var(--tabs-active-color)]",
         className
       )}

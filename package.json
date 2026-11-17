@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "check:def-erp": "node scripts/check-def-erp.mjs",
-    "check:case-tokens": "node scripts/check-case-tokens.mjs"
+    "check:case-tokens": "node scripts/check-case-tokens.mjs",
+    "erp:dev": "npm --prefix demos/def-design-system run dev",
+    "erp:preview": "npm --prefix demos/def-design-system run preview"
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",

@@ -20,10 +20,12 @@ const each = async (h: Helpers, selector: string, limit = 4) => {
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Principles', lead: 'People first, then ERP rules.', seconds: 19,
-    body: 'Fourteen rules, one source of truth.',
+    title: 'Principles', lead: 'Three words, then the rules.', seconds: 23,
+    body: 'Calm, layered, precise. Fourteen rules, one source of truth.',
     script: async (h) => {
       await go(h, 'principles');
+      h.say('Calm, layered, precise');
+      await each(h, '[data-keyword]', 3);
       h.say('Start from the people');
       await each(h, '[data-principle]', 6);
       await go(h, 'how');
@@ -50,13 +52,13 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'Type & shape', lead: 'Few values, repeated.', seconds: 24,
-    body: 'Four sizes, a 4px scale, five radii.',
+    body: 'Four sizes, a 4px scale, six nested radii.',
     script: async (h) => {
       await go(h, 'type');
       h.say('Four sizes');
       await each(h, '[data-type-row]', 5);
       await go(h, 'space');
-      h.say('Five radii');
+      h.say('Six radii, nested');
       await each(h, '[data-radius]', 5);
       h.say('4px steps');
       await h.zoom(h.find('[data-space-demo]'), 1.7);

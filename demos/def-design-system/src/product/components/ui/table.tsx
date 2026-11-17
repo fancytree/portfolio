@@ -102,7 +102,7 @@ function Table({
   containerClassName,
   children,
   frame = true,
-  gridLines = "all",
+  gridLines = "rows",
   layout,
   scroll,
   stickyHeader,
@@ -229,7 +229,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("border-b border-border/50 bg-background", className)}
+      className={cn("border-b border-border/50 bg-muted", className)}
       {...props}
     />
   )
@@ -263,7 +263,7 @@ function TableRow({
   return (
     <tr
       data-slot="table-row"
-      className={cn("hover:bg-background", interactive && "cursor-pointer", className)}
+      className={cn("transition-colors hover:bg-surface-hover", interactive && "cursor-pointer", className)}
       {...props}
     />
   )
@@ -279,7 +279,7 @@ function TableHead({
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 border-b border-border/50 text-sm font-semibold whitespace-nowrap text-foreground",
+        "h-10 border-b border-border/50 text-xs font-medium whitespace-nowrap text-muted-foreground",
         headDensity({ density, align }),
         className,
       )}

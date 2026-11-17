@@ -83,11 +83,11 @@ function contrast(a: [number, number, number], b: [number, number, number]) {
 }
 
 const colourGroups: { title: string; items: [string, string][] }[] = [
-  { title: 'Surfaces & lines', items: [['--surface-base', 'Page background and quiet areas'], ['--surface-raised', 'Cards, drawers, popovers'], ['--border', 'Table, card and section dividers'], ['--input', 'Input and outlined-button borders']] },
+  { title: 'Surfaces & lines', items: [['--surface-base', 'Page background: the lowest layer'], ['--surface-raised', 'Cards, drawers, popovers'], ['--surface-sunken', 'Rows and tiles inside a card'], ['--surface-hover', 'Hover: 5% blue on white, never grey'], ['--border', 'Hairlines inside cards'], ['--input', 'Input and outlined-button borders']] },
   { title: 'Text', items: [['--foreground', 'Body text and values'], ['--muted-foreground', 'Helper text and table headers']] },
-  { title: 'Brand', items: [['--primary', 'The one main action, links, the selected state'], ['--primary-tint', 'Light status fills only. Never used for text']] },
-  { title: 'Status', items: [['--success', 'Received, paid, in stock'], ['--warning', 'Needs a look: partial, near expiry'], ['--destructive', 'Errors and irreversible actions']] },
-  { title: 'Data series', items: [['--data-blue', 'Same business value, same colour in every chart and tag'], ['--data-green', 'Same business value, same colour in every chart and tag'], ['--data-orange', 'Same business value, same colour in every chart and tag'], ['--data-purple', 'Same business value, same colour in every chart and tag'], ['--data-cyan', 'Same business value, same colour in every chart and tag']] },
+  { title: 'Brand', items: [['--primary', 'The one main action, links, the selected state'], ['--primary-strong', 'Hover and pressed; strong text on a blue tint'], ['--primary-tint', 'Light fills only. Never used for text']] },
+  { title: 'Status', items: [['--success', 'Received, paid, in stock'], ['--warning', 'Needs a look: partial, near expiry'], ['--destructive', 'Errors and irreversible actions'], ['--attention', 'Counts that wait on you: navigation badges']] },
+  { title: 'Data series', items: [['--viz-1', 'Series 1, always the main value'], ['--viz-2', 'Series 2'], ['--viz-3', 'Series 3'], ['--viz-4', 'Series 4'], ['--viz-5', 'Series 5. Order is fixed, never cycled']] },
 ];
 
 function Colour() {
@@ -124,7 +124,7 @@ function Colour() {
           </div>
         ))}
         <p className="rounded-lg bg-card p-4 text-xs text-muted-foreground">
-          <strong className="text-foreground">Brand blue was darkened</strong> from #197afa to #1366d6 so white text on it passes WCAG AA: contrast 4.03 → 5.39. The bright value stays as <span className="font-mono">--primary-tint</span> for soft fills.
+          <strong className="text-foreground">One calm blue.</strong> #2358e6 carries white text at 5.82:1 (AA); hover and pressed step down to <span className="font-mono">--primary-strong</span> (7.98:1). Status colours are softened so they inform without shouting, and every chart palette is checked for colour-blind separation.
         </p>
       </div>
       <Card className="sticky top-6 h-fit self-start" data-detail>
@@ -191,7 +191,7 @@ function Typography() {
 }
 
 function SpaceShape() {
-  const radii = [['--shape-none', 'None', 'Table edges inside cards'], ['--shape-sm', 'Small', 'Badges, status tags'], ['--shape-md', 'Medium', 'Inputs and buttons'], ['--shape-lg', 'Large', 'Cards, dialogs, popovers'], ['--shape-full', 'Full', 'Switch, avatar, radio']];
+  const radii = [['--shape-none', 'None', 'Table edges inside cards'], ['--shape-sm', 'Small', 'Badges, status tags'], ['--shape-md', 'Medium', 'Inputs, buttons, tabs'], ['--shape-lg', 'Large', 'Tiles and rows inside a card'], ['--shape-xl', 'XL', 'Cards, dialogs, popovers'], ['--shape-full', 'Full', 'Avatar, switch, count badge']];
   const [vals, setVals] = useState<Record<string, string>>({});
   useEffect(() => {
     const cs = getComputedStyle(document.documentElement);
@@ -201,8 +201,8 @@ function SpaceShape() {
   return (
     <div className="space-y-6">
       <div>
-        <Sub>Five radii. Nothing in between.</Sub>
-        <div className="grid grid-cols-5 gap-3">
+        <Sub>Six radii, nested: inner = outer − padding. No pills.</Sub>
+        <div className="grid grid-cols-6 gap-3">
           {radii.map(([t, name, use]) => (
             <div key={t} data-radius className="rounded-lg bg-card p-3">
               <span className="block h-14 border-2 border-primary bg-primary/10" style={{ borderRadius: `var(${t})` }} />
@@ -216,10 +216,11 @@ function SpaceShape() {
       <SpacingScale />
       <div>
         <div className="rounded-lg bg-card p-4">
-          <Sub>Borders over shadows</Sub>
-          <div className="flex gap-3">
-            <div className="flex-1 rounded-lg border bg-card p-3 text-xs">Standard card: hairline border, no shadow</div>
-            <div className="flex-1 rounded-lg bg-card p-3 text-xs" style={{ boxShadow: 'var(--elevation-xl)' }}>Floating layers only: dialogs, popovers</div>
+          <Sub>Three layers, soft depth</Sub>
+          <div className="flex gap-3 rounded-xl p-3" style={{ background: 'var(--surface-base)' }}>
+            <div className="flex-1 rounded-xl p-3 text-xs" style={{ background: 'var(--surface-sunken)' }}>Sunken: rows and tiles inside a card</div>
+            <div className="flex-1 rounded-2xl bg-card p-3 text-xs" style={{ boxShadow: 'var(--elevation-card)' }}>Raised card: a 1px ring and a soft, low shadow</div>
+            <div className="flex-1 rounded-2xl bg-card p-3 text-xs" style={{ boxShadow: 'var(--elevation-xl)' }}>Floating: dialogs, menus, popovers</div>
           </div>
         </div>
       </div>
@@ -509,7 +510,21 @@ export default function Docs() {
         <p className="text-xs text-muted-foreground">DEF Beauty Supply · B2B wholesale ERP</p>
         <h1 className="mt-2 text-6xl font-semibold tracking-tight">Design system</h1>
 
-        <Section id="principles" n="01" title="Principles" intro="Fourteen rules: six about the people who use it, eight about building an ERP they can trust.">
+        <Section id="principles" n="01" title="Principles" intro="Three words for how it looks, then fourteen rules: six about the people who use it, eight about building an ERP they can trust.">
+          <Sub>The look in three words</Sub>
+          <div className="mb-8 grid grid-cols-3 gap-3">
+            {([
+              ['Calm', 'Colour only with meaning', 'One blue for action, softened status colours. Everything else is ink and quiet surfaces.'],
+              ['Layered', 'Surfaces, not lines', 'Base, raised and sunken surfaces with a soft card depth carry the hierarchy, so fewer dividers are needed.'],
+              ['Precise', 'Every value on a scale', 'Six nested radii, a 4px scale, tabular numbers. Motion only where it explains a change.'],
+            ] as const).map(([word, line, body]) => (
+              <article key={word} data-keyword className="flex flex-col rounded-2xl bg-card p-5 shadow-card">
+                <h3 className="text-3xl font-semibold tracking-tight">{word}</h3>
+                <p className="mt-1 text-[11px] font-medium uppercase tracking-[0.08em] text-muted-foreground">{line}</p>
+                <p className="mt-3 text-xs leading-5 text-muted-foreground">{body}</p>
+              </article>
+            ))}
+          </div>
           {([
             ['Start from the people', 'grid-cols-3', [
               ['Design for the busiest seat', 'Five of fifteen staff live in one screen, sales entry, with a customer standing in front of them. An extra click there is paid dozens of times a day.'],

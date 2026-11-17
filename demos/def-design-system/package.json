@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5290 --strictPort --open /demos/def-design-system/?view=shell",
+    "preview": "vite build --outDir .preview --emptyOutDir && vite preview --outDir .preview --host 127.0.0.1 --port 5291 --strictPort --open /demos/def-design-system/?view=shell",
     "build": "tsc -p tsconfig.json && vite build"
   },
   "dependencies": {

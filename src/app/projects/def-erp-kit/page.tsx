@@ -6,6 +6,7 @@ import FragmentedOperationsDiagram from './FragmentedOperationsDiagram';
 import UnifiedOperationsDiagram from './UnifiedOperationsDiagram';
 import BeforeAfterSlider from '../def-erp/BeforeAfterSlider';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
+import DashboardLiveDemo from './DashboardLiveDemo';
 import DesignSystemShowcase from './DesignSystemShowcase';
 import wide from './DefDecisions.module.css';
 import { InvoicingLiveDemo, PurchasingLiveDemo, SalesOrderLiveDemo, StorefrontBuilderLiveDemo } from './ErpLiveDemo';
@@ -231,6 +232,14 @@ export default function DefErpKitPage() {
         </CaseChapter>
 
         <CaseChapter label="06 / Design system" title="A shared system, from design to code.">
+          <CaseStats items={[
+            { value: 'Calm', label: 'Colour only with meaning' },
+            { value: 'Layered', label: 'Surfaces, not lines' },
+            { value: 'Precise', label: 'Every value on a scale' },
+          ]} />
+          <CaseProse>
+            <p><strong>Calm:</strong> one blue for action, softened status colours. <strong>Layered:</strong> base, raised and sunken surfaces with soft card depth carry the hierarchy. <strong>Precise:</strong> six nested radii, a 4px scale, tabular numbers, and motion only where it explains a change.</p>
+          </CaseProse>
           <CaseProse>
             <p>Written rules plus reusable components give design and the coding agent one shared reference. Step through it below; the controls and patterns are live and use demonstration data.</p>
           </CaseProse>
@@ -267,28 +276,18 @@ export default function DefErpKitPage() {
             beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
             beforeAlt="Legacy ordering system Dashboard: one undifferentiated view mixing sales KPIs, pending approvals, and promotional panels for every user."
             beforeLabel="Before"
-            afterSrc="/img/def-erp/evidence/dashboard-admin-expanded-v2.webp"
-            afterAlt="New Admin dashboard: sales, orders, new customers and receivables with trend lines, sales performance, customer mix, and tasks to handle."
+            afterSrc="/img/def-erp/evidence/dashboard-admin-v3.webp"
+            afterAlt="New Admin dashboard: four tinted KPI tiles with trend lines, quick actions, net sales against the previous period, and an across-teams list of what is waiting on whom."
             afterLabel="After"
             aspectRatio={1.6}
           />
           <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">
             Before: one Dashboard page for every login, mixing task types that belonged to different jobs. After: the same shell, reweighted per role — this is the Admin view.
           </p>
-          <div className="grid grid-cols-1 gap-[var(--case-space-24)] md:grid-cols-2">
-            <CaseFigure caption="Admin — business performance and outstanding work.">
-              <Image src="/img/def-erp/evidence/dashboard-admin-expanded-v2.webp" alt="Admin dashboard with business metrics, sales trends, customer mix, and outstanding tasks." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
-            </CaseFigure>
-            <CaseFigure caption="Sales — orders, receivables, and customer follow-ups.">
-              <Image src="/img/def-erp/evidence/dashboard-sales-expanded-v2.webp" alt="Sales dashboard showing orders to ship, overdue customers, customer follow-ups, and sales performance." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
-            </CaseFigure>
-            <CaseFigure caption="Warehouse — stock, dispatch, and incoming goods.">
-              <Image src="/img/def-erp/evidence/dashboard-warehouse-expanded-v2.webp" alt="Warehouse dashboard with stock tasks, orders to ship, incoming receipts, and near-expiry products." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
-            </CaseFigure>
-            <CaseFigure caption="Finance — payment approvals, invoices, and receivables.">
-              <Image src="/img/def-erp/evidence/dashboard-finance-expanded-v2.webp" alt="Finance dashboard showing payment approvals, invoices to issue, and overdue receivables." width={3200} height={2000} sizes="(min-width: 768px) 50vw, 100vw" unoptimized />
-            </CaseFigure>
-          </div>
+          <CaseProse>
+            <p>The four dashboards running on demonstration data, one role at a time. Watch, or move your pointer in and use them yourself. Nothing is saved.</p>
+          </CaseProse>
+          <DashboardLiveDemo />
           <CaseProse>
             <h3>One order, from search to delivery</h3>
             <p>Two trade-offs shaped the sales screens: how packaging units are modelled, and when the system asks before acting.</p>
