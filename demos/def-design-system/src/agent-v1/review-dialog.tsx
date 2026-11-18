@@ -32,7 +32,7 @@ const TONE = ['var(--success)', 'var(--warning)', 'var(--destructive)'];
 const offBy = (d: Dim, v: number) => (d.ideal === 'center' ? Math.abs(v) : v >= 1 ? 0 : v === 0 ? 1 : 2);
 
 /** 五档滑块：拖动时拇指跟手、略微放大，松手按回弹曲线吸附到最近一档；颜色随偏离程度变化 */
-function StopSlider({ dim, value, onChange }: { dim: Dim; value: number; onChange: (v: number) => void }) {
+export function StopSlider({ dim, value, onChange }: { dim: Dim; value: number; onChange: (v: number) => void }) {
   const track = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<number | null>(null); // 拖动中的连续位置 0–100
   const moved = useRef(false);

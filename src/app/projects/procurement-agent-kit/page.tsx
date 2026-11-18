@@ -288,7 +288,7 @@ export default function ProcurementAgentKitPage() {
           <ReversalList items={reversals} />
         </CaseChapter>
 
-        <CaseChapter label="10 / Design an AI agent" title="12 clear steps and 6 topics shape every handoff.">
+        <CaseChapter label="10 / Design an AI agent" title="Twelve steps and six themes shape every handoff.">
           <CaseProse><p>Twelve steps across a purchase, six themes across all of them. Try each card; every one is held to four goals: explainable, controllable, predictable, recoverable.</p></CaseProse>
           <ProcurementExperienceMap />
         </CaseChapter>

@@ -10,6 +10,9 @@ import { eur } from './order-deliveries';
 import { AGENT_POS, AGENT_STATUS, NOTICES, OPPORTUNITIES, PLAN_STEP_DETAIL, PLAN_STEPS, SUPPLIER_RULES, TASKS } from './agent-data';
 import { KeyValues, type ResultCard } from './agent-panel';
 import { EvidenceView } from './agent-evidence';
+import { EvidenceView as EvidenceV1 } from './agent-v1/agent-evidence';
+import { SupplierScoreCard } from './agent-v1/accuracy';
+import { DIMS, INTENT, StopSlider, parseMentions } from './agent-v1/review-dialog';
 import { OpportunityCard, SUPPLIERS, SupplierPicker, TaskItem } from './agent-workspace';
 import { BASE_LINES } from './purchase-data';
 
@@ -178,7 +181,7 @@ function Recovery() {
 
 /* 08 · 可核查的交付 */
 function Evidence() {
-  return <Frame title="Evidence for this order" sub="PO-2026-0842 · MNP · 30-day coverage"><EvidenceView coverage={30} confirmation="26VOM002922.pdf" onOpenRules={() => {}} /></Frame>;
+  return <Frame title="Evidence for this order" sub="PO-2026-0843 · MNP · 30-day coverage"><EvidenceV1 coverage={30} confirmation="26VOM002922.pdf" showScore onOpenRules={() => {}} /></Frame>;
 }
 
 /* 09 · 就地修改 */
@@ -206,15 +209,20 @@ function EditableTable() {
 
 /* 10 · 反馈与复用：订单备注和供应商规则分开 */
 function Notes() {
-  const [text, setText] = useState('');
-  const [notes, setNotes] = useState([{ t: 'Salon fair on 28/11: keep extra bonders this cycle.', at: '17/11 08:20' }]);
+  const [dims, setDims] = useState<Record<string, number>>({ quantity: -1, timing: -1 });
+  const [note, setNote] = useState('Black Onyx sells, but salons report chipping. Keep it flat.');
+  const mentions = parseMentions(note);
   return (
-    <Frame title="Order notes" sub="This purchase only · supplier rules stay unchanged">
-      <div className="space-y-2.5">
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} aria-label="Order note" placeholder="Add context or a decision for this order" className="block w-full resize-none rounded-xl border border-input bg-card px-3 py-[9px] text-sm leading-5 outline-none focus:ring-2 focus:ring-ring/40" />
-        <Button className="w-full" disabled={!text.trim()} onClick={() => { setNotes((p) => [{ t: text.trim(), at: '17/11 now' }, ...p]); setText(''); }}>Save note</Button>
+    <Frame title="Review this order" sub="PO-2026-0838 · rate it, then name exceptions">
+      <div className="-mx-1 divide-y divide-border rounded-xl border border-border">
+        {DIMS.slice(0, 2).map((d) => <StopSlider key={d.id} dim={d} value={dims[d.id]} onChange={(v) => setDims((p) => ({ ...p, [d.id]: v }))} />)}
       </div>
-      <ul className="mt-4 space-y-2">{notes.map((n) => <li key={n.t} className="rounded-xl bg-muted px-3.5 py-2.5 text-sm">{n.t}<span className="mt-0.5 block text-xs tabular-nums text-muted-foreground">Giulia Rossi · {n.at}</span></li>)}</ul>
+      <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} aria-label="Notes about specific products"
+        className="mt-3 block w-full resize-none rounded-xl border border-input bg-card px-3 py-[9px] text-sm leading-5 outline-none focus:ring-2 focus:ring-ring/40" />
+      <div className="mt-2 flex min-h-7 flex-wrap gap-1.5">
+        {mentions.length ? mentions.map((m) => <span key={m.key} className="inline-flex h-7 items-center gap-1.5 rounded-full border border-primary/25 bg-primary/5 px-2.5 text-xs"><span className="font-medium">{m.label}</span><span className="text-muted-foreground">→</span><span className="font-medium text-warning-text">{INTENT[m.intent]}</span></span>)
+          : <span className="text-xs text-muted-foreground">Name a product or SKU to see what the agent will do.</span>}
+      </div>
     </Frame>
   );
 }
@@ -332,18 +340,12 @@ function Schedule() {
 /* F · 体验度量 */
 const CHECKS: Record<string, string[]> = { Plan: ['Supplier and coverage are clear', 'Plan can be checked in the table', 'Next action is easy to find'], Confirmation: ['Differences are found without reading the PDF', 'Approval path is understood', 'Approve is not mistaken for ordering'], Recovery: ['Previous draft can be previewed', 'Applying keeps later events', 'Buyer trusts the restored plan'] };
 function Metrics() {
-  const [tab, setTab] = useState<keyof typeof CHECKS>('Plan');
-  const [done, setDone] = useState<Set<string>>(new Set());
-  const all = Object.values(CHECKS).flat();
+  const [sid, setSid] = useState<'mnp' | 'moroccanoil'>('mnp');
   return (
-    <Frame title="Experience review" sub="Observed in task scenarios, not measured impact" action={<span className="text-xs tabular-nums text-muted-foreground">{done.size}/{all.length}</span>}>
-      <SlideTabs label="Scenario" value={tab} onChange={setTab} items={Object.keys(CHECKS).map((k) => ({ id: k as keyof typeof CHECKS, label: k }))}
-        className="flex gap-1 rounded-xl bg-muted p-1" itemClassName="flex-1 rounded-[8px] px-2 py-1.5 text-sm" activeClassName="font-semibold" idleClassName="text-muted-foreground" indicatorClassName="rounded-[8px] bg-card shadow-[0_1px_2px_rgb(16_24_40/0.08)]" />
-      <ul className="mt-3 space-y-1">{CHECKS[tab].map((c) => (
-        <li key={c}><button type="button" onClick={() => setDone((p) => { const n = new Set(p); if (n.has(c)) n.delete(c); else n.add(c); return n; })} className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left text-sm hover:bg-muted">
-          <span className={'grid size-4 place-items-center rounded border ' + (done.has(c) ? 'border-primary bg-primary text-white' : 'border-input')}>{done.has(c) && <Check className="size-3" strokeWidth={3} />}</span>{c}</button></li>
-      ))}</ul>
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-300" style={{ width: `${(done.size / all.length) * 100}%` }} /></div>
+    <Frame title="Plan accuracy" sub="Measured from reviewed orders, per supplier">
+      <SlideTabs label="Supplier" value={sid} onChange={setSid} items={[{ id: 'mnp', label: 'MNP' }, { id: 'moroccanoil', label: 'Moroccanoil' }]}
+        className="mb-4 flex gap-1 rounded-xl bg-muted p-1" itemClassName="flex-1 rounded-[8px] px-2 py-1.5 text-sm" activeClassName="font-semibold" idleClassName="text-muted-foreground" indicatorClassName="rounded-[8px] bg-card shadow-[0_1px_2px_rgb(16_24_40/0.08)]" />
+      <div key={sid} className="fade-in"><SupplierScoreCard sid={sid} /></div>
     </Frame>
   );
 }
