@@ -47,6 +47,7 @@ export const experiments = pick(EXPERIMENTS);
 
 export const contact = {
   email: "mei.chai@mail.polimi.it",
+  booking: "https://calendar.google.com/calendar/appointments/schedules/AcZssZ3KoR3nCvJQAUFlHP7DjIqR59PohUmqlV2N3N1giwLJMvjXCe11tRISWa5hHIAMUhuCbeuMmz7I?gv=true",
   linkedin: "https://www.linkedin.com/in/meichai/",
   github: "https://github.com/fancytree",
   cv: "/MeiChai_Product_Designer_Resume.pdf",

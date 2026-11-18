@@ -7,6 +7,7 @@ import MemQCover from "../components/memq-cover/MemQCover";
 import ProcurementCover from "../components/procurement-cover/ProcurementCover";
 import home from "../components/WorkProjectRows.module.css";
 import HashScroll from "./HashScroll";
+import BookingDialog from "./BookingDialog";
 import Journey from "./Journey";
 import MoreList from "./MoreList";
 import Portrait from "./Portrait";
@@ -256,16 +257,17 @@ export default function RiverHome() {
         {/* 04 — Contact */}
         <section id="contact" className={`${s.section} ${s.contact}`} aria-labelledby="contact-title" data-river-window>
           <div className={`${s.container} ${s.grid}`}>
-            <div className={s.contactText} data-river-text>
+            <div className={s.contactText}>
               {/* the end of the river: one thing to do, and the water */}
-              <h2 id="contact-title" className={s.srOnly}>
-                Contact
-              </h2>
-              <a className={s.touch} href={`mailto:${contact.email}`}>
+              <h2 id="contact-title" className={s.touch} data-river-text>
                 Get in <em>touch</em>
-                <span className={s.touchArrow} aria-hidden="true">↗</span>
-              </a>
-              <p className={s.touchNote}>{contact.email}</p>
+              </h2>
+              <div className={s.contactActions}>
+                <a className={s.contactEmail} href={`mailto:${contact.email}`}>
+                  <span>Email me</span><span aria-hidden="true">↗</span>
+                </a>
+                <BookingDialog />
+              </div>
             </div>
 
           </div>
