@@ -172,10 +172,9 @@ export function applyDdt(lines: RecLine[]): RecLine[] {
   return next;
 }
 
-export type RemainingDecision = 'wait_next_batch' | 'supplier_delay' | 'close_remaining' | 'return_no_stock';
+export type RemainingDecision = 'wait_next_batch' | 'close_remaining' | 'return_no_stock';
 export const REMAINING: Record<RemainingDecision, { title: string; description: string; line: string }> = {
-  wait_next_batch: { title: 'Wait for next batch', description: 'Order stays open for the next delivery.', line: 'Next batch' },
-  supplier_delay: { title: 'Supplier delay', description: 'Set a new arrival date.', line: 'Delayed · reminder set' },
+  wait_next_batch: { title: 'Wait for next batch', description: 'The order stays open for the next delivery.', line: 'Next batch' },
   close_remaining: { title: 'Close remaining', description: 'The supplier will not ship the rest.', line: 'Closed · not arriving' },
   return_no_stock: { title: 'Return / do not stock', description: 'Wrong or damaged goods stay out of stock.', line: 'Not stocked' },
 };
@@ -188,14 +187,14 @@ export function recStatus(l: RecLine, ddtUploaded: boolean, decision: RemainingD
   if (!ddtUploaded) {
     // 没有 DDT 也能收货：直接拿实点数和确认单比
     const open = Math.max(0, l.ordered - l.stocked);
-    if (l.counted === 0) return decision ? { label: REMAINING[decision].line, tone: decision === 'wait_next_batch' || decision === 'supplier_delay' ? 'info' : 'hold' } : { label: 'Not counted yet', tone: 'info' };
+    if (l.counted === 0) return decision ? { label: REMAINING[decision].line, tone: decision === 'wait_next_batch' ? 'info' : 'hold' } : { label: 'Not counted yet', tone: 'info' };
     if (l.counted < open) return { label: 'Short vs confirmation', tone: 'warn' };
     if (l.counted > open) return { label: 'More than confirmed', tone: 'warn' };
     return { label: 'Matches confirmation', tone: 'ok' };
   }
   if (l.ordered === 0) return extra ? { label: EXTRA_LABEL[extra], tone: extra === 'return' ? 'hold' : 'ok' } : { label: 'Not on confirmation', tone: 'warn' };
   const open = Math.max(0, l.ordered - l.stocked);
-  if (l.ddt === 0 && open > 0) return decision ? { label: REMAINING[decision].line, tone: decision === 'wait_next_batch' || decision === 'supplier_delay' ? 'info' : 'hold' } : { label: 'Not on DDT', tone: 'info' };
+  if (l.ddt === 0 && open > 0) return decision ? { label: REMAINING[decision].line, tone: decision === 'wait_next_batch' ? 'info' : 'hold' } : { label: 'Not on DDT', tone: 'info' };
   if (l.ddt < open) return { label: 'Short vs confirmation', tone: 'warn' };
   if (l.ddt > open) return { label: 'More than confirmed', tone: 'warn' };
   if (l.counted !== l.ddt) return { label: 'Actual ≠ DDT', tone: 'warn' };

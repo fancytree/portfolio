@@ -316,6 +316,12 @@ const purchasing: ShowcaseItem[] = [
       h.say('Ready to receive');
       await h.zoomOut();
       await h.click(h.find('button', 'Confirm receipt'));
+      await h.wait(700);
+      h.say('Who received it');
+      await h.click(h.find('[role="dialog"] [role="combobox"]'));
+      await h.wait(400);
+      await h.pick(h.find('[role="option"]', 'Elena Rossi'));
+      await h.click(h.find('[role="dialog"] button', 'Confirm receipt'));
       await h.wait(900);
       await h.hover(h.find('p', 'PO receipt progress'));
       await h.wait(900);
@@ -332,8 +338,7 @@ const purchasing: ShowcaseItem[] = [
       await h.zoomOut();
       await h.click(h.find('button', 'Handle remaining goods'));
       await h.wait(800);
-      await h.hover(h.find('[role="dialog"] [role="radio"]', 'Wait for next batch'));
-      await h.click(h.find('[role="dialog"] [role="radio"]', 'Supplier delay'));
+      await h.click(h.find('[role="dialog"] [role="radio"]', 'Wait for next batch'));
       await h.wait(500);
       await h.click(h.find('#remaining-follow-up-date'));
       await h.fill(h.find('#remaining-follow-up-date'), '2026-09-04');
@@ -344,7 +349,7 @@ const purchasing: ShowcaseItem[] = [
       h.say('Decision on the order');
       await h.zoom(h.find('[data-remaining-decision] p'), 1.7);
       await h.hover(h.find('[data-remaining-decision] p'));
-      await h.hover(h.find('tbody p', 'Delayed'));
+      await h.hover(h.find('tbody p', 'Next batch'));
       await h.wait(900);
     },
   },

@@ -66,14 +66,19 @@ export default function StoreAccounts() {
             <div className="px-6 py-5">
               <p className="text-lg font-semibold">{c.name}</p>
               <p className="text-sm text-muted-foreground">{c.kind} · <span className="font-mono">{c.code}</span></p>
-              {code ? (
-                <div className="mt-5">
-                  <div className="flex items-center gap-2.5 text-sm"><Badge variant="warning">Waiting to be used</Badge><span className="text-muted-foreground">Valid until <span className="tabular-nums text-foreground">{code.until}</span></span></div>
-                  <p className="mt-3 flex items-center gap-2 font-mono text-4xl font-semibold tracking-[0.18em] text-primary-strong">{code.code}<CopyButton text={code.code} label="Copy pairing code" /></p>
-                </div>
-              ) : <p className="mt-5 rounded-xl bg-muted px-4 py-3 text-sm text-muted-foreground">No pairing code yet. Generate one and send it to the customer.</p>}
+              {/* 配对码位置高度固定：生成前后一样高，下面的规则和账号列表不会被推动 */}
+              <div className="mt-5 h-[5.75rem]">
+                {code ? (
+                  <>
+                    <div className="flex items-center gap-2.5 text-sm"><Badge variant="warning">Waiting to be used</Badge><span className="text-muted-foreground">Valid until <span className="tabular-nums text-foreground">{code.until}</span></span></div>
+                    <p className="mt-3 flex items-center gap-2 font-mono text-4xl font-semibold tracking-[0.18em] text-primary-strong">{code.code}<CopyButton text={code.code} label="Copy pairing code" /></p>
+                  </>
+                ) : (
+                  <div className="grid h-full place-items-center rounded-xl border border-dashed border-border text-sm text-muted-foreground">No pairing code yet. Generate one and send it to the customer.</div>
+                )}
+              </div>
               <ul className="mt-5 grid grid-cols-4 gap-2 text-xs text-muted-foreground">
-                {['Valid for 7 days', 'Single use', 'Regenerating revokes the old code', 'Typed in the mini-program, no SMS'].map((t) => <li key={t} className="rounded-lg border border-border px-2.5 py-2">{t}</li>)}
+                {['Valid for 7 days', 'Single use', 'New code revokes the old', 'Entered in the app, no SMS'].map((t) => <li key={t} className="truncate rounded-lg border border-border px-2.5 py-2" title={t}>{t}</li>)}
               </ul>
             </div>
           </section>

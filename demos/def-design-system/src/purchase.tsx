@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { CopyButton, eur } from './order-deliveries';
 import { AddProductDialog, QuickSkuDialog, RemainingDialog, UploadDocDialog, type Uploaded } from './purchase-dialogs';
+import { FormDialog, FormSection } from './form-dialog';
 import {
   BASE_LINES, CONFIRMATION_FILE, DDT_FILE, DDT_ONLY, INVOICE_FILE, OPERATOR, PO_META, PO_NO, REMAINING, SALES_WINDOWS, SKU_CREATED_NOTE, SUPPLIER,
   applyConfirmation, applyDdt, groupBySpu, hasGap, isGift, notesOf, priceDiffers, qtyDiffers, recStatus, salesFor, seedReceiving, subtotalOf, toReceiving,
@@ -335,6 +336,10 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
   });
   const [ddt, setDdt] = useState<(Uploaded & { at: string }) | null>(withDdt ? { fileName: DDT_FILE, sizeLabel: '1 KB', at: '14 Nov, 14:20' } : null);
   const [received, setReceived] = useState(START_STATE === 'received');
+  // 确认收货要记录收货人：从中间状态打开时沿用演示数据里的经办人
+  const [receiver, setReceiver] = useState(START_STATE === 'received' ? OPERATOR.split(' · ')[0] : '');
+  const [receiveAsk, setReceiveAsk] = useState(false);
+  const [receiverDraft, setReceiverDraft] = useState('');
   const [extras, setExtras] = useState<Record<string, ExtraDecision>>(START_STATE === 'received' ? { [DDT_ONLY.sku]: 'gift' } : {});
   const [invoice, setInvoice] = useState(false);
   const [ddtOpen, setDdtOpen] = useState(false);
@@ -406,7 +411,7 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
                   <>
                     {!ddtUploaded && <Button onClick={() => setDdtOpen(true)}><Upload />Upload DDT</Button>}
                     <Button variant="outline" disabled={!(openQty > 0 || received)} onClick={() => setRemainingOpen(true)}>Handle remaining goods</Button>
-                    <Button disabled={!canConfirm} title={pendingExtras ? 'Decide the lines that are not on the confirmation first' : undefined} onClick={() => setReceived(true)}><PackageCheck />Confirm receipt</Button>
+                    <Button disabled={!canConfirm} title={pendingExtras ? 'Decide the lines that are not on the confirmation first' : undefined} onClick={() => { setReceiverDraft(receiver); setReceiveAsk(true); }}><PackageCheck />Confirm receipt</Button>
                   </>
                 )}
                 <DropdownMenu>
@@ -474,7 +479,7 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
                 {remaining.decision && (
                   <div data-remaining-decision className="rounded-xl bg-status-info-subtle px-4 py-3 text-sm">
                     <p className="font-semibold">Remaining {openQty} pcs · {REMAINING[remaining.decision].title}</p>
-                    <p className="mt-0.5 text-muted-foreground">{remaining.decision === 'supplier_delay' && remaining.date ? `New expected arrival ${dmy(remaining.date)}. ` : ''}{remaining.note || REMAINING[remaining.decision].description}</p>
+                    <p className="mt-0.5 text-muted-foreground">{remaining.decision === 'wait_next_batch' && remaining.date ? `Expected ${dmy(remaining.date)}, reminder set. ` : ''}{remaining.note || REMAINING[remaining.decision].description}</p>
                   </div>
                 )}
                 <div className="rounded-xl px-4 py-3.5" style={{ background: 'color-mix(in srgb, var(--attention) 14%, var(--surface-raised))' }}>
@@ -560,9 +565,9 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
                   <Info label="Receipt" wide>{ddtUploaded || received ? `Batch 1 · first delivery${ddtUploaded ? '' : ' · no DDT'}` : 'No goods received yet'}</Info>
                   <Info label="Delivery note">{ddt ? ddt.fileName.replace(/\.pdf$/i, '') : '—'}</Info>
                   <Info label="Uploaded at"><span className="tabular-nums">{ddt?.at ?? '—'}</span></Info>
-                  <Info label="Operator" wide>{OPERATOR}</Info>
+                  <Info label="Received by" wide>{receiver ? `${receiver} · warehouse` : '—'}</Info>
                   <Info label="Stocked in"><span className="tabular-nums">{receivedPcs} pcs</span></Info>
-                  <Info label="Expected arrival"><span className="tabular-nums">{remaining.decision === 'supplier_delay' && remaining.date ? dmy(remaining.date) : PO_META.expectedDelivery}</span></Info>
+                  <Info label="Expected arrival"><span className="tabular-nums">{remaining.decision === 'wait_next_batch' && remaining.date ? dmy(remaining.date) : PO_META.expectedDelivery}</span></Info>
                   <Info label="Notes" wide>{remaining.decision ? `Remaining goods: ${REMAINING[remaining.decision].title}` : ddtUploaded ? 'First truck · quantities checked against the supplier confirmation' : 'Ordered and confirmed · waiting for the first truck'}</Info>
                 </dl>
               </CardContent>
@@ -590,6 +595,7 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
         description="The PDF is read and written back to the order lines; differences against your draft are marked there."
         drop="Drop the supplier PDF here, or click to browse" hint="Conferma d’ordine · PDF up to 10 MB"
         steps={['Reading PDF layout…', 'Matching supplier codes to SKUs…', 'Comparing against the draft PO…']}
+        results={['3 pages · 16 lines', '14 matched · 2 not on the draft', '5 differences marked']}
         onApply={(u) => {
           const next = applyConfirmation(lines);
           setLines(next);
@@ -601,6 +607,7 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
         description="The DDT is read and checked against the supplier confirmation, line by line."
         drop="Drop the DDT here, or click to browse" hint="Documento di trasporto · PDF up to 10 MB"
         steps={['Reading the delivery note…', 'Matching supplier codes and lot numbers to SKUs…', 'Comparing shipped quantities against the confirmation…']}
+        results={['2 pages · 14 lines', '13 matched · 11 lot numbers', '4 lines differ']}
         onApply={(u) => {
           const next = applyDdt(rec);
           setRec(next);
@@ -608,7 +615,26 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
           recExpand.add(next.filter((l) => recStatus(l, true, null, null).tone !== 'ok').map((l) => l.productId));
           setDdtOpen(false);
         }} />
+      {/* 确认收货：先看本批汇总，再选收货人 */}
+      <FormDialog open={receiveAsk} onOpenChange={setReceiveAsk} className="sm:max-w-md" title="Confirm receipt"
+        description={<>{ddt ? `Batch 1 · ${ddt.fileName.replace(/\.pdf$/i, '')}` : 'Batch 1 · no DDT'}</>}
+        status={receiverDraft ? undefined : 'Choose who received the goods'} confirmLabel="Confirm receipt" confirmDisabled={!receiverDraft}
+        onConfirm={() => { setReceiver(receiverDraft); setReceived(true); setReceiveAsk(false); }}>
+        <FormSection title="This batch">
+          <dl className="grid grid-cols-3 gap-2 text-sm">
+            {([['Into stock', `${thisBatch} pcs`], ['Lines', `${rec.filter((l) => l.counted > 0).length} SKUs`], ['Still open', `${Math.max(0, orderedTotal - stockedTotal - thisBatch)} pcs`]] as const).map(([k, v]) => (
+              <div key={k} className="rounded-xl bg-muted px-3 py-2.5"><dt className="text-xs text-muted-foreground">{k}</dt><dd className="mt-0.5 font-semibold tabular-nums">{v}</dd></div>
+            ))}
+          </dl>
+          {Object.values(extras).some((x) => x !== 'receive') && <p className="mt-2.5 text-xs text-muted-foreground">Lines marked as gift or return are recorded but not stocked.</p>}
+        </FormSection>
+        <FormSection title="Received by" hint="Recorded on the receipt and in the stock movement.">
+          <Select value={receiverDraft || null} onValueChange={setReceiverDraft} size="lg" placeholder="Select who received it" ariaLabel="Received by" triggerClassName="!h-10 w-full rounded-xl"
+            options={['Elena Rossi', 'Luca Bianchi', 'Marco Ferri'].map((n) => ({ value: n, label: n }))} />
+        </FormSection>
+      </FormDialog>
       <RemainingDialog open={remainingOpen} onOpenChange={setRemainingOpen} openQty={openQty} initial={remaining}
+        lines={rec.map((l) => ({ name: `${l.productName} ${l.variant}`, qty: Math.max(0, l.ordered - l.stocked - (received ? l.counted : 0)) })).filter((l) => l.qty > 0)}
         onSave={(v) => { setRemaining(v); setRemainingOpen(false); }} />
       <Confirm open={!!toDelete} onClose={() => setToDelete(null)} title={toDelete?.title ?? ''} body="The lines are removed from this purchase order." action="Delete" destructive
         onConfirm={() => { toDelete?.run(); setToDelete(null); }} />
@@ -622,12 +648,12 @@ export default function PurchaseOrder({ onBack, po }: { onBack?: () => void; po?
             {([
               ['Document', [['PO number', PO], ['Status', ddtUploaded ? 'Ordered · DDT received' : 'Ordered · awaiting delivery']]],
               ['Supplier', [['Supplier', SUPPLIER_NAME], ['Contact', SUPPLIER.contact], ['Website', SUPPLIER.website]]],
-              ['Order', [['Order date', PO_META.orderDate], ['Expected arrival', PO_META.expectedDelivery], ['Operator', OPERATOR]]],
+              ['Order', [['Order date', PO_META.orderDate], ['Expected arrival', PO_META.expectedDelivery], ['Received by', receiver ? `${receiver} · warehouse` : '—']]],
               ['Receipt', [['Lines', `${recKeys.length} products · ${rec.length} SKUs`], ['Quantity', `${receivedPcs} / ${orderedTotal} pcs received`], ['Confirmed batches', received ? `1 receipt · ${thisBatch} pcs total` : '—'], ['Invoice', invoice ? INVOICE_FILE : '—']]],
             ] as const).map(([title, rows]) => (
               <section key={title}>
                 <h3 className="mb-2.5 text-sm font-semibold">{title}</h3>
-                <dl className="grid grid-cols-2 gap-x-4 gap-y-3">{rows.map(([k, v]) => <Info key={k} label={k} wide={k === 'Supplier' || k === 'Contact' || k === 'Operator'}>{v}</Info>)}</dl>
+                <dl className="grid grid-cols-2 gap-x-4 gap-y-3">{rows.map(([k, v]) => <Info key={k} label={k} wide={k === 'Supplier' || k === 'Contact' || k === 'Received by'}>{v}</Info>)}</dl>
               </section>
             ))}
           </div>

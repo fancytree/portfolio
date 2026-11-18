@@ -212,17 +212,20 @@ export default function ProductSales() {
     setLines((p) => p.map((l) => ({ ...l, price: unitPrice(unitOf(skuOf(l.sku), l.unit), c.priceType), disc: c.tier?.rate ?? 1 })));
   };
 
-  /* 加入商品：同一 SKU + 同包装 + 非赠品的行合并数量，否则新增一行 */
+  /* 加入商品：同一 SKU + 同包装 + 非赠品的行合并数量（留在原位）；新商品放在列表最上方，一次加多个时保持选择顺序 */
   const addSkus = (ids: string[]) => {
     setLines((p) => {
       let next = [...p];
+      const added: Line[] = [];
       ids.forEach((id) => {
         const s = skuOf(id);
         const i = next.findIndex((l) => l.sku === id && l.unit === s.defaultUnit && !l.gift);
+        const j = added.findIndex((l) => l.sku === id && l.unit === s.defaultUnit);
         if (i >= 0) next = next.map((l, k) => (k === i ? { ...l, qty: l.qty + 1 } : l));
-        else next = [...next, newLine(s, cust)];
+        else if (j >= 0) added[j] = { ...added[j], qty: added[j].qty + 1 };
+        else added.push(newLine(s, cust));
       });
-      return next;
+      return [...added, ...next];
     });
     setQ(''); setDropOpen(false); setExpanded(null); setPicked({});
     requestAnimationFrame(() => searchRef.current?.focus());

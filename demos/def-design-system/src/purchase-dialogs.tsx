@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, Check, FileText, Loader2, Search, UploadCloud } from 'lucide-react';
+import { AlertTriangle, Check, FileText, Hourglass, Loader2, PackageX, Search, Undo2, UploadCloud } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -15,7 +15,7 @@ import { LIBRARY, NEW_PRODUCT_NOTE, REMAINING, type PoLine, type RemainingDecisi
 function Field({ id, label, required, children }: { id?: string; label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="text-xs text-muted-foreground">{label}{required && <span className="ml-0.5 text-destructive">*</span>}</label>
+      <label htmlFor={id} className="block text-xs text-muted-foreground">{label}{required && <span className="ml-0.5 text-destructive">*</span>}</label>
       {children}
     </div>
   );
@@ -148,7 +148,7 @@ export function QuickSkuDialog({ line, onOpenChange, onCreate }: { line: PoLine 
 export type Uploaded = { fileName: string; sizeLabel: string };
 const sizeOf = (b: number) => (b <= 0 ? '—' : b < 1024 * 1024 ? `${Math.max(1, Math.round(b / 1024))} KB` : `${(b / 1024 / 1024).toFixed(1)} MB`);
 
-export function UploadDocDialog({ open, onOpenChange, title, description, drop, hint, steps, onApply }: { open: boolean; onOpenChange: (o: boolean) => void; title: string; description: string; drop: string; hint: string; steps: string[]; onApply: (u: Uploaded) => void }) {
+export function UploadDocDialog({ open, onOpenChange, title, description, drop, hint, steps, results, onApply }: { open: boolean; onOpenChange: (o: boolean) => void; title: string; description: string; drop: string; hint: string; steps: string[]; results?: string[]; onApply: (u: Uploaded) => void }) {
   const [file, setFile] = useState<Uploaded | null>(null);
   const [idx, setIdx] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -163,7 +163,7 @@ export function UploadDocDialog({ open, onOpenChange, title, description, drop, 
     if (!file) return;
     const n = stepCount.current;
     const timers = Array.from({ length: n }, (_, i) => window.setTimeout(() => setIdx(i + 1), 450 * (i + 1)));
-    const done = window.setTimeout(() => { if (!applied.current) { applied.current = true; apply.current(file); } }, 450 * n + 350);
+    const done = window.setTimeout(() => { if (!applied.current) { applied.current = true; apply.current(file); } }, 450 * n + 700);
     return () => { timers.forEach(clearTimeout); clearTimeout(done); };
   }, [file]);
   const start = (f: File | null) => {
@@ -178,38 +178,50 @@ export function UploadDocDialog({ open, onOpenChange, title, description, drop, 
           <div className="min-w-0"><DialogTitle className="text-lg font-semibold tracking-[-0.01em]">{title}</DialogTitle><DialogDescription className="mt-1 text-sm text-muted-foreground">{description}</DialogDescription></div>
           <DialogClose className="-mr-2 -mt-1 grid size-9 shrink-0 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" aria-label="Close"><X className="size-4" /></DialogClose>
         </header>
-        <div className="px-6 py-5">
+        {/* 内容区高度固定：上传前（拖放区）和解析中（步骤）一样高，弹窗不会跳 */}
+        <div className="flex h-[256px] flex-col px-6 py-5">
           {!file ? (
             <>
               <div role="button" tabIndex={0} onClick={() => input.current?.click()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') input.current?.click(); }}
                 onDragOver={(e) => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={(e) => { e.preventDefault(); setDragging(false); start(e.dataTransfer.files?.[0] ?? null); }}
-                className={'flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors ' + (dragging ? 'border-primary bg-primary/5' : 'border-border bg-muted hover:border-primary hover:bg-primary/5')}>
+                className={'flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 text-center transition-colors ' + (dragging ? 'border-primary bg-primary/5' : 'border-border bg-muted hover:border-primary hover:bg-primary/5')}>
                 <span className="grid size-11 place-items-center rounded-full bg-card text-primary shadow-[0_1px_2px_rgb(16_24_40/0.08)]"><UploadCloud className="size-5" /></span>
                 <p className="mt-1 text-sm font-medium">{drop}</p>
                 <p className="text-xs text-muted-foreground">{hint}</p>
                 <input ref={input} type="file" accept="application/pdf,.pdf" className="hidden" onChange={(e) => { start(e.target.files?.[0] ?? null); e.target.value = ''; }} />
               </div>
-              {error && <p className="mt-3 flex items-start gap-1.5 rounded-xl bg-status-danger-subtle px-3 py-2 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0" />{error} Upload the PDF file.</p>}
+              {error && <p className="mt-3 flex shrink-0 items-start gap-1.5 rounded-xl bg-status-danger-subtle px-3 py-2 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0" />{error} Upload the PDF file.</p>}
             </>
           ) : (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2.5 rounded-xl bg-muted px-3.5 py-3">
-                <FileText className="size-4 shrink-0 text-destructive" />
-                <span className="truncate text-sm font-medium">{file.fileName}</span>
-                <span className="shrink-0 text-xs text-muted-foreground">{file.sizeLabel}</span>
-                <Loader2 className="ml-auto size-4 shrink-0 animate-spin text-primary" />
+            /* 解析中：文件卡片带总进度，下面是撑满剩余高度的步骤时间线 */
+            <div className="flex h-full flex-col">
+              <div className="shrink-0 rounded-xl border border-border px-3.5 pb-3 pt-3">
+                <div className="flex items-center gap-3">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-status-danger-subtle text-destructive"><FileText className="size-4" /></span>
+                  <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{file.fileName}</p><p className="text-xs text-muted-foreground">{file.sizeLabel} · {idx >= steps.length ? 'Done, writing to the lines' : 'Reading'}</p></div>
+                  <span className="shrink-0 text-sm font-semibold tabular-nums text-primary-strong">{Math.round((idx / steps.length) * 100)}%</span>
+                </div>
+                <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-[width] duration-[400ms] ease-out" style={{ width: `${(idx / steps.length) * 100}%` }} /></div>
               </div>
-              <ul className="space-y-2.5">
-                {steps.map((s, i) => {
+              <ol className="relative mt-4 flex min-h-0 flex-1 flex-col justify-between" aria-label="Parsing steps">
+                {/* 连接线：底色一条，已完成部分用主色盖上 */}
+                <span aria-hidden className="absolute bottom-3 left-[9px] top-3 w-0.5 rounded-full bg-border" />
+                <span aria-hidden className="absolute left-[9px] top-3 w-0.5 rounded-full bg-success transition-[height] duration-[400ms] ease-out" style={{ height: `calc((100% - 1.5rem) * ${Math.min(idx, steps.length - 1) / (steps.length - 1)})` }} />
+                {steps.map((step, i) => {
                   const done = idx > i; const active = idx === i;
                   return (
-                    <li key={s} className="flex items-center gap-2.5 text-sm">
-                      <span className={'grid size-5 place-items-center rounded-full border transition-colors ' + (done ? 'border-success bg-success text-white' : active ? 'border-primary' : 'border-border')}>{done && <Check className="size-3" />}</span>
-                      <span className={done || active ? '' : 'text-muted-foreground'}>{s}</span>
+                    <li key={step} className="relative flex items-start gap-3">
+                      <span className={'relative z-[1] grid size-5 shrink-0 place-items-center rounded-full border-2 bg-card transition-colors duration-300 ' + (done ? 'border-success bg-success text-white' : active ? 'border-primary' : 'border-border')}>
+                        {done ? <Check className="size-3" strokeWidth={3} /> : active ? <Loader2 className="size-3 animate-spin text-primary" /> : null}
+                      </span>
+                      <div className="min-w-0 -mt-px">
+                        <p className={'text-sm transition-colors ' + (active ? 'font-semibold' : done ? '' : 'text-muted-foreground')}>{done ? step.replace(/…$/, '') : step}</p>
+                        <p className={'text-xs text-muted-foreground transition-opacity duration-300 ' + (done && results?.[i] ? 'opacity-100' : 'opacity-0')}>{results?.[i] ?? '\u00a0'}</p>
+                      </div>
                     </li>
                   );
                 })}
-              </ul>
+              </ol>
             </div>
           )}
         </div>
@@ -218,35 +230,60 @@ export function UploadDocDialog({ open, onOpenChange, title, description, drop, 
   );
 }
 
-/* ───────── 处理剩余商品：四选一 + 延期日期 + 备注，保存后生效 ───────── */
-export function RemainingDialog({ open, onOpenChange, openQty, initial, onSave }: { open: boolean; onOpenChange: (o: boolean) => void; openQty: number; initial: { decision: RemainingDecision | null; date: string; note: string }; onSave: (v: { decision: RemainingDecision; date: string; note: string }) => void }) {
+/* ───────── 处理剩余商品：一行汇总（明细在浮层里）→ 三种处理方式 → 备注 ───────── */
+const REMAINING_ICON: Record<RemainingDecision, typeof Hourglass> = { wait_next_batch: Hourglass, close_remaining: PackageX, return_no_stock: Undo2 };
+export function RemainingDialog({ open, onOpenChange, openQty, lines = [], initial, onSave }: { open: boolean; onOpenChange: (o: boolean) => void; openQty: number; lines?: { name: string; qty: number }[]; initial: { decision: RemainingDecision | null; date: string; note: string }; onSave: (v: { decision: RemainingDecision; date: string; note: string }) => void }) {
   const [draft, setDraft] = useState<RemainingDecision | null>(null);
   const [date, setDate] = useState('');
   const [note, setNote] = useState('');
   useEffect(() => { if (open) { setDraft(initial.decision); setDate(initial.date); setNote(initial.note); } }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
-  const invalid = !draft || (draft === 'supplier_delay' && !date);
+  const wait = draft === 'wait_next_batch';
+  const dmy = (iso: string) => iso.split('-').reverse().join('/');
   return (
-    <FormDialog open={open} onOpenChange={onOpenChange} className="sm:max-w-2xl" title="Handle remaining goods"
-      description={<><span className="font-semibold tabular-nums text-foreground">{openQty} pcs</span> still open on this order</>}
-      status={!draft ? 'Choose what happens to the rest' : draft === 'supplier_delay' && !date ? 'New arrival date is required' : undefined}
-      confirmLabel="Save" confirmDisabled={invalid} onConfirm={() => { if (draft) onSave({ decision: draft, date: draft === 'supplier_delay' ? date : '', note: note.trim() }); }}>
-      <div className="grid grid-cols-2 gap-2.5" role="radiogroup" aria-label="Remaining goods">
-        {(Object.keys(REMAINING) as RemainingDecision[]).map((k) => {
-          const on = draft === k;
-          return (
-            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setDraft(k)}
-              className={'rounded-xl border p-3.5 text-left transition-colors ' + (on ? 'border-primary bg-primary/5' : 'border-border hover:bg-[var(--surface-hover)]')}>
-              <span className="flex items-center justify-between gap-2"><span className="text-sm font-semibold">{REMAINING[k].title}</span>
-                <span className={'grid size-4 place-items-center rounded-full border transition-colors ' + (on ? 'border-primary bg-primary' : 'border-input')}>{on && <span className="size-1.5 rounded-full bg-white" />}</span></span>
-              <span className="mt-0.5 block text-xs text-muted-foreground">{REMAINING[k].description}</span>
-            </button>
-          );
-        })}
+    <FormDialog open={open} onOpenChange={onOpenChange} className="h-[min(40rem,85vh)] sm:max-w-4xl" title="Handle remaining goods"
+      description="Decide what happens to the goods that haven’t arrived."
+      status={!draft ? 'Choose what happens to the rest' : wait && date ? <>Reminder on <span className="font-semibold tabular-nums text-foreground">{dmy(date)}</span></> : <>Applies to <span className="font-semibold tabular-nums text-foreground">{openQty} pcs</span></>}
+      confirmLabel="Save" confirmDisabled={!draft} onConfirm={() => { if (draft) onSave({ decision: draft, date: wait ? date : '', note: note.trim() }); }}>
+      {/* 左右结构：左边还缺哪些（自己滚动），右边怎么处理；弹窗高度固定 */}
+      <div className="-mx-6 -my-5 grid h-[calc(100%+2.5rem)] grid-cols-[minmax(0,1fr)_22rem]">
+        <section className="flex min-h-0 flex-col border-r border-border" aria-label="Still open">
+          <div className="flex shrink-0 items-baseline justify-between gap-3 px-6 pb-3 pt-5">
+            <h3 className="text-sm font-semibold">Still open</h3>
+            <p className="text-xs text-muted-foreground"><span className="font-semibold tabular-nums text-foreground">{openQty} pcs</span> · {lines.length} line{lines.length === 1 ? '' : 's'}</p>
+          </div>
+          <ul className="min-h-0 flex-1 divide-y divide-border overflow-y-auto border-t border-border px-6 [scrollbar-width:thin]" aria-label="Lines still open">
+            {lines.map((l) => <li key={l.name} className="flex h-11 items-center justify-between gap-3 text-sm"><span className="truncate">{l.name}</span><span className="shrink-0 font-semibold tabular-nums">{l.qty} pcs</span></li>)}
+          </ul>
+        </section>
+
+        <section className="min-h-0 space-y-5 overflow-y-auto px-6 py-5 [scrollbar-width:thin]" aria-label="Decision">
+          <div>
+            <h3 className="mb-3 text-sm font-semibold">What happens to the rest</h3>
+            <div role="radiogroup" aria-label="Remaining goods" className="space-y-2">
+              {(Object.keys(REMAINING) as RemainingDecision[]).map((k) => {
+                const on = draft === k; const I = REMAINING_ICON[k];
+                return (
+                  <div key={k} className={'rounded-xl border transition-colors ' + (on ? 'border-primary bg-primary/5' : 'border-border hover:bg-[var(--surface-hover)]')}>
+                    <button type="button" role="radio" aria-checked={on} onClick={() => setDraft(k)} className="flex w-full items-center gap-3 px-3.5 py-3 text-left">
+                      <span className={'grid size-9 shrink-0 place-items-center rounded-lg transition-colors ' + (on ? 'bg-primary text-white' : 'bg-muted text-muted-foreground')}><I className="size-4" /></span>
+                      <span className="min-w-0 flex-1"><span className="block text-sm font-semibold">{REMAINING[k].title}</span><span className="block text-xs text-muted-foreground">{REMAINING[k].description}</span></span>
+                      <span className={'grid size-4 shrink-0 place-items-center rounded-full border-2 transition-colors ' + (on ? 'border-primary' : 'border-input')}>{on && <span className="size-2 rounded-full bg-primary" />}</span>
+                    </button>
+                    {k === 'wait_next_batch' && (
+                      /* 预计到货日期：可选，一直可填；填了就自动选中「等下一批」 */
+                      <label className="flex items-center justify-between gap-3 whitespace-nowrap border-t border-dashed border-border px-3.5 py-2.5 text-xs text-muted-foreground">
+                        Expected arrival (optional)
+                        <Input id="remaining-follow-up-date" type="date" value={date} onChange={(e) => { setDate(e.target.value); setDraft('wait_next_batch'); }} className="h-9 w-40 rounded-lg bg-card tabular-nums text-foreground" />
+                      </label>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <Field id="remaining-decision-note" label="Notes"><Textarea id="remaining-decision-note" rows={3} className="resize-none rounded-xl" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Optional, e.g. what the supplier said" /></Field>
+        </section>
       </div>
-      {draft === 'supplier_delay' && (
-        <div className="mt-4"><Field id="remaining-follow-up-date" label="New arrival date" required><Input id="remaining-follow-up-date" type="date" className={INPUT + ' w-48 tabular-nums'} value={date} onChange={(e) => setDate(e.target.value)} /></Field></div>
-      )}
-      <div className="mt-4"><Field id="remaining-decision-note" label="Notes"><Textarea id="remaining-decision-note" rows={2} className="rounded-xl" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Optional" /></Field></div>
     </FormDialog>
   );
 }
