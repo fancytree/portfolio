@@ -36,7 +36,7 @@ export function DecisionCards({ items, start = 1 }: { items: Decision[]; start?:
                 <Image src={decision.shot.src} alt={decision.shot.alt} width={decision.shot.width} height={decision.shot.height} sizes="(min-width: 1024px) 780px, 100vw" unoptimized />
                 {decision.shot.marks?.map((m) => (
                   <span key={m.label} className="case-decision-mark-box" style={{ left: `${m.x}%`, top: `${m.y}%`, width: `${m.w}%`, height: `${m.h}%` }} aria-hidden="true">
-                    <span className={`case-decision-mark-label${m.y < 14 ? ' is-below' : ''}${m.x + m.w > 70 ? ' is-right' : ''}`}>{m.label}</span>
+                    <span className={`case-decision-mark-label${m.y < 14 && m.y + m.h > 86 ? ' is-inside' : m.y < 14 ? ' is-below' : ''}${m.x + m.w > 70 ? ' is-right' : ''}`}>{m.label}</span>
                   </span>
                 ))}
               </a>

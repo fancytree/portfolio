@@ -141,37 +141,86 @@ export function InvoiceCadence() {
   );
 }
 
+/**
+ * Confirmation by consequence, shown as the four responses side by side.
+ * The mocks grow with what is at stake (1 → 3); the counter (4) breaks the pattern on purpose.
+ */
 export function ConfirmationLadder() {
-  const rungs = [
-    { n: '1', head: 'Reversible, no side effects', body: 'Editing draft rows. Applies instantly, no dialog.' },
-    { n: '2', head: 'Reversible, but costs something', body: 'Switching single / multi-SKU mode drops selections. Confirm, and say what is lost.' },
-    { n: '3', head: 'Irreversible: stock or money moves', body: 'Confirm shipment, post a stocktake, void an invoice. Danger dialog listing consequences, with a reason where it applies.' },
-    { n: '4', head: 'Counter queue: the logged exception', body: 'Hold, resume, add an item while a customer waits. Instant action and a toast, no confirmation.', picked: true },
+  const levels = [
+    {
+      n: '1', head: 'Reversible', what: 'Edit a draft row', response: 'Applies at once',
+      mock: (
+        <div className={styles.mCell}>
+          <span className={styles.mLabel}>Qty</span>
+          <span className={styles.mValue}><s>12</s> 14</span>
+          <span className={styles.mSaved}>✓ Saved</span>
+        </div>
+      ),
+    },
+    {
+      n: '2', head: 'Costs something', what: 'Switch to multi-SKU', response: 'Confirm, name the loss',
+      mock: (
+        <div className={styles.mPop}>
+          <b>Switch to multi-SKU?</b>
+          <span>3 selections will be cleared</span>
+          <span className={styles.mBtns}><i>Cancel</i><i className={styles.mPrimary}>Switch</i></span>
+        </div>
+      ),
+    },
+    {
+      n: '3', head: 'Irreversible', what: 'Post a stocktake', response: 'Danger dialog + reason',
+      mock: (
+        <div className={`${styles.mPop} ${styles.mDanger}`}>
+          <b>Post stocktake?</b>
+          <ul>
+            <li>Stock changes for 12 SKUs</li>
+            <li>€340.50 loss posts to finance</li>
+            <li>Cannot be undone</li>
+          </ul>
+          <span className={styles.mField}>Reason: damaged in transit</span>
+          <span className={styles.mBtns}><i>Cancel</i><i className={styles.mDangerBtn}>Post</i></span>
+        </div>
+      ),
+    },
+    {
+      n: '4', head: 'Counter', what: 'Hold a sale, customer waiting', response: 'No dialog, toast, logged', exception: true,
+      mock: (
+        <div className={styles.mToastWrap}>
+          <span className={styles.mToast}>Held · Zhang San, 5 items <u>Undo</u></span>
+          <span className={styles.mLogged}>Logged as exception</span>
+        </div>
+      ),
+    },
   ];
   return (
-    <div className={`${styles.ladder} ${styles.pad}`}>
-      <div className={styles.rows}>
-        {rungs.map((r) => (
-          <div key={r.n} className={`${styles.rung} ${styles.rungStep} ${r.picked ? styles.picked : ''}`} style={{ animationDelay: `${(Number(r.n) - 1) * 2}s` }}>
-            <span className={styles.rungNum}>{r.n}</span>
-            <div>
-              <h3 className={styles.rungHead}>{r.head}</h3>
-              <p className={styles.rungBody}>{r.body}</p>
-            </div>
+    <div className={`${styles.pad} ${styles.conf}`} role="img" aria-label="Four confirmation levels: reversible edits apply at once; edits that cost something ask and name the loss; irreversible stock or money moves get a danger dialog with a reason; the counter, where a customer is waiting, skips confirmation and logs the action instead.">
+      {levels.map((l, i) => (
+        <div key={l.n} className={`${styles.lvl} ${l.exception ? styles.lvlException : ''}`} aria-hidden="true">
+          <div className={styles.lvlMock}><div className={styles.act} style={{ animationDelay: `${i * 2}s` }}>{l.mock}</div></div>
+          <div className={styles.lvlAxis}>
+            {l.exception ? <span className={styles.axisTag}>Exception</span> : <span className={`${styles.axisLine} ${i === 2 ? styles.axisEnd : ''}`} />}
           </div>
-        ))}
-      </div>
-      <div className={styles.stack}>
-        <div className={`${styles.dialog} ${styles.dlg3}`}>
-          <span className={styles.tag}>Level 3 · stocktake confirmation</span>
-          <pre>{`About to:\n · Adjust stock for 12 SKUs\n · Record €340.50 in losses\n   (posts to finance)\n · This cannot be undone`}</pre>
+          <div className={styles.lvlText}>
+            <span className={styles.lvlNum}>{l.n}</span>
+            <b>{l.head}</b>
+            <span className={styles.lvlWhat}>{l.what}</span>
+            <span className={styles.lvlResp}>{l.response}</span>
+          </div>
         </div>
-        <div className={`${styles.dialog} ${styles.dlg4}`}>
-          <span className={styles.tag}>Level 4 · counter</span>
-          <span className={`${styles.toast} ${styles.toastIn}`}>Held: Zhang San, 5 items</span>
-        </div>
-      </div>
+      ))}
+      <span className={styles.axisCaption} aria-hidden="true">More at stake → more friction</span>
     </div>
+  );
+}
+
+/** A pointer to where another case explains a flow in full. */
+export function CaseCrossLink({ href, kicker, title }: { href: string; kicker: string; title: string }) {
+  return (
+    <a className={styles.crossLink} href={href}>
+      <span className={styles.crossKicker}>{kicker}</span>
+      <span className={styles.crossTitle}>{title}</span>
+      <span className={styles.crossArrow} aria-hidden="true">→</span>
+    </a>
   );
 }
 

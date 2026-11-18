@@ -44,7 +44,12 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
       setTitle(railTitle ?? normalize(root.querySelector('h1')?.textContent ?? 'This project'));
     };
     prepare();
-    const timer = window.setTimeout(prepare, 300);
+    // Chapter ids are assigned here, after the browser's own hash jump, so honour a #case-… link once they exist.
+    const timer = window.setTimeout(() => {
+      prepare();
+      const target = window.location.hash.startsWith('#case-') ? document.getElementById(decodeURIComponent(window.location.hash.slice(1))) : null;
+      target?.scrollIntoView({ block: 'start' });
+    }, 300);
     return () => window.clearTimeout(timer);
   }, [navLabels, railTitle]);
 
