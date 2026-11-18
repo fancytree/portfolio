@@ -67,7 +67,7 @@ const sourceDecision: Decision = {
     { label: 'Ready-made decks', verdict: 'Fast to fill, but someone else’s highlights. Downloaded, never opened.', reversed: true },
     { label: 'Your own material', verdict: 'Notes, a PDF, a question you asked AI. AI drafts; you keep what you use.', chosen: true },
   ],
-  evidence: 'v1’s curated library went unused. People forget what they looked up themselves.',
+  evidence: 'In interviews, people forgot what they had looked up themselves, and stopped making cards by hand.',
   tradeoff: 'New accounts start empty, so every empty screen needs one next step.',
 };
 
@@ -81,7 +81,7 @@ const directionDecision: Decision = {
     { label: 'D · Quiet and minimal', verdict: 'Too close to v1.' },
     { label: 'E · Open concept', verdict: 'Expressive, but Start and Create get lost.' },
   ],
-  evidence: 'All five carried the same data, so I compared design, not sample content.',
+  evidence: '',
   tradeoff: 'Playful must stay adult: no lives, no coins, no punished streaks.',
 };
 
@@ -92,7 +92,7 @@ const writerDecision: Decision = {
     { label: 'Copy it into MemQ', verdict: 'A chore, and the question behind the answer is lost.' },
     { label: 'The chat writes them, through MemQ’s tools', verdict: 'The model that explained it writes the cards; MemQ checks and saves.', chosen: true },
   ],
-  evidence: 'Only the chat knows what was actually asked.',
+  evidence: '',
   tradeoff: 'Quality depends on another model, so MemQ enforces the card rules.',
 };
 const doorsDecision: Decision = {
@@ -104,7 +104,7 @@ const doorsDecision: Decision = {
     { label: 'Two doors, named for what they do', verdict: 'Where you tap is the intent, and the cost.', chosen: true },
   ],
   evidence: 'Four of five ways in were already unambiguous.',
-  tradeoff: '“Chat” never appears in the UI; a lesson page gets two action buttons.',
+  tradeoff: 'Ask a question cannot make cards; it can only point you to Learn something.',
 };
 
 const uiDecision: Decision = {
@@ -139,7 +139,7 @@ const creditsDecision: Decision = {
     { label: 'One monthly number', verdict: 'Weighted by cost, back on the 1st. Practice is never charged.', chosen: true },
   ],
   evidence: 'Seven limits on three clocks, and the app could only ever show one of them.',
-  tradeoff: '“Credits” needs explaining, so the line explains itself when tapped.',
+  tradeoff: 'Credits are counted per account, so a second account gets round them.',
 };
 
 
