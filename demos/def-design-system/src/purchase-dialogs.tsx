@@ -148,7 +148,9 @@ export function QuickSkuDialog({ line, onOpenChange, onCreate }: { line: PoLine 
 export type Uploaded = { fileName: string; sizeLabel: string };
 const sizeOf = (b: number) => (b <= 0 ? '—' : b < 1024 * 1024 ? `${Math.max(1, Math.round(b / 1024))} KB` : `${(b / 1024 / 1024).toFixed(1)} MB`);
 
-export function UploadDocDialog({ open, onOpenChange, title, description, drop, hint, steps, results, onApply }: { open: boolean; onOpenChange: (o: boolean) => void; title: string; description: string; drop: string; hint: string; steps: string[]; results?: string[]; onApply: (u: Uploaded) => void }) {
+export function UploadDocDialog({ open, onOpenChange, title, description, drop, hint, steps, results, onApply, sample }: { open: boolean; onOpenChange: (o: boolean) => void; title: string; description: string; drop: string; hint: string; steps: string[]; results?: string[]; onApply: (u: Uploaded) => void;
+  /** 演示里访客手上没有这份 PDF：点上传区就模拟选中示例文件（拖入真实文件照常可用） */
+  sample?: { fileName: string; sizeLabel: string } }) {
   const [file, setFile] = useState<Uploaded | null>(null);
   const [idx, setIdx] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -182,7 +184,7 @@ export function UploadDocDialog({ open, onOpenChange, title, description, drop, 
         <div className="flex h-[256px] flex-col px-6 py-5">
           {!file ? (
             <>
-              <div role="button" tabIndex={0} onClick={() => input.current?.click()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') input.current?.click(); }}
+              <div role="button" tabIndex={0} data-upload-drop onClick={() => (sample ? (setError(null), setIdx(0), setFile(sample)) : input.current?.click())} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { if (sample) setFile(sample); else input.current?.click(); } }}
                 onDragOver={(e) => { e.preventDefault(); setDragging(true); }} onDragLeave={() => setDragging(false)} onDrop={(e) => { e.preventDefault(); setDragging(false); start(e.dataTransfer.files?.[0] ?? null); }}
                 className={'flex min-h-0 flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed px-6 text-center transition-colors ' + (dragging ? 'border-primary bg-primary/5' : 'border-border bg-muted hover:border-primary hover:bg-primary/5')}>
                 <span className="grid size-11 place-items-center rounded-full bg-card text-primary shadow-[0_1px_2px_rgb(16_24_40/0.08)]"><UploadCloud className="size-5" /></span>
