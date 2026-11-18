@@ -293,6 +293,8 @@
 .case-decision-badge.is-reversed { background: var(--case-flow-break); }
 .case-decision-foot { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: var(--case-space-16) 0 0; border-top: var(--case-border-width) solid var(--case-rule); }
 .case-decision-foot > div { padding: var(--case-space-16) var(--case-space-24); }
+.case-decision-foot.is-single { grid-template-columns: 1fr; }
+.case-decision-body > .case-decision-options:last-child { padding-bottom: var(--case-space-24); }
 .case-decision-foot > div + div { border-left: var(--case-border-width) solid var(--case-rule); }
 .case-decision-foot dt { font-family: var(--case-font-heading); font-size: var(--case-type-caption); color: var(--case-muted); text-transform: uppercase; margin-bottom: var(--case-space-8); }
 .case-decision-foot dd { margin: 0; font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.5; color: var(--case-copy); }
