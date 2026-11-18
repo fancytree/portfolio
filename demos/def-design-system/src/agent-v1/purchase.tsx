@@ -244,7 +244,7 @@ function ReceivingTable({ lines, confirmed, ddtUploaded, decision, extras, expan
   return (
     <div className="min-h-0 flex-1 overflow-auto [scrollbar-width:thin]" onScroll={onScroll}>
       <table className="w-full min-w-[56rem] table-fixed text-sm [&_td]:whitespace-nowrap [&_th]:whitespace-nowrap">
-        <colgroup><col /><col style={{ width: 96 }} /><col style={{ width: 92 }} /><col style={{ width: 76 }} /><col style={{ width: 96 }} /><col style={{ width: 60 }} /><col style={{ width: 232 }} /></colgroup>
+        <colgroup><col /><col style={{ width: 96 }} /><col style={{ width: 92 }} /><col style={{ width: 76 }} /><col style={{ width: 96 }} /><col style={{ width: 60 }} /><col style={{ width: 272 }} /></colgroup>
         <thead className="sticky top-0 z-[2]">
           <tr className="text-xs font-medium text-muted-foreground [&>th]:bg-muted [&>th]:px-3 [&>th]:py-2.5 [&>th]:text-right">
             <th className={left + ' z-[3] !pl-6 !text-left'}>Product / SKU</th>
@@ -279,10 +279,10 @@ function ReceivingTable({ lines, confirmed, ddtUploaded, decision, extras, expan
                       <td className="!pr-6 !text-left">
                         <p className={'pt-1.5 text-xs font-medium ' + TONE_TEXT[st.tone]}>{st.label}</p>
                         {needs && (
-                          <div className="mt-2 flex gap-1.5">
+                          <div className="mt-2 inline-flex rounded-lg border border-input bg-card p-0.5" role="group" aria-label={`What to do with ${l.sku}`}>
                             {([['return', 'Return', RotateCcw], ['gift', 'Gift', Gift], ['receive', 'Stock in', PackageCheck]] as const).map(([v, label, Icon]) => (
                               <button key={v} type="button" aria-pressed={extra === v} disabled={confirmed} onClick={() => onExtra(l.sku, v)}
-                                className={'inline-flex h-7 items-center gap-1 rounded-lg border px-2 text-xs font-medium transition-colors disabled:opacity-60 ' + (extra === v ? 'border-primary bg-primary/10 text-primary-strong' : 'border-input bg-card hover:bg-[var(--surface-hover)]')}>
+                                className={'inline-flex h-7 items-center gap-1 rounded-md px-2.5 text-xs font-medium transition-colors disabled:opacity-60 ' + (extra === v ? 'bg-primary/10 text-primary-strong' : 'text-muted-foreground hover:bg-[var(--surface-hover)] hover:text-foreground')}>
                                 <Icon className="size-3.5" />{label}
                               </button>
                             ))}
@@ -775,7 +775,7 @@ export default function PurchaseOrder({ onBack, po, agent }: { onBack?: () => vo
         onAdd={(added) => { setLines((p) => [...p, ...added]); draftExpand.add(added.map((l) => l.productId)); }} />
       <QuickSkuDialog line={createFor} onOpenChange={(o) => { if (!o) setCreateFor(null); }}
         onCreate={(sku) => { setLines((p) => p.map((l) => (l.sku === sku ? { ...l, alert: SKU_CREATED_NOTE } : l))); setCreateFor(null); }} />
-      <UploadDocDialog open={uploadOpen} onOpenChange={setUploadOpen} title="Upload supplier confirmation"
+      <UploadDocDialog open={uploadOpen} onOpenChange={setUploadOpen} title="Upload supplier confirmation" sample={{ fileName: CONFIRMATION_FILE, sizeLabel: '228 KB' }}
         description="The PDF is read and written back to the order lines; differences against your draft are marked there."
         drop="Drop the supplier PDF here, or click to browse" hint="Conferma d’ordine · PDF up to 10 MB"
         steps={['Reading PDF layout…', 'Matching supplier codes to SKUs…', 'Comparing against the draft PO…']}
@@ -792,7 +792,7 @@ export default function PurchaseOrder({ onBack, po, agent }: { onBack?: () => vo
               log('Confirmation compared', 'Agent', '6 differences'); thread.post({ role: 'agent', text: 'The differences are marked on the lines.', card: confirmationCard() }); })();
           }
         }} />
-      <UploadDocDialog open={ddtOpen} onOpenChange={setDdtOpen} title="Upload delivery note"
+      <UploadDocDialog open={ddtOpen} onOpenChange={setDdtOpen} title="Upload delivery note" sample={{ fileName: DDT_FILE, sizeLabel: '96 KB' }}
         description="The DDT is read and checked against the supplier confirmation, line by line."
         drop="Drop the DDT here, or click to browse" hint="Documento di trasporto · PDF up to 10 MB"
         steps={['Reading the delivery note…', 'Matching supplier codes and lot numbers to SKUs…', 'Comparing shipped quantities against the confirmation…']}

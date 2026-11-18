@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Boxes, ChevronDown, CircleHelp, FileImage, LayoutDashboard, PanelLeftClose, PanelLeftOpen, Package, Search, Settings, ShoppingCart, Smartphone, Sparkles, Truck, Users, Wallet } from 'lucide-react';
+import { Boxes, ChevronDown, CircleHelp, FileImage, LayoutDashboard, PanelLeftClose, PanelLeftOpen, Package, Search, Settings, ShoppingCart, Smartphone, Sparkles, Truck, Users, Wallet, ArrowLeft } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Kbd } from '@/components/ui/kbd';
 import { AccountMenu, NotificationsMenu } from './topbar-menus';
@@ -139,6 +139,8 @@ const circle = 'flex size-10 items-center justify-center rounded-full bg-card sh
 export default function Shell({ children, initial = 'Overview', initialRole = 'admin' }: { children: (page: string, open: (label: string) => void, role: Role) => React.ReactNode; initial?: string; initialRole?: Role }) {
   // ?nav=collapsed：从作品集直接打开时侧栏先收起，把空间留给工作区
   const [collapsed, setCollapsed] = useState(() => new URLSearchParams(location.search).get('nav') === 'collapsed');
+  // ?back=/projects/...：从作品集全屏打开时，左上角给一个回到案例的入口
+  const backHref = new URLSearchParams(location.search).get('back');
   const [open, setOpen] = useState<string | null>(null);
   const [page, setPage] = useState(initial);
   // 角色由 URL（?role=）决定；预览里不再显示 View as 切换
@@ -218,7 +220,14 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
       className="flex min-h-screen gap-4 bg-background p-4 font-sans text-foreground"
       style={{ backgroundImage: 'radial-gradient(48rem 24rem at 100% -6%, color-mix(in srgb, var(--warning) 12%, transparent), transparent 70%)' }}
     >
-      <aside className={'sticky top-4 flex h-[calc(100vh-2rem)] shrink-0 flex-col rounded-2xl bg-card shadow-card transition-[width] duration-200 ' + (collapsed ? 'w-[4.75rem]' : 'w-60')} aria-label="Sidebar">
+      <div className="sticky top-4 flex h-[calc(100vh-2rem)] shrink-0 flex-col gap-3">
+      {backHref && (
+        <a href={backHref} title="Back to case study"
+          className={'group flex h-12 shrink-0 items-center rounded-2xl bg-card text-sm font-semibold shadow-card transition-colors hover:bg-[var(--surface-hover)] hover:text-primary-strong ' + (collapsed ? 'w-[4.75rem] justify-center gap-1' : 'w-60 gap-2.5 px-4')}>
+          <ArrowLeft className="size-[18px] shrink-0 transition-transform group-hover:-translate-x-0.5" />{collapsed ? 'Back' : 'Back to case study'}
+        </a>
+      )}
+      <aside className={'flex min-h-0 flex-1 flex-col rounded-2xl bg-card shadow-card transition-[width] duration-200 ' + (collapsed ? 'w-[4.75rem]' : 'w-60')} aria-label="Sidebar">
         <div className={'flex items-center px-3 pt-4 ' + (collapsed ? 'justify-center' : 'justify-between gap-2')}>
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl text-base font-bold text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--primary)_80%,transparent)]" style={{ background: 'linear-gradient(140deg, color-mix(in srgb, var(--primary) 70%, white), var(--primary) 70%)' }}>D</span>
@@ -262,6 +271,7 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
           </button>
         </div>
       </aside>
+      </div>
 
       {/* 专注模式（开单）：去掉顶栏，内容占满一屏高度，上下仍留和侧栏一样的边距 */}
       <div className={'flex min-w-0 flex-1 flex-col ' + (focus ? 'sticky top-4 h-[calc(100vh-2rem)]' : '')}>
