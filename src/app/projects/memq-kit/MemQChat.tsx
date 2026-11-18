@@ -95,20 +95,14 @@ function Cover({ kind }: { kind: 'peach' | 'lime' }) {
   );
 }
 
-/** The steps so far: done ones ticked and quiet, the current one spinning, later ones not shown yet. */
+/** One line, in the one place: each step replaces the last, so the wait says what is happening now. */
 function Waiting({ status }: { status: Status }) {
+  const step = status.steps[status.at];
   return (
-    <ol className={c.trail} aria-live="polite">
-      {status.steps.slice(0, status.at + 1).map((step, i) => {
-        const now = i === status.at;
-        return (
-          <li key={step} className={now ? c.stepNow : c.stepDone}>
-            {now ? <span className={c.spinner} aria-hidden="true" /> : <Glyph name="check" size={14} />}
-            <span>{step}{now ? '…' : ''}</span>
-          </li>
-        );
-      })}
-    </ol>
+    <div className={c.waiting} aria-live="polite">
+      <span className={c.spinner} aria-hidden="true" />
+      <span key={step} className={c.waitingText}>{step}…</span>
+    </div>
   );
 }
 
@@ -331,18 +325,16 @@ function AnswerActions({ onAgain, onCards, cards }: { onAgain: () => void; onCar
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
   return (
     <div className={c.actions}>
+      {/* One 18-point slot each, the glyph sized by eye inside it: a solid sheet reads larger
+          than an outline ring, and a wide mark shorter than a tall one, at the same number. */}
       <button type="button" aria-label="Copy" className={copied ? c.actionOn : undefined} onClick={() => { setCopied(true); later(() => setCopied(false), 1600); }}>
-        <Glyph name={copied ? 'check' : 'copy'} size={16} />
+        <Glyph name={copied ? 'check' : 'copy'} size={copied ? 17 : 15} />
       </button>
       <button type="button" aria-label="Read aloud" className={speaking ? c.speaking : undefined} onClick={() => { setSpeaking(true); later(() => setSpeaking(false), 3000); }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path className={c.speaker} fill="currentColor" d="M3 9.5h3.6L11 5.6v12.8l-4.4-3.9H3z" />
-          <path className={c.waveNear} d="M14.6 9.2a4 4 0 0 1 0 5.6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path className={c.waveFar} d="M17.3 6.6a7.6 7.6 0 0 1 0 10.8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+        <Glyph name="volumeOn" size={18} className={c.speakerGlyph} />
       </button>
-      <button type="button" aria-label="Ask again" onClick={onAgain}><Glyph name="replay" size={16} /></button>
-      {cards && <button type="button" aria-label="Make cards" onClick={onCards}><Glyph name="layers" size={16} /></button>}
+      <button type="button" aria-label="Ask again" onClick={onAgain}><Glyph name="replay" size={17} /></button>
+      {cards && <button type="button" aria-label="Make cards" onClick={onCards}><Glyph name="layers" size={18} /></button>}
       {copied && <span className={c.copied}>Copied</span>}
     </div>
   );
@@ -511,7 +503,8 @@ export function ChatPhone({ start }: { start: Start }) {
                   ))}
                 </div>
               </div>
-              {!started && (
+              {/* Ways in, not a menu: once one is in the box (or anything is typed) they step aside. */}
+              {!started && !draft.trim() && (
                 <div className={c.starters}>
                   {(screen === 'create' ? CREATE_STARTERS : PRACTICE_STARTERS).map((s) => (
                     <button key={s} type="button" className={c.starter} onClick={() => fill(s)}><span>{s}</span></button>
