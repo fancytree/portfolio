@@ -30,75 +30,107 @@ const h1 = () => document.querySelector('h1')?.textContent?.trim() ?? '';
 /** 采购单页头的状态标签 */
 const badge = (label: string) => document.querySelector('h1')?.parentElement?.querySelector('[data-slot="badge"]')?.textContent?.trim() === label;
 const exact = (sel: string, text: string) => [...document.querySelectorAll<HTMLElement>(sel)].find((e) => visible(e) && e.textContent?.trim() === text) ?? null;
-const click = (el: HTMLElement | null) => el?.click();
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const typeInto = (el: HTMLTextAreaElement | null, text: string) => {
+
+/* ───────── Show me 的模拟操作：先滚到目标、光标移过去、再点；文字逐字输入 ───────── */
+type Ghost = { x: number; y: number; down: boolean } | null;
+let setGhost: (g: Ghost) => void = () => {};
+let ghostAt: Ghost = null;
+const moveGhost = (g: Ghost) => { ghostAt = g; setGhost(g); };
+async function point(el: HTMLElement) {
+  el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+  await wait(450);
+  const r = el.getBoundingClientRect();
+  // 第一次出现时从目标附近进场，之后从上一个位置移过去
+  if (!ghostAt) { moveGhost({ x: r.left + r.width / 2 + 80, y: r.top + r.height / 2 + 60, down: false }); await wait(40); }
+  moveGhost({ x: r.left + Math.min(r.width / 2, 60), y: r.top + r.height / 2, down: false });
+  await wait(650);
+}
+async function click(el: HTMLElement | null) {
   if (!el) return;
-  Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!.call(el, text);
-  el.dispatchEvent(new Event('input', { bubbles: true }));
-};
+  await point(el);
+  moveGhost({ ...ghostAt!, down: true });
+  await wait(130);
+  el.click();
+  await wait(200);
+  moveGhost({ ...ghostAt!, down: false });
+  await wait(250);
+}
+async function typeSlow(el: HTMLTextAreaElement | null, text: string) {
+  if (!el) return;
+  await click(el);
+  el.focus();
+  const set = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')!.set!;
+  for (let k = 1; k <= text.length; k++) {
+    set.call(el, text.slice(0, k));
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    await wait(text[k - 1] === ' ' ? 45 : 28);
+  }
+  await wait(500);
+}
 
 const STEPS: Step[] = [
   { title: 'Start with MNP', body: 'Stock runs out before the next delivery.',
     target: () => find('article[aria-label="MNP replenishment"] button', 'Create purchase order'),
     done: () => has('[role="dialog"] h2', 'Review the last MNP order') || h1().startsWith('PO-'),
-    show: () => click(find('article[aria-label="MNP replenishment"] button', 'Create purchase order')) },
+    show: async () => await click(find('article[aria-label="MNP replenishment"] button', 'Create purchase order')) },
   { title: 'Review the last order first', body: 'It sharpens the next plan. Skipping is fine.',
     target: () => find('[role="dialog"] button', 'Review first'),
     done: () => h1() === 'PO-2026-0838' || h1() === 'PO-2026-0843',
-    show: () => click(find('[role="dialog"] button', 'Review first')) },
+    show: async () => await click(find('[role="dialog"] button', 'Review first')) },
   { title: 'Add what you saw', body: 'The agent scored the order. Your turn.',
     target: () => find('button', 'Write review'),
     done: () => has('[role="dialog"] h2', 'Review this order') || has('article[aria-label="What changes in the next MNP plan"]') || h1() === 'PO-2026-0843',
-    show: () => click(find('button', 'Write review')) },
+    show: async () => await click(find('button', 'Write review')) },
   { title: 'Rate it, name exceptions', body: 'Drag a slider, mention a SKU, save.',
     target: () => find('[role="dialog"]') ,
     done: () => has('article[aria-label="What changes in the next MNP plan"]') || h1() === 'PO-2026-0843',
     show: async () => {
-      typeInto(document.querySelector<HTMLTextAreaElement>('#review-note'), 'Black Onyx sells, but salons report chipping. Keep it flat.');
-      await wait(700);
-      click(find('[role="dialog"] button', 'Save review'));
+      await click(find('button[aria-label="Product mix: Right"]'));
+      await wait(500);
+      await typeSlow(document.querySelector<HTMLTextAreaElement>('#review-note'), 'Black Onyx sells, but salons report chipping. Keep it flat.');
+      await click(find('[role="dialog"] button', 'Save review'));
     } },
   { title: 'Back to the new plan', body: 'MNP’s accuracy is updated.',
     target: () => find('button', 'Continue to the new MNP plan'),
     done: () => h1() === 'PO-2026-0843',
-    show: () => click(find('button', 'Continue to the new MNP plan')) },
+    show: async () => await click(find('button', 'Continue to the new MNP plan')) },
   { title: 'See the plan score', body: 'Open it to see every point.',
     target: () => find('button[title="Why this score"]'),
     done: () => has('h4', 'How it’s built'),
-    show: () => click(find('button[title="Why this score"]')) },
+    show: async () => await click(find('button[title="Why this score"]')) },
   { title: 'Ask why on a line', body: 'Open a product, then choose Why.',
     target: () => find('tbody button', 'Why 96') ?? find('tbody button[aria-expanded]', 'Reinforced bonder'),
     done: () => has('article[aria-label="370102 · 14 ml"]'),
     show: async () => {
-      if (!find('tbody button', 'Why 96')) { click(find('tbody button[aria-expanded]', 'Reinforced bonder')); await wait(400); }
-      click(find('tbody button', 'Why 96'));
+      if (!find('tbody button', 'Why 96')) { await click(find('tbody button[aria-expanded]', 'Reinforced bonder')); await wait(400); }
+      await click(find('tbody button', 'Why 96'));
     } },
   { title: 'Upload the confirmation', body: 'Click the upload area. Differences show on each line.',
     target: () => find('[data-upload-drop]') ?? find('button', 'Upload confirmation'),
     done: () => has('article[aria-label="Confirmation needs review"]') && !has('[role="dialog"]'),
-    show: async () => { if (!find('[data-upload-drop]')) { click(find('button', 'Upload confirmation')); await wait(600); } click(find('[data-upload-drop]')); } },
+    show: async () => { if (!find('[data-upload-drop]')) { await click(find('button', 'Upload confirmation')); await wait(600); } await click(find('[data-upload-drop]')); } },
   { title: 'Choose who approves', body: 'Approving doesn’t place the order.',
     target: () => exact('[role="dialog"] button', 'Approve') ?? exact('[role="dialog"] button', 'Send to owner') ?? exact('button', 'Approve'),
     done: () => badge('Approved') || badge('Waiting for owner') || badge('Ordered'),
-    show: async () => { if (!has('[role="dialog"] h2', 'Choose approval path')) { click(exact('button', 'Approve')); await wait(700); } click(exact('[role="dialog"] button', 'Approve') ?? exact('[role="dialog"] button', 'Send to owner')); } },
+    show: async () => { if (!has('[role="dialog"] h2', 'Choose approval path')) { await click(exact('button', 'Approve')); await wait(700); } await click(exact('[role="dialog"] button', 'Approve') ?? exact('[role="dialog"] button', 'Send to owner')); } },
   { title: 'Mark as ordered', body: 'After you order from MNP.',
     target: () => find('button', 'Approve as owner') ?? find('button', 'Mark as ordered'),
     done: () => badge('Ordered'),
-    show: async () => { click(find('button', 'Approve as owner')); await wait(300); click(find('button', 'Mark as ordered')); } },
+    show: async () => { await click(find('button', 'Approve as owner')); await wait(300); await click(find('button', 'Mark as ordered')); } },
   { title: 'Upload the delivery note', body: 'Click the upload area. Actual is filled in.',
     target: () => find('[data-upload-drop]') ?? find('button', 'Upload DDT'),
     done: () => has('article[aria-label="Delivery note checked"]') && !has('[role="dialog"]'),
-    show: async () => { if (!find('[data-upload-drop]')) { click(find('button', 'Upload DDT')); await wait(600); } click(find('[data-upload-drop]')); } },
+    show: async () => { if (!find('[data-upload-drop]')) { await click(find('button', 'Upload DDT')); await wait(600); } await click(find('[data-upload-drop]')); } },
   { title: 'Confirm what arrived', body: 'Decide the extra line first.',
     target: () => find('[role="dialog"] button', 'Confirm receipt') ?? find('tbody button[aria-pressed]', 'Gift') ?? find('button', 'Confirm receipt'),
     done: () => badge('Partially received'),
     show: async () => {
-      click(find('tbody button[aria-pressed]', 'Gift')); await wait(300);
-      click(find('button', 'Confirm receipt')); await wait(600);
-      click(find('[role="dialog"] button[role="combobox"]')); await wait(300);
-      click(find('[role="option"]', 'Elena Rossi')); await wait(200);
-      click(find('[role="dialog"] button', 'Confirm receipt'));
+      await click(find('tbody button[aria-pressed]', 'Gift')); await wait(300);
+      await click(find('button', 'Confirm receipt')); await wait(600);
+      await click(find('[role="dialog"] button[role="combobox"]')); await wait(300);
+      await click(find('[role="option"]', 'Elena Rossi')); await wait(200);
+      await click(find('[role="dialog"] button', 'Confirm receipt'));
     } },
 ];
 
@@ -111,6 +143,8 @@ export function AgentTour() {
   const [open, setOpen] = useState(true);
   const [busy, setBusy] = useState(false);
   const iRef = useRef(0); iRef.current = i;
+  const [ghost, setG] = useState<Ghost>(null);
+  useEffect(() => { setGhost = setG; return () => { setGhost = () => {}; }; }, []);
 
   // 读 DOM：完成了就往前走；记下目标位置
   useEffect(() => {
@@ -137,10 +171,25 @@ export function AgentTour() {
     return { left: Math.min(Math.max(16, left), W - CARD_W - 16), top, side: right ? 'left' as const : 'right' as const, arrow: Math.min(Math.max(18, rect.top + rect.height / 2 - top), 130) };
   })();
 
-  const showMe = async () => { if (!step.show || busy) return; setBusy(true); await step.show(); setTimeout(() => setBusy(false), 2500); };
+  const showMe = async () => {
+    if (!step.show || busy) return;
+    setBusy(true);
+    await step.show();
+    // 光标停一下再淡出
+    setTimeout(() => { moveGhost(null); setBusy(false); }, 1400);
+  };
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[2147483000]" aria-live="polite">
+      {/* Show me 的光标：缓动移动，按下时缩一下并出一圈涟漪 */}
+      {ghost && (
+        <div className="absolute left-0 top-0 transition-transform duration-[650ms]" style={{ transform: `translate(${ghost.x}px, ${ghost.y}px)`, transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)' }}>
+          {ghost.down && <span className="absolute -left-4 -top-4 size-8 animate-ping rounded-full bg-primary/40" style={{ animationDuration: '600ms', animationIterationCount: 1 }} />}
+          <svg width="24" height="28" viewBox="0 0 22 26" className="transition-transform duration-150" style={{ transform: `scale(${ghost.down ? 0.86 : 1})`, filter: 'drop-shadow(0 2px 3px rgb(16 24 40 / 0.35))' }} aria-hidden>
+            <path d="M2 2 L2 20 L7 15.5 L10.5 23 L13.5 21.6 L10 14.3 L17 14.3 Z" fill="#141a2a" stroke="white" strokeWidth="1.6" strokeLinejoin="round" />
+          </svg>
+        </div>
+      )}
       {/* 高亮：一圈呼吸的描边，不挡点击 */}
       {open && rect && !finished && (
         <span className="absolute rounded-xl transition-all duration-300 ease-out"
