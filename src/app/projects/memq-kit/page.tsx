@@ -29,11 +29,13 @@ import { ProductShowcase } from './MemQPractice';
 import { MarkingEvidence, QuestionLadder } from './MemQQuiz';
 import { A2uiPeek, ChatToCards } from './MemQMcp';
 import { ProgressCharts } from './MemQCharts';
+import { ChatDemo } from './MemQChat';
+import { CreditsLab, MemoryLab, OwnAiImport, TurnFlow } from './MemQAi';
 
 export const metadata: Metadata = {
   title: 'MemQ — making what you learn stick | Mei Chai',
   description:
-    'An AI study app for iOS, designed and built solo: from research to a spaced-retrieval loop, a rigged mascot and a visual language built on one depth rule.',
+    'An AI study app for iOS, designed and built solo: from research to a spaced-retrieval loop, a rigged mascot, a visual language built on one depth rule, and an in-app AI chat that explains first and makes cards when asked.',
   robots: { index: false, follow: false },
 };
 
@@ -46,9 +48,12 @@ const navLabels = [
   '06 / Design language',
   '07 / Inkling',
   '08 / The loop',
-  '09 / Now building',
-  '10 / Results',
-  '11 / Reflection',
+  '09 / AI chat',
+  '10 / Under the chat',
+  '11 / Paying for AI',
+  '12 / Next',
+  '13 / Results',
+  '14 / Reflection',
 ];
 
 const sourceDecision: Decision = {
@@ -119,6 +124,52 @@ const writerDecision: Decision = {
   evidence: 'People already learn in conversations. The missing step is the one after the answer, and the chat is the only place that knows what was actually asked.',
   tradeoff: 'Card quality now depends on someone else’s model. So MemQ holds the rules: every card brings a choice question with 5–6 short options and exactly one right, plus a recall question, all saved together or not at all.',
 };
+const doorsDecision: Decision = {
+  question: 'One chat that works out what you meant, or two doors?',
+  source: 'AI chat spec · entry points',
+  options: [
+    { label: 'One chat; the model detects the intent', verdict: 'Easy to find. But what a message costs is only known after the model has run, and rewording a message could slip it into the cheaper line.' },
+    { label: 'One chat; pick a mode first', verdict: 'Version 1 had this: a Q&A / Vocabulary / Quiz chooser. It asks people to sort their own need at the moment they most want to talk.', reversed: true },
+    { label: 'Two doors, each named for what it does', verdict: 'Learn something, and Ask a question. Where you tap is the intent, so each line carries only its own tools, and the allowance is charged before the model runs.', chosen: true },
+  ],
+  evidence: 'Of the five ways into a conversation, four were already unambiguous: the two cards on Today, the create screen, a wrong answer in practice. Detecting intent everywhere would have solved one ambiguous place, the lesson page, with complexity in every message.',
+  tradeoff: 'The word “chat” never appears in the UI, and the lesson page gets two entries named for actions instead of one assistant. When a practice conversation needs new cards, it hands over with a button; the two lines never merge.',
+};
+
+const uiDecision: Decision = {
+  question: 'Who draws what appears in the chat?',
+  source: 'AI chat spec · structured replies',
+  options: [
+    { label: 'The model, as rich text', verdict: 'The first real answer was five paragraphs with raw asterisks, ending in “shall I make cards?”. Cards described in prose cannot be ticked.' },
+    { label: 'The model picks from interfaces the app already has', verdict: 'Card drafts, and a practice round. The model chooses one and says what it needs; the server fills it from real data; the app draws it in its own components and writes every label.', chosen: true },
+  ],
+  evidence: 'A button whose words the model wrote can promise anything. An early “Practise Norse gods” said what, not how much: three cards or three hundred. The round is now a card with the lesson’s cards, what is due and its progress, read from numbers the app already holds.',
+  tradeoff: 'No charts, free layouts or model-made forms. Each new interface has to be worth the tokens its schema adds to every prompt.',
+};
+
+const toolDecision: Decision = {
+  question: 'How do you get a model to use a tool every time?',
+  source: 'Chat test bench · real model, 8 runs a case',
+  options: [
+    { label: 'Offer the tool and ask firmly in the prompt', verdict: 'Optional tools were tried three times and never called. Pushed harder, the model wrote its suggestions into the answer instead.' },
+    { label: 'Ask for words and a tool call in one turn', verdict: 'In 8 of 8 runs it called the tool and said nothing, then started hanging practice buttons under unrelated answers.' },
+    { label: 'Give the moment to the person, or to a call of its own', verdict: 'A button sends an intent the server enforces. A practice offer is made in words, and the person’s “yes” is when the tool is used. Memory is a separate call that can only do one thing.', chosen: true },
+  ],
+  evidence: 'After the change the practice offer held 8 of 8. The separate memory call reuses a prompt already in cache and costs about $0.00007, once every four messages.',
+  tradeoff: 'More calls to arrange, and some things take two turns: the model asks first, and the round only appears once the person agrees.',
+};
+
+const creditsDecision: Decision = {
+  question: 'How should using AI be counted?',
+  source: 'AI credits · server gate and lib/aiCredits',
+  options: [
+    { label: 'A limit for each feature', verdict: 'Seven counters by the day, the month or for ever. Each protected a cost; no screen could show them together.', reversed: true },
+    { label: 'Unlimited for Pro', verdict: '“Unlimited” is a promise the project’s daily budget could break.' },
+    { label: 'One monthly number, weighted by cost', verdict: 'Anything a person asks AI for spends from one allowance that comes back on the 1st. What the app does on its own while you practise is never on it.', chosen: true },
+  ],
+  evidence: 'At the listed model prices and live usage, a free account spending all 50 credits costs under 2 cents a month, a full Pro month about $0.60. Credits spent are the existing usage rows, weighted: no new table.',
+  tradeoff: '“Credits” is a word I made up, so the line explains itself when tapped. Limits are per account, so several accounts can get round them.',
+};
 
 
 export default function MemQKitPage() {
@@ -145,10 +196,10 @@ export default function MemQKitPage() {
           glance={{
             items: [
               { label: 'Challenge', body: 'Answers stay in the chat window. Flashcard apps make you build the cards; AI tools never ask you again.' },
-              { label: 'Solution', body: 'Your own material becomes cards. A schedule brings each back on time, in five kinds of question, with a character that reacts to how it went.' },
+              { label: 'Solution', body: 'Your own material becomes cards. A schedule brings each back on time, in five kinds of question, with a character that reacts. An in-app AI chat explains first, and makes cards only when asked.' },
               { label: 'Outcome', body: 'Version 1 live on the App Store. Version 2.0 rebuilt end to end: new visual language, rigged mascot, spaced-retrieval scheduler and progress charts.' },
             ],
-            deliverables: ['iOS app', 'Design system', 'Rigged mascot', 'Scheduler', 'AI-chat concept'],
+            deliverables: ['iOS app', 'Design system', 'Rigged mascot', 'Scheduler', 'In-app AI chat', 'AI credits'],
           }}
         />
 
@@ -266,9 +317,66 @@ export default function MemQKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="09 / Now building" title="From the question you asked to the card you keep.">
+        <CaseChapter label="09 / AI chat" title="Explain first. Cards only when asked.">
           <CaseProse>
-            <p>This is what I am working on now. People already learn by asking Claude or ChatGPT; what they ask there is gone a week later. The aim: <strong>the conversation is summarised into knowledge cards, and MemQ makes sure you remember them.</strong> MemQ becomes the memory of the chats you learn in, not one more place to type.</p>
+            <p>Research kept pointing at the same gap: people learn by asking AI, and the answer is gone a week later. So MemQ got its own AI, not as a chatbot in a corner but as <strong>two short conversations that each end somewhere</strong>: one in cards you keep, the other in a round of practice. Watch it play, or move your pointer in and use it.</p>
+          </CaseProse>
+          <ChatDemo />
+          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">A rebuild of the chat at the app’s own layout, from its chat components, on demonstration content. Replies are canned here; in the app they stream from the model.</p>
+          <CaseSteps items={[
+            { title: 'Teaching and keeping are two jobs', body: 'Asked what something is, it answers in about eighty words and stops. Cards come when you ask for them: one tap under the answer, or saying so.' },
+            { title: 'A suggestion is a draft', body: 'Starters fill the box instead of sending. The difference between a draft and a sent message is the difference between a suggestion and a decision made for you.' },
+            { title: 'The model’s judgement is visible, so it can be overruled', body: 'It reads your lessons before drafting, so its guess of where the cards go is already in the lesson box when you get there. Type to search, or name a new one.' },
+          ]} />
+          <DecisionCards items={[doorsDecision, uiDecision]} />
+        </CaseChapter>
+
+        <CaseChapter label="10 / Under the chat" title="The model talks. The app decides.">
+          <CaseProse>
+            <p>The first version was fixed one symptom at a time: a button that did not appear, a tool never called, a prompt that started inventing lesson names. Four problems, one cause: <strong>nobody had written down which job belonged to the model, the server or the interface.</strong> So I wrote the flow down, then measured it.</p>
+          </CaseProse>
+          <CaseFigure caption="Making cards, before and after the flow was written down. What a tool returns decides what happens next: data goes back to the model; show and say end the turn. Lessons reach the model as short handles (L1, L2) the server resolves, so no tool accepts an id.">
+            <TurnFlow />
+          </CaseFigure>
+          <CaseStats items={[
+            { value: '1', label: 'Model call to make a set of cards, down from 3–4' },
+            { value: '184 / 184', label: 'Scripted conversations passed on the real model: 23 cases, 8 runs each' },
+            { value: '99.8%', label: 'Of the prompt served from cache on a conversation’s second message' },
+          ]} />
+          <CaseProse>
+            <h3>Tested like a product, not a prompt</h3>
+            <p>A model follows a prompt only most of the time, so every case runs eight times and is judged by its pass rate. A full run costs about a cent and happens before and after every prompt change. Three cases came from the simulator first, such as the practice line offering to make cards it cannot make.</p>
+          </CaseProse>
+          <DecisionCards items={[toolDecision]} />
+          <CaseProse>
+            <h3>Memory: three things, only one of them memory</h3>
+            <p>A conversation is kept until you clear it, and Inkling remembers what you say about yourself. There is no settings page for it: the way to change it is to say so.</p>
+          </CaseProse>
+          <CaseFigure caption="The memory rules, played on six things said in a conversation. Each outcome is one of the cases the memory call is tested on with the real model, 8 runs each, all passing.">
+            <MemoryLab />
+          </CaseFigure>
+        </CaseChapter>
+
+        <CaseChapter label="11 / Paying for AI" title="One allowance, and a free way round it.">
+          <CaseProse>
+            <p>With no revenue yet, every model call is real money, and free accounts still need to try everything. The first gate on the server was seven limits, each sensible on its own. Together, nobody could have said what they were allowed to do.</p>
+          </CaseProse>
+          <CaseFigure caption="Spend a free month. The costs are the app’s own. The number shows under the create box, where credits go three at a time; in the chat only below 20%. Pro is offered only when little is left or a request is refused, and never to someone who already pays.">
+            <CreditsLab />
+          </CaseFigure>
+          <DecisionCards items={[creditsDecision]} />
+          <CaseProse>
+            <h3>Use your own AI</h3>
+            <p>Past the allowance, and without any connector, the app still works. “Use your own AI” gives you a prompt to take to ChatGPT, Claude or any other. That AI asks what you want to learn, or offers to use the chat it was pasted into, writes cards and practice questions to the same contract as MemQ’s own tools, and you paste its reply back. Pasted into the create box, it is recognised as cards at once.</p>
+          </CaseProse>
+          <CaseFigure caption="How a pasted reply is read. The prompt was tested by playing the learner against a real model: 11 kinds of conversation, 4 runs each, 384 cards, every one with complete questions that passed the checks.">
+            <OwnAiImport />
+          </CaseFigure>
+        </CaseChapter>
+
+        <CaseChapter label="12 / Next" title="From the chats you already learn in.">
+          <CaseProse>
+            <p>Inside MemQ, explain-then-keep now works. The next step is the same move where people already learn: Claude and ChatGPT. What they ask there is gone a week later. The aim: <strong>the conversation is summarised into knowledge cards, and MemQ makes sure you remember them.</strong> MemQ becomes the memory of the chats you learn in, not one more place to type. Until it ships, Use your own AI does the same by copy and paste.</p>
           </CaseProse>
           <CaseFigure caption="The intended flow, as two illustrative conversations in a generic chat app. MemQ’s skill checks the learner’s lessons and recommends where the cards go; the cards render in the chat as an A2UI surface, in MemQ’s two card kinds, without practice answers; one button adds the ones kept. Illustrative: the experience as designed, not a shipped feature.">
             <ChatToCards />
@@ -285,7 +393,7 @@ export default function MemQKitPage() {
           </CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="10 / Results" title="Shipped, rebuilt, and honest about what is measured.">
+        <CaseChapter label="13 / Results" title="Shipped, rebuilt, and honest about what is measured.">
           <CaseStats items={[
             { value: 'Live', label: 'Version 1 on the App Store; 2.0 built and its store set ready' },
             { value: '126', label: 'Commits in the six days that took 2.0 from tokens to App Store screenshots' },
@@ -296,16 +404,19 @@ export default function MemQKitPage() {
               <li>2.0 rebuilt every screen on one token pipeline, with UI guards that check contrast and asset sources on each change.</li>
               <li>Progress charts read a per-answer log, counted in the learner’s own time zone: a twelve-week grid, accuracy, the daily goal and what is coming due.</li>
               <li>Empty and error states each got a scene and one next step, instead of “No cards”.</li>
+              <li>An in-app AI chat in two lines, with card drafts, lesson picking, practice rounds and a long-term memory, checked against the real model before every prompt change.</li>
+              <li>AI cost on one monthly allowance, with a route that costs nothing through any AI the learner already uses.</li>
             </ul>
             <p>I do not yet have usage data for 2.0, so I am not claiming retention gains. The first thing to measure is whether people come back for the second and seventh day’s reviews.</p>
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="11 / Reflection" title="What I would tell the next designer on it.">
+        <CaseClose label="14 / Reflection" title="What I would tell the next designer on it.">
           <CaseProse>
             <ul>
               <li><strong>Calm is not the same as inviting.</strong> v1 was the version I was proudest of visually, and it asked nothing of you tomorrow.</li>
               <li><strong>Write briefs, not blueprints.</strong> Saying what a screen must make you feel, and what identity cannot change, got better work from every collaborator, human or AI.</li>
+              <li><strong>Write the flow down before tuning the prompt.</strong> Four chat bugs were one missing page: who does what. Once it existed, a set of cards took one model call instead of four, and every prompt change could be measured.</li>
               <li><strong>Read the product before animating it.</strong> Mapping where the character appears showed only one place needed instant reaction. That decided the whole motion architecture.</li>
               <li><strong>Go where the learning already happens.</strong> People learn in AI chats now. The next MemQ is less a place to type cards and more the memory of those conversations.</li>
             </ul>
