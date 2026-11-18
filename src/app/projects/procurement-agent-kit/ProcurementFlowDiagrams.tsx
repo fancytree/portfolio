@@ -6,6 +6,49 @@
 
 import styles from './ProcurementFlowDiagrams.module.css';
 
+/** Length of an orthogonal path made of M / H / V commands. */
+function pathLength(d: string) {
+  let x = 0, y = 0, len = 0;
+  for (const [, cmd, a, b] of d.matchAll(/([MHVL])\s*(-?[\d.]+)(?:\s+(-?[\d.]+))?/g)) {
+    const n = Number(a);
+    if (cmd === 'M') { x = n; y = Number(b); }
+    else if (cmd === 'H') { len += Math.abs(n - x); x = n; }
+    else if (cmd === 'V') { len += Math.abs(n - y); y = n; }
+    else { const nx = n, ny = Number(b); len += Math.hypot(nx - x, ny - y); x = nx; y = ny; }
+  }
+  return len;
+}
+
+/**
+ * A dot that travels a sequence of paths at one steady speed: each hop starts when the previous
+ * one ends, then the loop rests briefly. Every hop shares one looping timeline; its keyframes are
+ * placed by its share of the total length, so short hops no longer flash past and long ones no
+ * longer leave a gap. Pure CSS, generated here, so it needs no client JS.
+ */
+export function FlowPulse({ id, paths, speed = 240, rest = 0.6 }: { id: string; paths: readonly string[]; speed?: number; rest?: number }) {
+  const dot = 16;
+  const lens = paths.map(pathLength);
+  const durs = lens.map((l) => Math.max(0.3, l / speed));
+  const total = durs.reduce((a, b) => a + b, 0) + rest;
+  const pct = (t: number) => ((t / total) * 100).toFixed(3);
+  const starts = durs.map((_, i) => durs.slice(0, i).reduce((a, b) => a + b, 0));
+  const css = paths.map((_, i) => {
+    const len = lens[i], seg = Math.min(dot, len), s0 = starts[i], s1 = starts[i] + durs[i];
+    const name = `${id}-k${i}`;
+    return `@keyframes ${name}{0%,${pct(s0)}%{stroke-dashoffset:${seg};opacity:0}${pct(s0 + 0.001)}%{stroke-dashoffset:${seg};opacity:.9}${pct(s1)}%{stroke-dashoffset:${-len};opacity:.9}${pct(s1 + 0.001)}%,100%{stroke-dashoffset:${-len};opacity:0}}`
+      + `.${name}{animation:${name} ${total.toFixed(3)}s linear infinite}`;
+  }).join('');
+  return (
+    <g className={styles.flowDot}>
+      <style>{css}</style>
+      {paths.map((d, i) => (
+        <path key={d} className={`${id}-k${i}`} d={d} fill="none" stroke="var(--case-flow-link)" strokeWidth="5" strokeLinecap="round"
+          strokeDasharray={`${Math.min(dot, lens[i])} ${lens[i] + dot}`} opacity="0" />
+      ))}
+    </g>
+  );
+}
+
 type FlowNode = { title: string; note: string; emphasis?: boolean };
 type FlowZone = { label: string; nodes: [FlowNode, FlowNode]; caption: [string, string]; outside?: boolean };
 
@@ -89,9 +132,7 @@ function Flow({ id, title, desc, zones, broken, legend }: {
         ))}
 
         {/* The record moving forward, one hop after another. */}
-        {!broken && pulsePaths.map((d, i) => (
-          <path key={d} className={styles.pulse} d={d} pathLength={1} stroke={LINK} strokeWidth="5" style={{ animationDelay: `${i * 0.9}s` }} />
-        ))}
+        {!broken && <FlowPulse id={`${id}-pulse`} paths={pulsePaths} />}
 
         {zones.map((zone, zi) => zone.nodes.map((node, ni) => {
           const flagged = broken && node.emphasis;
@@ -233,7 +274,7 @@ export function AgentMemoryLoop() {
     <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="Per-supplier memory loop; scroll horizontally on small screens">
       <svg viewBox="0 0 960 560" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
         <title id={`${id}-title`}>The Agent keeps a memory for each supplier, built from every purchase</title>
-        <desc id={`${id}-desc`}>Supplier confirmation, delivery note, receiving, variance, and outcome feed that supplier's memory at the centre. The buyer reviews what to keep, and only reviewed learning informs the next plan.</desc>
+        <desc id={`${id}-desc`}>Supplier confirmation, delivery note, receiving, variance, and outcome feed that supplier&apos;s memory at the centre. The buyer reviews what to keep, and only reviewed learning informs the next plan.</desc>
         <defs>
           <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
             <path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" />
@@ -251,9 +292,7 @@ export function AgentMemoryLoop() {
           <path d="M170 122 V56 H378" />
         </g>
         {/* The purchase moving round the ring, one step after another. */}
-        {RING_PATHS.map((d, i) => (
-          <path key={d} className={styles.pulse} d={d} pathLength={1} stroke={LINK} strokeWidth="5" style={{ animationDelay: `${i * 1}s` }} />
-        ))}
+        <FlowPulse id={`${id}-pulse`} paths={RING_PATHS} />
         {/* Evidence written to memory. */}
         <g fill="none" stroke="var(--case-muted)" strokeWidth="var(--case-border-width)" strokeDasharray="5 4" markerEnd={`url(#${id}-arrow)`}>
           {['M480 96 V213', 'M480 464 V347', 'M690 170 L602 236', 'M690 390 L602 324', 'M270 390 L358 324', 'M270 170 L358 236'].map(d => <path key={d} className={styles.carry} d={d} />)}
@@ -280,6 +319,147 @@ export function AgentMemoryLoop() {
         <text x="480" y="284" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)">One per supplier</text>
         <text x="480" y="310" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">recommendations · overrides</text>
         <text x="480" y="330" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">outcomes · notes · rules</text>
+      </svg>
+    </div>
+  );
+}
+
+/* ───────── Human in the loop ─────────
+ * Two lanes across one purchase: what the Agent prepares, and what the buyer decides.
+ * Thick outlines mark human gates, where the flow waits for a person; the dashed box is
+ * the one thing the Agent is never allowed to do. */
+type Lane = { lines: string[]; gate?: boolean; never?: boolean };
+const HITL: { stage: string; agent: Lane; buyer: Lane }[] = [
+  { stage: 'Plan', agent: { lines: ['Drafts quantities', 'and shows why'] }, buyer: { lines: ['Edits any line'] } },
+  { stage: 'Confirm', agent: { lines: ['Compares the', 'supplier PDF'] }, buyer: { lines: ['Checks the', 'marked lines'] } },
+  { stage: 'Approve', agent: { lines: ['Lists the', 'approval checks'] }, buyer: { lines: ['Approves, or', 'asks the owner'], gate: true } },
+  { stage: 'Order', agent: { lines: ['Cannot place', 'the order'], never: true }, buyer: { lines: ['Orders outside,', 'marks ordered'], gate: true } },
+  { stage: 'Receive', agent: { lines: ['Fills Actual', 'from the DDT'] }, buyer: { lines: ['Confirms what', 'arrived'], gate: true } },
+  { stage: 'Review', agent: { lines: ['Scores the plan', 'against sales'] }, buyer: { lines: ['Adds judgment,', 'saves or skips'], gate: true } },
+];
+
+export function HumanInTheLoopFlow() {
+  const id = 'procurement-hitl';
+  const x0 = 132, colW = 136, boxW = 122, agentY = 92, buyerY = 250, boxH = 84;
+  const cx = (i: number) => x0 + i * colW + colW / 2;
+  const text = (lines: string[], x: number, y: number, fill: string, weight?: string) => lines.map((l, k) => (
+    <text key={k} x={x} y={y + k * 20} textAnchor="middle" fill={fill} fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fontWeight={weight}>{l}</text>
+  ));
+  return (
+    <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="Human in the loop; scroll horizontally on small screens">
+      <svg viewBox="0 0 960 470" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
+        <title id={`${id}-title`}>The Agent prepares every step; four steps wait for a person</title>
+        <desc id={`${id}-desc`}>{HITL.map((c) => `${c.stage}: the Agent ${c.agent.lines.join(' ').toLowerCase()}; the buyer ${c.buyer.lines.join(' ').toLowerCase()}${c.buyer.gate ? ' (human gate)' : ''}.`).join(' ')}</desc>
+        <defs>
+          <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-muted)" /></marker>
+          <marker id={`${id}-flow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" /></marker>
+        </defs>
+        <rect width="960" height="470" fill="var(--case-bg)" />
+
+        {/* Lane bands and labels */}
+        <rect x="16" y={agentY - 16} width="928" height={boxH + 32} rx="8" fill="var(--case-surface)" />
+        <rect x="16" y={buyerY - 16} width="928" height={boxH + 32} rx="8" fill="var(--case-surface)" />
+        <text x="32" y={agentY + boxH / 2 - 4} fill={LINK} fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">AGENT</text>
+        <text x="32" y={agentY + boxH / 2 + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">prepares</text>
+        <text x="32" y={buyerY + boxH / 2 - 4} fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">BUYER</text>
+        <text x="32" y={buyerY + boxH / 2 + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">decides</text>
+
+        {/* Stage header with the purchase moving left to right */}
+        <line x1={cx(0) - 40} x2={cx(HITL.length - 1) + 40} y1="40" y2="40" stroke="var(--case-copy)" strokeWidth="var(--case-border-width)" markerEnd={`url(#${id}-flow)`} />
+        {HITL.map((c, i) => (
+          <g key={c.stage}>
+            <circle cx={cx(i)} cy="40" r="13" fill="var(--case-bg)" stroke="var(--case-copy)" strokeWidth="var(--case-border-width)" />
+            <text x={cx(i)} y="45" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{i + 1}</text>
+            <text x={cx(i)} y="72" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{c.stage.toUpperCase()}</text>
+          </g>
+        ))}
+
+        {HITL.map((c, i) => {
+          const x = cx(i) - boxW / 2;
+          const a = c.agent, b = c.buyer;
+          return (
+            <g key={`col-${c.stage}`}>
+              {/* Agent box */}
+              <rect x={x} y={agentY} width={boxW} height={boxH} rx="8" fill="var(--case-bg)"
+                stroke={a.never ? BREAK : LINK} strokeWidth="var(--case-border-width)" strokeDasharray={a.never ? '5 4' : undefined} />
+              {text(a.lines, cx(i), agentY + boxH / 2 - 4, a.never ? BREAK : 'var(--case-copy)')}
+              {/* Handoff */}
+              {!a.never && <line x1={cx(i)} x2={cx(i)} y1={agentY + boxH + 2} y2={buyerY - (b.gate ? 16 : 4)} stroke="var(--case-muted)" strokeWidth="var(--case-border-width)" markerEnd={`url(#${id}-arrow)`} />}
+              {/* Buyer box; gates are heavy and tagged */}
+              <rect x={x} y={buyerY} width={boxW} height={boxH} rx="8" fill="var(--case-bg)"
+                stroke="var(--case-ink)" strokeWidth={b.gate ? 3 : 'var(--case-border-width)'} />
+              {b.gate && <>
+                <rect className={styles.breathe} x={x} y={buyerY} width={boxW} height={boxH} rx="8" fill="none" stroke="var(--case-ink)" strokeWidth="var(--case-border-width)" />
+                <rect x={cx(i) - 26} y={buyerY - 11} width="52" height="22" rx="11" fill="var(--case-ink)" />
+                <text x={cx(i)} y={buyerY + 4} textAnchor="middle" fill="var(--case-bg)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">GATE</text>
+              </>}
+              {text(b.lines, cx(i), buyerY + boxH / 2 + (b.lines.length > 1 ? -4 : 6), 'var(--case-ink)', b.gate ? 'var(--case-weight-strong)' : undefined)}
+            </g>
+          );
+        })}
+
+        {/* Legend */}
+        <g fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">
+          <rect x="32" y="400" width="34" height="22" rx="6" fill="var(--case-bg)" stroke="var(--case-ink)" strokeWidth="3" />
+          <text x="76" y="416" fill="var(--case-copy)">Human gate · the purchase waits until a person acts</text>
+          <rect x="490" y="400" width="34" height="22" rx="6" fill="var(--case-bg)" stroke={BREAK} strokeDasharray="5 4" />
+          <text x="534" y="416" fill="var(--case-copy)">Never the Agent’s job</text>
+          <rect x="726" y="400" width="34" height="22" rx="6" fill="var(--case-bg)" stroke={LINK} />
+          <text x="770" y="416" fill="var(--case-copy)">Agent prepares</text>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+/* Compact memory loop, sized for a decision card's visual column (wide, not tall). */
+const C_NODES = [
+  { n: '01', title: 'Confirmation', note: 'Commitment, stockouts', x: 360, y: 56 },
+  { n: '02', title: 'DDT', note: 'Shipment evidence', x: 610, y: 160 },
+  { n: '03', title: 'Receiving', note: 'What arrived', x: 610, y: 300 },
+  { n: '04', title: 'Variance', note: 'Against the order', x: 360, y: 404 },
+  { n: '05', title: 'Outcome', note: 'Over, short, on time', x: 110, y: 300 },
+  { n: '06', title: 'Review', note: 'Buyer decides to keep', x: 110, y: 160 },
+] as const;
+const C_RING = ['M448 56 H610 V124', 'M610 192 V264', 'M610 332 V404 H452', 'M272 404 H110 V336', 'M110 268 V196', 'M110 128 V56 H268'] as const;
+
+export function AgentMemoryLoopCompact() {
+  const id = 'procurement-memory-compact';
+  return (
+    <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="Per-supplier memory loop">
+      <svg viewBox="0 0 720 460" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
+        <title id={`${id}-title`}>Each purchase writes evidence to its supplier&apos;s memory; only review changes it</title>
+        <desc id={`${id}-desc`}>Confirmation, DDT, receiving, variance and outcome each write evidence to that supplier&apos;s memory in the centre. The buyer&apos;s review decides what is kept for the next plan.</desc>
+        <defs>
+          <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" /></marker>
+        </defs>
+        <rect width="720" height="460" fill="var(--case-bg)" />
+        <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" markerEnd={`url(#${id}-arrow)`}>
+          {C_RING.map((d) => <path key={d} d={d} />)}
+        </g>
+        <FlowPulse id={`${id}-pulse`} paths={C_RING} />
+        {/* Evidence written to memory */}
+        <g fill="none" stroke="var(--case-muted)" strokeWidth="var(--case-border-width)" strokeDasharray="5 4" markerEnd={`url(#${id}-arrow)`}>
+          {['M360 88 V160', 'M360 372 V300', 'M522 170 L476 196', 'M522 290 L476 264', 'M198 290 L244 264', 'M198 170 L244 196'].map((d) => <path key={d} className={styles.carry} d={d} />)}
+        </g>
+        {C_NODES.map((node) => {
+          const em = node.n === '06';
+          return (
+            <g key={node.n}>
+              <rect x={node.x - 88} y={node.y - 32} width="176" height="64" rx="8" fill="var(--case-bg)" stroke={em ? LINK : 'var(--case-copy)'} strokeWidth={em ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
+              {em && <rect className={styles.breathe} x={node.x - 88} y={node.y - 32} width="176" height="64" rx="8" fill="none" stroke={LINK} strokeWidth="var(--case-border-width)" />}
+              <text x={node.x - 74} y={node.y - 6} fill={em ? LINK : 'var(--case-muted)'} fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{node.n}</text>
+              <text x={node.x - 48} y={node.y - 6} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fontWeight="var(--case-weight-strong)">{node.title}</text>
+              <text x={node.x - 74} y={node.y + 18} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{node.note}</text>
+            </g>
+          );
+        })}
+        <rect className={styles.breathe} x="250" y="166" width="220" height="128" rx="8" fill="none" stroke="var(--case-ink)" strokeWidth="var(--case-border-width)" />
+        <rect x="250" y="166" width="220" height="128" rx="8" fill="var(--case-surface)" stroke="var(--case-ink)" strokeWidth="var(--case-focus-width)" />
+        <text x="360" y="200" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">SUPPLIER MEMORY</text>
+        <text x="360" y="230" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)">One per supplier</text>
+        <text x="360" y="256" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">overrides · outcomes</text>
+        <text x="360" y="276" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">notes · rules</text>
       </svg>
     </div>
   );

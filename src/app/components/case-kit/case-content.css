@@ -296,6 +296,31 @@
 .case-decision-foot > div + div { border-left: var(--case-border-width) solid var(--case-rule); }
 .case-decision-foot dt { font-family: var(--case-font-heading); font-size: var(--case-type-caption); color: var(--case-muted); text-transform: uppercase; margin-bottom: var(--case-space-8); }
 .case-decision-foot dd { margin: 0; font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.5; color: var(--case-copy); }
+.case-decision.has-shot { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); }
+/* Narrow text column beside a large visual: tighter padding, evidence and cost stacked. */
+.case-decision.has-shot:not(.is-wide) .case-decision-head { padding: var(--case-space-24) var(--case-space-16) var(--case-space-12); }
+.case-decision.has-shot:not(.is-wide) .case-decision-options { padding: 0 var(--case-space-16); }
+.case-decision.has-shot:not(.is-wide) .case-decision-option { padding: var(--case-space-8) var(--case-space-12); }
+.case-decision.has-shot:not(.is-wide) .case-decision-foot { grid-template-columns: 1fr; }
+.case-decision.has-shot:not(.is-wide) .case-decision-foot > div { padding: var(--case-space-12) var(--case-space-16); }
+.case-decision.has-shot:not(.is-wide) .case-decision-foot > div + div { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
+.case-decision-shot { margin: 0; padding: var(--case-space-16); background: var(--case-surface); border-right: var(--case-border-width) solid var(--case-rule); display: flex; flex-direction: column; align-items: center; }
+.case-decision-frame { position: sticky; top: var(--case-space-24); display: block; margin: 0 auto; }
+.case-decision-frame img { display: block; width: 100%; height: auto; border-radius: var(--case-radius-sm); box-shadow: 0 1px 2px rgb(16 24 40 / 0.06), 0 10px 28px -12px rgb(16 24 40 / 0.25); background: var(--case-bg); }
+/* Callouts: an outlined box on the exact element, with its label on a pill. */
+.case-decision-mark-box { position: absolute; border: 2px solid var(--case-flow-link); border-radius: 6px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--case-flow-link) 16%, transparent); pointer-events: none; }
+.case-decision-mark-label { position: absolute; left: -2px; bottom: 100%; margin-bottom: 6px; padding: 3px 9px; border-radius: 999px; background: var(--case-flow-link); color: #fff; font-family: var(--case-font-body); font-size: 12px; line-height: 1.3; font-weight: var(--case-weight-strong); white-space: nowrap; box-shadow: 0 4px 10px -4px rgb(16 24 40 / 0.4); }
+.case-decision-mark-label.is-below { bottom: auto; top: 100%; margin: 6px 0 0; }
+.case-decision-mark-label.is-right { left: auto; right: -2px; }
+.case-decision-shot figcaption { margin-top: var(--case-space-12); align-self: stretch; font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.45; color: var(--case-muted); }
+.case-decision-body { min-width: 0; }
+.case-decision-shot.is-diagram { justify-content: center; }
+.case-decision.has-shot.is-wide { grid-template-columns: 1fr; }
+.case-decision.is-wide .case-decision-shot { border-right: 0; border-bottom: var(--case-border-width) solid var(--case-rule); }
+.case-decision.is-wide .case-decision-diagram { position: static; }
+.case-kit .case-decision.is-wide .case-decision-diagram .case-diagram-scroll > svg { min-width: var(--case-diagram-inline-width); }
+.case-decision-diagram { position: sticky; top: var(--case-space-24); width: 100%; border-radius: var(--case-radius-sm); overflow: hidden; background: var(--case-bg); box-shadow: 0 1px 2px rgb(16 24 40 / 0.06); }
+.case-kit .case-decision-diagram .case-diagram-scroll > svg { min-width: 520px; height: auto; }
 
 .case-reversal { display: grid; grid-template-columns: 1fr 1fr 1fr; border: var(--case-border-width) solid var(--case-rule); border-radius: var(--case-radius-md); overflow: hidden; }
 .case-reversal-col { padding: var(--case-space-16) var(--case-space-20); display: flex; flex-direction: column; gap: var(--case-space-8); }
@@ -308,6 +333,12 @@
 .case-reversal-after p { color: var(--case-ink); font-weight: var(--case-weight-strong); }
 .case-reversal-source { font-family: var(--case-font-code); font-size: var(--case-type-spec); color: var(--case-subtle); }
 
+/* Decision + screenshot: side by side only when both have room. */
+@media (max-width: 1023px) {
+  .case-decision.has-shot { grid-template-columns: 1fr; }
+  .case-decision-shot { border-right: 0; border-bottom: var(--case-border-width) solid var(--case-rule); }
+  .case-decision-frame { position: relative; top: auto; }
+}
 @media (max-width: 767px) {
   .case-decision-foot, .case-reversal { grid-template-columns: 1fr; }
   .case-decision-foot > div + div, .case-reversal-col + .case-reversal-col { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }

@@ -7,9 +7,11 @@ import { CaseButton } from '../../components/case-kit/CaseButton';
 import { CaseChapter, CaseClose, CaseEvidenceCards, CaseEvidenceThumbs, CaseFigure, CaseHero, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseStats } from '../../components/case-kit/CaseKit';
 import ProcurementExperienceMap from './ProcurementExperienceMap';
 import { PurchasingLiveDemo } from '../def-erp-kit/ErpLiveDemo';
-import { AgentMemoryLoop, ConnectedProcurementFlow, LegacyProcurementFlow } from './ProcurementFlowDiagrams';
+import { AgentMemoryLoopCompact, ConnectedProcurementFlow, HumanInTheLoopFlow, LegacyProcurementFlow } from './ProcurementFlowDiagrams';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from './DecisionCards';
 import AgentLiveDemo, { AgentEvaluationLiveDemo } from './AgentLiveDemo';
+import { DECISION_SHOTS } from './decisionShots';
+import { ModelEngineFlow, OrderOutsideFlow } from './DecisionDiagrams';
 import { EvaluationLoop, PlanScoreBuild, SupplierAccuracyChart } from './EvaluationDiagrams';
 import { PROCUREMENT_AGENT_ERP_URL } from '@/lib/demoUrls';
 
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
   description: 'How I turned fragmented purchasing records into an editable AI recommendation, then designed how its accuracy is measured, supplier by supplier. In production at DEF Beauty Supply.',
 };
 
-const navLabels = ['01 / My role', '02 / The problem', '03 / Phase 1', '04 / Why an Agent', '05 / Agent design', '06 / Key decisions', '07 / The experience', '08 / Measuring accuracy', '09 / Iterations', '10 / Design an AI agent', '11 / Results', '12 / Reflection'];
+const navLabels = ['01 / My role', '02 / The problem', '03 / Phase 1', '04 / Why an Agent', '05 / Agent design', '06 / Key decisions', '07 / The experience', '08 / Every handoff', '09 / Measuring accuracy', '10 / What I got wrong', '11 / Results', '12 / Reflection'];
 const imageSizes = '(min-width: 1408px) 1120px, (min-width: 1280px) calc(100vw - 288px), calc(100vw - 48px)';
 
 // Sourced from the DEF project decision log (DEC-xxx) and interview records (INT-xxx).
@@ -27,105 +29,107 @@ const decisions: Decision[] = [
     question: 'Where does the Agent live in the ERP?',
     source: 'DEC-001 · DEC-012',
     options: [
-      { label: 'Add more filters and fields to the purchase page', verdict: 'Every season and supplier needs a different data window. A fixed page just keeps growing.' },
-      { label: 'Fixed wizards per scenario', verdict: 'Fine for known cases, but it cannot cover every supplier and season combination.' },
-      { label: 'Workbench plus a persistent Agent panel', verdict: 'The table stays the source of truth. Chat starts tasks, asks, explains, and repairs. Results always land in the workbench, never only in chat.', chosen: true },
-      { label: 'Chat only', verdict: 'Wide tables, discrepancies, and approvals are hard to audit inside a conversation.' },
+      { label: 'More filters on the purchase page', verdict: 'Keeps growing with every case.' },
+      { label: 'A wizard per scenario', verdict: 'Can’t cover every supplier and season.' },
+      { label: 'Workbench with an Agent panel', verdict: 'The table stays the source of truth.', chosen: true },
+      { label: 'Chat only', verdict: 'Wide tables are hard to audit in chat.' },
     ],
-    evidence: 'The buyer lead said one page could not hold that many situations. In prototype review, Chat that only explained had little value, so it became the way to start a purchase.',
-    tradeoff: 'A dynamic experience is harder to test than a fixed form. The Agent’s plan and current step have to stay visible.',
+    evidence: 'One page couldn’t hold every situation.',
+    tradeoff: 'Harder to test than a fixed form.',
+    shot: { src: `/img/procurement-agent/decisions/d1-agent-beside-the-order.webp?v=${DECISION_SHOTS['d1-agent-beside-the-order'].v}`, ...DECISION_SHOTS['d1-agent-beside-the-order'], alt: 'Purchase order with the editable table on the left and the Procurement agent panel on the right.', caption: 'The order stays the source of truth; the Agent sits beside it.' },
   },
   {
     question: 'How many recommendations should the Agent show?',
     source: 'DEC-014 → DEC-026',
     options: [
-      { label: 'Three scenarios: least risk, balanced, opportunity', verdict: 'I chose this first, to expose the trade-offs. The buyer wanted a quick check, not a menu.', reversed: true },
-      { label: 'Unlimited generated scenarios', verdict: 'Too much choice. Nothing to compare against.' },
-      { label: 'One best plan, editable line by line', verdict: 'Each row shows evidence, confidence, and the calculation. High-impact conditions go to approval, not into extra scenarios.', chosen: true },
+      { label: 'Three scenarios to compare', verdict: 'Buyers wanted a quick check, not a menu.', reversed: true },
+      { label: 'Unlimited scenarios', verdict: 'Too much choice.' },
+      { label: 'One plan, editable per line', verdict: 'Each line shows its reasons.', chosen: true },
     ],
-    evidence: 'Prototype feedback: replenishment needs one best plan to review and edit quickly.',
-    tradeoff: 'The Agent has to justify why this plan is best, and make overriding it effortless.',
+    evidence: 'Replenishment needs one plan to check fast.',
+    tradeoff: 'The Agent must justify its one plan.',
+    shot: { src: `/img/procurement-agent/decisions/d2-one-editable-plan.webp?v=${DECISION_SHOTS['d2-one-editable-plan'].v}`, ...DECISION_SHOTS['d2-one-editable-plan'], alt: 'Draft purchase table with editable quantities and a Why link on each line.', caption: 'One plan, editable in place, each line showing its sales and stock.' },
   },
   {
     question: 'Who calculates the order quantity?',
-    source: 'DEC-009 · DEC-046 · DEC-047',
+    source: 'DEC-009 · DEC-046',
     options: [
-      { label: 'The LLM analyses and calculates', verdict: 'Cannot be reproduced or regression tested, and can invent stock or sales figures.' },
-      { label: 'Fixed rules only, no Agent', verdict: 'Cannot read supplier emails, PDFs, or the buyer’s intent.' },
-      { label: 'LLM interprets, a deterministic engine calculates', verdict: 'The model extracts supplier, coverage, and constraints. A tested function computes quantity. A graph makes “no calculation until required fields exist” a control-flow rule, not a prompt.', chosen: true },
+      { label: 'The LLM', verdict: 'Not reproducible; can invent numbers.' },
+      { label: 'Fixed rules, no Agent', verdict: 'Can’t read supplier PDFs or intent.' },
+      { label: 'LLM reads, an engine calculates', verdict: 'Same inputs, same number.', chosen: true },
     ],
-    evidence: 'Quantity moves cash and supplier commitments, so the same inputs must give the same number. A free-form tool-calling loop was ruled out for the first version.',
-    tradeoff: 'Lower confidence at first. Seasonality and customer mix are not in the data, so they show as data gaps rather than being faked.',
+    evidence: 'Quantity moves cash; it must be repeatable.',
+    tradeoff: 'Gaps like seasonality show as gaps.',
+    diagram: { node: <ModelEngineFlow />, caption: 'The model turns words into fields; a tested engine turns fields into the number.' },
   },
   {
     question: 'Who places the order?',
     source: 'DEC-002 · DEC-025',
     options: [
-      { label: 'Suggest only, create nothing', verdict: 'Too little value. The buyer still builds the order alone.' },
-      { label: 'Auto-order under a threshold', verdict: 'No accuracy or trust data yet to support it.' },
-      { label: 'Full automation with audit after the fact', verdict: 'A real commercial commitment cannot be undone by an audit.' },
-      { label: 'Agent drafts, buyer orders outside, platform records it', verdict: 'Recording “Order placed” requires the final confirmation attached. Ordering happens on WhatsApp or email, so the platform never sends it.', chosen: true },
+      { label: 'Suggest only', verdict: 'Too little value.' },
+      { label: 'Auto-order under a threshold', verdict: 'No accuracy data to justify it.' },
+      { label: 'Agent drafts, buyer orders outside', verdict: 'The platform only records it.', chosen: true },
     ],
-    evidence: 'The buyer lead named automatic ordering as forbidden. A later review corrected a deeper point: the platform cannot order from suppliers at all.',
-    tradeoff: 'One manual step stays. Testers read a prepared order as a placed one, so the UI keeps saying that approved is not ordered.',
+    evidence: 'Ordering happens on WhatsApp or email.',
+    tradeoff: 'One manual step stays.',
+    diagram: { node: <OrderOutsideFlow />, caption: 'The commitment happens outside; the platform only records it, with the confirmation.' },
   },
   {
     question: 'How should approval relate to ordering?',
     source: 'DEC-019 · DEC-035',
     options: [
-      { label: 'Approve means order', verdict: 'Mixes accepting risk with executing a trade. A changed quote could slip through.' },
-      { label: 'Owner approves the direction, not a version', verdict: 'A supplier can change price or quantity and still reuse the old approval.' },
-      { label: 'Agent auto-approves small exceptions', verdict: 'Exceptions are the user’s own high-impact boundaries. The Agent should not waive them.' },
-      { label: 'Approval bound to one quote version, separate from ordering', verdict: 'A change to price or quantity reopens approval. Escalation happens in place on the same order, only when a confirmation brings a real exception.', chosen: true },
+      { label: 'Approve means order', verdict: 'Mixes risk with execution.' },
+      { label: 'Approve once, reuse it', verdict: 'A changed quote slips through.' },
+      { label: 'Approve this confirmation only', verdict: 'A new price or quantity reopens it.', chosen: true },
     ],
-    evidence: 'New suppliers, new products, large orders, and unstable prices need the owner. Normal orders do not.',
-    tradeoff: 'An extra step after approval, and a quote-version mechanism to build and maintain.',
+    evidence: 'Only real exceptions need the owner.',
+    tradeoff: 'An extra step after approval.',
+    shot: { src: `/img/procurement-agent/decisions/d5-approval-path.webp?v=${DECISION_SHOTS['d5-approval-path'].v}`, ...DECISION_SHOTS['d5-approval-path'], alt: 'Approval dialog listing the approval checks and two paths: approve directly or push to the owner.', caption: 'Approval is tied to this confirmation and its checks.' },
   },
   {
     question: 'How should receiving work?',
     source: 'DEC-017 · DEC-028',
     options: [
-      { label: 'Keep entering each product by hand', verdict: 'The same duplicated search and typing, with the same errors.' },
-      { label: 'Read the delivery note and stock in automatically', verdict: 'The DDT says what the supplier shipped, not what arrived.' },
-      { label: 'Prefill from the DDT, record only differences', verdict: 'Order, DDT, counted, and accepted quantities stay separate. Counted goods do not automatically become stock.', chosen: true },
+      { label: 'Enter each product by hand', verdict: 'Slow and error-prone.' },
+      { label: 'Stock in straight from the DDT', verdict: 'The DDT is what shipped, not what arrived.' },
+      { label: 'Prefill from the DDT, decide differences', verdict: 'Counted goods stay separate from stock.', chosen: true },
     ],
-    evidence: 'My first model went from confirmation straight to receipt. An interview showed a DDT sits in between, and that data model could not tell input errors from real over-delivery.',
-    tradeoff: 'Needs a dependable DDT-to-order link. Over-receipt takes an extra recount.',
+    evidence: 'A DDT sits between confirmation and receipt.',
+    tradeoff: 'Over-receipts need a recount.',
+    shot: { src: `/img/procurement-agent/decisions/d6-receive-against-ddt.webp?v=${DECISION_SHOTS['d6-receive-against-ddt'].v}`, ...DECISION_SHOTS['d6-receive-against-ddt'], alt: 'Receiving table comparing confirmed, DDT and actual quantities with a status per line.', caption: 'Actual prefilled from the DDT; only differences need a decision.' },
   },
   {
     question: 'How does the Agent learn?',
     source: 'DEC-006 · DEC-020',
     options: [
-      { label: 'Learn automatically from every order', verdict: 'Fast, but it follows noise, one-off events, and mistaken edits.' },
-      { label: 'Static reports only', verdict: 'Safe, but feedback never changes the next plan.' },
-      { label: 'The buyer writes supplier rules by hand', verdict: 'Good for clear policy. Poor at patterns, and generalizes from single cases.' },
-      { label: 'Outcomes become candidates. Reviewed before they shape plans', verdict: 'Memory has four layers: facts, metrics, observations, and approved rules. One order only yields a candidate.', chosen: true },
+      { label: 'From every order, automatically', verdict: 'Learns noise and mistakes.' },
+      { label: 'Static reports only', verdict: 'Feedback never reaches the next plan.' },
+      { label: 'Only from reviewed outcomes', verdict: 'A person decides what is kept.', chosen: true },
     ],
-    evidence: 'One result mixes Agent advice, human edits, supplier behavior, and season. Edits alone do not explain why something happened.',
-    tradeoff: 'Slower to improve. With little data, the Agent has to say it does not know yet.',
+    evidence: 'Edits alone don’t explain why.',
+    tradeoff: 'Slower to improve.',
+    diagram: { node: <AgentMemoryLoopCompact />, caption: 'Solid arrows follow a purchase to review. Dashed arrows write its evidence to that supplier’s memory; only the buyer’s review changes it.' },
   },
+];
+
+// Iteration 2: the evaluation decision lives in its own chapter.
+const evaluationDecision: Decision[] = [
   {
     question: 'How do we know the plan was right?',
     source: 'Iteration 2',
     options: [
-      { label: 'Acceptance rate: how often buyers keep the plan', verdict: 'Measures habit, not correctness. A busy buyer accepts a wrong plan.' },
-      { label: 'One accuracy score for the whole Agent', verdict: 'Averages a supplier ordered every 3 weeks with one ordered every quarter. It hides where the plan fails.' },
-      { label: 'Measure silently from sales, no review', verdict: 'Stock-outs, gifts, and one-off events need a person to read them. Unreviewed numbers learn noise.' },
-      { label: 'Score each reviewed order, kept per supplier, with confidence', verdict: 'Planned vs needed gives the order’s accuracy. The buyer rates the order and names exceptions in words, which works for 10 products or 300. The supplier’s score weights the last 6 reviews, with confidence from how much data there is.', chosen: true },
+      { label: 'Acceptance rate', verdict: 'Measures habit, not correctness.' },
+      { label: 'One global score', verdict: 'Hides which supplier fails.' },
+      { label: 'Score each reviewed order, per supplier', verdict: 'With confidence from data volume.', chosen: true },
     ],
-    evidence: 'Results could show planning got faster, not whether the quantities were right. Suppliers also differ: MNP has 18 months of sales and orders every 3 weeks; Moroccanoil has 7 months and orders every 2.',
-    tradeoff: 'Review becomes a step after receiving. It stays skippable, and a skipped order is simply not counted.',
+    evidence: 'Faster plans didn’t prove right plans.',
+    tradeoff: 'Review adds a step; skips aren’t counted.',
+    shot: { src: `/img/procurement-agent/decisions/d8-plan-score.webp?v=${DECISION_SHOTS['d8-plan-score'].v}`, ...DECISION_SHOTS['d8-plan-score'], alt: 'Plan score in the Evidence panel: expected accuracy 77%, the supplier track record, and each deduction.', caption: 'Every new plan shows its expected accuracy and why.' },
   },
 ];
 
 // What I got wrong, and what changed my mind.
 const reversals: Reversal[] = [
-  {
-    before: 'Planning time as the result.',
-    evidence: 'Faster plans did not prove better plans. Accuracy was “not yet measured”.',
-    after: 'Every reviewed order is scored; each supplier keeps its own accuracy and confidence.',
-    source: 'Iteration 2',
-  },
   {
     before: 'Three scenarios, so the buyer sees the trade-offs.',
     evidence: 'Replenishment needs one best plan to check and edit fast.',
@@ -156,6 +160,12 @@ const reversals: Reversal[] = [
     after: 'Approval and ordering split. The platform only records the order.',
     source: 'INT-008 · DEC-025',
   },
+  {
+    before: 'Planning time as the result.',
+    evidence: 'Faster plans did not prove better plans. Accuracy was “not yet measured”.',
+    after: 'Every reviewed order is scored; each supplier keeps its own accuracy and confidence.',
+    source: 'Iteration 2',
+  },
 ];
 
 export default function ProcurementAgentKitPage() {
@@ -180,7 +190,7 @@ export default function ProcurementAgentKitPage() {
           glance={{ items: [
             { label: 'The challenge', body: 'Purchasing was split across Excel, supplier messages, and delivery notes. Even after the ERP, stockouts, seasonality, and customer growth lived in the buyer’s memory.' },
             { label: 'My approach', body: 'Connect the purchase lifecycle first. Then let an Agent draft one editable plan, keep every handoff explicit, and score each plan against what was really needed.' },
-            { label: 'The outcome', body: 'A purchase plan that took 30 minutes to 2 hours across suppliers now takes 5 to 10 minutes, and three staff members use it daily. AI prepares the recommendation; the buyer commits the order.' },
+            { label: 'The outcome', body: 'A purchase plan that took 30 minutes to 2 hours now takes 5 to 10 minutes, used daily by three staff. A second iteration scores every plan, supplier by supplier.' },
           ] }}
         />
 
@@ -201,22 +211,22 @@ export default function ProcurementAgentKitPage() {
             { src: '/img/procurement-agent/evidence/ddt-stack-paper.webp', title: '3 · Months of paper documents', alt: 'Stacks of printed receiving documents, bundled and labelled by month.', width: 2400, height: 1800 },
             { src: '/img/procurement-agent/evidence/ddt-lines-checked.webp', title: '4 · Checked line by line', alt: 'A supplier document with ticked items, highlighted quantities, and handwritten corrections.', width: 1400, height: 996 },
             { src: '/img/procurement-agent/evidence/legacy-receiving-entry.webp', title: '5 · Add products one by one', alt: 'Legacy purchase receiving screen: a product search dialog beside the list of products added one at a time.', width: 2000, height: 1140, badge: 'Only record in the system' },
-          ]} caption="Evidence from the old workflow, in order: the Excel order, the supplier’s confirmation, the printed documents that arrived with each shipment, and the legacy receiving screen. Identifying details are masked." />
-          <CaseFigure caption="Before the ERP · The order and the supplier’s answer lived outside the system. Receiving followed the delivery note, so batch arrivals could not be recorded. Scroll horizontally on smaller screens.">
+          ]} caption="The old workflow, from Excel order to manual receiving. Identifying details are masked." />
+          <CaseFigure caption="Before the ERP · The order and the supplier’s answer lived outside the system. Receiving followed the delivery note, so batch arrivals could not be recorded.">
             <LegacyProcurementFlow />
           </CaseFigure>
         </CaseChapter>
 
         <CaseChapter label="03 / Phase 1" title="First, I brought the whole purchase into the ERP.">
           <CaseProse><p>Order, confirmation, DDT and receiving became one record, with differences marked on it. It still did not suggest a quantity.</p></CaseProse>
-          <CaseFigure caption="Phase 1 · The same three moments, now on one purchase record. The quantity judgment at the start is still manual. Scroll horizontally on smaller screens.">
+          <CaseFigure caption="Phase 1 · The same three moments, now on one purchase record. The quantity judgment at the start is still manual.">
             <ConnectedProcurementFlow />
           </CaseFigure>
           <PurchasingLiveDemo />
         </CaseChapter>
 
         <CaseChapter label="04 / Why an Agent" title="After launch, buyers still wrote the order from their own heads.">
-          <CasePullquote>Now I don&apos;t need to switch between Excel and the system anymore. But the part that takes the most time is still the same. I still have to decide what to buy and how much.</CasePullquote>
+          <CasePullquote>Now I don&apos;t need to switch between Excel and the system anymore. But <strong>the part that takes the most time is still the same</strong>. I still have to <strong>decide what to buy and how much</strong>.</CasePullquote>
           <CaseProse><p>Procurement team, after Phase 1. They adjusted for four things the system did not hold:</p></CaseProse>
           <CaseEvidenceCards label="What buyers adjusted for, and kept in memory" items={[
             { icon: <FileSearch />, title: 'Stockouts', body: 'Confirmations show shortages. The buyer remembers and orders around them.' },
@@ -229,46 +239,43 @@ export default function ProcurementAgentKitPage() {
         <CaseChapter label="05 / Agent design" title="The system should hold the signals. The buyer should hold the decision.">
           <CaseProse><p>The work is gathering and weighing evidence, which an Agent can do. But an order commits the business, so the Agent proposes and the buyer decides.</p></CaseProse>
           <CaseEvidenceCards label="Design principles for the Agent" items={[
-            { icon: <Layers />, title: 'Capture signals where they appear', body: 'Stockouts, notes, and exceptions are recorded on the purchase, ready for next time.' },
-            { icon: <ClipboardCheck />, title: 'Reduce the decision, and show the work', body: 'One recommendation, not a menu. Each line lists its demand signals: stockout recovery, seasonality, customer mix, buyer notes.' },
-            { icon: <Calculator />, title: 'Calculate what must be reproducible', body: 'Quantity comes from a deterministic engine. The model interprets and explains, it does not invent numbers.' },
-            { icon: <ShieldCheck />, title: 'Stop where commitment begins', body: 'The plan stays editable and reversible. The buyer places the order, and confirms what the Agent learns.' },
+            { icon: <Layers />, title: 'Capture signals where they appear', body: 'Stockouts, notes, and exceptions stay on the purchase for next time.' },
+            { icon: <ClipboardCheck />, title: 'One plan, with the work shown', body: 'One recommendation, not a menu. Every line shows its reasons.' },
+            { icon: <Calculator />, title: 'Numbers from an engine', body: 'A tested engine calculates; the model reads and explains.' },
+            { icon: <ShieldCheck />, title: 'Stop where commitment begins', body: 'The buyer orders, and confirms what the Agent learns.' },
           ]} layout="pairs" />
-          <CaseProse><p>Suppliers behave differently, so each keeps its own memory, changed only through the buyer’s review.</p></CaseProse>
-          <CaseFigure caption="The learning loop, per supplier · Solid arrows follow a purchase from confirmation to review. Dashed arrows write each piece of evidence to that supplier’s memory. Scroll horizontally on smaller screens.">
-            <AgentMemoryLoop />
+          <CaseProse><p>The Agent prepares every step. Four steps wait for a person, because each one commits money, stock, or what the Agent learns next.</p></CaseProse>
+          <CaseFigure caption="Human in the loop · Blue: what the Agent prepares. Heavy outline: a human gate, where the purchase waits for the buyer. The Agent can never place the order.">
+            <HumanInTheLoopFlow />
           </CaseFigure>
-          <CaseEvidenceCards label="Division of responsibility in the AI workflow" items={[
-            { icon: <Bot />, title: 'Model · interpret', body: 'Read the request and supplier documents. Explain the plan and any differences.' },
-            { icon: <Calculator />, title: 'Engine · calculate', body: 'Use sales, coverage, stock, inbound, and lead time, adjusted for demand signals.' },
-            { icon: <UserCheck />, title: 'Buyer · decide', body: 'Edit the plan, resolve exceptions, and place the supplier order.' },
-          ]} />
         </CaseChapter>
 
-        <CaseChapter label="06 / Key decisions" title="Eight decisions, and what I rejected for each.">
+        <CaseChapter label="06 / Key decisions" title="Seven decisions turned those principles into a product.">
           <CaseStats items={[
             { value: '73', label: 'Decision records, each with the options weighed' },
             { value: '47', label: 'Interview and feedback records' },
             { value: '60', label: 'Documented design iterations' },
           ]} />
+          <CaseProse><p>Each principle was tested against real alternatives. For every decision: what I chose, what I rejected, and the cost I accepted.</p></CaseProse>
           <DecisionCards items={decisions} />
         </CaseChapter>
 
         <CaseChapter label="07 / The experience" title="A clear next action, from replenishment to receipt.">
-          <CaseProse><p>The purchase list coordinates purchases. Each order keeps its own evidence, rules, activity, and conversation.</p></CaseProse>
+          <CaseProse><p>Together, those decisions make one flow: a supplier card starts the draft, the Agent explains every line, and the buyer approves, orders, and receives.</p></CaseProse>
           <AgentLiveDemo />
-          <CaseEvidenceCards label="Boundaries that make the experience coherent" items={[
-            { icon: <FileSearch />, title: 'One purchase context', body: 'Conversation, documents, evidence, and activity stay with the same order.' },
-            { icon: <ClipboardCheck />, title: 'Distinct responsibilities', body: 'The Agent prepares and explains; the buyer edits, approves, orders, and receives.' },
-            { icon: <History />, title: 'Reviewed continuity', body: 'Autosaves support recovery; order notes and supplier terms keep separate scopes.' },
-          ]} />
         </CaseChapter>
 
-        <CaseChapter label="08 / Measuring accuracy" title="Faster was proven. Right was not. So every plan now gets a score.">
-          <CaseProse><p>Results showed planning time, not whether the quantities were right, and the next step, automation, needs exactly that. Iteration 2 scores each plan against what was really needed, supplier by supplier.</p></CaseProse>
-          <CaseFigure caption="The evaluation loop · A plan starts with an expected accuracy. The review after receiving measures the real one and updates that supplier’s track record. Scroll horizontally on smaller screens.">
+        <CaseChapter label="08 / Every handoff" title="Twelve steps and six themes shape every handoff.">
+          <CaseProse><p>Underneath that flow, each handoff between Agent and buyer was designed on its own: twelve steps across a purchase, six themes across all of them. Try any card.</p></CaseProse>
+          <ProcurementExperienceMap />
+        </CaseChapter>
+
+        <CaseChapter label="09 / Measuring accuracy" title="Faster was proven. Right was not. So every plan now gets a score.">
+          <CaseProse><p>After launch, plans were faster, but nothing showed whether the quantities were right. Automation would need exactly that. Iteration 2 scores each plan against what was really needed, supplier by supplier.</p></CaseProse>
+          <CaseFigure caption="The evaluation loop · A plan starts with an expected accuracy. The review after receiving measures the real one and updates that supplier’s track record.">
             <EvaluationLoop />
           </CaseFigure>
+          <DecisionCards items={evaluationDecision} start={8} />
           <CaseEvidenceCards label="Why the score is designed this way" items={[
             { icon: <Layers />, title: 'It belongs to the supplier', body: 'Order frequency and data history differ, so one global number would hide where plans fail.' },
             { icon: <History />, title: 'Review first, but skippable', body: 'A new plan asks for the last unreviewed order. Skipping is allowed; it just isn’t counted.' },
@@ -284,13 +291,9 @@ export default function ProcurementAgentKitPage() {
           <AgentEvaluationLiveDemo />
         </CaseChapter>
 
-        <CaseChapter label="09 / Iterations" title="Six things I got wrong, and what changed my mind.">
+        <CaseChapter label="10 / What I got wrong" title="Six things I got wrong, and what changed my mind.">
+          <CaseProse><p>Most of these came from testers and buyers, not from me. Each one narrowed the Agent’s job.</p></CaseProse>
           <ReversalList items={reversals} />
-        </CaseChapter>
-
-        <CaseChapter label="10 / Design an AI agent" title="Twelve steps and six themes shape every handoff.">
-          <CaseProse><p>Twelve steps across a purchase, six themes across all of them. Try each card; every one is held to four goals: explainable, controllable, predictable, recoverable.</p></CaseProse>
-          <ProcurementExperienceMap />
         </CaseChapter>
 
         <CaseChapter label="11 / Results" title="A purchase plan in 5 to 10 minutes, down from 30 minutes to 2 hours.">
@@ -303,7 +306,6 @@ export default function ProcurementAgentKitPage() {
             { icon: <ScanSearch />, title: 'Now measurable', body: 'Iteration 2 scores plan accuracy per supplier from reviewed orders. Designed and prototyped in the ERP.' },
             { icon: <UserCheck />, title: 'Still open', body: 'Acceptance rate, and whether the Agent stops at the right approval boundary.' },
           ]} />
-          <CaseProse><p>The biggest validation finding shaped the UI: testers read a prepared order as a placed one, so every screen now separates approved from ordered.</p></CaseProse>
         </CaseChapter>
 
         <CaseClose label="12 / Reflection" title="My contribution was designing the conditions for delegation.">

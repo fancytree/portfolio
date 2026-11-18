@@ -4,6 +4,7 @@
  * one plan's expected accuracy is built. Numbers are the demonstration data in the ERP demo.
  */
 import styles from './ProcurementFlowDiagrams.module.css';
+import { FlowPulse } from './ProcurementFlowDiagrams';
 
 const LINK = 'var(--case-flow-link)';
 const BREAK = 'var(--case-flow-break)';
@@ -33,7 +34,7 @@ export function EvaluationLoop() {
         <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" markerEnd={`url(#${id}-arrow)`}>
           {LOOP_PATHS.map((d) => <path key={d} d={d} />)}
         </g>
-        {LOOP_PATHS.map((d, i) => <path key={`p${d}`} className={styles.pulse} d={d} pathLength={1} stroke={LINK} strokeWidth="5" style={{ animationDelay: `${i * 1.75}s` }} />)}
+        <FlowPulse id={`${id}-pulse`} paths={LOOP_PATHS} />
 
         {/* Skip: allowed, but the outcome never reaches the track record. */}
         <g fill="none" stroke={BREAK} strokeWidth="var(--case-border-width)" strokeDasharray="5 4">
@@ -134,7 +135,8 @@ export function PlanScoreBuild() {
   const x0 = 520, x1 = 900;
   const sx = (v: number) => x0 + ((v - 70) / 15) * (x1 - x0);
   const rowY = (i: number) => 92 + i * 56;
-  let running = base;
+  // Where each step starts and ends on the line, worked out before render (no mutation in JSX).
+  const froms = STEPS.map((_, i) => base + STEPS.slice(0, i).reduce((a, x) => a + x.delta, 0));
   return (
     <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="How a plan score is built; scroll horizontally on small screens">
       <svg viewBox="0 0 960 400" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
@@ -148,7 +150,7 @@ export function PlanScoreBuild() {
           </g>
         ))}
         {STEPS.map((s, i) => {
-          const from = running; running += s.delta; const y = rowY(i);
+          const from = froms[i]; const to = from + s.delta; const y = rowY(i);
           return (
             <g key={s.label}>
               <text x="24" y={y - 4} fill="var(--case-ink)" fontFamily={T.body} fontSize={T.cap} fontWeight={T.strong}>{s.label}</text>
@@ -157,7 +159,7 @@ export function PlanScoreBuild() {
               {s.delta === 0
                 ? <circle cx={sx(from)} cy={y} r="7" fill="var(--case-ink)" />
                 : <>
-                  <line x1={sx(from)} x2={sx(running) + 6} y1={y} y2={y} stroke={BREAK} strokeWidth="6" strokeLinecap="round" />
+                  <line x1={sx(from)} x2={sx(to) + 6} y1={y} y2={y} stroke={BREAK} strokeWidth="6" strokeLinecap="round" />
                   <line x1={sx(from)} x2={sx(from)} y1={rowY(i - 1) + 8} y2={y - 4} stroke="var(--case-rule)" strokeDasharray="3 3" />
                 </>}
             </g>
