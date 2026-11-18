@@ -188,3 +188,34 @@
 .costs b { font-variant-numeric: tabular-nums; }
 @container (max-width: 520px) { .sides { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .taps li, .limits li, .limitBar span, .costs li { transition: none; } .oneBar span { animation: none; } }
+
+/* ── 6. Clear to people, affordable to run ── */
+.balance { --mq-primary: #6c3cbc; --mq-track: #f0e4fc; --mq-edge: #e5dfeb; --mq-green: #176b46; --mq-greenL: #eaf7ef;
+  padding: var(--case-space-24); font-family: var(--case-font-body); }
+.balance table { width: 100%; border-collapse: collapse; }
+.balance thead th { font-size: 12px; font-weight: 700; color: var(--case-muted); text-align: center; padding: 0 8px 10px; width: 120px; border-bottom: 1px solid var(--case-rule); }
+.balance thead th:first-child { text-align: left; width: auto; padding-left: 0; }
+.short { display: none; }
+.balance thead th:nth-child(2) { color: var(--mq-primary); }
+.balance thead th:nth-child(3) { color: var(--mq-green); }
+.balance tbody tr { border-bottom: 1px solid var(--case-rule); opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
+.balanceOn tbody tr { opacity: 1; transform: none; }
+.balance tbody tr.rowBoth { background: color-mix(in srgb, var(--mq-track) 45%, transparent); }
+.balance tbody th { text-align: left; padding: 10px 8px 10px 10px; font-weight: 400; }
+.ruleCell { display: flex; flex-direction: column; gap: 2px; }
+.balance tbody th b { font-size: 14px; color: var(--case-ink); }
+.balance tbody th span { font-size: 12.5px; line-height: 1.4; color: var(--case-copy); }
+.balance td { text-align: center; vertical-align: middle; }
+.mark { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--mq-primary); color: #fff; font-style: normal; font-size: 12px; font-weight: 700; }
+.markCost { background: var(--mq-green); }
+.none { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--mq-edge); }
+.balance tfoot th { text-align: left; padding: 12px 0 0; font-size: 13px; font-weight: 600; color: var(--case-ink); }
+.balance tfoot td { padding: 12px 0 0; text-align: center; font-size: 13px; color: var(--case-muted); }
+.balance tfoot b { font-size: 20px; color: var(--case-ink); margin-right: 2px; }
+@media (max-width: 600px) {
+  .balance { padding: var(--case-space-16); }
+  .balance thead th { width: 70px; font-size: 11px; padding: 0 2px 10px; }
+  .long { display: none; }
+  .short { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) { .balance tbody tr { opacity: 1; transform: none; transition: none; } }

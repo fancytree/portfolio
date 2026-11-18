@@ -30,7 +30,7 @@ import { MarkingEvidence, QuestionLadder } from './MemQQuiz';
 import { A2uiPeek, ChatToCards } from './MemQMcp';
 import { ProgressCharts } from './MemQCharts';
 import { ChatDemo } from './MemQChat';
-import { CreditsCompare, MemoryLab, OwnAiImport, TurnFlow } from './MemQAi';
+import { BalanceTable, CreditsCompare, MemoryLab, OwnAiImport, TurnFlow } from './MemQAi';
 import { ChatPhone } from './MemQChat';
 import { Captioned, DecisionBeside, Screens } from './MemQDecision';
 import { Focus, type Note } from './MemQFocus';
@@ -138,7 +138,7 @@ const creditsDecision: Decision = {
     { label: 'Unlimited for Pro', verdict: 'A promise the daily budget could break.' },
     { label: 'One monthly number', verdict: 'Weighted by cost, back on the 1st. Practice is never charged.', chosen: true },
   ],
-  evidence: 'A free month costs under 2 cents; a full Pro month about $0.60.',
+  evidence: 'Seven limits on three clocks, and the app could only ever show one of them.',
   tradeoff: '“Credits” needs explaining, so the line explains itself when tapped.',
 };
 
@@ -292,15 +292,32 @@ export default function MemQKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Paying for AI" title="One allowance, and a free way round it.">
+        <CaseChapter label="07 / Paying for AI" title="Easy to understand, affordable to run.">
           <CaseProse>
-            <p>Drafting cards is the one part of the app that costs money per tap, and free accounts still need to try everything. The first gate was seven limits, each sensible alone; together, nobody could say what they were allowed to do.</p>
+            <p>AI is the one part of MemQ that costs money per tap, and there is no revenue yet. So the allowance had two goals that pull against each other: <strong>anyone can tell what they have left and what a tap costs</strong>, and <strong>the bill stays small</strong> while a free account still tries everything.</p>
           </CaseProse>
-          <DecisionBeside decision={creditsDecision} caption="The same month of taps, counted both ways."
-            screen={<CreditsCompare />} />
           <CaseProse>
-            <h3>Use your own AI</h3>
-            <p>The third way in costs nothing. Copy a prompt into ChatGPT, Claude or any AI; it asks what you want to learn, writes cards and questions to MemQ’s own contract, and you paste the reply back.</p>
+            <h3>Understand: one number instead of seven</h3>
+            <p>The first gate was seven limits, each sensible alone, on three different clocks. Play the same month through both.</p>
+          </CaseProse>
+          <DecisionBeside decision={creditsDecision} screen={<CreditsCompare />} />
+
+          <CaseProse>
+            <h3>Balance: every rule serves one goal, or both</h3>
+            <p>One number made it clear; the rules around it keep it affordable without ever surprising anyone.</p>
+          </CaseProse>
+          <CaseFigure caption="The ten rules of the allowance, and which goal each serves.">
+            <BalanceTable />
+          </CaseFigure>
+          <CaseStats items={[
+            { value: '< 2¢', label: 'A free account using all 50 credits in a month, at listed model prices' },
+            { value: '≈ $0.60', label: 'A Pro account using all 2,000' },
+            { value: '0', label: 'Credits for practice questions and marking' },
+          ]} />
+
+          <CaseProse>
+            <h3>The release valve: use your own AI</h3>
+            <p>When the allowance runs out, there is still a way on that costs MemQ nothing. Copy a prompt into ChatGPT, Claude or any AI; it asks what you want to learn, writes cards and questions to MemQ’s own contract, and you paste the reply back.</p>
           </CaseProse>
           <CaseFigure caption="How a pasted reply is read. Tested against a real model: 384 cards from 11 kinds of conversation, all valid.">
             <OwnAiImport />

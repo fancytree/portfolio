@@ -431,3 +431,51 @@ export function CreditsCompare() {
     </div>
   );
 }
+
+/* ───────────────────────── 6. Clear to people, affordable to run ───────────────────────── */
+
+const RULES: { rule: string; how: string; clear: boolean; cost: boolean }[] = [
+  { rule: 'One number for everything', how: 'Every AI tap spends from one monthly allowance, back on the 1st.', clear: true, cost: true },
+  { rule: 'Priced by what it costs', how: 'A message or a rewrite 1, a set of cards 3, a PDF 10.', clear: false, cost: true },
+  { rule: 'It has to fit', how: 'With 4 left you cannot read a PDF, but you can still chat.', clear: false, cost: true },
+  { rule: 'Unknown counts as spent', how: 'If the count cannot be read, nothing is given away.', clear: false, cost: true },
+  { rule: 'Learning is never charged', how: 'Practice questions and marking are free; no one is stopped mid-round.', clear: true, cost: false },
+  { rule: 'Shown where it is spent', how: 'Always under the create box; in the chat only below 20%.', clear: true, cost: false },
+  { rule: 'Pro at two moments only', how: 'When little is left, or a request is refused. Never to someone who pays.', clear: true, cost: false },
+  { rule: 'A free way round', how: 'Use your own AI sits beside Pro, and costs MemQ nothing.', clear: true, cost: true },
+  { rule: 'A number for Pro too', how: '2,000 a month, not “unlimited”, a promise the budget could break.', clear: true, cost: true },
+  { rule: 'Two tiers, not three', how: 'No Max until there is something expensive to sell.', clear: true, cost: false },
+];
+
+/** Each rule of the allowance, and which of the two goals it serves. */
+export function BalanceTable() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setOn(true); }, { threshold: 0.2 });
+    io.observe(ref.current!);
+    return () => io.disconnect();
+  }, []);
+  const both = RULES.filter((r) => r.clear && r.cost).length;
+  return (
+    <div ref={ref} className={`${s.balance} ${on ? s.balanceOn : ''}`}>
+      <table>
+        <thead>
+          <tr><th scope="col">Rule</th><th scope="col"><span className={s.long}>Clear to people</span><span className={s.short}>Clear</span></th><th scope="col"><span className={s.long}>Affordable to run</span><span className={s.short}>Affordable</span></th></tr>
+        </thead>
+        <tbody>
+          {RULES.map((r, i) => (
+            <tr key={r.rule} style={{ transitionDelay: `${i * 60}ms` }} className={r.clear && r.cost ? s.rowBoth : ''}>
+              <th scope="row"><div className={s.ruleCell}><b>{r.rule}</b><span>{r.how}</span></div></th>
+              <td>{r.clear ? <i className={s.mark} aria-label="serves">✓</i> : <i className={s.none} aria-label="does not serve" />}</td>
+              <td>{r.cost ? <i className={`${s.mark} ${s.markCost}`} aria-label="serves">✓</i> : <i className={s.none} aria-label="does not serve" />}</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr><th scope="row">Rules that serve both</th><td colSpan={2}><b>{both}</b> of {RULES.length}</td></tr>
+        </tfoot>
+      </table>
+    </div>
+  );
+}
