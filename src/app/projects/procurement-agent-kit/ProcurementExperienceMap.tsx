@@ -58,7 +58,7 @@ const checks: Record<string, [string, string]> = {
 function ExperienceCard({item,phase}:{item:Facet;phase:string}) {
  const [revision,setRevision]=useState(0);
  return <article id={`experience-facet-${item.id}`} className="min-w-0 overflow-hidden rounded-[var(--case-radius-media)] border border-[var(--case-rule)] bg-[var(--case-bg)]" aria-label={`${item.id} / ${item.title}`}>
-   <CaseInteractivePreview key={revision} src={`/demos/procurement-agent/index.html?facet=${item.id}&revision=${revision}`} title={`Interactive design: ${item.title}`} />
+   <CaseInteractivePreview key={revision} src={`/demos/def-design-system/index.html?view=agent-facet&id=${item.id}&revision=${revision}`} title={`Interactive design: ${item.title}`} />
    <div className="flex flex-col gap-[var(--case-space-12)] border-t border-[var(--case-rule)] p-[var(--case-space-24)]">
      <div className="flex items-center justify-between gap-[var(--case-space-8)]">
        <span data-case-type="spec">{phase} · {item.id}</span>

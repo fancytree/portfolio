@@ -65,9 +65,9 @@ export default function ProcurementWorkspace({ onOpen }: { onOpen: (no: string) 
         <div className="shrink-0 border-y border-border px-6">
           <SlideTabs label="Purchase order status" value={tab} onChange={setTab}
             items={tabs.map((t) => ({ id: t.id, label: <>{t.label}<span className="text-xs tabular-nums opacity-60">{count(t.id)}</span></> }))}
-            className="-mb-px flex h-12 items-stretch gap-1"
+            className="-mb-px -ml-3 flex h-12 items-stretch gap-1"
             itemClassName="flex h-full items-center gap-1.5 px-3 text-sm" activeClassName="font-semibold text-primary-strong" idleClassName="text-muted-foreground hover:text-foreground"
-            indicatorClassName="after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary" />
+            indicatorClassName="after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary" />
         </div>
 
         <div className="min-h-0 flex-1 overflow-auto [scrollbar-width:thin]">

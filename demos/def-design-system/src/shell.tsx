@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Boxes, ChevronDown, CircleHelp, FileImage, LayoutDashboard, PanelLeftClose, PanelLeftOpen, Package, Search, Settings, ShoppingCart, Smartphone, Truck, Users, Wallet } from 'lucide-react';
+import { Boxes, ChevronDown, CircleHelp, FileImage, LayoutDashboard, PanelLeftClose, PanelLeftOpen, Package, Search, Settings, ShoppingCart, Smartphone, Sparkles, Truck, Users, Wallet } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { Kbd } from '@/components/ui/kbd';
 import { AccountMenu, NotificationsMenu } from './topbar-menus';
@@ -24,6 +24,10 @@ const allGroups: { label: string; sections: Section[] }[] = [
       { id: 'inventory', label: 'Inventory', icon: Boxes, children: ['Stock overview', 'Stock movements', 'Stocktake', 'Write-offs'] },
       { id: 'products', label: 'Products', icon: Package, children: ['Product list', 'Categories', 'Brands'] },
       { id: 'procurement', label: 'Procurement', icon: Truck, children: ['Workspace', 'Replenishment', 'Inbound records', 'Purchase returns', 'Suppliers'] },
+      // Agent 版采购：单独入口，和传统采购工作台并列
+      { id: 'agent', label: 'Procurement agent V0', icon: Sparkles },
+      // 迭代版本：从 V0 复制，在 agent-v1/ 里改
+      { id: 'agent-v1', label: 'Procurement agent V1', icon: Sparkles },
     ],
   },
   {
@@ -54,6 +58,7 @@ const ACCESS: Record<Role, Record<string, Access>> = {
     inventory: { counts: { 'Stock overview': 4 } },      // 4 batches expiring
     products: {},
     procurement: { counts: { 'Inbound records': 1 } },   // PO-0319 partially received
+    agent: {}, 'agent-v1': {},
     finance: { counts: { 'Customer accounts': 3 } },     // 3 invoices overdue
     customers: {}, 'visual-agent': {}, miniprogram: {}, settings: {},
   },
@@ -132,7 +137,8 @@ const pill = 'flex h-10 items-center rounded-xl bg-card shadow-card transition-c
 const circle = 'flex size-10 items-center justify-center rounded-full bg-card shadow-card transition-colors';
 
 export default function Shell({ children, initial = 'Overview', initialRole = 'admin' }: { children: (page: string, open: (label: string) => void, role: Role) => React.ReactNode; initial?: string; initialRole?: Role }) {
-  const [collapsed, setCollapsed] = useState(false);
+  // ?nav=collapsed：从作品集直接打开时侧栏先收起，把空间留给工作区
+  const [collapsed, setCollapsed] = useState(() => new URLSearchParams(location.search).get('nav') === 'collapsed');
   const [open, setOpen] = useState<string | null>(null);
   const [page, setPage] = useState(initial);
   // 角色由 URL（?role=）决定；预览里不再显示 View as 切换
@@ -141,13 +147,13 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
   const { groups, settings } = navFor(role);
   const focus = page === 'Product sales' || page === 'Storefront builder';
   // 撑满一屏的列表页：底部不再额外留白，卡片底边和侧栏底边对齐
-  const fill = page === 'Sales orders' || page === 'Workspace' || page === 'Invoices' || page === 'Store accounts';
+  const fill = page === 'Sales orders' || page.startsWith('Procurement agent') || page === 'Workspace' || page === 'Invoices' || page === 'Store accounts';
   // 单据详情页：去掉顶栏，单据本身就是页面的主角（和开单页一致）
   const detail = page.startsWith('OUT-') || page.startsWith('SO-') || page.startsWith('PO-');
 
   const { glideRef, hoverRef, selRef, onNavHover, onNavLeave } = useNavGlide([page, open, collapsed, role].join('|'));
 
-  const sectionOf = (label: string) => label.startsWith('SO-') || label.startsWith('OUT-') ? 'sales' : label.startsWith('PO-') ? 'procurement' : [overviewSection, ...groups.flatMap((g) => g.sections), ...(settings ? [settings] : [])].find((s) => s.label === label || s.children?.includes(label))?.id;
+  const sectionOf = (label: string) => label.startsWith('SO-') || label.startsWith('OUT-') ? 'sales' : label.startsWith('PO-') ? ((window as unknown as { __agentNav?: string }).__agentNav ?? 'procurement') : [overviewSection, ...groups.flatMap((g) => g.sections), ...(settings ? [settings] : [])].find((s) => s.label === label || s.children?.includes(label))?.id;
   const activeSection = sectionOf(page);
 
   const renderSection = (s: Section, glide = true) => {
