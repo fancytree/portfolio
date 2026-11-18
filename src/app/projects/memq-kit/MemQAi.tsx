@@ -291,10 +291,10 @@ const SPEND = [
   { key: 'set', name: 'Set of cards', cost: 3 },
   { key: 'pdf', name: 'PDF read', cost: 10 },
 ];
-const BEFORE = ['Lessons generated, by the month', 'Single cards filled, by the day', 'Question sets, by the day', 'Answers marked, by the day', 'PDFs, for ever', 'Chat to make cards, by the month', 'Chat about your cards, by the month'];
 const LIMIT = 50;
 
-export function CreditsLab() {
+/** The app's credits line and what each thing costs: spend from a free month. */
+export function CreditsMeter() {
   const [used, setUsed] = useState<{ name: string; cost: number; id: number }[]>([]);
   const id = useRef(0);
   const spent = used.reduce((n, x) => n + x.cost, 0);
@@ -302,46 +302,131 @@ export function CreditsLab() {
   const low = left <= LIMIT * 0.2;
   const out = left <= 0;
   const spend = (name: string, cost: number) => { id.current += 1; setUsed((u) => [{ name, cost, id: id.current }, ...u]); };
+  return (
+    <div className={`${s.credits} ${s.creditsMeterOnly}`}>
+      <div className={s.meterCard}>
+        <div className={s.meterHead}>
+          <span className={s.meterLine}>{out ? 'No AI credits left · back Dec 1' : `${left} AI ${left === 1 ? 'credit' : 'credits'} left this month`}</span>
+          {low && <span className={s.seePro}>See Pro</span>}
+        </div>
+        <span className={s.meter} role="meter" aria-label="AI credits left" aria-valuemin={0} aria-valuemax={LIMIT} aria-valuenow={left}>
+          <span style={{ width: `${(left / LIMIT) * 100}%` }} className={low ? s.meterLow : ''} />
+        </span>
+        <div className={s.spendGrid}>
+          {SPEND.map((x) => (
+            <button key={x.key} type="button" className={s.spend} disabled={x.cost > left} onClick={() => spend(x.name, x.cost)}>
+              <span>{x.name}</span><b>{x.cost > left && !out ? `needs ${x.cost}` : `${x.cost}`}</b>
+            </button>
+          ))}
+        </div>
+        {out && (
+          <div className={s.outBox}>
+            <b>You have used this month’s AI credits</b>
+            <span>Two ways on: your own AI, free, or Pro.</span>
+            <span className={s.outBtns}><em>Use my own AI</em><em>See Pro</em></span>
+          </div>
+        )}
+        <ol className={s.history}>
+          {used.slice(0, 3).map((x) => <li key={x.id}><span>{x.name}</span><span>−{x.cost}</span></li>)}
+        </ol>
+        {used.length > 0 && <CaseButton variant="text" type="button" className={s.reset} onClick={() => setUsed([])}>Start the month again</CaseButton>}
+      </div>
+    </div>
+  );
+}
+
+/* ───────────────────────── 5. Seven limits against one allowance ───────────────────────── */
+
+type Act = 'chat' | 'set' | 'practice' | 'pdf' | 'ask' | 'card';
+const ACTS: Record<Act, { name: string; cost: number; tone: string }> = {
+  chat: { name: 'Chat message', cost: 1, tone: '#9b7be0' },
+  ask: { name: 'Question about a card', cost: 1, tone: '#b9a1ee' },
+  card: { name: 'Card rewritten', cost: 1, tone: '#c9b8f3' },
+  set: { name: 'Set of cards', cost: 3, tone: '#6c3cbc' },
+  pdf: { name: 'PDF read', cost: 10, tone: '#4b2c78' },
+  practice: { name: 'Practice round', cost: 0, tone: '#cfe9da' },
+};
+/** One month of a free account, the same taps both ways. */
+const MONTH: Act[] = ['chat', 'set', 'practice', 'pdf', 'ask', 'card', 'set', 'practice', 'pdf', 'chat'];
+/** The seven server limits before credits, free tier, and which taps each counted. */
+const LIMITS: { name: string; clock: 'day' | 'month' | 'ever'; of: number; counts: (a: Act) => number }[] = [
+  { name: 'Lessons generated', clock: 'month', of: 5, counts: (a) => (a === 'set' ? 1 : 0) },
+  { name: 'Cards filled', clock: 'day', of: 30, counts: (a) => (a === 'card' ? 1 : 0) },
+  { name: 'Question sets', clock: 'day', of: 20, counts: (a) => (a === 'practice' ? 1 : 0) },
+  { name: 'Answers marked', clock: 'day', of: 200, counts: (a) => (a === 'practice' ? 10 : 0) },
+  { name: 'PDFs', clock: 'ever', of: 3, counts: (a) => (a === 'pdf' ? 1 : 0) },
+  { name: 'Chat to make cards', clock: 'month', of: 30, counts: (a) => (a === 'chat' ? 1 : 0) },
+  { name: 'Chat about cards', clock: 'month', of: 60, counts: (a) => (a === 'ask' ? 1 : 0) },
+];
+
+/** The same month of taps counted both ways: seven meters on three clocks, or one number. */
+export function CreditsCompare() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [on, setOn] = useState(false);
+  const [n, setN] = useState(0);
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => setOn(e.isIntersecting), { threshold: 0.3 });
+    io.observe(ref.current!);
+    return () => io.disconnect();
+  }, []);
+  useEffect(() => {
+    if (!on) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const t = window.setTimeout(() => setN(MONTH.length), 0);
+      return () => window.clearTimeout(t);
+    }
+    const t = window.setTimeout(() => setN((x) => (x >= MONTH.length ? 0 : x + 1)), n >= MONTH.length ? 2600 : n === 0 ? 700 : 950);
+    return () => window.clearTimeout(t);
+  }, [on, n]);
+  const done = MONTH.slice(0, n);
+  const last = n > 0 ? MONTH[n - 1] : null;
+  const spent = done.reduce((t, a) => t + ACTS[a].cost, 0);
 
   return (
-    <div className={s.credits}>
-      <div className={s.creditsGrid}>
-      <div className={s.before}>
-        <span className={s.ownLabel}>Before: seven limits</span>
-        <ul>{BEFORE.map((b) => <li key={b}>{b}</li>)}</ul>
-        <p>Each one sensible. Together, nothing anyone could explain, and the app could show only one of them.</p>
-      </div>
-      <div className={s.after}>
-        <span className={s.ownLabel}>After: one number, back on the 1st</span>
-        <div className={s.meterCard}>
-          <div className={s.meterHead}>
-            <span className={s.meterLine}>{out ? 'No AI credits left · back Dec 1' : `${left} AI ${left === 1 ? 'credit' : 'credits'} left this month`}</span>
-            {low && <span className={s.seePro}>See Pro</span>}
-          </div>
-          <span className={s.meter} role="meter" aria-label="AI credits left" aria-valuemin={0} aria-valuemax={LIMIT} aria-valuenow={left}>
-            <span style={{ width: `${(left / LIMIT) * 100}%` }} className={low ? s.meterLow : ''} />
-          </span>
-          <div className={s.spendGrid}>
-            {SPEND.map((x) => (
-              <button key={x.key} type="button" className={s.spend} disabled={x.cost > left} onClick={() => spend(x.name, x.cost)}>
-                <span>{x.name}</span><b>{x.cost > left && !out ? `needs ${x.cost}` : `${x.cost}`}</b>
-              </button>
+    <div ref={ref} className={s.compare} role="img" aria-label="The same month of taps counted two ways: seven limits on three different clocks, against one monthly number of 50 credits where practice costs nothing.">
+      <ol className={s.taps}>
+        {MONTH.map((a, i) => (
+          <li key={i} className={`${i < n ? s.tapOn : ''} ${i === n - 1 ? s.tapNow : ''}`} style={{ ['--tone' as string]: ACTS[a].tone }}>{ACTS[a].name}</li>
+        ))}
+      </ol>
+      <div className={s.sides}>
+        <section className={s.side}>
+          <h4>Before: seven limits</h4>
+          <ul className={s.limits}>
+            {LIMITS.map((l) => {
+              const used = done.reduce((t, a) => t + l.counts(a), 0);
+              const hit = last ? l.counts(last) > 0 : false;
+              return (
+                <li key={l.name} className={hit ? s.limitHit : ''}>
+                  <span className={s.limitName}>{l.name}</span>
+                  <em className={s[`clock_${l.clock}`]}>{l.clock === 'ever' ? 'for ever' : `a ${l.clock}`}</em>
+                  <span className={s.limitBar}><span style={{ width: `${Math.min(100, (used / l.of) * 100)}%` }} /></span>
+                  <span className={s.limitNum}>{used}/{l.of}</span>
+                </li>
+              );
+            })}
+          </ul>
+          <p className={s.sideSum}>Seven numbers on three clocks. Practice counts too.</p>
+        </section>
+        <section className={`${s.side} ${s.sideAfter}`}>
+          <h4>After: one allowance</h4>
+          <div className={s.oneHead}><b>{50 - spent}</b> of 50 credits left · back on the 1st</div>
+          <div className={s.oneBar} aria-hidden="true">
+            {done.map((a, i) => ACTS[a].cost > 0 && (
+              <span key={i} className={i === n - 1 ? s.segNow : ''} style={{ width: `${(ACTS[a].cost / 50) * 100}%`, background: ACTS[a].tone }} />
             ))}
           </div>
-          {out && (
-            <div className={s.outBox}>
-              <b>You have used this month’s AI credits</b>
-              <span>Two ways on: make cards with your own AI, free, or see Pro.</span>
-              <span className={s.outBtns}><em>Use my own AI</em><em>See Pro</em></span>
-            </div>
-          )}
-          <ol className={s.history}>
-            {used.slice(0, 4).map((x) => <li key={x.id}><span>{x.name}</span><span>−{x.cost}</span></li>)}
-          </ol>
-          {used.length > 0 && <CaseButton variant="text" type="button" className={s.reset} onClick={() => setUsed([])}>Start the month again</CaseButton>}
-        </div>
-        <p className={s.free}>Free: questions written for practice and answers marked (that is learning itself), memory upkeep, and cards from your own AI. Free accounts get 50 a month, Pro 2,000, a number too, not “unlimited”.</p>
-      </div>
+          <ul className={s.costs}>
+            {(['chat', 'set', 'pdf', 'practice'] as Act[]).map((a) => (
+              <li key={a} className={last && (last === a || (a === 'chat' && (last === 'ask' || last === 'card'))) ? s.costHit : ''}>
+                <i style={{ background: ACTS[a].tone }} />
+                <span>{a === 'chat' ? 'Message or rewrite' : ACTS[a].name}</span>
+                <b>{ACTS[a].cost === 0 ? 'free' : ACTS[a].cost}</b>
+              </li>
+            ))}
+          </ul>
+          <p className={s.sideSum}>One number, weighted by cost. Practice is never on it.</p>
+        </section>
       </div>
     </div>
   );
