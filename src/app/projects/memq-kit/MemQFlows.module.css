@@ -1,0 +1,24 @@
+/* Animated flows beside decisions. MemQ palette for the moving parts, case tokens for text. */
+.flow {
+  --p: #6c3cbc; --deep: #4b2c78; --track: #f0e4fc; --edge: #e5dfeb; --lime: #f4fab1; --green: #176b46; --warn: #875807; --warnL: #fff5e4;
+  display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 22px;
+  background: linear-gradient(180deg, #f3ffa6 0, #fcfced 160px); font-family: var(--case-font-body); color: #301a50;
+}
+
+/* ── MCP writer chain ── */
+.chain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; position: relative; }
+.chain::before { content: ''; position: absolute; left: 13px; top: 14px; bottom: 14px; width: 2px; background: var(--edge); }
+.link { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px 10px 34px; border-radius: 12px; background: #fff; opacity: .45; transition: opacity .3s, box-shadow .3s; }
+.link::before { content: ''; position: absolute; left: 8px; top: 13px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--edge); background: #fff; transition: background-color .3s, border-color .3s; }
+.linkOn { opacity: 1; }
+.linkOn::before { background: var(--p); border-color: var(--p); }
+.linkNow { box-shadow: 0 0 0 2px var(--p); }
+.linkWho { font-size: 11px; font-weight: 700; color: var(--p); }
+.linkWhat { font-size: 13px; line-height: 1.35; font-weight: 500; }
+.rules { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.rules em { font-style: normal; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--track); color: var(--deep); opacity: .4; transition: opacity .3s, background-color .3s, color .3s; }
+.rules em.ruleOn { opacity: 1; background: #eaf7ef; color: var(--green); }
+
+@media (prefers-reduced-motion: reduce) {
+  .link, .link::before, .rules em { transition: none; }
+}

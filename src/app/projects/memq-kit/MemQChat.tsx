@@ -63,7 +63,7 @@ const STEPS = {
 } as const;
 const STEP_MS = { explain: 520, cards: 620, practice: 520 } as const;
 type Screen = 'today' | 'create' | 'practice';
-export type Start = 'today' | 'empty' | 'answered' | 'drafts' | 'practice';
+export type Start = 'today' | 'empty' | 'answered' | 'drafts' | 'practice' | 'offered';
 
 const answered = (id: number): Turn => ({ id, asked: QUESTION, parts: ANSWER.map((text) => ({ kind: 'text', text, shown: text.split(' ').length })), status: null, done: true });
 const drafted = (id: number): Turn => ({ id, asked: 'Make cards from this', parts: [{ kind: 'drafts' }], status: null, done: true });
@@ -71,6 +71,11 @@ const drafted = (id: number): Turn => ({ id, asked: 'Make cards from this', part
 function startState(start: Start): { screen: Screen; turns: Turn[] } {
   if (start === 'today') return { screen: 'today', turns: [] };
   if (start === 'practice') return { screen: 'practice', turns: [] };
+  // A practice offer made in words, and the round that arrives once the person says yes.
+  if (start === 'offered') return { screen: 'practice', turns: [
+    { id: 1, asked: 'Hi Inkling!', parts: [{ kind: 'text', text: 'Hi! You have 8 Everyday Italian cards due. Want a quick round?', shown: 12 }], status: null, done: true },
+    { id: 2, asked: 'Yes, let’s do it', parts: [{ kind: 'practice' }], status: null, done: true },
+  ] };
   if (start === 'answered') return { screen: 'create', turns: [answered(1)] };
   if (start === 'drafts') return { screen: 'create', turns: [answered(1), drafted(2)] };
   return { screen: 'create', turns: [] };
@@ -340,7 +345,8 @@ function AnswerActions({ onAgain, onCards, cards }: { onAgain: () => void; onCar
   );
 }
 
-export function ChatPhone({ start }: { start: Start }) {
+/** `bare`: just the 402 × 874 screen, no device frame, for a zoomed figure to crop. */
+export function ChatPhone({ start, bare = false }: { start: Start; bare?: boolean }) {
   const { ref, scale } = useScale();
   const initial = startState(start);
   const [screen, setScreen] = useState<Screen>(initial.screen);
@@ -433,7 +439,7 @@ export function ChatPhone({ start }: { start: Start }) {
   };
 
   return (
-    <PhoneFrame className={q.showPhone}>
+    <Frame bare={bare}>
       <div ref={ref} className={q.viewport} data-chat-root>
         <div className={`${q.app} ${c.app} ${geistSans.variable} ${oswald.variable}`} style={{ transform: `scale(${scale})` }}>
           {/* Today, as in the app: the hero and stats from the 2.0 capture, then the two entry cards and the lessons. */}
@@ -526,8 +532,12 @@ export function ChatPhone({ start }: { start: Start }) {
           <span className={q.homeIndicator} />
         </div>
       </div>
-    </PhoneFrame>
+    </Frame>
   );
+}
+
+function Frame({ bare, children }: { bare: boolean; children: ReactNode }) {
+  return bare ? <div className={c.bare}>{children}</div> : <PhoneFrame className={q.showPhone}>{children}</PhoneFrame>;
 }
 
 /* ───────────────────────── Auto-played walkthrough ───────────────────────── */

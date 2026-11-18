@@ -113,6 +113,8 @@
 }
 
 /* ── 4. Credits ── */
+.creditsMeterOnly { padding: 0; }
+.creditsMeterOnly .spendGrid { grid-template-columns: 1fr; }
 .creditsGrid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 24px; align-items: start; }
 .before { display: flex; flex-direction: column; gap: 10px; }
 .before ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
@@ -149,3 +151,40 @@
   .node, .meter span { transition: none; }
   .keptList li.keptNew, .readList li, .asking, .seePro, .outBox, .history li { animation: none; }
 }
+
+/* ── 5. Seven limits against one allowance ── */
+.compare { --mq-primary: #6c3cbc; --mq-deep: #4b2c78; --mq-darkest: #301a50; --mq-track: #f0e4fc; --mq-edge: #e5dfeb; --mq-green: #176b46; --mq-warn: #875807;
+  display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 22px; background: linear-gradient(180deg, #f3ffa6 0, #fcfced 140px); font-family: var(--case-font-body); color: var(--mq-darkest); container-type: inline-size; }
+.compare h4 { margin: 0; font-size: 13px; font-weight: 700; }
+.taps { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+.taps li { font-size: 11px; padding: 3px 8px; border-radius: 999px; background: #fff; color: var(--case-muted); box-shadow: inset 0 0 0 1px var(--mq-edge); opacity: .45; transition: opacity .3s, box-shadow .3s, color .3s; }
+.taps li.tapOn { opacity: 1; color: var(--mq-darkest); box-shadow: inset 3px 0 0 var(--tone), inset 0 0 0 1px var(--mq-edge); }
+.taps li.tapNow { box-shadow: inset 3px 0 0 var(--tone), 0 0 0 2px var(--mq-primary); }
+.sides { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 12px; }
+.side { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: #fff; box-shadow: 0 3px 0 var(--mq-edge); min-width: 0; }
+.limits { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.limits li { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'name clock' 'bar num'; gap: 2px 8px; padding: 4px 6px; margin: 0 -6px; border-radius: 8px; transition: background-color .3s; }
+.limits li.limitHit { background: #faf6ff; }
+.limitName { grid-area: name; font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.limits em { grid-area: clock; font-style: normal; font-size: 10px; font-weight: 600; padding: 1px 6px; border-radius: 999px; align-self: center; }
+.clock_day { background: #e8f1fd; color: #2f5fa8; }
+.clock_month { background: var(--mq-track); color: var(--mq-deep); }
+.clock_ever { background: #fff1e0; color: var(--mq-warn); }
+.limitBar { grid-area: bar; height: 6px; align-self: center; border-radius: 4px; background: #f3f0f7; overflow: hidden; }
+.limitBar span { display: block; height: 100%; border-radius: 4px; background: var(--mq-deep); transition: width .45s cubic-bezier(.3, 1.3, .5, 1); }
+.limitNum { grid-area: num; font-size: 11px; color: var(--case-muted); font-variant-numeric: tabular-nums; text-align: right; }
+.sideSum { margin: auto 0 0; font-size: 12px; line-height: 1.4; color: var(--case-muted); }
+.sideAfter { background: #fff; }
+.oneHead { font-size: 12px; color: var(--case-muted); }
+.oneHead b { font-size: 26px; line-height: 1; color: var(--mq-darkest); margin-right: 4px; font-variant-numeric: tabular-nums; }
+.oneBar { display: flex; height: 14px; border-radius: 8px; background: var(--mq-track); overflow: hidden; gap: 1px; }
+.oneBar span { height: 100%; animation: segIn .45s cubic-bezier(.3, 1.3, .5, 1) backwards; transform-origin: left; }
+.oneBar span.segNow { box-shadow: inset 0 0 0 2px #fff; }
+@keyframes segIn { from { transform: scaleX(0); } }
+.costs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.costs li { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; font-size: 12px; padding: 3px 6px; margin: 0 -6px; border-radius: 8px; transition: background-color .3s; }
+.costs li.costHit { background: #faf6ff; }
+.costs i { width: 10px; height: 10px; border-radius: 3px; }
+.costs b { font-variant-numeric: tabular-nums; }
+@container (max-width: 520px) { .sides { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .taps li, .limits li, .limitBar span, .costs li { transition: none; } .oneBar span { animation: none; } }

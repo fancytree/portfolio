@@ -1,0 +1,17 @@
+/* A zoomed crop with callouts: a dot on the element, a hairline to a label in the margin. */
+.focus { --pin: #6c3cbc; display: flex; flex-direction: column; gap: var(--case-space-12, 12px); }
+.stage { position: relative; width: 100%; min-height: 120px; }
+.crop { position: absolute; top: 0; overflow: hidden; border-radius: 18px; background: #fcfced; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .06), 0 18px 40px -26px rgb(48 26 80 / .35); }
+.scene { position: absolute; left: 0; top: 0; width: 402px; transform-origin: 0 0; pointer-events: none; transition: opacity .2s; }
+.shot { display: block; width: 402px; height: auto; }
+.lines { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.line { fill: none; stroke: var(--case-ink, #301a50); stroke-width: 1; opacity: .55; }
+.dot { position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--pin); box-shadow: 0 0 0 3px #fff, 0 0 0 7px rgb(108 60 188 / .18); display: grid; place-items: center; color: #fff; font: 700 10px/1 var(--case-font-body); pointer-events: none; animation: dotIn .5s cubic-bezier(.3, 1.6, .5, 1) backwards; }
+.dot:not(:empty) { width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+@keyframes dotIn { from { transform: scale(0); } }
+.label { position: absolute; transform: translateY(-50%); font-family: var(--case-font-body); font-size: 13px; line-height: 1.35; color: var(--case-ink); transition: top .2s; }
+.labelLeft { text-align: right; }
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.notes li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 18px; color: var(--case-copy); }
+.num { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--pin); color: #fff; font-size: 10px; line-height: 1; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } .label { transition: none; } }

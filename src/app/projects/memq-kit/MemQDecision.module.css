@@ -1,0 +1,35 @@
+/* Visual left and large, decision right and compact. The visual stays in view while the card is read. */
+.beside { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: var(--case-space-32, 32px); align-items: start; }
+.screen { margin: 0; min-width: 0; }
+.pin { position: sticky; top: var(--case-space-24, 24px); display: flex; flex-direction: column; gap: var(--case-space-12, 12px); }
+.pin > figcaption { font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.45; color: var(--case-muted); }
+.card { min-width: 0; }
+
+/* The card, compressed: one decision per visual, so no running number or source line. */
+.card :global(.case-decision-num), .card :global(.case-decision-source) { display: none; }
+.card :global(.case-decision-head) { grid-template-columns: 1fr; padding: var(--case-space-16) var(--case-space-16) var(--case-space-8); }
+.card :global(.case-decision-question) { font-size: 16px; line-height: 1.3; }
+.card :global(.case-decision-options) { gap: 4px; padding: 0 var(--case-space-12); }
+.card :global(.case-decision-option) { grid-template-columns: 14px 1fr; gap: 8px; padding: 6px 10px; }
+.card :global(.case-decision-mark) { font-size: 12px; }
+.card :global(.case-decision-label) { font-size: 13px; line-height: 1.3; gap: 6px; }
+.card :global(.case-decision-badge) { font-size: 10px; padding: 1px 6px; }
+.card :global(.case-decision-verdict) { font-size: 12px; line-height: 1.4; }
+.card :global(.case-decision-foot) { grid-template-columns: 1fr; margin-top: var(--case-space-8); }
+.card :global(.case-decision-foot > div) { padding: 10px var(--case-space-16); }
+.card :global(.case-decision-foot > div + div) { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
+.card :global(.case-decision-foot dt) { font-size: 11px; margin-bottom: 4px; }
+.card :global(.case-decision-foot dd) { font-size: 12px; line-height: 1.4; }
+
+/* Wide: a row of screens, so the visual takes even more. */
+.wide { grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); }
+.row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-12, 12px); align-items: start; }
+.captioned { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.captioned > span { font-family: var(--case-font-body); font-size: 13px; line-height: 1.35; color: var(--case-ink); }
+
+@media (max-width: 860px) {
+  .beside { grid-template-columns: 1fr; gap: var(--case-space-16, 16px); }
+  .pin { position: static; }
+  .row { gap: 8px; }
+  .captioned > span { font-size: 11px; }
+}

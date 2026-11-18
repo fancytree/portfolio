@@ -9,6 +9,7 @@
 :where(.app) button:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
 :where(.app) :where(p) { margin: 0; }
 .stage { padding-top: 32px; padding-bottom: 32px; }
+.bare { position: relative; width: 402px; height: 874px; overflow: hidden; }
 
 /* ── Lipped surfaces: a face on a darker shell, the shell showing along the bottom ── */
 .card { display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 24px; background: var(--surf); box-shadow: 0 3px 0 var(--line); }
