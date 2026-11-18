@@ -105,9 +105,11 @@ let bump={v:1,vel:0,phase:'rest',t:0};
 function grow(days){
   const from=STREAK.value,to=from+days;STREAK.value=to;pill.setAttribute('aria-label',to+'-day streak');
   if(reduce){STREAK.count=to;numEl.textContent=to;return}
-  STREAK.from=from;STREAK.to=to;STREAK.roll=Math.min(ROLL_MAX_MS,days*STEP_MS);STREAK.count=from;STREAK.t0=performance.now();bump={v:1,vel:0,phase:'wait',t:0};
+  STREAK.from=from;STREAK.to=to;STREAK.roll=Math.min(ROLL_MAX_MS,days*STEP_MS);STREAK.count=from;STREAK.t0=-2;bump={v:1,vel:0,phase:'wait',t:0};
 }
 function streakFrame(now,dt){
+  // Timed on the frame clock, not performance.now(): inside an iframe the two can be over a second apart.
+  if(STREAK.t0===-2)STREAK.t0=now;
   if(STREAK.t0<0)return;
   const t=now-STREAK.t0;
   // flare
