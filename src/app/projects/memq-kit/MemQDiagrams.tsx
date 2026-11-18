@@ -73,7 +73,7 @@ const versions = [
     date: 'Oct 2026',
     name: 'White & ink',
     swatches: ['#FFFFFF', '#242424', '#FCF6DB', '#BAADEE'],
-    image: '/img/memq-v2/inkling-v2-curious.svg',
+    image: '/img/memq-v2/screen-v2-today.webp',
     kept: 'Colour lives in details. A first character, kept subordinate to content.',
     gap: 'Quieter still. The character was a sticker, not part of the product.',
   },
@@ -98,8 +98,8 @@ export function VisualEvolution() {
             <span className={s.evoName}>{v.name}</span>
             <span className={s.evoDate}>{v.date}</span>
           </div>
-          <div className={`${s.evoShot} ${i === 1 ? s.evoShotArt : ''}`}>
-            <Image src={v.image} alt={`MemQ ${v.name} visual direction`} fill sizes="(min-width: 900px) 30vw, 90vw" style={{ objectFit: i === 1 ? 'contain' : 'cover', objectPosition: 'top' }} unoptimized={v.image.endsWith('.svg')} />
+          <div className={s.evoShot}>
+            <Image src={v.image} alt={`MemQ ${v.name} visual direction: the Today screen`} fill sizes="(min-width: 900px) 30vw, 90vw" style={{ objectFit: 'cover', objectPosition: 'top' }} />
           </div>
           <div className={s.swatches} aria-hidden="true">
             {v.swatches.map((c) => <span key={c} style={{ background: c }} title={c} />)}
