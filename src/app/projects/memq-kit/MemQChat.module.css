@@ -70,23 +70,22 @@
 @keyframes turnIn { from { opacity: 0; transform: translateY(8px); } }
 .asked { align-self: flex-end; max-width: 85%; padding: 8px 16px; border-radius: 24px; background: var(--lime); font-size: 16px; line-height: 24px; font-weight: 500; color: var(--text); }
 .said { font-size: 16px; line-height: 24px; color: var(--text); }
-.trail { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.trail li { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; animation: turnIn .25s ease-out; }
-.stepDone { color: var(--faint); }
-.stepDone svg { color: var(--action); }
-.stepNow { color: var(--sub); font-weight: 500; }
-.stepNow span:last-child { animation: pulse 1.52s ease-in-out infinite; }
-.trail .spinner { width: 14px; height: 14px; }
+.waiting { display: flex; align-items: center; gap: 8px; height: 18px; color: var(--sub); }
+.waiting .spinner { width: 14px; height: 14px; }
+/* The new step takes the old one's place: it rises in, then breathes while it lasts. */
+.waitingText { font-size: 13px; line-height: 18px; font-weight: 500; animation: stepIn .28s ease-out, pulse 1.52s ease-in-out .28s infinite; }
+@keyframes stepIn { from { opacity: 0; transform: translateY(5px); } }
 @keyframes pulse { 50% { opacity: .45; } }
 
 .actions { display: flex; align-items: center; gap: 16px; margin-top: -12px; color: var(--faint); animation: turnIn .3s ease-out; }
-.actions button { padding: 4px 0; display: grid !important; color: var(--faint); }
+.actions button { width: 18px; height: 18px; padding: 4px 0; box-sizing: content-box !important; display: grid !important; place-items: center; color: var(--faint); }
 .actionOn { color: var(--action) !important; }
 .copied { font-size: 12px; line-height: 16px; color: var(--action); }
 .speaking { color: var(--action) !important; }
-.speaking .waveNear { animation: wave 1s ease-in-out infinite; }
-.speaking .waveFar { animation: wave 1s ease-in-out .18s infinite; }
-.speaking .speaker { animation: bump 1s ease-in-out infinite; transform-origin: 30% 50%; }
+/* The app's volumeOn taken apart, as its SpeakingGlyph does: the body bumps, the two waves light in turn. */
+.speaking .speakerGlyph path:nth-of-type(1) { animation: bump 1s ease-in-out infinite; transform-origin: 40% 50%; transform-box: fill-box; }
+.speaking .speakerGlyph path:nth-of-type(2) { animation: wave 1s ease-in-out infinite; }
+.speaking .speakerGlyph path:nth-of-type(3) { animation: wave 1s ease-in-out .18s infinite; }
 @keyframes wave { 0%, 100% { opacity: .25; } 40% { opacity: 1; } }
 @keyframes bump { 0%, 100% { transform: none; } 30% { transform: scale(1.12); } }
 
@@ -158,5 +157,5 @@
 .practiceTrack { margin-top: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise, .turn, .actions, .trail li, .stepNow span:last-child, .spinner, .speaking .waveNear, .speaking .waveFar, .speaking .speaker { animation: none; }
+  .rise, .turn, .actions, .waitingText, .spinner, .speaking .speakerGlyph path { animation: none; }
 }
