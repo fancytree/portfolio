@@ -44,13 +44,13 @@ const navLabels = [
   '02 / The problem',
   '03 / Research',
   '04 / Principles',
-  '05 / Direction',
-  '06 / Design language',
-  '07 / Inkling',
+  '05 / AI chat',
+  '06 / Under the chat',
+  '07 / Paying for AI',
   '08 / The loop',
-  '09 / AI chat',
-  '10 / Under the chat',
-  '11 / Paying for AI',
+  '09 / Direction',
+  '10 / Design language',
+  '11 / Inkling',
   '12 / Next',
   '13 / Results',
   '14 / Reflection',
@@ -196,8 +196,8 @@ export default function MemQKitPage() {
           glance={{
             items: [
               { label: 'Challenge', body: 'Answers stay in the chat window. Flashcard apps make you build the cards; AI tools never ask you again.' },
-              { label: 'Solution', body: 'Your own material becomes cards. A schedule brings each back on time, in five kinds of question, with a character that reacts. An in-app AI chat explains first, and makes cards only when asked.' },
-              { label: 'Outcome', body: 'Version 1 live on the App Store. Version 2.0 rebuilt end to end: new visual language, rigged mascot, spaced-retrieval scheduler and progress charts.' },
+              { label: 'Solution', body: 'Get it in: AI drafts cards from your own material, and you keep what matters. Bring it back: a schedule asks each card again on time, in five kinds of question. Make it worth opening: a language and a character people want to return to.' },
+              { label: 'Outcome', body: 'Version 1 live on the App Store. 2.0 built and its store set ready, with a new visual language, a rigged character, a spaced-retrieval loop and an AI chat that explains, then keeps.' },
             ],
             deliverables: ['iOS app', 'Design system', 'Rigged mascot', 'Scheduler', 'In-app AI chat', 'AI credits'],
           }}
@@ -205,15 +205,18 @@ export default function MemQKitPage() {
 
         <CaseChapter label="01 / Overview" title="One designer, the whole product.">
           <CaseProse>
-            <p>I owned every layer: research, product scope, visual language, the character, motion, and the code that ships it. That matters for this case, because most decisions below were made where design and engineering meet.</p>
+            <p>I owned every layer: research, product scope, visual language, the character, motion, and the code that ships it. That matters here, because most decisions below were made where design and engineering meet.</p>
           </CaseProse>
           <CaseFigure caption="MemQ 2.0: Today in front, four of the five ways of being asked behind it. Real screens from the App Store set.">
             <ProductShowcase />
           </CaseFigure>
-          <CaseStats items={[
-            { value: '8 + 24', label: 'Interviews and survey responses before any design' },
-            { value: '11', label: 'Moderated usability sessions over two rounds' },
-            { value: '15', label: 'TestFlight beta users before launch' },
+          <CaseProse>
+            <p>The case follows the three jobs the app has, in the order a card meets them:</p>
+          </CaseProse>
+          <CaseSteps items={[
+            { title: 'Get it in', body: 'Turn what you looked up, read or asked into cards, without the chore that made people give up on flashcards. AI does the drafting; you decide what stays.' },
+            { title: 'Bring it back', body: 'Ask each card again just before it would be forgotten, in a form that fits how well it is known, and mark the answer fairly.' },
+            { title: 'Make tomorrow worth opening', body: 'A review app only works if people return. A visual language, a character that reacts and honest progress give them a reason to.' },
           ]} />
         </CaseChapter>
 
@@ -227,13 +230,18 @@ export default function MemQKitPage() {
 
         <CaseChapter label="03 / Research" title="Four findings, each with a design consequence.">
           <CaseProse>
-            <p>8 interviews and 24 survey responses across students, language learners and professionals, many already using Anki, Quizlet, ChatGPT or Claude. Then two rounds of usability testing on the prototype (6 and 5 sessions, 3 returning) and 15 TestFlight users on reminders and subscription.</p>
+            <p>Students, language learners and professionals, many already using Anki, Quizlet, ChatGPT or Claude. Interviews and a survey first; then two rounds of usability testing on the prototype (6 and 5 sessions, 3 returning) and TestFlight users on reminders and subscription.</p>
           </CaseProse>
+          <CaseStats items={[
+            { value: '8 + 24', label: 'Interviews and survey responses before any design' },
+            { value: '11', label: 'Moderated usability sessions over two rounds' },
+            { value: '15', label: 'TestFlight beta users before launch' },
+          ]} />
           <CaseEvidenceCards label="Research findings" layout="pairs" items={[
-            { icon: null, title: 'Creating cards is the drop-off', body: 'People spent longer making cards than studying them. → AI drafting became the main path, manual entry the fallback.' },
-            { icon: null, title: 'AI should remove friction, not learning', body: 'They wanted help with the busywork and control over the study. → AI fills fields; the learner edits and keeps.' },
-            { icon: null, title: 'Trust comes after accuracy', body: 'Sceptical first, convinced once extraction was right. → Show the work: slips picked out, answers overrulable.' },
-            { icon: null, title: 'Progress keeps people going', body: 'Visible mastery was rated high-value in every round. → Today leads with what is due; You gets charts from an answer log.' },
+            { icon: null, title: 'Creating cards is the drop-off', body: 'People spent longer making cards than studying them. → AI drafting became the main path, manual entry the fallback (05–07).' },
+            { icon: null, title: 'AI should remove friction, not learning', body: 'They wanted help with the busywork and control over the study. → AI drafts; the learner edits and keeps (05).' },
+            { icon: null, title: 'Trust comes after accuracy', body: 'Sceptical first, convinced once extraction was right. → Show the work: slips picked out, answers overrulable (08).' },
+            { icon: null, title: 'Progress keeps people going', body: 'Visible mastery was rated high-value in every round. → Today leads with what is due; You gets charts from an answer log (08).' },
           ]} />
         </CaseChapter>
 
@@ -248,42 +256,66 @@ export default function MemQKitPage() {
           <DecisionCards items={[sourceDecision]} />
         </CaseChapter>
 
-        <CaseChapter label="05 / Direction" title="Three visual versions, and why the third one.">
-          <CaseFigure caption="v1 and v2 were credible and calm. Neither gave a clear reason to come back tomorrow, which is the whole job of a review app.">
-            <VisualEvolution />
-          </CaseFigure>
+        <CaseChapter label="05 / AI chat" title="Explain first. Cards only when asked."
+          lead="Part one: get it in. The first finding was that making cards is where people give up, so the first job is getting cards in without the chore.">
           <CaseProse>
-            <p>For 2.0 I wrote a brief for five deliberately different directions, each tested with the same home screen, the same quiz and the same numbers, so the comparison was about design rather than nicer sample data. Each had to say what you see first, where you start, and what gets pushed back, and why.</p>
+            <p>There are three ways in. Type a topic or drop in a PDF and a set of cards is drafted; talk it through in a chat; or bring cards from the AI you already use (07). The chat is the newest and the one that taught me most. It is not a chatbot in a corner but <strong>two short conversations that each end somewhere</strong>: one in cards you keep, the other in a round of practice. Watch it play, or move your pointer in and use it.</p>
           </CaseProse>
-          <DecisionCards items={[directionDecision]} />
+          <ChatDemo />
+          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">A rebuild of the chat at the app’s own layout, from its chat components, on demonstration content. Replies are canned here; in the app they stream from the model.</p>
+          <CaseSteps items={[
+            { title: 'Teaching and keeping are two jobs', body: 'Asked what something is, it answers in about eighty words and stops. Cards come when you ask for them: one tap under the answer, or saying so.' },
+            { title: 'A suggestion is a draft', body: 'Starters fill the box instead of sending. The difference between a draft and a sent message is the difference between a suggestion and a decision made for you.' },
+            { title: 'The model’s judgement is visible, so it can be overruled', body: 'It reads your lessons before drafting, so its guess of where the cards go is already in the lesson box when you get there. Type to search, or name a new one.' },
+          ]} />
+          <DecisionCards items={[doorsDecision, uiDecision]} />
         </CaseChapter>
 
-        <CaseChapter label="06 / Design language" title="One depth rule, applied everywhere.">
+        <CaseChapter label="06 / Under the chat" title="The model talks. The app decides.">
           <CaseProse>
-            <p>A playful style falls apart fast when every component improvises its own depth. So the system has exactly one: a <strong>ledge</strong>. Every raised surface is a face on a darker shell, offset upward. Switch the treatments below to see why the other two were rejected, and press the button.</p>
+            <p>Behind those few screens, the hard part was deciding who does what. The first version was fixed one symptom at a time: a button that did not appear, a tool never called, a prompt that started inventing lesson names. Four problems, one cause: <strong>nobody had written down which job belonged to the model, the server or the interface.</strong> So I wrote the flow down, then measured it.</p>
           </CaseProse>
-          <CaseFigure caption="Same card, chips and button under three depth treatments. Only the ledge survives on the lime ground.">
-            <LedgeLab />
+          <CaseFigure caption="Making cards, before and after the flow was written down. What a tool returns decides what happens next: data goes back to the model; show and say end the turn. Lessons reach the model as short handles (L1, L2) the server resolves, so no tool accepts an id.">
+            <TurnFlow />
           </CaseFigure>
-          <CaseFigure caption="The rule that keeps interface and illustration apart on the same screen.">
-            <OutlineRule />
-          </CaseFigure>
-          <CaseFigure caption="Lime sky, purple content. The clash is the most recognisable thing about the app, so every colour has a single role.">
-            <PaletteStrip />
+          <CaseStats items={[
+            { value: '1', label: 'Model call to make a set of cards, down from 3–4' },
+            { value: '184 / 184', label: 'Scripted conversations passed on the real model: 23 cases, 8 runs each' },
+            { value: '99.8%', label: 'Of the prompt served from cache on a conversation’s second message' },
+          ]} />
+          <CaseProse>
+            <h3>Tested like a product, not a prompt</h3>
+            <p>A model follows a prompt only most of the time, so every case runs eight times and is judged by its pass rate. A full run costs about a cent and happens before and after every prompt change. Three cases came from the simulator first, such as the practice line offering to make cards it cannot make.</p>
+          </CaseProse>
+          <DecisionCards items={[toolDecision]} />
+          <CaseProse>
+            <h3>Memory: three things, only one of them memory</h3>
+            <p>A conversation is kept until you clear it, and Inkling remembers what you say about yourself. There is no settings page for it: the way to change it is to say so.</p>
+          </CaseProse>
+          <CaseFigure caption="The memory rules, played on six things said in a conversation. Each outcome is one of the cases the memory call is tested on with the real model, 8 runs each, all passing.">
+            <MemoryLab />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Inkling" title="A character that reacts, not a sticker.">
+        <CaseChapter label="07 / Paying for AI" title="One allowance, and a free way round it.">
           <CaseProse>
-            <p>Inkling started as a drawing in Figma and ended as a rig: separate parts, each turning about its own point, driven by springs and linked so the tail, horns and hands follow the body. This is the app’s own rig running in your browser. Take it apart, show the skeleton, switch the state the app is in, or tap it.</p>
+            <p>Drafting cards is the one part of the app that costs money per tap. With no revenue yet, every model call is real money, and free accounts still need to try everything. The first gate on the server was seven limits, each sensible on its own. Together, nobody could have said what they were allowed to do.</p>
           </CaseProse>
-          <CaseFigure caption="Live: the production rig on demonstration controls. Motion is computed each frame from the state; nothing is keyframed. With reduced motion, it is drawn once at rest.">
-            <CaseInteractivePreview src="/demos/memq-mascot/index.html" title="Inkling, MemQ's rigged mascot" />
+          <CaseFigure caption="Spend a free month. The costs are the app’s own. The number shows under the create box, where credits go three at a time; in the chat only below 20%. Pro is offered only when little is left or a request is refused, and never to someone who already pays.">
+            <CreditsLab />
           </CaseFigure>
-          <DecisionCards items={[mascotDecision]} />
+          <DecisionCards items={[creditsDecision]} />
+          <CaseProse>
+            <h3>Use your own AI</h3>
+            <p>The third way in costs nothing. Past the allowance, and without any connector, the app still works. “Use your own AI” gives you a prompt to take to ChatGPT, Claude or any other. That AI asks what you want to learn, or offers to use the chat it was pasted into, writes cards and practice questions to the same contract as MemQ’s own tools, and you paste its reply back. Pasted into the create box, it is recognised as cards at once.</p>
+          </CaseProse>
+          <CaseFigure caption="How a pasted reply is read. The prompt was tested by playing the learner against a real model: 11 kinds of conversation, 4 runs each, 384 cards, every one with complete questions that passed the checks.">
+            <OwnAiImport />
+          </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="08 / The loop" title="When to ask, how to ask, and how to mark.">
+        <CaseChapter label="08 / The loop" title="When to ask, how to ask, and how to mark."
+          lead="Part two: bring it back. Cards in hand, each has to come back at the right moment, in the right form, and be marked fairly.">
           <CaseProse>
             <h3>When: the schedule</h3>
             <p>Play the card below. Answer as if it came due, miss one, or set an exam date and watch the remaining looks close up. The curve is illustrative; the stages are the real ones.</p>
@@ -317,66 +349,45 @@ export default function MemQKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="09 / AI chat" title="Explain first. Cards only when asked.">
+        <CaseChapter label="09 / Direction" title="Three visual versions, and why the third one."
+          lead="Part three: make tomorrow worth opening. A schedule only works if people open the app when it calls, and the first two versions gave them no reason to.">
+          <CaseFigure caption="v1 and v2 were credible and calm. Neither gave a clear reason to come back tomorrow, which is the whole job of a review app.">
+            <VisualEvolution />
+          </CaseFigure>
           <CaseProse>
-            <p>Research kept pointing at the same gap: people learn by asking AI, and the answer is gone a week later. So MemQ got its own AI, not as a chatbot in a corner but as <strong>two short conversations that each end somewhere</strong>: one in cards you keep, the other in a round of practice. Watch it play, or move your pointer in and use it.</p>
+            <p>For 2.0 I wrote a brief for five deliberately different directions, each tested with the same home screen, the same quiz and the same numbers, so the comparison was about design rather than nicer sample data. Each had to say what you see first, where you start, and what gets pushed back, and why.</p>
           </CaseProse>
-          <ChatDemo />
-          <p className="m-0 text-[13px] leading-[1.5] text-[#686868]">A rebuild of the chat at the app’s own layout, from its chat components, on demonstration content. Replies are canned here; in the app they stream from the model.</p>
-          <CaseSteps items={[
-            { title: 'Teaching and keeping are two jobs', body: 'Asked what something is, it answers in about eighty words and stops. Cards come when you ask for them: one tap under the answer, or saying so.' },
-            { title: 'A suggestion is a draft', body: 'Starters fill the box instead of sending. The difference between a draft and a sent message is the difference between a suggestion and a decision made for you.' },
-            { title: 'The model’s judgement is visible, so it can be overruled', body: 'It reads your lessons before drafting, so its guess of where the cards go is already in the lesson box when you get there. Type to search, or name a new one.' },
-          ]} />
-          <DecisionCards items={[doorsDecision, uiDecision]} />
+          <DecisionCards items={[directionDecision]} />
         </CaseChapter>
 
-        <CaseChapter label="10 / Under the chat" title="The model talks. The app decides.">
+        <CaseChapter label="10 / Design language" title="One depth rule, applied everywhere.">
           <CaseProse>
-            <p>The first version was fixed one symptom at a time: a button that did not appear, a tool never called, a prompt that started inventing lesson names. Four problems, one cause: <strong>nobody had written down which job belonged to the model, the server or the interface.</strong> So I wrote the flow down, then measured it.</p>
+            <p>A playful style falls apart fast when every component improvises its own depth. So the system has exactly one: a <strong>ledge</strong>. Every raised surface is a face on a darker shell, offset upward. Switch the treatments below to see why the other two were rejected, and press the button.</p>
           </CaseProse>
-          <CaseFigure caption="Making cards, before and after the flow was written down. What a tool returns decides what happens next: data goes back to the model; show and say end the turn. Lessons reach the model as short handles (L1, L2) the server resolves, so no tool accepts an id.">
-            <TurnFlow />
+          <CaseFigure caption="Same card, chips and button under three depth treatments. Only the ledge survives on the lime ground.">
+            <LedgeLab />
           </CaseFigure>
-          <CaseStats items={[
-            { value: '1', label: 'Model call to make a set of cards, down from 3–4' },
-            { value: '184 / 184', label: 'Scripted conversations passed on the real model: 23 cases, 8 runs each' },
-            { value: '99.8%', label: 'Of the prompt served from cache on a conversation’s second message' },
-          ]} />
-          <CaseProse>
-            <h3>Tested like a product, not a prompt</h3>
-            <p>A model follows a prompt only most of the time, so every case runs eight times and is judged by its pass rate. A full run costs about a cent and happens before and after every prompt change. Three cases came from the simulator first, such as the practice line offering to make cards it cannot make.</p>
-          </CaseProse>
-          <DecisionCards items={[toolDecision]} />
-          <CaseProse>
-            <h3>Memory: three things, only one of them memory</h3>
-            <p>A conversation is kept until you clear it, and Inkling remembers what you say about yourself. There is no settings page for it: the way to change it is to say so.</p>
-          </CaseProse>
-          <CaseFigure caption="The memory rules, played on six things said in a conversation. Each outcome is one of the cases the memory call is tested on with the real model, 8 runs each, all passing.">
-            <MemoryLab />
+          <CaseFigure caption="The rule that keeps interface and illustration apart on the same screen.">
+            <OutlineRule />
+          </CaseFigure>
+          <CaseFigure caption="Lime sky, purple content. The clash is the most recognisable thing about the app, so every colour has a single role.">
+            <PaletteStrip />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="11 / Paying for AI" title="One allowance, and a free way round it.">
+        <CaseChapter label="11 / Inkling" title="A character that reacts, not a sticker.">
           <CaseProse>
-            <p>With no revenue yet, every model call is real money, and free accounts still need to try everything. The first gate on the server was seven limits, each sensible on its own. Together, nobody could have said what they were allowed to do.</p>
+            <p>v2’s character was a sticker beside the content. In 2.0 Inkling became part of the product: Today shows its state (thinking while lessons load, sleepy when nothing is due, pleased when the goal is met), and it reacts when an answer lands or the streak grows. It started as a drawing in Figma and ended as a rig: separate parts, each turning about its own point, driven by springs and linked so the tail, horns and hands follow the body. This is the app’s own rig running in your browser. Take it apart, show the skeleton, switch the state the app is in, or tap it.</p>
           </CaseProse>
-          <CaseFigure caption="Spend a free month. The costs are the app’s own. The number shows under the create box, where credits go three at a time; in the chat only below 20%. Pro is offered only when little is left or a request is refused, and never to someone who already pays.">
-            <CreditsLab />
+          <CaseFigure caption="Live: the production rig on demonstration controls. Motion is computed each frame from the state; nothing is keyframed. With reduced motion, it is drawn once at rest.">
+            <CaseInteractivePreview src="/demos/memq-mascot/index.html" title="Inkling, MemQ's rigged mascot" />
           </CaseFigure>
-          <DecisionCards items={[creditsDecision]} />
-          <CaseProse>
-            <h3>Use your own AI</h3>
-            <p>Past the allowance, and without any connector, the app still works. “Use your own AI” gives you a prompt to take to ChatGPT, Claude or any other. That AI asks what you want to learn, or offers to use the chat it was pasted into, writes cards and practice questions to the same contract as MemQ’s own tools, and you paste its reply back. Pasted into the create box, it is recognised as cards at once.</p>
-          </CaseProse>
-          <CaseFigure caption="How a pasted reply is read. The prompt was tested by playing the learner against a real model: 11 kinds of conversation, 4 runs each, 384 cards, every one with complete questions that passed the checks.">
-            <OwnAiImport />
-          </CaseFigure>
+          <DecisionCards items={[mascotDecision]} />
         </CaseChapter>
 
         <CaseChapter label="12 / Next" title="From the chats you already learn in.">
           <CaseProse>
-            <p>Inside MemQ, explain-then-keep now works. The next step is the same move where people already learn: Claude and ChatGPT. What they ask there is gone a week later. The aim: <strong>the conversation is summarised into knowledge cards, and MemQ makes sure you remember them.</strong> MemQ becomes the memory of the chats you learn in, not one more place to type. Until it ships, Use your own AI does the same by copy and paste.</p>
+            <p>Inside MemQ, explain-then-keep now works (05). The next step takes part one to where people already learn: Claude and ChatGPT, where what they ask is gone a week later. The aim: <strong>the conversation is summarised into knowledge cards, and MemQ makes sure you remember them.</strong> MemQ becomes the memory of the chats you learn in, not one more place to type. Until it ships, Use your own AI (07) does the same by copy and paste.</p>
           </CaseProse>
           <CaseFigure caption="The intended flow, as two illustrative conversations in a generic chat app. MemQ’s skill checks the learner’s lessons and recommends where the cards go; the cards render in the chat as an A2UI surface, in MemQ’s two card kinds, without practice answers; one button adds the ones kept. Illustrative: the experience as designed, not a shipped feature.">
             <ChatToCards />
@@ -401,11 +412,9 @@ export default function MemQKitPage() {
           ]} />
           <CaseProse>
             <ul>
-              <li>2.0 rebuilt every screen on one token pipeline, with UI guards that check contrast and asset sources on each change.</li>
-              <li>Progress charts read a per-answer log, counted in the learner’s own time zone: a twelve-week grid, accuracy, the daily goal and what is coming due.</li>
-              <li>Empty and error states each got a scene and one next step, instead of “No cards”.</li>
-              <li>An in-app AI chat in two lines, with card drafts, lesson picking, practice rounds and a long-term memory, checked against the real model before every prompt change.</li>
-              <li>AI cost on one monthly allowance, with a route that costs nothing through any AI the learner already uses.</li>
+              <li><strong>Get it in:</strong> an in-app AI chat in two lines, with card drafts, lesson picking, practice rounds and a long-term memory, checked against the real model before every prompt change; AI cost on one monthly allowance, with a free route through any AI the learner already uses.</li>
+              <li><strong>Bring it back:</strong> a spaced-retrieval scheduler, five kinds of question with fair marking, and progress charts read from a per-answer log, counted in the learner’s own time zone.</li>
+              <li><strong>Worth opening:</strong> 2.0 rebuilt every screen on one token pipeline, with UI guards that check contrast and asset sources on each change; empty and error states each got a scene and one next step, instead of “No cards”.</li>
             </ul>
             <p>I do not yet have usage data for 2.0, so I am not claiming retention gains. The first thing to measure is whether people come back for the second and seventh day’s reviews.</p>
           </CaseProse>
@@ -414,10 +423,10 @@ export default function MemQKitPage() {
         <CaseClose label="14 / Reflection" title="What I would tell the next designer on it.">
           <CaseProse>
             <ul>
-              <li><strong>Calm is not the same as inviting.</strong> v1 was the version I was proudest of visually, and it asked nothing of you tomorrow.</li>
-              <li><strong>Write briefs, not blueprints.</strong> Saying what a screen must make you feel, and what identity cannot change, got better work from every collaborator, human or AI.</li>
               <li><strong>Write the flow down before tuning the prompt.</strong> Four chat bugs were one missing page: who does what. Once it existed, a set of cards took one model call instead of four, and every prompt change could be measured.</li>
+              <li><strong>Calm is not the same as inviting.</strong> v1 was the version I was proudest of visually, and it asked nothing of you tomorrow.</li>
               <li><strong>Read the product before animating it.</strong> Mapping where the character appears showed only one place needed instant reaction. That decided the whole motion architecture.</li>
+              <li><strong>Write briefs, not blueprints.</strong> Saying what a screen must make you feel, and what identity cannot change, got better work from every collaborator, human or AI.</li>
               <li><strong>Go where the learning already happens.</strong> People learn in AI chats now. The next MemQ is less a place to type cards and more the memory of those conversations.</li>
             </ul>
           </CaseProse>
