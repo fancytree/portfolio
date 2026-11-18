@@ -89,7 +89,6 @@ const builderDecision: Decision = {
     { label: 'Free-form page editor', verdict: 'Staff aren’t designers; a broken page reaches every salon.' },
     { label: 'Modules, draft before publish', verdict: 'Add, reorder, configure; nothing is live until published.', chosen: true },
   ],
-  evidence: 'Products come from ERP records, not typed in.',
   tradeoff: 'Each new module type needs development.',
   shot: { src: `/img/def-erp/decisions/e-storefront-modules.webp?v=${ERP_DECISION_SHOTS['e-storefront-modules'].v}`, ...ERP_DECISION_SHOTS['e-storefront-modules'], alt: 'Storefront builder: module library on the left, the live mini-program preview in the middle, settings on the right.', caption: 'Staff build the home page from modules, previewed in the real mini-program.' },
 };
@@ -102,7 +101,6 @@ const miniProgramDecisions: Decision[] = [
       { label: 'A fresh visual redesign', verdict: 'Salons reorder from habit and would relearn it.' },
       { label: 'Keep the layout, rewire what is behind it', verdict: 'Same blocks, now on live ERP stock and prices.', chosen: true },
     ],
-    evidence: 'The problem was the data, not the layout.',
     tradeoff: 'Before and after look alike.',
     shot: { src: `/img/def-erp/decisions/e-keep-the-look.webp?v=${ERP_DECISION_SHOTS['e-keep-the-look'].v}`, ...ERP_DECISION_SHOTS['e-keep-the-look'], alt: 'The old and new mini-program home pages side by side, with the same layout.', caption: 'Same layout; every block now reads from the ERP.' },
   },
@@ -113,7 +111,6 @@ const miniProgramDecisions: Decision[] = [
       { label: 'Native WeChat code', verdict: 'Every screen and login written by hand.' },
       { label: 'Taro with WeChat’s own login', verdict: 'Same stack as the ERP; no new accounts or SMS.', chosen: true },
     ],
-    evidence: 'One skill set builds both the ERP and the store.',
     tradeoff: 'Customers without WeChat still order through staff.',
     shot: { src: `/img/def-erp/decisions/e-wechat-signin.webp?v=${ERP_DECISION_SHOTS['e-wechat-signin'].v}`, ...ERP_DECISION_SHOTS['e-wechat-signin'], alt: 'Mini-program sign-in screen with a Sign in with WeChat button and the benefits of linking.', caption: 'Sign in with WeChat; no separate account.' },
   },
@@ -135,8 +132,6 @@ const miniProgramDecisions: Decision[] = [
       { label: 'Redesign the brand first', verdict: 'Months before a real order reaches the ERP.' },
       { label: 'Launch fast, then rebrand', verdict: 'Real orders prove the data flow first.', chosen: true },
     ],
-    evidence: 'The value was orders arriving without re-entry.',
-    tradeoff: 'The brand waits for phase 2.',
     diagram: { node: <LaunchPhasesFlow />, caption: 'Phase 1 connected every flow on the familiar look; the rebrand builds on proven data.' },
   },
 ];

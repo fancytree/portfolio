@@ -13,8 +13,10 @@ export type Decision = {
   /** Internal decision-log reference; kept for traceability, not shown to readers. */
   source: string;
   options: DecisionOption[];
-  evidence: string;
-  tradeoff: string;
+  /** Only when there is an observed fact behind the pick (data, an interview, a test). Leave out rather than pad. */
+  evidence?: string;
+  /** Only when the pick cost something real. Leave out rather than pad. */
+  tradeoff?: string;
   /** The screen this decision produced, shown beside it so the reader can match decision and design. */
   /** For decisions about a process rather than a screen: an animated diagram instead of a screenshot. */
   /** wide: a large diagram goes above the decision, full width, instead of beside it. */
@@ -71,16 +73,12 @@ export function DecisionCards({ items, start = 1 }: { items: Decision[]; start?:
               </li>
             ))}
           </ul>
-          <dl className="case-decision-foot">
-            <div>
-              <dt>Evidence</dt>
-              <dd>{decision.evidence}</dd>
-            </div>
-            <div>
-              <dt>Cost I accepted</dt>
-              <dd>{decision.tradeoff}</dd>
-            </div>
-          </dl>
+          {(decision.evidence || decision.tradeoff) && (
+            <dl className={`case-decision-foot${decision.evidence && decision.tradeoff ? '' : ' is-single'}`}>
+              {decision.evidence && <div><dt>Evidence</dt><dd>{decision.evidence}</dd></div>}
+              {decision.tradeoff && <div><dt>Cost I accepted</dt><dd>{decision.tradeoff}</dd></div>}
+            </dl>
+          )}
           </div>
         </li>
       ))}

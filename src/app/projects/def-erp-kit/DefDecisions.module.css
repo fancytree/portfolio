@@ -1,6 +1,44 @@
 /* This case carries wide live demos: a slimmer rail and a wider content column than the kit default. */
 .widePage { --case-content-wide: 1400px; --case-rail-width: 200px; }
 
+/* Decision cards on this page: a readable type ladder beside the visual.
+   Tiers: number → question → the pick → what was turned down → evidence and cost. */
+.widePage :global(.case-decision.has-shot:not(.is-wide)) { grid-template-columns: minmax(0, 1.75fr) minmax(360px, 1fr); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-head) { grid-template-columns: 1fr; gap: var(--case-space-8); padding: var(--case-space-32, 32px) var(--case-space-32, 32px) var(--case-space-20); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-num) { font-size: 14px; letter-spacing: 0.06em; color: var(--case-flow-link); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-num)::before { content: 'Decision '; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-question) { font-size: 24px; line-height: 1.25; letter-spacing: -0.01em; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-options) { gap: var(--case-space-8); padding: 0 var(--case-space-20); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-option) { grid-template-columns: 20px 1fr; gap: var(--case-space-12); padding: var(--case-space-12); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-option.is-chosen) { padding: var(--case-space-16) var(--case-space-16) var(--case-space-16) var(--case-space-12); background: color-mix(in srgb, var(--case-flow-link) 7%, var(--case-bg)); border-left-width: 3px; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-mark) { font-size: 16px; line-height: 1.45; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-text) { gap: 4px; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-label) { font-size: 16px; line-height: 1.4; font-weight: 500; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-verdict) { font-size: 15px; line-height: 1.5; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.is-chosen .case-decision-label) { font-size: 18px; font-weight: var(--case-weight-strong); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.is-chosen .case-decision-verdict) { font-size: 16px; color: var(--case-ink); }
+/* The tick and the tint already say "chosen"; the pill only crowded the label. */
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-badge:not(.is-reversed)) { display: none; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-foot) { grid-template-columns: 1fr; margin-top: var(--case-space-24); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-foot > div) { padding: var(--case-space-20) var(--case-space-32, 32px); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-foot > div + div) { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-foot dt) { font-size: 13px; letter-spacing: 0.06em; margin-bottom: 6px; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-foot dd) { font-size: 16px; line-height: 1.5; color: var(--case-ink); }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-shot figcaption) { font-size: 15px; }
+.widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-shot) { justify-content: center; }
+
+@media (max-width: 1023px) {
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) { grid-template-columns: 1fr; }
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-head) { padding: var(--case-space-24) var(--case-space-20) var(--case-space-16); }
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-options) { padding: 0 var(--case-space-12); }
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-foot > div) { padding: var(--case-space-16) var(--case-space-20); }
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-question) { font-size: 21px; }
+}
+@media (max-width: 600px) {
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-mark-label) { font-size: 10px; padding: 2px 6px; margin-bottom: 3px; }
+  .widePage :global(.case-decision.has-shot:not(.is-wide)) :global(.case-decision-mark-box + .case-decision-mark-box > .case-decision-mark-label) { top: 4px; bottom: auto; left: auto; right: 4px; margin: 0; }
+}
+
 /* Visual decision modules for the DEF ERP case. Tokens only (case.css). */
 .pad { padding: var(--case-space-24); }
 .stack { display: flex; flex-direction: column; gap: var(--case-space-16); }
