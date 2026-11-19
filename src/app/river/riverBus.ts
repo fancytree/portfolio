@@ -13,7 +13,7 @@ export const riverBus = {
    */
   intro: { away: false },
   /** Where the river fish is on screen (viewport css px), or null when there is no river scene. The loader's fish dives here. */
-  fish: null as { x: number; y: number } | null,
+  fish: null as { x: number; y: number; len: number } | null,
   /** Where the runner is on screen (css px), as last drawn by the river scene. */
   runner: null as { x: number; feetY: number; headY: number } | null,
   /** How far the tools have dropped off the About shelf into the river: 0 on the shelf … 1 afloat. */
@@ -24,10 +24,6 @@ export const riverBus = {
    * About sheet, and the river scene, which shows below that edge, draws it from there on.
    */
   toolFall: null as ToolFall[] | null,
-  /** Project cards, page → scene: how far each has risen out of the river (0 afloat … 1 clear of it); null while they are not in play. */
-  worksUp: null as number[] | null,
-  /** Project cards, scene → page: where each floating card is on screen (centre, height, css px). */
-  workSpots: null as { x: number; y: number; h: number }[] | null,
   /** Set by the portrait while it is playing her, so the scene's own runner steps aside. */
   runnerHidden: false,
 };

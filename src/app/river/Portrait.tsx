@@ -290,11 +290,19 @@ export default function Portrait() {
       handle.setPortrait(q, look.x, look.y);
       handle.render(still ? 0 : (performance.now() - start) / 1000, 0, 0, 0, 0);
     };
-    const loop = () => {
-      tick();
+    // Full speed while she is coming in or being looked about; 30 fps while she just
+    // stands there breathing, which the dithered pixels hide.
+    let lastDraw = 0;
+    let lookedAt = -1e9;
+    const loop = (now: number) => {
       raf = requestAnimationFrame(loop);
+      const arrived = frame.hasAttribute("data-ready");
+      if (arrived && now - lookedAt > 400 && now - lastDraw < 32) return;
+      lastDraw = now;
+      tick();
     };
     const onPointer = (e: PointerEvent) => {
+      lookedAt = performance.now();
       const rect = frame.getBoundingClientRect();
       look.x = Math.max(-1, Math.min(1, (e.clientX - (rect.left + rect.width / 2)) / (window.innerWidth * 0.35)));
       look.y = Math.max(-1, Math.min(1, (e.clientY - (rect.top + rect.height * 0.35)) / (window.innerHeight * 0.4)));

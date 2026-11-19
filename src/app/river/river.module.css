@@ -474,6 +474,12 @@ html:has(.root) {
   background: var(--section-bg, var(--river-bg));
 }
 
+/* the project cards sit over the airborne fish, which swims behind them */
+.cards {
+  position: relative;
+  z-index: 2;
+}
+
 /* One tone per module, stepping from paper toward dusk as the river runs on. */
 .work {
   --section-bg: #f2f1ec;
@@ -1300,40 +1306,6 @@ html:has(.root) {
   text-transform: uppercase;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--river-border-strong);
-}
-
-/* ---------- Works afloat: the bridge from the hero to Selected Work ---------- */
-
-/* The canvas the four project cards are drawn on while they travel from the hero's
-   river to their places in the grid (WorkFloaters.tsx). It sits over the Work sheet
-   and under its cards, so a real card can appear on top of the one that has landed. */
-.floaters {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 30;
-  max-width: none;
-  pointer-events: none;
-  visibility: hidden;
-  image-rendering: pixelated;
-}
-
-.cards {
-  position: relative;
-  z-index: 31;
-}
-
-/* A stretch of open river after the hero, so the cards have time to rise before the
-   Work sheet arrives. */
-.heroTail {
-  height: 70vh;
-}
-
-@media (max-width: 899px), (prefers-reduced-motion: reduce) {
-  .floaters,
-  .heroTail {
-    display: none;
-  }
 }
 
 /* ---------- Contact ---------- */
@@ -2214,12 +2186,12 @@ html:has(.root) {
   white-space: nowrap;
 }
 
-/* The fish while it is out of the water: a small canvas that flies above the sheets. */
+/* The fish while it is out of the water: a small canvas over the Work sheet, under its cards. */
 .flyer {
   position: fixed;
   left: 0;
   top: 0;
-  z-index: 45;
+  z-index: 1; /* over the Work sheet, under its cards */
   width: 300px;
   height: 300px;
   opacity: 0;

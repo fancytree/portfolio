@@ -23,7 +23,7 @@ export type SceneHandle = {
   /** Hero only: make the fish leap. */
   jump(): void;
   /** Hero only: where the fish is, in css px from the canvas's top-left corner. */
-  fishScreen(): { x: number; y: number } | null;
+  fishScreen(): { x: number; y: number; len: number } | null;
   /** Journey only: the block of text on screen (css px), kept clear of the scene; null when there is none. */
   setTextZone(zone: { left: number; top: number; right: number; bottom: number } | null): void;
   /** Journey only: where the mouse is across the screen (css px), or null when the fish should roam freely. */
@@ -1126,6 +1126,8 @@ type Built = {
   update(t: number, px: number, py: number): void;
   jump?: () => void;
   fishPos?: THREE.Vector3;
+  /** the river fish's length, nose to tail, in world units */
+  fishLen?: number;
   /** meshes left out of the normal pass (the water surface, so it does not hide what swims under it) */
   skipNormal?: THREE.Object3D[];
   leave?: () => void;
@@ -1633,6 +1635,7 @@ function buildHero(scene: THREE.Scene): Built {
       sw.lastT = t;
       const scale = this.narrow ? 0.5 : 0.34;
       const LEN = 2.5 * scale; // nose to tail tip
+      this.fishLen = LEN;
       // its stretch of river travels with the camera, so it keeps the visitor company all the way down
       const camX = this.camX ?? 0.7;
       // With the mouse over the river it keeps under the pointer, milling about in a
@@ -1720,6 +1723,9 @@ function buildHero(scene: THREE.Scene): Built {
       }
 
       const swimming = !sw.away && (sw.mode === "cruise" || sw.mode === "run");
+      // out of the river it is another canvas's fish, so this one is not drawn at all
+      // (the water shows what swims under it, and it would show here too)
+      f.root.visible = !sw.away;
       if (sw.away) {
         // not in the river: its place is kept under the camera, ready for the dive back in
         sw.x = cx;
@@ -1741,8 +1747,10 @@ function buildHero(scene: THREE.Scene): Built {
 
         const run = sw.mode === "run";
         // left behind by a fast scroll: sprint to catch up, harder the further back it is
-        // hopelessly far back (the page jumped): it is well off screen, so it rejoins just out of view
-        if (Math.abs(sw.x - cx) > rx + 6) sw.x = cx + Math.sign(sw.x - cx) * (rx + 3);
+        // hopelessly far back (the page jumped): it is well off screen, so it rejoins out of
+        // view. Far enough out that it never pops in at the edge of a wide window: there is
+        // one fish, and it must not vanish in one place and appear in another.
+        if (Math.abs(sw.x - cx) > rx + 12) sw.x = cx + Math.sign(sw.x - cx) * (rx + 9);
         // led by the mouse: how far it still has to go to be under the pointer
         const lead = led && !run ? Math.max(0, Math.abs(sw.x - cx) - rx) : 0;
         const behind = led ? 0 : Math.max(0, Math.abs(sw.x - cx) - rx);
@@ -3137,7 +3145,11 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
     fishScreen() {
       if (!built.fishPos) return null;
       projected.copy(built.fishPos).project(camera);
-      return { x: ((projected.x + 1) / 2) * width, y: ((1 - projected.y) / 2) * height };
+      const x = ((projected.x + 1) / 2) * width;
+      const y = ((1 - projected.y) / 2) * height;
+      // how long it looks on screen, so a fish drawn elsewhere can match it exactly
+      projected.copy(built.fishPos).setX(built.fishPos.x + (built.fishLen ?? 0.85)).project(camera);
+      return { x, y, len: Math.abs(((projected.x + 1) / 2) * width - x) };
     },
     nodesScreen() {
       const camX = built.camX ?? 0;

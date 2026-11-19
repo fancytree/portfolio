@@ -188,8 +188,12 @@ export default function Preloader() {
           50 * Math.sin(Math.min(1, k * 2.4) * Math.PI) * (1 - k) +
           (to.y - from.y) * k * k;
         const pitch = from.pitch + (-1.45 - from.pitch) * ease(k * 1.4);
-        // it shrinks to the size of the fish in the river as it falls away from the screen
-        const scale = FISH_SCALE + ((spot ? 0.42 : 0.55) - FISH_SCALE) * k * k;
+        // it ends the size the river's fish looks on screen (the same overlay camera as
+        // Journey's airborne fish: 2.5 units long over 300 px at 30°, 8.8 off), so the
+        // fish that lands is the very size of the one the river takes back
+        const flyerLen = (2.5 * FISH_BOX) / (2 * 8.8 * Math.tan((15 * Math.PI) / 180));
+        const endScale = spot ? spot.len / flyerLen : 0.55;
+        const scale = FISH_SCALE + (endScale - FISH_SCALE) * k * k;
         fish.pose(dir, pitch, 1.2 + k * 2, 0, -0.6 * Math.sin(k * Math.PI));
         place(x, y, scale);
         canvas.style.zIndex = "3";

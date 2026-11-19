@@ -25,6 +25,9 @@ const FLYER_W = 300;
 const FLYER_H = 300;
 // drawn smaller out of the water, so it fits the margins and gaps of Selected Work
 const FLYER_SCALE = 0.55;
+// how long the fish is in that overlay at scale 1, css px: the overlay's camera stands
+// 8.8 units off with a 30° field over 300 px, and the fish is 2.5 units nose to tail
+const FLYER_LEN = (2.5 * FLYER_H) / (2 * 8.8 * Math.tan((15 * Math.PI) / 180));
 // Journey progress (0 source … 1 sea) at each of those moments. U_FIRST is just
 // before the first node comes in from the right, U_LAST just after the last one
 // has left on the left.
@@ -34,12 +37,11 @@ const U_FIRST = 0.19;
 const U_LAST = 0.735;
 const U_GONE = 0.8;
 
-type Props = { className?: string; buttonClassName?: string; flyerClassName?: string };
+type Props = { className?: string; buttonClassName?: string };
 
-export default function Journey({ className, buttonClassName, flyerClassName }: Props) {
+export default function Journey({ className, buttonClassName }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const flyerRef = useRef<HTMLCanvasElement>(null);
   const jumpRef = useRef<() => void>(() => {});
 
   useEffect(() => {
@@ -51,7 +53,9 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
     // The fish out of water: a second, small canvas above the page. When a sheet
     // covers the river the fish bursts out and flies alongside the scroll; when
     // water shows again it dives back in and the river fish takes over.
-    const flyerCanvas = flyerRef.current;
+    // The airborne fish is drawn on a canvas that lives in the Selected Work sheet
+    // (RiverHome), so it can swim behind the project cards.
+    const flyerCanvas = document.querySelector<HTMLCanvasElement>("[data-river-flyer]");
     let flyer: SceneHandle | null = null;
     const fly = {
       state: "water" as "water" | "air" | "diving",
@@ -70,6 +74,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       wet: 0,
       lastY: window.scrollY,
       lastT: 0,
+      scale: FLYER_SCALE, // drawn size: the river fish's own size as it leaves or enters the water
     };
     // where the mouse is, in px, and when it last moved (the airborne fish follows it)
     const mouse = { x: 0, y: 0, at: -99 };
@@ -349,7 +354,6 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
     // Selected Work, and the places in it where nothing is written
     const work = document.querySelector<HTMLElement>("#work");
     const workHead = work?.querySelector<HTMLElement>('[data-fish-zone="head"]') ?? null;
-    const workMore = work?.querySelector<HTMLElement>('[data-fish-zone="more"]') ?? null;
     const workCovers = (y: number) => {
       if (!work) return false;
       const r = work.getBoundingClientRect();
@@ -362,40 +366,16 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       const vw = window.innerWidth;
       const sec = work.getBoundingClientRect();
       if (sec.bottom < HEADER || sec.top > vh) return null;
-      const lo = HEADER + 16;
-      const hi = vh - 16;
-      // 1. beside the heading: the right half of the section head, above the "view all" link
-      const head = workHead.getBoundingClientRect();
-      const hTop = Math.max(lo, head.top - 20);
-      const hBottom = Math.min(hi, head.bottom - 70);
-      if (hBottom - hTop >= 110) {
-        const x0 = head.left + head.width * 0.56;
-        const x1 = head.right - 70;
-        return {
-          x: (x0 + x1) / 2 + Math.sin(t * 0.45) * Math.max(0, (x1 - x0) / 2 - 70),
-          y: (hTop + hBottom) / 2 + Math.sin(t * 0.9) * Math.max(0, (hBottom - hTop) / 2 - 50),
-        };
-      }
-      // 2. the band under the last row, once it has come into view
-      const floor = (workMore ?? workHead).getBoundingClientRect().bottom + 24;
-      const fTop = Math.max(lo, floor);
-      const fBottom = Math.min(hi, sec.bottom - 20);
-      if (fBottom - fTop >= 84) {
-        return {
-          x: vw * 0.5 + Math.sin(t * 0.4) * vw * 0.24,
-          y: (fTop + fBottom) / 2 + Math.sin(t * 0.8) * Math.max(0, (fBottom - fTop) / 2 - 38),
-        };
-      }
-      // 3. otherwise the page margin, swimming up and down beside the cards
-      const margin = vw - head.right;
-      if (margin >= 52) {
-        const x = head.right + margin / 2;
-        // Not in the margin yet: get there sideways first, at the height it is already
-        // at, rather than cutting the corner across a card on the way down.
-        if (fly.state !== "water" && fly.x < x - 46) return { x, y: Math.max(lo + 40, Math.min(hi - 40, fly.y)) };
-        return { x, y: (lo + hi) / 2 + Math.sin(t * 0.55) * (hi - lo) * 0.3 };
-      }
-      return null;
+      // It swims behind the cards now, so it has the whole sheet: long lengths from one
+      // side to the other, drifting up and down a little, within the part on screen.
+      // While any of the sheet is on screen it has somewhere to be, however thin the strip.
+      const lo = Math.max(HEADER + 40, sec.top + 60);
+      const hi = Math.max(lo, Math.min(vh - 40, sec.bottom - 60));
+      const reach = Math.max(0, vw / 2 - 110);
+      return {
+        x: vw / 2 + Math.sin(t * 0.3) * reach,
+        y: (lo + hi) / 2 + Math.sin(t * 0.5 + 1.2) * (hi - lo) * 0.3,
+      };
     };
 
     const updateFlyer = (t: number) => {
@@ -410,9 +390,12 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       fly.wet = wet ? fly.wet + dt : 0;
 
       const spot = workSpot(t);
-      if (fly.state !== "water" && !wet && !spot) {
-        // Selected Work has gone and there is no river in view either (a jump down the
-        // page, or the About sheet): the fish is simply back in the river, out of sight
+      // Selected Work has gone and there is no river in view either (a jump down the
+      // page, or the About sheet): it swims off the screen the way the sheet went, and
+      // only once it is out of sight is it back in the river. It never just vanishes.
+      const vh = window.innerHeight;
+      const away = fly.state !== "water" && fly.state !== "diving" && !wet && !spot;
+      if (away && (fly.y < -140 || fly.y > vh + 140)) {
         handle.fishEnter();
         fly.state = "water";
       }
@@ -426,13 +409,15 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
           fly.y = home.y;
           fly.vx = 120;
           fly.vy = -820;
+          fly.scale = home.len / FLYER_LEN; // the same size as the fish that was just in the river
         }
       } else {
         // Out of the water it keeps to the empty parts of Selected Work: the space
         // beside the heading, the page margin while the cards go by, the band under
         // the last row. It is routed there; it does not follow the mouse.
-        let tx = spot ? spot.x : fly.x;
-        let ty = spot ? spot.y : fly.y;
+        const sheetAbove = !!work && work.getBoundingClientRect().bottom < vh / 2;
+        let tx = spot ? spot.x : fly.x + Math.cos(fly.heading) * 200;
+        let ty = spot ? spot.y : away ? (sheetAbove ? -400 : vh + 400) : fly.y;
         let top = 560; // px per second
         let agility = 4.6; // rad per second it can turn at speed
         if (fly.state === "air" && fly.wet > 0.25) {
@@ -446,7 +431,9 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
           top = 1100;
           agility = 10;
           if (!wet && t - fly.since > 0.2) fly.state = "air"; // the water went away again mid-dive
-          else if (Math.hypot(tx - fly.x, ty - fly.y) < 26 || (t - fly.since > 0.5 && fly.y > ty)) {
+          // it goes in only where the river's fish will come up: there is one fish, so it
+          // must not vanish in one place and surface in another
+          else if (Math.hypot(tx - fly.x, ty - fly.y) < 26 || (Math.abs(tx - fly.x) < 40 && fly.y > ty - 10)) {
             handle.fishEnter();
             fly.state = "water";
           }
@@ -496,6 +483,15 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
         fly.y += fly.vy * dt;
       }
 
+      // Its size: the river fish's as it leaves the water, growing to its size over the
+      // sheet; on the way back it shrinks to the river fish's again by the time it lands.
+      const riverScale = home.len / FLYER_LEN;
+      if (fly.state === "diving") {
+        const near = Math.min(1, Math.hypot(home.x - fly.x, home.y - fly.y) / 260);
+        fly.scale = riverScale + (FLYER_SCALE - riverScale) * near;
+      } else if (fly.state === "air") {
+        fly.scale += (FLYER_SCALE - fly.scale) * Math.min(1, dt * 2.2);
+      }
       const out = fly.state !== "water";
       flyerCanvas.style.opacity = out ? "1" : "0";
       if (!out) return;
@@ -513,7 +509,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       // long strokes when it has somewhere to go, harder ones in a turn, a lazy fan when it idles
       flyer.pose(fly.dir, pitch, (fly.resting ? 0.45 : 0.7) + Math.min(4.2, fly.speed / 150 + Math.abs(fly.turn) * 0.35), bend, arch);
       flyer.render(t, 0, 0, 0, 0);
-      flyerCanvas.style.transform = `translate3d(${(fly.x - FLYER_W / 2).toFixed(1)}px, ${(fly.y - FLYER_H / 2).toFixed(1)}px, 0) scale(${FLYER_SCALE})`;
+      flyerCanvas.style.transform = `translate3d(${(fly.x - FLYER_W / 2).toFixed(1)}px, ${(fly.y - FLYER_H / 2).toFixed(1)}px, 0) scale(${fly.scale.toFixed(3)})`;
     };
 
     // Each tool lands straight below its case: the landing spots are worked out from
@@ -529,8 +525,6 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       const rect = shelf.getBoundingClientRect();
       // the camera has stopped at the sea by the time anything falls (see progressAt)
       handle.aimLandings(TOOL_SLOTS.map((slot) => ({ p: 1, x: rect.left + rect.width * shelfFraction(slot.x) })));
-      // and the four project cards float across the right of the hero
-      handle.aimWorks([0.56, 0.67, 0.78, 0.9].map((k) => window.innerWidth * k));
     };
 
     const renderOnce = () => {
@@ -547,7 +541,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
         riverBus.drop = Math.min(1, Math.max(0, (vh * 0.62 - seaWindow.getBoundingClientRect().top) / (vh * 0.44)));
       }
       handle.setDrop(riverBus.drop);
-      handle.setWorksUp(riverBus.worksUp);
+      handle.setWorksUp(null); // no project cards in the river
       // One fall for each tool, in screen space: from its case on the shelf to where it
       // floats. The shelf's canvas shows it as far as the bottom edge of the About
       // sheet; this scene, which is what shows below that edge, has it from there.
@@ -598,14 +592,24 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       riverBus.fish = handle.fishScreen();
       riverBus.waterY = riverBus.fish?.y ?? 0;
       riverBus.runner = handle.runnerScreen();
-      riverBus.workSpots = handle.workSpots();
       handle.setRunnerHidden(riverBus.runnerHidden);
       placeNodes();
       updateFlyer(now);
     };
-    const loop = () => {
-      renderOnce();
+    // Full speed while something moves with the page (a scroll, the fish in the air, the
+    // loader's intro); otherwise the river idles at 30 fps, which the dithered pixels hide
+    // and which halves the work the GPU does.
+    let lastDraw = 0;
+    let scrolledAt = -1e9;
+    const onActivity = () => {
+      scrolledAt = performance.now();
+    };
+    const loop = (now: number) => {
       if (running) frame = requestAnimationFrame(loop);
+      const busy = now - scrolledAt < 400 || fly.state !== "water" || riverBus.intro.away;
+      if (!busy && now - lastDraw < 32) return;
+      lastDraw = now;
+      renderOnce();
     };
     const resize = () => {
       if (!handle || !wrap.clientWidth || !wrap.clientHeight) return;
@@ -667,6 +671,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
           window.addEventListener("scroll", onScroll, { passive: true });
         } else {
           window.addEventListener("pointermove", onPointer, { passive: true });
+          window.addEventListener("scroll", onActivity, { passive: true });
           window.addEventListener("click", onClick);
           document.addEventListener("visibilitychange", onVisibility);
           window.addEventListener("scroll", onSnapScroll, { passive: true });
@@ -688,6 +693,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       cancelAnimationFrame(scrollFrame);
       resizeObserver.disconnect();
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("scroll", onActivity);
       window.removeEventListener("click", onClick);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("scroll", onSnapScroll);
@@ -707,7 +713,6 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       <div ref={wrapRef} className={className} aria-hidden="true">
         <canvas ref={canvasRef} />
       </div>
-      <canvas ref={flyerRef} className={flyerClassName} aria-hidden="true" />
       {/* keyboard and screen-reader route to the same leap; shown only when focused */}
       {buttonClassName && (
         <button type="button" className={buttonClassName} onClick={() => jumpRef.current()}>

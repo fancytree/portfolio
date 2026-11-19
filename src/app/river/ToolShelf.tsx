@@ -47,9 +47,14 @@ export default function ToolShelf() {
       } else handle.setToolPath(null);
       handle.render(still ? 0 : (performance.now() - start) / 1000, 0, 0, 0, 0);
     };
-    const loop = () => {
-      renderOnce();
+    // Full speed while the tools are falling; 30 fps while they only bob on the shelf.
+    let lastDraw = 0;
+    const loop = (now: number) => {
       if (visible && !still) raf = requestAnimationFrame(loop);
+      const falling = riverBus.drop > 0 && riverBus.drop < 1;
+      if (!falling && now - lastDraw < 32) return;
+      lastDraw = now;
+      renderOnce();
     };
     const resize = () => {
       if (!handle || !frame.clientWidth || !frame.clientHeight) return;

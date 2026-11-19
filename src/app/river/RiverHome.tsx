@@ -13,7 +13,6 @@ import MoreList from "./MoreList";
 import Portrait from "./Portrait";
 import { SiteFooter, SiteHeader } from "./SiteChrome";
 import ToolShelf from "./ToolShelf";
-import WorkFloaters from "./WorkFloaters";
 import StageNodes from "./StageNodes";
 import { plexMono } from "./fonts";
 import { contact, experiments, projects, strategy } from "./content";
@@ -46,13 +45,12 @@ export default function RiverHome() {
         Skip to content
       </a>
       <HashScroll />
-      <Journey className={s.journey} flyerClassName={s.flyer} />
+      <Journey className={s.journey} />
 
       <SiteHeader home />
 
       <main id="main">
         {/* inside main, so it stacks with the Work cards: over the sheet, under the cards */}
-        <WorkFloaters />
 
         {/* 01 — Hero */}
         <section id="top" className={s.hero} aria-labelledby="hero-title" data-river-window>
@@ -104,10 +102,11 @@ export default function RiverHome() {
         </section>
 
         {/* more river before the next sheet: room for the project cards to lift out of the water */}
-        <div className={s.heroTail} data-river-window aria-hidden="true" />
 
         {/* 02 — Selected Work */}
         <section id="work" className={`${s.section} ${s.work}`} aria-labelledby="work-title">
+          {/* the fish out of the water swims over this sheet, behind its cards (Journey.tsx) */}
+          <canvas className={s.flyer} data-river-flyer aria-hidden="true" />
           <div className={s.container}>
             <div className={s.sectionHead} data-fish-zone="head">
               <div>
