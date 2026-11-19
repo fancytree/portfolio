@@ -9,11 +9,16 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: "/projects/procurement-agent",
-        destination: "/projects/procurement-agent-v2",
-        permanent: false,
-      },
+      // retired case pages now land on their current versions
+      { source: "/projects/procurement-agent", destination: "/projects/procurement-agent-kit", permanent: false },
+      { source: "/projects/procurement-agent-v2", destination: "/projects/procurement-agent-kit", permanent: false },
+      { source: "/projects/def-erp", destination: "/projects/def-erp-kit", permanent: false },
+      { source: "/projects/jobnova", destination: "/projects/jobnova-kit", permanent: false },
+      { source: "/projects/jobnova-ai-platform", destination: "/projects/jobnova-kit", permanent: false },
+      { source: "/projects/jobnova-ai-platform-v2", destination: "/projects/jobnova-kit", permanent: false },
+      { source: "/projects/jobnova-ai-platform-v3", destination: "/projects/jobnova-kit", permanent: false },
+      { source: "/projects/connectnova", destination: "/projects/connectnova-kit", permanent: false },
+      { source: "/projects/memq", destination: "/projects/memq-kit", permanent: false },
       // the river page was built at /river before it became the homepage
       {
         source: "/river",

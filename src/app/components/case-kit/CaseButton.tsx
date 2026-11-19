@@ -39,9 +39,9 @@ export function CaseButtonSamples() {
   return <div>
     <p className={styles.sampleLabel}>Buttons</p>
     <div className={styles.samples}>
-      <CaseButton href="/projects/def-erp">Sample case</CaseButton>
+      <CaseButton href="/projects/def-erp-kit">Sample case</CaseButton>
       <CaseButton variant="secondary" href="/#work">All work</CaseButton>
-      <CaseButton variant="icon" href="/projects/def-erp" aria-label="View sample case"><ArrowUpRight aria-hidden="true" /></CaseButton>
+      <CaseButton variant="icon" href="/projects/def-erp-kit" aria-label="View sample case"><ArrowUpRight aria-hidden="true" /></CaseButton>
       <CaseButton variant="icon" data-tone="dark" href="/projects/procurement-agent-kit" aria-label="View procurement case"><ArrowUpRight aria-hidden="true" /></CaseButton>
       <CaseButton disabled>Disabled</CaseButton>
     </div>
