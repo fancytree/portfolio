@@ -1,0 +1,28 @@
+.wrap { --ink: #010214; --lime: #b0f809; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; font-family: var(--case-font-body); color: var(--ink); min-width: 0; }
+
+.stage { position: relative; border-radius: 16px; overflow: hidden; background: #f7f8f9; box-shadow: 0 0 0 1px #eceef1, 0 18px 40px -30px rgb(1 2 20 / .3); }
+.stage img { display: block; width: 100%; height: auto; }
+.notes li.notesHead { display: flex; align-items: center; gap: 8px; padding: 0 2px 4px; background: none; font-size: 13px; line-height: 18px; font-weight: 600; color: #6b6c7a; }
+.tag { padding: 2px 10px; border-radius: 999px; background: #8c8e99; color: #fff; font-size: 12px; line-height: 18px; font-weight: 600; }
+
+.pin { position: absolute; z-index: 1; display: grid; place-items: center; width: 28px; height: 28px; margin: -14px 0 0 -14px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); color: var(--lime); font: 600 13px/1 var(--case-font-body); cursor: default; box-shadow: 0 0 0 3px rgb(255 255 255 / .9), 0 6px 16px -4px rgb(1 2 20 / .4); transition: transform .25s cubic-bezier(.25, 1, .5, 1), background .25s, color .25s; }
+.pin::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; box-shadow: 0 0 0 2px var(--lime); opacity: 0; transition: opacity .25s; }
+.pinOn { transform: scale(1.18); background: var(--lime); color: var(--ink); }
+.pinOn::after { opacity: 1; }
+
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.notes li { display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #f7f8f9; transition: background .25s, box-shadow .25s; }
+.notes li.noteOn { background: #fff; box-shadow: 0 0 0 1.5px var(--ink); }
+.num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--lime); font-size: 12px; font-weight: 600; }
+.notes b { display: block; font-size: 14px; line-height: 20px; font-weight: 600; }
+.notes p { margin: 2px 0 0; font-size: 13px; line-height: 19px; color: #41414f; }
+
+@media (max-width: 1024px) {
+  .wrap { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .pin { width: 22px; height: 22px; margin: -11px 0 0 -11px; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pin, .pin::after, .notes li { transition: none; }
+}

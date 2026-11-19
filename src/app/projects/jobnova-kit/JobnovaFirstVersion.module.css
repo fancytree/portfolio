@@ -1,0 +1,59 @@
+/* Process strip: five steps on one line, each with what it produced */
+.process { --ink: #010214; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: 12px; row-gap: 0; font-family: var(--case-font-body); color: var(--ink); counter-reset: none; }
+/* Subgrid rows (number, title, what I did, output) keep the output lines level across steps */
+.process li { position: relative; padding: 18px 16px 16px; border-radius: 16px; background: #f7f8f9; display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 6px; align-content: start; min-width: 0; }
+.process li > * { align-self: start; }
+.process li:not(:last-child)::after { content: ''; position: absolute; top: 27px; right: -12px; width: 12px; height: 2px; background: #d6d8de; }
+.pNum { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #b0f809; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.process h3 { margin: 4px 0 0; font-size: 16px; line-height: 21px; font-weight: 600; }
+.process p { margin: 0; font-size: 13px; line-height: 19px; color: #41414f; }
+.process .out { margin-top: 4px; padding-top: 10px; border-top: 1px solid #e6e8ec; color: #010214; font-weight: 500; }
+
+/* Architecture map */
+.map { --ink: #010214; margin: 0; padding: 24px; border-radius: 20px; background: #fff; box-shadow: 0 0 0 1px #eceef1, 0 18px 40px -30px rgb(1 2 20 / .3); font-family: var(--case-font-body); color: var(--ink); min-width: 0; }
+.mapTitle { margin-bottom: 16px; font-size: 13px; font-weight: 600; color: #6b6c7a; }
+
+.base { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 16px; border-radius: 12px; background: var(--ink); color: #fff; font-size: 14px; line-height: 20px; }
+.base b { font-weight: 600; color: #b0f809; }
+.base em { margin-left: auto; font-style: normal; font-size: 12px; color: #b9bac4; }
+
+.ticks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; height: 16px; }
+.ticks i { width: 2px; height: 100%; margin-left: 24px; background: #d6d8de; }
+
+.modules { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+.modules > li { position: relative; display: flex; flex-direction: column; gap: 12px; min-width: 0; padding: 12px; border-radius: 16px; background: #f7f8f9; }
+.modules > li:not(:last-child)::after { content: '→'; position: absolute; top: 64px; right: -24px; width: 20px; text-align: center; font-size: 16px; color: #8c8e99; }
+.modules > li.flagged { box-shadow: inset 0 0 0 1.5px var(--ink); }
+
+.shot { display: block; aspect-ratio: 16 / 10; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px #e6e8ec; }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; transition: transform .4s cubic-bezier(.25, 1, .5, 1); }
+.shot:hover img { transform: scale(1.04); }
+.modules h3 { margin: 0 4px; font-size: 16px; line-height: 21px; font-weight: 600; }
+
+.parts { list-style: none; margin: 0 4px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.parts li { font-size: 13px; line-height: 18px; color: #41414f; }
+.parts b { display: block; font-weight: 600; color: var(--ink); }
+
+.options { margin: 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.options dt { font-size: 12px; line-height: 16px; color: #6b6c7a; }
+.options dd { margin: 4px 0 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.options dd span { padding: 2px 8px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px #e1e3e8; font-size: 12px; line-height: 16px; }
+
+.stuck { margin: auto 0 0; padding: 10px 12px; border-radius: 10px; background: #fff; font-size: 13px; line-height: 18px; color: #41414f; }
+.stuck span { display: table; margin: 0 0 6px; padding: 1px 8px; border-radius: 999px; background: #b0f809; color: var(--ink); font-size: 11px; line-height: 16px; font-weight: 600; }
+
+@media (max-width: 1024px) {
+  .process { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .process li { margin-bottom: 12px; }
+  .process li::after { display: none; }
+  .modules, .ticks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .modules > li::after { display: none; }
+  .ticks { display: none; }
+  .base { margin-bottom: 16px; }
+}
+@media (max-width: 640px) {
+  .process { grid-template-columns: 1fr; }
+  .modules { grid-template-columns: 1fr; }
+  .map { padding: 16px; }
+  .base em { margin-left: 0; }
+}

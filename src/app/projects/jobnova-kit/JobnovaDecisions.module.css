@@ -1,0 +1,50 @@
+/* JobNova's decision cards: the shared case-kit cards, in JobNova's own language
+   (ink and system lime, large rounded cards), read in four steps:
+   the question → the pick, raised in lime → what was turned down, stepped back → the cost. */
+.jn {
+  --jn-ink: #010214; --jn-lime: #b0f809; --jn-tint: rgb(176 248 9 / .14); --jn-olive: #3f6212;
+  --jn-grey: #f7f8f9; --jn-line: #eceef1;
+  --case-flow-link: var(--jn-ink);
+  display: flex; flex-direction: column; gap: var(--case-space-24, 24px);
+}
+.jn :global(.case-decisions) { gap: var(--case-space-24, 24px); }
+.jn :global(.case-decision) { border: 0; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px var(--jn-line), 0 18px 40px -28px rgb(1 2 20 / .35); }
+.jn :global(.case-decision-num), .jn :global(.case-decision-source) { display: none; }
+
+/* The screen: on JobNova's light grey canvas, rounded like the product */
+.jn :global(.case-decision-shot) { background: var(--jn-grey); border-right: 0; padding: var(--case-space-24, 24px); }
+.jn :global(.case-decision-frame) { border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--jn-line), 0 12px 28px -18px rgb(1 2 20 / .3); }
+.jn :global(.case-decision-shot) > figcaption { margin-top: 12px; font-family: var(--case-font-body); font-size: 13px; line-height: 1.45; color: #6b6c7a; text-align: center; }
+
+/* 1 · The question, with a small lime tag */
+.jn :global(.case-decision-head) { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: var(--case-space-24, 24px) var(--case-space-24, 24px) var(--case-space-16, 16px) !important; }
+.jn :global(.case-decision-head)::before { content: 'Design decision'; padding: 3px 10px; border-radius: 999px; background: var(--jn-tint); font-family: var(--case-font-body); font-size: 12px; font-weight: 600; line-height: 16px; color: var(--jn-olive); }
+.jn :global(.case-decision-question) { font-size: 22px; line-height: 1.28; letter-spacing: -.015em; color: var(--jn-ink); }
+
+/* 2 · The options: the pick is raised in lime, the rest step back */
+.jn :global(.case-decision-options) { gap: 6px; padding: 0 var(--case-space-16, 16px) !important; }
+.jn :global(.case-decision-option) { grid-template-columns: 22px 1fr; gap: 12px; padding: 10px 12px !important; border-left: 0; border-radius: 14px; }
+.jn :global(.case-decision-option:not(.is-chosen)) { color: #9a9aa6; }
+.jn :global(.case-decision-option.is-chosen) { padding: 14px 12px !important; background: var(--jn-tint); box-shadow: inset 0 0 0 1.5px rgb(176 248 9 / .7); }
+.jn :global(.case-decision-mark) { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; line-height: 1; }
+.jn :global(.case-decision-option:not(.is-chosen) .case-decision-mark) { background: #f2f2f3; color: #9a9aa6; }
+.jn :global(.is-chosen .case-decision-mark) { background: var(--jn-lime); color: var(--jn-ink); }
+.jn :global(.case-decision-text) { gap: 3px; }
+.jn :global(.case-decision-label) { font-size: 15px; line-height: 22px; font-weight: 500; }
+.jn :global(.case-decision-verdict) { font-size: 14px; line-height: 1.5; }
+.jn :global(.is-chosen .case-decision-label) { font-size: 16px; font-weight: 600; color: var(--jn-ink); }
+.jn :global(.is-chosen .case-decision-verdict) { font-size: 15px; color: var(--jn-ink); }
+.jn :global(.case-decision-badge) { padding: 1px 9px; border-radius: 999px; background: var(--jn-lime); color: var(--jn-ink); font-size: 11px; line-height: 18px; font-weight: 600; }
+
+/* 3 · The cost: a quiet note on grey, only when there is one */
+.jn :global(.case-decision-foot) { display: flex; flex-direction: column; margin: var(--case-space-16, 16px) var(--case-space-16, 16px) var(--case-space-16, 16px) !important; border: 0; border-radius: 14px; background: var(--jn-grey); }
+.jn :global(.case-decision-foot > div) { padding: 14px 16px; border: 0 !important; }
+.jn :global(.case-decision-foot dt) { margin-bottom: 4px; font-family: var(--case-font-body); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; color: #6b6c7a; }
+.jn :global(.case-decision-foot dd) { font-size: 14px; line-height: 1.5; color: var(--jn-ink); }
+.jn :global(.case-decision-foot > div:has(> dd:empty)) { display: none; }
+.jn :global(.case-decision-foot:not(:has(dd:not(:empty)))) { display: none; }
+
+@media (max-width: 860px) {
+  .jn :global(.case-decision-shot) { border-bottom: 0; padding: var(--case-space-16, 16px); }
+  .jn :global(.case-decision-question) { font-size: 19px; }
+}

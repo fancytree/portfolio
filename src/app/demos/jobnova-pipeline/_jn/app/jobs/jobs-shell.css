@@ -1,0 +1,217 @@
+/* Jobs page shell, per the JobNova redesign: left navigation and overall layout.
+   Loaded after the global stylesheet, so it overrides the old .jb-* shell. */
+
+.jb-layout { grid-template-columns: 240px minmax(0, 1fr); background: #fff; }
+
+/* ── Left navigation ── */
+.jb-sidebar.jn-side { width: 240px; padding: 0; background: #fff; font-family: 'Inter', sans-serif; }
+.jn-logo { height: 75px; padding: 24px 12px; display: flex; align-items: center; flex-shrink: 0; }
+.jn-logo img { width: 112px; height: 32px; object-fit: cover; }
+.jn-side-body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 24px; padding: 0 12px 12px; }
+.jn-nav { display: flex; flex-direction: column; gap: 4px; }
+.jn-nav-item {
+  display: flex; align-items: center; gap: 8px; width: 100%; padding: 11px 12px; border-radius: 31px;
+  background: #fff; color: #010214; text-decoration: none; white-space: nowrap;
+  font: 500 16px/24px 'Plus Jakarta Sans', sans-serif; transition: background .15s;
+}
+.jn-nav-item:hover { background: rgba(173, 245, 0, .07); }
+.jn-nav-item.is-active { background: rgba(173, 245, 0, .12); }
+.jn-nav-item--sm { font: 400 16px/1.3 'Inter', sans-serif; }
+.jn-side-bottom { display: flex; flex-direction: column; gap: 24px; }
+.jn-upgrade {
+  display: flex; flex-direction: column; gap: 24px; padding: 20px 18px; border-radius: 16px; color: #0e1401;
+  background: linear-gradient(92.85deg, #b0f90e 7.76%, #7bffb4 98.83%);
+}
+.jn-upgrade > div { display: flex; flex-direction: column; gap: 8px; }
+.jn-upgrade-title { margin: 0; font: 500 16px/24px 'Plus Jakarta Sans', sans-serif; }
+.jn-upgrade-sub { margin: 0; font: 400 14px/20px 'Plus Jakarta Sans', sans-serif; }
+.jn-upgrade-btn {
+  display: flex; align-items: center; justify-content: center; height: 40px; padding: 9px 20px; border-radius: 33px;
+  background: #0e1401; color: #fff; text-decoration: none; font: 500 16px/20.3px 'Inter', sans-serif; letter-spacing: -.32px;
+  transition: opacity .15s;
+}
+.jn-upgrade-btn:hover { opacity: .88; }
+
+/* ── Overall layout: top bar over a gray, rounded work area ── */
+.jb-content { --jb-right-panel-width: 320px; background: #fff; }
+.jb-main-hd { background: #fff; }
+.jb-main-hd-inner { display: flex; align-items: center; justify-content: space-between; height: 75px; padding: 0 18px; }
+.jb-main-hd-main { flex: 1; min-width: 0; }
+.jb-tab-bar { padding: 0; }
+.jb-main-hd-side { padding: 0; gap: 16px; }
+
+/* tabs: a dark pill for the active one, plain text for the rest */
+.jb-seg { padding: 0; gap: 22px; background: transparent; border-radius: 0; }
+.jb-seg-item { padding: 11px 26px; border-radius: 112px; background: transparent; color: #696b6e; font: 500 16px/20.3px 'Inter', sans-serif; letter-spacing: -.32px; font-feature-settings: 'calt' 0; }
+.jb-seg-item:hover { background: #f7f8f9; }
+.jb-seg-item.is-active { padding: 12px 28px; background: #010214; color: #fff; }
+.jb-seg-item.is-active:hover { background: #010214; }
+.jb-seg-n { padding: 3px 7px; background: #b7fd33; color: #171e29; font: 500 14px/normal 'Inter', sans-serif; letter-spacing: .28px; border-radius: 17px; }
+.jb-seg-item.is-active .jb-seg-n { background: #b7fd33; color: #171e29; }
+
+.jb-content-body {
+  gap: 18px; padding: 18px 18px 0; background: #f7f8f9; border-radius: 24px 0 24px 24px;
+  grid-template-columns: minmax(0, 1fr) var(--jb-right-panel-width);
+}
+
+/* ── Top right: aligned with the job detail page ── */
+.jb-main-hd-side { gap: 16px; }
+.jb-credit-pill {
+  gap: 4px; padding: 8px 16px; border: 1px solid #f2f2f3; border-radius: 37px; background: #fff;
+  font: 400 16px/normal 'Inter', sans-serif; letter-spacing: .48px; text-transform: uppercase; color: #0e1401;
+}
+.jb-credit-pill:hover { background: #fff; box-shadow: none; color: #0e1401; }
+.jb-credit-value { color: #0e1401; font-weight: 400; }
+/* the avatar is the profile photo, 40px */
+.jb-top-avatar.jb-user-av {
+  width: 40px; height: 40px; border-radius: 50%; font-size: 0; color: transparent;
+  background: #f2f2f3 url('/demos/jobnova/img/job-detail/avatar.png') center / cover no-repeat;
+}
+.jb-fpill--saved { font: 400 16px/20px 'Inter', sans-serif; color: #5f5e5e; }
+
+/* ── Chatbot entry: the owl, 56px (JobNova redesign) ── */
+.nova-float-btn { width: 56px; height: 56px; padding: 0; background: transparent; overflow: hidden; box-shadow: 0 4px 12px rgba(1, 2, 20, .14), 0 0 0 1px rgba(1, 2, 20, .04); }
+.nova-float-btn.is-open { background: transparent; }
+.nova-float-owl { display: block; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; transition: opacity .2s ease, transform .3s cubic-bezier(.22, 1, .36, 1); }
+.nova-float-x { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #010214; color: #fff; opacity: 0; transform: scale(.6) rotate(-45deg); transition: opacity .2s ease, transform .3s cubic-bezier(.22, 1, .36, 1); }
+.nova-float-btn.is-open .nova-float-x { opacity: 1; transform: none; }
+.nova-float-btn.is-open .nova-float-owl { opacity: 0; transform: scale(.8); }
+
+/* credit: the same gradient bolt as the job detail page */
+.jb-credit-icon, .aa-cp-credits-icon { width: 12px; height: 16px; background: url('/demos/jobnova/img/job-detail/credit.svg') center / contain no-repeat; }
+.jb-credit-icon path, .aa-cp-credits-icon path { display: none; }
+
+/* ── Margins: the list sits 18px from the work area's edges, as on the job detail page ── */
+.jb-filters { padding: 0 0 4px; background: transparent; }
+.jb-main { overflow: visible; min-height: 0; }
+.jb-content-body { grid-template-rows: minmax(0, 1fr); }
+/* the scroller clips to its padding box: widen it by 18px per side (and give the foot room) so card shadows can spill outside the cards, then pull the cards back */
+.jb-list-scroll { padding: 8px 18px 28px; margin: 0 -18px; }
+
+/* a company with a real mark shows it as is; a title that opens the job reads as text */
+.jb-co-av.jb-co-av--img { background: none; object-fit: cover; border-radius: 0; }
+.jb-title-link { color: inherit; text-decoration: none; }
+.jb-title-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Top edges: the right-hand card starts at the same line as the search row (18px from the bar) */
+.aa-top-card { margin-top: 0; }
+
+/* Prototype: the credit alerts are not shown */
+.aa-alert { display: none; }
+
+/* Filter panel options: hover changes the background only, nothing moves */
+.jb-panel-item:hover,
+.jb-panel-check-row:hover,
+.jb-panel-radio-row:hover,
+.jb-loc-result-row:hover,
+.jb-loc-qpill:hover { transform: none; }
+
+/* Auto Apply settings icon, a touch larger */
+.aa-settings-btn svg { width: 18px; height: 18px; }
+
+/* real brand marks on a white tile */
+.jb-co-av.jb-co-av--mark { box-sizing: border-box; padding: calc(var(--sz, 36px) * .22); background: #fff; border: 1px solid var(--color-border-default, #e8e9f0); object-fit: contain; }
+
+/* One logo style everywhere: a white tile with a hairline. Companies without a mark show their initials in the same tile. */
+.jb-co-av:not(.jb-co-av--mark) { box-sizing: border-box; background: #fff; border: 1px solid var(--color-border-default, #e8e9f0); color: var(--co, #010214); }
+
+/* Referral: a hairline outline */
+.jb-ref-btn { border-width: 1px; }
+
+/* ── Live Workspace: new jobs slide in, the list makes room, the oldest leaves ── */
+.aa-row { display: grid; grid-template-rows: 1fr; }
+.aa-row-inner { min-height: 0; overflow: hidden; }
+.aa-row--in { animation: aa-row-in .55s cubic-bezier(.22, 1, .36, 1) both; }
+.aa-row--in .aa-item { animation: aa-item-in .55s cubic-bezier(.22, 1, .36, 1) both !important; }
+.aa-row--leaving { animation: aa-row-out .5s cubic-bezier(.45, 0, .1, 1) both; }
+@keyframes aa-row-in { from { grid-template-rows: 0fr; } to { grid-template-rows: 1fr; } }
+@keyframes aa-row-out { from { grid-template-rows: 1fr; opacity: 1; } to { grid-template-rows: 0fr; opacity: 0; } }
+@keyframes aa-item-in { from { opacity: 0; transform: translateY(-10px) scale(.98); } to { opacity: 1; transform: none; } }
+.aa-item.is-fresh { animation: aa-fresh 1.6s ease-out 0s 1 both !important; }
+@keyframes aa-fresh { 0% { background: rgba(176, 248, 9, .28); } 100% { background: transparent; } }
+.aa-status-badge { animation: aa-badge .35s ease both; }
+@keyframes aa-badge { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+.aa-pop { display: inline-block; animation: aa-pop .4s cubic-bezier(.22, 1, .36, 1); }
+@keyframes aa-pop { from { transform: translateY(-5px); opacity: .3; } to { transform: none; opacity: 1; } }
+.aa-row--in .aa-item.is-fresh { animation: aa-item-in .55s cubic-bezier(.22, 1, .36, 1) both, aa-fresh 1.6s ease-out both !important; }
+
+/* ── Right column: same side margins as the job detail page's chat ──
+   12px to the list, 18px to the window edge; its cards run the column's full width. */
+.jb-content-body { gap: 18px; }
+.aa-top-card, .aa-live-card { margin-left: 0; margin-right: 0; }
+
+/* Auto Apply started modal: primary button matches the dark pill buttons (Apply Now), larger */
+.aa-start-cta {
+  height: 48px; min-width: 160px; padding: 0 32px; border-radius: 999px;
+  background: #0e1401; color: #fff; font-size: 16px; font-weight: 500; letter-spacing: -.01em;
+}
+.aa-start-cta:hover { opacity: .88; }
+
+/* ── Floating Nova chat: same window as the job detail page's chat ── */
+.nova-float-panel {
+  width: 320px; height: min(520px, calc(100vh - 132px)); border-radius: 16px; background: #fff;
+  box-shadow: 0 12px 40px rgba(1, 2, 20, .16), 0 0 0 1px rgba(1, 2, 20, .04);
+}
+.nova-float-hd { display: flex; align-items: center; gap: 4px; padding: 12px; background: #fff; border-bottom: 1px solid #e8e9f0; }
+.nova-float-hd img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.nova-float-hd > span:not(.nova-float-online) { flex: 1; font: 400 14px/1.3 'Inter', sans-serif; letter-spacing: .2px; color: #0e1401; }
+.nova-float-close { width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: #5f5e5e; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background .15s; }
+.nova-float-close:hover { background: #f7f8f9; color: #010214; }
+.nova-float-body { flex: 1; min-height: 0; padding: 12px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; background: #fff; scrollbar-width: thin; }
+.nova-float-body > * { flex-shrink: 0; animation: jd-rise .4s cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes jd-rise { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+.nova-float-bubble { background: #f7f8f9; border: 0; border-radius: 8px; padding: 12px; font: 400 12px/16px 'Inter', sans-serif; letter-spacing: .2px; color: #010214; }
+.nova-float-bubble p { margin: 0 0 8px; }
+.nova-float-bubble p:last-child { margin-bottom: 0; }
+.nova-float-bubble strong { font-weight: 700; color: #010214; }
+.nova-float-chips { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; margin-top: auto; padding-top: 8px; }
+.nova-float-chip {
+  height: 28px; padding: 6px 12px; border-radius: 8px; border: 1px solid #e8e9f0; background: #f7f8f9; box-shadow: none; transform: none;
+  font: 400 12px/1.3 'Inter', sans-serif; letter-spacing: .2px; color: #010214; white-space: nowrap; cursor: pointer;
+  transition: background .15s, border-color .15s; animation: jd-rise .4s cubic-bezier(.22, 1, .36, 1) both;
+}
+.nova-float-chip:hover { background: rgba(176, 248, 9, .32); border-color: transparent; color: #010214; transform: none; }
+.nova-float-input-row { display: block; height: 103px; padding: 12px; border-top: .5px solid #f2f2f3; background: #fff; flex-shrink: 0; }
+.nova-float-input-row > div { height: 100%; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; border: 1px solid #f2f2f3; border-radius: 8px; padding: 6px 12px; transition: border-color .15s; }
+.nova-float-input-row > div:focus-within { border-color: #010214; }
+.nova-float-input { flex: 1; width: 100%; min-height: 0; resize: none; border: 0; outline: 0; background: transparent; font: 400 14px/20px 'Inter', sans-serif; color: #010214; padding: 0; }
+.nova-float-input::placeholder { color: #ccccd0; }
+.nova-float-send { display: inline-flex; align-items: center; width: auto; height: 20px; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: pointer; transition: opacity .15s; }
+.nova-float-send:disabled { opacity: .35; cursor: default; }
+.nova-float-send:hover { transform: none; }
+
+/* stat numbers: the digits roll upward to the new value */
+.aa-roll { display: inline-flex; font-variant-numeric: tabular-nums; }
+.aa-roll-col { display: inline-block; height: 1.2em; line-height: 1.2em; overflow: hidden; }
+.aa-roll-strip { display: flex; flex-direction: column; transition: transform .8s cubic-bezier(.22, 1, .36, 1); }
+.aa-roll-strip i { display: block; height: 1.2em; font-style: normal; }
+@media (prefers-reduced-motion: reduce) { .aa-roll-strip { transition: none; } }
+
+/* Live Workspace statuses: In-process / Queued / Submitted */
+.aa-s--queued { background: rgba(173, 245, 0, .12); color: #8aa23a; animation: none; }
+.aa-s--process { background: #b0f809; color: #010214; animation: none; }
+.aa-s--submitted { background: #f7f8f9; color: #929090; animation: aaAppliedStamp .32s cubic-bezier(.34, 1.56, 0.64, 1) both; }
+
+/* ── Auto Apply card: same as the Auto Apply page ── */
+.aa-top-card { padding: 18px; display: flex; flex-direction: column; gap: 16px; font-family: 'Inter', sans-serif; }
+.aa-top-card .aa-hd { padding: 0; min-height: 34px; display: flex; align-items: center; justify-content: space-between; }
+.aa-top-card .aa-hd-left { display: flex; align-items: center; gap: 12px; }
+.aa-bolt { width: 12px; height: 16px; background: url('/demos/jobnova/img/job-detail/credit.svg') center / contain no-repeat; flex-shrink: 0; }
+.aa-top-card .aa-hd-title { font: 400 14px/1.3 'Inter', sans-serif; letter-spacing: .2px; color: #000; }
+.aa-top-card .aa-hd-right { display: flex; align-items: center; gap: 4px; }
+.aa-steps--pill { display: flex; justify-content: space-between; align-items: center; padding: 4px 12px; border-radius: 21px; background: #f7f8f9; gap: 8px; }
+.aa-steps--pill .aa-step { gap: 4px; font: 400 12px/16px 'Plus Jakarta Sans', sans-serif; color: #787675; opacity: 1; }
+.aa-steps--pill .aa-step-dot { width: 8px; height: 8px; background: #d7f58a; }
+.aa-steps--pill .aa-step.is-active { color: #000; animation: none; }
+.aa-steps--pill .aa-step.is-active .aa-step-dot { background: #b0f809; }
+.aa-today-stats--two { padding-top: 0; height: 40px; align-items: center; gap: 17px; }
+.aa-today-stats--two .aa-tstat { padding: 6px 12px; border: 0; gap: 0; }
+.aa-today-stats--two .aa-tstat:first-child { padding-left: 12px; }
+.aa-today-stats--two .aa-tstat + .aa-tstat { position: relative; }
+.aa-today-stats--two .aa-tstat + .aa-tstat::before { content: ''; position: absolute; left: -9px; top: -1px; width: 1px; height: 41px; background: #f2f2f3; }
+.aa-today-stats--two .aa-tstat strong { font: 700 20px/normal 'DIN Alternate', 'Inter', sans-serif; color: #010214; }
+.aa-today-stats--two .aa-tstat:last-child strong { color: #e9b008; }
+.aa-today-stats--two .aa-tstat > span { font: 400 10px/normal 'Plus Jakarta Sans', sans-serif; text-transform: none; letter-spacing: 0; color: #787675; font-weight: 400; }
+.aa-tstat .aa-roll span, .aa-tstat .aa-roll i { font: inherit; color: inherit; text-transform: none; letter-spacing: inherit; }
+
+.jn-nav-badge { margin-left: auto; padding: 2px 8px; border-radius: 17px; background: #ffc107; color: #010214; font: 500 12px/16px 'Inter', sans-serif; }

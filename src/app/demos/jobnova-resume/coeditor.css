@@ -1,0 +1,252 @@
+/* Resume v2 — co-editing in place. Prefix .cv- (the original drawer uses .rv- and is untouched). */
+.cv { font-family: 'Inter', sans-serif; color: #010214; -webkit-font-smoothing: antialiased; background: #fff; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; height: min(860px, calc(100vh - 48px)); box-shadow: 0 24px 64px rgba(1,2,20,.12), 0 0 0 1px rgba(1,2,20,.04); }
+.cv *, .cv *::before, .cv *::after { box-sizing: border-box; }
+.cv :where(h1, h2, h3, h4, p, ul) { margin: 0; padding: 0; }
+.cv :where(button) { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+.cv button:focus-visible { outline: 2px solid #010214; outline-offset: 2px; }
+
+.cv-head { display: flex; align-items: center; padding: 20px 24px; border-bottom: 1px solid #f2f2f3; flex-shrink: 0; }
+.cv-close { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; margin-right: 12px; }
+.cv-head h2 { font: 600 18px/24px 'Inter', sans-serif; letter-spacing: -.36px; padding-left: 16px; border-left: 1px solid #e8e9f0; }
+.cv-for { margin-left: auto; font-size: 13px; color: #6b6c7a; }
+
+.cv-body { flex: 1; min-height: 0; display: flex; gap: 24px; padding: 18px; background: #f7f8f9; }
+.cv-left { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
+.cv-card { background: #fff; border-radius: 10px; flex-shrink: 0; }
+.cv-card h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; padding: 16px 20px; border-bottom: 1px solid #f2f2f3; font: 500 16px/20px 'Inter', sans-serif; }
+.cv-card h3 small { font: 400 12px/16px 'Inter', sans-serif; color: #6b6c7a; }
+
+/* Score: before → now → keep all */
+.cv-score { display: flex; align-items: center; gap: 18px; padding: 20px 18px; }
+.cv-ringbox { position: relative; width: 132px; height: 132px; flex-shrink: 0; }
+.cv-ring { width: 100%; height: 100%; }
+.cv-arc { transition: stroke-dasharray .7s cubic-bezier(.45,0,.1,1), stroke-dashoffset .7s cubic-bezier(.45,0,.1,1); }
+.cv-num { position: absolute; inset: 34% 0 auto 0; text-align: center; font: 500 30px/1 'Inter', sans-serif; }
+.cv-tag { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); font: 500 11px/1 'Inter', sans-serif; }
+.cv-compare { flex: 1; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.cv-compare > div { display: flex; align-items: center; gap: 8px; }
+.cv-compare b { margin-left: auto; font-weight: 600; font-variant-numeric: tabular-nums; }
+.cv-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.cv-dot.is-before { background: #fbbf24; }
+.cv-dot.is-now { background: #b0f809; }
+.cv-dot.is-possible { background: repeating-linear-gradient(135deg, #cfd0d6 0 2px, #fff 2px 4px); border: 1px solid #cfd0d6; }
+.cv-ats { align-self: flex-start; margin-top: 4px; padding: 4px 10px; border-radius: 999px; background: #fff4dc; color: #8a5a00; font: 500 12px/16px 'Inter', sans-serif; }
+.cv-ats.is-ok { background: rgba(176,248,9,.25); color: #010214; }
+
+/* ATS keywords */
+.cv-chips { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 20px 8px; }
+.cv-chips li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 8px; font: 400 12px/16px 'Inter', sans-serif; }
+.cv-chips li.is-on { background: rgba(176,248,9,.25); }
+.cv-chips li.is-soon { background: #f7f8f9; color: #41414f; }
+.cv-chips li.is-off { background: #fff; border: 1px dashed #ccccd0; color: #41414f; }
+.cv-chips li button { padding: 1px 8px; border-radius: 6px; background: #010214; color: #fff; font-size: 11px; }
+.cv-note { padding: 0 20px 14px; font-size: 12px; color: #6b6c7a; }
+
+/* What changed */
+.cv-change { border-bottom: 1px solid #f2f2f3; }
+.cv-change:last-child { border-bottom: 0; }
+.cv-change-head { width: 100%; display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; padding: 14px 20px; text-align: left; }
+.cv-change-head:hover { background: #fafafb; }
+.cv-n { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; padding: 2px 6px; border-radius: 10px; background: #b0f809; font-size: 12px; line-height: 16px; }
+.cv-change-t { font: 500 14px/20px 'Inter', sans-serif; }
+.cv-state { font-size: 12px; color: #8a5a00; white-space: nowrap; }
+.cv-state.is-done { color: #6b6c7a; }
+.cv-change-b { padding: 0 20px 14px 48px; font-size: 13px; line-height: 19px; color: #41414f; }
+
+/* Resume */
+.cv-paper-wrap { position: relative; flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: #fff; border-radius: 10px; overflow: hidden; }
+.cv-paper { --s: 1.25; position: relative; flex: 1; min-height: 0; overflow-y: auto; padding: 36px 56px 96px; display: flex; flex-direction: column; gap: 18px; align-items: center; }
+.cv-top { text-align: center; display: flex; flex-direction: column; gap: 4px; }
+.cv-top h1 { font: 500 calc(24px * var(--s)) / 1.2 'Inter', sans-serif; }
+.cv-top p { font: 400 calc(12px * var(--s)) / 1.4 'Inter', sans-serif; color: #41414f; }
+.cv-doc { width: 100%; max-width: 760px; display: flex; flex-direction: column; gap: 22px; }
+.cv-doc section { display: flex; flex-direction: column; gap: 6px; }
+.cv-doc h4 { font: 600 calc(14px * var(--s)) / 1.4 'Inter', sans-serif; padding-bottom: 3px; border-bottom: 1px solid #e8e9f0; }
+.cv-serif { font: 400 calc(12px * var(--s)) / 1.35 'Times New Roman', Times, serif; }
+.cv-ul { padding-left: calc(18px * var(--s)) !important; display: flex; flex-direction: column; gap: 6px; list-style: disc; }
+.cv-row { display: flex; justify-content: space-between; gap: 12px; font: 700 calc(12px * var(--s)) / 1.3 'Inter', sans-serif; }
+.cv-row.is-italic { font: italic 400 calc(12px * var(--s)) / 1.3 'Times New Roman', Times, serif; }
+.cv-exp { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+
+/* A block: the rewrite reads as finished text, new words marked as the original drawer marks them */
+.cv-block { position: relative; display: block; border-radius: 4px; transition: background .3s; }
+.cv-block.is-flash { background: rgba(176,248,9,.18); }
+.cv-doc { outline: none; caret-color: #010214; }
+.cv-text { display: inline; }
+.cv-text mark { background: rgba(176,248,9,.34); color: inherit; border-radius: 3px; transition: background .25s; }
+.cv.hide-marks .cv-text mark { background: transparent; }
+.cv-text .cv-slot { background: #fff4dc; color: #8a5a00; border-radius: 3px; font-family: 'Inter', sans-serif; font-size: .85em; }
+.cv-sec { position: relative; }
+.cv-pin { position: absolute; left: -30px; top: 4px; display: inline-flex; align-items: center; justify-content: center; min-width: 20px; padding: 2px 6px; border-radius: 10px; background: #b0f809; font: 400 12px/16px 'Inter', sans-serif; }
+
+/* Selection → Ask Nova */
+.cv-pop { position: absolute; z-index: 3; transform: translate(-50%, calc(-100% - 10px)); display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 10px; background: #010214; color: #fff; box-shadow: 0 8px 24px rgba(1,2,20,.2); font: 400 12px/16px 'Inter', sans-serif; white-space: nowrap; }
+.cv-pop > span { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px 0 8px; color: #b0f809; font-weight: 500; }
+.cv-pop img { filter: invert(1); }
+.cv-pop button { padding: 5px 10px; border-radius: 7px; color: #fff; }
+.cv-pop button:hover { background: rgba(255,255,255,.12); }
+.cv-pop button:disabled { opacity: .35; cursor: not-allowed; }
+
+.cv-dl { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 12px 24px 14px; background: rgba(255,255,255,.8); backdrop-filter: blur(6px); }
+.cv-warn { margin-right: auto; font-size: 12px; color: #8a5a00; }
+.cv-btn { background: #010214; color: #fff; padding: 8px 18px; border-radius: 33px; font-size: 12px; }
+.cv-btn:disabled { opacity: .4; cursor: not-allowed; }
+.cv-icon { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #fff; border: 1px solid #e8e9f0; box-shadow: 0 4px 12px rgba(1,2,20,.14); }
+
+@media (max-width: 1024px) {
+  .cv { height: auto; }
+  .cv-body { flex-direction: column; }
+  .cv-left { width: 100%; overflow: visible; }
+  .cv-paper { overflow: visible; padding: 24px 28px 88px; }
+}
+@media (max-width: 480px) {
+  .cv-for { display: none; }
+  .cv-score { flex-direction: column; }
+  .cv-paper { padding: 20px 18px 88px; }
+  .cv-row { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) { .cv-arc, .cv-block { transition: none; } }
+
+.cv-jump { font-size: 14px; line-height: 20px; margin-bottom: 4px !important; }
+.cv-jump b { margin: 0 !important; }
+.cv-chev { transition: transform .2s; color: #41414f; }
+.cv-chev.is-open { transform: rotate(180deg); }
+.cv-change-head { grid-template-columns: auto 1fr auto; }
+.cv-hint { margin-right: auto; font-size: 12px; color: #6b6c7a; }
+.cv-toast { margin-right: auto; display: inline-flex; align-items: center; gap: 10px; padding: 6px 6px 6px 12px; border-radius: 999px; background: #010214; color: #fff; font-size: 12px; }
+.cv-toast button { padding: 3px 10px; border-radius: 999px; background: #b0f809; color: #010214; font-weight: 500; }
+
+.cv-switch { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: #41414f; cursor: pointer; user-select: none; }
+.cv-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.cv-switch span { position: relative; width: 30px; height: 18px; border-radius: 999px; background: #dcdde2; transition: background .2s; }
+.cv-switch span::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(1,2,20,.2); transition: transform .2s; }
+.cv-switch input:checked + span { background: #b0f809; }
+.cv-switch input:checked + span::after { transform: translateX(12px); }
+.cv-switch input:focus-visible + span { outline: 2px solid #010214; outline-offset: 2px; }
+.cv-paper ::selection { background: rgba(1,2,20,.14); }
+
+/* Selection → Ask Nova, as Notion places it: a field for any instruction, then the common edits */
+.cv-ask { position: absolute; z-index: 4; width: 320px; display: flex; flex-direction: column; gap: 6px; font: 400 14px/20px 'Inter', sans-serif; }
+.cv-ask-field { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 12px; background: #fff; border-radius: 10px; box-shadow: 0 8px 28px rgba(1,2,20,.14), 0 0 0 1px rgba(1,2,20,.06); }
+.cv-ask-field svg { color: #010214; flex-shrink: 0; }
+.cv-ask-field input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; color: #010214; }
+.cv-ask-field input::placeholder { color: #9a9aa6; }
+.cv-ask-go { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #b0f809; color: #010214; }
+.cv-ask-go:disabled { background: #f2f2f3; color: #9a9aa6; cursor: default; }
+.cv-menu { background: #fff; border-radius: 10px; padding: 6px; box-shadow: 0 8px 28px rgba(1,2,20,.14), 0 0 0 1px rgba(1,2,20,.06); }
+.cv-menu-h { padding: 6px 10px 4px; font-size: 12px; color: #6b6c7a; }
+.cv-menu button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 7px; text-align: left; color: #010214; }
+.cv-menu button svg { width: 16px; height: 16px; color: #41414f; flex-shrink: 0; }
+.cv-menu button:hover:not(:disabled), .cv-menu button:focus-visible { background: #f2f2f3; outline: none; }
+.cv-menu button:disabled { color: #b4b4bd; cursor: default; }
+.cv-menu button:disabled svg { color: #cfd0d6; }
+.cv-more { margin-left: auto; }
+.cv-sub-wrap { position: relative; }
+.cv-sub { position: absolute; left: calc(100% + 4px); top: -6px; width: 170px; }
+.cv-sw { width: 8px; height: 8px; border-radius: 50%; background: #b0f809; margin: 0 4px; flex-shrink: 0; }
+::highlight(nova-sel) { background: rgba(176,248,9,.45); }
+.cv-chips-row { display: flex; gap: 6px; }
+.cv-chips-row button { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px; background: #fff; box-shadow: 0 4px 14px rgba(1,2,20,.10), 0 0 0 1px rgba(1,2,20,.06); font: 400 12px/16px 'Inter', sans-serif; color: #010214; white-space: nowrap; }
+.cv-chips-row button svg { color: #41414f; }
+.cv-chips-row button:hover:not(:disabled) { background: #f7f8f9; }
+.cv-chips-row button:disabled { color: #b4b4bd; cursor: default; }
+.cv-chips-row button:disabled svg { color: #cfd0d6; }
+.cv-ask.is-up { flex-direction: column-reverse; }
+
+/* Score card, as the original drawer draws it (.rv-score-card) */
+.cv-score { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 24px 18px; }
+.cv-ringbox { position: relative; width: 146px; height: 146px; flex-shrink: 0; }
+.cv-num { position: absolute; inset: 31.51% 0 auto 0; display: flex; justify-content: center; font: 500 32px/normal 'Inter', sans-serif; }
+.cv-tag { position: absolute; left: 50%; transform: translateX(-50%); top: 60.27%; padding: 2px 12px; border-radius: 23px; background: rgba(176,248,9,.2); font: 500 11px/normal 'Inter', sans-serif; }
+.cv-score-copy { width: 184px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.cv-score-copy p { font: 400 14px/20px 'Inter', sans-serif; }
+.cv-score-copy b { font-weight: 600; }
+.cv-score-copy b.is-bold { font-weight: 700; }
+.cv-score-copy .cv-ats { margin-top: 0; }
+.cv-arc { transition: stroke-dasharray .9s cubic-bezier(.45,0,.1,1), stroke-dashoffset .9s cubic-bezier(.45,0,.1,1); }
+@media (max-width: 480px) { .cv-score { flex-direction: column; } .cv-score-copy { width: auto; } }
+
+/* ════════════ Motion ════════════ */
+/* Lines Nova has not reached yet: the original, dimmed, with a light passing over it */
+.cv-block.is-waiting .cv-text { color: transparent; background: linear-gradient(90deg, #a9aab4 0%, #a9aab4 40%, #e6e7eb 50%, #a9aab4 60%, #a9aab4 100%) 0 0 / 300% 100%; -webkit-background-clip: text; background-clip: text; animation: cv-sheen 1.6s linear infinite; }
+@keyframes cv-sheen { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+/* Nova working on a selection: a lime sweep before the new words land */
+.cv-block.is-working { background: linear-gradient(90deg, rgba(176,248,9,0) 0%, rgba(176,248,9,.35) 50%, rgba(176,248,9,0) 100%) 0 0 / 200% 100%; animation: cv-sweep .52s ease-in-out; }
+@keyframes cv-sweep { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.cv-block.is-flash { animation: cv-flash 1.4s ease-out; background: none; }
+@keyframes cv-flash { 0% { background: rgba(176,248,9,.35); } 100% { background: rgba(176,248,9,0); } }
+
+/* Score card while generating */
+.cv.is-busy .cv-spark { animation: cv-spark 1.2s ease-in-out infinite; }
+@keyframes cv-spark { 50% { transform: rotate(14deg) scale(1.12); opacity: .7; } }
+.cv-copy { animation: cv-in .35s ease both; }
+.cv-progress { display: block; margin-top: 4px; font-size: 12px; color: #6b6c7a; font-variant-numeric: tabular-nums; }
+.cv-num { font-variant-numeric: tabular-nums; }
+.cv-tag { animation: cv-pop .4s cubic-bezier(.22,1.4,.36,1) both; }
+.cv-ats { animation: cv-in .35s ease both; }
+
+/* Change summary and pins arrive one by one */
+.cv-change { animation: cv-drop .4s cubic-bezier(.22,1,.36,1) both; }
+@keyframes cv-drop { from { opacity: 0; transform: translateY(-6px); } }
+.cv-sk-list { display: grid; gap: 10px; padding: 16px 20px; }
+.cv-sk-list i { height: 12px; border-radius: 6px; background: #eef0f2; animation: cv-pulse 1.4s ease-in-out infinite; }
+.cv-sk-list i:nth-child(2) { width: 82%; animation-delay: .15s; }
+.cv-sk-list i:nth-child(3) { width: 64%; animation-delay: .3s; }
+@keyframes cv-pulse { 50% { opacity: .45; } }
+.cv-pin { opacity: 0; scale: .6; transition: opacity .3s ease, scale .4s cubic-bezier(.22,1.4,.36,1); }
+.cv-pin[data-on] { opacity: 1; scale: 1; }
+
+/* ATS keywords: a matched chip pops as it turns lime */
+.cv-chips li { transition: background-color .3s ease, border-color .3s ease; }
+.cv.is-done .cv-chips li.is-on { animation: cv-pop .45s cubic-bezier(.22,1.4,.36,1) both; }
+@keyframes cv-pop { from { transform: scale(.88); } 60% { transform: scale(1.06); } }
+
+/* Nova panel, toast, download bar */
+.cv-ask { animation: cv-rise .16s ease-out both; transform-origin: top left; }
+.cv-ask.is-up { transform-origin: bottom left; }
+@keyframes cv-rise { from { opacity: 0; transform: translateY(4px) scale(.98); } }
+.cv-menu:not(.cv-sub) { animation: cv-in .14s ease-out both; }
+.cv-sub { animation: cv-slide .14s ease-out both; }
+@keyframes cv-slide { from { opacity: 0; transform: translateX(-4px); } }
+.cv-toast { animation: cv-up .28s cubic-bezier(.22,1,.36,1) both; }
+@keyframes cv-up { from { opacity: 0; transform: translateY(8px); } }
+@keyframes cv-in { from { opacity: 0; } }
+.cv-dl { transition: opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1); }
+.cv-dl:not([data-on]) { opacity: 0; transform: translateY(10px); pointer-events: none; }
+.cv-btn, .cv-icon, .cv-chips-row button, .cv-menu button, .cv-chips li button { transition: background-color .15s, transform .12s, opacity .15s; }
+.cv-btn:active:not(:disabled), .cv-icon:active, .cv-chips-row button:active:not(:disabled), .cv-chips li button:active { transform: scale(.95); }
+.cv-icon:hover img { animation: cv-spark .8s ease-in-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cv *, .cv *::before, .cv *::after { animation: none !important; transition: none !important; }
+  .cv-block.is-waiting .cv-text { color: #a9aab4; background: none; }
+}
+.cv-ring .cv-arc { transition: none; } /* the tween drives the ring with the number */
+
+/* ════════════ As a drawer: the original's geometry (.rv-root / .rv-drawer) ════════════ */
+.cv-root { position: fixed; inset: 0; z-index: 50; pointer-events: none; }
+.cv-root.is-open { pointer-events: auto; }
+.cv-scrim { position: absolute; inset: 0; background: rgba(255,255,255,.12); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); opacity: 0; transition: opacity .3s; }
+.cv-root.is-open .cv-scrim { opacity: 1; }
+.cv-drawer { position: absolute; top: 18px; right: 18px; bottom: 18px; width: min(1280px, calc(100vw - 36px)); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 64px rgba(1,2,20,.12), 0 0 0 1px rgba(1,2,20,.04); transform: translateX(calc(100% + 36px)); transition: transform .35s cubic-bezier(.22,.8,.3,1); }
+.cv-root.is-open .cv-drawer { transform: none; }
+.cv-drawer > .cv { height: 100%; border-radius: 0; box-shadow: none; }
+.cv-close { border-radius: 8px; transition: background .15s; }
+.cv-close:hover:not(:disabled) { background: #f2f2f3; }
+.cv-close:disabled { cursor: default; }
+@media (max-width: 1024px) { .cv-drawer { inset: 0; width: 100%; border-radius: 0; } .cv-drawer > .cv { overflow-y: auto; } }
+@media (prefers-reduced-motion: reduce) { .cv-drawer, .cv-scrim { transition: none; } }
+
+/* The numbers in the score sentence carry the ring's colours: amber = your resume (the original drawer's colour), lime = after tailoring */
+.cv-score-copy b.cv-from, .cv-score-copy b.cv-to { display: inline-block; padding: 0 6px; border-radius: 6px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 20px; }
+.cv-score-copy b.cv-from { background: rgba(251,191,36,.3); color: #7a4b00; }
+.cv-score-copy b.cv-to { background: rgba(176,248,9,.45); color: #010214; }
+
+/* While text is selected, Nova's marks step aside so the selection is the only thing highlighted */
+.cv.is-selecting .cv-text mark { background: transparent; }
+
+/* Opened above the selection: anchored by its bottom edge, so typing (which filters the list) never lifts it away */
+.cv-ask.is-up { transform: translateY(-100%); }
+.cv-ask.is-up { animation-name: cv-rise-up; }
+@keyframes cv-rise-up { from { opacity: 0; transform: translateY(calc(-100% + 4px)) scale(.98); } }
