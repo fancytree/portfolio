@@ -19,13 +19,13 @@ Agent workflow 使用共享 `CaseWorkflow` 的三个阶段切换：Intent routin
 
 用户本轮确认采集、Project、AI 评估、Outreach 和 Sequence 均已上线；旧稿四组百分比来源待核对，新页全部留位、不显示。研究原件、最终权重校验、QA 和结果证据在页内标识，详细补充清单位于 `docs/case-studies/connectnova-kit-evidence.md`。界面计数、模拟执行和排名分数不作为业务成效。页面为 noindex 草稿，文末使用自动唯一 CaseEnd。
 
-## JobNova 新叙事草稿
+## JobNova 案例
 
-`/projects/jobnova-kit` 独立于现有 Jobnova 案例，原页面保留，作品集首页及 Work 列表入口现指向新页。新页使用 My role、Research & reframing、Workflow strategy、Explain the fit、Review the changes、Govern the action、Follow the outcome、System & delivery、Results、Reflection 十章。参考 DEF ERP 的证据阅读节奏，按求职 Agent 的解释、审核、授权、反馈组织主线。个人身份为用户确认的 Founding Designer；不将模型架构和后端实现归于本人。
+`/projects/jobnova-kit` 是作品集首页及 Work 列表的 JobNova 入口。2026-11-19 改为设计迭代叙事，九章：01 Context、02 The first version、03 What we learned、04 Resume review: V1、05 Resume review: V2、06 Tracking: V1、07 Tracking: V2、08 Results、09 Next。主线是“上线 → 数据与反馈 → 在两个模块上迭代 → 结果 → 下一轮”，不用 Redesign 一词，统一叫 V1/V2、Iterated。03 章点明平台模块很多，只跟踪流失最多的两个。01 章用动态双泳道流程图（`JobnovaFlow.tsx`）讲产品怎么运作：上排 JobNova 的四步，下排每步里用户的控制点，进入视口才播放，悬停暂停，减少动态时直接显示完成态。02 章讲第一版（`JobnovaFirstVersion.tsx`）：五步设计流程（调研、结构、规则、系统、测试，各写产出），加一张架构图：共享资料（Profile、基础简历、Job preference）下接匹配、简历定制、Auto Apply 规则、追踪四个模块，配第一版截图和各模块的页面组成，迭代的两个模块标 Iterated in 04–05 / 06–07 并写明卡点。03 章用 `JobnovaCharts.tsx` 的 CompareBars（打开 Editor 17%、下载 58%）和 ShareGrid（~40k 申请中 4.1% 收到面试邀请）。04、06 章是 V1 问题章：`JobnovaAnnotated.tsx` 在 V1 截图上放编号标注点（悬停与右侧说明互相高亮，标注点避开所指文字），标注只描述界面；用户原话转述放在 Heard 里，06 章再加每日查看 1–3 次和两类失败原因；章末一句 Goal for V2。05、07 章是 V2：V1/V2 对比滑块 → 三张设计决定 → 可操作演示，05 章末 CompareBars 给出下载率 V1 58% → V2 74%（上线 40+ 天，截至 2026 年 6 月）。08 章汇总结果并注明追踪 V2 已上线、尚未测量；09 章写下一步测量什么和三条可带走的原则。图表配色经 dataviz 校验：灰 #8c8e99 为 V1，深明黄 #5f9a00 为 V2，数值直接标在条旁。证据只用用户提供的反馈与数据；失败主因是缺用户才能填的信息和人机验证，需用户处理的事项有邮件提醒。旧报告的 88.21% 成功率未经确认，不使用。个人身份为 Founding Designer；不将模型架构和后端实现归于本人。
 
-共享图标卡说明职责和人机分工，匹配、简历审核、权限设置、申请跟踪、设计系统截图及两段既有录屏支持决策。录屏为演示，界面示例计数不充当成果。截图直接展示并保留图注，不提供 View full size 入口；视频进入视口后播放、离开后暂停。四项工作流和待补结果卡使用共享 `CaseEvidenceCards layout="pairs"`，768px 起两列，手机一列。
+两段 V2 各按「V1/V2 对比滑块 → 三张设计决定 → 可操作演示」排列；决定从求职者角度写，每张带 Evidence（上述反馈与数据）和 Cost，文案在 `jobnova-kit/iteration.ts`，复用采购案例的 DecisionCards 与 DEF 的 BeforeAfterSlider。原型的失败原因已对齐真实情况（人机验证、缺少薪资/到岗时间等信息），JobNova 仓库与 `_jn` 副本同步。截图取自 JobNova 原型仓库的 v2 路由（`/jobs/detail-v2`、`/jobs/auto-apply-v2`），位于 `public/img/jobnova/v2`、`public/videos/jobnova/v2`。05 章的简历演示不再是录屏，而是可操作的自动导航演示：`/demos/jobnova-resume` 是从 JobNova 原型复制过来的协作编辑器（裸舞台），由 DEF 案例的 LiveShowcase 驱动四段脚本（改写、选中后让 Nova 改、补关键词、像文档一样编辑），指针进入即交给访客。决定卡用 `JobnovaDecisions` 换成 JobNova 的黑与明黄；Pipeline 的原型录屏也换成自动导航演示：`/demos/jobnova-pipeline` 把 JobNova 原型的 `/jobs/auto-apply-v2` 连同依赖复制进私有目录 `_jn`（图片改到 `public/demos/jobnova/img`，原仓库不动），五段脚本：概览、Pipeline、进行中、修复失败、日历。评分圆环的起始分数颜色改回原版抽屉的琥珀色 #fbbf24，句中「5.2 / 7.7」用圆环同色底标出。
 
-用户授权暂用旧报告数字，稍后与开发核对。1,240 注册用户和 8,700+ 完成申请标为历史总量；263 新用户、179 完成设置、51 开启 Auto Apply 属于旧报告中的 30 天 cohort，结果沿用同一定义的 68.06% 和 19.39%。不将上线 cohort 当成改版前基线，不混合总量与 cohort 分母，不把采用率或执行成功率解释成信任，不声称设计造成净增长。报告日期和当前值待刷新。研究原件、QA 实例和当前增长/留存等缺口在页内留位，完整填写表位于 `docs/case-studies/jobnova-kit-evidence.md`。新页标为草稿并设置 noindex。
+旧报告的 cohort 数字（1,240 注册、68.06%、19.39% 等）不再出现在页内，旧十章版本的证据表仍在 `docs/case-studies/jobnova-kit-evidence.md`。不把采用率解释成信任，也不声称设计造成净增长。页面仍设置 noindex。
 
 ## 发布入口与阅读规则
 

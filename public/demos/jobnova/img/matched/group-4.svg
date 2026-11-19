@@ -1,0 +1,24 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="22.149" height="22.2373" viewBox="0 0 22.149 22.2373" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group" filter="url(#filter0_di_0_389)">
+<path id="Vector" d="M17.8924 1.24113H4.25655C3.50513 1.24113 2.89598 1.85357 2.89598 2.60905V16.3185C2.89598 17.074 3.50513 17.6865 4.25655 17.6865H17.8924C18.6439 17.6865 19.253 17.074 19.253 16.3185V2.60905C19.253 1.85357 18.6439 1.24113 17.8924 1.24113Z" fill="#107C41"/>
+<path id="Vector_2" d="M7.15965 13.9064L9.99166 9.45813L7.3612 5.00989H9.47764L10.9088 7.84705C11.0398 8.11049 11.1305 8.31313 11.1809 8.44485C11.2716 8.23209 11.3724 8.01929 11.4731 7.81665L13.0051 5.00989H14.9501L12.2694 9.45813L15.0308 13.9469H13.0151L11.3522 10.8362C11.2766 10.7035 11.2126 10.5645 11.1607 10.4207C11.1126 10.5628 11.0483 10.6988 10.9693 10.8261L9.17532 13.9064H7.15965Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_di_0_389" x="0" y="0" width="22.149" height="22.2373" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="1.65485"/>
+<feGaussianBlur stdDeviation="1.44799"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_389"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_389" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dx="1.24114" dy="1.24114"/>
+<feGaussianBlur stdDeviation="1.03428"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="shape" result="effect2_innerShadow_0_389"/>
+</filter>
+</defs>
+</svg>

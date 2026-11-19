@@ -4,7 +4,7 @@ import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseS
 import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
 import FragmentedOperationsDiagram from './FragmentedOperationsDiagram';
 import UnifiedOperationsDiagram from './UnifiedOperationsDiagram';
-import BeforeAfterSlider from '../def-erp/BeforeAfterSlider';
+import BeforeAfterSlider from './BeforeAfterSlider';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
 import DashboardLiveDemo from './DashboardLiveDemo';
 import DesignSystemShowcase from './DesignSystemShowcase';

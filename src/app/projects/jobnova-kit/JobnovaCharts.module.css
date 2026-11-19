@@ -1,0 +1,33 @@
+.chart { margin: 0; padding: var(--case-space-24, 24px); border-radius: 20px; background: #fff; box-shadow: 0 0 0 1px #eceef1, 0 18px 40px -30px rgb(1 2 20 / .3); font-family: var(--case-font-body); color: #010214; min-width: 0; }
+.title { margin-bottom: 16px; font-size: 13px; font-weight: 600; color: #6b6c7a; }
+
+/* Compare bars */
+.rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.row { display: grid; grid-template-columns: minmax(120px, 34%) 1fr 48px; gap: 12px; align-items: center; font-size: 14px; line-height: 20px; }
+.rowLabel { color: #41414f; }
+.track { height: 12px; border-radius: 6px; background: #f2f2f3; overflow: hidden; }
+.track i { display: block; height: 100%; border-radius: 6px; }
+.before { background: #8c8e99; }
+.after { background: #5f9a00; }
+.value { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+.note { display: block; margin: 14px 0 0; font-size: 12px; line-height: 17px; color: #6b6c7a; }
+
+/* Share of 100 */
+.share { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; }
+.grid { display: grid; grid-template-columns: repeat(10, 12px); gap: 3px; }
+.grid i { width: 12px; height: 12px; border-radius: 3px; background: #e6e8ec; }
+.grid i.on { background: #5f9a00; }
+.shareText { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.big { font-size: 34px; line-height: 40px; font-weight: 600; letter-spacing: -.02em; }
+.shareLabel { font-size: 14px; line-height: 20px; color: #41414f; }
+
+/* What people told us */
+.heard { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.heard li { position: relative; padding: 10px 12px 10px 30px; border-radius: 12px; background: #f7f8f9; font-size: 14px; line-height: 20px; }
+.heard li::before { content: ''; position: absolute; left: 12px; top: 17px; width: 7px; height: 7px; border-radius: 50%; background: #b0f809; }
+
+@media (max-width: 640px) {
+  .row { grid-template-columns: 1fr 44px; }
+  .rowLabel { grid-column: 1 / -1; }
+  .share { grid-template-columns: 1fr; }
+}

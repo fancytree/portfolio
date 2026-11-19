@@ -1,0 +1,405 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║            JOBNOVA DESIGN SYSTEM TOKENS                      ║
+ * ║   Source of truth — all values derived from Figma variables  ║
+ * ║   File: JobNova-Redesign (HKaPDw3kBZgRTzFBxX0Mas)           ║
+ * ╚══════════════════════════════════════════════════════════════╝
+ */
+
+:root {
+
+  /* ─────────────────────────────────────────
+     TIER 1 — GLOBAL PALETTE (raw values)
+     Never use these directly in components.
+     Reference them via alias tokens below.
+  ───────────────────────────────────────── */
+
+  /* Lime / Brand Green */
+  --palette-lime-400:   #b0f809;   /* primary brand accent */
+  --palette-lime-300:   #c7f22d;   /* lighter lime (badges) */
+  --palette-lime-dark:  #73a605;   /* dark lime — green text */
+  --palette-lime-darker:#3a5c00;   /* darkest lime — status text */
+
+  /* Indigo / Secondary */
+  --palette-indigo-400: #818cf8;
+  --palette-indigo-500: #6366f1;
+  --palette-indigo-600: #4f46e5;
+  --palette-indigo-700: #4338ca;
+
+  /* Neutral / Gray */
+  --palette-black:      #09090b;
+  --palette-gray-900:   #111827;
+  --palette-gray-800:   #1c1917;
+  --palette-gray-700:   #374151;
+  --palette-gray-600:   #525558;
+  --palette-gray-500:   #787675;
+  --palette-gray-400:   #84888b;
+  --palette-gray-300:   #afafbc;
+  --palette-gray-200:   #d0d1da;
+  --palette-gray-100:   #e7e8e9;
+  --palette-gray-50:    #f3f4f6;
+  --palette-white:      #ffffff;
+
+  /* Surface / Background */
+  --palette-surface:    var(--palette-white);   /* alias — identical to white */
+  --palette-surface-muted:  #f4f4f5;
+  --palette-surface-subtle: #fafafa;
+  --palette-bg:         #f9fafb;
+  --palette-bg-light:   #f6fee2;
+
+  /* State — Green (remote / success) */
+  --palette-green-700:  #15803d;
+  --palette-green-600:  #16a34a;
+  --palette-green-100:  #f0fdf4;
+
+  /* State — Blue (hybrid / info) */
+  --palette-blue-700:   #1d4ed8;
+  --palette-blue-600:   #2563eb;
+  --palette-blue-100:   #eff6ff;
+
+  /* State — Amber (onsite / warning) */
+  --palette-amber-700:  #b45309;
+  --palette-amber-600:  #d97706;
+  --palette-amber-100:  #fffbeb;
+  --palette-amber-800:  #a16207;
+
+  /* State — Rose (saved / danger) */
+  --palette-rose-600:   #e11d48;
+  --palette-rose-100:   #fff1f2;
+  --palette-rose-200:   #ffe4e6;
+
+  /* State — Orange (hot / alert) */
+  --palette-orange-700: #c2410c;
+  --palette-orange-100: #fff7ed;
+
+  /* LinkedIn */
+  --palette-linkedin:   #0a66c2;
+  --palette-linkedin-bg:#e8f0fe;
+
+  /* Live / Online */
+  --palette-live:       #22c55e;
+
+
+  /* ─────────────────────────────────────────
+     TIER 2 — ALIAS TOKENS (semantic)
+     These are what components use.
+  ───────────────────────────────────────── */
+
+  /* ── Color / Brand ────────────────────── */
+  --color-main-default:   var(--palette-lime-400);      /* primary accent */
+  --color-main-disable:   var(--palette-gray-100);      /* disabled state  */
+
+  /* ── Color / Surface ──────────────────── */
+  --color-surface:        var(--palette-surface);        /* card / panel bg         */
+  --color-surface-muted:  var(--palette-surface-muted);  /* slightly off-white bg   */
+  --color-surface-subtle: var(--palette-surface-subtle); /* near-white / chat bg    */
+  --color-nav-bg:         rgba(255, 255, 255, 0.85);     /* frosted-glass nav       */
+
+  /* ── Color / Background ───────────────── */
+  --color-bg:             var(--palette-bg);          /* page background        */
+  --color-bg-light:       var(--palette-bg-light);    /* brand-tinted surface   */
+  --color-bg-neutral:     var(--palette-gray-50);     /* neutral light surface  */
+
+  /* ── Color / Text ─────────────────────── */
+  --color-text-default:       var(--palette-black);       /* primary text          */
+  --color-text-second:        var(--palette-gray-600);    /* secondary text        */
+  --color-text-second-2:      var(--palette-gray-400);    /* tertiary / muted text */
+  --color-text-white:         var(--palette-white);       /* inverse text          */
+  --color-text-placeholder:   var(--palette-gray-300);    /* placeholder           */
+  --color-text-green:         var(--palette-lime-dark);   /* green accent text     */
+  --color-text-green-dark:    var(--palette-lime-darker); /* dark green status     */
+  --color-text-on-green:      #424a34;                    /* text on lime surface  */
+
+  /* ── Color / Secondary (Indigo) ──────── */
+  --color-secondary-text:    var(--palette-indigo-500);  /* indigo labels     */
+  --color-secondary-default: var(--palette-indigo-400);  /* indigo default    */
+  --color-secondary-icon-bg: rgba(99, 102, 241, 0.10);   /* indigo icon bg    */
+
+  /* ── Color / State ────────────────────── */
+  --color-state-red:    #f44336;                        /* error / danger       */
+  --color-state-orange: #ffc107;                        /* warning              */
+
+  /* Work-mode & filter pill states */
+  --color-remote:         var(--palette-green-600);
+  --color-remote-bg:      var(--palette-green-100);
+  --color-remote-hover:   var(--palette-green-700);
+
+  --color-hybrid:         var(--palette-blue-600);
+  --color-hybrid-bg:      var(--palette-blue-100);
+  --color-hybrid-hover:   var(--palette-blue-700);
+
+  --color-onsite:         var(--palette-amber-600);
+  --color-onsite-bg:      var(--palette-amber-100);
+  --color-onsite-hover:   var(--palette-amber-700);
+
+  --color-saved-pill:       var(--palette-rose-600);
+  --color-saved-pill-bg:    var(--palette-rose-100);
+  --color-saved-pill-hover: var(--palette-rose-200);
+
+  --color-referral:       var(--palette-indigo-600);
+  --color-referral-bg:    #eef2ff;
+  --color-referral-hover: var(--palette-indigo-700);
+
+  --color-warning-bg:   rgba(255, 193, 7, 0.12);
+  --color-warning-text: var(--palette-amber-800);
+
+  /* ── Color / LinkedIn ─────────────────── */
+  --color-linkedin:     var(--palette-linkedin);
+  --color-linkedin-bg:  var(--palette-linkedin-bg);
+
+  /* ── Color / Live / Online ────────────── */
+  --color-live:         var(--palette-live);
+
+  /* ── Color / Hot badge ────────────────── */
+  --color-hot-bg:       var(--palette-orange-100);
+  --color-hot-text:     var(--palette-orange-700);
+
+  /* ── Color / Nova chat ────────────────── */
+  --color-nova-header:  #18181b;
+
+  /* ── Color / UI Grays (inputs / search) ─ */
+  --color-ui-placeholder: #ccccd0;
+  --color-ui-gray1:        #474646;
+  --color-ui-gray3:        var(--palette-gray-500);    /* alias — same value     */
+  --color-ui-border:       var(--palette-gray-200);    /* input border default  */
+  --color-ui-border-focus: #b0b2c0;                    /* input border focus    */
+  --color-ui-border-filled:#c4c6d2;                    /* input border filled   */
+  --color-ui-chip-bg:      #e4e4e8;                    /* inline chip bg        */
+
+  /* ── Color / Border ───────────────────── */
+  --color-border-light:   rgba(255, 255, 255, 0.64);
+  --color-border-default: #e8e9f0;
+
+  /* ── Color / Alpha whites (on dark surfaces) ── */
+  --color-white-alpha-72: rgba(255, 255, 255, 0.72);   /* frosted glass bg       */
+  --color-white-alpha-60: rgba(255, 255, 255, 0.60);   /* muted text on dark     */
+  --color-white-alpha-55: rgba(255, 255, 255, 0.55);   /* subtle text on dark    */
+  --color-white-alpha-50: rgba(255, 255, 255, 0.50);   /* stat tile bg           */
+  --color-white-alpha-40: rgba(255, 255, 255, 0.40);   /* dim label on dark      */
+  --color-white-alpha-32: rgba(255, 255, 255, 0.32);   /* shimmer / divider      */
+  --color-white-alpha-18: rgba(255, 255, 255, 0.18);   /* hover on dark surface  */
+  --color-white-alpha-12: rgba(255, 255, 255, 0.12);   /* icon bg on dark        */
+  --color-white-alpha-10: rgba(255, 255, 255, 0.10);   /* subtle dark overlay    */
+
+  /* ── Color / Alpha darks (on light surfaces) ── */
+  --color-dark-alpha-65:  rgba(13, 13, 13, 0.65);     /* body text on light     */
+  --color-dark-alpha-55:  rgba(13, 13, 13, 0.55);     /* secondary text on lime */
+  --color-dark-alpha-45:  rgba(13, 13, 13, 0.45);     /* muted text on lime     */
+  /* --color-dark-alpha-08 merged into --color-overlay-08 (visually identical) */
+
+  /* ── Color / Black overlays ───────────── */
+  --color-overlay-03:     rgba(0, 0, 0, 0.03);        /* alert warn bg           */
+  --color-overlay-05:     rgba(0, 0, 0, 0.05);        /* alert error bg          */
+  --color-overlay-08:     rgba(0, 0, 0, 0.08);        /* ghost active / badge bg */
+  --color-overlay-12:     rgba(21, 22, 20, 0.12);     /* seg count on active tab */
+  --color-overlay-32:     rgba(0, 0, 0, 0.32);        /* modal backdrop          */
+
+  /* ── Color / Live ring ────────────────── */
+  --color-live-ring:      rgba(34, 197, 94, 0.25);    /* online pulse ring      */
+
+  /* ── Color / Brand Green Tints ────────── */
+  --color-main-tint-xs:  rgba(173, 245, 0,  0.06);   /* nav item hover         */
+  --color-main-tint-sm:  rgba(176, 249, 14, 0.12);   /* nav item active / chip */
+  --color-main-tint-md:  rgba(176, 249, 14, 0.18);   /* JS sort active bg      */
+  --color-main-tint-glow:rgba(176, 248, 9,  0.07);   /* feature glow           */
+
+  /* ── Color / Brand Green Alpha (animations) ── */
+  --color-main-alpha-15: rgba(176, 248, 9,  0.15);   /* nova av bg             */
+  --color-main-alpha-20: rgba(176, 249, 14, 0.20);   /* pulse glow mid         */
+  --color-main-alpha-25: rgba(176, 249, 14, 0.25);   /* pulse glow             */
+  --color-main-alpha-30: rgba(176, 248, 9,  0.30);   /* nova av border / ring  */
+  --color-main-alpha-35: rgba(176, 249, 14, 0.35);   /* pulse ring strong      */
+
+
+  /* ─────────────────────────────────────────
+     MATCH RING — tier colors
+  ───────────────────────────────────────── */
+  --ring-track-low:      #e2e8f0;
+  --ring-track-mid:      #dbeafe;
+  --ring-track-high:     #ffedd5;
+  --ring-track-elite:    #dcfce7;
+  --ring-progress-low:   #94a3b8;
+  --ring-progress-mid:   #60a5fa;
+  --ring-progress-high:  #fbbf24;
+  --ring-progress-elite: #4ade80;
+
+
+  /* ─────────────────────────────────────────
+     SHADOWS
+  ───────────────────────────────────────── */
+  --shadow-card:
+    0 0 4px 0 rgba(21, 22, 20, 0.12),
+    0 4px 12px 8px rgba(0, 0, 0, 0.059);
+  --shadow-sm:   0 2px 18px rgba(0, 0, 0, 0.05);
+  --shadow-md:   0 8px 48px rgba(0, 0, 0, 0.08);
+  --shadow-xl:   0 24px 80px rgba(0, 0, 0, 0.13);
+
+  /* Contextual shadows */
+  --shadow-xs:         0 1px 4px rgba(0, 0, 0, 0.15);        /* sort item active, toggle knob */
+  --shadow-chip:       0 1px 3px rgba(0, 0, 0, 0.06);        /* floating chip */
+  --shadow-tab:        0 2px 12px rgba(0, 0, 0, 0.07);       /* active tab/toggle */
+  --shadow-btn-hover:  0 6px 18px rgba(9, 9, 11, 0.20);      /* button hover lift */
+  --shadow-hover-card: 0 16px 40px rgba(0, 0, 0, 0.08);      /* card hover elevation */
+  --shadow-fab:        0 4px 20px rgba(9, 9, 11, 0.30);      /* floating action button */
+  --shadow-fab-hover:  0 6px 28px rgba(9, 9, 11, 0.35);      /* FAB hover */
+  --shadow-dropdown:   0 14px 40px rgba(9, 9, 11, 0.12), 0 3px 12px rgba(9, 9, 11, 0.07);
+  --shadow-panel:      0 10px 28px rgba(9, 9, 11, 0.10), 0 2px 8px rgba(9, 9, 11, 0.06);
+  --shadow-float:      0 1px 2px rgba(15, 23, 42, 0.03), 0 6px 14px rgba(15, 23, 42, 0.06), 0 14px 24px rgba(15, 23, 42, 0.05);
+  --shadow-nova:       0 16px 64px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-modal:      0 24px 60px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08);
+
+
+  /* ─────────────────────────────────────────
+     TYPOGRAPHY — Font Families
+  ───────────────────────────────────────── */
+  --font-heading: 'Plus Jakarta Sans', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-accent:  'Lexend', sans-serif;
+
+
+  /* ─────────────────────────────────────────
+     TYPOGRAPHY — Scale
+  ───────────────────────────────────────── */
+
+  /* Headings — Plus Jakarta Sans */
+  --text-h2-size:        48px;
+  --text-h2-weight:      800;
+  --text-h2-line-height: 48px;
+
+  --text-h3-size:        36px;
+  --text-h3-weight:      800;
+  --text-h3-line-height: 40px;
+
+  --text-h4-size:        24px;
+  --text-h4-weight:      700;
+  --text-h4-line-height: 32px;
+
+  --text-h5-size:        16px;
+  --text-h5-weight:      500;
+  --text-h5-line-height: 24px;
+
+  /* Body — Plus Jakarta Sans */
+  --text-body-l-size:        16px;
+  --text-body-l-weight:      400;
+  --text-body-l-line-height: 26px;
+
+  --text-body-size:        14px;
+  --text-body-weight:      500;
+  --text-body-line-height: 20px;
+
+  --text-body-light-weight:      400;   /* lighter variant of --text-body; size/lh shared */
+
+  --text-body-large-size:        20px;
+  --text-body-large-weight:      500;
+  --text-body-large-line-height: 28px;
+
+  /* Buttons — Plus Jakarta Sans */
+  --text-btn-l-size:        18px;
+  --text-btn-l-weight:      700;
+  --text-btn-l-line-height: 28px;
+
+  --text-btn-s-size:        14px;
+  --text-btn-s-weight:      700;
+  --text-btn-s-line-height: 20px;
+
+  /* Hint — Plus Jakarta Sans */
+  --text-hint-size:        10px;
+  --text-hint-weight:      800;
+  --text-hint-line-height: 15px;
+
+  /* Body — Inter */
+  --text-inter-base-size:        16px;
+  --text-inter-base-weight:      400;
+  --text-inter-base-line-height: 24px;
+
+  --text-inter-h5-size:        18px;
+  --text-inter-h5-weight:      500;
+  --text-inter-h5-line-height: 1.5;
+
+  --text-inter-h4-size:        24px;
+  --text-inter-h4-weight:      500;
+  --text-inter-h4-line-height: 32px;
+
+
+  /* ─────────────────────────────────────────
+     SPACING
+  ───────────────────────────────────────── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  28px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+
+  /* ─────────────────────────────────────────
+     BORDER RADIUS
+  ───────────────────────────────────────── */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-full: 9999px;
+
+
+  /* ─────────────────────────────────────────
+     GRADIENTS
+  ───────────────────────────────────────── */
+  --gradient-highlight: linear-gradient(104.68deg, #B0F90E 7.76%, #7BFFB4 98.83%);
+  --gradient-hero-glow: radial-gradient(ellipse at 60% 40%, rgba(176,248,9,0.18) 0%, transparent 70%);
+  --gradient-shimmer:   linear-gradient(90deg, transparent 0%, var(--color-white-alpha-32) 50%, transparent 100%);
+  --gradient-stream-glow: linear-gradient(to top, var(--color-main-tint-sm), transparent);
+
+
+  /* ─────────────────────────────────────────
+     BUTTON INTERACTION TOKENS
+  ───────────────────────────────────────── */
+  --btn-duration:        0.18s;
+  --btn-easing:          cubic-bezier(0.4, 0, 0.2, 1);
+  --btn-hover-lift:      translateY(-2px);
+  --btn-active-scale:    scale(0.96);
+  --btn-focus-ring:      0 0 0 3px var(--color-main-tint-md);
+  --btn-height-s:        18px;
+  --btn-height-m:        30px;
+  --btn-height-l:        36px;
+  --btn-px-s:            var(--space-2);
+  --btn-px-m:            14px;
+  --btn-px-l:            16px;
+  --btn-font-size-s:     12px;
+  --btn-font-size-m:     13px;
+  --btn-font-size-l:     14px;
+
+  /* 图标按钮 — Location 筛选重置（sm / md / lg） */
+  --icon-btn-loc-reset-size-sm:    22px;
+  --icon-btn-loc-reset-size-md:    24px;
+  --icon-btn-loc-reset-size-lg:    28px;
+  --icon-btn-loc-reset-glyph-sm:   10px;
+  --icon-btn-loc-reset-glyph-md:   12px;
+  --icon-btn-loc-reset-glyph-lg:   14px;
+  --icon-btn-loc-reset-radius-sm:  6px;
+  --icon-btn-loc-reset-radius-md:  7px;
+  --icon-btn-loc-reset-radius-lg:  var(--radius-sm);
+
+  /* Variant — Primary (Acid Green) */
+  --btn-primary-bg:             var(--color-main-default);
+  --btn-primary-color:          var(--color-text-default);
+  --btn-primary-hover-opacity:  0.9;
+  --btn-primary-hover-shadow:   0 12px 36px var(--color-main-tint-md);
+
+  /* Variant — Dark (Black) */
+  --btn-dark-bg:                var(--color-text-default);
+  --btn-dark-color:             var(--color-text-white);
+  --btn-dark-hover-shadow:      var(--shadow-sm);
+
+  /* Variant — Ghost (Transparent) */
+  --btn-ghost-color:            var(--color-text-default);
+  --btn-ghost-hover-bg:         var(--color-surface-muted);
+}

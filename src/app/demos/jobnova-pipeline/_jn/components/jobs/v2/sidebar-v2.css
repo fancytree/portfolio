@@ -1,0 +1,64 @@
+/* JnSidebarV2: collapsible left navigation. Builds on the shell's .jn-* styles (jobs-shell.css). */
+.jb-layout.jn2-layout { grid-template-columns: 240px minmax(0, 1fr); transition: grid-template-columns .28s cubic-bezier(.22, .8, .3, 1); }
+.jb-layout.jn2-layout.is-collapsed { grid-template-columns: 72px minmax(0, 1fr); }
+
+.jb-sidebar.jn-side.jn2 { width: 100%; min-width: 0; overflow: visible; }
+
+/* Header: logo and the toggle */
+.jn2-head { position: relative; display: flex; align-items: center; justify-content: space-between; height: 75px; padding-right: 12px; }
+.jn2-logo { overflow: hidden; transition: width .28s cubic-bezier(.22, .8, .3, 1); width: 136px; }
+.jn2-logo img { object-position: left center; transition: width .28s cubic-bezier(.22, .8, .3, 1); }
+.jn2-toggle { width: 32px; height: 32px; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: none; color: #41414f; cursor: pointer; transition: background .15s, color .15s; }
+.jn2-toggle:hover { background: #f2f2f3; color: #010214; }
+.jn2-toggle:focus-visible, .jn2 .jn-nav-item:focus-visible, .jn2 .jn-upgrade-btn:focus-visible { outline: 2px solid #010214; outline-offset: 2px; }
+
+/* Labels fade out before the rail narrows, and back in after it widens */
+.jn2-label { transition: opacity .18s ease .1s; white-space: nowrap; }
+.jn2 .jn-nav-item { position: relative; }
+.jn2 .jn-nav-badge { transition: opacity .18s ease .1s; }
+.jn2-zap { display: none; }
+
+/* ── Collapsed: an icon rail ── */
+.jn2.is-collapsed .jn2-head { flex-direction: column; justify-content: center; gap: 6px; height: auto; padding: 18px 0 12px; }
+.jn2.is-collapsed .jn2-logo { width: 32px; height: 32px; padding: 0; }
+.jn2.is-collapsed .jn2-logo img { width: 32px; height: 32px; object-fit: cover; }
+.jn2.is-collapsed .jn-side-body { padding: 0 12px 12px; }
+.jn2.is-collapsed .jn2-label { opacity: 0; width: 0; overflow: hidden; transition: opacity .1s ease; }
+.jn2.is-collapsed .jn-nav-item { justify-content: center; gap: 0; padding: 11px 0; }
+.jn2.is-collapsed .jn-nav-item--sm { padding: 10px 0; }
+/* The count becomes a small badge on the icon */
+.jn2.is-collapsed .jn-nav-badge { position: absolute; top: 3px; right: 4px; margin: 0; padding: 0 5px; min-width: 18px; text-align: center; font-size: 10px; line-height: 16px; transition: none; }
+/* The upgrade card becomes one round button */
+.jn2.is-collapsed .jn2-upgrade { padding: 0; gap: 0; background: none; align-items: center; }
+.jn2.is-collapsed .jn2-upgrade .jn-upgrade-btn { width: 40px; height: 40px; padding: 0; border-radius: 50%; background: linear-gradient(92.85deg, #b0f90e 7.76%, #7bffb4 98.83%); color: #0e1401; }
+.jn2.is-collapsed .jn2-zap { display: block; }
+
+/* Tooltips name each icon while collapsed */
+.jn2 [data-tip] { position: relative; }
+.jn2 [data-tip]::after {
+  content: attr(data-tip); position: absolute; left: calc(100% + 10px); top: 50%; z-index: 30;
+  transform: translate(-4px, -50%); opacity: 0; pointer-events: none; white-space: pre;
+  padding: 5px 9px; border-radius: 7px; background: #010214; color: #fff; font: 500 12px/16px 'Inter', sans-serif;
+  transition: opacity .12s ease, transform .12s ease;
+}
+.jn2 [data-tip]:hover::after, .jn2 [data-tip]:focus-visible::after { opacity: 1; transform: translate(0, -50%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .jb-layout.jn2-layout, .jn2-logo, .jn2-logo img, .jn2-label, .jn2 [data-tip]::after { transition: none; }
+}
+
+/* ── Toggle placement (v2.1) ── */
+/* Expanded: the collapse button fades in while the pointer is over the sidebar */
+.jn2:not(.is-collapsed) .jn2-toggle { opacity: 0; transition: opacity .15s, background .15s, color .15s; }
+.jn2:not(.is-collapsed):hover .jn2-toggle, .jn2 .jn2-toggle:focus-visible { opacity: 1; }
+@media (hover: none) { .jn2:not(.is-collapsed) .jn2-toggle { opacity: 1; } }
+
+/* Collapsed: just the logo mark; hover or focus swaps it for the expand icon */
+.jn2.is-collapsed .jn2-head { padding: 22px 0 14px; }
+.jn2-logo-btn { position: relative; width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 10px; background: none; color: #010214; cursor: pointer; transition: background .15s; }
+.jn2-logo-btn img { width: 32px; height: 32px; object-fit: cover; object-position: left center; transition: opacity .15s, transform .15s; }
+.jn2-logo-open { position: absolute; opacity: 0; transform: scale(.85); transition: opacity .15s, transform .15s; }
+.jn2-logo-btn:hover, .jn2-logo-btn:focus-visible { background: #f2f2f3; }
+.jn2-logo-btn:hover img, .jn2-logo-btn:focus-visible img { opacity: 0; transform: scale(.85); }
+.jn2-logo-btn:hover .jn2-logo-open, .jn2-logo-btn:focus-visible .jn2-logo-open { opacity: 1; transform: none; }
+.jn2-logo-btn:focus-visible { outline: 2px solid #010214; outline-offset: 2px; }

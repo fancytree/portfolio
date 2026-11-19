@@ -51,7 +51,7 @@ export default function CaseKitStylePage() {
           { label: 'Industry', value: 'Case studies' },
           { label: 'Tools', value: 'Hero, chapter, prose, figure, stats, pull quote, close' },
         ]}
-        action={{ label: 'Sample case', href: '/projects/def-erp' }}
+        action={{ label: 'Sample case', href: '/projects/def-erp-kit' }}
         tags={['Hero', 'Chapter', 'Prose', 'Figure', 'Stats', 'Pull quote', 'Close']}
         glance={{
           items: [
