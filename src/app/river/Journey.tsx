@@ -585,11 +585,18 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
       }
       pointer.x += (pointer.tx - pointer.x) * 0.06;
       pointer.y += (pointer.ty - pointer.y) * 0.06;
+      // the loader's intro: its fish is this river's fish, out of the water until it drops in
+      if (riverBus.intro.away !== introAway) {
+        introAway = riverBus.intro.away;
+        if (introAway) handle.fishLeave();
+        else handle.fishEnter();
+      }
       handle.setTextZone(textZone());
       // while the mouse is about, the fish in the river keeps under it
       handle.setPointer(!still && now - mouse.at < 5 ? Math.min(window.innerWidth - 60, Math.max(60, mouse.x)) : null);
       handle.render(now, pointer.x, pointer.y, p, 0);
-      riverBus.waterY = handle.fishScreen()?.y ?? 0;
+      riverBus.fish = handle.fishScreen();
+      riverBus.waterY = riverBus.fish?.y ?? 0;
       riverBus.runner = handle.runnerScreen();
       riverBus.workSpots = handle.workSpots();
       handle.setRunnerHidden(riverBus.runnerHidden);
@@ -639,6 +646,7 @@ export default function Journey({ className, buttonClassName, flyerClassName }: 
     };
 
     const resizeObserver = new ResizeObserver(resize);
+    let introAway = false;
 
     import("./scene3d/build")
       .then(({ createScene }) => {

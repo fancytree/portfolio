@@ -1,0 +1,220 @@
+/* Full-screen loader shown before the site comes in: a black seal counting the page
+   in, the homepage's fish swimming round it; then the sheet lifts away and the fish
+   drops into the river (see Preloader.tsx). */
+
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  transition:
+    opacity 420ms ease,
+    visibility 0s linear 420ms;
+}
+
+/* already seen this visit, or inside an embed: never shown (set before first paint) */
+:global(html[data-preloaded]) .loader {
+  display: none;
+}
+
+.loader[data-done] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* (while it shows, the page behind is held still: see globals.css) */
+
+/* the sheet and the seal lift away together, like the page scrolling up */
+.sheet,
+.seal {
+  transition: transform 950ms cubic-bezier(0.7, 0, 0.25, 1);
+}
+
+.loader[data-clear] .sheet,
+.loader[data-clear] .seal {
+  transform: translateY(-100vh);
+}
+
+/* the paper: the river scene's own background */
+.sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #fafaf8;
+  /* a hairline where the lifting sheet meets the page */
+  box-shadow: 0 1px 0 #d8d8d6;
+}
+
+.brand {
+  position: absolute;
+  left: clamp(20px, 4.17vw, 60px);
+  top: 26px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #141414;
+}
+
+.logo {
+  width: auto;
+  height: 16px;
+}
+
+.name {
+  font-family: var(--font-oswald), Oswald, sans-serif;
+  text-transform: uppercase;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* The seal: the hero's "scroll to dive in" badge, bigger, with the count in the
+   middle and a ring round it that fills as the page loads. */
+.seal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  width: 200px;
+  height: 200px;
+  margin: -100px 0 0 -100px;
+  display: grid;
+  place-items: center;
+}
+
+.loader[data-clear] .seal {
+  transform: translateY(-100vh);
+}
+
+.track {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* the fill starts at the top */
+  fill: none;
+  stroke: #d8d8d6;
+  stroke-width: 0.6;
+}
+
+.arc {
+  stroke: #141414;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+.badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #141414;
+  color: #ffffff;
+}
+
+/* a ripple breaking away from it, as on the hero's badge */
+.badge::before,
+.badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #141414;
+  border-radius: 50%;
+  animation: ripple 2.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+.badge::after {
+  animation-delay: 1.3s;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: turn 12s linear infinite;
+}
+
+.ring text {
+  fill: currentColor;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 9.6px;
+  letter-spacing: 0.06em;
+}
+
+@keyframes turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.count {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  font-family: var(--font-oswald), Oswald, sans-serif;
+  font-size: 40px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.count small {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+/* the fish, rendered by the river scene's own code and moved about by Preloader.tsx */
+.fish {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  transform-origin: 0 0;
+  image-rendering: pixelated;
+  will-change: transform;
+}
+
+.loader[data-fish] .fish {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .brand {
+    top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    transition-duration: 200ms, 0s;
+    transition-delay: 0s, 200ms;
+  }
+
+  .sheet,
+  .seal {
+    transition: none;
+  }
+
+  .ring,
+  .badge::before,
+  .badge::after {
+    animation: none;
+  }
+}

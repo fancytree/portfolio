@@ -2462,3 +2462,14 @@ html.mei-home .mei-page-surface {
     --site-nav-h: 48px;
   }
 }
+
+/* While the full-screen loader shows (components/Preloader.tsx), the page behind it
+   does not scroll or take clicks. */
+html[data-preloading],
+html[data-preloading] body {
+  overflow: hidden;
+}
+
+html[data-preloading] body {
+  pointer-events: none;
+}

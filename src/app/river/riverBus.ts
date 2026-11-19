@@ -6,6 +6,14 @@ import type { ToolFall } from "./scene3d/toolLayout";
 export const riverBus = {
   /** Screen y (css px) of the water's surface along the lane the fish swims in. */
   waterY: 0,
+  /**
+   * The loader's intro on the homepage, page → scene: while `away` the river's fish is
+   * out of the water (it is the one circling the loader); set back to false, it drops
+   * in with a splash.
+   */
+  intro: { away: false },
+  /** Where the river fish is on screen (viewport css px), or null when there is no river scene. The loader's fish dives here. */
+  fish: null as { x: number; y: number } | null,
   /** Where the runner is on screen (css px), as last drawn by the river scene. */
   runner: null as { x: number; feetY: number; headY: number } | null,
   /** How far the tools have dropped off the About shelf into the river: 0 on the shelf … 1 afloat. */
