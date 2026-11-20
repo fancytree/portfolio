@@ -1,14 +1,15 @@
 'use client'
 
-// Half-screen detail for one calendar day. A past day: how many applications went out,
-// where they stand now, which ones turned into interviews, and the list itself. Today and
-// after: that day's interviews and deadlines. Uses the original drawer frame (.rv-root).
+// Half-screen detail for one calendar day. A past day (and today) has two tabs:
+// Scheduled, the interviews and deadlines on that day with how they went, and Sent, how
+// many applications went out, where they stand now, and the list itself. A future day
+// only has what is scheduled. Uses the original drawer frame (.rv-root).
 
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowUpRight, CalendarCheck2, Clock3, Mail, Sparkles, Video } from 'lucide-react'
+import { ArrowUpRight, CalendarCheck2, CircleCheck, Clock3, Mail, Sparkles, Video } from 'lucide-react'
 import { BRAND_LOGOS } from '../../../components/jobs/brandLogos'
-import type { CalEvent } from './CalendarView'
+import { minutesOf, type CalEvent } from './CalendarView'
 import '../detail/resume.css'
 import './day-drawer.css'
 
@@ -41,16 +42,19 @@ const STATE: Record<Row['state'], string> = { waiting: 'Waiting', viewed: 'Viewe
 const KIND: Record<CalEvent['kind'], { label: string; icon: React.ReactNode }> = {
   interview: { label: 'Interview', icon: <Video size={14} strokeWidth={2} /> },
   deadline: { label: 'Reply due', icon: <Mail size={14} strokeWidth={2} /> },
-  offer: { label: 'Offer reply due', icon: <Sparkles size={14} strokeWidth={2} /> },
+  offer: { label: 'Offer', icon: <Sparkles size={14} strokeWidth={2} /> },
 }
+type Tab = 'scheduled' | 'sent'
 
 export default function DayDrawer({ day, onClose, onOpen }: { day: DayInfo | null; onClose: () => void; onOpen: (id: number) => void }) {
   const [mounted, setMounted] = useState(false)
   const [shown, setShown] = useState<DayInfo | null>(null)
   const [open, setOpen] = useState(false)
+  const [tab, setTab] = useState<Tab>('scheduled')
   useEffect(() => { setMounted(true) }, [])
   useEffect(() => {
-    if (day) { setShown(day); const t = requestAnimationFrame(() => requestAnimationFrame(() => setOpen(true))); return () => cancelAnimationFrame(t) }
+    // A day opens on what happened or is planned; with nothing scheduled, on what was sent
+    if (day) { setShown(day); setTab(day.events.length || day.sent === null ? 'scheduled' : 'sent'); const t = requestAnimationFrame(() => requestAnimationFrame(() => setOpen(true))); return () => cancelAnimationFrame(t) }
     setOpen(false)
   }, [day])
   useEffect(() => {
@@ -63,9 +67,13 @@ export default function DayDrawer({ day, onClose, onOpen }: { day: DayInfo | nul
 
   const d = shown
   const title = d.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
-  const past = d.sent !== null && !d.isToday
-  const rows = past ? rowsFor(d.date, d.sent ?? 0, d.interviewFrom) : []
+  const hasSent = d.sent !== null // past days and today
+  const rows = hasSent ? rowsFor(d.date, d.sent ?? 0, d.interviewFrom) : []
   const count = (s: Row['state']) => rows.filter(r => r.state === s).length
+  const events = [...d.events].sort((a, b) => minutesOf(a) - minutesOf(b))
+  const interviews = events.filter(e => e.kind === 'interview').length
+  const showScheduled = !hasSent || tab === 'scheduled'
+  const showSent = hasSent && tab === 'sent'
 
   return createPortal(
     <div className={`rv-root dd-root${open ? ' is-open' : ''}`} aria-hidden={!open}>
@@ -79,20 +87,33 @@ export default function DayDrawer({ day, onClose, onOpen }: { day: DayInfo | nul
         </header>
 
         <div className="dd-body">
-          {/* What is scheduled that day */}
-          {d.events.length > 0 && (
-            <section className="dd-card">
-              <h3 className="dd-h">Scheduled</h3>
+          {/* Past days and today: what was on the calendar, and what went out */}
+          {hasSent && (
+            <div className="dd-tabs" role="tablist" aria-label="This day">
+              <button role="tab" aria-selected={tab === 'scheduled'} className={tab === 'scheduled' ? 'is-on' : ''} onClick={() => setTab('scheduled')}>Scheduled<b>{events.length}</b></button>
+              <button role="tab" aria-selected={tab === 'sent'} className={tab === 'sent' ? 'is-on' : ''} onClick={() => setTab('sent')}>Sent<b>{d.sent}</b></button>
+            </div>
+          )}
+
+          {/* What is scheduled that day; past events say how they went */}
+          {showScheduled && events.length > 0 && (
+            <section className="dd-card" key={`s-${tab}`}>
+              {/* Under the tabs the tab already says "Scheduled", so the card names what is in it */}
+              <h3 className="dd-h">
+                {hasSent ? (interviews ? `${interviews} interview${interviews > 1 ? 's' : ''}` : 'On the calendar') : 'Scheduled'}
+                {!hasSent && interviews > 1 && <small>{interviews} interviews</small>}
+              </h3>
               <ul className="dd-events">
-                {d.events.map((e, i) => {
+                {events.map((e, i) => {
                   const logo = BRAND_LOGOS[e.company]
                   return (
-                    <li key={i} className={`dd-ev dd-ev--${e.kind}`}>
+                    <li key={i} className={`dd-ev dd-ev--${e.kind}${e.outcome ? ' is-done' : ''}`}>
                       <span className="dd-ev-time">{e.time ?? 'All day'}</span>
                       <div className="dd-ev-b">
                         <p className="dd-ev-k">{KIND[e.kind].icon}{KIND[e.kind].label}</p>
                         <p className="dd-ev-t">{e.title}</p>
                         <p className="dd-ev-co">{logo ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={logo} alt="" /> : null}{e.company} · {e.note}</p>
+                        {e.outcome && <p className="dd-ev-out"><CircleCheck size={13} strokeWidth={2} />{e.outcome}</p>}
                       </div>
                       <button className="dd-btn" onClick={() => onOpen(e.id)}>Open<ArrowUpRight size={14} /></button>
                     </li>
@@ -101,12 +122,14 @@ export default function DayDrawer({ day, onClose, onOpen }: { day: DayInfo | nul
               </ul>
             </section>
           )}
-          {!past && d.events.length === 0 && (
-            <section className="dd-card dd-empty"><CalendarCheck2 size={22} strokeWidth={1.6} /><p>Nothing scheduled.</p><span>Auto Apply keeps sending on its own; interviews and deadlines will show up here.</span></section>
+          {showScheduled && events.length === 0 && (
+            hasSent && !d.isToday
+              ? <section className="dd-card dd-empty"><CalendarCheck2 size={22} strokeWidth={1.6} /><p>Nothing was scheduled.</p><span>No interviews or deadlines this day. See what Auto Apply sent in the Sent tab.</span></section>
+              : <section className="dd-card dd-empty"><CalendarCheck2 size={22} strokeWidth={1.6} /><p>Nothing scheduled.</p><span>Auto Apply keeps sending on its own; interviews and deadlines will show up here.</span></section>
           )}
 
           {/* What went out that day, and how it is going */}
-          {past && (
+          {showSent && (
             <>
               <section className="dd-card dd-sum">
                 <div className="dd-big"><b>{d.sent}</b><span>applications sent</span></div>

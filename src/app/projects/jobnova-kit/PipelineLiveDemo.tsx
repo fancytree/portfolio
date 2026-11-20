@@ -99,19 +99,22 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'See it by date',
-    lead: 'Interviews and deadlines, and how each day went.',
-    body: 'Past days are shaded by how many applications went out; click one for what it led to.',
-    seconds: 12,
+    lead: 'Interviews past and coming, and how each day went.',
+    body: 'Past interviews stay on the calendar with how they went. A day opens on what was scheduled, and what was sent.',
+    seconds: 14,
     script: async (h) => {
       h.say('Calendar');
       for (const x of h.all('.rv-root.is-open .rv-close')) await h.tap(x);
       await h.click(h.find('.ap2-view button', 'Calendar'));
       await h.wait(1200);
-      await h.hover(h.find('.cal-ev--interview'));
+      await h.hover(h.find('.cal-ev--interview:not(.is-done)'));
       await h.wait(800);
-      const day = h.all('.cal-month[data-month="2025-11"] .cal-day').find(d => d.querySelector('.cal-num')?.textContent === '14');
-      if (day) { await h.click(day); await h.wait(1300); }
-      await h.hover(h.find('.dd-win'));
+      // A past day with two interviews: what happened, then what went out
+      const day = h.all('.cal-month[data-month="2025-11"] .cal-day').find(d => d.querySelector('.cal-num')?.textContent === '20');
+      if (day) { await h.click(day.querySelector('.cal-num') ?? day); await h.wait(1300); }
+      await h.hover(h.find('.dd-ev-out'));
+      await h.wait(1300);
+      await h.click(h.find('.dd-tabs button', 'Sent'));
       await h.wait(1300);
       await h.click(h.find('.rv-root.is-open .rv-close'));
       await h.wait(600);

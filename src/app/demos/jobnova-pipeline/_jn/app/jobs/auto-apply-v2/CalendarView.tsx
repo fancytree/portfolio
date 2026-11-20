@@ -1,9 +1,10 @@
 'use client'
 
 // Calendar view of the application pipeline. One grid, two jobs:
-// past days show how many applications went out (the heat) and whether that day's
-// applications later got an interview (a dot); today and after show what needs the
-// person: interviews and reply deadlines. A "Coming up" list sits beside it.
+// past days show how many applications went out (the heat), whether that day's
+// applications later got an interview (a dot), and the interviews that took place there
+// (muted, with how they went); today and after show what needs the person: interviews
+// and reply deadlines. A "Coming up" list sits beside it.
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { CalendarPlus, ChevronLeft, ChevronRight, Clock3, Mail, Sparkles, Video } from 'lucide-react'
@@ -12,7 +13,8 @@ import { BRAND_LOGOS } from '../../../components/jobs/brandLogos'
 import './calendar.css'
 
 type Kind = 'interview' | 'deadline' | 'offer'
-export type CalEvent = { id: number; date: string; time?: string; kind: Kind; title: string; company: string; note: string }
+/** `outcome` is set on events that already happened: how it went */
+export type CalEvent = { id: number; date: string; time?: string; kind: Kind; title: string; company: string; note: string; outcome?: string }
 
 // Demo "today" matches the sample data (Fri, Nov 28, 2025)
 const TODAY = new Date(2025, 10, 28)
@@ -20,13 +22,33 @@ const DAY = 86400000
 const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
 export const EVENTS: CalEvent[] = [
+  // Already happened
+  { id: 9, date: '2025-10-14', time: '11:00 AM', kind: 'interview', title: 'Portfolio review', company: 'Notion', note: 'Brand Designer · 60 min', outcome: 'Not selected' },
+  { id: 12, date: '2025-10-21', time: '2:00 PM', kind: 'interview', title: 'Recruiter call', company: 'Google', note: 'Interaction Designer · 30 min', outcome: 'Moved to the design interview' },
+  { id: 12, date: '2025-10-30', time: '10:00 AM', kind: 'interview', title: 'Design interview', company: 'Google', note: 'Interaction Designer · 45 min', outcome: 'Not selected' },
+  { id: 1, date: '2025-11-17', time: '10:00 AM', kind: 'interview', title: 'Phone screen', company: 'Accenture', note: 'Founding Product Designer · 30 min', outcome: 'Moved to the panel' },
+  { id: 1, date: '2025-11-20', time: '10:00 AM', kind: 'interview', title: 'Panel interview', company: 'Accenture', note: 'Founding Product Designer · 90 min', outcome: 'Led to an offer' },
+  { id: 10, date: '2025-11-20', time: '3:00 PM', kind: 'interview', title: 'Screening call', company: 'Cursor AI', note: 'Design Engineer · 30 min', outcome: 'Moved to the video interview' },
+  { id: 11, date: '2025-11-24', time: '1:00 PM', kind: 'interview', title: 'Recruiter call', company: 'Linear', note: 'Staff Product Designer · 30 min', outcome: 'Moved to the portfolio review' },
+  { id: 1, date: '2025-11-26', kind: 'offer', title: 'Offer received', company: 'Accenture', note: 'Founding Product Designer', outcome: 'Reply by Dec 3' },
+  // Today and after
   { id: 2, date: '2025-11-28', time: '6:00 PM', kind: 'deadline', title: 'Reply to interview invite', company: 'Cursor AI', note: 'User Experience Designer' },
   { id: 10, date: '2025-12-02', time: '10:00 AM', kind: 'interview', title: 'Video interview', company: 'Cursor AI', note: 'Design Engineer · 45 min' },
   { id: 1, date: '2025-12-03', kind: 'offer', title: 'Offer reply due', company: 'Accenture', note: 'Founding Product Designer' },
   { id: 11, date: '2025-12-04', time: '2:00 PM', kind: 'interview', title: 'Portfolio review', company: 'Linear', note: 'Staff Product Designer · 60 min' },
+  { id: 11, date: '2025-12-09', time: '9:30 AM', kind: 'interview', title: 'Design exercise', company: 'Linear', note: 'Staff Product Designer · 60 min' },
   { id: 2, date: '2025-12-09', time: '11:30 AM', kind: 'interview', title: 'Intro call', company: 'Cursor AI', note: 'User Experience Designer · 30 min' },
+  { id: 10, date: '2025-12-09', time: '3:00 PM', kind: 'interview', title: 'Technical design interview', company: 'Cursor AI', note: 'Design Engineer · 60 min' },
   { id: 11, date: '2025-12-16', time: '3:00 PM', kind: 'interview', title: 'Final round', company: 'Linear', note: 'Staff Product Designer · 2 h' },
 ]
+/** Minutes after midnight, for ordering a day's events; all-day items come first */
+export const minutesOf = (e: CalEvent) => {
+  if (!e.time) return -1
+  const [, h, m, ap] = e.time.match(/(\d+):(\d+)\s*(AM|PM)/) ?? []
+  return ((+h % 12) + (ap === 'PM' ? 12 : 0)) * 60 + +m
+}
+/** How many event chips fit in a day cell before "+N more" */
+const CELL_MAX = 2
 const STARTED = new Date(2025, 8, 8) // Auto Apply was switched on
 /** The months the calendar covers, oldest first */
 const MONTHS = [[2025, 8], [2025, 9], [2025, 10], [2025, 11], [2026, 0]] as const
@@ -65,7 +87,7 @@ export default function CalendarView({ onOpen }: { onOpen: (id: number) => void 
   const [cur, setCur] = useState(mKey(TODAY.getFullYear(), TODAY.getMonth()))
   const scroller = useRef<HTMLDivElement>(null)
   const fmt = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleDateString('en-US', o)
-  const upcoming = EVENTS.filter(e => e.date >= iso(TODAY)).sort((a, b) => (a.date + (a.time ?? '')).localeCompare(b.date + (b.time ?? '')))
+  const upcoming = EVENTS.filter(e => e.date >= iso(TODAY)).sort((a, b) => a.date.localeCompare(b.date) || minutesOf(a) - minutesOf(b))
 
   // Bring a month to the top of the calendar
   const goTo = (key: string, smooth = true) => {
@@ -135,19 +157,19 @@ export default function CalendarView({ onOpen }: { onOpen: (id: number) => void 
             const days = Array.from({ length: count }, (_, i) => new Date(y, m, i + 1))
             const sentTotal = days.reduce((s2, d) => s2 + (sentOn(d) ?? 0), 0)
             const wins = days.filter(d => LED_TO_INTERVIEW.has(iso(d))).length
-            const evs = EVENTS.filter(e => e.date.startsWith(mKey(y, m))).length
+            const evs = EVENTS.filter(e => e.date.startsWith(mKey(y, m)) && e.kind === 'interview').length
             return (
               <section key={mKey(y, m)} className="cal-month" data-month={mKey(y, m)}>
                 <h3 className="cal-month-h">
                   {first.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                  <small>{sentTotal ? `${sentTotal.toLocaleString()} sent` : ''}{wins ? ` · ${wins} led to interviews` : ''}{evs ? `${sentTotal ? ' · ' : ''}${evs} scheduled` : ''}{!sentTotal && !evs ? 'Nothing yet' : ''}</small>
+                  <small>{sentTotal ? `${sentTotal.toLocaleString()} sent` : ''}{wins ? ` · ${wins} led to interviews` : ''}{evs ? `${sentTotal ? ' · ' : ''}${evs} interview${evs > 1 ? 's' : ''}` : ''}{!sentTotal && !evs ? 'Nothing yet' : ''}</small>
                 </h3>
                 <div className="cal-grid" role="grid">
                   {Array.from({ length: lead }, (_, i) => <div key={`l${i}`} className="cal-pad" aria-hidden="true" />)}
                   {days.map(d => {
                     const key = iso(d)
                     const sent = sentOn(d)
-                    const events = EVENTS.filter(e => e.date === key)
+                    const events = EVENTS.filter(e => e.date === key).sort((a, b) => minutesOf(a) - minutesOf(b))
                     const isToday = key === iso(TODAY)
                     const past = sent !== null && !isToday
                     const info = { date: d, sent, isToday, events, interviewFrom: WINS[key] ?? null }
@@ -162,11 +184,12 @@ export default function CalendarView({ onOpen }: { onOpen: (id: number) => void 
                           {past && sent! > 0 && <span className="cal-sent">{sent}</span>}
                           {LED_TO_INTERVIEW.has(key) && <span className="cal-dot" aria-label="Led to an interview" />}
                         </div>
-                        {events.map((e, i) => (
-                          <button key={i} className={`cal-ev cal-ev--${e.kind}`} onClick={ev => { ev.stopPropagation(); onOpen(e.id) }}>
+                        {events.slice(0, CELL_MAX).map((e, i) => (
+                          <button key={i} className={`cal-ev cal-ev--${e.kind}${e.outcome ? ' is-done' : ''}`} title={e.outcome ? `${e.title} · ${e.outcome}` : e.title} onClick={ev => { ev.stopPropagation(); onOpen(e.id) }}>
                             {KIND_ICON[e.kind]}<span className="cal-ev-t"><b>{e.company}</b>{e.time && <em>{e.time}</em>}</span>
                           </button>
                         ))}
+                        {events.length > CELL_MAX && <span className="cal-more">+{events.length - CELL_MAX} more</span>}
                       </div>
                     )
                   })}
@@ -181,6 +204,7 @@ export default function CalendarView({ onOpen }: { onOpen: (id: number) => void 
           <span className="cal-scale">Less{[0, 1, 2, 3, 4].map(l => <i key={l} className={`lv-${l}`} />)}More</span>
           <span><span className="cal-dot" />Got an interview</span>
           <span><span className="cal-key cal-ev--interview" />Interview</span>
+          <span><span className="cal-key cal-ev--interview is-done" />Done</span>
           <span><span className="cal-key cal-ev--deadline" />Reply due</span>
           <span><span className="cal-key cal-ev--offer" />Offer</span>
         </footer>
