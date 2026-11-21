@@ -37,7 +37,7 @@ export default function BookingDialog() {
     <div className={s.booking}>
       <button className={s.bookingToggle} type="button" onClick={showBooking}>
         <span>Book a call</span>
-        <span className={s.bookingToggleIcon} aria-hidden="true">↗</span>
+        <svg className={s.contactArrow} aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 10.5L10.5 3.5M5 3.5H10.5V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" /></svg>
       </button>
       <dialog
         ref={dialog}

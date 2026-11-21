@@ -1398,8 +1398,11 @@ html:has(.root) {
 .bookingToggle { background: #242424; color: #fafaf8; border-color: #242424; }
 .bookingToggle:hover { background: #444; border-color: #444; }
 .bookingToggle:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
-.bookingToggleIcon { font-size: 18px; line-height: 1; transition: transform 200ms ease; }
-.bookingToggle:hover .bookingToggleIcon { transform: translate(3px, -3px); }
+/* One arrow for both contact buttons: same drawing, size and hover nudge. */
+.contactArrow { flex: none; transition: transform 200ms ease; }
+.contactEmail:hover .contactArrow,
+.bookingToggle:hover .contactArrow { transform: translate(2px, -2px); }
+@media (prefers-reduced-motion: reduce) { .contactArrow { transition: none; } }
 .bookingDialog {
   position: fixed;
   inset: 0 0 0 auto;

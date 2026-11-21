@@ -263,7 +263,7 @@ export default function RiverHome() {
               </h2>
               <div className={s.contactActions}>
                 <a className={s.contactEmail} href={`mailto:${contact.email}`}>
-                  <span>Email me</span><span aria-hidden="true">↗</span>
+                  <span>Email me</span><svg className={s.contactArrow} aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 10.5L10.5 3.5M5 3.5H10.5V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" /></svg>
                 </a>
                 <BookingDialog />
               </div>
