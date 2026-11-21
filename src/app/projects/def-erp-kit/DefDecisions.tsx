@@ -242,3 +242,93 @@ export function IterationLog({ items }: { items: IterationItem[] }) {
     </ol>
   );
 }
+
+/*
+ * Who carried the work in MPSOFT: its operation log, 1 May – 21 Aug 2026 (11,489 actions, logins excluded),
+ * grouped by account. Roles are read from what each account did. Counted from the exported log, not estimated.
+ */
+type LogRole = { role: string; account: string; total: number; sales: number; payments: number; customers: number; other: number; note: string; lead?: boolean };
+const LOG_ROLES: LogRole[] = [
+  { role: 'Counter', account: 'one shared “cassa” login', total: 7858, sales: 6090, payments: 883, customers: 726, other: 159, note: 'Enters, approves and takes payment for most orders', lead: true },
+  { role: 'Finance', account: '1 account', total: 1870, sales: 22, payments: 1824, customers: 8, other: 16, note: 'Almost only records customer payments' },
+  { role: 'Customer service', account: '4 accounts', total: 1632, sales: 1274, payments: 49, customers: 288, other: 21, note: 'Keys in orders that salons sent by chat' },
+  { role: 'Purchasing', account: '1 account', total: 125, sales: 0, payments: 0, customers: 0, other: 125, note: 'Purchase orders and suppliers' },
+  { role: 'Owner and others', account: '2 accounts', total: 4, sales: 2, payments: 1, customers: 1, other: 0, note: 'Log in to look; 4 actions' },
+];
+const LOG_KINDS = [
+  { key: 'sales', label: 'Sales orders', cls: 'kSales' },
+  { key: 'payments', label: 'Payments', cls: 'kPay' },
+  { key: 'customers', label: 'Customer records', cls: 'kCust' },
+  { key: 'other', label: 'Purchasing, returns, other', cls: 'kOther' },
+] as const;
+
+export function LogRoleLoad() {
+  const max = LOG_ROLES[0].total;
+  const all = LOG_ROLES.reduce((s, r) => s + r.total, 0);
+  return (
+    <div className={`${styles.pad} ${styles.load}`}>
+      <ul className={styles.loadLegend} aria-label="Kinds of work">
+        {LOG_KINDS.map((k) => <li key={k.key}><span className={`${styles.loadSwatch} ${styles[k.cls]}`} />{k.label}</li>)}
+      </ul>
+      <table className={styles.loadTable}>
+        <caption className="sr-only">Logged actions per role, March to June 2026, split by kind of work</caption>
+        <thead className="sr-only"><tr><th>Role</th><th>What the account mostly did</th><th>Actions</th>{LOG_KINDS.map((k) => <th key={k.key}>{k.label}</th>)}</tr></thead>
+        <tbody>
+          {LOG_ROLES.map((r) => (
+            <tr key={r.role} className={r.lead ? styles.loadLead : undefined}>
+              <th scope="row" className={styles.loadWho}>
+                <b>{r.role}</b>
+                <span>{r.account}</span>
+              </th>
+              <td className={styles.loadBarCell}>
+                <span className={styles.loadBar} style={{ width: `max(${(r.total / max) * 100}%, 4px)` }}>
+                  {LOG_KINDS.map((k) => r[k.key] > 0 && (
+                    <span key={k.key} className={`${styles.loadSeg} ${styles[k.cls]}`} style={{ flexGrow: r[k.key] }} title={`${r.role} · ${k.label}: ${r[k.key].toLocaleString('en-US')}`} />
+                  ))}
+                </span>
+                <span className={styles.loadNote}>{r.note}</span>
+              </td>
+              <td className={styles.loadNum}>
+                <b>{r.total.toLocaleString('en-US')}</b>
+                <span>{r.total / all < 0.01 ? '<1' : Math.round((r.total / all) * 100)}%</span>
+              </td>
+              {LOG_KINDS.map((k) => <td key={k.key} className="sr-only">{r[k.key]}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* What each role dashboard is built around: the work waiting on that role first, then the numbers it checks most.
+   Card names match the dashboards in the live demo below. */
+const ROLE_BOARDS = [
+  { role: 'Admin', ask: 'How is the business doing?', act: ['What is waiting on each team'], watch: ['Net sales vs the previous period', 'Sales by channel', 'When orders come in'] },
+  { role: 'Sales', ask: 'Am I on target, and who owes me?', act: ['Overdue payments to chase', 'Customers who have gone quiet'], watch: ['Monthly target and forecast', 'Pipeline, lead to payment'] },
+  { role: 'Warehouse', ask: 'What do I move today?', act: ['Rush items for the store', 'Orders to pick, pack and ship', 'Deliveries to confirm'], watch: ['Low, expiring and out-of-stock SKUs'] },
+  { role: 'Finance', ask: 'What do I approve, invoice, chase?', act: ['Payments to approve, in a batch', 'Shipped orders to invoice', 'Overdue receivables'], watch: ['Invoiced vs collected'] },
+];
+
+export function RoleBoards() {
+  return (
+    <div className={`${styles.pad} ${styles.boards}`}>
+      {ROLE_BOARDS.map((b) => (
+        <section key={b.role} className={styles.board} aria-label={`${b.role} dashboard`}>
+          <header>
+            <h3>{b.role}</h3>
+            <p>{b.ask}</p>
+          </header>
+          <div className={styles.boardAct}>
+            <span className={styles.boardTag}>Needs my action</span>
+            <ul>{b.act.map((x) => <li key={x}>{x}</li>)}</ul>
+          </div>
+          <div className={styles.boardWatch}>
+            <span className={styles.boardTag}>I check most</span>
+            <ul>{b.watch.map((x) => <li key={x}>{x}</li>)}</ul>
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}

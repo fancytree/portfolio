@@ -12,7 +12,7 @@ import wide from './DefDecisions.module.css';
 import { ERP_DECISION_SHOTS } from './erpDecisionShots';
 import { ApprovalChainFlow, LaunchPhasesFlow } from './ErpDecisionDiagrams';
 import { InvoicingLiveDemo, PurchasingLiveDemo, SalesOrderLiveDemo, StorefrontBuilderLiveDemo } from './ErpLiveDemo';
-import { ArchitectureOptions, CapabilityMatrix, ConfirmationLadder, CaseCrossLink, IterationLog, InvoiceCadence, type IterationItem } from './DefDecisions';
+import { ArchitectureOptions, CapabilityMatrix, ConfirmationLadder, CaseCrossLink, IterationLog, InvoiceCadence, LogRoleLoad, RoleBoards, type IterationItem } from './DefDecisions';
 import {
   CaseChapter,
   CaseClose,
@@ -194,8 +194,17 @@ export default function DefErpKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="03 / Research" title="Five interviews, and what they overturned.">
-          <CaseProse><p>One interview per role, recorded and transcribed. Every finding was checked against the transcript and tagged, so a later interview could overturn it cleanly.</p></CaseProse>
+        <CaseChapter label="03 / Research" title="The logs showed who did the work. Interviews showed why.">
+          <CaseProse><p>First I read MPSOFT’s operation log: <strong>11,489 actions from March to June 2026</strong>, grouped by the account that did them.</p></CaseProse>
+          <CaseFigure caption="MPSOFT operation log, March – June 2026, logins excluded. Roles are read from what each account did.">
+            <LogRoleLoad />
+          </CaseFigure>
+          <CaseStats items={[
+            { value: '68%', label: 'Of all work ran under one shared counter login: no one could tell who did what' },
+            { value: '98%', label: 'Of order approvals came from that same login, often for orders it had just entered' },
+            { value: '44%', label: 'Of counter work fell between 16:00 and 19:00, while customers wait at the desk' },
+          ]} />
+          <CaseProse><p>Then one interview per role, recorded and transcribed. Every finding was checked against the transcript and tagged, so a later interview could overturn it cleanly.</p></CaseProse>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] gap-[var(--case-space-24)]">
             <CaseFigure caption="Interview scripts with handwritten notes.">
               <Image src="/img/def-erp/research-annotated-interviews.webp" alt="Printed interview scripts spread across a desk, with handwritten notes and annotations in blue ink." width={506} height={380} sizes="(min-width: 768px) 50vw, 100vw" />
@@ -230,7 +239,11 @@ export default function DefErpKitPage() {
         </CaseChapter>
 
         <CaseChapter label="06 / Role dashboards" title="Each role sees its own work on the same data.">
-          <CaseProse><p>One page for every login became four views on one shell: admin, sales, warehouse and finance. Admin shown.</p></CaseProse>
+          <CaseProse><p>One page for every login became four views on one shell. Each shows <strong>the work waiting on that role</strong> beside the numbers it checks most.</p></CaseProse>
+          <CaseFigure caption="What each dashboard is built around. Card names match the live dashboards below.">
+            <RoleBoards />
+          </CaseFigure>
+          <CaseProse><p>Before and after, Admin shown.</p></CaseProse>
           <BeforeAfterSlider
             beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
             beforeAlt="Legacy ordering system Dashboard: one undifferentiated view mixing sales KPIs, pending approvals, and promotional panels for every user."
@@ -316,7 +329,7 @@ export default function DefErpKitPage() {
           <CaseStats items={[
             { value: '86%', label: 'Orders placed by customers themselves · one-week sample, a month after launch' },
             { value: '5 → 3', label: 'Steps in the wholesale ordering flow' },
-            { value: '40–70', label: 'Daily orders sales used to key in by hand; they now arrive without re-entry' },
+            { value: '~40', label: 'Orders a day keyed in by hand before launch (log median); they now arrive without re-entry' },
           ]} />
           <CaseProse>
             <ul>
