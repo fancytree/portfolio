@@ -51,7 +51,14 @@ export type PlaygroundExperience = PlaygroundBase & {
   poster: string;
 };
 
-export type PlaygroundItem = PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive | PlaygroundExperience;
+export type PlaygroundArticle = PlaygroundBase & {
+  kind: 'article';
+  title: string;
+  description: string;
+  href: string;
+};
+
+export type PlaygroundItem = PlaygroundArticle | PlaygroundQuote | PlaygroundImage | PlaygroundVideo | PlaygroundInteractive | PlaygroundExperience;
 
 export const playgroundItems: PlaygroundItem[] = [
   {
@@ -62,6 +69,13 @@ export const playgroundItems: PlaygroundItem[] = [
     src: '/play/river/index.html',
     poster: '/play/river-cover.png',
     wide: true,
+  },
+  {
+    id: 'design-should-run',
+    kind: 'article',
+    title: 'Design Should Run',
+    description: 'My vision for a design workstation in the age of agents.',
+    href: '/playground/design-should-run',
   },
   // 顺序即排布顺序：视觉卡片与引用交错放，让每一列都有图也有字、引用不会全挤在下面
   {

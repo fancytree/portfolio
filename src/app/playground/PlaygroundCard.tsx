@@ -1,6 +1,7 @@
 // 单张 Playground 卡片：按 kind 渲染不同内容，卡片外不放任何文字信息。
 
 import Image from 'next/image';
+import Link from 'next/link';
 import type { PlaygroundItem } from '@/lib/playground-items';
 import InteractiveStage from './InteractiveStage';
 import PlaygroundVideo from './PlaygroundVideo';
@@ -9,6 +10,14 @@ import styles from './playground.module.css';
 
 function CardBody({ item }: { item: PlaygroundItem }) {
   switch (item.kind) {
+    case 'article':
+      return (
+        <Link href={item.href} className={styles.articleLink}>
+          <h2>{item.title}</h2>
+          <p>{item.description}</p>
+          <span>Read essay <span aria-hidden="true">↗</span></span>
+        </Link>
+      );
     case 'experience':
       return <FullscreenExperience item={item} />;
     case 'quote':
@@ -37,6 +46,7 @@ function CardBody({ item }: { item: PlaygroundItem }) {
 
 // what the title bar calls each kind of card
 const KIND: Record<PlaygroundItem['kind'], string> = {
+  article: 'Essay',
   experience: 'Experience',
   quote: 'Note',
   image: 'Image',

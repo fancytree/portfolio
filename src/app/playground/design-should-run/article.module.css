@@ -1,0 +1,13 @@
+.diagram { overflow: auto; overscroll-behavior-x: contain; }
+.diagram img { display: block; width: 100%; min-width: 900px; height: auto; }
+.diagram:focus-visible, .states button:focus-visible { outline: 2px solid var(--case-accent); outline-offset: -2px; }
+.workstation { padding: var(--case-space-24); background: var(--case-surface); color: var(--case-ink); font-family: var(--case-font-body); font-size: var(--case-type-body); }
+.demoHeader { display: flex; align-items: baseline; flex-wrap: wrap; justify-content: space-between; gap: var(--case-space-8); }
+.demoHeader span, .demoFooter { color: var(--case-muted); font-size: var(--case-type-caption); }
+.demoSteps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--case-space-16); margin-block: var(--case-space-16); }
+.demoSteps > div, .result { padding: var(--case-space-16); background: var(--case-bg, #fff); }
+.demoSteps p, .result p { margin: var(--case-space-6) 0 0; }
+.states { display: flex; flex-wrap: wrap; gap: var(--case-space-8); margin-bottom: var(--case-space-16); }
+.states button { padding: 6px 12px; border: 1px solid currentColor; background: transparent; border-radius: 4px; cursor: pointer; font: inherit; }
+.states button[aria-pressed='true'] { color: #fff; background: var(--case-ink); border-color: var(--case-ink); }
+.demoFooter { margin: var(--case-space-16) 0 0; }

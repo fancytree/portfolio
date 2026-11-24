@@ -31,11 +31,11 @@ function BlockSpec({ spec }: SpecProps) {
 }
 
 /** 章节槽。导航留在外壳里，章节放这里，侧栏才能跟内容同一列高。 */
-export function CaseKitSections({ children }: { children: ReactNode }) {
+export function CaseKitSections({ children, backHref, backLabel }: { children: ReactNode; backHref?: string; backLabel?: string }) {
   return (
     <div className={styles.sections} data-case-sections>
       {children}
-      <CaseEnd />
+      <CaseEnd href={backHref} label={backLabel} />
     </div>
   );
 }
@@ -358,12 +358,12 @@ export function CaseClose({ label, title, children }: CaseCloseProps) {
 }
 
 /** 所有案例共用的文末返回区，与 Hero 使用相同的分割线。 */
-export function CaseEnd() {
+export function CaseEnd({ href = '/#work', label = 'Back to work' }: { href?: string; label?: string } = {}) {
   return (
     <div className={styles.end} data-case-end data-case-tone="default">
       <div className={styles.column}>
         <div className={styles.endInner}>
-          <CaseButton variant="text" arrow="left" href="/#work">Back to work</CaseButton>
+          <CaseButton variant="text" arrow="left" href={href}>{label}</CaseButton>
         </div>
       </div>
     </div>

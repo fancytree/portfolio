@@ -261,3 +261,9 @@
 .experienceClose:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 @media (max-width: 640px) { .experienceCaption { padding: 16px 18px; } .experienceDescription { font-size: 12px; } }
 @media (prefers-reduced-motion: reduce) { .card, .card::after { transition: none; } }
+
+.articleLink { display: grid; gap: 12px; padding: 24px; color: var(--river-text); text-decoration: none; }
+.articleLink h2, .articleLink p { margin: 0; }
+.articleLink h2 { font-size: clamp(23px, 3vw, 34px); line-height: 1.1; }
+.articleLink > span { font-family: var(--river-mono); font-size: 12px; text-decoration: underline; text-underline-offset: 3px; }
+.articleLink:focus-visible { outline: 2px solid currentColor; outline-offset: -5px; }

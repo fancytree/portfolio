@@ -2,21 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../CaseStudyBackButton';
+import { CaseButton } from './CaseButton';
 
 type NavItem = { id: string; label: string; index: string };
 type CaseStudyControlsProps = {
   navLabels?: string[];
   railKicker?: string;
   railTitle?: string;
+  backHref?: string;
+  backLabel?: string;
+  showProgress?: boolean;
   /** Content retained for callers that also use these summaries in their story. */
   tldrPoints?: { label: string; body: string }[];
 };
 
 const normalize = (text: string) => text.replace(/\s+/g, ' ').trim();
 
-export default function CaseStudyControls({ navLabels, railKicker = 'Case study', railTitle }: CaseStudyControlsProps) {
+export default function CaseStudyControls({ navLabels, railKicker = 'Case study', railTitle, backHref, backLabel = 'Back', showProgress = false }: CaseStudyControlsProps) {
   const [items, setItems] = useState<NavItem[]>([]);
   const [activeId, setActiveId] = useState('');
+  const [progress, setProgress] = useState(0);
   const [title, setTitle] = useState(railTitle ?? '');
 
   useEffect(() => {
@@ -60,6 +65,12 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
         if ((document.getElementById(item.id)?.getBoundingClientRect().top ?? Infinity) <= 160) current = item.id;
       }
       setActiveId(current);
+      if (showProgress) {
+        const bounds = document.querySelector('.mei-project-page')?.getBoundingClientRect();
+        const distance = bounds ? Math.max(1, bounds.height - window.innerHeight) : 1;
+        const fraction = Math.max(0, Math.min(1, -(bounds?.top ?? 0) / distance));
+        setProgress(fraction === 1 ? 100 : Math.min(99, Math.round(fraction * 100)));
+      }
     };
     update();
     window.addEventListener('scroll', update, { passive: true });
@@ -68,23 +79,37 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, [items]);
+  }, [items, showProgress]);
+
+  const chapterLinks = items.map(item => (
+    <a key={item.id} href={`#${item.id}`} aria-current={item.id === activeId ? 'location' : undefined}>
+      <span aria-hidden>{item.index}</span><span>{item.label}</span>
+    </a>
+  ));
 
   return (
-    <aside className="mei-case-study-rail case-rail" aria-label="Case study navigation">
+    <aside className="mei-case-study-rail case-rail" data-reading-progress={showProgress || undefined} aria-label="Case study navigation">
       <div className="case-rail-sticky">
-        <CaseStudyBackButton />
+        {backHref ? <CaseButton variant="back" arrow="left" href={backHref}>{backLabel}</CaseButton> : <CaseStudyBackButton />}
         <div className="case-rail-heading">
           <p className="case-rail-kicker">{railKicker}</p>
           <p className="case-rail-title">{title}</p>
         </div>
-        <nav className="case-rail-links" aria-label="Chapters">
-          {items.map(item => (
-            <a key={item.id} href={`#${item.id}`} aria-current={item.id === activeId ? 'location' : undefined}>
-              <span aria-hidden>{item.index}</span><span>{item.label}</span>
-            </a>
-          ))}
-        </nav>
+        {showProgress && (
+          <div className="case-rail-progress">
+            <span aria-hidden="true">{progress}%</span>
+            <progress max={100} value={progress} aria-label="Article reading progress" />
+          </div>
+        )}
+        <nav className="case-rail-links" aria-label="Chapters">{chapterLinks}</nav>
+        {showProgress && (
+          <details className="case-rail-mobile">
+            <summary>Contents</summary>
+            <nav className="case-rail-links" aria-label="Chapters" onClick={event => {
+              if (event.target instanceof Element && event.target.closest('a')) event.currentTarget.closest('details')?.removeAttribute('open');
+            }}>{chapterLinks}</nav>
+          </details>
+        )}
       </div>
     </aside>
   );

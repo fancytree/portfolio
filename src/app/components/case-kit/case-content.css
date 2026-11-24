@@ -348,3 +348,16 @@
   .case-decision-foot, .case-reversal { grid-template-columns: 1fr; }
   .case-decision-foot > div + div, .case-reversal-col + .case-reversal-col { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
 }
+
+.case-kit .case-rail-progress { display: grid; gap: var(--case-space-6); margin-block: var(--case-space-16); color: var(--case-nav-active); font: var(--case-type-caption) var(--case-font-body); }
+.case-kit .case-rail-progress progress { width: 100%; height: 4px; accent-color: var(--case-accent); }
+.case-kit .case-rail-mobile { display: none; }
+@media (max-width: 1279px) {
+  .case-kit .case-rail[data-reading-progress] { display: block; position: fixed; z-index: 30; bottom: var(--case-space-16); left: var(--case-space-16); width: auto; }
+  .case-kit .case-rail[data-reading-progress] .case-rail-sticky { position: relative; top: auto; padding: var(--case-space-8) var(--case-space-12); background: var(--case-surface); border: 1px solid var(--case-muted); border-radius: 4px; }
+  .case-kit .case-rail[data-reading-progress] .case-rail-sticky > :is(.case-rail-heading, .case-rail-links, a, button) { display: none; }
+  .case-kit .case-rail-progress { margin: 0 0 var(--case-space-6); }
+  .case-kit .case-rail-mobile { display: block; font: var(--case-type-caption) var(--case-font-body); }
+  .case-kit .case-rail-mobile summary { cursor: pointer; }
+  .case-kit .case-rail-mobile .case-rail-links { position: absolute; bottom: calc(100% + 8px); left: 0; width: min(300px, calc(100vw - 32px)); max-height: 65dvh; padding: var(--case-space-16); background: var(--case-surface); border: 1px solid var(--case-muted); border-radius: 4px; }
+}

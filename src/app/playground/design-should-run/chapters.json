@@ -1,0 +1,162 @@
+[
+  {
+    "label": "01 / The design loop",
+    "title": "Design starts with evidence and returns to it.",
+    "lead": "I start by making the problem and intended outcome clear. A working prototype lets me test that intent. What I learn in testing and after release feeds the next decision.",
+    "diagram": "/play/design-should-run/01-design-loop.svg",
+    "height": 785,
+    "alt": "The runnable design loop",
+    "caption": "The outer arrows trace the five stages. Dashed lines link each stage to shared facts. The side panel shows who has the authority to decide.",
+    "notes": [
+      {
+        "title": "Keep the reasoning visible",
+        "body": "The spec, design system, and working agreements give everyone a common reference. When a test or production incident changes what the team knows, that evidence can be traced to the decision it affects."
+      },
+      {
+        "title": "Carry the evidence forward",
+        "body": "In the workstation, I want to open a decision and see why it was made, what shipped, and whether it worked."
+      }
+    ]
+  },
+  {
+    "label": "02 / Code as a design material",
+    "title": "Working with code changes what I can test.",
+    "lead": "A prototype lets me see what actually happens when data arrives late, a request fails, or someone lacks permission. Reviewing a change and helping ship it call for different evidence and responsibilities.",
+    "diagram": "/play/design-should-run/02-code-participation.svg",
+    "height": 795,
+    "alt": "Code as a design material",
+    "caption": "Read across the three levels, then compare the evidence and its limits within each level. The five checks apply throughout.",
+    "notes": [
+      {
+        "title": "Match the evidence to the claim",
+        "body": "A demo can show that a flow works in the cases it covers. Code review and testing tell the team more about the change. Release approval also depends on the people who own the risks."
+      },
+      {
+        "title": "Show how far the work has come",
+        "body": "I want the workstation to show whether I am looking at an experiment, a reviewed change, or a release candidate, and which checks still need review."
+      }
+    ]
+  },
+  {
+    "label": "03 / Design system context",
+    "title": "The design system gives agents rules they can check.",
+    "lead": "An agent needs to know which component fits a situation, how it behaves in different states, and when it can be used. The design system can supply those rules and give the team a way to check the result.",
+    "diagram": "/play/design-should-run/03-agent-context.svg",
+    "height": 740,
+    "alt": "The design system as agent context",
+    "caption": "Read from constraints through the agent workflow to the output checks. The outer arrows show how feedback returns to the design system.",
+    "notes": [
+      {
+        "title": "Give the agent usable rules",
+        "body": "I want rules that tell an agent how to choose a component, map it to code, handle its states, and recognize when a pattern is out of bounds."
+      },
+      {
+        "title": "Make the result reviewable",
+        "body": "Each result should point to the version of the rules it used. If a review exposes a gap in those rules, the team can fix the source and verify the next result."
+      }
+    ]
+  },
+  {
+    "label": "04 / Delivery artifacts",
+    "title": "A spec should explain how the work gets done.",
+    "lead": "Once a prototype can act, I want the team to agree on three things before it moves forward. Who is responsible, what information the system can rely on, and what it is allowed to do.",
+    "diagram": "/play/design-should-run/04-delivery-materials.svg",
+    "height": 755,
+    "alt": "Three artifacts for runnable delivery",
+    "caption": "Roles, context, and permissions feed into the spec that guides implementation, integration, testing, and acceptance.",
+    "notes": [
+      {
+        "title": "Approval needs evidence",
+        "body": "In a purchase flow, the agent can draft a recommendation. A buyer needs the source data, the assumptions, and the proposed quantity before approving a commitment."
+      },
+      {
+        "title": "Keep the spec current",
+        "body": "When a test reveals a missing permission or an unclear responsibility, I want that change reflected in the spec and linked to the version the team reviewed."
+      }
+    ]
+  },
+  {
+    "label": "05 / Human and agent access",
+    "title": "People and agents need access to the same facts.",
+    "lead": "A buyer needs a clear explanation and a way to take over. The agent needs to identify the right order, understand its state, and know which actions it can take. Both should be working from the same underlying record.",
+    "diagram": "/play/design-should-run/05-two-access-paths.svg",
+    "height": 760,
+    "alt": "Two ways to access the same facts",
+    "caption": "The human interface and agent tools share the same product facts. Test both paths in the same task, including how they recover when something goes wrong.",
+    "notes": [
+      {
+        "title": "Test a complete task",
+        "body": "I want to see what the agent reads, what the buyer sees before approving, and how the result is recorded. If an action fails, both paths should give the team enough information to recover."
+      },
+      {
+        "title": "Check accessibility on its own terms",
+        "body": "A reliable tool interface helps the agent operate. People still need an accessible interface and a clear way to understand, challenge, or take over a decision."
+      }
+    ]
+  },
+  {
+    "label": "06 / Team delivery",
+    "title": "A successful prototype should teach the team something it can reuse.",
+    "lead": "A working demo shows that an idea can be tried. Version history shows how the work changed. Methods tested across tasks help others repeat it. A release decision needs evidence from the running product and review by the people responsible for it.",
+    "diagram": "/play/design-should-run/06-team-delivery.svg",
+    "height": 770,
+    "alt": "From individual prototypes to team delivery",
+    "caption": "Four kinds of evidence support team delivery. Shared records and a log of key AI contributions let reviewers trace what changed and why.",
+    "notes": [
+      {
+        "title": "Record the decisions that matter",
+        "body": "I want enough context for a reviewer to see what the agent used, what it produced, what people changed, and how the result was tested."
+      },
+      {
+        "title": "Make reuse a team practice",
+        "body": "When a pattern works across tasks, it can become a component, a template, or a reusable skill. Its source, limits, and verification should travel with it."
+      }
+    ]
+  },
+  {
+    "label": "07 / The workstation",
+    "title": "One shared workspace. Four connected surfaces.",
+    "lead": "In the workstation below, a buyer reviews a purchase recommendation that an agent prepared. The buyer can inspect the evidence, try the flow in different states, and see whose approval is needed before an order is placed.",
+    "notes": [
+      {
+        "title": "Evidence canvas",
+        "body": "Problem statements, source interviews, hypotheses, business outcomes, risk, and named decision owners."
+      },
+      {
+        "title": "Constraint library",
+        "body": "Versioned tokens, components, semantic rules, behavior, permissions, and verified reusable patterns."
+      },
+      {
+        "title": "Live lab",
+        "body": "Realistic prototype states, agent traces, code diffs, mocked or approved data, and observable recovery paths."
+      },
+      {
+        "title": "Evaluation console",
+        "body": "Automated checks, expert review, test evidence, production signals, regression history, and authorization gates."
+      }
+    ]
+  },
+  {
+    "label": "08 / Operating principles",
+    "title": "What I would hold the workstation to.",
+    "lead": "A faster design process only matters when it improves the quality of decisions and the reliability of what reaches users.",
+    "notes": [
+      {
+        "title": "Every important decision has a reason.",
+        "body": "Keep evidence, assumptions, trade-offs, and approved constraints connected to the running artifact."
+      },
+      {
+        "title": "Automation does not equal permission.",
+        "body": "Agents can prepare, recommend, and verify. A responsible person or authorized role still approves consequential actions."
+      },
+      {
+        "title": "Make failure and recovery visible.",
+        "body": "Loading, empty states, errors, long data, access denial, responsiveness, and recovery are part of the design."
+      },
+      {
+        "title": "Bring runtime evidence into the next decision.",
+        "body": "Events, failures, and user observations update the next hypothesis, the spec, and the design system itself."
+      }
+    ]
+  }
+]
