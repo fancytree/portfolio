@@ -363,13 +363,3 @@
 .case-kit .case-rail-progress progress::-webkit-progress-bar { background: var(--case-rule); }
 .case-kit .case-rail-progress progress::-webkit-progress-value { background: var(--case-ink); }
 .case-kit .case-rail-progress progress::-moz-progress-bar { background: var(--case-ink); }
-.case-kit .case-rail-mobile { display: none; }
-@media (max-width: 1279px) {
-  .case-kit .case-rail[data-reading-progress] { display: block; position: fixed; z-index: 30; bottom: var(--case-space-16); left: var(--case-space-16); width: auto; }
-  .case-kit .case-rail[data-reading-progress] .case-rail-sticky { position: relative; top: auto; padding: var(--case-space-8) var(--case-space-12); background: var(--case-surface); border: 1px solid var(--case-muted); border-radius: 4px; }
-  .case-kit .case-rail[data-reading-progress] .case-rail-sticky > :is(.case-rail-heading, .case-rail-links, a, button) { display: none; }
-  .case-kit .case-rail-progress { margin: 0 0 var(--case-space-6); }
-  .case-kit .case-rail-mobile { display: block; font: var(--case-type-caption) var(--case-font-body); }
-  .case-kit .case-rail-mobile summary { min-height: 30px; padding-block: var(--case-space-4); cursor: pointer; }
-  .case-kit .case-rail[data-reading-progress] .case-rail-mobile .case-rail-links { position: absolute; bottom: calc(100% + 8px); left: 0; width: min(300px, calc(100vw - 32px)); max-height: 65dvh; margin: 0; padding: var(--case-space-16); background: var(--case-surface); border: 1px solid var(--case-muted); border-radius: 4px; }
-}

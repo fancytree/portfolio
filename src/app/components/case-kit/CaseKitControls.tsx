@@ -13,14 +13,13 @@ type CaseStudyControlsProps = {
   backHref?: string;
   backLabel?: string;
   showProgress?: boolean;
-  mobileContents?: boolean;
   /** Content retained for callers that also use these summaries in their story. */
   tldrPoints?: { label: string; body: string }[];
 };
 
 const normalize = (text: string) => text.replace(/\s+/g, ' ').trim();
 
-export default function CaseStudyControls({ navLabels, railKicker = 'Case study', railTitle, backHref, backLabel = 'Back', showProgress = false, mobileContents = false }: CaseStudyControlsProps) {
+export default function CaseStudyControls({ navLabels, railKicker = 'Case study', railTitle, backHref, backLabel = 'Back', showProgress = false }: CaseStudyControlsProps) {
   const [items, setItems] = useState<NavItem[]>([]);
   const [activeId, setActiveId] = useState('');
   const [title, setTitle] = useState(railTitle ?? '');
@@ -83,7 +82,7 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
   ));
 
   return (
-    <aside className="mei-case-study-rail case-rail" data-reading-progress={mobileContents || undefined} aria-label="Case study navigation">
+    <aside className="mei-case-study-rail case-rail" aria-label="Case study navigation">
       <div className="case-rail-sticky">
         {backHref ? <CaseButton variant="back" arrow="left" href={backHref}>{backLabel}</CaseButton> : <CaseStudyBackButton />}
         <div className="case-rail-heading">
@@ -92,14 +91,6 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
         </div>
         {showProgress && <CaseReadingProgress />}
         <nav className="case-rail-links" aria-label="Chapters">{chapterLinks}</nav>
-        {mobileContents && (
-          <details className="case-rail-mobile">
-            <summary>Contents</summary>
-            <nav className="case-rail-links" aria-label="Chapters" onClick={event => {
-              if (event.target instanceof Element && event.target.closest('a')) event.currentTarget.closest('details')?.removeAttribute('open');
-            }}>{chapterLinks}</nav>
-          </details>
-        )}
       </div>
     </aside>
   );

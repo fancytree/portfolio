@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export default function DesignShouldRun() {
   return (
     <CaseKitPage>
-      <CaseKitControls railKicker="Playground · Essay" railTitle={title} backHref="/playground" backLabel="Back to Playground" showProgress mobileContents />
+      <CaseKitControls railKicker="Playground · Essay" railTitle={title} backHref="/playground" backLabel="Back to Playground" showProgress />
       <CaseKitSections backHref="/playground" backLabel="Back to Playground">
         <CaseHero
           eyebrow="Playground · Design in the age of agents"
@@ -52,7 +52,7 @@ export default function DesignShouldRun() {
               </CaseFigure>
             )}
             {chapter.label.startsWith('07') && (
-              <CaseFigure caption="Try each state in the purchase approval prototype.">
+              <CaseFigure caption="Workstation concept · Aurora Store. Open AUR-8 to see the requirements, the spec, and how feedback shaped the cart prototype.">
                 <Workstation />
               </CaseFigure>
             )}

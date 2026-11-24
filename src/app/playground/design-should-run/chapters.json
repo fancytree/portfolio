@@ -116,7 +116,7 @@
   {
     "label": "07 / The workstation",
     "title": "One shared workspace. Four connected surfaces.",
-    "lead": "In the workstation below, a buyer reviews a purchase recommendation that an agent prepared. The buyer can inspect the evidence, try the flow in different states, and see whose approval is needed before an order is placed.",
+    "lead": "This preview shows how I imagine the workstation could work, using Aurora Store as an example. Open AUR-8 to see how support evidence and a shared spec inform two versions of the shopping cart. The second version adds Undo after review.",
     "notes": [
       {
         "title": "Evidence canvas",
