@@ -16,7 +16,7 @@ const navLabels = ['01 / My role', '02 / Design direction', '03 / Agent workflow
 export default function MonoProjectPage() {
   return (
     <CaseKitPage>
-      <CaseStudyControls navLabels={navLabels} railKicker="Case study" railTitle="Mono" />
+      <CaseStudyControls showProgress navLabels={navLabels} railKicker="Case study" railTitle="Mono" />
       <CaseKitSections>
         <div className="case-mobile-back"><CaseStudyBackButton /></div>
         <CaseHero

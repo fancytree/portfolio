@@ -7,6 +7,16 @@ import chapters from './chapters.json';
 import Workstation from './Workstation';
 import styles from './article.module.css';
 
+// Static paths keep deployment tracing limited to these six figures.
+const figures: Record<string, string> = {
+  '/play/design-should-run/01-design-loop.svg': readFileSync(join(process.cwd(), 'public/play/design-should-run/01-design-loop.svg'), 'utf8'),
+  '/play/design-should-run/02-code-participation.svg': readFileSync(join(process.cwd(), 'public/play/design-should-run/02-code-participation.svg'), 'utf8'),
+  '/play/design-should-run/03-agent-context.svg': readFileSync(join(process.cwd(), 'public/play/design-should-run/03-agent-context.svg'), 'utf8'),
+  '/play/design-should-run/04-delivery-materials.svg': readFileSync(join(process.cwd(), 'public/play/design-should-run/04-delivery-materials.svg'), 'utf8'),
+  '/play/design-should-run/05-two-access-paths.svg': readFileSync(join(process.cwd(), 'public/play/design-should-run/05-two-access-paths.svg'), 'utf8'),
+  '/play/design-should-run/06-team-delivery.svg': readFileSync(join(process.cwd(), 'public/play/design-should-run/06-team-delivery.svg'), 'utf8'),
+};
+
 const title = 'Design Should Run';
 const description = 'My vision for a design workstation where teams can connect user evidence, working prototypes, and decisions in the age of agents.';
 
@@ -19,7 +29,7 @@ export const metadata: Metadata = {
 export default function DesignShouldRun() {
   return (
     <CaseKitPage>
-      <CaseKitControls railKicker="Playground · Essay" railTitle={title} backHref="/playground" backLabel="Back to Playground" showProgress />
+      <CaseKitControls railKicker="Playground · Essay" railTitle={title} backHref="/playground" backLabel="Back to Playground" showProgress mobileContents />
       <CaseKitSections backHref="/playground" backLabel="Back to Playground">
         <CaseHero
           eyebrow="Playground · Design in the age of agents"
@@ -37,7 +47,7 @@ export default function DesignShouldRun() {
                   role="region"
                   aria-label={`${chapter.alt}. Scroll horizontally on small screens.`}
                   // This markup comes only from the six versioned SVG assets.
-                  dangerouslySetInnerHTML={{ __html: readFileSync(join(process.cwd(), 'public', chapter.diagram), 'utf8') }}
+                  dangerouslySetInnerHTML={{ __html: figures[chapter.diagram] }}
                 />
               </CaseFigure>
             )}
@@ -54,7 +64,7 @@ export default function DesignShouldRun() {
         <CaseClose label="09 / Conclusion" title="The workstation I want">
           <CaseProse>
             <p>I would judge the workstation by what the team can explain after a release. Can we trace a decision to the evidence behind it, see how it behaved in use, and know who can act on what we learned?</p>
-            <p>The six figures adapt ideas from Chapter 6 of Xue Zhirong’s <a href="https://www.xuezhirong.com/books/design-in-the-age-of-agents/6/">Design in the Age of Agents</a>. The workstation and its operating principles are my proposal.</p>
+            <p>The six figures adapt ideas from Chapter 6 of Xue Zhirong’s <a className={styles.sourceLink} href="https://www.xuezhirong.com/books/design-in-the-age-of-agents/6/">Design in the Age of Agents</a>. The workstation and its operating principles are my proposal.</p>
           </CaseProse>
         </CaseClose>
       </CaseKitSections>

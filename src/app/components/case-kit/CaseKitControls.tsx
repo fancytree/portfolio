@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../CaseStudyBackButton';
 import { CaseButton } from './CaseButton';
+import CaseReadingProgress from './CaseReadingProgress';
 
 type NavItem = { id: string; label: string; index: string };
 type CaseStudyControlsProps = {
@@ -12,16 +13,16 @@ type CaseStudyControlsProps = {
   backHref?: string;
   backLabel?: string;
   showProgress?: boolean;
+  mobileContents?: boolean;
   /** Content retained for callers that also use these summaries in their story. */
   tldrPoints?: { label: string; body: string }[];
 };
 
 const normalize = (text: string) => text.replace(/\s+/g, ' ').trim();
 
-export default function CaseStudyControls({ navLabels, railKicker = 'Case study', railTitle, backHref, backLabel = 'Back', showProgress = false }: CaseStudyControlsProps) {
+export default function CaseStudyControls({ navLabels, railKicker = 'Case study', railTitle, backHref, backLabel = 'Back', showProgress = false, mobileContents = false }: CaseStudyControlsProps) {
   const [items, setItems] = useState<NavItem[]>([]);
   const [activeId, setActiveId] = useState('');
-  const [progress, setProgress] = useState(0);
   const [title, setTitle] = useState(railTitle ?? '');
 
   useEffect(() => {
@@ -65,12 +66,6 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
         if ((document.getElementById(item.id)?.getBoundingClientRect().top ?? Infinity) <= 160) current = item.id;
       }
       setActiveId(current);
-      if (showProgress) {
-        const bounds = document.querySelector('.mei-project-page')?.getBoundingClientRect();
-        const distance = bounds ? Math.max(1, bounds.height - window.innerHeight) : 1;
-        const fraction = Math.max(0, Math.min(1, -(bounds?.top ?? 0) / distance));
-        setProgress(fraction === 1 ? 100 : Math.min(99, Math.round(fraction * 100)));
-      }
     };
     update();
     window.addEventListener('scroll', update, { passive: true });
@@ -79,7 +74,7 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, [items, showProgress]);
+  }, [items]);
 
   const chapterLinks = items.map(item => (
     <a key={item.id} href={`#${item.id}`} aria-current={item.id === activeId ? 'location' : undefined}>
@@ -88,21 +83,16 @@ export default function CaseStudyControls({ navLabels, railKicker = 'Case study'
   ));
 
   return (
-    <aside className="mei-case-study-rail case-rail" data-reading-progress={showProgress || undefined} aria-label="Case study navigation">
+    <aside className="mei-case-study-rail case-rail" data-reading-progress={mobileContents || undefined} aria-label="Case study navigation">
       <div className="case-rail-sticky">
         {backHref ? <CaseButton variant="back" arrow="left" href={backHref}>{backLabel}</CaseButton> : <CaseStudyBackButton />}
         <div className="case-rail-heading">
           <p className="case-rail-kicker">{railKicker}</p>
           <p className="case-rail-title">{title}</p>
         </div>
-        {showProgress && (
-          <div className="case-rail-progress">
-            <span aria-hidden="true">{progress}%</span>
-            <progress max={100} value={progress} aria-label="Article reading progress" />
-          </div>
-        )}
+        {showProgress && <CaseReadingProgress />}
         <nav className="case-rail-links" aria-label="Chapters">{chapterLinks}</nav>
-        {showProgress && (
+        {mobileContents && (
           <details className="case-rail-mobile">
             <summary>Contents</summary>
             <nav className="case-rail-links" aria-label="Chapters" onClick={event => {

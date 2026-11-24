@@ -33,3 +33,14 @@
   .workspace ul { display: flex; flex-wrap: wrap; gap: var(--case-space-4); }
   .evidence { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
 }
+
+.sourceLink {
+  color: var(--case-flow-link);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+}
+.sourceLink:hover { text-decoration-thickness: 2px; }
+.sourceLink:focus-visible {
+  outline: var(--case-focus-width) solid var(--case-flow-link);
+  outline-offset: var(--case-focus-offset);
+}

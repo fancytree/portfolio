@@ -34,6 +34,7 @@ export default function CaseKitStylePage() {
         alwaysVisible
         showDivider={false}
         editorial
+        showProgress
         railKicker="Case study"
         railTitle="Case study kit"
       />

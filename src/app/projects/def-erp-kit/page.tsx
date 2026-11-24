@@ -148,7 +148,7 @@ export default function DefErpKitPage() {
   return (
     <div className={wide.widePage}>
     <CaseKitPage>
-      <CaseStudyControls navLabels={navLabels} railTitle="DEF Beauty ERP" />
+      <CaseStudyControls showProgress navLabels={navLabels} railTitle="DEF Beauty ERP" />
       <CaseKitSections>
         <div className="case-mobile-back"><CaseStudyBackButton /></div>
         <CaseHero

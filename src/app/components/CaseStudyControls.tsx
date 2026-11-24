@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 import { fontFamily } from '@/lib/design-tokens';
+import CaseReadingProgress from './case-kit/CaseReadingProgress';
 
 type CaseStudyNavItem = {
   id: string;
@@ -25,6 +26,7 @@ type CaseStudyControlsProps = {
   showDivider?: boolean;
   /** 样式页用的侧栏：返回、案例名、带编号的章节。不画圆点和连线。 */
   editorial?: boolean;
+  showProgress?: boolean;
   railKicker?: string;
   railTitle?: string;
 };
@@ -269,6 +271,7 @@ function CaseStudyEditorialNav({
   showDivider,
   kicker,
   title,
+  showProgress,
 }: {
   visible: boolean;
   activeId: string;
@@ -276,6 +279,7 @@ function CaseStudyEditorialNav({
   showDivider: boolean;
   kicker: string;
   title: string;
+  showProgress: boolean;
 }) {
   const router = useRouter();
   const idleColor = 'var(--case-nav-idle)';
@@ -369,6 +373,8 @@ function CaseStudyEditorialNav({
           {title}
         </p>
       </div>
+
+      {showProgress && <CaseReadingProgress />}
 
       <nav
         style={{
@@ -563,6 +569,7 @@ export default function CaseStudyControls({
   alwaysVisible = false,
   showDivider = true,
   editorial = false,
+  showProgress = false,
   railKicker = 'Case study',
   railTitle,
 }: CaseStudyControlsProps) {
@@ -689,6 +696,7 @@ export default function CaseStudyControls({
           activeId={activeId}
           items={navItems}
           showDivider={showDivider}
+          showProgress={showProgress}
           kicker={railKicker}
           title={railTitle || pageTitle}
         />

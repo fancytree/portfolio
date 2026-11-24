@@ -21,19 +21,19 @@
   {
     "label": "02 / Code as a design material",
     "title": "Working with code changes what I can test.",
-    "lead": "A prototype lets me see what actually happens when data arrives late, a request fails, or someone lacks permission. Reviewing a change and helping ship it call for different evidence and responsibilities.",
+    "lead": "When a prototype runs, I can see what happens when data arrives late, a request fails, or a user lacks permission. As I move from building a demo to reviewing a change or helping ship it, the evidence I need changes too.",
     "diagram": "/play/design-should-run/02-code-participation.svg",
     "height": 795,
     "alt": "Code as a design material",
-    "caption": "Read across the three levels, then compare the evidence and its limits within each level. The five checks apply throughout.",
+    "caption": "Compare what each kind of work can demonstrate and what still needs evidence. The five checks apply at every stage.",
     "notes": [
       {
         "title": "Match the evidence to the claim",
-        "body": "A demo can show that a flow works in the cases it covers. Code review and testing tell the team more about the change. Release approval also depends on the people who own the risks."
+        "body": "A demo can show that a flow works in the cases it covers. A targeted review tells me whether a particular change fixed the issue. A release decision calls for broader checks and approval from the people who own the risks."
       },
       {
-        "title": "Show how far the work has come",
-        "body": "I want the workstation to show whether I am looking at an experiment, a reviewed change, or a release candidate, and which checks still need review."
+        "title": "Show what is ready for review",
+        "body": "In the workstation, I want to see whether I’m looking at an experiment, a reviewed change, or a release candidate. Each should show what has been checked, what still needs evidence, and who can make the next decision."
       }
     ]
   },

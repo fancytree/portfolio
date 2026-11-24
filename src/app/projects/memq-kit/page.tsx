@@ -160,7 +160,7 @@ export default function MemQKitPage() {
   return (
     <div className={diagrams.widePage}>
     <CaseKitPage>
-      <CaseStudyControls navLabels={navLabels} railKicker="Case study" railTitle="MemQ" />
+      <CaseStudyControls showProgress navLabels={navLabels} railKicker="Case study" railTitle="MemQ" />
       <CaseKitSections>
         <div className="case-mobile-back"><CaseStudyBackButton /></div>
         <CaseHero

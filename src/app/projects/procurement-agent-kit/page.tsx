@@ -171,7 +171,7 @@ const reversals: Reversal[] = [
 export default function ProcurementAgentKitPage() {
   return (
     <CaseKitPage>
-      <CaseStudyControls navLabels={navLabels} railKicker="Case study" railTitle="Procurement Agent" />
+      <CaseStudyControls showProgress navLabels={navLabels} railKicker="Case study" railTitle="Procurement Agent" />
       <CaseKitSections>
         <div className="case-mobile-back"><CaseStudyBackButton /></div>
         <CaseHero

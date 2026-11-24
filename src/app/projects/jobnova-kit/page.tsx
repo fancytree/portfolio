@@ -25,7 +25,7 @@ const IMG = '/img/jobnova/v2';
 export default function JobnovaKitPage() {
   return (
     <CaseKitPage>
-      <CaseStudyControls navLabels={navLabels} railKicker="Case study" railTitle="JobNova" />
+      <CaseStudyControls showProgress navLabels={navLabels} railKicker="Case study" railTitle="JobNova" />
       <CaseKitSections>
         <div className="case-mobile-back"><CaseStudyBackButton /></div>
         <CaseHero
