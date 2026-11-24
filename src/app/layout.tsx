@@ -4,7 +4,7 @@ import "./globals.css";
 // 引入页面基础布局组件，用于包裹整个应用内容
 import Layout from "./components/Layout";
 import Script from "next/script";
-import Preloader, { preloaderGate } from "./components/Preloader";
+import { preloaderGate } from "./components/Preloader";
 
 export const metadata: Metadata = {
   title: "Mei Chai — Product Designer · AI-Native Products & Design Systems",
@@ -24,13 +24,11 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      // the loader's inline script marks <html> before React hydrates
+      // the homepage loader gate marks <html> before React hydrates
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${nunito.variable} ${inter.variable} ${dmMono.variable} ${oswald.variable}`}
     >
       <body className="antialiased">
-        {/* 全屏加载动画：每次访问只播一次，盖在整站之上 */}
-        <Preloader />
         <Script id="preloader-gate" strategy="beforeInteractive">
           {preloaderGate}
         </Script>

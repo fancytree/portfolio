@@ -8,9 +8,8 @@
 // away upwards to show the page, and the fish drops out of its circle and falls, the
 // way the tools fall off the About shelf, into the hero's river, where the scene
 // takes it back with a splash: the loader's fish and the river's fish are one fish.
-// Elsewhere it falls out through the bottom of the screen.
 //
-// The markup is in the server HTML so it covers the page from the first paint;
+// Only the homepage includes the markup in its server HTML;
 // `preloaderGate`, run from the root layout before anything paints, hides it
 // straight away when it is not wanted.
 
@@ -34,8 +33,8 @@ const FALL_S = 1.05; // from leaving the loop to landing in the river
 const ONCE = process.env.NODE_ENV === "production";
 
 // Run before the page paints (see the root layout): hides the loader at once when it
-// has already played this visit, inside an embed, or on the bare /demos pages.
-export const preloaderGate = `(function(){var d=document.documentElement;try{if((${ONCE}&&sessionStorage.getItem('${SEEN}'))||location.pathname.indexOf('/demos/')===0||window.top!==window){d.setAttribute('data-preloaded','');return}}catch(e){d.setAttribute('data-preloaded','');return}d.setAttribute('data-preloading','')})();`;
+// has already played this visit, inside an embed, or outside the homepage.
+export const preloaderGate = `(function(){var d=document.documentElement;try{if((${ONCE}&&sessionStorage.getItem('${SEEN}'))||location.pathname!=='/'||window.top!==window){d.setAttribute('data-preloaded','');return}}catch(e){d.setAttribute('data-preloaded','');return}d.setAttribute('data-preloading','')})();`;
 
 const clamp = (v: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
 const ease = (v: number) => {
@@ -53,7 +52,7 @@ export default function Preloader() {
     const html = document.documentElement;
     const root = rootRef.current;
     const canvas = fishRef.current;
-    if (!root || !canvas || html.hasAttribute("data-preloaded")) return;
+    if (!root || !canvas || window.location.pathname !== "/" || !html.hasAttribute("data-preloading")) return;
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const home = window.location.pathname === "/";
@@ -229,6 +228,7 @@ export default function Preloader() {
       timers.forEach((id) => window.clearTimeout(id));
       window.removeEventListener("load", onLoad);
       fish?.dispose();
+      html.removeAttribute("data-preloading");
       if (home) riverBus.intro.away = false;
     };
   }, []);

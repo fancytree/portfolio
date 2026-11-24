@@ -18,7 +18,7 @@ const figures: Record<string, string> = {
 };
 
 const title = 'Design Should Run';
-const description = 'My vision for a design workstation where teams can connect user evidence, working prototypes, and decisions in the age of agents.';
+const description = 'Notes on designing in code, with a workstation concept for reviewing prototypes and keeping track of design decisions.';
 
 export const metadata: Metadata = {
   title: `${title} — Mei Chai`,
@@ -32,9 +32,9 @@ export default function DesignShouldRun() {
       <CaseKitControls railKicker="Playground · Essay" railTitle={title} backHref="/playground" backLabel="Back to Playground" showProgress />
       <CaseKitSections backHref="/playground" backLabel="Back to Playground">
         <CaseHero
-          eyebrow="Playground · Design in the age of agents"
+          eyebrow="Playground · Notes on designing in code"
           title="Design should run. And remain accountable."
-          intro="I want a workstation where I can start with user evidence, try a design that runs, and see what happens after it ships. AI can help the team move through that work, while people decide when the evidence is strong enough to act."
+          intro="These notes draw on Chapter 6 of Xue Zhirong’s Design in the Age of Agents. I’ve redrawn six figures in English and added a workstation concept based on how I prototype and review designs today."
           meta={[{ label: 'Format', value: 'Essay and interactive prototype' }]}
         />
         {chapters.map(chapter => (
@@ -52,9 +52,14 @@ export default function DesignShouldRun() {
               </CaseFigure>
             )}
             {chapter.label.startsWith('07') && (
-              <CaseFigure caption="Workstation concept · Aurora Store. Open AUR-8 to see the requirements, the spec, and how feedback shaped the cart prototype.">
-                <Workstation />
-              </CaseFigure>
+              <>
+                <CaseProse>
+                  <p>When I prototype in code, teammates usually pull my Git branch and run it locally to review the interaction. I’d like us to review that same working version in a shared space, leave comments on specific states, and keep the reasoning behind each decision with the prototype.</p>
+                </CaseProse>
+                <CaseFigure caption="Workstation concept · Aurora Store. Open AUR-8 to see the requirements, the spec, and how feedback shaped the cart prototype.">
+                  <Workstation />
+                </CaseFigure>
+              </>
             )}
             <CaseProse>
               {chapter.notes.map(note => <p key={note.title}><strong>{note.title}</strong><br />{note.body}</p>)}

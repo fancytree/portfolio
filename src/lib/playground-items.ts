@@ -74,7 +74,7 @@ export const playgroundItems: PlaygroundItem[] = [
     id: 'design-should-run',
     kind: 'article',
     title: 'Design Should Run',
-    description: 'My vision for a design workstation in the age of agents.',
+    description: 'Notes on designing in code, with an interactive workstation concept.',
     href: '/playground/design-should-run',
   },
   // 顺序即排布顺序：视觉卡片与引用交错放，让每一列都有图也有字、引用不会全挤在下面
