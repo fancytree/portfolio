@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import CaseKitControls from '../../components/case-kit/CaseKitControls';
 import { CaseChapter, CaseClose, CaseFigure, CaseHero, CaseKitPage, CaseKitSections, CaseProse } from '../../components/case-kit/CaseKit';
 import chapters from './chapters.json';
@@ -30,9 +31,14 @@ export default function DesignShouldRun() {
           <CaseChapter key={chapter.label} label={chapter.label} title={chapter.title} lead={chapter.lead}>
             {chapter.diagram && chapter.height && chapter.alt && chapter.caption && (
               <CaseFigure caption={chapter.caption}>
-                <div className={styles.diagram} tabIndex={0} role="region" aria-label={chapter.alt}>
-                  <Image unoptimized src={chapter.diagram} alt={chapter.alt} width={1400} height={chapter.height} />
-                </div>
+                <div
+                  className={`case-diagram-scroll ${styles.diagram}`}
+                  tabIndex={0}
+                  role="region"
+                  aria-label={`${chapter.alt}. Scroll horizontally on small screens.`}
+                  // This markup comes only from the six versioned SVG assets.
+                  dangerouslySetInnerHTML={{ __html: readFileSync(join(process.cwd(), 'public', chapter.diagram), 'utf8') }}
+                />
               </CaseFigure>
             )}
             {chapter.label.startsWith('07') && (

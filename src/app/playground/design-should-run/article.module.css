@@ -1,13 +1,35 @@
-.diagram { overflow: auto; overscroll-behavior-x: contain; }
-.diagram img { display: block; width: 100%; min-width: 900px; height: auto; }
-.diagram:focus-visible, .states button:focus-visible { outline: 2px solid var(--case-accent); outline-offset: -2px; }
-.workstation { padding: var(--case-space-24); background: var(--case-surface); color: var(--case-ink); font-family: var(--case-font-body); font-size: var(--case-type-body); }
-.demoHeader { display: flex; align-items: baseline; flex-wrap: wrap; justify-content: space-between; gap: var(--case-space-8); }
-.demoHeader span, .demoFooter { color: var(--case-muted); font-size: var(--case-type-caption); }
-.demoSteps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--case-space-16); margin-block: var(--case-space-16); }
-.demoSteps > div, .result { padding: var(--case-space-16); background: var(--case-bg, #fff); }
+.diagram { overscroll-behavior-x: contain; }
+.diagram > svg { height: auto; }
+.diagram :global(.article-diagram-title) { text-transform: uppercase; }
+.workstation { container-type: inline-size; background: var(--case-bg); color: var(--case-ink); font-family: var(--case-font-body); font-size: var(--case-type-caption); }
+.demoHeader, .demoFooter, .labHeader { display: flex; align-items: baseline; flex-wrap: wrap; justify-content: space-between; gap: var(--case-space-8); }
+.demoHeader, .demoFooter { padding: var(--case-space-16); background: var(--case-surface); }
+.demoHeader { border-bottom: var(--case-border-width) solid var(--case-rule); }
+.demoFooter { border-top: var(--case-border-width) solid var(--case-rule); }
+.demoHeader span, .labHeader span, .demoFooter span { color: var(--case-muted); }
+.workstationBody { display: grid; grid-template-columns: minmax(120px, .8fr) minmax(0, 2.8fr) minmax(160px, 1fr); }
+.workspace, .evidence { padding: var(--case-space-16); background: var(--case-surface); }
+.workspace { border-right: var(--case-border-width) solid var(--case-rule); }
+.evidence { border-left: var(--case-border-width) solid var(--case-rule); }
+.workspace h3, .evidence h3 { margin: 0 0 var(--case-space-12); font: var(--case-weight-strong) var(--case-type-caption) var(--case-font-body); }
+.workspace ul { margin: 0; padding: 0; list-style: none; }
+.workspace li { padding: var(--case-space-4) var(--case-space-8); }
+.workspace li[data-selected] { background: var(--case-bg); border-left: var(--case-focus-width) solid var(--case-ink); font-weight: var(--case-weight-strong); }
+.evidence dl { margin: 0; }
+.evidence dl > div + div { margin-top: var(--case-space-12); }
+.evidence dt { font-weight: var(--case-weight-strong); }
+.evidence dd { margin: 0; color: var(--case-copy); }
+.workspace p, .evidence p { margin: var(--case-space-16) 0 0; color: var(--case-muted); }
+.liveLab { min-width: 0; padding: var(--case-space-16); }
+.demoSteps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: var(--case-space-12); margin-block: var(--case-space-16); }
+.demoSteps > div, .result { padding: var(--case-space-12); border: var(--case-border-width) solid var(--case-rule); border-radius: var(--case-radius-sm); }
 .demoSteps p, .result p { margin: var(--case-space-6) 0 0; }
-.states { display: flex; flex-wrap: wrap; gap: var(--case-space-8); margin-bottom: var(--case-space-16); }
-.states button { padding: 6px 12px; border: 1px solid currentColor; background: transparent; border-radius: 4px; cursor: pointer; font: inherit; }
-.states button[aria-pressed='true'] { color: #fff; background: var(--case-ink); border-color: var(--case-ink); }
-.demoFooter { margin: var(--case-space-16) 0 0; }
+.demoSteps small { display: inline-block; margin-top: var(--case-space-8); color: var(--case-muted); }
+.states { display: flex; align-items: center; flex-wrap: wrap; gap: var(--case-space-6); margin-bottom: var(--case-space-12); }
+.states > span { width: 100%; color: var(--case-muted); }
+@container (max-width: 760px) {
+  .workstationBody { grid-template-columns: minmax(0, 1fr); }
+  .workspace { border-right: 0; border-bottom: var(--case-border-width) solid var(--case-rule); }
+  .workspace ul { display: flex; flex-wrap: wrap; gap: var(--case-space-4); }
+  .evidence { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
+}
