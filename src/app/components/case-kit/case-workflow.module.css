@@ -1,12 +1,12 @@
 .workflow {
   padding: var(--case-space-24);
-  background: var(--case-bg);
+  background: var(--case-white);
   color: var(--case-copy);
 }
 .title {
   margin: 0 0 var(--case-space-24);
   font-family: var(--case-font-heading);
-  font-size: var(--case-type-subsection);
+  font-size: var(--case-text-24);
   font-weight: var(--case-weight-regular);
   line-height: var(--case-leading-chapter);
   color: var(--case-ink);
@@ -17,15 +17,15 @@
   min-height: var(--case-workflow-description-height);
   margin: var(--case-space-24) 0 var(--case-space-8);
   font-family: var(--case-font-body);
-  font-size: var(--case-type-card-body);
+  font-size: var(--case-text-16);
   line-height: var(--case-leading-body);
   color: var(--case-copy);
 }
 .description strong { font-weight: var(--case-weight-strong); }
 .diagram { min-width: 0; }
 .diagram :global([data-workflow-node] > rect) {
-  fill: var(--case-bg);
-  stroke: var(--case-rule);
+  fill: var(--case-white);
+  stroke: var(--case-line);
   stroke-width: var(--case-border-width);
 }
 .diagram :global([data-workflow-node='true'] > rect) {
@@ -34,7 +34,7 @@
   stroke-width: var(--case-focus-width);
 }
 .diagram :global([data-workflow-node='false'] > text) { fill: var(--case-muted); }
-.diagram :global([data-workflow-edge]) { stroke: var(--case-rule); }
+.diagram :global([data-workflow-edge]) { stroke: var(--case-line); }
 .diagram :global([data-workflow-edge='true']) { stroke: var(--case-ink); }
 @media print {
   .controls { display: none; }

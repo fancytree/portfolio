@@ -8,7 +8,7 @@ import { FlowPulse } from './ProcurementFlowDiagrams';
 
 const LINK = 'var(--case-flow-link)';
 const BREAK = 'var(--case-flow-break)';
-const T = { heading: 'var(--case-font-heading)', body: 'var(--case-font-body)', cap: 'var(--case-type-caption)', strong: 'var(--case-weight-strong)' };
+const T = { heading: 'var(--case-font-heading)', body: 'var(--case-font-body)', cap: 'var(--case-text-14)', strong: 'var(--case-weight-strong)' };
 
 /* ───────── 1 · The evaluation loop ───────── */
 const LOOP = [
@@ -30,7 +30,7 @@ export function EvaluationLoop() {
           <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" /></marker>
           <marker id={`${id}-arrow-break`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill={BREAK} /></marker>
         </defs>
-        <rect width="960" height="400" fill="var(--case-bg)" />
+        <rect width="960" height="400" fill="var(--case-white)" />
         <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" markerEnd={`url(#${id}-arrow)`}>
           {LOOP_PATHS.map((d) => <path key={d} d={d} />)}
         </g>
@@ -46,7 +46,7 @@ export function EvaluationLoop() {
           const em = 'emphasis' in node;
           return (
             <g key={node.n}>
-              <rect x={node.x - 132} y={node.y - 40} width="264" height="80" rx="8" fill="var(--case-bg)" stroke={em ? LINK : 'var(--case-copy)'} strokeWidth={em ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
+              <rect x={node.x - 132} y={node.y - 40} width="264" height="80" rx="8" fill="var(--case-white)" stroke={em ? LINK : 'var(--case-copy)'} strokeWidth={em ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
               {em && <rect className={styles.breathe} x={node.x - 132} y={node.y - 40} width="264" height="80" rx="8" fill="none" stroke={LINK} strokeWidth="var(--case-border-width)" />}
               <text x={node.x - 114} y={node.y - 12} fill={em ? LINK : 'var(--case-muted)'} fontFamily={T.heading} fontSize={T.cap}>{node.n}</text>
               <text x={node.x - 86} y={node.y - 12} fill="var(--case-ink)" fontFamily={T.body} fontSize={T.cap} fontWeight={T.strong}>{node.title}</text>
@@ -86,11 +86,11 @@ export function SupplierAccuracyChart() {
       <svg viewBox={`0 0 960 ${top + ROWS.length * row + 40}`} role="img" aria-labelledby={`${id}-title ${id}-desc`}>
         <title id={`${id}-title`}>Plan accuracy and confidence differ by supplier</title>
         <desc id={`${id}-desc`}>{ROWS.map((r) => `${r.name}: ${r.score == null ? 'no score yet' : `${r.score}%`}, ${r.conf.toLowerCase()} confidence, ${r.reviewed} reviewed orders`).join('; ')}.</desc>
-        <rect width="960" height={top + ROWS.length * row + 40} fill="var(--case-bg)" />
+        <rect width="960" height={top + ROWS.length * row + 40} fill="var(--case-white)" />
         {/* Grid and axis labels */}
         {[50, 60, 70, 80, 90, 100].map((v) => (
           <g key={v}>
-            <line x1={sx(v)} x2={sx(v)} y1={top - 14} y2={top + ROWS.length * row - 14} stroke="var(--case-rule)" strokeWidth="1" />
+            <line x1={sx(v)} x2={sx(v)} y1={top - 14} y2={top + ROWS.length * row - 14} stroke="var(--case-line)" strokeWidth="1" />
             <text x={sx(v)} y={top - 26} textAnchor="middle" fill="var(--case-muted)" fontFamily={T.body} fontSize={T.cap}>{v}%</text>
           </g>
         ))}
@@ -107,7 +107,7 @@ export function SupplierAccuracyChart() {
               {r.score != null ? (
                 <>
                   <line x1={sx(r.score - s)} x2={sx(Math.min(100, r.score + s))} y1={y} y2={y} stroke={LINK} strokeOpacity="0.35" strokeWidth="6" strokeLinecap="round" />
-                  <circle cx={sx(r.score)} cy={y} r="7" fill={LINK} stroke="var(--case-bg)" strokeWidth="2" />
+                  <circle cx={sx(r.score)} cy={y} r="7" fill={LINK} stroke="var(--case-white)" strokeWidth="2" />
                   <text x={sx(Math.min(100, r.score + s)) + 12} y={y + 5} fill="var(--case-ink)" fontFamily={T.body} fontSize={T.cap} fontWeight={T.strong}>{r.score}%</text>
                 </>
               ) : <text x={sx(50) + 4} y={y + 5} fill="var(--case-muted)" fontFamily={T.body} fontSize={T.cap}>Review a received order to start</text>}
@@ -142,10 +142,10 @@ export function PlanScoreBuild() {
       <svg viewBox="0 0 960 400" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
         <title id={`${id}-title`}>A new plan starts from the supplier&apos;s track record, then loses points for weak data</title>
         <desc id={`${id}-desc`}>MNP track record 81%. Stock-outs hide demand, minus 2. Thin sales signal, minus 1. Lead time varies, minus 1. Expected accuracy 77%, likely between 73% and 81% because confidence is high.</desc>
-        <rect width="960" height="400" fill="var(--case-bg)" />
+        <rect width="960" height="400" fill="var(--case-white)" />
         {[70, 75, 80, 85].map((v) => (
           <g key={v}>
-            <line x1={sx(v)} x2={sx(v)} y1="64" y2="346" stroke="var(--case-rule)" strokeWidth="1" />
+            <line x1={sx(v)} x2={sx(v)} y1="64" y2="346" stroke="var(--case-line)" strokeWidth="1" />
             <text x={sx(v)} y="50" textAnchor="middle" fill="var(--case-muted)" fontFamily={T.body} fontSize={T.cap}>{v}%</text>
           </g>
         ))}
@@ -160,18 +160,18 @@ export function PlanScoreBuild() {
                 ? <circle cx={sx(from)} cy={y} r="7" fill="var(--case-ink)" />
                 : <>
                   <line x1={sx(from)} x2={sx(to) + 6} y1={y} y2={y} stroke={BREAK} strokeWidth="6" strokeLinecap="round" />
-                  <line x1={sx(from)} x2={sx(from)} y1={rowY(i - 1) + 8} y2={y - 4} stroke="var(--case-rule)" strokeDasharray="3 3" />
+                  <line x1={sx(from)} x2={sx(from)} y1={rowY(i - 1) + 8} y2={y - 4} stroke="var(--case-line)" strokeDasharray="3 3" />
                 </>}
             </g>
           );
         })}
         {/* Result with its likely range */}
-        <line x1="24" x2="936" y1="318" y2="318" stroke="var(--case-rule)" />
+        <line x1="24" x2="936" y1="318" y2="318" stroke="var(--case-line)" />
         <text x="24" y="356" fill="var(--case-ink)" fontFamily={T.body} fontSize={T.cap} fontWeight={T.strong}>Expected accuracy</text>
         <text x="24" y="376" fill="var(--case-muted)" fontFamily={T.body} fontSize={T.cap}>High confidence · ±4 points</text>
         <text x="470" y="361" textAnchor="end" fill={LINK} fontFamily={T.body} fontSize={T.cap} fontWeight={T.strong}>{expected}%</text>
         <line x1={sx(lo)} x2={sx(hi)} y1="356" y2="356" stroke={LINK} strokeOpacity="0.35" strokeWidth="8" strokeLinecap="round" />
-        <circle cx={sx(expected)} cy="356" r="8" fill={LINK} stroke="var(--case-bg)" strokeWidth="2" />
+        <circle cx={sx(expected)} cy="356" r="8" fill={LINK} stroke="var(--case-white)" strokeWidth="2" />
         <text x={sx(hi) + 14} y="361" fill="var(--case-muted)" fontFamily={T.body} fontSize={T.cap}>{lo}–{hi}%</text>
       </svg>
     </div>

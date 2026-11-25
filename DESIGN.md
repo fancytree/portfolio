@@ -52,6 +52,26 @@ MemQ 的 `coverAccent` 使用项目设计系统主色 `#1A8A72`。封面 hover �
 
 首页继续使用用户已确认的定制视觉，不把案例 token 规则扩大成首页重设计。定位文案复用现有标题、正文、眉题和网格样式，不新增色板、字体、卡片系统或 token。首屏去掉固定 `100vh` 高度，依靠 `.mei-section-screen` 的 `min-height: 100svh`，小屏文字较长时自然撑高、不被裁切。页面 title 和 description 同步为 AI-native products、Design systems 和数据驱动迭代的定位。
 
+## Token 归并与参照页（2026-11-25）
+
+`src/lib/design-tokens/case.css` 是全站外壳唯一的数值来源：案例页、首页、Playground 和页头页脚都读它。`--river-*` 只是指向 `--case-*` 的别名，`--mei-*`、未使用的 Mono 深色主题、`.cn-scope` 样式和 MeiNunito 字体已删除。产品演示（`.cn-demo-scope`、`_jn` 等）保留各自体系。参照页 `/design-system`（noindex，站内无链接）在构建时读取样式表，列出 token、组件和仍手写的值；新增样式先查该页。
+
+## 间距与圆角（2026-11-25，取代下方“间距”一节的档位）
+
+间距 6 档：`--case-space-4 / 8 / 16 / 24 / 32 / 64`，节奏值只留 `--case-space-stack`（区块之间）和 `--case-space-chapter`（章节之间）。圆角 4 个：`--case-radius-none`（直角，主按钮与首页卡片）、`--case-radius-sm`（8px）、`--case-radius-lg`（16px）、`--case-radius-full`；圆形用 50%。其余按用途命名的间距与圆角别名已删除。
+
+## 颜色与字号（2026-11-25）
+
+颜色只有 10 个：`--case-white / paper / surface / line / faded / muted / copy / ink`，以及仅供流程图的 `--case-flow-break / flow-link`（产品案例可在局部用品牌色覆盖这两项）。字号只有一套：`--case-text-12 / 14 / 16 / 18 / 24 / 36 / 56`，外加首页大标题的流式 `--case-text-display`。按用途命名的颜色与字号别名、未使用的深色反相调色板已删除；本文较早章节提到的 `--case-type-*`、`--case-copy-*` 等旧名以本节为准。
+
+## 间距（2026-11-25）
+
+间距只有 8 档：`--case-space-4 / 8 / 12 / 16 / 24 / 32 / 48 / 64`。旧档位并入方式：2→4、6→8、10→12、14/18/20→16、22/28→24、36/40→32、56→48。图标尺寸是尺寸值，不走间距档。章节节奏继续用 `--case-space-chapter`、`stack`、`glance`、`page-*` 等语义 token。
+
+## 字体（2026-11-25）
+
+外壳只用三种字体：标题 Oswald、正文 Geist、标签与代码 IBM Plex Mono（`--case-font-heading`、`--case-font-body`、`--case-font-code`），统一在 `src/app/fonts/index.ts` 加载。Nunito、Geist Mono、DM Mono 已移除。Inter 只供 ConnectNova 与 JobNova 产品演示使用，不预加载；演示内的简历衬线体和产品插画字体属于产品本身。
+
 ## 页面清理（2026-11-25）
 
 站内只保留访客能到达的页面，以及 `/projects/connectnova-kit`（首页不展示，网址可单独发送）和样式参照页 `/projects/case-kit`。`/works`、旧版首页、占位页与 Beikemama、CrackInterview、客服系统、Milano Partecipa、Clarity、两篇核桃研究页已删除，旧网址在 `next.config.ts` 中跳转首页。旧页专用的导航、Hero、TypeScript 字体与圆角 token（`typography.ts`、`radius.ts`）和全局兼容样式一并删除；案例页导航只用 `case-kit/CaseKitControls.tsx`，token 唯一来源仍是 `case.css`。下文提到 `/works` 与旧路由保留的记录以本节为准。

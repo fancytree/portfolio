@@ -14,7 +14,6 @@ import Portrait from "./Portrait";
 import { SiteFooter, SiteHeader } from "./SiteChrome";
 import ToolShelf from "./ToolShelf";
 import StageNodes from "./StageNodes";
-import { plexMono } from "./fonts";
 import { contact, experiments, projects, strategy } from "./content";
 import s from "./river.module.css";
 
@@ -40,7 +39,7 @@ function Label({ children }: { children: string }) {
 
 export default function RiverHome() {
   return (
-    <div className={`${s.root} ${plexMono.variable}`}>
+    <div className={s.root}>
       <a className={s.skip} href="#main">
         Skip to content
       </a>

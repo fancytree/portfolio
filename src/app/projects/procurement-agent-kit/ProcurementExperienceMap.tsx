@@ -57,9 +57,9 @@ const checks: Record<string, [string, string]> = {
 };
 function ExperienceCard({item,phase}:{item:Facet;phase:string}) {
  const [revision,setRevision]=useState(0);
- return <article id={`experience-facet-${item.id}`} className="min-w-0 overflow-hidden rounded-[var(--case-radius-media)] border border-[var(--case-rule)] bg-[var(--case-bg)]" aria-label={`${item.id} / ${item.title}`}>
+ return <article id={`experience-facet-${item.id}`} className="min-w-0 overflow-hidden rounded-[var(--case-radius-sm)] border border-[var(--case-line)] bg-[var(--case-white)]" aria-label={`${item.id} / ${item.title}`}>
    <CaseInteractivePreview key={revision} src={`/demos/def-design-system/index.html?view=agent-facet&id=${item.id}&revision=${revision}`} title={`Interactive design: ${item.title}`} />
-   <div className="flex flex-col gap-[var(--case-space-12)] border-t border-[var(--case-rule)] p-[var(--case-space-24)]">
+   <div className="flex flex-col gap-[var(--case-space-16)] border-t border-[var(--case-line)] p-[var(--case-space-24)]">
      <div className="flex items-center justify-between gap-[var(--case-space-8)]">
        <span data-case-type="spec">{phase} · {item.id}</span>
        <CaseButton variant="text" aria-label={`Reset ${item.title}`} onClick={()=>setRevision(value=>value+1)}>Reset</CaseButton>
@@ -68,7 +68,7 @@ function ExperienceCard({item,phase}:{item:Facet;phase:string}) {
      <p data-case-type="card-body"><strong>{item.goal}</strong></p>
      <details className="group">
        <summary data-case-type="caption" className="cursor-pointer list-none underline underline-offset-4">Why and how</summary>
-       <div data-case-type="card-body" className="mt-[var(--case-space-12)] flex flex-col gap-[var(--case-space-12)]">
+       <div data-case-type="card-body" className="mt-[var(--case-space-16)] flex flex-col gap-[var(--case-space-16)]">
          <p><strong>User need.</strong> {item.problem}</p>
          <p><strong>Design.</strong> {item.design}</p>
          <p><strong>Trade-off.</strong> {checks[item.id][0]}</p>
@@ -110,8 +110,8 @@ export default function ProcurementExperienceMap() {
  };
 
  return <div className="flex min-w-0 flex-col gap-[var(--case-space-32)]" aria-label="Agent UX Map: 12 Steps + 6 Themes">
-  <div className="sticky top-[var(--site-nav-h)] z-10 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-[var(--case-bg)] before:content-['']">
-   <div ref={strip} className="overflow-x-auto border-b border-[var(--case-rule)] py-[var(--case-space-12)]">
+  <div className="sticky top-[var(--site-nav-h)] z-10 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-[var(--case-white)] before:content-['']">
+   <div ref={strip} className="overflow-x-auto border-b border-[var(--case-line)] py-[var(--case-space-16)]">
     <div className="flex w-max gap-[var(--case-space-8)]" role="group" aria-label="Phases of the experience; follows your scroll">
      {phases.map(item=><CaseButton key={item.id} variant="tab" aria-pressed={item.id===active} onClick={()=>jump(item.id)}>{item.title}</CaseButton>)}
     </div>

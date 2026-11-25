@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { dmMono, geistMono, geistSans, inter, nunito, oswald } from "./fonts";
+import { geistSans, inter, oswald, plexMono } from "./fonts";
 import "./globals.css";
 // 引入页面基础布局组件，用于包裹整个应用内容
 import Layout from "./components/Layout";
@@ -26,7 +26,7 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       // the homepage loader gate marks <html> before React hydrates
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} ${nunito.variable} ${inter.variable} ${dmMono.variable} ${oswald.variable}`}
+      className={`${geistSans.variable} ${oswald.variable} ${plexMono.variable} ${inter.variable}`}
     >
       <body className="antialiased">
         <Script id="preloader-gate" strategy="beforeInteractive">

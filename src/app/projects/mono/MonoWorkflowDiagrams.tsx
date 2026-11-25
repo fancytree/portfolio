@@ -10,18 +10,18 @@ function Node({ x, y, title, tag, lines, focal = false, terminal = false, stage 
   const focused = useCaseWorkflowFocus(stage);
   return (
     <g data-workflow-node={focused} data-workflow-stage={stage}>
-      <rect x={x} y={y} width="232" height="112" fill="var(--case-bg)" stroke={focal ? 'var(--case-ink)' : 'var(--case-rule)'} strokeWidth={focal ? 'var(--case-focus-width)' : 'var(--case-border-width)'} style={{ rx: terminal ? 'var(--case-radius-xl)' : 'var(--case-radius-sm)' }} />
-      <text x={x + 20} y={y + 24} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-spec)" fontWeight="var(--case-weight-medium)">{tag}</text>
-      <text x={x + 20} y={y + 52} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)">{title}</text>
-      {lines.map((line, index) => <text key={line} x={x + 20} y={y + 76 + index * 20} fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{line}</text>)}
+      <rect x={x} y={y} width="232" height="112" fill="var(--case-white)" stroke={focal ? 'var(--case-ink)' : 'var(--case-line)'} strokeWidth={focal ? 'var(--case-focus-width)' : 'var(--case-border-width)'} style={{ rx: terminal ? 'var(--case-radius-lg)' : 'var(--case-radius-sm)' }} />
+      <text x={x + 20} y={y + 24} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-12)" fontWeight="var(--case-weight-medium)">{tag}</text>
+      <text x={x + 20} y={y + 52} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-18)" fontWeight="var(--case-weight-strong)">{title}</text>
+      {lines.map((line, index) => <text key={line} x={x + 20} y={y + 76 + index * 20} fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">{line}</text>)}
     </g>
   );
 }
 
 function ArrowLabel({ x, y, width, children }: { x: number; y: number; width: number; children: string }) {
   return <g>
-    <rect x={x} y={y} width={width} height="24" fill="var(--case-bg)" />
-    <text x={x + width / 2} y={y + 16} textAnchor="middle" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-stat-label)" fontWeight="var(--case-weight-medium)">{children}</text>
+    <rect x={x} y={y} width={width} height="24" fill="var(--case-white)" />
+    <text x={x + width / 2} y={y + 16} textAnchor="middle" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-12)" fontWeight="var(--case-weight-medium)">{children}</text>
   </g>;
 }
 
@@ -35,7 +35,7 @@ function Markers({ prefix }: { prefix: string }) {
 
 function WorkflowEdge({ stage, prefix, d, dashed = false }: { stage: string; prefix: string; d: string; dashed?: boolean }) {
   const focused = useCaseWorkflowFocus(stage);
-  return <path d={d} data-workflow-edge={focused} data-workflow-stage={stage} markerEnd={`url(#${prefix}-arrow${focused ? '-accent' : ''})`} strokeDasharray={dashed ? 'var(--case-space-6) var(--case-space-4)' : undefined} />;
+  return <path d={d} data-workflow-edge={focused} data-workflow-stage={stage} markerEnd={`url(#${prefix}-arrow${focused ? '-accent' : ''})`} strokeDasharray={dashed ? 'var(--case-space-8) var(--case-space-4)' : undefined} />;
 }
 
 export function MonoAgentWorkflow() {
@@ -51,7 +51,7 @@ export function MonoAgentWorkflow() {
         <title id={`${prefix}-title`}>Mono: from intent to a structured interface</title>
         <desc id={`${prefix}-desc`}>LangChain routes a request to a task chain or domain service, missing information prompts clarification, and a structured response is checked and rendered by product-owned components.</desc>
         <Markers prefix={prefix} />
-        <rect width="960" height="600" fill="var(--case-bg)" />
+        <rect width="960" height="600" fill="var(--case-white)" />
         <g fill="none" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" markerEnd={`url(#${prefix}-arrow)`}>
           <WorkflowEdge stage="routing" prefix={prefix} d="M280 120 H364" />
           <WorkflowEdge stage="execution" prefix={prefix} d="M596 120 H680" />
@@ -69,10 +69,10 @@ export function MonoAgentWorkflow() {
         <Node x={680} y={300} stage="execution" title="Clarify & continue" tag="FOLLOW-UP" lines={['Ask for missing information', 'Carry the request forward']} />
         <Node x={364} y={300} stage="composition" title="Response contract" tag="04 / STRUCTURED OUTPUT" lines={['Intent · component · data', 'Feedback · schema check']} />
         <Node x={48} y={300} stage="composition" title="Product-owned UI" tag="05 / CLIENT" lines={['Registry + dedicated views', 'Defined styles and actions']} />
-        <g fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fill="var(--case-copy)">
+        <g fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)" fill="var(--case-copy)">
           <line x1="48" y1="544" x2="88" y2="544" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" />
           <text x="100" y="549">Processing path</text>
-          <line x1="288" y1="544" x2="328" y2="544" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" strokeDasharray="var(--case-space-6) var(--case-space-4)" />
+          <line x1="288" y1="544" x2="328" y2="544" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" strokeDasharray="var(--case-space-8) var(--case-space-4)" />
           <text x="340" y="549">Clarification return</text>
           <text x="48" y="580">Structured-UI path shown. Text-only replies bypass UI composition.</text>
         </g>
@@ -89,12 +89,12 @@ export function MonoConfirmationWorkflow() {
         <title id="mono-confirmation-workflow-title">Mono: review before a transaction write</title>
         <desc id="mono-confirmation-workflow-desc">A proposed transaction remains editable until a person confirms it, product code submits the save request, and dismissing the draft saves no change.</desc>
         <Markers prefix="mono-confirmation-workflow" />
-        <rect width="960" height="600" fill="var(--case-bg)" />
+        <rect width="960" height="600" fill="var(--case-white)" />
         <g fill="none" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" markerEnd="url(#mono-confirmation-workflow-arrow)">
           <path d="M280 168 H364" />
           <path d="M596 168 H680" />
           <path d="M796 224 V360" />
-          <path d="M480 224 V360" strokeDasharray="var(--case-space-6) var(--case-space-4)" />
+          <path d="M480 224 V360" strokeDasharray="var(--case-space-8) var(--case-space-4)" />
         </g>
         <ArrowLabel x={604} y={136} width={64}>CONFIRM</ArrowLabel>
         <ArrowLabel x={804} y={280} width={112}>ON SUCCESS</ArrowLabel>
@@ -104,13 +104,13 @@ export function MonoConfirmationWorkflow() {
         <Node x={680} y={112} title="Save request" tag="03 / PRODUCT CODE" lines={['Explicit confirm callback', 'Write through data service']} />
         <Node x={680} y={360} title="Saved feedback" tag="04 / RESPONSE" lines={['Reflect the saved state', 'After a successful request']} terminal />
         <Node x={364} y={360} title="Dismiss draft" tag="ALTERNATIVE" lines={['Close or cancel the review', 'No change saved']} terminal />
-        <text x="48" y="384" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-eyebrow)">THE DESIGN BOUNDARY</text>
-        <text x="48" y="412" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">Generating a proposal does</text>
-        <text x="48" y="432" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">not submit the change.</text>
-        <g fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fill="var(--case-copy)">
+        <text x="48" y="384" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-16)">THE DESIGN BOUNDARY</text>
+        <text x="48" y="412" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">Generating a proposal does</text>
+        <text x="48" y="432" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">not submit the change.</text>
+        <g fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)" fill="var(--case-copy)">
           <line x1="48" y1="536" x2="88" y2="536" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" />
           <text x="100" y="541">Confirmation path</text>
-          <line x1="304" y1="536" x2="344" y2="536" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" strokeDasharray="var(--case-space-6) var(--case-space-4)" />
+          <line x1="304" y1="536" x2="344" y2="536" stroke="var(--case-muted)" strokeWidth="var(--case-icon-stroke)" strokeDasharray="var(--case-space-8) var(--case-space-4)" />
           <text x="356" y="541">Dismissal path</text>
           <text x="48" y="580">Scope: transaction creation / editing. Read-only responses do not enter this save flow.</text>
         </g>

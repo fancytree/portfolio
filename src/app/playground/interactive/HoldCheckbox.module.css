@@ -5,7 +5,7 @@
   place-items: center;
   padding: 24px;
   background: #f5f5f5;
-  font-family: var(--mei-font-primary), sans-serif;
+  font-family: var(--case-font-body);
 }
 
 .content {
@@ -138,7 +138,7 @@
 
 .copy small {
   color: #a2a2a2;
-  font-family: var(--font-dm-mono), monospace;
+  font-family: var(--case-font-code);
   font-size: 12px;
   line-height: 1.2;
 }
@@ -147,7 +147,7 @@
   min-height: 18px;
   margin: 12px 0 0;
   color: #777;
-  font-family: var(--font-dm-mono), monospace;
+  font-family: var(--case-font-code);
   font-size: 11px;
   line-height: 1.5;
 }

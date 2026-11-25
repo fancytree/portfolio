@@ -1,8 +1,8 @@
 /* Visual left and large, decision right and compact. The visual stays in view while the card is read. */
 .beside { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: var(--case-space-32, 32px); align-items: start; }
 .screen { margin: 0; min-width: 0; }
-.pin { position: sticky; top: var(--case-space-24, 24px); display: flex; flex-direction: column; gap: var(--case-space-12, 12px); }
-.pin > figcaption { font-family: var(--case-font-body); font-size: var(--case-type-caption); line-height: 1.45; color: var(--case-muted); }
+.pin { position: sticky; top: var(--case-space-24, 24px); display: flex; flex-direction: column; gap: var(--case-space-16, 12px); }
+.pin > figcaption { font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.45; color: var(--case-muted); }
 .card { min-width: 0; }
 
 /* The decision card, in MemQ's palette (no case-kit blue), read in four steps:
@@ -11,7 +11,7 @@
   --case-flow-link: #6c3cbc; --case-flow-break: #875807;
   --mq-tint: #f5f0fd; --mq-purple: #6c3cbc; --mq-deep: #4b2c78;
 }
-.card :global(.case-decision) { border-radius: 20px; background: var(--case-bg); box-shadow: 0 1px 2px rgb(48 26 80 / .04), 0 16px 36px -24px rgb(48 26 80 / .28); }
+.card :global(.case-decision) { border-radius: 20px; background: var(--case-white); box-shadow: 0 1px 2px rgb(48 26 80 / .04), 0 16px 36px -24px rgb(48 26 80 / .28); }
 .card :global(.case-decision-num), .card :global(.case-decision-source) { display: none; }
 
 /* 1 · The question. */
@@ -24,7 +24,7 @@
 .card :global(.case-decision-option) { grid-template-columns: 20px 1fr; gap: 10px; padding: 10px 14px; border-radius: 14px; border-left: 0; }
 .card :global(.case-decision-option.is-chosen) { padding: 14px; background: var(--mq-tint); box-shadow: inset 0 0 0 1.5px var(--mq-purple); }
 .card :global(.case-decision-mark) { font-size: 14px; line-height: 22px; text-align: center; }
-.card :global(.case-decision-option:not(.is-chosen) .case-decision-mark) { color: var(--case-subtle); }
+.card :global(.case-decision-option:not(.is-chosen) .case-decision-mark) { color: var(--case-muted); }
 .card :global(.is-chosen .case-decision-mark) { color: var(--mq-purple); }
 .card :global(.case-decision-text) { gap: 3px; }
 .card :global(.case-decision-label) { font-size: 15px; line-height: 22px; font-weight: 500; gap: var(--case-space-8); }
@@ -32,12 +32,12 @@
 .card :global(.is-chosen .case-decision-label) { font-size: 17px; font-weight: 600; color: var(--case-ink); }
 .card :global(.is-chosen .case-decision-verdict) { font-size: 15px; color: var(--case-ink); }
 .card :global(.case-decision-badge) { font-size: 11px; line-height: 18px; padding: 0 8px; border-radius: 999px; background: var(--mq-purple); color: #fff; }
-.card :global(.case-decision-badge.is-reversed) { background: transparent; color: var(--case-muted); box-shadow: inset 0 0 0 1px var(--case-rule); }
+.card :global(.case-decision-badge.is-reversed) { background: transparent; color: var(--case-muted); box-shadow: inset 0 0 0 1px var(--case-line); }
 
 /* 3 · Why, and what it cost: quiet notes, shown only when there is something real to say. */
-.card :global(.case-decision-foot) { display: flex; flex-direction: column; margin-top: var(--case-space-24); background: #faf9fc; border-top: var(--case-border-width) solid var(--case-rule); border-radius: 0 0 20px 20px; }
+.card :global(.case-decision-foot) { display: flex; flex-direction: column; margin-top: var(--case-space-24); background: #faf9fc; border-top: var(--case-border-width) solid var(--case-line); border-radius: 0 0 20px 20px; }
 .card :global(.case-decision-foot > div) { padding: var(--case-space-16) var(--case-space-24); }
-.card :global(.case-decision-foot > div + div) { border-left: 0; border-top: var(--case-border-width) solid var(--case-rule); }
+.card :global(.case-decision-foot > div + div) { border-left: 0; border-top: var(--case-border-width) solid var(--case-line); }
 .card :global(.case-decision-foot dt) { font-size: 12px; letter-spacing: .06em; margin-bottom: 4px; color: var(--case-muted); }
 .card :global(.case-decision-foot dd) { font-size: 15px; line-height: 1.5; color: var(--case-ink); }
 .card :global(.case-decision-foot > div:has(> dd:empty)) { display: none; }
@@ -47,7 +47,7 @@
 
 /* Wide: a row of screens, so the visual takes even more. */
 .wide { grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); }
-.row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-12, 12px); align-items: start; }
+.row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-16, 12px); align-items: start; }
 .captioned { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .captioned > span { font-family: var(--case-font-body); font-size: 13px; line-height: 1.35; color: var(--case-ink); }
 

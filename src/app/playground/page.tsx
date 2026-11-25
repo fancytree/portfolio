@@ -3,7 +3,6 @@
 // 版面跟首页一致：同一套页头页脚、字体和像素风卡片（river/river.module.css 的 token）。
 
 import { playgroundItems } from '@/lib/playground-items';
-import { plexMono } from '../river/fonts';
 import river from '../river/river.module.css';
 import { SiteFooter, SiteHeader } from '../river/SiteChrome';
 import MasonryFeed from './MasonryFeed';
@@ -16,7 +15,7 @@ export const metadata = {
 
 export default function PlaygroundPage() {
   return (
-    <div id="top" className={`${river.root} ${plexMono.variable} ${styles.root}`}>
+    <div id="top" className={`${river.root} ${styles.root}`}>
       <a className={river.skip} href="#main">
         Skip to content
       </a>

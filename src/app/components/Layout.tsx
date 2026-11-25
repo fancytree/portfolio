@@ -6,7 +6,6 @@
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { SiteFooter, SiteHeader } from "../river/SiteChrome";
-import { plexMono } from "../river/fonts";
 import river from "../river/river.module.css";
 import CustomCursor from "./CustomCursor";
 
@@ -93,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   // 样式页自己排左侧导航和内容，不再套全站的居中窄容器。
-  const caseFrame = ["/projects/case-kit", "/projects/def-erp-kit", "/projects/jobnova-kit", "/projects/connectnova-kit", "/projects/procurement-agent-kit", "/projects/memq-kit", "/projects/mono", "/playground/design-should-run"].includes(pathname ?? "");
+  const caseFrame = ["/design-system", "/projects/case-kit", "/projects/def-erp-kit", "/projects/jobnova-kit", "/projects/connectnova-kit", "/projects/procurement-agent-kit", "/projects/memq-kit", "/projects/mono", "/playground/design-should-run"].includes(pathname ?? "");
 
   return (
     // 外层容器：全屏高度，背景色和基础字体
@@ -102,8 +101,8 @@ export default function Layout({ children }: LayoutProps) {
           它的父元素里生效），river.root 提供配色和字体变量。高度见 --site-nav-h。 */}
       {/* --river-bg 换成作品集页面自己的底色，导航和正文是同一张纸 */}
       <div
-        className={`sticky top-0 z-50 ${river.root} ${plexMono.variable}`}
-        style={{ minHeight: 0, ["--river-bg" as string]: "var(--case-bg, #ffffff)" }}
+        className={`sticky top-0 z-50 ${river.root}`}
+        style={{ minHeight: 0, ["--river-bg" as string]: "var(--case-white, #ffffff)" }}
       >
         <SiteHeader frame={river.siteFrame} />
       </div>
@@ -127,7 +126,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* 全站底部：与首页同一个 footer（深色条 + 联系方式），固定贴底，正文滚完后露出。
           river.root 提供它的配色、字体变量；min-height 归零，免得撑满一屏。 */}
-      <div ref={footerRef} className={`fixed inset-x-0 bottom-0 z-0 ${river.root} ${plexMono.variable}`} style={{ minHeight: 0 }}>
+      <div ref={footerRef} className={`fixed inset-x-0 bottom-0 z-0 ${river.root}`} style={{ minHeight: 0 }}>
         <SiteFooter frame={river.siteFrame} />
       </div>
     </div>

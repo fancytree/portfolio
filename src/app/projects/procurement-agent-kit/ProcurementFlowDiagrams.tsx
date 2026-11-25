@@ -82,16 +82,16 @@ function Flow({ id, title, desc, zones, broken, legend }: {
             <path d="M0 0 L8 4 L0 8 Z" fill={broken ? BREAK : LINK} />
           </marker>
         </defs>
-        <rect width="960" height="440" fill="var(--case-bg)" />
+        <rect width="960" height="440" fill="var(--case-white)" />
 
         <g fill="var(--case-surface)" strokeWidth="var(--case-border-width)">
           {ZONE_X.map((x, i) => (
             <rect key={x} x={x} y="40" width="272" height="320" rx="8"
-              stroke={broken && zones[i].outside ? BREAK : 'var(--case-rule)'}
+              stroke={broken && zones[i].outside ? BREAK : 'var(--case-line)'}
               strokeDasharray={broken && zones[i].outside ? '6 4' : undefined} />
           ))}
         </g>
-        <g fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">
+        <g fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">
           {zones.map((zone, i) => (
             <text key={zone.label} x={ZONE_X[i] + 16} y="68" fill={broken && zone.outside ? BREAK : 'var(--case-muted)'}>{zone.label}</text>
           ))}
@@ -125,9 +125,9 @@ function Flow({ id, title, desc, zones, broken, legend }: {
         {CROSS_X.map((x, i) => (
           <g key={x}>
             {broken && <circle className={`${styles.ring} ${i ? styles.ringLate : ''}`} cx={x} cy="204" r="12" fill="none" stroke={BREAK} strokeWidth="var(--case-border-width)" />}
-            <circle cx={x} cy="204" r="12" fill={broken ? 'var(--case-bg)' : LINK} stroke={broken ? BREAK : LINK} strokeWidth="var(--case-focus-width)" />
+            <circle cx={x} cy="204" r="12" fill={broken ? 'var(--case-white)' : LINK} stroke={broken ? BREAK : LINK} strokeWidth="var(--case-focus-width)" />
             <path d={broken ? `M${x - 5} 199 L${x + 5} 209 M${x + 5} 199 L${x - 5} 209` : `M${x - 5} 204 L${x - 1.5} 207.5 L${x + 5} 200.5`}
-              fill="none" stroke={broken ? BREAK : 'var(--case-bg)'} strokeWidth="var(--case-focus-width)" strokeLinecap="round" strokeLinejoin="round" />
+              fill="none" stroke={broken ? BREAK : 'var(--case-white)'} strokeWidth="var(--case-focus-width)" strokeLinecap="round" strokeLinejoin="round" />
           </g>
         ))}
 
@@ -138,16 +138,16 @@ function Flow({ id, title, desc, zones, broken, legend }: {
           const flagged = broken && node.emphasis;
           return (
             <g key={`${zone.label}-${ni}`}>
-              <rect x={ZONE_X[zi] + 16} y={NODE_Y[ni]} width="240" height="88" rx="8" fill="var(--case-bg)"
+              <rect x={ZONE_X[zi] + 16} y={NODE_Y[ni]} width="240" height="88" rx="8" fill="var(--case-white)"
                 stroke={flagged ? BREAK : node.emphasis ? 'var(--case-ink)' : 'var(--case-copy)'}
                 strokeWidth={node.emphasis ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
-              <text x={ZONE_X[zi] + 136} y={NODE_Y[ni] + 38} textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)">{node.title}</text>
-              <text x={ZONE_X[zi] + 136} y={NODE_Y[ni] + 62} textAnchor="middle" fill={flagged ? BREAK : 'var(--case-muted)'} fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{node.note}</text>
+              <text x={ZONE_X[zi] + 136} y={NODE_Y[ni] + 38} textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-18)" fontWeight="var(--case-weight-strong)">{node.title}</text>
+              <text x={ZONE_X[zi] + 136} y={NODE_Y[ni] + 62} textAnchor="middle" fill={flagged ? BREAK : 'var(--case-muted)'} fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">{node.note}</text>
             </g>
           );
         }))}
 
-        <g fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" textAnchor="middle">
+        <g fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)" textAnchor="middle">
           {zones.map((zone, i) => (
             <text key={`c${zone.label}`} x={ZONE_X[i] + 136} y="324">
               <tspan x={ZONE_X[i] + 136}>{zone.caption[0]}</tspan>
@@ -156,19 +156,19 @@ function Flow({ id, title, desc, zones, broken, legend }: {
           ))}
         </g>
 
-        <line x1="40" y1="388" x2="920" y2="388" stroke="var(--case-rule)" strokeWidth="var(--case-border-width)" />
+        <line x1="40" y1="388" x2="920" y2="388" stroke="var(--case-line)" strokeWidth="var(--case-border-width)" />
         {broken ? (
           <>
             <path d="M40 416 H96" fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" strokeDasharray={dash} markerEnd={`url(#${copyArrow})`} />
-            <text x="112" y="420" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">A person carries information across.</text>
-            <circle cx="504" cy="416" r="9" fill="var(--case-bg)" stroke={BREAK} strokeWidth="var(--case-focus-width)" />
+            <text x="112" y="420" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">A person carries information across.</text>
+            <circle cx="504" cy="416" r="9" fill="var(--case-white)" stroke={BREAK} strokeWidth="var(--case-focus-width)" />
             <path d="M500 412 L508 420 M508 412 L500 420" fill="none" stroke={BREAK} strokeWidth="var(--case-focus-width)" strokeLinecap="round" />
-            <text x="524" y="420" fill={BREAK} fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{legend}</text>
+            <text x="524" y="420" fill={BREAK} fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">{legend}</text>
           </>
         ) : (
           <>
             <path d="M40 416 H96" fill="none" stroke={LINK} strokeWidth="var(--case-focus-width)" markerEnd={`url(#${accentArrow})`} />
-            <text x="112" y="420" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{legend}</text>
+            <text x="112" y="420" fill="var(--case-copy)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">{legend}</text>
           </>
         )}
       </svg>
@@ -280,7 +280,7 @@ export function AgentMemoryLoop() {
             <path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" />
           </marker>
         </defs>
-        <rect width="960" height="560" fill="var(--case-bg)" />
+        <rect width="960" height="560" fill="var(--case-white)" />
 
         {/* Purchase flow around the ring. */}
         <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" markerEnd={`url(#${id}-arrow)`}>
@@ -302,23 +302,23 @@ export function AgentMemoryLoop() {
           const emphasis = node.n === '06';
           return (
             <g key={node.n}>
-              <rect x={node.x - 100} y={node.y - 38} width="200" height="76" rx="8" fill="var(--case-bg)"
+              <rect x={node.x - 100} y={node.y - 38} width="200" height="76" rx="8" fill="var(--case-white)"
                 stroke={emphasis ? LINK : 'var(--case-copy)'}
                 strokeWidth={emphasis ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
               {emphasis && <rect className={styles.breathe} x={node.x - 100} y={node.y - 38} width="200" height="76" rx="8" fill="none" stroke={LINK} strokeWidth="var(--case-border-width)" />}
-              <text x={node.x - 84} y={node.y - 12} fill={emphasis ? LINK : 'var(--case-muted)'} fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{node.n}</text>
-              <text x={node.x - 56} y={node.y - 12} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fontWeight="var(--case-weight-strong)">{node.title}</text>
-              <text x={node.x - 84} y={node.y + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{node.note}</text>
+              <text x={node.x - 84} y={node.y - 12} fill={emphasis ? LINK : 'var(--case-muted)'} fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">{node.n}</text>
+              <text x={node.x - 56} y={node.y - 12} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)" fontWeight="var(--case-weight-strong)">{node.title}</text>
+              <text x={node.x - 84} y={node.y + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">{node.note}</text>
             </g>
           );
         })}
 
         <rect className={styles.breathe} x="360" y="215" width="240" height="130" rx="8" fill="none" stroke="var(--case-ink)" strokeWidth="var(--case-border-width)" />
         <rect x="360" y="215" width="240" height="130" rx="8" fill="var(--case-surface)" stroke="var(--case-ink)" strokeWidth="var(--case-focus-width)" />
-        <text x="480" y="252" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">SUPPLIER MEMORY</text>
-        <text x="480" y="284" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)">One per supplier</text>
-        <text x="480" y="310" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">recommendations · overrides</text>
-        <text x="480" y="330" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">outcomes · notes · rules</text>
+        <text x="480" y="252" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">SUPPLIER MEMORY</text>
+        <text x="480" y="284" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-18)" fontWeight="var(--case-weight-strong)">One per supplier</text>
+        <text x="480" y="310" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">recommendations · overrides</text>
+        <text x="480" y="330" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">outcomes · notes · rules</text>
       </svg>
     </div>
   );
@@ -343,7 +343,7 @@ export function HumanInTheLoopFlow() {
   const x0 = 132, colW = 136, boxW = 122, agentY = 92, buyerY = 250, boxH = 84;
   const cx = (i: number) => x0 + i * colW + colW / 2;
   const text = (lines: string[], x: number, y: number, fill: string, weight?: string) => lines.map((l, k) => (
-    <text key={k} x={x} y={y + k * 20} textAnchor="middle" fill={fill} fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fontWeight={weight}>{l}</text>
+    <text key={k} x={x} y={y + k * 20} textAnchor="middle" fill={fill} fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)" fontWeight={weight}>{l}</text>
   ));
   return (
     <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="Human in the loop; scroll horizontally on small screens">
@@ -354,23 +354,23 @@ export function HumanInTheLoopFlow() {
           <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-muted)" /></marker>
           <marker id={`${id}-flow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" /></marker>
         </defs>
-        <rect width="960" height="470" fill="var(--case-bg)" />
+        <rect width="960" height="470" fill="var(--case-white)" />
 
         {/* Lane bands and labels */}
         <rect x="16" y={agentY - 16} width="928" height={boxH + 32} rx="8" fill="var(--case-surface)" />
         <rect x="16" y={buyerY - 16} width="928" height={boxH + 32} rx="8" fill="var(--case-surface)" />
-        <text x="32" y={agentY + boxH / 2 - 4} fill={LINK} fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">AGENT</text>
-        <text x="32" y={agentY + boxH / 2 + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">prepares</text>
-        <text x="32" y={buyerY + boxH / 2 - 4} fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">BUYER</text>
-        <text x="32" y={buyerY + boxH / 2 + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">decides</text>
+        <text x="32" y={agentY + boxH / 2 - 4} fill={LINK} fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">AGENT</text>
+        <text x="32" y={agentY + boxH / 2 + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">prepares</text>
+        <text x="32" y={buyerY + boxH / 2 - 4} fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">BUYER</text>
+        <text x="32" y={buyerY + boxH / 2 + 16} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">decides</text>
 
         {/* Stage header with the purchase moving left to right */}
         <line x1={cx(0) - 40} x2={cx(HITL.length - 1) + 40} y1="40" y2="40" stroke="var(--case-copy)" strokeWidth="var(--case-border-width)" markerEnd={`url(#${id}-flow)`} />
         {HITL.map((c, i) => (
           <g key={c.stage}>
-            <circle cx={cx(i)} cy="40" r="13" fill="var(--case-bg)" stroke="var(--case-copy)" strokeWidth="var(--case-border-width)" />
-            <text x={cx(i)} y="45" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{i + 1}</text>
-            <text x={cx(i)} y="72" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{c.stage.toUpperCase()}</text>
+            <circle cx={cx(i)} cy="40" r="13" fill="var(--case-white)" stroke="var(--case-copy)" strokeWidth="var(--case-border-width)" />
+            <text x={cx(i)} y="45" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">{i + 1}</text>
+            <text x={cx(i)} y="72" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">{c.stage.toUpperCase()}</text>
           </g>
         ))}
 
@@ -380,18 +380,18 @@ export function HumanInTheLoopFlow() {
           return (
             <g key={`col-${c.stage}`}>
               {/* Agent box */}
-              <rect x={x} y={agentY} width={boxW} height={boxH} rx="8" fill="var(--case-bg)"
+              <rect x={x} y={agentY} width={boxW} height={boxH} rx="8" fill="var(--case-white)"
                 stroke={a.never ? BREAK : LINK} strokeWidth="var(--case-border-width)" strokeDasharray={a.never ? '5 4' : undefined} />
               {text(a.lines, cx(i), agentY + boxH / 2 - 4, a.never ? BREAK : 'var(--case-copy)')}
               {/* Handoff */}
               {!a.never && <line x1={cx(i)} x2={cx(i)} y1={agentY + boxH + 2} y2={buyerY - (b.gate ? 16 : 4)} stroke="var(--case-muted)" strokeWidth="var(--case-border-width)" markerEnd={`url(#${id}-arrow)`} />}
               {/* Buyer box; gates are heavy and tagged */}
-              <rect x={x} y={buyerY} width={boxW} height={boxH} rx="8" fill="var(--case-bg)"
+              <rect x={x} y={buyerY} width={boxW} height={boxH} rx="8" fill="var(--case-white)"
                 stroke="var(--case-ink)" strokeWidth={b.gate ? 3 : 'var(--case-border-width)'} />
               {b.gate && <>
                 <rect className={styles.breathe} x={x} y={buyerY} width={boxW} height={boxH} rx="8" fill="none" stroke="var(--case-ink)" strokeWidth="var(--case-border-width)" />
                 <rect x={cx(i) - 26} y={buyerY - 11} width="52" height="22" rx="11" fill="var(--case-ink)" />
-                <text x={cx(i)} y={buyerY + 4} textAnchor="middle" fill="var(--case-bg)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">GATE</text>
+                <text x={cx(i)} y={buyerY + 4} textAnchor="middle" fill="var(--case-white)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">GATE</text>
               </>}
               {text(b.lines, cx(i), buyerY + boxH / 2 + (b.lines.length > 1 ? -4 : 6), 'var(--case-ink)', b.gate ? 'var(--case-weight-strong)' : undefined)}
             </g>
@@ -399,12 +399,12 @@ export function HumanInTheLoopFlow() {
         })}
 
         {/* Legend */}
-        <g fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">
-          <rect x="32" y="400" width="34" height="22" rx="6" fill="var(--case-bg)" stroke="var(--case-ink)" strokeWidth="3" />
+        <g fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">
+          <rect x="32" y="400" width="34" height="22" rx="6" fill="var(--case-white)" stroke="var(--case-ink)" strokeWidth="3" />
           <text x="76" y="416" fill="var(--case-copy)">Human gate · the purchase waits until a person acts</text>
-          <rect x="490" y="400" width="34" height="22" rx="6" fill="var(--case-bg)" stroke={BREAK} strokeDasharray="5 4" />
+          <rect x="490" y="400" width="34" height="22" rx="6" fill="var(--case-white)" stroke={BREAK} strokeDasharray="5 4" />
           <text x="534" y="416" fill="var(--case-copy)">Never the Agent’s job</text>
-          <rect x="726" y="400" width="34" height="22" rx="6" fill="var(--case-bg)" stroke={LINK} />
+          <rect x="726" y="400" width="34" height="22" rx="6" fill="var(--case-white)" stroke={LINK} />
           <text x="770" y="416" fill="var(--case-copy)">Agent prepares</text>
         </g>
       </svg>
@@ -433,7 +433,7 @@ export function AgentMemoryLoopCompact() {
         <defs>
           <marker id={`${id}-arrow`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--case-copy)" /></marker>
         </defs>
-        <rect width="720" height="460" fill="var(--case-bg)" />
+        <rect width="720" height="460" fill="var(--case-white)" />
         <g fill="none" stroke="var(--case-copy)" strokeWidth="var(--case-focus-width)" markerEnd={`url(#${id}-arrow)`}>
           {C_RING.map((d) => <path key={d} d={d} />)}
         </g>
@@ -446,20 +446,20 @@ export function AgentMemoryLoopCompact() {
           const em = node.n === '06';
           return (
             <g key={node.n}>
-              <rect x={node.x - 88} y={node.y - 32} width="176" height="64" rx="8" fill="var(--case-bg)" stroke={em ? LINK : 'var(--case-copy)'} strokeWidth={em ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
+              <rect x={node.x - 88} y={node.y - 32} width="176" height="64" rx="8" fill="var(--case-white)" stroke={em ? LINK : 'var(--case-copy)'} strokeWidth={em ? 'var(--case-focus-width)' : 'var(--case-border-width)'} />
               {em && <rect className={styles.breathe} x={node.x - 88} y={node.y - 32} width="176" height="64" rx="8" fill="none" stroke={LINK} strokeWidth="var(--case-border-width)" />}
-              <text x={node.x - 74} y={node.y - 6} fill={em ? LINK : 'var(--case-muted)'} fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">{node.n}</text>
-              <text x={node.x - 48} y={node.y - 6} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)" fontWeight="var(--case-weight-strong)">{node.title}</text>
-              <text x={node.x - 74} y={node.y + 18} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">{node.note}</text>
+              <text x={node.x - 74} y={node.y - 6} fill={em ? LINK : 'var(--case-muted)'} fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">{node.n}</text>
+              <text x={node.x - 48} y={node.y - 6} fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)" fontWeight="var(--case-weight-strong)">{node.title}</text>
+              <text x={node.x - 74} y={node.y + 18} fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">{node.note}</text>
             </g>
           );
         })}
         <rect className={styles.breathe} x="250" y="166" width="220" height="128" rx="8" fill="none" stroke="var(--case-ink)" strokeWidth="var(--case-border-width)" />
         <rect x="250" y="166" width="220" height="128" rx="8" fill="var(--case-surface)" stroke="var(--case-ink)" strokeWidth="var(--case-focus-width)" />
-        <text x="360" y="200" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-heading)" fontSize="var(--case-type-caption)">SUPPLIER MEMORY</text>
-        <text x="360" y="230" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-body)" fontWeight="var(--case-weight-strong)">One per supplier</text>
-        <text x="360" y="256" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">overrides · outcomes</text>
-        <text x="360" y="276" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-type-caption)">notes · rules</text>
+        <text x="360" y="200" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-heading)" fontSize="var(--case-text-14)">SUPPLIER MEMORY</text>
+        <text x="360" y="230" textAnchor="middle" fill="var(--case-ink)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-18)" fontWeight="var(--case-weight-strong)">One per supplier</text>
+        <text x="360" y="256" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">overrides · outcomes</text>
+        <text x="360" y="276" textAnchor="middle" fill="var(--case-muted)" fontFamily="var(--case-font-body)" fontSize="var(--case-text-14)">notes · rules</text>
       </svg>
     </div>
   );

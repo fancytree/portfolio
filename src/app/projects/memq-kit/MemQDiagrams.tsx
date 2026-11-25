@@ -13,7 +13,7 @@ export function AskAgainLoop() {
       <figure className={s.loopPanel} aria-label="Without a retention step: ask, get an answer, close the chat, forget, ask again.">
         <span className={s.loopTag}>What people described</span>
         <svg viewBox="-10 0 340 260" className={s.loopSvg} aria-hidden="true">
-          <path id="memq-loop-a" d="M160 40 A120 90 0 1 1 159.9 40" fill="none" stroke="var(--case-rule)" strokeWidth="2" strokeDasharray="4 6" />
+          <path id="memq-loop-a" d="M160 40 A120 90 0 1 1 159.9 40" fill="none" stroke="var(--case-line)" strokeWidth="2" strokeDasharray="4 6" />
           <circle r="7" className={s.loopDotGrey}>
             <animateMotion dur="5s" repeatCount="indefinite"><mpath href="#memq-loop-a" /></animateMotion>
           </circle>
@@ -24,7 +24,7 @@ export function AskAgainLoop() {
             { x: 40, y: 130, t: 'Forget it' },
           ].map((n) => (
             <g key={n.t}>
-              <rect x={n.x - 52} y={n.y - 15} width="104" height="30" rx="15" fill="var(--case-bg)" stroke="var(--case-rule)" />
+              <rect x={n.x - 52} y={n.y - 15} width="104" height="30" rx="15" fill="var(--case-white)" stroke="var(--case-line)" />
               <text x={n.x} y={n.y + 4} textAnchor="middle" className={s.loopText}>{n.t}</text>
             </g>
           ))}
@@ -278,10 +278,10 @@ export function SpacedScheduler() {
   return (
     <div className={s.sched}>
       <svg viewBox={`0 0 ${W} ${H}`} className={s.schedSvg} role="img" aria-label={`Card at stage ${stage}, next look on day ${due}.`}>
-        <line x1={L} x2={W - R} y1={base} y2={base} stroke="var(--case-rule)" />
+        <line x1={L} x2={W - R} y1={base} y2={base} stroke="var(--case-line)" />
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={x(t)} x2={x(t)} y1={base} y2={base + 5} stroke="var(--case-rule)" />
+            <line x1={x(t)} x2={x(t)} y1={base} y2={base + 5} stroke="var(--case-line)" />
             <text x={x(t)} y={base + 18} textAnchor="middle" className={s.schedTick}>{t === 0 ? 'day 0' : t}</text>
           </g>
         ))}

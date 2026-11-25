@@ -9,71 +9,21 @@
    Portfolio itself uses no `dark:` utilities, so gating on .dark is safe. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@font-face {
-  font-family: "MeiNunito";
-  src: url("/fonts/mei-nunito-latin.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400 800;
-  font-display: swap;
-}
-
-/* Mono component preview — dark theme tokens */
-@theme {
-  --color-text-primary: #ececec;
-  --color-text-secondary: #9b9b9b;
-  --color-surface: rgba(255, 255, 255, 0.08);
-  --color-surface-muted: rgba(255, 255, 255, 0.06);
-  --color-surface-hover: rgba(255, 255, 255, 0.12);
-  --color-border-subtle: rgba(255, 255, 255, 0.06);
-  --color-border-default: rgba(255, 255, 255, 0.10);
-  --color-border-strong: rgba(255, 255, 255, 0.20);
-  --color-accent: #10a37f;
-  --color-text-brand: #62c4b7;
-  --color-chat-bg: #212121;
-  --color-chat-card-inner: #171717;
-  --color-bg-chat-card-inner: #171717;
-  --color-input-border: rgba(255, 255, 255, 0.24);
-  --color-action-primary: #0f766e;
-  --color-action-hover: #0b625b;
-  --color-action-border: #0d9488;
-  --color-border-control: #969696;
-  --color-focus-ring: #62c4b7;
-  --color-chart-series-1: #10a37f;
-  --color-chart-series-2: #3b82f6;
-  --color-chart-series-3: #8b5cf6;
-  --color-chart-series-4: #f59e0b;
-  --color-chart-series-5: #ec4899;
-  --color-chart-series-6: #06b6d4;
-  --color-chart-series-7: #ef4444;
-  --color-budget-growth: #4ade80;
-  --color-status-success: #4ade80;
-  --color-status-danger: #fca5a5;
-}
-
 :root {
   /* height of the site header (the homepage's, used on every page): sticky
      offsets and anchor scroll margins are measured from it */
   --site-nav-h: 52px;
-  --background: #f3f1ea;
-  --foreground: #0a0a0a;
-  --mei-ink: #000000;
-  --mei-paper: #f3f1ea;
-  --mei-surface: #ffffff;
-  --mei-line: #cccccc;
-  --mei-orange: #ed5b2b;
-  --mei-muted: rgb(0 0 0 / 0.58);
-  --mei-font-primary: var(--font-geist-sans), Geist, sans-serif;
-  --mei-font-display: var(--font-oswald), Oswald, sans-serif;
-  --mei-font-secondary: var(--font-oswald), Oswald, sans-serif;
+  --background: var(--case-surface);
+  --foreground: var(--case-ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-plex-mono);
 
-  /* shadcn utilities — variables resolve only inside .cn-scope */
+  /* shadcn utilities — variables resolve only inside .cn-demo-scope */
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
@@ -116,7 +66,7 @@ body {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--mei-font-primary);
+  font-family: var(--case-font-body);
 }
 
 body.no-scroll {
@@ -161,11 +111,11 @@ body.no-scroll {
     justify-content: center;
     overflow: hidden;
     border: 1px solid rgb(10 10 10 / 0.9);
-    border-radius: 999px;
-    background: #0a0a0a;
-    color: #ffffff;
-    font-family: var(--mei-font-primary);
-    font-size: 11px;
+    border-radius: var(--case-radius-full);
+    background: var(--case-ink);
+    color: var(--case-white);
+    font-family: var(--case-font-body);
+    font-size: var(--case-text-12);
     font-weight: 400;
     letter-spacing: 0;
     line-height: 1;
@@ -197,18 +147,18 @@ body.no-scroll {
   /* 黑底区域用浅色光标，避免深色光标融进背景。 */
   .mei-custom-cursor[data-surface='light'] .mei-custom-cursor__body {
     border-color: rgb(255 255 255 / 0.9);
-    background: #ffffff;
-    color: #0a0a0a;
+    background: var(--case-white);
+    color: var(--case-ink);
     box-shadow: 0 8px 22px rgb(0 0 0 / 0.28);
   }
 
   .mei-custom-cursor[data-surface='light'] .mei-custom-cursor__label {
-    color: #0a0a0a;
+    color: var(--case-ink);
   }
 
   .mei-custom-cursor__label {
     flex-shrink: 0;
-    color: #ffffff;
+    color: var(--case-white);
     opacity: 0;
     white-space: nowrap;
     transition: opacity 0.24s ease;
@@ -248,8 +198,8 @@ body.no-scroll {
 .case-study-section-title {
   max-width: var(--case-content-title);
   color: var(--case-ink) !important;
-  font-family: var(--mei-font-display) !important;
-  font-size: var(--case-type-section) !important;
+  font-family: var(--case-font-heading) !important;
+  font-size: var(--case-text-36) !important;
   font-weight: 400 !important;
   line-height: var(--case-leading-chapter) !important;
   letter-spacing: 0 !important;
@@ -257,58 +207,30 @@ body.no-scroll {
   text-wrap: balance;
 }
 
-/* Mono uses a slightly firmer editorial hierarchy across the full case study. */
-.mono-case-study {
-  --case-type-section: clamp(32px, 4.2vw, 48px);
-  --case-type-lead: clamp(18px, 1.45vw, 20px);
-  --case-type-body: 16px;
-  --case-type-caption: 14px;
-}
-
-.mono-case-study [data-case-type='display'] {
-  font-weight: 500 !important;
-  line-height: 1.12 !important;
-}
-
-.mono-case-study [data-case-type='lead'] {
-  font-weight: 400 !important;
-}
-
 /* Walnut's narrative cards use inline legacy styles. Keep their titles on the
    shared small-title scale while leaving the product mockups untouched. */
-
-.case-study-subsection-title {
-  color: var(--case-ink) !important;
-  font-family: var(--mei-font-display) !important;
-  font-size: var(--case-type-subsection) !important;
-  font-weight: 400 !important;
-  line-height: 1 !important;
-  letter-spacing: 0 !important;
-  text-transform: uppercase;
-  text-wrap: balance;
-}
 
 .case-study-lead {
   max-width: var(--case-content-reading);
   color: var(--case-muted) !important;
-  font-family: var(--mei-font-primary) !important;
-  font-size: var(--case-type-lead) !important;
+  font-family: var(--case-font-body) !important;
+  font-size: var(--case-text-18) !important;
   font-weight: 400 !important;
   line-height: var(--case-leading-body) !important;
 }
 
 .case-study-body {
   color: var(--case-ink) !important;
-  font-family: var(--mei-font-primary) !important;
-  font-size: var(--case-type-body) !important;
+  font-family: var(--case-font-body) !important;
+  font-size: var(--case-text-18) !important;
   font-weight: 400 !important;
   line-height: var(--case-leading-body) !important;
 }
 
 .case-study-eyebrow {
   color: var(--case-muted);
-  font-family: var(--mei-font-display) !important;
-  font-size: var(--case-type-eyebrow) !important;
+  font-family: var(--case-font-heading) !important;
+  font-size: var(--case-text-16) !important;
   font-weight: 400 !important;
   line-height: 1 !important;
   letter-spacing: var(--case-tracking-label) !important;
@@ -316,7 +238,7 @@ body.no-scroll {
 }
 
 .case-study-section-space {
-  padding-block: var(--case-space-section) !important;
+  padding-block: var(--case-space-chapter) !important;
 }
 
 /* 案例页圆角工具类：sm 标签 / md 内框 / lg 卡片 / xl 媒体 / full pill */
@@ -325,7 +247,7 @@ body.no-scroll {
 }
 
 .case-radius-md {
-  border-radius: var(--case-radius-md, 12px);
+  border-radius: var(--case-radius-sm, 12px);
 }
 
 .case-radius-lg {
@@ -333,18 +255,11 @@ body.no-scroll {
 }
 
 .case-radius-xl {
-  border-radius: var(--case-radius-xl, 24px);
+  border-radius: var(--case-radius-lg, 24px);
 }
 
 .case-radius-full {
   border-radius: var(--case-radius-full, 999px);
-}
-
-/* Mono uses the same case-study reading measure and section gutters as the
-   rest of the portfolio, while keeping its full-bleed section backgrounds. */
-.mono-case-study > section:not(.mei-case-study-hero) {
-  box-sizing: border-box;
-  padding-inline: clamp(20px, 5vw, 64px);
 }
 
 /* Footer 印章徽标：外圈弧形文字持续旋转，中间信封图标保持静止不动 */
@@ -369,7 +284,7 @@ body.no-scroll {
   display: inline-block;
   width: 260px;
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: var(--case-radius-sm);
   overflow: hidden;
   transition: transform 0.3s ease;
   background-image: url('/img/crackinterview/Animation_Default.avif');
@@ -434,7 +349,7 @@ body.no-scroll {
   background-color: rgb(0, 0, 0);
   color: rgb(255, 255, 255);
   font-family: system-ui, -apple-system, sans-serif;
-  font-size: 16px;
+  font-size: var(--case-text-16);
   line-height: 24px;
   font-weight: 500;
   cursor: pointer;
@@ -468,277 +383,6 @@ body.no-scroll {
 
 .other-work-card:hover .case-study-hint {
   color: rgb(0, 0, 0);
-}
-
-/* ====================================================
-   ConnectNova Design System — scoped to .cn-scope
-   ==================================================== */
-.cn-scope {
-  --cn-primary: #004ac6;
-  --cn-primary-dark: #003da8;
-  --cn-primary-light: rgba(0, 74, 198, 0.07);
-  --cn-primary-border: rgba(0, 74, 198, 0.18);
-  --cn-primary-ring: rgba(0, 74, 198, 0.12);
-
-  --cn-danger: rgba(200, 40, 20, 0.9);
-  --cn-danger-light: rgba(200, 40, 20, 0.04);
-  --cn-danger-border: rgba(200, 40, 20, 0.25);
-
-  --cn-success: rgba(20, 130, 60, 0.9);
-  --cn-success-light: rgba(20, 130, 60, 0.07);
-  --cn-success-border: rgba(20, 130, 60, 0.2);
-
-  --cn-purple: rgba(140, 60, 200, 0.85);
-  --cn-purple-light: rgba(140, 60, 200, 0.07);
-  --cn-purple-border: rgba(140, 60, 200, 0.2);
-
-  --cn-border: rgba(0, 0, 0, 0.14);
-  --cn-border-subtle: rgba(0, 0, 0, 0.1);
-  --cn-surface: #ffffff;
-  --cn-text: rgb(0, 0, 0);
-  --cn-text-muted: rgba(0, 0, 0, 0.5);
-  --cn-text-dim: rgba(0, 0, 0, 0.35);
-
-  --cn-radius-sm: 6px;
-  --cn-radius-md: 7px;
-  --cn-radius-lg: 10px;
-  --cn-radius-xl: 12px;
-  --cn-radius-2xl: 14px;
-  --cn-radius-full: 999px;
-
-  --cn-space-1: 4px;
-  --cn-space-2: 8px;
-  --cn-space-3: 12px;
-  --cn-space-4: 16px;
-  --cn-space-5: 20px;
-  --cn-space-6: 24px;
-  --cn-space-8: 32px;
-  --cn-space-12: 48px;
-}
-
-/* Buttons */
-.cn-scope .cn-btn {
-  display: inline-flex;
-  align-items: center;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: var(--cn-radius-md);
-  padding: 8px 16px;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-  outline: none;
-  white-space: nowrap;
-}
-.cn-scope .cn-btn-sm { font-size: 12px; padding: 6px 12px; border-radius: var(--cn-radius-sm); }
-
-.cn-scope .cn-btn-primary { color: #fff; background: var(--cn-primary); border-color: var(--cn-primary); }
-.cn-scope .cn-btn-primary:hover { background: var(--cn-primary-dark); border-color: var(--cn-primary-dark); }
-
-.cn-scope .cn-btn-secondary { color: var(--cn-primary); background: #fff; border-color: var(--cn-primary-border); }
-.cn-scope .cn-btn-secondary:hover { background: var(--cn-primary-light); }
-
-.cn-scope .cn-btn-ghost { color: rgba(0, 0, 0, 0.6); background: transparent; border-color: var(--cn-border); }
-.cn-scope .cn-btn-ghost:hover { background: rgba(0, 0, 0, 0.04); }
-
-.cn-scope .cn-btn-danger { color: var(--cn-danger); background: #fff; border-color: var(--cn-danger-border); }
-.cn-scope .cn-btn-danger:hover { background: var(--cn-danger-light); }
-
-.cn-scope .cn-btn-shortlist {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--cn-primary);
-  background: var(--cn-primary-light);
-  border: 1px solid var(--cn-primary-border);
-  border-radius: var(--cn-radius-sm);
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-  outline: none;
-}
-.cn-scope .cn-btn-shortlist.is-active {
-  color: #fff;
-  background: var(--cn-primary);
-  border-color: var(--cn-primary);
-}
-
-/* Chips / Badges */
-.cn-scope .cn-chip {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  font-weight: 500;
-  border-radius: 5px;
-  padding: 3px 8px;
-  border: 1px solid;
-  white-space: nowrap;
-}
-.cn-scope .cn-chip-blue   { color: var(--cn-primary);  background: var(--cn-primary-light);  border-color: var(--cn-primary-border); }
-.cn-scope .cn-chip-green  { color: var(--cn-success);  background: var(--cn-success-light);  border-color: var(--cn-success-border); }
-.cn-scope .cn-chip-gray   { color: rgba(0,0,0,0.42);   background: rgba(0,0,0,0.05);         border-color: rgba(0,0,0,0.12); }
-.cn-scope .cn-chip-gray-dim { color: rgba(0,0,0,0.35); background: rgba(0,0,0,0.04);         border-color: rgba(0,0,0,0.10); }
-.cn-scope .cn-chip-purple { color: var(--cn-purple);   background: var(--cn-purple-light);   border-color: var(--cn-purple-border); }
-
-/* Inputs */
-.cn-scope .cn-input {
-  font-size: 13px;
-  font-weight: 400;
-  color: rgb(0, 0, 0);
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.16);
-  border-radius: var(--cn-radius-md);
-  padding: 8px 12px;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-.cn-scope .cn-input:focus {
-  border-color: var(--cn-primary);
-  box-shadow: 0 0 0 3px var(--cn-primary-ring);
-}
-.cn-scope .cn-input:disabled {
-  background: rgba(0, 0, 0, 0.03);
-  color: rgba(0, 0, 0, 0.3);
-  cursor: not-allowed;
-  border-color: rgba(0, 0, 0, 0.1);
-}
-.cn-scope .cn-input-search { padding-left: 32px; }
-
-/* Tab switcher */
-.cn-scope .cn-tab-group {
-  display: inline-flex;
-  background: rgba(0, 0, 0, 0.06);
-  border-radius: 8px;
-  padding: 3px;
-  gap: 2px;
-}
-.cn-scope .cn-tab {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.45);
-  background: transparent;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 14px;
-  cursor: pointer;
-  transition: all 0.15s;
-  outline: none;
-}
-.cn-scope .cn-tab.is-active { color: rgb(0, 0, 0); background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
-
-/* Avatar */
-.cn-scope .cn-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  flex-shrink: 0;
-  background: var(--cn-primary-light);
-  color: var(--cn-primary);
-}
-
-/* Score badge */
-.cn-scope .cn-score-badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-  background: var(--cn-primary);
-  color: #fff;
-}
-
-/* Progress bar */
-.cn-scope .cn-progress {
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.07);
-  overflow: hidden;
-}
-.cn-scope .cn-progress-bar {
-  height: 100%;
-  border-radius: 2px;
-  background: var(--cn-primary);
-  opacity: 0.8;
-}
-
-/* Candidate row */
-.cn-scope .cn-candidate-row {
-  border: 1.5px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--cn-radius-lg);
-  overflow: hidden;
-  background: #fff;
-  transition: border-color 0.2s, background 0.2s;
-  cursor: pointer;
-}
-.cn-scope .cn-candidate-row.is-expanded {
-  border-color: rgba(0, 74, 198, 0.2);
-  background: rgba(0, 74, 198, 0.015);
-}
-
-/* Production Mono card and chart motion, scoped to the case study preview. */
-@keyframes insightCardEnter {
-  from { opacity: 0; transform: translateY(12px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes insightFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes lineDraw {
-  to { stroke-dashoffset: 0; }
-}
-@keyframes barGrow {
-  from { height: 0%; opacity: 0; }
-  to { opacity: 0.85; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .mono-showcase .insight-card-enter { animation: none !important; }
-  .mono-showcase .insight-card-enter *,
-  .mono-showcase .transition-all,
-  .mono-showcase .transition-opacity,
-  .mono-showcase .transition-transform { transition-duration: 0.01ms !important; }
-  .mono-showcase [style*="barGrow"],
-  .mono-showcase [style*="insightFadeIn"] { animation: none !important; }
-  .mono-showcase svg path { transition-duration: 0.01ms !important; }
-}
-
-/* Mono's original fields use this focus treatment inside the registry preview. */
-.mono-showcase .mono-field,
-.mono-showcase .mono-select {
-  border-color: var(--color-input-border);
-}
-.mono-showcase .mono-field:focus {
-  outline: none;
-  box-shadow: none;
-}
-.mono-showcase :is(button, input, textarea, select, [role="button"]):focus-visible {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
-}
-.mono-showcase .mono-field:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
-.mono-showcase .mono-field[type="search"]::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  margin-left: 8px;
-  background-color: var(--color-text-secondary, #9b9b9b);
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='white' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 4l8 8M12 4l-8 8' fill='none' stroke='white' stroke-width='1.75' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
-  cursor: pointer;
 }
 
 /* 首页只用纸和墨两种材质：正文容器跟着 hero 走，白色只留给卡片封面和图框 */

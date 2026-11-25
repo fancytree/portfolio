@@ -2,21 +2,21 @@
    Scoped to .root so nothing leaks into the rest of the site. */
 
 .root {
-  --river-bg: #fafaf8;
-  --river-surface: #ffffff;
-  --river-text: #141414;
-  --river-text-2: rgb(0 0 0 / 0.75); /* --case-copy */
-  --river-text-3: rgb(0 0 0 / 0.58); /* --case-muted */
-  --river-border: #d8d8d6;
-  --river-border-strong: #242424;
-  --river-ink: #222222;
-  --river-ink-muted: #a5a5a5;
+  --river-bg: var(--case-paper);
+  --river-surface: var(--case-white);
+  --river-text: var(--case-ink);
+  --river-text-2: var(--case-copy);
+  --river-text-3: var(--case-muted);
+  --river-border: var(--case-line);
+  --river-border-strong: var(--case-ink);
+  --river-ink: var(--case-ink);
+  --river-ink-muted: var(--case-faded);
 
   /* Case Kit type: Oswald, uppercase, for headings; Geist for copy.
      The mono stays for the bracketed labels and the small meta lines. */
-  --river-display: var(--font-oswald), Oswald, sans-serif;
+  --river-display: var(--case-font-heading);
   --river-sans: var(--font-geist-sans), Geist, system-ui, sans-serif;
-  --river-mono: var(--font-river-mono), "IBM Plex Mono", ui-monospace, monospace;
+  --river-mono: var(--case-font-code);
 
   --river-margin: clamp(20px, 4.17vw, 60px);
   --river-gap: 24px;
@@ -27,7 +27,7 @@
   background: var(--river-bg);
   color: var(--river-text);
   font-family: var(--river-sans);
-  font-size: 16px;
+  font-size: var(--case-text-16);
   line-height: 1.625;
   overflow-x: clip;
 }
@@ -35,7 +35,7 @@
 html:has(.root) {
   scroll-behavior: smooth;
   scroll-padding-top: 52px; /* = --river-header */
-  background: #fafaf8;
+  background: var(--case-paper);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -52,7 +52,7 @@ html:has(.root) {
 .root :focus-visible {
   outline: 2px solid var(--river-border-strong);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--case-radius-none);
 }
 
 .root ul,
@@ -73,8 +73,8 @@ html:has(.root) {
   z-index: 60;
   padding: 10px 14px;
   background: var(--river-text);
-  color: #fff !important;
-  font-size: 13px;
+  color: var(--case-white) !important;
+  font-size: var(--case-text-14);
 }
 
 .skip:focus {
@@ -104,7 +104,7 @@ html:has(.root) {
 .cardMeta,
 .footerMeta {
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
   color: var(--river-text-3);
@@ -122,20 +122,20 @@ html:has(.root) {
 }
 
 .h1 {
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: var(--case-text-display);
   line-height: 1.05;
   letter-spacing: 0;
 }
 
 .h2 {
-  font-size: clamp(36px, 3.9vw, 56px);
+  font-size: var(--case-text-display);
   line-height: 1.05;
   letter-spacing: 0;
 }
 
 .lead,
 .bodyLarge {
-  font-size: 18px;
+  font-size: var(--case-text-18);
   line-height: 1.625;
   color: var(--river-text-2);
   margin: 0;
@@ -146,7 +146,7 @@ html:has(.root) {
 }
 
 .body {
-  font-size: 15px;
+  font-size: var(--case-text-16);
   line-height: 1.625;
   color: var(--river-text-2);
   margin: 0;
@@ -208,7 +208,7 @@ html:has(.root) {
 .brandMark {
   font-family: var(--river-display);
   text-transform: uppercase;
-  font-size: 24px;
+  font-size: var(--case-text-24);
   line-height: 1;
   letter-spacing: 0;
 }
@@ -224,13 +224,13 @@ html:has(.root) {
 }
 
 .header .brandMark {
-  font-size: 18px;
+  font-size: var(--case-text-18);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  font-size: 13px;
+  font-size: var(--case-text-14);
   line-height: 1.4;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -283,7 +283,7 @@ html:has(.root) {
     list-style: none;
     cursor: pointer;
     padding: 8px 0;
-    font-size: 12px;
+    font-size: var(--case-text-12);
     line-height: 1.4;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -319,7 +319,7 @@ html:has(.root) {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
-    font-size: 14px;
+    font-size: var(--case-text-14);
   }
 
   .menuPanel .nav li + li::before {
@@ -372,7 +372,7 @@ html:has(.root) {
   gap: 10px;
   margin: 0;
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -399,8 +399,8 @@ html:has(.root) {
   height: 48px;
   padding-inline: 22px;
   border: 1px solid var(--river-text);
-  border-radius: 6px;
-  font-size: 15px;
+  border-radius: var(--case-radius-sm);
+  font-size: var(--case-text-16);
   font-weight: 500;
   line-height: 1;
   transition: background-color 250ms ease, color 250ms ease;
@@ -416,16 +416,16 @@ html:has(.root) {
 
 .buttonPrimary {
   background: var(--river-text);
-  color: #fff !important;
+  color: var(--case-white) !important;
 }
 
 .buttonPrimary:hover {
-  background: #2e2e2e;
+  background: var(--case-copy);
 }
 
 .buttonSecondary:hover {
   background: var(--river-text);
-  color: #fff !important;
+  color: var(--case-white) !important;
 }
 
 .heroScene {
@@ -447,7 +447,7 @@ html:has(.root) {
 
 .sceneGlyphs {
   font-family: var(--river-mono);
-  font-size: 13px;
+  font-size: var(--case-text-14);
   fill: var(--river-ink-muted);
   letter-spacing: 0.2em;
 }
@@ -482,19 +482,19 @@ html:has(.root) {
 
 /* One tone per module, stepping from paper toward dusk as the river runs on. */
 .work {
-  --section-bg: #f2f1ec;
+  --section-bg: var(--case-surface);
 }
 
 .about {
-  --section-bg: #eae9e3;
-  --river-text-3: #666666;
-  --river-border: #cfcec7;
+  --section-bg: var(--case-surface);
+  --river-text-3: var(--case-muted);
+  --river-border: var(--case-line);
 }
 
 .contact {
   background: transparent; /* a window onto the river */
-  --river-text-2: #555555;
-  --river-text-3: #5e5e5e;
+  --river-text-2: var(--case-muted);
+  --river-text-3: var(--case-muted);
 }
 
 .sectionHead {
@@ -512,7 +512,7 @@ html:has(.root) {
 .sectionIntro {
   margin: 20px 0 0;
   max-width: 34em;
-  font-size: 18px;
+  font-size: var(--case-text-18);
   line-height: 1.6;
   color: var(--river-text-2);
 }
@@ -520,7 +520,7 @@ html:has(.root) {
 .textLink {
   display: inline-flex;
   gap: 8px;
-  font-size: 15px;
+  font-size: var(--case-text-16);
   font-weight: 500;
   padding-bottom: 4px;
   border-bottom: 1px solid var(--river-text);
@@ -606,7 +606,7 @@ html:has(.root) {
 .root .card:focus-visible {
   outline: 2px solid var(--river-border-strong);
   outline-offset: 5px;
-  border-radius: 0;
+  border-radius: var(--case-radius-none);
 }
 
 .cardBar {
@@ -617,7 +617,7 @@ html:has(.root) {
   padding-right: 12px;
   border-bottom: 2px solid var(--river-border-strong);
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1;
   letter-spacing: 0.04em;
   color: var(--river-text);
@@ -631,7 +631,7 @@ html:has(.root) {
   width: 44px;
   border-right: 2px solid var(--river-border-strong);
   background: var(--river-text);
-  color: #ffffff;
+  color: var(--case-white);
 }
 
 .cardRole {
@@ -656,14 +656,14 @@ html:has(.root) {
 .card:hover .cardBar,
 .card:focus-visible .cardBar {
   background: var(--river-text);
-  color: #ffffff;
+  color: var(--case-white);
 }
 
 .card:hover .cardNo,
 .card:focus-visible .cardNo {
-  background: #ffffff;
+  background: var(--case-white);
   color: var(--river-text);
-  border-right-color: #ffffff;
+  border-right-color: var(--case-white);
 }
 
 .card:hover .cardSquares i:last-child,
@@ -684,14 +684,14 @@ html:has(.root) {
   font-family: var(--river-display);
   text-transform: uppercase;
   font-weight: 400;
-  font-size: 24px;
+  font-size: var(--case-text-24);
   line-height: 1.14;
   letter-spacing: 0;
 }
 
 .cardBody {
   margin: 12px 0 0;
-  font-size: 15px;
+  font-size: var(--case-text-16);
   line-height: 1.625;
   color: var(--river-text-2);
 }
@@ -706,7 +706,7 @@ html:has(.root) {
   padding-top: 16px;
   background: repeating-linear-gradient(90deg, var(--river-border-strong) 0 2px, transparent 2px 6px) 0 0 / 100% 2px no-repeat;
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.5;
   color: var(--river-text-2);
 }
@@ -715,7 +715,7 @@ html:has(.root) {
   font-family: var(--river-display);
   text-transform: uppercase;
   font-weight: 500;
-  font-size: 28px;
+  font-size: var(--case-text-24);
   line-height: 1;
   letter-spacing: -0.03em;
   color: var(--river-text);
@@ -731,7 +731,7 @@ html:has(.root) {
 
 .tags li {
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   padding: 3px 8px;
   border: 1px solid var(--river-border-strong);
@@ -745,7 +745,7 @@ html:has(.root) {
   position: relative;
   margin-top: 22px;
   border: 2px solid var(--river-border-strong);
-  border-radius: 0 !important;
+  border-radius: var(--case-radius-none) !important;
   box-shadow: none !important;
   filter: grayscale(1) contrast(1.08);
   transition: filter 240ms steps(4, end);
@@ -754,7 +754,7 @@ html:has(.root) {
 .cardImage {
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: #f1f1ee;
+  background: var(--case-surface);
 }
 
 .cardImage img {
@@ -795,7 +795,7 @@ html:has(.root) {
   align-items: center;
   margin-top: 18px;
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -808,7 +808,7 @@ html:has(.root) {
   height: 30px;
   border: 2px solid var(--river-border-strong);
   font-family: var(--river-sans);
-  font-size: 15px;
+  font-size: var(--case-text-16);
   line-height: 1;
   transition: background-color 120ms steps(2, end), color 120ms steps(2, end);
 }
@@ -816,12 +816,12 @@ html:has(.root) {
 .card:hover .cardGo,
 .card:focus-visible .cardGo {
   background: var(--river-text);
-  color: #ffffff;
+  color: var(--case-white);
 }
 
 /* arrow used by the experiments list */
 .cardArrow {
-  font-size: 16px;
+  font-size: var(--case-text-16);
   transition: transform 300ms ease;
 }
 
@@ -851,19 +851,19 @@ html:has(.root) {
 .moreTitle {
   font-family: var(--river-display);
   text-transform: uppercase;
-  font-size: 20px;
+  font-size: var(--case-text-18);
   line-height: 1.15;
 }
 
 .moreBody {
-  font-size: 15px;
+  font-size: var(--case-text-16);
   line-height: 1.5;
   color: var(--river-text-2);
 }
 
 .moreMeta {
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.5;
   color: var(--river-text-3);
 }
@@ -878,7 +878,7 @@ html:has(.root) {
   pointer-events: none;
   background: var(--river-surface);
   border: 1px solid var(--river-border-strong);
-  border-radius: 8px;
+  border-radius: var(--case-radius-sm);
   box-shadow: 6px 6px 0 var(--river-border-strong);
   overflow: hidden;
   opacity: 0;
@@ -903,7 +903,7 @@ html:has(.root) {
   padding-inline: 10px;
   border-bottom: 1px solid var(--river-border-strong);
   font-family: var(--river-mono);
-  font-size: 11px;
+  font-size: var(--case-text-12);
   letter-spacing: 0.04em;
   color: var(--river-text);
 }
@@ -928,7 +928,7 @@ html:has(.root) {
 .peekFrame {
   position: relative;
   height: 218px;
-  background: #f1f1ee;
+  background: var(--case-surface);
 }
 
 .peekFrame img {
@@ -1014,7 +1014,7 @@ html:has(.root) {
 
 .methodSettles {
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
   color: var(--river-text-3);
@@ -1023,7 +1023,7 @@ html:has(.root) {
 .methodTitle {
   font-family: var(--river-display);
   text-transform: uppercase;
-  font-size: 20px;
+  font-size: var(--case-text-18);
   line-height: 1.15;
 }
 
@@ -1043,7 +1043,7 @@ html:has(.root) {
   height: 22px;
   border: 2px solid var(--river-border-strong);
   font-family: var(--river-mono);
-  font-size: 14px;
+  font-size: var(--case-text-14);
   line-height: 1;
   transition: transform 160ms steps(4), background-color 120ms steps(2), color 120ms steps(2);
 }
@@ -1051,7 +1051,7 @@ html:has(.root) {
 .method summary:hover .methodToggle,
 .method[open] .methodToggle {
   background: var(--river-text);
-  color: #ffffff;
+  color: var(--case-white);
 }
 
 .method[open] .methodToggle {
@@ -1083,13 +1083,13 @@ html:has(.root) {
   aspect-ratio: 16 / 10;
   object-fit: contain;
   border: 2px solid var(--river-border-strong);
-  background: #ffffff;
+  background: var(--case-white);
 }
 
 .methodFigures figcaption {
   margin-top: 8px;
   font-family: var(--river-mono);
-  font-size: 11px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   color: var(--river-text-3);
 }
@@ -1121,7 +1121,7 @@ html:has(.root) {
   font-family: var(--river-display);
   text-transform: uppercase;
   font-weight: 400;
-  font-size: 16px;
+  font-size: var(--case-text-16);
   line-height: 1;
   letter-spacing: 0.8px;
   white-space: nowrap;
@@ -1156,7 +1156,7 @@ html:has(.root) {
   top: 0;
   transform: translateX(-50%);
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   white-space: nowrap;
   color: var(--river-text);
@@ -1248,9 +1248,9 @@ html:has(.root) {
   padding: 6px 10px 6px 8px;
   border: 2px solid var(--river-border-strong);
   background: var(--river-text);
-  color: #ffffff;
+  color: var(--case-white);
   font-family: var(--river-mono);
-  font-size: 11px;
+  font-size: var(--case-text-12);
   line-height: 1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1330,7 +1330,7 @@ html:has(.root) {
   gap: 0.22em;
   font-family: var(--river-display);
   text-transform: uppercase;
-  font-size: clamp(40px, 5vw, 72px);
+  font-size: var(--case-text-display);
   line-height: 1.05;
   letter-spacing: 0;
   color: var(--river-text);
@@ -1360,7 +1360,7 @@ html:has(.root) {
 .touchNote {
   margin: 18px 0 0;
   font-family: var(--river-mono);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
   color: var(--river-text-2);
@@ -1386,17 +1386,17 @@ html:has(.root) {
   border: 1px solid currentColor;
   color: var(--river-text);
   font-family: var(--river-mono);
-  font-size: 13px;
+  font-size: var(--case-text-14);
   cursor: pointer;
   text-align: left;
 }
 
 .contactEmail:hover,
-.bookingToggle:hover { background: #242424; color: #fafaf8; }
-.contactEmail { background: #e1e0d8; }
-.contactEmail:hover { background: #242424; }
-.bookingToggle { background: #242424; color: #fafaf8; border-color: #242424; }
-.bookingToggle:hover { background: #444; border-color: #444; }
+.bookingToggle:hover { background: var(--case-ink); color: var(--case-paper); }
+.contactEmail { background: var(--case-line); }
+.contactEmail:hover { background: var(--case-ink); }
+.bookingToggle { background: var(--case-ink); color: var(--case-paper); border-color: var(--case-ink); }
+.bookingToggle:hover { background: var(--case-copy); border-color: var(--case-copy); }
 .bookingToggle:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
 /* One arrow for both contact buttons: same drawing, size and hover nudge. */
 .contactArrow { flex: none; transition: transform 200ms ease; }
@@ -1412,9 +1412,9 @@ html:has(.root) {
   max-width: none;
   max-height: none;
   padding: 0;
-  border: 2px solid #242424;
-  background: #fff;
-  color: #141414;
+  border: 2px solid var(--case-ink);
+  background: var(--case-white);
+  color: var(--case-ink);
   overflow: hidden;
 }
 .bookingDialog[open] { display: flex; flex-direction: column; animation: bookingEnter 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
@@ -1427,14 +1427,14 @@ html:has(.root) {
   display: flex;
   align-items: stretch;
   min-height: 48px;
-  border-bottom: 2px solid #242424;
+  border-bottom: 2px solid var(--case-ink);
 }
 .bookingIndex {
   display: grid;
   place-items: center;
   flex: 0 0 54px;
-  background: #141414;
-  color: #fff;
+  background: var(--case-ink);
+  color: var(--case-white);
   font: 12px/1 var(--river-mono);
 }
 .bookingTitle {
@@ -1451,14 +1451,14 @@ html:has(.root) {
   flex: 0 0 48px;
   padding: 0;
   border: 0;
-  border-left: 1px solid #242424;
+  border-left: 1px solid var(--case-ink);
   background: transparent;
   color: inherit;
-  font-size: 24px;
+  font-size: var(--case-text-24);
   line-height: 1;
   cursor: pointer;
 }
-.bookingClose:hover { background: #242424; color: #fff; }
+.bookingClose:hover { background: var(--case-ink); color: var(--case-white); }
 .bookingFrame {
   display: block;
   flex: 1 1 auto;
@@ -1494,9 +1494,9 @@ html:has(.root) {
 /* ---------- Footer ---------- */
 
 .footer {
-  background: #141414;
-  color: #ffffff;
-  --river-text-3: #a5a5a5;
+  background: var(--case-ink);
+  color: var(--case-white);
+  --river-text-3: var(--case-faded);
 }
 
 .footerInner {
@@ -1510,7 +1510,7 @@ html:has(.root) {
   display: flex;
   gap: 28px;
   margin-left: auto !important;
-  font-size: 13px;
+  font-size: var(--case-text-14);
 }
 
 .footerLinks a:hover {
@@ -1558,7 +1558,7 @@ html:has(.root) {
   }
 
   .nav {
-    font-size: 12px;
+    font-size: var(--case-text-12);
     letter-spacing: 0.04em;
   }
 
@@ -1638,7 +1638,7 @@ html:has(.root) {
   }
 
   .cardTitle {
-    font-size: 28px;
+    font-size: var(--case-text-24);
   }
 
   .horizon {
@@ -1684,7 +1684,7 @@ html:has(.root) {
   height: 128px;
   border-radius: 50%;
   background: var(--river-text);
-  color: #ffffff;
+  color: var(--case-white);
   transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -1738,7 +1738,7 @@ html:has(.root) {
 .cueArrow {
   position: relative;
   font-family: var(--river-sans);
-  font-size: 40px;
+  font-size: var(--case-text-36);
   font-weight: 300;
   line-height: 1;
   animation: cueDrop 1.5s cubic-bezier(0.5, 0, 0.3, 1) infinite;
@@ -1775,7 +1775,7 @@ html:has(.root) {
   gap: 6px;
   font-family: var(--river-display);
   text-transform: uppercase;
-  font-size: 20px;
+  font-size: var(--case-text-18);
   line-height: 1.15;
   color: var(--river-text);
 }
@@ -1783,7 +1783,7 @@ html:has(.root) {
 .scrollHint {
   font-family: var(--river-mono);
   text-transform: none;
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1827,7 +1827,7 @@ html:has(.root) {
   }
 
   .cueArrow {
-    font-size: 32px;
+    font-size: var(--case-text-36);
   }
 }
 
@@ -1898,14 +1898,14 @@ html:has(.root) {
   top: 0;
   z-index: 2;
   width: 232px;
-  background: #fafaf8;
-  border: 1px solid #242424;
-  border-radius: 6px;
-  color: #141414;
+  background: var(--case-paper);
+  border: 1px solid var(--case-ink);
+  border-radius: var(--case-radius-sm);
+  color: var(--case-ink);
   opacity: 0;
   visibility: hidden;
   will-change: transform, opacity;
-  box-shadow: 0 0 0 #242424;
+  box-shadow: 0 0 0 var(--case-ink);
   /* a spring: overshoots and rings down. Browsers without linear() get a single overshoot. */
   --node-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   /* opening: the card springs wider and lifts, then the detail unfolds and settles in */
@@ -1927,7 +1927,7 @@ html:has(.root) {
 .node[data-open] {
   width: 320px;
   z-index: 3;
-  box-shadow: 5px 5px 0 #242424;
+  box-shadow: 5px 5px 0 var(--case-ink);
 }
 
 /* stem down to the marker */
@@ -1938,7 +1938,7 @@ html:has(.root) {
   top: 100%;
   width: 1px;
   height: 14px;
-  background: #242424;
+  background: var(--case-ink);
 }
 
 .nodeButton {
@@ -1946,7 +1946,7 @@ html:has(.root) {
   width: 100%;
   padding: 10px 12px 11px;
   border: 0;
-  border-radius: 5px;
+  border-radius: var(--case-radius-sm);
   background: none;
   color: inherit;
   text-align: left;
@@ -1955,17 +1955,17 @@ html:has(.root) {
 }
 
 .nodeButton:hover {
-  background: #f0efea;
+  background: var(--case-surface);
 }
 
 .nodeYears {
   display: flex;
   gap: 10px;
   font-family: var(--river-mono);
-  font-size: 11px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: var(--case-muted);
 }
 
 .nodeToggle {
@@ -1975,11 +1975,11 @@ html:has(.root) {
   width: 18px;
   height: 18px;
   margin-top: -2px;
-  border: 1px solid #242424;
+  border: 1px solid var(--case-ink);
   border-radius: 50%;
-  font-size: 13px;
+  font-size: var(--case-text-14);
   line-height: 1;
-  color: #141414;
+  color: var(--case-ink);
   transition:
     transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1),
     background-color 300ms ease,
@@ -1991,8 +1991,8 @@ html:has(.root) {
 }
 
 .node[data-open] .nodeToggle {
-  background: #141414;
-  color: #ffffff;
+  background: var(--case-ink);
+  color: var(--case-white);
   transform: rotate(135deg);
 }
 
@@ -2001,7 +2001,7 @@ html:has(.root) {
   margin-top: 4px;
   font-family: var(--river-display);
   text-transform: uppercase;
-  font-size: 18px;
+  font-size: var(--case-text-18);
   line-height: 1.15;
 }
 
@@ -2009,9 +2009,9 @@ html:has(.root) {
   display: block;
   margin-top: 2px;
   font-family: var(--river-sans);
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
-  color: #666666;
+  color: var(--case-muted);
 }
 
 /* Height animates through a grid row going from 0fr to 1fr, so it works for any amount of text. */
@@ -2034,7 +2034,7 @@ html:has(.root) {
 /* the place and its numbers, then what she did and how */
 .nodeFacts {
   padding-top: 12px;
-  border-top: 1px solid #d8d8d6;
+  border-top: 1px solid var(--case-line);
 }
 
 .nodeWork {
@@ -2042,7 +2042,7 @@ html:has(.root) {
 }
 
 .nodeWork:first-child {
-  border-top: 1px solid #d8d8d6;
+  border-top: 1px solid var(--case-line);
 }
 
 .nodeMoreInner > * {
@@ -2069,9 +2069,9 @@ html:has(.root) {
 /* what the place is, and how big */
 .nodeCompany {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--case-text-14);
   line-height: 1.5;
-  color: #666666;
+  color: var(--case-muted);
 }
 
 /* the numbers the work moved: the loudest thing on the card */
@@ -2084,33 +2084,33 @@ html:has(.root) {
 
 .nodeImpact dt {
   font-family: var(--river-display);
-  font-size: 26px;
+  font-size: var(--case-text-24);
   line-height: 1.05;
   white-space: nowrap;
 }
 
 .nodeImpact dd {
   margin: 4px 0 0;
-  font-size: 12px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
-  color: #444444;
+  color: var(--case-copy);
 }
 
 .nodeDid {
   display: grid;
   gap: 4px;
   margin: 0;
-  font-size: 13px;
+  font-size: var(--case-text-14);
   line-height: 1.55;
-  color: #333333;
+  color: var(--case-copy);
 }
 
 .nodeDid span {
   font-family: var(--river-mono);
-  font-size: 11px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: var(--case-muted);
 }
 
 .nodeListLabel {
@@ -2124,10 +2124,10 @@ html:has(.root) {
 
 .nodeListLabel {
   font-family: var(--river-mono);
-  font-size: 11px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.04em;
-  color: #666666;
+  color: var(--case-muted);
 }
 
 .nodeListLabel + .nodeMethods {
@@ -2145,10 +2145,10 @@ html:has(.root) {
 
 .nodeMethods li {
   padding: 3px 7px;
-  border: 1px solid #242424;
-  border-radius: 3px;
+  border: 1px solid var(--case-ink);
+  border-radius: var(--case-radius-none);
   font-family: var(--river-mono);
-  font-size: 10.5px;
+  font-size: var(--case-text-12);
   line-height: 1.4;
   letter-spacing: 0.02em;
 }
@@ -2223,7 +2223,7 @@ html:has(.root) {
 
 
   .nodeRole {
-    font-size: 18px;
+    font-size: var(--case-text-18);
   }
 }
 
