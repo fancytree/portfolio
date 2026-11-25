@@ -1,6 +1,10 @@
 # UX：案例阅读与内容组织
 
 
+## 页面清理（2026-11-25）
+
+`/works` 和不再展示的二级页面已删除，旧网址跳转首页；ConnectNova 案例页保留，但首页不展示。下文关于 `/works`、旧案例路由保留的描述已失效。
+
 ## Mono 叙事页
 
 `/projects/mono` 使用 My role、Design direction、Agent workflow、UI contract、Human handoff、Exploration outcomes、Reflection 七章。主叙事是用户意图如何进入 LangChain 路由、由产品代码分派到任务链或业务服务、缺信息时如何追问、结构化输出如何映射为 UI，以及用户确认何时允许写入。用户最新要求不逐项介绍功能，因此移除记账、记录、预算三张功能截图及相应说明，也不再展示组件功能目录；保留开场整体录屏作为运行证据。

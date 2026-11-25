@@ -19,6 +19,10 @@ const nextConfig: NextConfig = {
       { source: "/projects/jobnova-ai-platform-v3", destination: "/projects/jobnova-kit", permanent: false },
       { source: "/projects/connectnova", destination: "/projects/connectnova-kit", permanent: false },
       { source: "/projects/memq", destination: "/projects/memq-kit", permanent: false },
+      // pages that are no longer shown land on the homepage
+      ...["works", "not-daily-fun", "projects/beikemama", "projects/crackinterview", "projects/customer-service-system", "projects/milano-partecipa", "projects/clarity", "projects/walnut-coding", "projects/walnut-sharing"].map(
+        (path) => ({ source: `/${path}`, destination: "/", permanent: false }),
+      ),
       // the river page was built at /river before it became the homepage
       {
         source: "/river",

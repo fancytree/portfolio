@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { MonoAgentWorkflow } from '../mono/MonoWorkflowDiagrams';
-import CaseStudyControls from '../../components/CaseStudyControls';
+import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import {
   CaseChapter,
   CaseClose,
@@ -29,11 +29,7 @@ export default function CaseKitStylePage() {
   return (
     <CaseKitPage>
       <CaseStudyControls
-        accentColor="#ed5b2b"
         navLabels={navLabels}
-        alwaysVisible
-        showDivider={false}
-        editorial
         showProgress
         railKicker="Case study"
         railTitle="Case study kit"

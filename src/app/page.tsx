@@ -1,6 +1,5 @@
 // The homepage is the river page: one continuous scroll from the hero down to the sea.
-// It lives in ./river with its scene, sections and styles; the previous homepage is
-// kept, unrouted, in ./_legacy-home.
+// It lives in ./river with its scene, sections and styles.
 import Preloader from "./components/Preloader";
 import RiverHome from "./river/RiverHome";
 

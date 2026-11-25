@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Blocks, Bot, Braces, CheckCheck, Compass, Database, FileCheck, Layers3, PanelTop, ShieldCheck } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
-import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
+import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
 import { CaseChapter, CaseClose, CaseEvidenceCards, CaseFigure, CaseHero, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseVideo } from '../../components/case-kit/CaseKit';
 import { MonoAgentWorkflow, MonoConfirmationWorkflow } from './MonoWorkflowDiagrams';

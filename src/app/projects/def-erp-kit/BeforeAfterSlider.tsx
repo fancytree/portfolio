@@ -2,10 +2,9 @@
 
 import Image from 'next/image';
 import { useCallback, useRef, useState } from 'react';
-import { fontFamily } from '@/lib/design-tokens';
 
 const bodyStyle = {
-  fontFamily: fontFamily.sans,
+  fontFamily: 'var(--case-font-body)',
 } as const;
 
 type BeforeAfterSliderProps = {

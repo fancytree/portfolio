@@ -52,9 +52,9 @@ MemQ 的 `coverAccent` 使用项目设计系统主色 `#1A8A72`。封面 hover �
 
 首页继续使用用户已确认的定制视觉，不把案例 token 规则扩大成首页重设计。定位文案复用现有标题、正文、眉题和网格样式，不新增色板、字体、卡片系统或 token。首屏去掉固定 `100vh` 高度，依靠 `.mei-section-screen` 的 `min-height: 100svh`，小屏文字较长时自然撑高、不被裁切。页面 title 和 description 同步为 AI-native products、Design systems 和数据驱动迭代的定位。
 
-## 旧案例路由
+## 页面清理（2026-11-25）
 
-采购、DEF、JobNova、ConnectNova 在首页和 `/works` 指向 kit 新页。其余旧路由沿用 `globals.css` 中 `.mei-project-page:not(.case-kit)` 的兼容样式，尚未迁移到 Case Kit token：包括仍在 `/works` 列出的 `crackinterview`、`customer-service-system`、`milano-partecipa`、`clarity`、`beikemama`、`walnut-*`，以及被 kit 页取代的旧版。重写或新增案例时从 Case Kit 模块组装，不以旧页为样式模板。
+站内只保留访客能到达的页面，以及 `/projects/connectnova-kit`（首页不展示，网址可单独发送）和样式参照页 `/projects/case-kit`。`/works`、旧版首页、占位页与 Beikemama、CrackInterview、客服系统、Milano Partecipa、Clarity、两篇核桃研究页已删除，旧网址在 `next.config.ts` 中跳转首页。旧页专用的导航、Hero、TypeScript 字体与圆角 token（`typography.ts`、`radius.ts`）和全局兼容样式一并删除；案例页导航只用 `case-kit/CaseKitControls.tsx`，token 唯一来源仍是 `case.css`。下文提到 `/works` 与旧路由保留的记录以本节为准。
 
 ## Device previews
 

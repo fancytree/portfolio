@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
-import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
+import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import FragmentedOperationsDiagram from './FragmentedOperationsDiagram';
 import UnifiedOperationsDiagram from './UnifiedOperationsDiagram';
 import BeforeAfterSlider from './BeforeAfterSlider';

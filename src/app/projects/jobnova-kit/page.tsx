@@ -9,7 +9,7 @@ import ResumeLiveDemo from './ResumeLiveDemo';
 import PipelineLiveDemo from './PipelineLiveDemo';
 import { resumeDecisions, trackingDecisions } from './iteration';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
-import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
+import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
 import { CaseChapter, CaseClose, CaseHero, CaseKitPage, CaseKitSections, CaseProse, CaseStats } from '../../components/case-kit/CaseKit';
 

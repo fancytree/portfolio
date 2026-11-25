@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { ArrowRightLeft, Blocks, BriefcaseBusiness, ClipboardCheck, Compass, FolderKanban, Layers3, ListFilter, PanelLeft, SlidersHorizontal, Users, Waypoints } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
-import { CaseKitControls as CaseStudyControls } from '../../components/CaseStudyControls';
+import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import { CaseButton } from '../../components/case-kit/CaseButton';
 import { CaseChapter, CaseClose, CaseEvidenceCards, CaseFigure, CaseHero, CaseInteractivePreview, CaseKitPage, CaseKitSections, CaseProse, CasePullquote, CaseStats, CaseVideo } from '../../components/case-kit/CaseKit';
 
