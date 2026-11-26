@@ -2,8 +2,8 @@ import { ScreenCallouts, type Screen } from './ScreenCallouts';
 
 /* What the heart does in each situation. */
 const cases: (Screen | Screen[])[] = [
-  { shot: 'save-single', name: 'One SKU: saved on tap', marks: [
-    { left: 321, top: 593, width: 50, height: 50, flip: true, title: 'No sheet', body: 'One tap saves it, another removes it.' },
+  { shot: 'save-single-page', name: 'One SKU: saved on tap', marks: [
+    { left: 224, top: 45, width: 54, height: 54, flip: true, title: 'No sheet', body: 'One tap saves it, another removes it.' },
   ] },
   { shot: 'save-shade', name: 'Several shades: pick which', marks: [
     { left: 12, top: 384, width: 366, height: 378, flip: true, title: 'The exact shade', body: 'Saved ones carry a heart, and the sheet stays open for more.' },
