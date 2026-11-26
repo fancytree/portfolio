@@ -35,7 +35,7 @@ const navLabels = [
   '03 / Structure',
   '04 / For you',
   '05 / Choosing',
-  '06 / Saving',
+  '06 / Saved',
   '07 / Wireframes',
   '08 / Design language',
   '09 / Try it',
@@ -94,7 +94,7 @@ export default function DefMiniProgramKitPage() {
             <CaseSteps items={[
               { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one. → 04' },
               { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 04' },
-              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 03, 06' },
+              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 06' },
               { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 05' },
             ]} />
           </div>
@@ -107,17 +107,17 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="03 / Structure" title="Rebuild the structure around coming back.">
-          <CaseProse><p>The old tabs described a shop. Merchants come back to restock and to see what is new in what they buy, so that job takes the Categories tab’s place as <strong>Saved</strong>. Finding by category moves into search.</p></CaseProse>
+          <CaseProse><p>The old structure started from the catalogue. The new one starts from what a merchant already buys, and rests on <strong>four features</strong>.</p></CaseProse>
+          <CaseFigure caption="Four features that serve coming back.">
+            <Compare label="Main features" items={[
+              { shot: 'saved', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 06' },
+              { shot: 'home', name: 'For you home', why: 'Opens on the merchant’s own categories. → 04' },
+              { shot: 'search', name: 'Search with categories', why: 'Takes over the Categories tab, so everything else is one search away.' },
+              { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 05' },
+            ]} />
+          </CaseFigure>
           <CaseFigure caption="From the previous tabs to the new ones.">
             <TabMap />
-          </CaseFigure>
-          <CaseFigure caption="Saved answers all four reasons to come back.">
-            <Compare label="Saved tab" items={[
-              { shot: 'saved', name: 'New and on offer', why: 'New shades in your ranges, then offers on what you buy.' },
-              { shot: 'restock', name: 'Restock', why: 'What is back, and when the rest is expected.' },
-              { shot: 'buy-items', name: 'Buy again', why: 'A past order, ready to add in bulk.' },
-              { shot: 'save-sheet', name: 'Save', why: 'Keeps one exact item from any product.' },
-            ]} />
           </CaseFigure>
           <CaseFigure caption="Information architecture: four tabs, one job each.">
             <SiteMap />
@@ -164,7 +164,15 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Saving" title="Saving stays off the buying path.">
+        <CaseChapter label="06 / Saved" title="Saved is for coming back, and stays off the buying path.">
+          <CaseProse><p>Saved takes the Categories tab’s place and answers the four reasons to return: what is new in my ranges, what is back, what is on offer, and buying again.</p></CaseProse>
+          <CaseFigure caption="Inside the Saved tab.">
+            <Compare wide label="Saved tab" items={[
+              { shot: 'saved', name: 'New and on offer', why: 'New shades in your ranges, then offers on what you buy.' },
+              { shot: 'restock', name: 'Restock', why: 'What is back, and when the rest is expected.' },
+              { shot: 'buy-items', name: 'Buy again', why: 'A past order, ready to add in bulk.' },
+            ]} />
+          </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
             <Compare wide label="Saving" items={[
