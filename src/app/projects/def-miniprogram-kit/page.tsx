@@ -8,6 +8,7 @@ import { CategoryFlow } from './CategoryFlow';
 import { SiteMap, TabMap } from './Diagrams';
 import { ShadeHighlight } from './ShadeHighlight';
 import { ResearchFlow } from './ResearchFlow';
+import { SavingCallouts } from './SavingCallouts';
 import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
@@ -151,11 +152,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
-            <Compare wide label="Saving" items={[
-              { shot: 'save-before', name: 'Before: heart beside buy', tag: 'Before', why: 'Competed with the main action.' },
-              { shot: 'product-shade', name: 'Heart in the header', chosen: true, why: 'Away from the buying path.' },
-              { shot: 'save-sheet', name: 'Save sheet', chosen: true, why: 'The exact item, no quantity or pack.' },
-            ]} />
+            <SavingCallouts />
           </CaseFigure>
         </CaseChapter>
 
