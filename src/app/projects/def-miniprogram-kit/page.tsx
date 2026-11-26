@@ -33,10 +33,10 @@ const navLabels = [
   '01 / The problem',
   '02 / Research',
   '03 / Structure',
-  '04 / Wireframes',
-  '05 / For you',
-  '06 / Choosing',
-  '07 / Saving',
+  '04 / For you',
+  '05 / Choosing',
+  '06 / Saving',
+  '07 / Wireframes',
   '08 / Design language',
   '09 / Try it',
   '10 / Where it stands',
@@ -92,10 +92,10 @@ export default function DefMiniProgramKitPage() {
               ]} />
             </CaseFigure>
             <CaseSteps items={[
-              { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one. → 05' },
-              { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 05' },
-              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 03, 07' },
-              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 06' },
+              { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one. → 04' },
+              { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 04' },
+              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 03, 06' },
+              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 05' },
             ]} />
           </div>
         </CaseChapter>
@@ -136,26 +136,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="04 / Wireframes" title="Draw the whole journey before styling it.">
-          <CaseFigure caption="Discover and choose.">
-            <Compare label="Wireframes: discover and choose" items={[
-              { shot: 'wf-home', name: 'Home' },
-              { shot: 'wf-list', name: 'List' },
-              { shot: 'wf-product', name: 'Product' },
-              { shot: 'wf-shades', name: 'Shades' },
-            ]} />
-          </CaseFigure>
-          <CaseFigure caption="Order and return.">
-            <Compare label="Wireframes: order and return" items={[
-              { shot: 'wf-bag', name: 'Bag' },
-              { shot: 'wf-checkout', name: 'Checkout' },
-              { shot: 'wf-saved', name: 'Saved' },
-              { shot: 'wf-account', name: 'Account' },
-            ]} />
-          </CaseFigure>
-        </CaseChapter>
-
-        <CaseChapter label="05 / For you" title="Home follows each merchant’s categories.">
+        <CaseChapter label="04 / For you" title="Home follows each merchant’s categories.">
           <CaseProse><p>Products and merchants use <strong>one set of categories</strong>. Where the two overlap is what a merchant sees first, so the home tabs are their own instead of a fixed list.</p></CaseProse>
           <CaseFigure caption="The new home: from a fixed category grid to tabs that belong to the merchant.">
             <HomeCallouts />
@@ -173,7 +154,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Choosing" title="Show only the choice the product needs.">
+        <CaseChapter label="05 / Choosing" title="Show only the choice the product needs.">
           <CaseProse><p>Picking the item to order was laborious. Each product type now configures its own display, and one add is one item, so price tables and pack choices that did not help left the screen.</p></CaseProse>
           <CaseFigure caption="Picking a shade, four ways.">
             <Compare label="Shade selectors" items={[
@@ -200,13 +181,32 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Saving" title="Saving stays off the buying path.">
+        <CaseChapter label="06 / Saving" title="Saving stays off the buying path.">
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
             <Compare wide label="Saving" items={[
               { shot: 'save-before', name: 'Before: heart beside buy', tag: 'Before', why: 'Competed with the main action.' },
               { shot: 'product-shade', name: 'Heart in the header', chosen: true, why: 'Away from the buying path.' },
               { shot: 'save-sheet', name: 'Save sheet', chosen: true, why: 'The exact item, no quantity or pack.' },
+            ]} />
+          </CaseFigure>
+        </CaseChapter>
+
+        <CaseChapter label="07 / Wireframes" title="Draw the whole journey before styling it.">
+          <CaseFigure caption="Discover and choose.">
+            <Compare label="Wireframes: discover and choose" items={[
+              { shot: 'wf-home', name: 'Home' },
+              { shot: 'wf-list', name: 'List' },
+              { shot: 'wf-product', name: 'Product' },
+              { shot: 'wf-shades', name: 'Shades' },
+            ]} />
+          </CaseFigure>
+          <CaseFigure caption="Order and return.">
+            <Compare label="Wireframes: order and return" items={[
+              { shot: 'wf-bag', name: 'Bag' },
+              { shot: 'wf-checkout', name: 'Checkout' },
+              { shot: 'wf-saved', name: 'Saved' },
+              { shot: 'wf-account', name: 'Account' },
             ]} />
           </CaseFigure>
         </CaseChapter>
