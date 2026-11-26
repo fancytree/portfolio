@@ -35,8 +35,8 @@ const navLabels = [
   '02 / Research',
   '03 / Structure',
   '04 / For you',
-  '05 / Choosing',
-  '06 / Saved',
+  '05 / Saved',
+  '06 / Choosing',
   '07 / Design highlight',
   '08 / Wireframes',
   '09 / Design language',
@@ -96,8 +96,8 @@ export default function DefMiniProgramKitPage() {
             <CaseSteps items={[
               { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one. → 04' },
               { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 04' },
-              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 06' },
-              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 05, 07' },
+              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 05' },
+              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 06, 07' },
             ]} />
           </div>
         </CaseChapter>
@@ -112,10 +112,10 @@ export default function DefMiniProgramKitPage() {
           <CaseProse><p>The old structure started from the catalogue. The new one starts from what a merchant already buys, and rests on <strong>four features</strong>.</p></CaseProse>
           <CaseFigure caption="Four features that serve coming back.">
             <Compare label="Main features" items={[
-              { shot: 'saved', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 06' },
+              { shot: 'saved', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 05' },
               { shot: 'home', name: 'For you home', why: 'Opens on the merchant’s own categories. → 04' },
               { shot: 'search', name: 'Search with categories', why: 'Takes over the Categories tab, so everything else is one search away.' },
-              { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 05, 07' },
+              { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 06, 07' },
             ]} />
           </CaseFigure>
           <CaseFigure caption="From the previous tabs to the new ones.">
@@ -140,26 +140,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="05 / Choosing" title="Show only the choice the product needs.">
-          <CaseProse><p>Picking the item to order was laborious. Each product type now configures its own display, so the screen shows only the choice that product needs.</p></CaseProse>
-          <CaseFigure caption="One sheet, shaped by the product’s attributes.">
-            <Compare label="Sheets by attribute" items={[
-              { shot: 'sheet-capacity', name: 'Capacity' },
-              { shot: 'sheet-glove', name: 'Colour and size' },
-              { shot: 'sheet-model', name: 'Model' },
-              { shot: 'sheet-shade', name: 'Shade', why: 'Long ranges: see 07.' },
-            ]} />
-          </CaseFigure>
-          <CaseFigure caption="The product page is for facts; choosing happens in the sheet.">
-            <Compare wide label="Product page" items={[
-              { shot: 'product', name: 'Key facts under the price' },
-              { shot: 'fold-closed', name: 'Shades, one row' },
-              { shot: 'fold-open', name: 'All twenty, one tap away' },
-            ]} />
-          </CaseFigure>
-        </CaseChapter>
-
-        <CaseChapter label="06 / Saved" title="Saved is for coming back, and stays off the buying path.">
+        <CaseChapter label="05 / Saved" title="Saved is for coming back, and stays off the buying path.">
           <CaseProse><p>Saved takes the Categories tab’s place and answers the four reasons to return: what is new in my ranges, what is back, what is on offer, and buying again.</p></CaseProse>
           <CaseFigure caption="Inside the Saved tab.">
             <Compare wide label="Saved tab" items={[
@@ -174,6 +155,25 @@ export default function DefMiniProgramKitPage() {
               { shot: 'save-before', name: 'Before: heart beside buy', tag: 'Before', why: 'Competed with the main action.' },
               { shot: 'product-shade', name: 'Heart in the header', chosen: true, why: 'Away from the buying path.' },
               { shot: 'save-sheet', name: 'Save sheet', chosen: true, why: 'The exact item, no quantity or pack.' },
+            ]} />
+          </CaseFigure>
+        </CaseChapter>
+
+        <CaseChapter label="06 / Choosing" title="Show only the choice the product needs.">
+          <CaseProse><p>Picking the item to order was laborious. Each product type now configures its own display, so the screen shows only the choice that product needs.</p></CaseProse>
+          <CaseFigure caption="One sheet, shaped by the product’s attributes.">
+            <Compare label="Sheets by attribute" items={[
+              { shot: 'sheet-capacity', name: 'Capacity' },
+              { shot: 'sheet-glove', name: 'Colour and size' },
+              { shot: 'sheet-model', name: 'Model' },
+              { shot: 'sheet-shade', name: 'Shade', why: 'Long ranges: see 07.' },
+            ]} />
+          </CaseFigure>
+          <CaseFigure caption="The product page is for facts; choosing happens in the sheet.">
+            <Compare wide label="Product page" items={[
+              { shot: 'product', name: 'Key facts under the price' },
+              { shot: 'fold-closed', name: 'Shades, one row' },
+              { shot: 'fold-open', name: 'All twenty, one tap away' },
             ]} />
           </CaseFigure>
         </CaseChapter>
