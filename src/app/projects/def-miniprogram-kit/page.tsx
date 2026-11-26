@@ -7,6 +7,7 @@ import layout from './Compare.module.css';
 import { CategoryFlow } from './CategoryFlow';
 import { SiteMap, TabMap } from './Diagrams';
 import { ShadeCallouts } from './ShadeCallouts';
+import { ShadeTradeoff } from './ShadeTradeoff';
 import { ResearchFlow } from './ResearchFlow';
 import { SaveCases } from './SaveCases';
 import { RestockFlow } from './RestockCallouts';
@@ -162,13 +163,8 @@ export default function DefMiniProgramKitPage() {
           <CaseFigure caption="One range, one shade at a time, on demonstration data.">
             <ShadeCallouts />
           </CaseFigure>
-          <CaseFigure caption="How I got there. Each shade and its quantity are confirmed one at a time, so I kept the photo cards.">
-            <Compare label="Shade selectors" items={[
-              { shot: 'swatch-preview', name: 'Large preview', why: 'The other colours become dots that are hard to compare.' },
-              { shot: 'swatch-compare', name: 'Side by side', why: 'An extra screen for a routine order.' },
-              { shot: 'swatch-bulk', name: 'Bulk grid', why: 'Several shades at once, so no shade and quantity is confirmed on its own.' },
-              { shot: 'swatch-cards', name: 'Photo cards', chosen: true, why: 'Real colour, one shade at a time: the base of the final sheet.' },
-            ]} />
+          <CaseFigure caption="How I got there, on demonstration data.">
+            <ShadeTradeoff />
           </CaseFigure>
           <CaseFigure caption="One sheet, shaped by the product’s attributes.">
             <Compare label="Sheets by attribute" items={[
