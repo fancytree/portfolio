@@ -192,7 +192,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Wireframes" title="Draw the whole journey before styling it.">
+        <CaseChapter label="07 / Wireframes" title="It started as wireframes of the whole journey.">
           <CaseFigure caption="Discover and choose.">
             <Compare label="Wireframes: discover and choose" items={[
               { shot: 'wf-home', name: 'Home' },
