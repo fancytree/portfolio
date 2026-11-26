@@ -8,8 +8,9 @@ const screens: Screen[] = [
     { left: 12, top: 702, width: 366, height: 130, title: 'The tap records the demand', body: 'It is confirmed, and listed in Restock.' },
   ] },
   { shot: 'stock-restock', name: 'Restock tab', marks: [
+    { left: 222, top: 43, width: 58, height: 58, title: 'Not in the store? Tap +', body: 'The request starts from the top right.' },
     { left: 12, top: 380, width: 366, height: 198, flip: true, title: 'Waiting, with a date', body: 'Once back, it moves up, ready to add.' },
-    { left: 12, top: 588, width: 366, height: 168, flip: true, title: 'Not in the store', body: 'Requests and their status sit below.' },
+    { left: 12, top: 590, width: 366, height: 108, flip: true, title: 'Your requests', body: 'Each one shows its status.' },
   ] },
   { shot: 'stock-request', name: 'Request a product', marks: [
     { left: 12, top: 156, width: 366, height: 350, flip: true, title: 'Only the basics', body: 'What it is, brand, link and quantity, sent to the ERP’s request list.' },
