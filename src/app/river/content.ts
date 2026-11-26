@@ -6,7 +6,7 @@ import { productProjects, type WorkProject } from "@/lib/work-projects";
 // Selected Work mirrors the current homepage: the same projects, in the same
 // order, read straight from the site's project data so the two never drift apart.
 // Titles, roles, descriptions and impact numbers are used as written there.
-const FEATURED = ["Procurement Agent", "DEF Beauty ERP", "JobNova", "MemQ"];
+const FEATURED = ["Procurement Agent", "DEF Beauty ERP", "DEF Mini Program", "JobNova", "MemQ"];
 const EXPERIMENTS = ["Mono", "SenseFlow", "Team HQ", "ConnectNova Sequence", "Milan Site Selection"];
 
 export type RiverProject = {

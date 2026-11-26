@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import ConnectNovaCover from "../components/connectnova-cover/ConnectNovaCover";
 import DefErpCover from "../components/def-erp-cover/DefErpCover";
+import DefMiniProgramCover from "../components/def-miniprogram-cover/DefMiniProgramCover";
 import JobNovaCover from "../components/jobnova-cover/JobNovaCover";
 import MemQCover from "../components/memq-cover/MemQCover";
 import ProcurementCover from "../components/procurement-cover/ProcurementCover";
@@ -23,11 +24,12 @@ export const metadata: Metadata = {
     "Mei Chai is a product designer with 6+ years in UX and user research, designing B2B SaaS, AI agents and enterprise workflows: human-in-the-loop by design, built on design systems, shipped in code.",
 };
 
-// The four featured projects use the same animated covers as the homepage, in the
+// The featured projects use the same animated covers as the homepage, in the
 // homepage's own cover frame, so a project looks the same wherever it is listed.
 const COVERS: Record<string, () => React.JSX.Element> = {
   "/projects/procurement-agent-kit": ProcurementCover,
   "/projects/def-erp-kit": DefErpCover,
+  "/projects/def-miniprogram-kit": DefMiniProgramCover,
   "/projects/jobnova-kit": JobNovaCover,
   "/projects/connectnova-kit": ConnectNovaCover,
   "/projects/memq-kit": MemQCover,
