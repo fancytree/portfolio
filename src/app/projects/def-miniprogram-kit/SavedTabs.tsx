@@ -4,9 +4,9 @@ import styles from './SavedTabs.module.css';
 
 /* Shares come from the March to August order data; a tab without data says so. */
 const tabs: { shot: keyof typeof dims; name: string; role: string; stat?: string; evidence: string }[] = [
-  { shot: 'tab-saved', name: 'Saved', role: 'What is new and on offer in what you buy, then the exact items you kept.', stat: '13% vs 1%', evidence: 'pick up a new shade: accounts buying the range, against other accounts.' },
-  { shot: 'tab-buy', name: 'Buy again', role: 'Past orders shown by their pictures; open one and add part or all of it.', stat: '85%', evidence: 'of repeat accounts bought a product again. 73% of orders were return visits.' },
-  { shot: 'tab-restock', name: 'Restock', role: 'What is back, and when the rest is expected, for items that were out when wanted.', evidence: 'From the merchant interviews. Sales data does not record what was out of stock.' },
+  { shot: 'tab-saved', name: 'Saved', role: 'New, on offer and kept items.', stat: '13% vs 1%', evidence: 'New-shade pick-up: range buyers against others.' },
+  { shot: 'tab-buy', name: 'Buy again', role: 'Add part or all of a past order.', stat: '85%', evidence: 'of repeat accounts bought a product again.' },
+  { shot: 'tab-restock', name: 'Restock', role: 'What is back, and what is expected.', evidence: 'From interviews; no sales data yet.' },
 ];
 
 /** The tabs inside Saved that work today, each with its job and what supports it. */
