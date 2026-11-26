@@ -6,7 +6,7 @@ import { Compare } from './Compare';
 import layout from './Compare.module.css';
 import { CategoryFlow } from './CategoryFlow';
 import { SiteMap, TabMap } from './Diagrams';
-import { ShadeHighlight } from './ShadeHighlight';
+import { ShadeCallouts } from './ShadeCallouts';
 import { ResearchFlow } from './ResearchFlow';
 import { SaveCases } from './SaveCases';
 import { RestockFlow } from './RestockCallouts';
@@ -157,18 +157,10 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Choosing" title="Finding a few shades among 120, and taking them together.">
-          <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So the picker has to find shades fast and collect several.</p></CaseProse>
-          <CaseFigure caption="Working prototype on demonstration data.">
-            <ShadeHighlight />
-          </CaseFigure>
-          <CaseFigure caption="The same picker in four situations.">
-            <Compare label="Shade picker states" items={[
-              { shot: 'pick-numbers', name: 'Numbers typed' },
-              { shot: 'pick-bought', name: 'Bought before' },
-              { shot: 'pick-hair', name: 'Hair colour by level' },
-              { shot: 'pick-tray', name: 'Quantities' },
-            ]} />
+        <CaseChapter label="06 / Choosing" title="Several shades, taken in one go.">
+          <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So a long range is listed in parts, and the picker collects several shades before adding them.</p></CaseProse>
+          <CaseFigure caption="Several shades of one range, on demonstration data.">
+            <ShadeCallouts />
           </CaseFigure>
           <CaseFigure caption="How I got there. I first chose one shade at a time; the order data brought the bulk grid back.">
             <Compare label="Shade selectors" items={[
