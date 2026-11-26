@@ -224,7 +224,7 @@ export function CaseEvidenceCards({ items, label, layout = 'auto' }: {
 }
 
 type CaseFigureProps = SpecProps & {
-  caption: string;
+  caption: ReactNode;
   children: ReactNode;
 };
 
