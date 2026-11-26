@@ -157,11 +157,11 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="05 / For you" title="Home follows each merchant’s categories.">
           <CaseProse><p>Products and merchants use <strong>one set of categories</strong>. Where the two overlap is what a merchant sees first, so the home tabs are their own instead of a fixed list.</p></CaseProse>
-          <CaseFigure caption="A product reaches For you when it shares a category with the merchant. Switch merchants to compare.">
-            <CategoryFlow />
-          </CaseFigure>
           <CaseFigure caption="The new home: from a fixed category grid to tabs that belong to the merchant.">
             <HomeCallouts />
+          </CaseFigure>
+          <CaseFigure caption="A product reaches For you when it shares a category with the merchant. Switch merchants to compare.">
+            <CategoryFlow />
           </CaseFigure>
           <CaseFigure caption="Four merchants, four sets of tabs, and the same gloves in each. Demonstration data; the first version recommends by rules.">
             <Compare label="For you by merchant" items={[
