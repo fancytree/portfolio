@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
-import { BadgePercent, Repeat, Store } from 'lucide-react';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
 import layout from './Compare.module.css';
 import { CategoryFlow } from './CategoryFlow';
-import { Method, Needs, OrderCharts, SiteMap, TabMap } from './Diagrams';
+import { SiteMap, TabMap } from './Diagrams';
+import { ResearchFlow } from './ResearchFlow';
 import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
@@ -14,7 +14,6 @@ import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 import {
   CaseChapter,
   CaseClose,
-  CaseEvidenceCards,
   CaseFigure,
   CaseHero,
   CaseKitPage,
@@ -102,21 +101,9 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="02 / Research" title="So what do merchants come for?">
-          <CaseProse><p>I asked merchants and sales, then checked the answers against the orders.</p></CaseProse>
-          <CaseFigure caption="Three sources.">
-            <Method />
+          <CaseFigure caption="Seven merchant interviews, checked against sales from March to August 2026. Repeat accounts; products grouped by name; a new shade is one first sold in May or later.">
+            <ResearchFlow />
           </CaseFigure>
-          <CaseFigure caption="Seven merchant interviews, and the design answer to each.">
-            <Needs />
-          </CaseFigure>
-          <CaseFigure caption="Order data, March to August 2026, accounts only. Established: six or more earlier order days, August orders. New shade: first sold in May or later. Includes counter orders; products grouped by name.">
-            <OrderCharts />
-          </CaseFigure>
-          <CaseEvidenceCards label="Three conclusions" items={[
-            { icon: <Repeat />, title: 'Build for coming back', body: 'Reordering deserves a permanent place.' },
-            { icon: <BadgePercent />, title: 'Organise by range', body: 'New shades, stock and offers hang off what is already bought.' },
-            { icon: <Store />, title: 'Lead with their categories', body: 'Each merchant’s own, with everything else searchable.' },
-          ]} />
         </CaseChapter>
 
         <CaseChapter label="03 / Structure" title="Rebuild the structure around coming back.">
