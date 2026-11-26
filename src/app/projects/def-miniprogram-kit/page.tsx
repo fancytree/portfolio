@@ -7,6 +7,7 @@ import { Compare } from './Compare';
 import layout from './Compare.module.css';
 import { CategoryFlow } from './CategoryFlow';
 import { Method, Needs, OrderCharts, SiteMap, TabMap } from './Diagrams';
+import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
@@ -144,13 +145,8 @@ export default function DefMiniProgramKitPage() {
           <CaseFigure caption="A product reaches For you when it shares a category with the merchant. Switch merchants to compare.">
             <CategoryFlow />
           </CaseFigure>
-          <CaseFigure caption="Four merchants, four sets of tabs, and the same gloves in each. Demonstration data; the first version recommends by rules.">
-            <Compare label="For you by merchant" items={[
-              { shot: 'foryou-hair', name: 'Hair and beauty' },
-              { shot: 'foryou-nails', name: 'Nails and pedicure' },
-              { shot: 'foryou-barber', name: 'Barber and hair' },
-              { shot: 'foryou-beauty', name: 'Beauty and spa' },
-            ]} />
+          <CaseFigure caption="The cards For you is built from, on demonstration data. The first version recommends by rules.">
+            <FeedCards />
           </CaseFigure>
         </CaseChapter>
 
