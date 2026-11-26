@@ -165,7 +165,6 @@ export default function DefMiniProgramKitPage() {
               { title: 'Finding means browsing', body: 'A whole tab goes to the category tree, and every visit starts from the top. → Search and filters (03).' },
               { title: 'No shortlist', body: 'Past orders sit in the account, with no place for the exact products a business keeps buying. → A Saved tab (04).' },
               { title: 'One page shape for every product', body: 'Built around a capacity button and a quantity bar, with no key facts up front and no room for shades, models or pack units. → A new product page and an adaptive sheet (08, 09).' },
-              { title: 'Red competes with the products', body: 'A strong brand colour around many brands of packaging. → Black, white and grey (06).' },
             ]} />
           </div>
         </CaseChapter>
