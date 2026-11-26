@@ -171,13 +171,6 @@ export default function DefMiniProgramKitPage() {
               { shot: 'foryou-beauty', name: 'Beauty and spa' },
             ]} />
           </CaseFigure>
-          <CaseFigure caption="Everything stays findable: search takes over the Categories tab.">
-            <Compare wide label="Search, filter and list" items={[
-              { shot: 'search', name: 'Search', why: 'Category and brand are ready before anything is typed.' },
-              { shot: 'filters', name: 'Filters', why: 'They follow the category.' },
-              { shot: 'list', name: 'Results', why: 'Each card says its next step.' },
-            ]} />
-          </CaseFigure>
         </CaseChapter>
 
         <CaseChapter label="06 / Choosing" title="Show only the choice the product needs.">
