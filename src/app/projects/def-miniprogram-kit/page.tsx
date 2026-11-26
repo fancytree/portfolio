@@ -26,18 +26,41 @@ export const metadata: Metadata = {
 
 const navLabels = [
   '01 / The problem',
-  '02 / Direction',
-  '03 / Try it',
-  '04 / Look',
-  '05 / Home',
-  '06 / Choosing a product',
-  '07 / Product page',
-  '08 / Saving',
-  '09 / Paying',
-  '10 / Less weight',
-  '11 / Working with AI',
-  '12 / Where it stands',
+  '02 / For you',
+  '03 / Finding products',
+  '04 / Why Saved',
+  '05 / Try it',
+  '06 / Look',
+  '07 / Feed rhythm',
+  '08 / Choosing a product',
+  '09 / Product page',
+  '10 / Paying',
+  '11 / Less weight',
+  '12 / Working with AI',
+  '13 / Where it stands',
 ];
+
+const homeDecision: Decision = {
+  question: 'How should a merchant meet a catalogue this wide?',
+  source: 'Home structure',
+  options: [
+    { label: 'A grid of category icons', verdict: 'The same eight doors for everyone. Finding what is relevant is left to the buyer.' },
+    { label: 'Make each merchant pick one trade first', verdict: 'Hides products the business may also need.' },
+    { label: 'For you first, other trades one tap away', verdict: 'Relevant by default, with nothing locked away.', chosen: true },
+  ],
+  tradeoff: 'The first version recommends by rules, so it is only as good as the business type on file.',
+};
+
+const tabDecision: Decision = {
+  question: 'What deserves the second tab?',
+  source: 'Bottom navigation',
+  options: [
+    { label: 'Keep a Categories tab', verdict: 'Repeats the home chips and search, for something a merchant does now and then.' },
+    { label: 'Five tabs: Categories and Reorder', verdict: 'The brief’s plan. More choices, and reordering still sits beside browsing.' },
+    { label: 'Saved takes the slot; categories move into search', verdict: 'Reordering gets a tab of its own. Browsing stays one tap behind the search box.', chosen: true },
+  ],
+  tradeoff: 'Someone who likes to browse the whole tree now goes through search.',
+};
 
 const paymentDecision: Decision = {
   question: 'How long should an unpaid order hold stock?',
@@ -108,8 +131,8 @@ export default function DefMiniProgramKitPage() {
           tags={['B2B commerce', 'Mobile design', 'Design system', 'AI-assisted design']}
           glance={{
             items: [
-              { label: 'Challenge', body: 'The mini program was shaped like a consumer shop. Its buyers are businesses, ordering many brands and many variants again and again.' },
-              { label: 'Solution', body: 'A merchant-first store in black and white, one selection sheet that adapts to each product, and payment by transfer built into the order.' },
+              { label: 'Challenge', body: 'DEF sells to businesses, but the mini program was shaped like a consumer shop: every merchant saw every category and browsed to find what they buy again and again.' },
+              { label: 'Solution', body: 'For you by business type, search and filters for the whole catalogue, and a Saved tab for reordering, in a quieter black and white system.' },
               { label: 'Outcome', body: 'Designed and prototyped, waiting for development. There are no results to report yet.' },
             ],
             deliverables: ['Requirements', 'Screen designs', 'Design system', 'Clickable prototype'],
@@ -124,41 +147,108 @@ export default function DefMiniProgramKitPage() {
           ]} />
         </CaseFigure>
 
-        <CaseChapter label="01 / The problem" title="Built like a retail shop. Used by merchants.">
+        <CaseChapter label="01 / The problem" title="Our buyers are businesses. The store treated them like shoppers.">
           <CaseProse>
-            <p>The first version connected ordering to the ERP and <a href="/projects/def-erp-kit">kept the look salons already knew</a>, so it could launch quickly. This redesign takes up what that decision postponed.</p>
+            <p>DEF sells to merchants: salons, barbers, nail studios, spas. The first mini program had the structure of a consumer shop. It opened on a category grid and a promotion, gave browsing a tab of its own, and showed every visitor the same thing. It <a href="/projects/def-erp-kit">kept the look salons already knew</a> so it could launch quickly. This redesign takes up what that decision postponed.</p>
           </CaseProse>
-          <CaseFigure caption="Before · The previous mini program, on demonstration data.">
-            <Compare label="Previous mini program" items={[
-              { shot: 'before-home', name: 'Home', why: 'A shopper’s home: banner, category icons, brands.' },
-              { shot: 'before-catalog', name: 'Catalogue', why: 'A category tree in Chinese inside an otherwise English interface.' },
-              { shot: 'before-product', name: 'Product', why: 'Capacity on the page and quantity in a second bar, built around one simple option.' },
-              { shot: 'before-account', name: 'Account', why: 'Money and orders packed into a heavy red block.' },
+          <CaseFigure caption="Before · The home and category tab of the previous mini program, on demonstration data.">
+            <Compare wide columns={2} label="Previous home and categories" items={[
+              { shot: 'before-home', name: 'Home: eight category icons', why: 'Nails, lashes, hair removal, hair, beauty, furniture, sterilisation, consumables. Every merchant gets all eight, with equal weight.' },
+              { shot: 'before-catalog', name: 'Categories: a whole tab', why: 'Browsing the category tree from the top, in Chinese inside an otherwise English interface.' },
             ]} />
           </CaseFigure>
           <CaseSteps items={[
-            { title: 'A consumer structure', body: 'The information architecture assumed a retail shopper. The actual customer is a business, with its own prices, balance, payment terms and quotes.' },
-            { title: 'Colour fighting colour', body: 'DEF carries many categories and brands. A red interface around all that packaging was visually noisy.' },
-            { title: 'Slow to choose', body: 'Picking the right shade, size or pack was too much work for an order someone places again and again.' },
+            { title: 'Everyone sees everything', body: 'A merchant buys within a trade. A nail studio walks past hair, salon furniture and sterilisation to reach its own products.' },
+            { title: 'Finding means browsing', body: 'The structure is built for looking around: category, then subcategory, then product, even for something bought many times.' },
+            { title: 'No shortlist', body: 'Past orders sat in the account, but there was no place for the exact products a business keeps buying.' },
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="02 / Direction" title="Start from the merchant, and let each kind of product behave differently.">
+        <CaseChapter label="02 / For you" title="From a category grid to For you.">
+          <CaseProse>
+            <p>The home page now starts from the merchant. Business verification asks for the <strong>main business type</strong> and any additional services, and For you is built from that answer. It can be changed later.</p>
+          </CaseProse>
+          <DecisionCards items={[homeDecision]} start={1} />
+          <CaseFigure caption="Before and after. Verification supplies the business type behind the new home.">
+            <Compare wide label="From category grid to For you" items={[
+              { shot: 'before-home', name: 'Before: category grid', tag: 'Before', why: 'The catalogue’s structure comes first.', alt: 'Previous home page' },
+              { shot: 'verify', name: 'Ask once: business type', tag: 'Input', why: 'One field the business already has to fill in to see its prices.' },
+              { shot: 'home', name: 'After: For you', chosen: true, why: 'Products come first. The trades sit in one row of chips.', alt: 'New home page' },
+            ]} />
+          </CaseFigure>
+          <CaseFigure caption="What For you means for four kinds of merchant. An illustration of the rule, built from the same components.">
+            <Compare label="For you by business type" items={[
+              { shot: 'foryou-hair', name: 'Hair salon', why: 'Colour, shampoo, tint tools, gloves.' },
+              { shot: 'foryou-nails', name: 'Nail salon', why: 'Gel shades, top coat, gloves.' },
+              { shot: 'foryou-barber', name: 'Barber shop', why: 'Chair, shampoo, gloves, tools.' },
+              { shot: 'foryou-beauty', name: 'Beauty salon', why: 'Serum, blush, gloves, shades.' },
+            ]} />
+          </CaseFigure>
+          <CaseProse>
+            <p>For you is selected by default; Hair, Barber, Beauty, Nails and Spa sit beside it for anyone who buys across trades. The first version uses <strong>rules on business type</strong>, and the same feed can take a ranking algorithm later. Guests see a general selection.</p>
+          </CaseProse>
+        </CaseChapter>
+
+        <CaseChapter label="03 / Finding products" title="Without the grid, everything still has to be findable.">
+          <CaseProse>
+            <p>The old grid mixed <strong>who a product is for</strong> (nails, hair) with <strong>what it is</strong> (furniture, consumables). I separated the questions and gave each its own way in.</p>
+          </CaseProse>
           <CaseSteps items={[
-            { title: 'Merchant first', body: 'Payment, terms, quotes, approvals and reordering are part of the store, not add-ons.' },
-            { title: 'One shell, many product types', body: 'Shades, sizes, models, capacities and pack units configure the page and the selector automatically.' },
-            { title: 'A feed per type of merchant', body: 'Home is designed as a For you feed of modules, meant to be ordered by an algorithm for each kind of business.' },
-            { title: 'Four tabs, in English', body: 'The brief had five: Home, Categories, Reorder, Cart, Me. Categories moved into the home chips and search, reordering into Saved.' },
+            { title: 'By trade', body: 'The chips under the banner switch the home page to another trade.' },
+            { title: 'By name or code', body: 'One search box takes name, brand, SKU or EAN, and remembers recent searches.' },
+            { title: 'By kind or brand', body: 'The search page holds Care, Consumables, Tools and Equipment, and a way in by brand.' },
+            { title: 'By attribute', body: 'Filters sit beside the search box. Their attributes follow the category, show the number of results, and are kept when you come back.' },
           ]} />
-          <CaseProse><p>I also cut photo search from the home page. It cost too much to build well for what it would give.</p></CaseProse>
+          <CaseFigure caption="Search, filters and the result list.">
+            <Compare wide label="Search, filter and list" items={[
+              { shot: 'search', name: 'Search', why: 'Recent, category and brand are ready before anything is typed.' },
+              { shot: 'filters', name: 'Filters', why: 'A bottom sheet: category, colour family, size, brand, stock, and a result count on the button.' },
+              { shot: 'list', name: 'Results', why: 'Each card says what comes next: choose shade, select options, add, or ask for a quote.' },
+            ]} />
+          </CaseFigure>
+          <CaseProse><p>When nothing matches, the page suggests other words, nearby categories and a way to reach support. I cut photo search: it cost too much to build well for what it would give.</p></CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="03 / Try it" title="Use the redesign.">
-          <CaseProse><p>Four tours play in turn. <strong>Move your pointer into the frame to take over</strong>: add products, save a shade, check out and pay. Names, prices and orders are demonstration data.</p></CaseProse>
+        <CaseChapter label="04 / Why Saved" title="Why the second tab is Saved, not Categories.">
+          <CaseProse>
+            <p>A tab is for what someone comes back to do. A business knows its trade and restocks many of the same products, so walking a category tree is the occasional job. With For you handling relevance and search handling lookup, a Categories tab would repeat both. That frees its slot for <strong>the merchant’s own shortlist</strong>.</p>
+          </CaseProse>
+          <CaseFigure caption="Tab bar, before and after.">
+            <Compare wide columns={2} label="Tab bar before and after" items={[
+              { shot: 'tab-old', name: 'Home, Categories, Cart, Me', why: 'A permanent place for browsing.' },
+              { shot: 'tab-capsule', name: 'Home, Saved, Bag, Account', chosen: true, why: 'A permanent place for reordering.' },
+            ]} />
+          </CaseFigure>
+          <DecisionCards items={[tabDecision]} start={2} />
+          <CaseSteps items={[
+            { title: 'Find it once', body: 'Through For you or search.' },
+            { title: 'Keep the exact one', body: 'The heart saves one SKU: a shade, size or model, not just the product.' },
+            { title: 'Reorder from the tab', body: 'Plus adds it straight to the bag, or opens the sheet when there is a pack size to choose.' },
+            { title: 'Past orders beside it', body: 'Buy again sits in the same tab. Restock and Lists have their place and are still to be designed.' },
+          ]} />
+          <CaseFigure caption="From a product to the shortlist.">
+            <Compare wide label="Save and reorder" items={[
+              { shot: 'product-shade', name: '1 · Tap the heart', why: 'In the page header, away from the buy button.', alt: 'Product page with heart' },
+              { shot: 'save-sheet', name: '2 · Pick the SKU', why: 'Only SKU options. No quantity, no packaging.' },
+              { shot: 'saved', name: '3 · Reorder in Saved', why: 'Every card is one exact item with its price and a plus.' },
+            ]} />
+          </CaseFigure>
+          <ReversalList items={savingReversals} />
+          <CaseFigure caption="Saving first sat on the buying path. The earlier sheet is recreated with the same data.">
+            <Compare wide columns={2} label="Saving in the buy sheet" items={[
+              { shot: 'save-before', name: 'Heart beside the buy button', why: 'A secondary action competed with the main one.' },
+              { shot: 'sheet-serum', name: 'Buy sheet without it', chosen: true, why: 'Nothing sits next to Add to Bag.', alt: 'Buy sheet without a heart' },
+            ]} />
+          </CaseFigure>
+          <CaseProse><p>That merchants reorder more than they browse is the assumption under this decision. It still has to be checked against usage once the redesign is live.</p></CaseProse>
+        </CaseChapter>
+
+        <CaseChapter label="05 / Try it" title="Use the redesign.">
+          <CaseProse><p>Five tours play in turn. <strong>Move your pointer into the frame to take over</strong>: switch trades, search, add products, save a shade, check out and pay. Names, prices and orders are demonstration data.</p></CaseProse>
           <MiniProgramDemo />
         </CaseChapter>
 
-        <CaseChapter label="04 / Look" title="The products bring the colour.">
+        <CaseChapter label="06 / Look" title="The products bring the colour.">
           <CaseFigure caption="Round 1 · Three directions on the same content.">
             <Compare wide label="Home directions" items={[
               { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
@@ -183,7 +273,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="05 / Home" title="Order first, variety last.">
+        <CaseChapter label="07 / Feed rhythm" title="Order first, variety last.">
           <CaseProse>
             <p>I explored many card types: products, collections, brands, video, articles and volume offers. A feed where every card has a different height looked chaotic and refused to line up.</p>
             <p>So the top of the feed runs <strong>fixed modules with full-width and aligned rows</strong>. The uneven two-column mix only appears at the very bottom, where nothing has to align after it.</p>
@@ -197,7 +287,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Choosing a product" title="One sheet that adapts to what is being sold.">
+        <CaseChapter label="08 / Choosing a product" title="One sheet that adapts to what is being sold.">
           <CaseFigure caption="How should someone pick a shade? Almost every product in the ERP already has an image per option.">
             <Compare label="Shade selectors" items={[
               { shot: 'swatch-preview', name: 'Large preview', why: 'One colour is huge; the others become small dots that are hard to compare.' },
@@ -229,7 +319,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Product page" title="One scroll, no inner pages.">
+        <CaseChapter label="09 / Product page" title="One scroll, no inner pages.">
           <CaseProse>
             <p>Everything a buyer needs sits on one page. Four or five facts they care about, such as material or the share of a key ingredient, come right under the price. The long product image tells the rest.</p>
           </CaseProse>
@@ -254,22 +344,11 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="08 / Saving" title="I moved saving off the buying path.">
-          <ReversalList items={savingReversals} />
-          <CaseFigure caption="The earlier sheet is recreated with the same data.">
-            <Compare wide label="Saving" items={[
-              { shot: 'save-before', name: 'Heart beside the buy button', why: 'A secondary action competed with the main one.' },
-              { shot: 'sheet-serum', name: 'Buy sheet', chosen: true, why: 'Nothing sits next to Add to Bag.', alt: 'Buy sheet without a heart' },
-              { shot: 'save-sheet', name: 'Save sheet', chosen: true, why: 'Opened from the product heart: SKU options and one button.' },
-            ]} />
-          </CaseFigure>
-        </CaseChapter>
-
-        <CaseChapter label="09 / Paying" title="No online payment, so the order has to explain itself.">
+        <CaseChapter label="10 / Paying" title="No online payment, so the order has to explain itself.">
           <CaseProse>
             <p>Merchants place the order first, pay by their own method, upload the receipt and wait for finance to check it. Balance is deducted at checkout. Customers with payment terms receive goods and pay later.</p>
           </CaseProse>
-          <DecisionCards items={[paymentDecision]} start={1} />
+          <DecisionCards items={[paymentDecision]} start={3} />
           <CaseFigure caption="One order, four moments.">
             <Compare label="Payment journey" items={[
               { shot: 'checkout', name: 'Checkout', why: 'Balance is applied first and the rest is stated.' },
@@ -292,7 +371,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="10 / Less weight" title="Many of my review notes asked for less.">
+        <CaseChapter label="11 / Less weight" title="Many of my review notes asked for less.">
           <ReversalList items={chromeReversals} />
           <CaseFigure caption="The tab bar, four versions.">
             <Compare wide columns={2} label="Tab bar versions" items={[
@@ -309,14 +388,14 @@ export default function DefMiniProgramKitPage() {
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="11 / Working with AI" title="AI drafted. I decided.">
+        <CaseChapter label="12 / Working with AI" title="AI drafted. I decided.">
           <CaseProse>
             <p>Claude drafted the requirements document from my first version, and generated the screens, the component code, the motion and this prototype. Codex generated the product photography. The brands in these screens are made up for the design.</p>
             <p>My work was framing the problem, giving direction, reviewing on the canvas and rejecting what was wrong. The sliding tab pill, the volume price table and the heart beside the buy button all made it into a draft. I removed each of them.</p>
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="12 / Where it stands" title="Designed, not yet built.">
+        <CaseClose label="13 / Where it stands" title="Designed, not yet built.">
           <CaseProse>
             <p>The redesign is waiting for development, so there are no results to report yet.</p>
             <p>One question is still open: how Buy again should work.</p>

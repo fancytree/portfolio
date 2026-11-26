@@ -1,12 +1,34 @@
 'use client';
 
-// The redesigned mini program, live in the case: four short tours a scripted cursor plays in
+// The redesigned mini program, live in the case: five short tours a scripted cursor plays in
 // turn. Moving the pointer into the frame stops the script and hands the prototype to the visitor.
 
 import LiveShowcase, { type ShowcaseItem } from '../def-erp-kit/LiveShowcase';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 
 const items: ShowcaseItem[] = [
+  {
+    title: 'Find by trade and search',
+    lead: 'For you first, everything else within reach.',
+    body: 'Switch the home page to another trade, then open search for categories, brands and filters.',
+    seconds: 14, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoMain`,
+    script: async (h) => {
+      h.say('Find');
+      await h.wait(1100);
+      await h.click(h.find('#base button.bs-chip', 'Nails'));
+      await h.wait(1500);
+      await h.click(h.find('#base button.bs-chip', 'Barber'));
+      await h.wait(1500);
+      await h.click(h.find('#base a[href="PhotoSearch.dc.html"]'));
+      await h.wait(1500);
+      await h.click(h.find('#base a[href="UIFilters.dc.html"]'));
+      await h.wait(1500);
+      await h.click(h.find('#over button', 'Tools'));
+      await h.wait(900);
+      await h.click(h.find('#over a', 'Show'));
+      await h.wait(2000);
+    },
+  },
   {
     title: 'Add to the bag',
     lead: 'Options appear only when you are buying.',
@@ -93,7 +115,7 @@ export default function MiniProgramDemo() {
   return (
     <LiveShowcase
       items={items}
-      src={`${DEF_MINI_REDESIGN_URL}?start=PhotoProduct`}
+      src={`${DEF_MINI_REDESIGN_URL}?start=PhotoMain`}
       label="mini program"
       title="DEF mini program redesign, clickable prototype with demonstration data"
       baseWidth={1100}
