@@ -8,16 +8,16 @@ import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Find by trade and search',
+    title: 'Find by category and search',
     lead: 'For you first, everything else within reach.',
-    body: 'Switch the home page to another trade, then open search for categories, brands and filters.',
+    body: 'Switch the home page to another category, then open search for categories, brands and filters.',
     seconds: 14, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoMain`,
     script: async (h) => {
       h.say('Find');
       await h.wait(1100);
       await h.click(h.find('#base button.bs-chip', 'Nails'));
       await h.wait(1500);
-      await h.click(h.find('#base button.bs-chip', 'Barber'));
+      await h.click(h.find('#base button.bs-chip', 'Hair'));
       await h.wait(1500);
       await h.click(h.find('#base a[href="PhotoSearch.dc.html"]'));
       await h.wait(1500);

@@ -5,7 +5,8 @@ import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
 import layout from './Compare.module.css';
-import { Method, Needs, OrderCharts, SiteMap, TabMap } from './Diagrams';
+import { CategoryLinks, Method, Needs, OrderCharts, SiteMap, SpreadCharts, TabMap } from './Diagrams';
+import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 import {
@@ -32,10 +33,10 @@ const navLabels = [
   '02 / Research',
   '03 / Structure',
   '04 / Wireframes',
-  '05 / Design language',
-  '06 / For you',
-  '07 / Choosing',
-  '08 / Saving',
+  '05 / For you',
+  '06 / Choosing',
+  '07 / Saving',
+  '08 / Design language',
   '09 / Try it',
   '10 / Where it stands',
 ];
@@ -65,7 +66,7 @@ export default function DefMiniProgramKitPage() {
             items: [
               { label: 'Challenge', body: 'A wholesale business was running a consumer-style shop: every merchant saw every category and browsed to find what they buy again and again.' },
               { label: 'Insight', body: 'Merchants return for four things: new items from their brands, restocks, offers on what they buy, and reordering.' },
-              { label: 'Solution', body: 'Home starts from the trade, search takes over categories, and a Saved tab is built around coming back.' },
+              { label: 'Solution', body: 'Home follows each merchant’s categories, search takes over browsing, and a Saved tab is built around coming back.' },
             ],
             deliverables: ['Research', 'Information architecture', 'Wireframes', 'Design system', 'Clickable prototype'],
           }}
@@ -90,10 +91,10 @@ export default function DefMiniProgramKitPage() {
               ]} />
             </CaseFigure>
             <CaseSteps items={[
-              { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one trade. → 06' },
-              { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 06' },
-              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 03, 08' },
-              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 07' },
+              { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one. → 05' },
+              { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 05' },
+              { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 03, 07' },
+              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 06' },
             ]} />
           </div>
         </CaseChapter>
@@ -112,7 +113,7 @@ export default function DefMiniProgramKitPage() {
           <CaseEvidenceCards label="Three conclusions" items={[
             { icon: <Repeat />, title: 'Build for coming back', body: 'Reordering deserves a permanent place.' },
             { icon: <BadgePercent />, title: 'Organise by range', body: 'New shades, stock and offers hang off what is already bought.' },
-            { icon: <Store />, title: 'Lead with the trade', body: 'Start from the main one, keep the others one tap away.' },
+            { icon: <Store />, title: 'Lead with their categories', body: 'Each merchant’s own, with everything else searchable.' },
           ]} />
         </CaseChapter>
 
@@ -153,42 +154,23 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="05 / Design language" title="A quiet language, so the products carry the colour.">
-          <CaseProse><p>Many categories and many brands of packaging clashed with a strong brand colour. I took Sephora as the reference and removed it: black, white and grey, with colour kept for products and state.</p></CaseProse>
-          <CaseFigure caption="Two other directions, then four layouts of the chosen one, Editorial, which leaves the colour to the products.">
-            <Compare label="Home exploration" items={[
-              { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
-              { shot: 'dir-supply', name: 'Pro supply', why: 'Products shrink to thumbnails and navy adds one more colour.' },
-              { shot: 'layout-cover', name: 'Editorial · Cover' },
-              { shot: 'layout-index', name: 'Editorial · Index' },
-              { shot: 'layout-lookbook', name: 'Editorial · Lookbook', chosen: true, why: 'Stories, brands and priced products share one layout.' },
-              { shot: 'layout-column', name: 'Editorial · Column' },
-            ]} />
+        <CaseChapter label="05 / For you" title="Home follows each merchant’s categories.">
+          <CaseProse><p>A barber does not need to see everything a nail studio buys. But one merchant can work in several categories, and the same gloves serve many of them. So I made one structure carry both: <strong>products and merchants link to categories, many to many</strong>, and the home tabs are the merchant’s own instead of a fixed list.</p></CaseProse>
+          <CaseFigure caption="Order data, March to August 2026, repeat accounts; sales categories grouped into five.">
+            <SpreadCharts />
           </CaseFigure>
-          <CaseFigure caption="The system: tokens, components and both themes.">
-            <Compare label="Design system" items={[
-              { shot: 'lang-foundations', name: 'Foundations' },
-              { shot: 'lang-light', name: 'Components' },
-              { shot: 'lang-dark', name: 'Dark' },
-            ]} />
+          <CaseFigure caption="One set of categories for products and merchants.">
+            <CategoryLinks />
           </CaseFigure>
-        </CaseChapter>
-
-        <CaseChapter label="06 / For you" title="Home starts from the trade.">
-          <CaseProse><p>A barber does not need to see everything a nail studio buys. So home shows what fits the business type first, instead of a grid of icons. Most accounts still buy outside their main trade, so the other trades stay one tap away and search reaches every product.</p></CaseProse>
-          <CaseFigure caption="From a category grid to For you, fed by the business type.">
-            <Compare wide label="From category grid to For you" items={[
-              { shot: 'before-home', name: 'Before: category grid', tag: 'Before', alt: 'Previous home page' },
-              { shot: 'verify', name: 'Ask once: business type' },
-              { shot: 'home', name: 'After: For you', chosen: true, alt: 'New home page' },
-            ]} />
+          <CaseFigure caption="From a fixed category grid to tabs that belong to the merchant.">
+            <HomeCallouts />
           </CaseFigure>
-          <CaseFigure caption="The same home for four kinds of merchant. An illustration of the rule; the first version recommends by rules.">
-            <Compare label="For you by business type" items={[
-              { shot: 'foryou-hair', name: 'Hair salon' },
-              { shot: 'foryou-nails', name: 'Nail salon' },
-              { shot: 'foryou-barber', name: 'Barber shop' },
-              { shot: 'foryou-beauty', name: 'Beauty salon' },
+          <CaseFigure caption="Four merchants, four sets of tabs, and the same gloves in each. Demonstration data; the first version recommends by rules.">
+            <Compare label="For you by merchant" items={[
+              { shot: 'foryou-hair', name: 'Hair and beauty' },
+              { shot: 'foryou-nails', name: 'Nails and pedicure' },
+              { shot: 'foryou-barber', name: 'Barber and hair' },
+              { shot: 'foryou-beauty', name: 'Beauty and spa' },
             ]} />
           </CaseFigure>
           <CaseFigure caption="Everything stays findable: search takes over the Categories tab.">
@@ -200,7 +182,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Choosing" title="Show only the choice the product needs.">
+        <CaseChapter label="06 / Choosing" title="Show only the choice the product needs.">
           <CaseProse><p>Picking the item to order was laborious. Each product type now configures its own display, and one add is one item, so price tables and pack choices that did not help left the screen.</p></CaseProse>
           <CaseFigure caption="Picking a shade, four ways.">
             <Compare label="Shade selectors" items={[
@@ -227,13 +209,34 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="08 / Saving" title="Saving stays off the buying path.">
+        <CaseChapter label="07 / Saving" title="Saving stays off the buying path.">
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
             <Compare wide label="Saving" items={[
               { shot: 'save-before', name: 'Before: heart beside buy', tag: 'Before', why: 'Competed with the main action.' },
               { shot: 'product-shade', name: 'Heart in the header', chosen: true, why: 'Away from the buying path.' },
               { shot: 'save-sheet', name: 'Save sheet', chosen: true, why: 'The exact item, no quantity or pack.' },
+            ]} />
+          </CaseFigure>
+        </CaseChapter>
+
+        <CaseChapter label="08 / Design language" title="A quiet language, so the products carry the colour.">
+          <CaseProse><p>Many categories and many brands of packaging clashed with a strong brand colour. I took Sephora as the reference and removed it: black, white and grey, with colour kept for products and state.</p></CaseProse>
+          <CaseFigure caption="Two other directions, then four layouts of the chosen one, Editorial, which leaves the colour to the products.">
+            <Compare label="Home exploration" items={[
+              { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
+              { shot: 'dir-supply', name: 'Pro supply', why: 'Products shrink to thumbnails and navy adds one more colour.' },
+              { shot: 'layout-cover', name: 'Editorial · Cover' },
+              { shot: 'layout-index', name: 'Editorial · Index' },
+              { shot: 'layout-lookbook', name: 'Editorial · Lookbook', chosen: true, why: 'Stories, brands and priced products share one layout.' },
+              { shot: 'layout-column', name: 'Editorial · Column' },
+            ]} />
+          </CaseFigure>
+          <CaseFigure caption="The system: tokens, components and both themes.">
+            <Compare label="Design system" items={[
+              { shot: 'lang-foundations', name: 'Foundations' },
+              { shot: 'lang-light', name: 'Components' },
+              { shot: 'lang-dark', name: 'Dark' },
             ]} />
           </CaseFigure>
         </CaseChapter>

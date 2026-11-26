@@ -12,6 +12,16 @@
 .four { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--case-space-16); }
 .charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-16); padding: var(--case-space-24); }
 .charts > div { background: var(--case-white); border: var(--case-border-width) solid var(--case-line); border-radius: var(--case-radius-sm); }
+/* products and merchants against categories */
+.scroll { overflow-x: auto; }
+.matrix { width: 100%; border-collapse: collapse; table-layout: fixed; background: var(--case-white); border: var(--case-border-width) solid var(--case-line); font-family: var(--case-font-body); font-size: var(--case-text-14); color: var(--case-ink); }
+.matrix th, .matrix td { border-bottom: var(--case-border-width) solid var(--case-line); padding: var(--case-space-8); text-align: center; vertical-align: middle; overflow-wrap: anywhere; }
+.matrix th[scope="col"] { font-weight: var(--case-weight-strong); }
+.matrix th[scope="row"] { text-align: left; font-weight: inherit; }
+.matrix tr > :first-child { width: 28%; }
+.matrix .group { text-align: left; background: var(--case-surface); color: var(--case-muted); font-size: var(--case-text-12); text-transform: uppercase; }
+.dot { display: inline-block; width: var(--case-space-16); height: var(--case-space-16); border-radius: 50%; background: var(--case-ink); vertical-align: middle; }
+.merchants .dot { background: var(--case-flow-link); }
 /* old tab to new place */
 .map { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--case-space-8); }
 .mapRow { display: grid; grid-template-columns: minmax(0, 1fr) var(--case-space-32) minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--case-space-16); align-items: center; }
@@ -33,9 +43,14 @@
 .fresh { border-color: var(--case-flow-link); box-shadow: inset 3px 0 0 var(--case-flow-link); }
 .planned { border-style: dashed; color: var(--case-muted); }
 @media (max-width: 899px) {
+  .matrix { font-size: var(--case-text-12); }
+  .matrix th, .matrix td { padding: var(--case-space-8) var(--case-space-4); overflow-wrap: normal; }
+  .dot { width: var(--case-space-8); height: var(--case-space-8); }
   .panel, .tree, .charts { padding: var(--case-space-16); }
   .three, .charts { grid-template-columns: 1fr; }
   .four, .branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mapRow { grid-template-columns: minmax(0, 1fr) var(--case-space-16) minmax(0, 1fr); row-gap: var(--case-space-4); }
   .why { grid-column: 1 / -1; padding-bottom: var(--case-space-8); }
 }
+/* Five narrow columns cannot hold the category names flat on a phone. */
+@media (max-width: 599px) { .matrix thead th[scope="col"] { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; text-align: left; } }

@@ -45,7 +45,7 @@ Object.assign(window, { STORE, euro });
 const SHEETS = /Sheet$|^PhotoSku|^PhotoSave[A-Z]|^UIFilters$/;
 const ALIAS = { Main: 'PhotoMain', UIList: 'PhotoList', UIBag: 'PhotoBag', UIAccount: 'PhotoAccount', UIProduct: 'PhotoProduct', UISearch: 'PhotoSearch', UIVariants: 'PhotoShadeSheet', UIProductSheet: 'PhotoProductSheet', UIQuote: 'PhotoQuote', UISaved: 'PhotoSaved' };
 const INFO = {
-  PhotoMain: ['Home', 'Swipe the banner, switch category chips, or tap + on a product and watch it land in the bag.'],
+  PhotoMain: ['Home', 'Swipe the banner, switch category tabs, or tap + on a product and watch it land in the bag.'],
   PhotoList: ['Product list', 'Open a product, or tap the heart on the shampoo to save one size.'],
   PhotoProduct: ['Product page', 'One scroll, no inner pages. Add to Bag opens the options.'],
   PhotoProductShade: ['Shade product', 'Shades are for looking here. Choose one after Add to Bag.'],

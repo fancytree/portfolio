@@ -1,0 +1,22 @@
+/* Before screens, the new home with circled areas, and the matching notes. Shared case tokens only. */
+.layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); gap: var(--case-space-32); align-items: start; padding: var(--case-space-24); }
+.before { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-16); }
+.before li, .after { display: flex; flex-direction: column; gap: var(--case-space-8); min-width: 0; }
+.shot { border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-line); background: var(--case-white); padding: var(--case-space-4); }
+.shot img { display: block; width: 100%; height: auto; border-radius: var(--case-radius-sm); }
+.current { padding-inline: var(--case-space-8); }
+.canvas { position: relative; }
+.ring { position: absolute; left: 1.5%; right: 1.5%; border: 2px solid var(--case-flow-link); border-radius: var(--case-radius-lg); pointer-events: none; }
+.ring .number { position: absolute; top: 0; left: 0; transform: translate(-50%, -35%); }
+.number { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--case-space-24); height: var(--case-space-24); border-radius: 50%; background: var(--case-flow-link); color: var(--case-white); font-family: var(--case-font-body); font-size: var(--case-text-12); font-weight: var(--case-weight-strong); }
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--case-space-24); align-self: center; }
+.notes li { display: flex; gap: var(--case-space-8); align-items: flex-start; }
+.name { margin: 0; font-family: var(--case-font-body); font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
+.body { margin: var(--case-space-4) 0 0; font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.55; color: var(--case-copy); }
+@media (max-width: 1099px) {
+  .layout { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-24); }
+  .before { grid-column: 1 / -1; }
+}
+@media (max-width: 699px) {
+  .layout { grid-template-columns: minmax(0, 1fr); padding: var(--case-space-16); }
+}

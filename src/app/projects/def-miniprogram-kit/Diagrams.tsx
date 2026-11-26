@@ -73,13 +73,79 @@ export function OrderCharts() {
         { label: 'Accounts that buy the range', value: 13, key: true },
         { label: 'Other accounts', value: 1 },
       ]} />
-      <ShareBars title="Spend concentrates in one trade" rows={[
-        { label: '80% or more in one trade', value: 69, key: true },
-        { label: 'Only ever one trade', value: 26 },
+      <ShareBars title="Spend concentrates in one category" rows={[
+        { label: '80% or more in one category', value: 69, key: true },
+        { label: 'Only ever one category', value: 26 },
       ]} />
-      <ShareBars title="Main trade" rows={[
+      <ShareBars title="Main category" rows={[
         { label: 'Nails', value: 80, key: true },
         { label: 'Hair', value: 14 },
+        { label: 'Hair removal', value: 6 },
+      ]} />
+    </div>
+  );
+}
+
+/** Products and merchants both link to categories, many to many; a merchant’s links become the home tabs. */
+export function CategoryLinks() {
+  const categories = ['Hair', 'Barber', 'Nails', 'Pedicure', 'Spa'];
+  const groups = [
+    { title: 'Products', rows: [
+      { name: 'Nitrile gloves', in: ['Hair', 'Barber', 'Nails', 'Pedicure', 'Spa'] },
+      { name: 'Gel colour', in: ['Nails', 'Pedicure'] },
+      { name: 'Styling chair', in: ['Hair', 'Barber'] },
+    ] },
+    { title: 'Merchants', rows: [
+      { name: 'Nail and foot studio', in: ['Nails', 'Pedicure'] },
+      { name: 'Barber shop', in: ['Barber', 'Hair'] },
+    ] },
+  ];
+  return (
+    <div className={styles.panel}>
+      <div className={styles.scroll}>
+        <table className={styles.matrix}>
+          <thead>
+            <tr>
+              <td />
+              {categories.map((c) => <th key={c} scope="col">{c}</th>)}
+            </tr>
+          </thead>
+          {groups.map((g) => (
+            <tbody key={g.title} className={g.title === 'Merchants' ? styles.merchants : undefined}>
+              <tr><th colSpan={categories.length + 1} scope="colgroup" className={styles.group}>{g.title}</th></tr>
+              {g.rows.map((row) => (
+                <tr key={row.name}>
+                  <th scope="row">{row.name}</th>
+                  {categories.map((c) => (
+                    <td key={c}>{row.in.includes(c) ? <span className={styles.dot} role="img" aria-label="Linked" /> : null}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          ))}
+        </table>
+      </div>
+      <ul className={styles.three}>
+        <li className={styles.card}><span className={styles.strong}>Chosen</span><span className={styles.label}>Picked at business verification, or followed later</span></li>
+        <li className={styles.card}><span className={styles.strong}>Bought</span><span className={styles.label}>Added from purchase history</span></li>
+        <li className={styles.card}><span className={styles.strong}>Shown</span><span className={styles.label}>Tabs: For you, then their categories, most bought first</span></li>
+      </ul>
+      <p className={styles.note}>An illustration of the model. Categories only shape what is shown first; every product stays searchable.</p>
+    </div>
+  );
+}
+
+/** How far merchants and products spread across categories. */
+export function SpreadCharts() {
+  return (
+    <div className={styles.charts}>
+      <ShareBars title="Merchants work across categories" rows={[
+        { label: '10% or more of spend in a second one', value: 48, key: true },
+        { label: 'Buy both nails and hair removal', value: 39 },
+      ]} />
+      <ShareBars title="Who buys gloves, by main category" rows={[
+        { label: 'Nails', value: 86 },
+        { label: 'Hair', value: 8 },
         { label: 'Hair removal', value: 6 },
       ]} />
     </div>
@@ -89,7 +155,7 @@ export function OrderCharts() {
 /** The old five places, and where each job went. */
 export function TabMap() {
   const rows = [
-    { from: 'Home · category grid', to: 'Home · For you', why: 'Starts from the business type' },
+    { from: 'Home · category grid', to: 'Home · For you', why: 'Tabs follow the merchant’s categories' },
     { from: 'Categories tab', to: 'Search, inside Home', why: 'Categories, brands and filters' },
     { from: 'No such place', to: 'Saved', why: 'Ranges, offers, restock, buy again', isNew: true },
     { from: 'Cart', to: 'Bag', why: 'Order list and quote list' },
@@ -117,7 +183,7 @@ type Node = { name: string; note?: string; fresh?: boolean; planned?: boolean };
 export function SiteMap() {
   const branches: { tab: string; pages: Node[] }[] = [
     { tab: 'Home', pages: [
-      { name: 'For you', note: 'Banner, trade chips, feed', fresh: true },
+      { name: 'For you', note: 'Banner, category tabs, feed', fresh: true },
       { name: 'Search', note: 'Recent, category, brand', fresh: true },
       { name: 'Filters and list' },
       { name: 'Product page', note: 'One scroll' },
@@ -144,7 +210,7 @@ export function SiteMap() {
       { name: 'Orders' },
       { name: 'Approvals' },
       { name: 'Quotes' },
-      { name: 'Verify business', note: 'Sets the trade' },
+      { name: 'Verify business', note: 'Picks categories' },
       { name: 'Settings' },
     ] },
   ];
