@@ -155,19 +155,14 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="05 / Design language" title="A quiet language, so the products carry the colour.">
           <CaseProse><p>Many categories and many brands of packaging clashed with a strong brand colour. I took Sephora as the reference and removed it: black, white and grey, with colour kept for products and state.</p></CaseProse>
-          <CaseFigure caption="Explore · Three directions on the same content.">
-            <Compare wide label="Home directions" items={[
+          <CaseFigure caption="Two other directions, then four layouts of the chosen one, Editorial, which leaves the colour to the products.">
+            <Compare label="Home exploration" items={[
               { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
               { shot: 'dir-supply', name: 'Pro supply', why: 'Products shrink to thumbnails and navy adds one more colour.' },
-              { shot: 'dir-editorial', name: 'Editorial', chosen: true, why: 'Leaves the colour to the products and gives imagery room.' },
-            ]} />
-          </CaseFigure>
-          <CaseFigure caption="Narrow down · Editorial, four layouts.">
-            <Compare label="Editorial layouts" items={[
-              { shot: 'layout-cover', name: 'Cover' },
-              { shot: 'layout-index', name: 'Index' },
-              { shot: 'layout-lookbook', name: 'Lookbook', chosen: true, why: 'Stories, brands and priced products share one layout.' },
-              { shot: 'layout-column', name: 'Column' },
+              { shot: 'layout-cover', name: 'Editorial · Cover' },
+              { shot: 'layout-index', name: 'Editorial · Index' },
+              { shot: 'layout-lookbook', name: 'Editorial · Lookbook', chosen: true, why: 'Stories, brands and priced products share one layout.' },
+              { shot: 'layout-column', name: 'Editorial · Column' },
             ]} />
           </CaseFigure>
           <CaseFigure caption="The system: tokens, components and both themes.">
