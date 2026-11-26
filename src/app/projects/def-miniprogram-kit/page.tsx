@@ -77,15 +77,6 @@ export default function DefMiniProgramKitPage() {
             deliverables: ['Research', 'Information architecture', 'Wireframes', 'Design system', 'Clickable prototype'],
           }}
         />
-        <CaseFigure caption="Where it ended up, on demonstration data.">
-          <Compare label="Final screens" items={[
-            { shot: 'home', name: 'Home' },
-            { shot: 'product', name: 'Product page' },
-            { shot: 'shade-sheet', name: 'Shade sheet' },
-            { shot: 'tab-saved-v2', name: 'Saved' },
-          ]} />
-        </CaseFigure>
-
         <CaseChapter label="01 / The problem" title="Our buyers are businesses. The store treated them like shoppers.">
           <CaseProse><p>DEF sells to salons, barbers and nail studios. Its mini program was shaped like a consumer shop, and <a href="/projects/def-erp-kit">my first rebuild kept that layout</a> to launch quickly.</p></CaseProse>
           <div className={layout.split}>
@@ -113,6 +104,12 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="03 / Structure" title="Rebuild the structure around coming back.">
           <CaseProse><p>The old structure started from the catalogue. The new one starts from what a merchant already buys, and rests on <strong>four features</strong>.</p></CaseProse>
+          <CaseFigure caption="From the previous tabs to the new ones.">
+            <TabMap />
+          </CaseFigure>
+          <CaseFigure caption="Information architecture: four tabs, one job each.">
+            <SiteMap />
+          </CaseFigure>
           <CaseFigure caption="Four features that serve coming back.">
             <Compare label="Main features" items={[
               { shot: 'tab-saved-v2', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 05' },
@@ -120,12 +117,6 @@ export default function DefMiniProgramKitPage() {
               { shot: 'search', name: 'Search with categories', why: 'Takes over the Categories tab, so everything else is one search away.' },
               { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 06' },
             ]} />
-          </CaseFigure>
-          <CaseFigure caption="From the previous tabs to the new ones.">
-            <TabMap />
-          </CaseFigure>
-          <CaseFigure caption="Information architecture: four tabs, one job each.">
-            <SiteMap />
           </CaseFigure>
         </CaseChapter>
 
