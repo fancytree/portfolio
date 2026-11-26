@@ -1,0 +1,13 @@
+/* Options side by side, the chosen one marked. Shared case tokens only. */
+.grid { list-style: none; margin: 0; padding: var(--case-space-24); display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: var(--case-space-24) var(--case-space-16); align-items: start; }
+.item { display: flex; flex-direction: column; gap: var(--case-space-12); min-width: 0; }
+.shot { position: relative; border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-line); background: var(--case-white); padding: var(--case-space-4); }
+.shot img { display: block; width: 100%; height: auto; border-radius: var(--case-radius-sm); }
+.chosen .shot { outline: 3px solid var(--case-flow-link); outline-offset: 2px; border-color: transparent; }
+.badge { align-self: flex-start; font-style: normal; font-family: var(--case-font-body); font-size: var(--case-text-12); font-weight: var(--case-weight-strong); padding: 2px var(--case-space-8); border-radius: var(--case-radius-sm); }
+.chosen .badge { background: var(--case-flow-link); color: var(--case-white); }
+.badge.plain { background: var(--case-surface); color: var(--case-muted); border: var(--case-border-width) solid var(--case-line); }
+.name { margin: 0; font-family: var(--case-font-body); font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
+.why { margin: 0; font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.55; color: var(--case-copy); }
+.chosen .why { color: var(--case-ink); }
+@media (max-width: 899px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--case-space-16); } .grid.wide { grid-template-columns: 1fr; } }

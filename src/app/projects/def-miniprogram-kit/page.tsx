@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import { CaseKitBackButton as CaseStudyBackButton } from '../../components/CaseStudyBackButton';
 import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
+import wide from '../def-erp-kit/DefDecisions.module.css';
+import { Compare } from './Compare';
+import MiniProgramDemo from './MiniProgramDemo';
+import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 import {
   CaseChapter,
   CaseClose,
@@ -11,7 +14,6 @@ import {
   CaseKitPage,
   CaseKitSections,
   CaseProse,
-  CasePullquote,
   CaseSteps,
 } from '../../components/case-kit/CaseKit';
 
@@ -25,79 +27,17 @@ export const metadata: Metadata = {
 const navLabels = [
   '01 / The problem',
   '02 / Direction',
-  '03 / Look',
-  '04 / Home',
-  '05 / Choosing a product',
-  '06 / Product page',
-  '07 / Saving',
-  '08 / Paying',
-  '09 / Less weight',
-  '10 / Working with AI',
-  '11 / Where it stands',
+  '03 / Try it',
+  '04 / Look',
+  '05 / Home',
+  '06 / Choosing a product',
+  '07 / Product page',
+  '08 / Saving',
+  '09 / Paying',
+  '10 / Less weight',
+  '11 / Working with AI',
+  '12 / Where it stands',
 ];
-
-const SHOTS = {
-  hero: [2364, 1200, 'Redesigned home, product page, shade sheet and payment screen side by side.'],
-  before: [2364, 1200, 'The previous mini program: red home page, category list, product page and account.'],
-  directions: [2364, 1200, 'Three home directions: red studio, navy supply tool and black and white editorial.'],
-  layouts: [2364, 1200, 'Four editorial home layouts: cover, index, lookbook and column.'],
-  'home-journey': [2364, 1200, 'Home page as wireframe, as the chosen lookbook layout, and as the final screen.'],
-  feed: [2364, 1800, 'Home feed: product and collection cards, brand and video cards, then a mixed two-column feed.'],
-  'swatch-explore': [2364, 1200, 'Four shade selectors: large preview, bulk grid, side by side comparison and photo cards.'],
-  sheets: [2364, 1200, 'Add to Bag sheets for capacity, colour and size, model, and shade.'],
-  volume: [2364, 1200, 'Add to Bag sheet with a volume price table, and the same sheet without it.'],
-  'shade-before-after': [2364, 1200, 'Nail polish sheet with packaging options, and the sheet showing twenty shades only.'],
-  'product-before-after': [2364, 1200, 'Product page wireframe, final serum page and final nail polish page.'],
-  'shade-fold': [2364, 1200, 'Shades on the product page, folded to one row and expanded to all twenty.'],
-  'save-before-after': [2364, 1200, 'Buy sheet with a heart beside Add to Bag, the buy sheet without it, and the separate save sheet.'],
-  money: [2364, 1200, 'Checkout, payment with a thirty minute timer, receipt under review, and a cancelled order.'],
-  account: [2364, 844, 'Account page variants showing different money summaries depending on the customer.'],
-  tabbar: [1600, 750, 'Four tab bars from heaviest to the final single floating capsule.'],
-  buyagain: [2364, 1200, 'Buy again as a product list, as an order list, and as one order with selectable items.'],
-} as const;
-
-function Shot({ name }: { name: keyof typeof SHOTS }) {
-  const [width, height, alt] = SHOTS[name];
-  return (
-    <Image
-      src={`/img/def-miniprogram/${name}.webp`}
-      width={width}
-      height={height}
-      alt={alt}
-      sizes="(min-width: 1024px) 960px, 100vw"
-      className="block h-auto w-full"
-      unoptimized
-    />
-  );
-}
-
-const lookDecision: Decision = {
-  question: 'Whose colour should the store wear?',
-  source: 'Home directions',
-  options: [
-    { label: 'A coloured interface, red or navy', verdict: 'It competes with every brand’s packaging in a multi-brand catalogue.' },
-    { label: 'Black, white and grey', verdict: 'Product photography carries the colour. Sephora was my reference.', chosen: true },
-  ],
-};
-
-const selectionDecision: Decision = {
-  question: 'How should someone pick a shade?',
-  source: 'Variant selector explorations',
-  options: [
-    { label: 'Pick many shades with quantities', verdict: 'More than the task needs. One SKU per add is enough.' },
-    { label: 'Photo cards, one SKU at a time', verdict: 'People can see the colour, and the choice stays simple.', chosen: true },
-  ],
-  evidence: 'Almost every product in the ERP already has an image per option.',
-};
-
-const volumeDecision: Decision = {
-  question: 'Do volume prices need their own block?',
-  source: 'Add to Bag sheet',
-  options: [
-    { label: 'A volume price table under packaging', verdict: 'It moved with packaging but looked tappable.', reversed: true },
-    { label: 'Unit price inside each packaging option', verdict: 'The price steps are already visible where the choice is made.', chosen: true },
-  ],
-};
 
 const paymentDecision: Decision = {
   question: 'How long should an unpaid order hold stock?',
@@ -147,33 +87,54 @@ const chromeReversals: Reversal[] = [
 
 export default function DefMiniProgramKitPage() {
   return (
+    <div className={wide.widePage}>
     <CaseKitPage>
       <CaseStudyControls showProgress navLabels={navLabels} railTitle="DEF mini program" />
       <CaseKitSections>
         <div className="case-mobile-back"><CaseStudyBackButton /></div>
         <CaseHero
-          eyebrow="Portfolio · Mobile commerce redesign · 2026"
-          title="A storefront rebuilt for merchants, mostly by taking things away"
-          intro="DEF sells professional beauty supplies to businesses, but its WeChat mini program was shaped like a consumer shop. I redesigned it around how merchants buy."
+          eyebrow="Portfolio · B2B commerce redesign · 2026"
+          title="DEF Beauty Supply: rebuilding a retail storefront for merchants"
+          intro="I redesigned DEF’s WeChat mini program around how businesses buy, and got there mostly by taking things away."
           meta={[
             { label: 'Client', value: 'DEF Beauty Supply' },
+            { label: 'Year', value: '2026' },
             { label: 'Role', value: 'Product design: problem, direction, decisions' },
             { label: 'Platform', value: 'WeChat mini program, mobile only' },
             { label: 'Status', value: 'Designed, awaiting development' },
             { label: 'AI tools', value: 'Claude, Codex' },
           ]}
-          tags={['B2B commerce', 'Design system', 'AI-assisted design']}
+          action={{ label: 'Try the clickable prototype', href: DEF_MINI_REDESIGN_URL }}
+          tags={['B2B commerce', 'Mobile design', 'Design system', 'AI-assisted design']}
+          glance={{
+            items: [
+              { label: 'Challenge', body: 'The mini program was shaped like a consumer shop. Its buyers are businesses, ordering many brands and many variants again and again.' },
+              { label: 'Solution', body: 'A merchant-first store in black and white, one selection sheet that adapts to each product, and payment by transfer built into the order.' },
+              { label: 'Outcome', body: 'Designed and prototyped, waiting for development. There are no results to report yet.' },
+            ],
+            deliverables: ['Requirements', 'Screen designs', 'Design system', 'Clickable prototype'],
+          }}
         />
-        <CaseFigure caption="Where the design ended up. Names and prices in brackets are placeholders.">
-          <Shot name="hero" />
+        <CaseFigure caption="Where the design ended up, on demonstration data.">
+          <Compare label="Final screens" items={[
+            { shot: 'home', name: 'Home' },
+            { shot: 'product', name: 'Product page' },
+            { shot: 'shade-sheet', name: 'Shade sheet' },
+            { shot: 'payment', name: 'Payment' },
+          ]} />
         </CaseFigure>
 
         <CaseChapter label="01 / The problem" title="Built like a retail shop. Used by merchants.">
           <CaseProse>
             <p>The first version connected ordering to the ERP and <a href="/projects/def-erp-kit">kept the look salons already knew</a>, so it could launch quickly. This redesign takes up what that decision postponed.</p>
           </CaseProse>
-          <CaseFigure caption="Before · Home, catalogue, product and account in the previous mini program, shown on demonstration data.">
-            <Shot name="before" />
+          <CaseFigure caption="Before · The previous mini program, on demonstration data.">
+            <Compare label="Previous mini program" items={[
+              { shot: 'before-home', name: 'Home', why: 'A shopper’s home: banner, category icons, brands.' },
+              { shot: 'before-catalog', name: 'Catalogue', why: 'A category tree in Chinese inside an otherwise English interface.' },
+              { shot: 'before-product', name: 'Product', why: 'Capacity on the page and quantity in a second bar, built around one simple option.' },
+              { shot: 'before-account', name: 'Account', why: 'Money and orders packed into a heavy red block.' },
+            ]} />
           </CaseFigure>
           <CaseSteps items={[
             { title: 'A consumer structure', body: 'The information architecture assumed a retail shopper. The actual customer is a business, with its own prices, balance, payment terms and quotes.' },
@@ -187,59 +148,97 @@ export default function DefMiniProgramKitPage() {
             { title: 'Merchant first', body: 'Payment, terms, quotes, approvals and reordering are part of the store, not add-ons.' },
             { title: 'One shell, many product types', body: 'Shades, sizes, models, capacities and pack units configure the page and the selector automatically.' },
             { title: 'A feed per type of merchant', body: 'Home is designed as a For you feed of modules, meant to be ordered by an algorithm for each kind of business.' },
-            { title: 'Four tabs, in English', body: 'The brief had Home, Categories, Reorder, Cart and Me. I settled on Home, Saved, Bag and Account.' },
+            { title: 'Four tabs, in English', body: 'The brief had five: Home, Categories, Reorder, Cart, Me. Categories moved into the home chips and search, reordering into Saved.' },
           ]} />
           <CaseProse><p>I also cut photo search from the home page. It cost too much to build well for what it would give.</p></CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="03 / Look" title="The products bring the colour.">
-          <CaseFigure caption="Round 1 · Three directions on the same content: Bold studio, Pro supply, Editorial.">
-            <Shot name="directions" />
+        <CaseChapter label="03 / Try it" title="Use the redesign.">
+          <CaseProse><p>Four tours play in turn. <strong>Move your pointer into the frame to take over</strong>: add products, save a shade, check out and pay. Names, prices and orders are demonstration data.</p></CaseProse>
+          <MiniProgramDemo />
+        </CaseChapter>
+
+        <CaseChapter label="04 / Look" title="The products bring the colour.">
+          <CaseFigure caption="Round 1 · Three directions on the same content.">
+            <Compare wide label="Home directions" items={[
+              { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
+              { shot: 'dir-supply', name: 'Pro supply', why: 'Efficient for reordering, but products shrink to thumbnails and navy adds one more colour.' },
+              { shot: 'dir-editorial', name: 'Editorial', chosen: true, why: 'Black and white leaves the colour to the products and gives imagery room. Sephora was my reference.' },
+            ]} />
           </CaseFigure>
-          <CaseFigure caption="Round 2 · I took Editorial and pushed its layout four ways. I chose the third, Lookbook.">
-            <Shot name="layouts" />
+          <CaseFigure caption="Round 2 · Editorial, laid out four ways.">
+            <Compare label="Editorial layouts" items={[
+              { shot: 'layout-cover', name: 'Cover', why: 'One campaign fills the screen. Nothing with a price is visible without scrolling.' },
+              { shot: 'layout-index', name: 'Index', why: 'Quick to scan categories, but products and brands stay small.' },
+              { shot: 'layout-lookbook', name: 'Lookbook', chosen: true, why: 'Two staggered columns hold a story, a brand and priced products together, and take new card types without a new layout.' },
+              { shot: 'layout-column', name: 'Column', why: 'One product per screen is too slow for someone restocking many items.' },
+            ]} />
           </CaseFigure>
-          <DecisionCards items={[lookDecision]} start={1} />
-          <CaseFigure caption="Wireframe, chosen layout, final. The wireframes stayed on their own page so each step could be compared.">
-            <Shot name="home-journey" />
+          <CaseFigure caption="Wireframe, chosen layout, final home. The wireframes stayed on their own page so each step could be compared.">
+            <Compare wide label="Home from wireframe to final" items={[
+              { shot: 'wire-home', name: 'Wireframe' },
+              { shot: 'layout-lookbook', name: 'Lookbook layout', alt: 'Lookbook layout as chosen' },
+              { shot: 'home', name: 'Final' },
+            ]} />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="04 / Home" title="Order first, variety last.">
+        <CaseChapter label="05 / Home" title="Order first, variety last.">
           <CaseProse>
             <p>I explored many card types: products, collections, brands, video, articles and volume offers. A feed where every card has a different height looked chaotic and refused to line up.</p>
             <p>So the top of the feed runs <strong>fixed modules with full-width and aligned rows</strong>. The uneven two-column mix only appears at the very bottom, where nothing has to align after it.</p>
           </CaseProse>
-          <CaseFigure caption="Product and collection modules, brand and video modules, then the mixed feed.">
-            <Shot name="feed" />
+          <CaseFigure caption="The feed from top to bottom.">
+            <Compare wide label="Home feed modules" items={[
+              { shot: 'feed-products', name: 'Products and collections', why: 'Aligned rows: what to buy now.' },
+              { shot: 'feed-stories', name: 'Brands, video, content', why: 'Full-width blocks: what to learn.' },
+              { shot: 'feed-mix', name: 'Mixed feed', why: 'Last, for open-ended browsing.' },
+            ]} />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="05 / Choosing a product" title="One sheet that adapts to what is being sold.">
-          <CaseFigure caption="Four ways to choose a shade: large preview, bulk grid, comparison, photo cards.">
-            <Shot name="swatch-explore" />
+        <CaseChapter label="06 / Choosing a product" title="One sheet that adapts to what is being sold.">
+          <CaseFigure caption="How should someone pick a shade? Almost every product in the ERP already has an image per option.">
+            <Compare label="Shade selectors" items={[
+              { shot: 'swatch-preview', name: 'Large preview', why: 'One colour is huge; the others become small dots that are hard to compare.' },
+              { shot: 'swatch-bulk', name: 'Bulk grid', why: 'Several shades with quantities is more than the task needs. One SKU per add is enough.' },
+              { shot: 'swatch-compare', name: 'Side by side', why: 'Good for judging two colours, an extra screen for a routine order.' },
+              { shot: 'swatch-cards', name: 'Photo cards', chosen: true, why: 'People see the real colour and pick one SKU in one tap.' },
+            ]} />
           </CaseFigure>
-          <DecisionCards items={[selectionDecision]} start={2} />
           <CaseProse><p>The sheet shows only the attributes a product has. Capacity stays as text. Colour and model use images. Piece, pack and case are <strong>conversion units</strong> of one product, so the sheet always says how many pieces you are buying.</p></CaseProse>
-          <CaseFigure caption="The same sheet for capacity, colour with size, model, and shade.">
-            <Shot name="sheets" />
+          <CaseFigure caption="The same sheet for four kinds of product.">
+            <Compare label="Sheets by attribute" items={[
+              { shot: 'sheet-capacity', name: 'Capacity', why: 'Text chips: a number needs no picture.' },
+              { shot: 'sheet-glove', name: 'Colour and size', why: 'Colour as swatches, size as text.' },
+              { shot: 'sheet-model', name: 'Model', why: 'Images, because model names mean little.' },
+              { shot: 'sheet-shade', name: 'Shade', why: 'A photo grid, five to a row.' },
+            ]} />
           </CaseFigure>
-          <DecisionCards items={[volumeDecision]} start={3} />
-          <CaseFigure caption="Before and after removing the volume price table.">
-            <Shot name="volume" />
+          <CaseFigure caption="Volume prices. The earlier version is recreated with the same data.">
+            <Compare wide columns={2} label="Volume prices" items={[
+              { shot: 'volume-before', name: 'A price table under packaging', why: 'It changed with packaging but looked tappable, and said the same thing twice.' },
+              { shot: 'sheet-serum', name: 'Unit price inside each pack', chosen: true, why: 'The price steps are visible exactly where the choice is made.' },
+            ]} />
           </CaseFigure>
-          <CasePullquote>Nail polish has <strong>no packaging choice at all</strong>. Twenty shades matter more, and a sold-out one is shown on its picture, without another label.</CasePullquote>
-          <CaseFigure caption="Before: eight shades, packaging, an out-of-stock label. After: twenty shades.">
-            <Shot name="shade-before-after" />
+          <CaseFigure caption="Nail polish. The earlier version is recreated with the same data.">
+            <Compare wide columns={2} label="Nail polish sheet" items={[
+              { shot: 'shade-before', name: 'Eight shades and packaging', why: 'Packaging pushed shades away, and sold-out needed a written label.' },
+              { shot: 'sheet-shade', name: 'Twenty shades only', chosen: true, why: 'No packaging for polish. A sold-out shade is struck through on its picture.', alt: 'Shade sheet with twenty shades' },
+            ]} />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Product page" title="One scroll, no inner pages.">
+        <CaseChapter label="07 / Product page" title="One scroll, no inner pages.">
           <CaseProse>
             <p>Everything a buyer needs sits on one page. Four or five facts they care about, such as material or the share of a key ingredient, come right under the price. The long product image tells the rest.</p>
           </CaseProse>
-          <CaseFigure caption="From a wireframe with selectors and links to inner pages, to the final serum and nail polish pages.">
-            <Shot name="product-before-after" />
+          <CaseFigure caption="From wireframe to final.">
+            <Compare wide label="Product page" items={[
+              { shot: 'wire-product', name: 'Wireframe', why: 'Selectors, a price table and a link out to specifications.' },
+              { shot: 'product', name: 'Serum', chosen: true, why: 'Facts first, options moved into the sheet.', alt: 'Final serum page' },
+              { shot: 'product-shade', name: 'Nail polish', chosen: true, why: 'Same structure, with shades to look at.' },
+            ]} />
           </CaseFigure>
           <CaseSteps items={[
             { title: 'Removed repetition', body: 'The delivery block and a specification list that repeated the page are gone. If we cannot ship to an address, Add to Bag is disabled.' },
@@ -247,39 +246,61 @@ export default function DefMiniProgramKitPage() {
             { title: 'Expiry only when it matters', body: 'Batches of the same product expire on different dates. A date appears only on the page of a short-dated item.' },
             { title: 'Shades to look at', body: 'On the page they are display only, one row by default. Choosing happens in the sheet.' },
           ]} />
-          <CaseFigure caption="Twenty shades folded to one row, and expanded.">
-            <Shot name="shade-fold" />
+          <CaseFigure caption="Twenty shades on the product page. One row keeps the page short; the rest is one tap away.">
+            <Compare wide columns={2} label="Shades folded and expanded" items={[
+              { shot: 'fold-closed', name: 'One row by default' },
+              { shot: 'fold-open', name: 'All twenty' },
+            ]} />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Saving" title="I moved saving off the buying path.">
+        <CaseChapter label="08 / Saving" title="I moved saving off the buying path.">
           <ReversalList items={savingReversals} />
-          <CaseFigure caption="Heart beside the buy button, buy sheet without it, and the separate save sheet.">
-            <Shot name="save-before-after" />
+          <CaseFigure caption="The earlier sheet is recreated with the same data.">
+            <Compare wide label="Saving" items={[
+              { shot: 'save-before', name: 'Heart beside the buy button', why: 'A secondary action competed with the main one.' },
+              { shot: 'sheet-serum', name: 'Buy sheet', chosen: true, why: 'Nothing sits next to Add to Bag.', alt: 'Buy sheet without a heart' },
+              { shot: 'save-sheet', name: 'Save sheet', chosen: true, why: 'Opened from the product heart: SKU options and one button.' },
+            ]} />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="08 / Paying" title="No online payment, so the order has to explain itself.">
+        <CaseChapter label="09 / Paying" title="No online payment, so the order has to explain itself.">
           <CaseProse>
             <p>Merchants place the order first, pay by their own method, upload the receipt and wait for finance to check it. Balance is deducted at checkout. Customers with payment terms receive goods and pay later.</p>
           </CaseProse>
-          <DecisionCards items={[paymentDecision]} start={4} />
-          <CaseFigure caption="Checkout, the 30-minute window, review, and an order that was released.">
-            <Shot name="money" />
+          <DecisionCards items={[paymentDecision]} start={1} />
+          <CaseFigure caption="One order, four moments.">
+            <Compare label="Payment journey" items={[
+              { shot: 'checkout', name: 'Checkout', why: 'Balance is applied first and the rest is stated.' },
+              { shot: 'payment', name: 'Pay', why: 'Timer, bank details and upload on one screen.' },
+              { shot: 'review', name: 'Under review', why: 'Says who is acting and that stock is held.' },
+              { shot: 'released', name: 'Released', why: 'Says why, and where any money goes.' },
+            ]} />
           </CaseFigure>
           <CaseProse>
-            <p>I cut a checkout state for insufficient credit, because it does not stop anyone ordering. I pulled the invoice request out into its own block, checked by default, because it was easy to miss.</p>
+            <p>I cut a checkout state for insufficient credit, because it does not stop anyone ordering. I pulled the invoice request into its own block, checked by default, because it was easy to miss.</p>
             <p>Most customers have no balance, so an account page built around one felt empty for them. The summary now follows the customer’s situation.</p>
           </CaseProse>
-          <CaseFigure caption="One account page at an earlier round: outstanding, due, prepaid, no money summary, and dark mode.">
-            <Shot name="account" />
+          <CaseFigure caption="One account page, four kinds of customer.">
+            <Compare label="Account by customer" items={[
+              { shot: 'account-terms', name: 'Payment terms', why: 'What is owed, by when, and the limit.' },
+              { shot: 'account-due', name: 'Money due', why: 'The amount and a way to pay it.' },
+              { shot: 'account-prepaid', name: 'Prepaid', why: 'The balance available.' },
+              { shot: 'account-regular', name: 'Regular', why: 'No empty balance, only what they have bought.' },
+            ]} />
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="09 / Less weight" title="Many of my review notes asked for less.">
+        <CaseChapter label="10 / Less weight" title="Many of my review notes asked for less.">
           <ReversalList items={chromeReversals} />
-          <CaseFigure caption="Top to bottom: first version, two lighter comparisons, final capsule.">
-            <Shot name="tabbar" />
+          <CaseFigure caption="The tab bar, four versions.">
+            <Compare wide columns={2} label="Tab bar versions" items={[
+              { shot: 'tab-first', name: '1 · Solid pill', why: 'Too heavy under a black primary button.' },
+              { shot: 'tab-soft', name: '2 · Soft', why: 'Lighter, but still four separate surfaces.' },
+              { shot: 'tab-plain', name: '3 · Plain', why: 'Quietest, but loose icons are hard to read over photography.' },
+              { shot: 'tab-capsule', name: '4 · One capsule', chosen: true, why: 'The calm of Plain on one floating surface that stays legible.' },
+            ]} />
           </CaseFigure>
           <CaseSteps items={[
             { title: 'Bottom actions without a bar', body: 'The total sits left and the button right, over a soft fade. Order rows line up with the Bag instead of inventing a new style.' },
@@ -288,23 +309,28 @@ export default function DefMiniProgramKitPage() {
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="10 / Working with AI" title="AI drafted. I decided.">
+        <CaseChapter label="11 / Working with AI" title="AI drafted. I decided.">
           <CaseProse>
-            <p>Claude drafted the requirements document from my first version, and generated the screens, the component code and the motion. Codex generated the product photography. The brands in these screens are placeholders made for the design.</p>
+            <p>Claude drafted the requirements document from my first version, and generated the screens, the component code, the motion and this prototype. Codex generated the product photography. The brands in these screens are made up for the design.</p>
             <p>My work was framing the problem, giving direction, reviewing on the canvas and rejecting what was wrong. The sliding tab pill, the volume price table and the heart beside the buy button all made it into a draft. I removed each of them.</p>
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="11 / Where it stands" title="Designed, not yet built.">
+        <CaseClose label="12 / Where it stands" title="Designed, not yet built.">
           <CaseProse>
             <p>The redesign is waiting for development, so there are no results to report yet.</p>
-            <p>One question is still open. Buy again can list products to add one by one, or orders to reopen and add in bulk. I mocked up both.</p>
+            <p>One question is still open: how Buy again should work.</p>
           </CaseProse>
-          <CaseFigure caption="Buy again by product, by order, and one order opened for bulk adding.">
-            <Shot name="buyagain" />
+          <CaseFigure caption="Two options for Buy again, still undecided.">
+            <Compare wide label="Buy again options" items={[
+              { shot: 'buy-products', name: 'A · By product', tag: 'Open', why: 'Quickest to restock one thing. Adding many takes many taps.' },
+              { shot: 'buy-orders', name: 'B · By order', tag: 'Open', why: 'Reopen a past order and recognise it by its pictures.' },
+              { shot: 'buy-items', name: 'B · Inside an order', tag: 'Open', why: 'Untick, change quantities and add in bulk.' },
+            ]} />
           </CaseFigure>
         </CaseClose>
       </CaseKitSections>
     </CaseKitPage>
+    </div>
   );
 }
