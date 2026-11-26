@@ -2,7 +2,8 @@ html,body{margin:0;height:100%;overflow:hidden;background:#f2f2ee;color:#141414;
 .demo{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:100%;align-items:center}
 .stage{height:100%;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center;min-width:0}
 .phone{position:relative;width:390px;height:844px;flex:none;border-radius:44px;overflow:hidden;background:#fff;box-shadow:0 0 0 8px #17191a,0 24px 60px rgb(0 0 0/.22);zoom:var(--fit,1)}
-.screen{position:absolute;inset:0;isolation:isolate;z-index:0}
+/* blurred bars ignore the phone's rounded overflow in Chrome, so each screen is clipped to the same corners */
+.screen{position:absolute;inset:0;isolation:isolate;z-index:0;border-radius:44px;overflow:hidden;clip-path:inset(0 round 44px)}
 .screen.over{z-index:1}
 .screen.over:empty{display:none}
 .screen>div{display:contents}
