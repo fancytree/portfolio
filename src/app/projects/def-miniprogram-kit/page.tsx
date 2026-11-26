@@ -217,7 +217,7 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="09 / Try it" title="Try the redesign.">
-          <CaseProse><p>Five short tours play in turn. <strong>Move your pointer into the frame to take over.</strong> All data is for demonstration.</p></CaseProse>
+          <CaseProse><p>Six short tours play in turn. <strong>Move your pointer into the frame to take over.</strong> All data is for demonstration.</p></CaseProse>
           <MiniProgramDemo />
         </CaseChapter>
 

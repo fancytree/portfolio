@@ -28,10 +28,11 @@ const SEED = () => ({
   bag: [{ ...P.cream, qty: 24 }, { ...P.shampoo, qty: 12 }],
   saved: [
     { id: 'serum:0', brand: 'AUREL', name: 'Dew Serum', meta: '30 ml', price: '€38', image: P.serum.image, add: 'PhotoProductSheet.dc.html' },
-    { id: 'gel:8', brand: 'SOLA', name: 'Gel Colour', meta: '09 Milk White · 15 ml', price: '€7.90', image: 'img/eb9553d71e29259b951aee83ef006de9.jpg' },
-    { id: 'care:1', brand: 'AUREL', name: 'Repair Shampoo', meta: '500 ml', price: '€14.50', image: P.shampoo.image, add: 'PhotoSkuCare.dc.html' }
+    { id: 'gel:8', brand: 'SOLA', name: 'Gel Colour LL01–LL20', meta: 'LL09 Milk White · 15 ml', price: '€7.90', image: 'img/eb9553d71e29259b951aee83ef006de9.jpg' },
+    { id: 'care:1', brand: 'AUREL', name: 'Repair Shampoo', meta: '500 ml', price: '€14.50', image: P.shampoo.image, add: 'PhotoSkuCare.dc.html' },
+    { id: 'gel:4', brand: 'SOLA', name: 'Gel Colour LL01–LL20', meta: 'LL05 Classic Red · 15 ml', price: '€7.90', image: 'img/4982c9c5751d096c081f44b97d9185be.jpg' }
   ],
-  balance: 120, order: { total: 410.65, used: 120, rest: 290.65 }, status: 'review'
+  told: false, openOrder: 'OUT-2026-001201', balance: 120, order: { total: 410.65, used: 120, rest: 290.65 }, status: 'review'
 });
 const STORE = Object.assign(SEED(), {
   count() { return this.bag.reduce((n, x) => n + x.qty, 0); },
@@ -42,15 +43,17 @@ const STORE = Object.assign(SEED(), {
 });
 Object.assign(window, { STORE, euro });
 
-const SHEETS = /Sheet$|^PhotoSku|^PhotoSave[A-Z]|^UIFilters$/;
-const ALIAS = { Main: 'PhotoMain', UIList: 'PhotoList', UIBag: 'PhotoBag', UIAccount: 'PhotoAccount', UIProduct: 'PhotoProduct', UISearch: 'PhotoSearch', UIVariants: 'PhotoShadeSheet', UIProductSheet: 'PhotoProductSheet', UIQuote: 'PhotoQuote', UISaved: 'PhotoSaved' };
+const SHEETS = /Sheet$|^PhotoSoldOut$|^PhotoSku|^PhotoSave[A-Z]|^UIFilters$/;
+const ALIAS = { Main: 'PhotoMain', UIList: 'PhotoList', UIBag: 'PhotoBag', UIAccount: 'PhotoAccount', UIProduct: 'PhotoProduct', UISearch: 'PhotoSearch', UIVariants: 'PhotoShadeSheet', UIProductSheet: 'PhotoProductSheet', UIQuote: 'PhotoQuote', UISaved: 'PhotoSaved', BuyAgainOrders: 'PhotoSaved' };
 const INFO = {
   PhotoMain: ['Home', 'Swipe the banner, switch category tabs, or tap + on a product and watch it land in the bag.'],
   PhotoList: ['Product list', 'Open a product, or tap the heart on the shampoo to save one size.'],
   PhotoProduct: ['Product page', 'One scroll, no inner pages. Add to Bag opens the options.'],
+  PhotoShadeRanges: ['Shade ranges', 'A long range is listed in parts. Open LL01–LL20.'],
   PhotoProductShade: ['Shade product', 'Shades are for looking here. Choose one after Add to Bag.'],
   PhotoProductSheet: ['Choose size and pack', 'Change size, packaging and quantity, then add.'],
-  PhotoShadeSheet: ['Choose a shade', 'Twenty shades. No packaging step for nail polish.'],
+  PhotoShadeSheet: ['Choose a shade', 'One shade and its quantity at a time. A side panel shows what this product has added.'],
+  PhotoSoldOut: ['Sold out', 'Ask to be told when the shade is back.'],
   PhotoSkuCare: ['Capacity and pack', 'Capacity as text, pack sizes as conversion units.'],
   PhotoSkuGlove: ['Colour, size and pack', 'The same sheet with three attributes.'],
   PhotoSkuTool: ['Model and pack', 'Models shown as images.'],
@@ -58,7 +61,10 @@ const INFO = {
   PhotoSaveShade: ['Save shades', 'Save several in a row. Saved ones carry a heart.'],
   PhotoSaveCare: ['Save a capacity', 'Sold-out sizes can be saved too.'],
   PhotoSaveGlove: ['Save colour and size', 'One combination is one saved item.'],
-  PhotoSaved: ['Saved', 'Your saved SKUs. Try Buy again.'],
+  PhotoSaved: ['Saved', 'Saved items, past orders and restocks.'],
+  PhotoRestock: ['Restock', 'Requests show where each one stands.'],
+  PhotoRequest: ['Request a product', 'Ask for something the store does not carry.'],
+  BuyAgainOrderItems: ['Buy again', 'Choose items from an order and adjust quantities.'],
   PhotoBag: ['Bag', 'Change quantities, then check out.'],
   PhotoQuote: ['Quote list', 'Bulky equipment is priced by delivery country.'],
   PhotoApproval: ['Approval', 'Staff orders can wait for an owner.'],
@@ -69,7 +75,7 @@ const INFO = {
   UIPaymentStatus: ['Payment status', 'Use the demo control to play the finance team.'],
   UIFilters: ['Filters', 'Filter sheet.']
 };
-const JUMP = ['PhotoMain', 'PhotoProduct', 'PhotoProductShade', 'PhotoSaved', 'PhotoBag', 'UICheckout', 'PhotoAccount'];
+const JUMP = ['PhotoMain', 'PhotoProduct', 'PhotoShadeRanges', 'PhotoSaved', 'PhotoBag', 'UICheckout', 'PhotoAccount'];
 
 const hosts = { base: { el: document.getElementById('base') }, over: { el: document.getElementById('over') } };
 function unmount(layer) { const h = hosts[layer]; if (h.root) { h.root.unmount(); h.root = null; } h.el.innerHTML = ''; h.name = null; h.draw = null; }
