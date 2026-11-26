@@ -5,7 +5,8 @@ import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
 import layout from './Compare.module.css';
-import { CategoryLinks, Method, Needs, OrderCharts, SiteMap, SpreadCharts, TabMap } from './Diagrams';
+import { CategoryFlow } from './CategoryFlow';
+import { Method, Needs, OrderCharts, SiteMap, TabMap } from './Diagrams';
 import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
@@ -155,12 +156,9 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="05 / For you" title="Home follows each merchant’s categories.">
-          <CaseProse><p>A barber does not need to see everything a nail studio buys. But one merchant can work in several categories, and the same gloves serve many of them. So I made one structure carry both: <strong>products and merchants link to categories, many to many</strong>, and the home tabs are the merchant’s own instead of a fixed list.</p></CaseProse>
-          <CaseFigure caption="Order data, March to August 2026, repeat accounts; sales categories grouped into five.">
-            <SpreadCharts />
-          </CaseFigure>
-          <CaseFigure caption="One set of categories for products and merchants.">
-            <CategoryLinks />
+          <CaseProse><p>Products and merchants use <strong>one set of categories</strong>. Where the two overlap is what a merchant sees first, so the home tabs are their own instead of a fixed list.</p></CaseProse>
+          <CaseFigure caption="From categories to tabs, with one merchant as the example.">
+            <CategoryFlow />
           </CaseFigure>
           <CaseFigure caption="The new home: from a fixed category grid to tabs that belong to the merchant.">
             <HomeCallouts />
