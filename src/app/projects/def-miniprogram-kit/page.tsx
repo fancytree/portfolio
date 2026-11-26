@@ -8,7 +8,7 @@ import { CategoryFlow } from './CategoryFlow';
 import { SiteMap, TabMap } from './Diagrams';
 import { ShadeHighlight } from './ShadeHighlight';
 import { ResearchFlow } from './ResearchFlow';
-import { SavingCallouts } from './SavingCallouts';
+import { SaveCases } from './SaveCases';
 import { RestockFlow } from './RestockCallouts';
 import { SavedTradeoff } from './SavedTradeoff';
 import { FeedCards } from './FeedCards';
@@ -152,9 +152,9 @@ export default function DefMiniProgramKitPage() {
           <CaseFigure caption="From a sold-out shade, or a product not in the store, to Restock. Demonstration data; the ERP collects requests today, the back-in-stock notice and photos are not built yet.">
             <RestockFlow />
           </CaseFigure>
-          <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
-          <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
-            <SavingCallouts />
+          <CaseProse><p>Saving is not why a merchant is on a product, so it <strong>stays off the buying path</strong>: the heart sits on product cards and the product header, never beside Add to Bag. What it keeps is <strong>one exact item (SKU)</strong>, so what the heart does depends on the product.</p></CaseProse>
+          <CaseFigure caption="Saving, situation by situation, on demonstration data. A product shows a filled heart once any of its options is saved.">
+            <SaveCases />
           </CaseFigure>
         </CaseChapter>
 
