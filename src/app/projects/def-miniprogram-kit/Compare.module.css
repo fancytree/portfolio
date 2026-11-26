@@ -11,3 +11,11 @@
 .why { margin: 0; font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.55; color: var(--case-copy); }
 .chosen .why { color: var(--case-ink); }
 @media (max-width: 899px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--case-space-16); } .grid.wide { grid-template-columns: 1fr; } }
+
+/* A few screens on the left, what is wrong with them on the right. */
+.split { display: grid; grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: var(--case-space-32); align-items: start; width: 100%; }
+.split .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--case-space-16); }
+@media (max-width: 899px) { .split { grid-template-columns: 1fr; } }
+/* Beside the screens the three points should read as one list. */
+.split > ol { gap: var(--case-space-32); }
+.split > ol > li { gap: var(--case-space-12); }

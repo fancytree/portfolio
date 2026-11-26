@@ -4,6 +4,7 @@ import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
 import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
+import layout from './Compare.module.css';
 import MiniProgramDemo from './MiniProgramDemo';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 import {
@@ -151,17 +152,19 @@ export default function DefMiniProgramKitPage() {
           <CaseProse>
             <p>DEF sells to merchants: salons, barbers, nail studios, spas. The first mini program had the structure of a consumer shop. It opened on a category grid and a promotion, gave browsing a tab of its own, and showed every visitor the same thing. It <a href="/projects/def-erp-kit">kept the look salons already knew</a> so it could launch quickly. This redesign takes up what that decision postponed.</p>
           </CaseProse>
-          <CaseFigure caption="Before · The home and category tab of the previous mini program, on demonstration data.">
-            <Compare wide columns={2} label="Previous home and categories" items={[
-              { shot: 'before-home', name: 'Home: eight category icons', why: 'Nails, lashes, hair removal, hair, beauty, furniture, sterilisation, consumables. Every merchant gets all eight, with equal weight.' },
-              { shot: 'before-catalog', name: 'Categories: a whole tab', why: 'Browsing the category tree from the top, in Chinese inside an otherwise English interface.' },
+          <div className={layout.split}>
+            <CaseFigure caption="Before · Home and the Categories tab, on demonstration data.">
+              <Compare columns={2} label="Previous home and categories" items={[
+                { shot: 'before-home', name: 'Home: eight category icons' },
+                { shot: 'before-catalog', name: 'Categories: a whole tab' },
+              ]} />
+            </CaseFigure>
+            <CaseSteps items={[
+              { title: 'Everyone sees everything', body: 'Home opens on eight categories with equal weight: nails, lashes, hair removal, hair, beauty, furniture, sterilisation, consumables. A merchant buys within a trade, so a nail studio walks past most of them.' },
+              { title: 'Finding means browsing', body: 'A whole tab is given to the category tree, in Chinese inside an otherwise English interface. Even something bought many times is reached from the top.' },
+              { title: 'No shortlist', body: 'Past orders sat in the account, but there was no place for the exact products a business keeps buying.' },
             ]} />
-          </CaseFigure>
-          <CaseSteps items={[
-            { title: 'Everyone sees everything', body: 'A merchant buys within a trade. A nail studio walks past hair, salon furniture and sterilisation to reach its own products.' },
-            { title: 'Finding means browsing', body: 'The structure is built for looking around: category, then subcategory, then product, even for something bought many times.' },
-            { title: 'No shortlist', body: 'Past orders sat in the account, but there was no place for the exact products a business keeps buying.' },
-          ]} />
+          </div>
         </CaseChapter>
 
         <CaseChapter label="02 / For you" title="From a category grid to For you.">
