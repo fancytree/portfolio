@@ -1,25 +1,59 @@
-/* Three steps read left to right; blue marks a category the merchant has. Shared case tokens only. */
-.flow { list-style: none; margin: 0; padding: var(--case-space-24); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-32); align-items: stretch; }
-.step { position: relative; display: flex; flex-direction: column; gap: var(--case-space-16); min-width: 0; }
-.step + .step::before { content: '→'; position: absolute; top: 50%; right: calc(100% + var(--case-space-8)); transform: translateY(-50%); color: var(--case-muted); font-family: var(--case-font-body); font-size: var(--case-text-16); }
-.title { margin: 0; display: flex; gap: var(--case-space-8); align-items: center; font-family: var(--case-font-body); font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.3; color: var(--case-ink); }
-.number { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--case-space-24); height: var(--case-space-24); border-radius: 50%; background: var(--case-ink); color: var(--case-white); font-size: var(--case-text-12); }
-.cards { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--case-space-8); }
-.card { display: flex; flex-direction: column; align-items: flex-start; gap: var(--case-space-8); background: var(--case-white); border: var(--case-border-width) solid var(--case-line); border-radius: var(--case-radius-sm); padding: var(--case-space-16); min-width: 0; }
-.off { border-style: dashed; background: transparent; }
-.off .strong { color: var(--case-muted); }
-.merchant { gap: var(--case-space-16); border-color: var(--case-flow-link); }
-.link { display: flex; flex-direction: column; align-items: flex-start; gap: var(--case-space-4); }
-.strong { font-family: var(--case-font-body); font-size: var(--case-text-14); font-weight: var(--case-weight-strong); color: var(--case-ink); }
-.chips { display: flex; flex-wrap: wrap; gap: var(--case-space-4); }
-.chip { font-family: var(--case-font-body); font-size: var(--case-text-12); line-height: 1.5; padding: 2px var(--case-space-8); border-radius: var(--case-radius-sm); background: var(--case-surface); color: var(--case-muted); }
-.hit { background: var(--case-flow-link); color: var(--case-white); }
-.tab { font-family: var(--case-font-body); font-size: var(--case-text-14); font-weight: var(--case-weight-strong); padding: var(--case-space-4) var(--case-space-16); border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-ink); color: var(--case-ink); }
+/* A top-to-bottom flowchart. Blue follows the merchant's categories. Shared case tokens only. */
+.flow { display: flex; flex-direction: column; align-items: center; padding: var(--case-space-32) var(--case-space-24); font-family: var(--case-font-body); --wire: var(--case-faded); }
+.flow > * { width: 100%; max-width: 46rem; }
+.node { display: flex; flex-direction: column; align-items: center; gap: var(--case-space-8); text-align: center; background: var(--case-white); border: var(--case-border-width) solid var(--case-line); border-radius: var(--case-radius-sm); padding: var(--case-space-16); min-width: 0; }
+.key { border: 2px solid var(--case-flow-link); }
+.off { border-style: dashed; border-color: var(--wire); background: transparent; }
+.strong { font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.3; color: var(--case-ink); }
+.small { font-size: var(--case-text-12); line-height: 1.5; color: var(--case-muted); }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--case-space-8); }
+.chip { font-size: var(--case-text-14); line-height: 1.5; padding: 2px var(--case-space-16); border-radius: var(--case-radius-lg); background: var(--case-flow-link); color: var(--case-white); }
+
+/* Three sources, joined into one arrow. */
+.sources { list-style: none; margin: 0 auto; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-16); align-items: stretch; }
+.merge, .split { position: relative; height: var(--case-space-32); }
+.merge::before { content: ''; position: absolute; top: 0; height: 50%; left: calc((100% - 2 * var(--case-space-16)) / 6); right: calc((100% - 2 * var(--case-space-16)) / 6); border: solid var(--wire); border-width: 0 2px 2px; }
+.merge::after, .line::before { content: ''; position: absolute; left: calc(50% - 1px); bottom: 0; border-left: 2px solid var(--wire); }
+.merge::after { top: 0; }
+.line { position: relative; height: var(--case-space-32); }
+.line::before { top: 0; }
+/* arrow heads */
+.merge::after, .line::before { width: 0; }
+.line::after, .outcome::before { content: ''; position: absolute; left: 50%; width: var(--case-space-8); height: var(--case-space-8); border: solid var(--wire); border-width: 0 2px 2px 0; transform: translate(-50%, -100%) rotate(45deg); }
+.line::after { bottom: -2px; }
+.tip { position: absolute; left: 50%; bottom: -2px; width: var(--case-space-8); height: var(--case-space-8); border: solid var(--wire); border-width: 0 2px 2px 0; transform: translate(-50%, -100%) rotate(45deg); }
+
+/* The question, fed from the side by the product. */
+.check { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--case-space-32); align-items: center; }
+.decision { grid-column: 2; grid-row: 1; background: var(--case-ink); color: var(--case-white); text-align: center; font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; padding: var(--case-space-24) var(--case-space-32); clip-path: polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%); }
+.product { grid-column: 3; grid-row: 1; position: relative; }
+.product::before { content: '←'; position: absolute; right: calc(100% + var(--case-space-8)); top: 50%; transform: translateY(-50%); color: var(--case-muted); font-size: var(--case-text-18); }
+
+/* Yes and no. */
+.split::before { content: ''; position: absolute; left: calc(50% - 1px); top: 0; height: 50%; border-left: 2px solid var(--wire); }
+.split::after { content: ''; position: absolute; top: 50%; bottom: 0; left: calc((100% - var(--case-space-16)) / 4); right: calc((100% - var(--case-space-16)) / 4); border: solid var(--wire); border-width: 2px 2px 0; }
+.outcomes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-16); align-items: start; }
+.outcome { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: var(--case-space-8); min-width: 0; }
+.outcome::before { top: 0; }
+.answer { align-self: center; margin-top: var(--case-space-4); font-size: var(--case-text-14); font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
+.no { color: var(--case-muted); }
+.tabs { list-style: none; margin: 0; padding: 0; width: 100%; display: flex; flex-direction: column; gap: var(--case-space-8); }
+.tabs li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--case-space-8); text-align: left; padding-top: var(--case-space-8); border-top: var(--case-border-width) solid var(--case-line); }
+.tab { font-size: var(--case-text-14); font-weight: var(--case-weight-strong); padding: 2px var(--case-space-16); border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-ink); color: var(--case-ink); }
 .current { background: var(--case-ink); color: var(--case-white); }
-.small { font-family: var(--case-font-body); font-size: var(--case-text-12); line-height: 1.5; color: var(--case-muted); }
-.items { font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.5; color: var(--case-copy); }
-.note { margin: auto 0 0; padding-top: var(--case-space-8); border-top: var(--case-border-width) solid var(--case-line); font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.55; color: var(--case-copy); }
-@media (max-width: 899px) {
-  .flow { grid-template-columns: minmax(0, 1fr); padding: var(--case-space-16); }
-  .step + .step::before { content: '↓'; top: calc(-1 * var(--case-space-16)); right: auto; left: 50%; transform: translate(-50%, -50%); }
+.items { font-size: var(--case-text-14); line-height: 1.5; color: var(--case-copy); }
+
+@media (max-width: 699px) {
+  .flow { padding: var(--case-space-24) var(--case-space-16); }
+  .sources { gap: var(--case-space-8); }
+  .sources .node { padding: var(--case-space-8) var(--case-space-4); }
+  .merge::before { left: calc((100% - 2 * var(--case-space-8)) / 6); right: calc((100% - 2 * var(--case-space-8)) / 6); }
+  /* the product sits above the question and feeds down into it */
+  .check { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-24); }
+  .product { grid-column: 1; grid-row: 1; }
+  .product::before { content: '↓'; right: auto; left: 50%; top: calc(100% + var(--case-space-4)); transform: translateX(-50%); line-height: 1; }
+  .decision { grid-column: 1; grid-row: 2; }
+  .outcomes { gap: var(--case-space-8); }
+  .split::after { left: calc((100% - var(--case-space-8)) / 4); right: calc((100% - var(--case-space-8)) / 4); }
+  .outcomes .node { padding: var(--case-space-8); }
 }
