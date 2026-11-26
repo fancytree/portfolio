@@ -1,5 +1,6 @@
 /* Small screens with circled points, sized to be read in one view. Shared case tokens only. */
 .row { list-style: none; margin: 0; padding: var(--case-space-24); display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 15rem)); justify-content: center; gap: var(--case-space-32); align-items: start; font-family: var(--case-font-body); }
+.cell { display: flex; flex-direction: column; gap: var(--case-space-32); min-width: 0; }
 .column { display: flex; flex-direction: column; gap: var(--case-space-8); min-width: 0; --mark: var(--case-flow-link); }
 .before, .cost { --mark: var(--case-flow-break); }
 .shot { border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-line); background: var(--case-white); padding: var(--case-space-4) var(--case-space-8); }
@@ -21,4 +22,7 @@
 .rejected .badge { background: var(--case-white); color: var(--case-muted); border-color: var(--case-faded); }
 .rejected .shot { border: var(--case-border-width) dashed var(--case-faded); background: transparent; }
 .rejected .canvas img { filter: grayscale(1); opacity: 0.55; }
-@media (max-width: 699px) { .row { grid-template-columns: minmax(0, 18rem); gap: var(--case-space-32); padding: var(--case-space-16); } }
+/* Five columns need tighter gaps, and wrap before they get too small to read. */
+.many { column-gap: var(--case-space-16); }
+@media (max-width: 1099px) { .row.many { grid-template-columns: repeat(3, minmax(0, 15rem)); } }
+@media (max-width: 699px) { .row, .row.many { grid-template-columns: minmax(0, 18rem); gap: var(--case-space-32); padding: var(--case-space-16); } }
