@@ -60,6 +60,8 @@ export const productProjects: WorkProject[] = [
     time: '2026',
     tags: ['B2B Commerce', 'Mobile Design', 'Design System'],
     description: 'A beauty wholesaler’s WeChat storefront, rebuilt around why merchants come back: their own categories, restocks and reorders, and shade ordering. Designed, awaiting development.',
+    // Research figures, not results: the redesign has not been built yet.
+    impact: { value: '7,354 orders', label: 'analysed (Mar–Aug 2026), plus 7 merchant interviews' },
     image: '/img/def-miniprogram/home.webp',
     coverScreen: '/img/def-miniprogram/home.webp',
     coverDevice: 'phone-stack',
