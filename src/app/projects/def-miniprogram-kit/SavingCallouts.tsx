@@ -14,7 +14,7 @@ const screens: { shot: keyof typeof dims; name: string; before?: boolean; marks:
     { left: 12, top: 771, width: 366, height: 60, title: 'Add to Bag stands alone', body: 'Nothing sits beside it.' },
   ] },
   { shot: 'save-sheet', name: 'After: save sheet', marks: [
-    { left: 12, top: 392, width: 366, height: 370, title: 'The exact item', body: 'Choose the shade; saved ones carry a heart.' },
+    { left: 12, top: 386, width: 366, height: 376, title: 'The exact item', body: 'Choose the shade; saved ones carry a heart.' },
     { left: 12, top: 771, width: 366, height: 60, title: 'One decision', body: 'No quantity and no pack.' },
   ] },
 ];

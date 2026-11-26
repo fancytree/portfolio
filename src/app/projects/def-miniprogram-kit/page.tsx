@@ -9,6 +9,7 @@ import { SiteMap, TabMap } from './Diagrams';
 import { ShadeHighlight } from './ShadeHighlight';
 import { ResearchFlow } from './ResearchFlow';
 import { SavingCallouts } from './SavingCallouts';
+import { SavedTabs } from './SavedTabs';
 import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
@@ -143,12 +144,8 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="05 / Saved" title="Saved is for coming back, and stays off the buying path.">
           <CaseProse><p>Saved takes the Categories tab’s place and answers the four reasons to return: what is new in my ranges, what is back, what is on offer, and buying again.</p></CaseProse>
-          <CaseFigure caption="Inside the Saved tab.">
-            <Compare wide label="Saved tab" items={[
-              { shot: 'saved', name: 'New and on offer', why: 'New shades in your ranges, then offers on what you buy.' },
-              { shot: 'restock', name: 'Restock', why: 'What is back, and when the rest is expected.' },
-              { shot: 'buy-items', name: 'Buy again', why: 'A past order, ready to add in bulk.' },
-            ]} />
+          <CaseFigure caption="Inside the Saved tab, on demonstration data. Shares are from order data, March to August 2026.">
+            <SavedTabs />
           </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
