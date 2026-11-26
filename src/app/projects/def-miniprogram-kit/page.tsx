@@ -9,7 +9,7 @@ import { SiteMap, TabMap } from './Diagrams';
 import { ShadeHighlight } from './ShadeHighlight';
 import { ResearchFlow } from './ResearchFlow';
 import { SavingCallouts } from './SavingCallouts';
-import { SavedTabs } from './SavedTabs';
+import { RestockCallouts } from './RestockCallouts';
 import { SavedTradeoff } from './SavedTradeoff';
 import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
@@ -148,8 +148,9 @@ export default function DefMiniProgramKitPage() {
           <CaseFigure caption="Two trade-offs, on demonstration data. Share from order data, March to August 2026.">
             <SavedTradeoff />
           </CaseFigure>
-          <CaseFigure caption="Restock, the third tab.">
-            <SavedTabs />
+          <CaseProse><p>Merchants asked whether what they needed was back. So Restock starts earlier: <strong>a sold-out item</strong> and <strong>a product the store does not carry</strong> can both be registered.</p></CaseProse>
+          <CaseFigure caption="From sold out to Restock, and a request for something new. Demonstration data; the ERP already collects requests, the back-in-stock notice is not built yet.">
+            <RestockCallouts />
           </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">
@@ -245,7 +246,7 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseClose label="11 / Where it stands" title="Designed, not yet built.">
-          <CaseProse><p>Awaiting development, so there are no results yet. Still open: how out-of-stock records are created, so Restock can be filled.</p></CaseProse>
+          <CaseProse><p>Awaiting development, so there are no results yet. Still open: where the expected arrival date comes from.</p></CaseProse>
           <CaseProse><p>I interviewed merchants and set the direction. Claude analysed the order data and drafted the requirements, screens, component code and this prototype; Codex made the product imagery; the brands are invented. The decisions are mine.</p></CaseProse>
         </CaseClose>
       </CaseKitSections>

@@ -44,6 +44,7 @@ export function SiteMap() {
       { name: 'Saved items' },
       { name: 'Buy again', note: 'Past orders' },
       { name: 'Restock', note: 'Back and expected', fresh: true },
+      { name: 'Request a product', note: 'Not in the store', fresh: true },
       { name: 'Shared lists', note: 'Later', planned: true },
     ] },
     { tab: 'Bag', pages: [
