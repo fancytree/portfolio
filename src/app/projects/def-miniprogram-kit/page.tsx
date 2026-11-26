@@ -101,7 +101,7 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="02 / Research" title="So what do merchants come for?">
-          <CaseFigure caption={<><strong>7</strong> merchant interviews, checked against sales from <strong>March to August 2026</strong>. Repeat accounts; products grouped by name; a new shade is one first sold in <strong>May</strong> or later.</>}>
+          <CaseFigure caption={<><strong>7</strong> merchant interviews, checked against sales from <strong>March to August 2026</strong>.</>}>
             <ResearchFlow />
           </CaseFigure>
         </CaseChapter>
