@@ -1,40 +1,30 @@
 import { ScreenCallouts, type Screen } from './ScreenCallouts';
 
-/* How a sold-out item turns into registered demand. */
-const waiting: Screen[] = [
-  { shot: 'stock-out', name: 'Sold out', marks: [
-    { left: 12, top: 768, width: 366, height: 64, title: 'Notify me replaces Add to Bag', body: 'A sold-out item still has a next step.' },
+/* Top row: a sold-out shade becomes registered demand. Bottom row: what is not in the store at all. */
+const screens: Screen[] = [
+  { shot: 'stock-page', name: 'Product page', marks: [
+    { left: 12, top: 768, width: 366, height: 64, title: 'Choosing happens in the sheet', body: 'The page keeps Add to Bag while other shades are in stock.' },
   ] },
-  { shot: 'stock-notify', name: 'Registered', marks: [
-    { left: 12, top: 702, width: 366, height: 130, title: 'The tap records the demand', body: 'It is confirmed, and listed in Restock.' },
+  { shot: 'stock-pick', name: 'Pick a sold-out shade', marks: [
+    { left: 89, top: 339, width: 70, height: 96, title: 'Sold out, still selectable', body: 'Demand belongs to one shade, not the whole product.' },
+    { left: 12, top: 742, width: 366, height: 88, flip: true, title: 'Notify me takes over', body: 'It replaces the quantity and Add to Bag.' },
+  ] },
+  { shot: 'stock-told', name: 'Registered', marks: [
+    { left: 12, top: 702, width: 366, height: 128, title: 'Recorded per shade', body: 'The sheet stays open, so other shades can be added.' },
   ] },
   { shot: 'stock-wait', name: 'Restock: waiting', marks: [
-    { left: 10, top: 218, width: 370, height: 350, flip: true, title: 'Grouped by expected date', body: 'Once back, an item moves to In stock.' },
-  ] },
-];
-
-/* What a merchant does inside Restock. */
-const using: Screen[] = [
-  { shot: 'stock-in', name: 'Restock: in stock', marks: [
-    { left: 6, top: 98, width: 378, height: 116, flip: true, title: 'Two levels that look different', body: 'Underlined page tabs, then a capsule to filter Restock.' },
-    { left: 12, top: 218, width: 366, height: 170, flip: true, title: 'Back, one tap to add', body: 'The same card as in Saved.' },
+    { left: 10, top: 218, width: 370, height: 350, flip: true, title: 'Grouped by expected date', body: 'Once back, it moves to In stock, with one tap to add.' },
   ] },
   { shot: 'stock-requests', name: 'Restock: requests', marks: [
-    { left: 14, top: 215, width: 180, height: 248, title: 'Add comes first', body: 'A product the store does not carry starts here.' },
-    { left: 197, top: 215, width: 180, height: 248, flip: true, title: 'With or without a photo', body: 'The status sits on the card as a tag.' },
+    { left: 14, top: 215, width: 180, height: 248, title: 'Not in the store', body: 'The first card starts a request.' },
+    { left: 197, top: 215, width: 180, height: 248, flip: true, title: 'Status on the card', body: 'With a photo or without.' },
   ] },
   { shot: 'stock-request', name: 'Request a product', marks: [
-    { left: 10, top: 102, width: 370, height: 128, flip: true, title: 'Up to three photos', body: 'Easier to show than to describe.' },
-    { left: 10, top: 232, width: 370, height: 354, flip: true, title: 'Only the basics', body: 'What it is, brand, link and quantity.' },
+    { left: 10, top: 102, width: 370, height: 486, flip: true, title: 'Photos and the basics', body: 'Up to three photos, then what it is, brand, link and quantity.' },
   ] },
 ];
 
-/** Registering demand for what is sold out. */
-export function RestockWaiting() {
-  return <ScreenCallouts screens={waiting} />;
-}
-
-/** Using Restock: what is back, what was asked for, and asking for more. */
-export function RestockInUse() {
-  return <ScreenCallouts screens={using} />;
+/** Registering demand: for a sold-out item, and for a product the store does not carry. */
+export function RestockFlow() {
+  return <ScreenCallouts screens={screens} columns={3} />;
 }

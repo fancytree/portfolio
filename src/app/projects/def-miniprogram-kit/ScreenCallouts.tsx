@@ -8,10 +8,10 @@ export type Screen = { shot: keyof typeof dims; name: string; before?: boolean; 
 
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 /** Screens with their points circled; numbers run on across the screens, and costs are marked in red. */
-export function ScreenCallouts({ screens }: { screens: Screen[] }) {
+export function ScreenCallouts({ screens, columns }: { screens: Screen[]; columns?: number }) {
   const start = screens.map((_, i) => screens.slice(0, i).reduce((n, s) => n + s.marks.length, 1));
   return (
-    <ul className={styles.row} style={{ '--cols': screens.length } as React.CSSProperties}>
+    <ul className={styles.row} style={{ '--cols': columns ?? screens.length } as React.CSSProperties}>
       {screens.map((screen, i) => {
         const [width, height] = dims[screen.shot];
         return (
