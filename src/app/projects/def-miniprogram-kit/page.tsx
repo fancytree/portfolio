@@ -40,11 +40,10 @@ const navLabels = [
   '04 / For you',
   '05 / Saved',
   '06 / Choosing',
-  '07 / Design highlight',
-  '08 / Wireframes',
-  '09 / Design language',
-  '10 / Try it',
-  '11 / Where it stands',
+  '07 / Wireframes',
+  '08 / Design language',
+  '09 / Try it',
+  '10 / Where it stands',
 ];
 
 export default function DefMiniProgramKitPage() {
@@ -100,7 +99,7 @@ export default function DefMiniProgramKitPage() {
               { title: 'Everyone sees everything', body: 'Eight categories with equal weight, though most of a merchant’s spend sits in one. → 04' },
               { title: 'Finding means browsing', body: 'A whole tab for the category tree, started from the top on every visit. → 04' },
               { title: 'No shortlist', body: 'No place for the exact products a business keeps buying. → 05' },
-              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 06, 07' },
+              { title: 'One page shape for every product', body: 'A capacity button and a quantity bar: choosing the right item to order takes work. → 06' },
             ]} />
           </div>
         </CaseChapter>
@@ -118,7 +117,7 @@ export default function DefMiniProgramKitPage() {
               { shot: 'tab-saved-v2', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 05' },
               { shot: 'home', name: 'For you home', why: 'Opens on the merchant’s own categories. → 04' },
               { shot: 'search', name: 'Search with categories', why: 'Takes over the Categories tab, so everything else is one search away.' },
-              { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 06, 07' },
+              { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 06' },
             ]} />
           </CaseFigure>
           <CaseFigure caption="From the previous tabs to the new ones.">
@@ -158,26 +157,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Choosing" title="Show only the choice the product needs.">
-          <CaseProse><p>Picking the item to order was laborious. Each product type now configures its own display, so the screen shows only the choice that product needs.</p></CaseProse>
-          <CaseFigure caption="One sheet, shaped by the product’s attributes.">
-            <Compare label="Sheets by attribute" items={[
-              { shot: 'sheet-capacity', name: 'Capacity' },
-              { shot: 'sheet-glove', name: 'Colour and size' },
-              { shot: 'sheet-model', name: 'Model' },
-              { shot: 'sheet-shade', name: 'Shade', why: 'Long ranges: see 07.' },
-            ]} />
-          </CaseFigure>
-          <CaseFigure caption="The product page is for facts; choosing happens in the sheet.">
-            <Compare wide label="Product page" items={[
-              { shot: 'product', name: 'Key facts under the price' },
-              { shot: 'fold-closed', name: 'Shades, one row' },
-              { shot: 'fold-open', name: 'All twenty, one tap away' },
-            ]} />
-          </CaseFigure>
-        </CaseChapter>
-
-        <CaseChapter label="07 / Design highlight" title="Finding a few shades among 120, and taking them together.">
+        <CaseChapter label="06 / Choosing" title="Finding a few shades among 120, and taking them together.">
           <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So the picker has to find shades fast and collect several.</p></CaseProse>
           <CaseFigure caption="Working prototype on demonstration data.">
             <ShadeHighlight />
@@ -198,9 +178,17 @@ export default function DefMiniProgramKitPage() {
               { shot: 'swatch-bulk', name: 'Bulk grid', chosen: true, why: 'Several shades with quantities: the base of the final picker.' },
             ]} />
           </CaseFigure>
+          <CaseFigure caption="One sheet, shaped by the product’s attributes.">
+            <Compare label="Sheets by attribute" items={[
+              { shot: 'sheet-capacity', name: 'Capacity' },
+              { shot: 'sheet-glove', name: 'Colour and size' },
+              { shot: 'sheet-model', name: 'Model' },
+              { shot: 'sheet-shade', name: 'Shade' },
+            ]} />
+          </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="08 / Wireframes" title="It started as wireframes of the whole journey.">
+        <CaseChapter label="07 / Wireframes" title="It started as wireframes of the whole journey.">
           <CaseFigure caption="Discover and choose.">
             <Compare label="Wireframes: discover and choose" items={[
               { shot: 'wf-home', name: 'Home' },
@@ -219,7 +207,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="09 / Design language" title="A quiet language, so the products carry the colour.">
+        <CaseChapter label="08 / Design language" title="A quiet language, so the products carry the colour.">
           <CaseProse><p>Many categories and many brands of packaging clashed with a strong brand colour. I took Sephora as the reference and removed it: black, white and grey, with colour kept for products and state.</p></CaseProse>
           <CaseFigure caption="Two other directions, then four layouts of the chosen one, Editorial, which leaves the colour to the products.">
             <Compare label="Home exploration" items={[
@@ -240,12 +228,12 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="10 / Try it" title="Try the redesign.">
+        <CaseChapter label="09 / Try it" title="Try the redesign.">
           <CaseProse><p>Five short tours play in turn. <strong>Move your pointer into the frame to take over.</strong> All data is for demonstration.</p></CaseProse>
           <MiniProgramDemo />
         </CaseChapter>
 
-        <CaseClose label="11 / Where it stands" title="Designed, not yet built.">
+        <CaseClose label="10 / Where it stands" title="Designed, not yet built.">
           <CaseProse><p>Awaiting development, so there are no results yet. Still open: where the expected arrival date comes from.</p></CaseProse>
           <CaseProse><p>I interviewed merchants and set the direction. Claude analysed the order data and drafted the requirements, screens, component code and this prototype; Codex made the product imagery; the brands are invented. The decisions are mine.</p></CaseProse>
         </CaseClose>
