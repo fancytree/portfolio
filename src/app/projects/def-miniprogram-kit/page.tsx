@@ -144,7 +144,7 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="05 / Saved" title="Saved is for coming back, and stays off the buying path.">
           <CaseProse><p>Saved takes the Categories tab’s place and answers the four reasons to return: what is new in my ranges, what is back, what is on offer, and buying again.</p></CaseProse>
-          <CaseFigure caption="Inside the Saved tab, on demonstration data. Shares are from order data, March to August 2026.">
+          <CaseFigure caption="The earlier Saved page and what is inside the tab now, on demonstration data. Shares are from order data, March to August 2026.">
             <SavedTabs />
           </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
