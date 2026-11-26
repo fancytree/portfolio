@@ -134,6 +134,7 @@ export default function DefMiniProgramKitPage() {
           <CaseFigure caption="A product reaches For you when it shares a category with the merchant. Switch merchants to compare.">
             <CategoryFlow />
           </CaseFigure>
+          <CaseProse><p>Why so many card styles? <strong>Marketing needs differ</strong>: a new range, a set, a price break, a brand story and a tutorial each call for their own shape, so one feed can carry different campaigns. And merchants come back often, so <strong>changing styles keep the page fresh</strong> instead of a wall of identical product tiles. Aligned modules come first, so the variety stays out of the way of ordering.</p></CaseProse>
           <CaseFigure caption="The cards For you is built from, on demonstration data. The first version recommends by rules.">
             <FeedCards />
           </CaseFigure>
