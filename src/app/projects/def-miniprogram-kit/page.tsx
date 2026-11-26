@@ -204,7 +204,15 @@ export default function DefMiniProgramKitPage() {
               { label: 'A range new to them', value: 10 },
             ]} />
           </CaseFigure>
-          <CaseProse><p><strong>So reordering earns its own tab, one product holds all its shades, and the way back is organised by range as well as by exact item.</strong></p></CaseProse>
+          <CaseStats items={[
+            { value: '11×', label: 'More likely to buy a new shade if the account already bought that range: 13% against 1%' },
+            { value: '52%', label: 'Of new shades bought by existing accounts came from a range they already buy' },
+            { value: '77%', label: 'Came from a brand they already buy' },
+          ]} />
+          <CaseProse>
+            <p>A new shade here is one first sold in May or later, measured to the end of August, among colour buyers who ordered again.</p>
+            <p><strong>So reordering earns its own tab, one product holds all its shades, and the way back is organised by range, with new shades flagged to the accounts that follow it.</strong></p>
+          </CaseProse>
           <CaseStats items={[
             { value: '69%', label: 'Of repeat accounts put at least 80% of their spend into one trade' },
             { value: '26%', label: 'Buy from only one trade; the rest also cross into others' },
@@ -276,14 +284,14 @@ export default function DefMiniProgramKitPage() {
             { title: 'Find it once', body: 'Through For you or search.' },
             { title: 'Keep the exact one', body: 'The heart saves one SKU: a shade, size or model, not just the product.' },
             { title: 'Reorder from the tab', body: 'Plus adds it straight to the bag, or opens the sheet when there is a pack size to choose.' },
-            { title: 'Go back to a range', body: 'Added after the research: Your ranges lists the lines an account keeps buying, and one tap opens the shades. It is built from orders, so nothing has to be saved.' },
+            { title: 'Go back to a range', body: 'Added after the research: Your ranges lists the lines an account keeps buying, says when one has new shades, and opens them in one tap. It is built from orders, so nothing has to be saved.' },
             { title: 'Past orders beside it', body: 'Buy again sits in the same tab. Restock and Lists have their place and are still to be designed.' },
           ]} />
           <CaseFigure caption="From a product to the shortlist.">
             <Compare wide label="Save and reorder" items={[
               { shot: 'product-shade', name: '1 · Tap the heart', why: 'In the page header, away from the buy button.', alt: 'Product page with heart' },
               { shot: 'save-sheet', name: '2 · Pick the SKU', why: 'Only SKU options. No quantity, no packaging.' },
-              { shot: 'saved', name: '3 · Reorder in Saved', why: 'Your ranges on top for a new shade; saved items below, each with a plus.' },
+              { shot: 'saved', name: '3 · Reorder in Saved', why: 'Your ranges on top, with new shades flagged; saved items below, each with a plus.' },
             ]} />
           </CaseFigure>
           <ReversalList items={savingReversals} />
