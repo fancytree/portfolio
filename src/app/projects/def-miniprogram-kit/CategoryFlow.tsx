@@ -71,58 +71,66 @@ export function CategoryFlow() {
 
   return (
     <div ref={root} className={styles.flow}>
-      <div className={styles.controls}>
-        <div className={styles.switch} role="group" aria-label="Choose a merchant">
-          {merchants.map((m, i) => (
-            <CaseButton key={m.name} variant="tab" aria-pressed={i === who}
-              onClick={() => { started.current = true; setState({ who: i, step: 0 }); setPlaying(true); }}>
-              {m.name}
-            </CaseButton>
-          ))}
-        </div>
+      <div className={styles.columns}>
+        <section className={styles.column} aria-label="Products">
+          <p className={styles.heading}>Products</p>
+          <ul className={styles.products}>
+            {products.map((p, i) => {
+              const seen = i < step;
+              const match = shared(p, mine).length > 0;
+              return (
+                <li key={p.id} className={`${styles.product} ${current === p ? styles.checking : ''} ${seen ? (match ? styles.inside : styles.outside) : ''}`}>
+                  <Photo id={p.id} name={p.name} />
+                  <span className={styles.detail}>
+                    <span className={styles.name}>{p.name}</span>
+                    <span className={styles.chips}>
+                      {p.categories.map((c) => <span key={c} className={`${styles.chip} ${seen && mine.includes(c) ? styles.hit : ''}`}>{c}</span>)}
+                    </span>
+                    <span className={styles.verdict}>{seen ? (match ? '✓ In For you' : '✕ Not in For you') : '\u00a0'}</span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
+        <section className={styles.column} aria-label="Merchant">
+          <p className={styles.heading}>Merchant</p>
+          <div className={styles.switch} role="group" aria-label="Choose a merchant">
+            {merchants.map((m, i) => (
+              <CaseButton key={m.name} variant="tab" aria-pressed={i === who}
+                onClick={() => { started.current = true; setState({ who: i, step: 0 }); setPlaying(true); }}>
+                {m.name}
+              </CaseButton>
+            ))}
+          </div>
+          <div className={styles.merchant}>
+            <span className={styles.name}>Merchant’s categories</span>
+            <span className={styles.chips}>{mine.map((c) => <span key={c} className={`${styles.chip} ${styles.hit}`}>{c}</span>)}</span>
+          </div>
+          <div className={styles.home}>
+            <div className={styles.tabs}>
+              <span className={`${styles.tab} ${styles.current}`}>For you</span>
+              {mine.map((c) => <span key={`${who}-${c}`} className={`${styles.tab} ${styles.arrive}`}>{c}</span>)}
+            </div>
+            {/* Both merchants end with two products, so the two places never move the page. */}
+            <ul className={styles.feed} aria-label="For you">
+              {[0, 1].map((slot) => {
+                const p = added[slot];
+                return (
+                  <li key={p ? `${who}-${p.id}` : `empty-${slot}`} className={p ? styles.arrive : styles.empty}>
+                    {p ? <><Photo id={p.id} name={p.name} /><span className={styles.name}>{p.name}</span></> : null}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <div className={styles.footer}>
+        <p className={styles.message} aria-live={playing ? 'off' : 'polite'}>{message}</p>
         <CaseButton variant="text" onClick={() => setPlaying((p) => !p)}>{playing ? 'Pause' : 'Play'}</CaseButton>
-      </div>
-
-      <div className={styles.merchant}>
-        <span className={styles.label}>Merchant’s categories</span>
-        <span className={styles.chips}>{mine.map((c) => <span key={c} className={`${styles.chip} ${styles.hit}`}>{c}</span>)}</span>
-      </div>
-
-      <ul className={styles.products} aria-label="Products and their categories">
-        {products.map((p, i) => {
-          const seen = i < step;
-          const match = shared(p, mine).length > 0;
-          return (
-            <li key={p.id} className={`${styles.product} ${current === p ? styles.checking : ''} ${seen ? (match ? styles.inside : styles.outside) : ''}`}>
-              <Photo id={p.id} name={p.name} />
-              <span className={styles.name}>{p.name}</span>
-              <span className={styles.chips}>
-                {p.categories.map((c) => <span key={c} className={`${styles.chip} ${seen && mine.includes(c) ? styles.hit : ''}`}>{c}</span>)}
-              </span>
-              <span className={styles.verdict}>{seen ? (match ? '✓ In For you' : '✕ Not in For you') : ' '}</span>
-            </li>
-          );
-        })}
-      </ul>
-
-      <p className={styles.message} aria-live={playing ? 'off' : 'polite'}>{message}</p>
-
-      <div className={styles.home}>
-        <div className={styles.tabs}>
-          <span className={`${styles.tab} ${styles.current}`}>For you</span>
-          {mine.map((c) => <span key={`${who}-${c}`} className={`${styles.tab} ${styles.arrive}`}>{c}</span>)}
-        </div>
-        {/* Both merchants end with two products, so the two places never move the page. */}
-        <ul className={styles.feed} aria-label="For you">
-          {[0, 1].map((slot) => {
-            const p = added[slot];
-            return (
-              <li key={p ? `${who}-${p.id}` : `empty-${slot}`} className={p ? styles.arrive : styles.empty}>
-                {p ? <><Photo id={p.id} name={p.name} /><span className={styles.name}>{p.name}</span></> : null}
-              </li>
-            );
-          })}
-        </ul>
       </div>
     </div>
   );
