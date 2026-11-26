@@ -2,22 +2,22 @@ import { ScreenCallouts, type Screen } from './ScreenCallouts';
 import styles from './SavedTradeoff.module.css';
 
 const saved: Screen[] = [
-  { shot: 'tab-earlier', name: 'Earlier: wishlist', marks: [
+  { shot: 'tab-earlier', name: 'Earlier: wishlist', chosen: false, marks: [
     { left: 14, top: 166, width: 362, height: 328, title: 'Gain: simple', body: 'Everything kept is in view at once.' },
     { left: 270, top: 434, width: 98, height: 55, title: 'Cost: whole products', body: 'The shade is chosen again, and nothing new reaches them.', cost: true },
   ] },
-  { shot: 'tab-saved', name: 'Now: reasons to return', marks: [
+  { shot: 'tab-saved-v2', name: 'Now: reasons to return', chosen: true, marks: [
     { left: 8, top: 154, width: 374, height: 400, flip: true, title: 'Gain: news comes to them', body: '13% of a range’s buyers take its new shade, against 1% of others.' },
     { left: 8, top: 564, width: 374, height: 194, flip: true, title: 'Cost: kept items move down', body: 'One scroll further, though each keeps its exact shade or size.', cost: true },
   ] },
 ];
 
 const again: Screen[] = [
-  { shot: 'buy-by-product', name: 'Option: by product', marks: [
+  { shot: 'buy-by-product-v2', name: 'Option: by product', chosen: false, marks: [
     { left: 14, top: 188, width: 362, height: 170, flip: true, title: 'Gain: one tap', body: 'One item restocks at its last quantity.' },
     { left: 14, top: 364, width: 362, height: 348, flip: true, title: 'Cost: item by item', body: 'Repeating a whole order takes many taps.', cost: true },
   ] },
-  { shot: 'tab-buy', name: 'Now: by order', marks: [
+  { shot: 'tab-buy-v2', name: 'Now: by order', chosen: true, marks: [
     { left: 12, top: 160, width: 366, height: 208, flip: true, title: 'Gain: whole orders', body: 'Recognised by its pictures, then added in part or whole.' },
     { left: 221, top: 304, width: 134, height: 54, title: 'Cost: one more step', body: 'A single item needs the order opened first.', cost: true },
   ] },

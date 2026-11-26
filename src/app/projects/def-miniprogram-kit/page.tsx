@@ -82,7 +82,7 @@ export default function DefMiniProgramKitPage() {
             { shot: 'home', name: 'Home' },
             { shot: 'product', name: 'Product page' },
             { shot: 'shade-sheet', name: 'Shade sheet' },
-            { shot: 'tab-saved', name: 'Saved' },
+            { shot: 'tab-saved-v2', name: 'Saved' },
           ]} />
         </CaseFigure>
 
@@ -115,7 +115,7 @@ export default function DefMiniProgramKitPage() {
           <CaseProse><p>The old structure started from the catalogue. The new one starts from what a merchant already buys, and rests on <strong>four features</strong>.</p></CaseProse>
           <CaseFigure caption="Four features that serve coming back.">
             <Compare label="Main features" items={[
-              { shot: 'tab-saved', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 05' },
+              { shot: 'tab-saved-v2', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 05' },
               { shot: 'home', name: 'For you home', why: 'Opens on the merchant’s own categories. → 04' },
               { shot: 'search', name: 'Search with categories', why: 'Takes over the Categories tab, so everything else is one search away.' },
               { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 06, 07' },

@@ -4,7 +4,7 @@ import styles from './ScreenCallouts.module.css';
 
 /** A circled area, in the screenshot's 390 × 844 points. */
 export type Mark = { left: number; top: number; width: number; height: number; title: string; body: string; cost?: boolean; flip?: boolean };
-export type Screen = { shot: keyof typeof dims; name: string; before?: boolean; marks: Mark[] };
+export type Screen = { shot: keyof typeof dims; name: string; before?: boolean; chosen?: boolean; marks: Mark[] };
 
 const pct = (v: number, of: number) => `${(v / of) * 100}%`;
 /** Screens with their points circled; numbers run on across the screens, and costs are marked in red. */
@@ -15,7 +15,8 @@ export function ScreenCallouts({ screens }: { screens: Screen[] }) {
       {screens.map((screen, i) => {
         const [width, height] = dims[screen.shot];
         return (
-          <li key={screen.shot} className={`${styles.column} ${screen.before ? styles.before : ''}`}>
+          <li key={screen.shot} className={`${styles.column} ${screen.before ? styles.before : ''} ${screen.chosen === undefined ? '' : screen.chosen ? styles.chosen : styles.rejected}`}>
+            {screen.chosen === undefined ? null : <em className={styles.badge}>{screen.chosen ? '✓ Chosen' : '✕ Not chosen'}</em>}
             <p className={styles.name}>{screen.name}</p>
             <div className={styles.shot}>
               <div className={styles.canvas}>

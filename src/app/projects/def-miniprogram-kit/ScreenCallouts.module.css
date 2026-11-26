@@ -14,4 +14,14 @@
 .notes li { display: flex; gap: var(--case-space-8); align-items: flex-start; }
 .name { margin: 0; font-size: var(--case-text-14); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
 .body { margin: var(--case-space-4) 0 0; font-size: var(--case-text-14); line-height: 1.5; color: var(--case-copy); }
+/* A decision: the chosen screen stands on a tinted card, the other fades back. */
+.badge { align-self: flex-start; font-style: normal; font-size: var(--case-text-12); font-weight: var(--case-weight-strong); line-height: 1.5; padding: 2px var(--case-space-8); border-radius: var(--case-radius-sm); }
+.chosen, .rejected { border-radius: var(--case-radius-lg); padding: var(--case-space-8); }
+.chosen { background: var(--case-white); border: 2px solid var(--case-flow-link); }
+.chosen .badge { background: var(--case-flow-link); color: var(--case-white); }
+.rejected { border: 2px dashed var(--case-faded); }
+.rejected .badge { background: var(--case-white); color: var(--case-muted); border: var(--case-border-width) solid var(--case-faded); }
+.rejected .shot { border-style: dashed; background: transparent; }
+.rejected .canvas img { filter: grayscale(1); opacity: 0.55; }
+.rejected .name, .rejected .body { color: var(--case-muted); }
 @media (max-width: 699px) { .row { grid-template-columns: minmax(0, 18rem); gap: var(--case-space-32); padding: var(--case-space-16); } }
