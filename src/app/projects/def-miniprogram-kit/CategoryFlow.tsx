@@ -1,78 +1,128 @@
+'use client';
+
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import { CaseButton } from '../../components/case-kit/CaseButton';
 import styles from './CategoryFlow.module.css';
 
-/* One worked example, matching the "Nails and pedicure" home further down. */
-const sources = [
-  { name: 'Verification', example: 'Picks Nails' },
-  { name: 'Purchases', example: 'Pedicure reaches 10%' },
-  { name: 'Follow', example: 'Adds more any time' },
+const products = [
+  { id: 'gel', name: 'Gel colour', categories: ['Nails'] },
+  { id: 'gloves', name: 'Nitrile gloves', categories: ['Hair', 'Nails', 'Pedicure'] },
+  { id: 'chair', name: 'Styling chair', categories: ['Hair', 'Barber'] },
 ];
-
-const tabs = [
-  { name: 'For you', items: 'Gloves · Gel colour · Foot cream' },
-  { name: 'Nails', items: 'Gloves · Gel colour' },
-  { name: 'Pedicure', items: 'Gloves · Gel colour · Foot cream' },
+const merchants = [
+  { name: 'Nail and foot studio', categories: ['Nails', 'Pedicure'] },
+  { name: 'Barber shop', categories: ['Barber', 'Hair'] },
 ];
+/* Step 0 shows the merchant; steps 1–3 compare one product each; the last step holds the result. */
+const DONE = products.length + 1;
+const shared = (p: (typeof products)[number], mine: string[]) => p.categories.filter((c) => mine.includes(c));
+const list = (names: string[]) => names.join(' and ');
 
-function Chips({ list }: { list: string[] }) {
-  return <span className={styles.chips}>{list.map((c) => <span key={c} className={styles.chip}>{c}</span>)}</span>;
+function Photo({ id, name }: { id: string; name: string }) {
+  return <Image className={styles.photo} src={`/img/def-miniprogram/p-${id}.webp`} width={480} height={480} alt={name} unoptimized />;
 }
 
-/** A flowchart: how a merchant's categories and a product's categories decide the home tabs. */
+/** Plays how products are matched to a merchant: a shared category puts a product into For you. */
 export function CategoryFlow() {
+  const root = useRef<HTMLDivElement>(null);
+  const [{ who, step }, setState] = useState({ who: 0, step: DONE });
+  const [playing, setPlaying] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const started = useRef(false);
+
+  /* Starts from the beginning the first time it is seen; people who prefer less motion get the result. */
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setVisible(entry.isIntersecting);
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        setState({ who: 0, step: 0 });
+        setPlaying(true);
+      }
+    }, { threshold: 0.35 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!playing || !visible) return;
+    const timer = window.setTimeout(() => {
+      setState((s) => (s.step < DONE ? { ...s, step: s.step + 1 } : { who: (s.who + 1) % merchants.length, step: 0 }));
+    }, step === DONE ? 3500 : 1800);
+    return () => window.clearTimeout(timer);
+  }, [playing, visible, who, step]);
+
+  const merchant = merchants[who];
+  const mine = merchant.categories;
+  const checked = products.slice(0, Math.min(step, products.length));
+  const added = checked.filter((p) => shared(p, mine).length > 0);
+  const current = step >= 1 && step <= products.length ? products[step - 1] : null;
+  const message = step === 0
+    ? `${merchant.name} has ${list(mine)}. Those become the tabs.`
+    : current
+      ? shared(current, mine).length
+        ? `${current.name} shares ${list(shared(current, mine))}: added to For you.`
+        : `${current.name} shares no category: left out, still searchable.`
+      : `For you: ${list(added.map((p) => p.name))}.`;
+
   return (
-    <div className={styles.flow} role="group" aria-label="How the home tabs are made">
-      <ul className={styles.sources}>
-        {sources.map((s) => (
-          <li key={s.name} className={styles.node}>
-            <span className={styles.strong}>{s.name}</span>
-            <span className={styles.small}>{s.example}</span>
-          </li>
-        ))}
+    <div ref={root} className={styles.flow}>
+      <div className={styles.controls}>
+        <div className={styles.switch} role="group" aria-label="Choose a merchant">
+          {merchants.map((m, i) => (
+            <CaseButton key={m.name} variant="tab" aria-pressed={i === who}
+              onClick={() => { started.current = true; setState({ who: i, step: 0 }); setPlaying(true); }}>
+              {m.name}
+            </CaseButton>
+          ))}
+        </div>
+        <CaseButton variant="text" onClick={() => setPlaying((p) => !p)}>{playing ? 'Pause' : 'Play'}</CaseButton>
+      </div>
+
+      <div className={styles.merchant}>
+        <span className={styles.label}>Merchant’s categories</span>
+        <span className={styles.chips}>{mine.map((c) => <span key={c} className={`${styles.chip} ${styles.hit}`}>{c}</span>)}</span>
+      </div>
+
+      <ul className={styles.products} aria-label="Products and their categories">
+        {products.map((p, i) => {
+          const seen = i < step;
+          const match = shared(p, mine).length > 0;
+          return (
+            <li key={p.id} className={`${styles.product} ${current === p ? styles.checking : ''} ${seen ? (match ? styles.inside : styles.outside) : ''}`}>
+              <Photo id={p.id} name={p.name} />
+              <span className={styles.name}>{p.name}</span>
+              <span className={styles.chips}>
+                {p.categories.map((c) => <span key={c} className={`${styles.chip} ${seen && mine.includes(c) ? styles.hit : ''}`}>{c}</span>)}
+              </span>
+              <span className={styles.verdict}>{seen ? (match ? '✓ In For you' : '✕ Not in For you') : ' '}</span>
+            </li>
+          );
+        })}
       </ul>
-      <div className={styles.merge} aria-hidden="true"><span className={styles.tip} /></div>
 
-      <div className={`${styles.node} ${styles.key}`}>
-        <span className={styles.strong}>Merchant’s categories</span>
-        <Chips list={['Nails', 'Pedicure']} />
-        <span className={styles.small}>Nail and foot studio</span>
-      </div>
-      <div className={styles.line} aria-hidden="true" />
+      <p className={styles.message} aria-live={playing ? 'off' : 'polite'}>{message}</p>
 
-      <div className={styles.check}>
-        <div className={styles.decision}>
-          <span>Does the product share one of them?</span>
+      <div className={styles.home}>
+        <div className={styles.tabs}>
+          <span className={`${styles.tab} ${styles.current}`}>For you</span>
+          {mine.map((c) => <span key={`${who}-${c}`} className={`${styles.tab} ${styles.arrive}`}>{c}</span>)}
         </div>
-        <div className={`${styles.node} ${styles.product}`}>
-          <span className={styles.strong}>Product’s categories</span>
-          <span className={styles.small}>Set in the back office, one or several</span>
-        </div>
-      </div>
-      <div className={styles.split} aria-hidden="true" />
-
-      <div className={styles.outcomes}>
-        <div className={styles.outcome}>
-          <span className={styles.answer}>Yes</span>
-          <div className={`${styles.node} ${styles.key}`}>
-            <span className={styles.strong}>Home tabs</span>
-            <span className={styles.small}>For you, then each category, most bought first</span>
-            <ul className={styles.tabs}>
-              {tabs.map((t, i) => (
-                <li key={t.name}>
-                  <span className={`${styles.tab} ${i === 0 ? styles.current : ''}`}>{t.name}</span>
-                  <span className={styles.items}>{t.items}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className={styles.outcome}>
-          <span className={`${styles.answer} ${styles.no}`}>No</span>
-          <div className={`${styles.node} ${styles.off}`}>
-            <span className={styles.strong}>Search only</span>
-            <span className={styles.small}>Not on this merchant’s home</span>
-            <span className={styles.items}>Styling chair · Hair, Barber</span>
-          </div>
-        </div>
+        {/* Both merchants end with two products, so the two places never move the page. */}
+        <ul className={styles.feed} aria-label="For you">
+          {[0, 1].map((slot) => {
+            const p = added[slot];
+            return (
+              <li key={p ? `${who}-${p.id}` : `empty-${slot}`} className={p ? styles.arrive : styles.empty}>
+                {p ? <><Photo id={p.id} name={p.name} /><span className={styles.name}>{p.name}</span></> : null}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
