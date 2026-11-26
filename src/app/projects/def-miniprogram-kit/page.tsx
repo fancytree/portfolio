@@ -162,7 +162,7 @@ export default function DefMiniProgramKitPage() {
           <CaseFigure caption="One set of categories for products and merchants.">
             <CategoryLinks />
           </CaseFigure>
-          <CaseFigure caption="From a fixed category grid to tabs that belong to the merchant. Each number is a problem and its answer.">
+          <CaseFigure caption="The new home: from a fixed category grid to tabs that belong to the merchant.">
             <HomeCallouts />
           </CaseFigure>
           <CaseFigure caption="Four merchants, four sets of tabs, and the same gloves in each. Demonstration data; the first version recommends by rules.">

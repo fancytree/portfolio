@@ -1,24 +1,15 @@
-/* Old and new home side by side; each has circled areas and matching notes on its outer side. Shared case tokens only. */
-.layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-32); align-items: start; padding: var(--case-space-24); }
-.side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "screen notes"; gap: var(--case-space-16); align-items: start; min-width: 0; --mark: var(--case-flow-link); }
-.before { grid-template-areas: "notes screen"; --mark: var(--case-flow-break); }
-.screen { grid-area: screen; display: flex; flex-direction: column; gap: var(--case-space-8); min-width: 0; }
+/* The new home, circled, with matching notes beside it. Shared case tokens only. */
+.layout { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 28rem); justify-content: center; gap: var(--case-space-64); align-items: center; padding: var(--case-space-24); }
 .shot { border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-line); background: var(--case-white); padding: var(--case-space-4) var(--case-space-8); }
 .canvas { position: relative; }
 .canvas img { display: block; width: 100%; height: auto; border-radius: var(--case-radius-sm); }
-.ring { position: absolute; left: 1.5%; right: 1.5%; border: 2px solid var(--mark); border-radius: var(--case-radius-lg); pointer-events: none; }
+.ring { position: absolute; left: 1.5%; right: 1.5%; border: 2px solid var(--case-flow-link); border-radius: var(--case-radius-lg); pointer-events: none; }
 .ring .number { position: absolute; top: 0; left: 0; transform: translate(-50%, -35%); }
-.number { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--case-space-24); height: var(--case-space-24); border-radius: 50%; background: var(--mark); color: var(--case-white); font-family: var(--case-font-body); font-size: var(--case-text-12); font-weight: var(--case-weight-strong); }
-.notes { grid-area: notes; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--case-space-24); align-self: center; min-width: 0; }
+.number { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--case-space-24); height: var(--case-space-24); border-radius: 50%; background: var(--case-flow-link); color: var(--case-white); font-family: var(--case-font-body); font-size: var(--case-text-12); font-weight: var(--case-weight-strong); }
+.notes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--case-space-32); min-width: 0; }
 .notes li { display: flex; gap: var(--case-space-8); align-items: flex-start; }
 .name { margin: 0; font-family: var(--case-font-body); font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
 .body { margin: var(--case-space-4) 0 0; font-family: var(--case-font-body); font-size: var(--case-text-14); line-height: 1.55; color: var(--case-copy); }
-/* Narrower pages put each list under its screen, then stack the two sides. */
-@media (max-width: 1099px) {
-  .layout { gap: var(--case-space-16); padding: var(--case-space-16); }
-  .side { grid-template-columns: minmax(0, 1fr); grid-template-areas: "screen" "notes"; }
-  .notes { align-self: start; }
-}
 @media (max-width: 699px) {
-  .layout { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-32); }
+  .layout { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-24); padding: var(--case-space-16); }
 }
