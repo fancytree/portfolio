@@ -149,7 +149,7 @@ export default function DefMiniProgramKitPage() {
             <SavedTradeoff />
           </CaseFigure>
           <CaseProse><p>Merchants asked whether what they needed was back. So Restock starts earlier: <strong>a sold-out item</strong> and <strong>a product the store does not carry</strong> can both be registered.</p></CaseProse>
-          <CaseFigure caption="From a sold-out shade, or a product not in the store, to Restock. Demonstration data; the ERP collects requests today, the back-in-stock notice and photos are not built yet.">
+          <CaseFigure caption="From sold out to Restock. Notices and photos are not built yet.">
             <RestockFlow />
           </CaseFigure>
           <CaseProse><p>Saving is not why a merchant is on a product, so it <strong>stays off the buying path</strong>: the heart sits on product cards and the product header, never beside Add to Bag. What it keeps is <strong>one exact item (SKU)</strong>, so what the heart does depends on the product.</p></CaseProse>
