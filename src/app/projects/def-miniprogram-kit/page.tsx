@@ -9,7 +9,7 @@ import { SiteMap, TabMap } from './Diagrams';
 import { ShadeHighlight } from './ShadeHighlight';
 import { ResearchFlow } from './ResearchFlow';
 import { SavingCallouts } from './SavingCallouts';
-import { RestockCallouts } from './RestockCallouts';
+import { RestockInUse, RestockWaiting } from './RestockCallouts';
 import { SavedTradeoff } from './SavedTradeoff';
 import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
@@ -149,8 +149,11 @@ export default function DefMiniProgramKitPage() {
             <SavedTradeoff />
           </CaseFigure>
           <CaseProse><p>Merchants asked whether what they needed was back. So Restock starts earlier: <strong>a sold-out item</strong> and <strong>a product the store does not carry</strong> can both be registered.</p></CaseProse>
-          <CaseFigure caption="From sold out to Restock, and a request for something new. Demonstration data; the ERP already collects requests, the back-in-stock notice is not built yet.">
-            <RestockCallouts />
+          <CaseFigure caption="From sold out to waiting. Demonstration data; the back-in-stock notice is not built yet.">
+            <RestockWaiting />
+          </CaseFigure>
+          <CaseFigure caption="Inside Restock. Demonstration data; the ERP collects requests today, photos are not supported yet.">
+            <RestockInUse />
           </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
           <CaseFigure caption="Saving moved from the buy button to the product header. Earlier sheet recreated.">

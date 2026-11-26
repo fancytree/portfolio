@@ -7,19 +7,19 @@ const saved: Screen[] = [
     { left: 270, top: 434, width: 98, height: 55, title: 'Cost: whole products', body: 'The shade is chosen again, and nothing new reaches them.', cost: true },
   ] },
   { shot: 'tab-saved', name: 'Now: reasons to return', marks: [
-    { left: 8, top: 168, width: 374, height: 398, flip: true, title: 'Gain: news comes to them', body: '13% of a range’s buyers take its new shade, against 1% of others.' },
-    { left: 8, top: 578, width: 374, height: 180, flip: true, title: 'Cost: kept items move down', body: 'One scroll further, though each keeps its exact shade or size.', cost: true },
+    { left: 8, top: 154, width: 374, height: 400, flip: true, title: 'Gain: news comes to them', body: '13% of a range’s buyers take its new shade, against 1% of others.' },
+    { left: 8, top: 564, width: 374, height: 194, flip: true, title: 'Cost: kept items move down', body: 'One scroll further, though each keeps its exact shade or size.', cost: true },
   ] },
 ];
 
 const again: Screen[] = [
   { shot: 'buy-by-product', name: 'Option: by product', marks: [
-    { left: 14, top: 192, width: 362, height: 172, flip: true, title: 'Gain: one tap', body: 'One item restocks at its last quantity.' },
-    { left: 14, top: 368, width: 362, height: 346, flip: true, title: 'Cost: item by item', body: 'Repeating a whole order takes many taps.', cost: true },
+    { left: 14, top: 188, width: 362, height: 170, flip: true, title: 'Gain: one tap', body: 'One item restocks at its last quantity.' },
+    { left: 14, top: 364, width: 362, height: 348, flip: true, title: 'Cost: item by item', body: 'Repeating a whole order takes many taps.', cost: true },
   ] },
   { shot: 'tab-buy', name: 'Now: by order', marks: [
-    { left: 12, top: 164, width: 366, height: 210, flip: true, title: 'Gain: whole orders', body: 'Recognised by its pictures, then added in part or whole.' },
-    { left: 223, top: 311, width: 132, height: 52, title: 'Cost: one more step', body: 'A single item needs the order opened first.', cost: true },
+    { left: 12, top: 160, width: 366, height: 208, flip: true, title: 'Gain: whole orders', body: 'Recognised by its pictures, then added in part or whole.' },
+    { left: 221, top: 304, width: 134, height: 54, title: 'Cost: one more step', body: 'A single item needs the order opened first.', cost: true },
   ] },
 ];
 
