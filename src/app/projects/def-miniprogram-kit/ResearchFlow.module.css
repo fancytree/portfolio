@@ -1,10 +1,7 @@
-/* Three steps joined by arrows; each appears in turn. Blue marks what the merchant already buys. Shared case tokens only. */
+/* Three steps joined by arrows. Blue marks what the merchant already buys. Shared case tokens only. */
 .flow { list-style: none; margin: 0; padding: var(--case-space-32) var(--case-space-24); display: flex; flex-direction: column; align-items: center; gap: var(--case-space-64); font-family: var(--case-font-body); }
 .step { position: relative; width: 100%; max-width: 52rem; display: flex; flex-direction: column; gap: var(--case-space-16); }
 .step + .step::before { content: '↓'; position: absolute; bottom: calc(100% + var(--case-space-16)); left: 50%; transform: translateX(-50%); font-size: var(--case-text-24); line-height: 1; color: var(--case-muted); }
-.shown { opacity: 1; transform: none; transition: opacity 0.6s, transform 0.6s; }
-.waiting { opacity: 0; transform: translateY(var(--case-space-16)); }
-.step.shown, .step.waiting { transition: opacity 0.6s, transform 0.6s; }
 .title { margin: 0; display: flex; justify-content: center; align-items: center; gap: var(--case-space-8); font-size: var(--case-text-18); font-weight: var(--case-weight-strong); line-height: 1.3; color: var(--case-ink); text-align: center; }
 .number { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--case-space-24); height: var(--case-space-24); border-radius: 50%; background: var(--case-ink); color: var(--case-white); font-size: var(--case-text-12); }
 .four, .two { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--case-space-16); }
@@ -12,15 +9,13 @@
 .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .card { background: var(--case-white); border: var(--case-border-width) solid var(--case-line); border-radius: var(--case-radius-lg); padding: var(--case-space-16); min-width: 0; }
 .four .card { text-align: center; font-size: var(--case-text-16); line-height: 1.45; color: var(--case-ink); }
-.card em { font-style: normal; font-weight: var(--case-weight-strong); transition: color 0.5s; }
-.marked em { color: var(--case-flow-link); }
+.card em { font-style: normal; font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
 .finding { margin: 0; text-align: center; font-size: var(--case-text-16); font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
 .claim { margin: 0 0 var(--case-space-16); font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
 .bar { display: grid; grid-template-columns: minmax(0, 1fr) 3rem; column-gap: var(--case-space-8); row-gap: var(--case-space-4); align-items: center; margin-top: var(--case-space-8); }
 .barLabel { grid-column: 1 / -1; font-size: var(--case-text-12); line-height: 1.5; color: var(--case-muted); }
 .track { display: block; height: var(--case-space-16); }
-.fill { display: block; width: 0; height: 100%; background: var(--case-faded); border-radius: 0 var(--case-radius-sm) var(--case-radius-sm) 0; transition: width 1.1s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.grown .fill { width: var(--value); }
+.fill { display: block; width: var(--value); height: 100%; background: var(--case-faded); border-radius: 0 var(--case-radius-sm) var(--case-radius-sm) 0; }
 .strongBar .fill { background: var(--case-flow-link); }
 .barValue { text-align: right; font-size: var(--case-text-18); font-weight: var(--case-weight-strong); font-variant-numeric: tabular-nums; color: var(--case-ink); }
 .verdict { margin: 0; text-align: center; background: var(--case-ink); color: var(--case-white); border-radius: var(--case-radius-lg); padding: var(--case-space-24) var(--case-space-16); font-size: var(--case-text-18); line-height: 1.45; }
@@ -30,4 +25,3 @@
   .four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-8); }
   .two { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-8); }
 }
-@media (prefers-reduced-motion: reduce) { .shown, .waiting, .step, .fill, .card em { transition: none; } }
