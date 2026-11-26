@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { CaseButton } from '../../components/case-kit/CaseButton';
 import styles from './CategoryFlow.module.css';
 
 const products = [
@@ -30,6 +29,7 @@ export function CategoryFlow() {
   const [playing, setPlaying] = useState(false);
   const [visible, setVisible] = useState(false);
   const started = useRef(false);
+  const reduced = useRef(false);
 
   /* Starts from the beginning the first time it is seen; people who prefer less motion get the result. */
   useEffect(() => {
@@ -39,7 +39,8 @@ export function CategoryFlow() {
       setVisible(entry.isIntersecting);
       if (entry.isIntersecting && !started.current) {
         started.current = true;
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        reduced.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced.current) return;
         setState({ who: 0, step: 0 });
         setPlaying(true);
       }
@@ -71,67 +72,60 @@ export function CategoryFlow() {
 
   return (
     <div ref={root} className={styles.flow}>
-      <div className={styles.columns}>
-        <section className={styles.column} aria-label="Products">
-          <p className={styles.heading}>Products</p>
-          <ul className={styles.products}>
-            {products.map((p, i) => {
-              const seen = i < step;
-              const match = shared(p, mine).length > 0;
-              return (
-                <li key={p.id} className={`${styles.product} ${current === p ? styles.checking : ''} ${seen ? (match ? styles.inside : styles.outside) : ''}`}>
-                  <Photo id={p.id} name={p.name} />
-                  <span className={styles.detail}>
-                    <span className={styles.name}>{p.name}</span>
-                    <span className={styles.chips}>
-                      {p.categories.map((c) => <span key={c} className={`${styles.chip} ${seen && mine.includes(c) ? styles.hit : ''}`}>{c}</span>)}
-                    </span>
-                    <span className={styles.verdict}>{seen ? (match ? '✓ In For you' : '✕ Not in For you') : '\u00a0'}</span>
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
+      <div className={styles.board}>
+        <p className={styles.heading}>Products</p>
+        {/* The demonstration's own control, styled with the diagram. */}
+        <div className={styles.switch} role="group" aria-label="Choose a merchant" data-case-visual>
+          {merchants.map((m, i) => (
+            <button key={m.name} type="button" className={styles.option} aria-pressed={i === who}
+              onClick={() => { started.current = true; setState({ who: i, step: reduced.current ? DONE : 0 }); setPlaying(!reduced.current); }}>
+              {m.name}
+            </button>
+          ))}
+        </div>
 
-        <section className={styles.column} aria-label="Merchant">
-          <p className={styles.heading}>Merchant</p>
-          <div className={styles.switch} role="group" aria-label="Choose a merchant">
-            {merchants.map((m, i) => (
-              <CaseButton key={m.name} variant="tab" aria-pressed={i === who}
-                onClick={() => { started.current = true; setState({ who: i, step: 0 }); setPlaying(true); }}>
-                {m.name}
-              </CaseButton>
-            ))}
-          </div>
-          <div className={styles.merchant}>
-            <span className={styles.name}>Merchant’s categories</span>
-            <span className={styles.chips}>{mine.map((c) => <span key={c} className={`${styles.chip} ${styles.hit}`}>{c}</span>)}</span>
-          </div>
-          <div className={styles.home}>
+        <ul className={styles.products} aria-label="Products and their categories">
+          {products.map((p, i) => {
+            const seen = i < step;
+            const match = shared(p, mine).length > 0;
+            return (
+              <li key={p.id} className={`${styles.product} ${current === p ? styles.checking : ''} ${seen ? (match ? styles.inside : styles.outside) : ''}`}>
+                <Photo id={p.id} name={p.name} />
+                <span className={styles.detail}>
+                  <span className={styles.name}>{p.name}</span>
+                  <span className={styles.chips}>
+                    {p.categories.map((c) => <span key={c} className={`${styles.chip} ${seen && mine.includes(c) ? styles.hit : ''}`}>{c}</span>)}
+                  </span>
+                </span>
+                <span className={styles.verdict} role="img" aria-label={seen ? (match ? 'In For you' : 'Not in For you') : 'Not compared yet'}>{seen ? (match ? '✓' : '✕') : ''}</span>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className={styles.home}>
+          <div className={styles.tabsBlock}>
             <div className={styles.tabs}>
               <span className={`${styles.tab} ${styles.current}`}>For you</span>
               {mine.map((c) => <span key={`${who}-${c}`} className={`${styles.tab} ${styles.arrive}`}>{c}</span>)}
             </div>
-            {/* Both merchants end with two products, so the two places never move the page. */}
-            <ul className={styles.feed} aria-label="For you">
-              {[0, 1].map((slot) => {
-                const p = added[slot];
-                return (
-                  <li key={p ? `${who}-${p.id}` : `empty-${slot}`} className={p ? styles.arrive : styles.empty}>
-                    {p ? <><Photo id={p.id} name={p.name} /><span className={styles.name}>{p.name}</span></> : null}
-                  </li>
-                );
-              })}
-            </ul>
+            <p className={styles.caption}>The tabs are the merchant’s categories</p>
           </div>
-        </section>
+          {/* Both merchants end with two products, so the two places never move the page. */}
+          <ul className={styles.feed} aria-label="For you">
+            {[0, 1].map((slot) => {
+              const p = added[slot];
+              return (
+                <li key={p ? `${who}-${p.id}` : `empty-${slot}`} className={p ? styles.arrive : undefined}>
+                  {p ? <><Photo id={p.id} name={p.name} /><span className={styles.name}>{p.name}</span></> : <><span className={styles.empty} /><span className={styles.name}>{'\u00a0'}</span></>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
 
-      <div className={styles.footer}>
-        <p className={styles.message} aria-live={playing ? 'off' : 'polite'}>{message}</p>
-        <CaseButton variant="text" onClick={() => setPlaying((p) => !p)}>{playing ? 'Pause' : 'Play'}</CaseButton>
-      </div>
+      <p className={styles.message}>{message}</p>
     </div>
   );
 }
