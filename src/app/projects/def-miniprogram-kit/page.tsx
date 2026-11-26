@@ -5,7 +5,7 @@ import { DecisionCards, ReversalList, type Decision, type Reversal } from '../pr
 import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
 import { ShareBars } from './ResearchCharts';
-import { FileSearch, MessageCircle, PackageSearch } from 'lucide-react';
+import { BadgePercent, FileSearch, MessageCircle, PackageCheck, PackageSearch, RotateCcw, Sparkles } from 'lucide-react';
 import layout from './Compare.module.css';
 import MiniProgramDemo from './MiniProgramDemo';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
@@ -66,7 +66,7 @@ const tabDecision: Decision = {
     { label: 'Five tabs: Categories and Reorder', verdict: 'The brief’s plan. More choices, and reordering still sits beside browsing.' },
     { label: 'Saved takes the slot; categories move into search', verdict: 'Reordering gets a tab of its own. Browsing stays one tap behind the search box.', chosen: true },
   ],
-  evidence: '85% of repeat accounts buy a product again, 99% once they have ordered on four days.',
+  evidence: 'In seven merchant interviews, new items, restocks and offers aside, the path was reordering. 85% of repeat accounts buy a product again.',
   tradeoff: 'Someone who likes to browse the whole tree now goes through search.',
 };
 
@@ -176,10 +176,18 @@ export default function DefMiniProgramKitPage() {
           </div>
         </CaseChapter>
 
-        <CaseChapter label="02 / Research" title="Almost every merchant comes back to what they already buy.">
+        <CaseChapter label="02 / Research" title="Merchants come back for what they already buy, and what is new in it.">
           <CaseProse>
-            <p>I used two sources: an interview with a salesperson, and <strong>six months of sales lines</strong> from the previous system (March to August 2026), for accounts that ordered on two or more days.</p>
+            <p>I used three sources: interviews with <strong>seven merchants</strong>, an interview with a salesperson, and <strong>six months of sales lines</strong> from the previous system (March to August 2026).</p>
+            <p>The merchants came back to four things.</p>
           </CaseProse>
+          <CaseEvidenceCards label="What seven merchants look for" layout="pairs" items={[
+            { icon: <Sparkles />, title: 'New from my brands', body: 'Has a brand I follow brought out something new? → Your ranges flags new shades.' },
+            { icon: <PackageCheck />, title: 'Back in stock', body: 'Has what I needed, and could not get, arrived? → Restock lists what is back and what is still expected.' },
+            { icon: <BadgePercent />, title: 'Offers that matter to me', body: 'Is something I buy regularly on offer, or is there a store-wide deal? → Offers from what you buy in Saved; store-wide deals on home.' },
+            { icon: <RotateCcw />, title: 'Otherwise, reorder', body: 'Beyond those three, the path through the store is buying again. → A tab built for it.' },
+          ]} />
+          <CaseProse><p>A salesperson added what the work looks like from the other side.</p></CaseProse>
           <CaseEvidenceCards label="What the interview showed" items={[
             { icon: <PackageSearch />, title: 'One shade, one listing', body: 'The same product in another colour had to be created as a separate item, and staff found it tedious to look things up. → One product page with a shade sheet.' },
             { icon: <MessageCircle />, title: 'Orders arrive as messages', body: 'Many customers send what they want on WeChat and staff key it in. → Make reordering quick enough to do it themselves.' },
@@ -220,7 +228,7 @@ export default function DefMiniProgramKitPage() {
           ]} />
           <CaseProse>
             <p><strong>And For you leads with the main trade, keeping every other trade one tap away.</strong></p>
-            <p>Limits: six months of data, so shares rise as an account’s history grows. It includes counter and staff-entered orders and cannot isolate the mini program. The old system had no product level, so I grouped codes into products by name. Walk-in sales are excluded, and I have not yet interviewed merchants.</p>
+            <p>Limits: six months of data, so shares rise as an account’s history grows. It includes counter and staff-entered orders and cannot isolate the mini program. The old system had no product level, so I grouped codes into products by name. Walk-in sales are excluded.</p>
           </CaseProse>
         </CaseChapter>
 
@@ -285,13 +293,19 @@ export default function DefMiniProgramKitPage() {
             { title: 'Keep the exact one', body: 'The heart saves one SKU: a shade, size or model, not just the product.' },
             { title: 'Reorder from the tab', body: 'Plus adds it straight to the bag, or opens the sheet when there is a pack size to choose.' },
             { title: 'Go back to a range', body: 'Added after the research: Your ranges lists the lines an account keeps buying, says when one has new shades, and opens them in one tap. It is built from orders, so nothing has to be saved.' },
-            { title: 'Past orders beside it', body: 'Buy again sits in the same tab. Restock and Lists have their place and are still to be designed.' },
+            { title: 'What changed since last time', body: 'Offers on things you buy sit in Saved, and Restock shows what is back. Buy again sits beside them; Lists is still to be designed.' },
           ]} />
           <CaseFigure caption="From a product to the shortlist.">
             <Compare wide label="Save and reorder" items={[
               { shot: 'product-shade', name: '1 · Tap the heart', why: 'In the page header, away from the buy button.', alt: 'Product page with heart' },
               { shot: 'save-sheet', name: '2 · Pick the SKU', why: 'Only SKU options. No quantity, no packaging.' },
               { shot: 'saved', name: '3 · Reorder in Saved', why: 'Your ranges on top, with new shades flagged; saved items below, each with a plus.' },
+            ]} />
+          </CaseFigure>
+          <CaseFigure caption="What merchants check when they come back. Added after the interviews and the order data.">
+            <Compare wide columns={2} label="Saved and Restock" items={[
+              { shot: 'saved', name: 'New and on offer', why: 'New shades in your ranges, then offers on what you buy, then your saved items.' },
+              { shot: 'restock', name: 'Back in stock', why: 'What has arrived can be added at once; what has not shows when it is expected.' },
             ]} />
           </CaseFigure>
           <ReversalList items={savingReversals} />
