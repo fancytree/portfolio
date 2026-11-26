@@ -1,11 +1,9 @@
-/* The earlier page and three current screens, each with one sentence. Shared case tokens only. */
-.row { list-style: none; margin: 0; padding: var(--case-space-24); display: grid; grid-template-columns: repeat(4, minmax(0, 15rem)); justify-content: center; gap: var(--case-space-16); font-family: var(--case-font-body); }
+/* A single screen with one sentence. Shared case tokens only. */
+.row { list-style: none; margin: 0; padding: var(--case-space-24); display: grid; grid-template-columns: repeat(1, minmax(0, 15rem)); justify-content: center; gap: var(--case-space-16); font-family: var(--case-font-body); }
 .column { display: flex; flex-direction: column; gap: var(--case-space-8); min-width: 0; }
 .name { margin: 0; font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
 .shot { border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-line); background: var(--case-white); padding: var(--case-space-4); }
 .shot img { display: block; width: 100%; height: auto; border-radius: var(--case-radius-sm); }
 .line { margin: 0; font-size: var(--case-text-14); line-height: 1.55; color: var(--case-copy); }
 .stat { font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
-.earlier .name { color: var(--case-muted); }
-.earlier .shot { border-style: dashed; border-color: var(--case-faded); background: transparent; }
-@media (max-width: 899px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--case-space-16); gap: var(--case-space-24) var(--case-space-8); } }
+@media (max-width: 899px) { .row { grid-template-columns: minmax(0, 15rem); padding: var(--case-space-16); gap: var(--case-space-24) var(--case-space-8); } }

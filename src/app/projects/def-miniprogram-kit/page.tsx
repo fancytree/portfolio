@@ -10,6 +10,7 @@ import { ShadeHighlight } from './ShadeHighlight';
 import { ResearchFlow } from './ResearchFlow';
 import { SavingCallouts } from './SavingCallouts';
 import { SavedTabs } from './SavedTabs';
+import { SavedTradeoff } from './SavedTradeoff';
 import { FeedCards } from './FeedCards';
 import { HomeCallouts } from './HomeCallouts';
 import MiniProgramDemo from './MiniProgramDemo';
@@ -144,7 +145,10 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="05 / Saved" title="Saved is for coming back, and stays off the buying path.">
           <CaseProse><p>Saved takes the Categories tab’s place and answers the four reasons to return: what is new in my ranges, what is back, what is on offer, and buying again.</p></CaseProse>
-          <CaseFigure caption="The earlier Saved page and what is inside the tab now, on demonstration data. Shares are from order data, March to August 2026.">
+          <CaseFigure caption="Two trade-offs, on demonstration data. Share from order data, March to August 2026.">
+            <SavedTradeoff />
+          </CaseFigure>
+          <CaseFigure caption="Restock, the third tab.">
             <SavedTabs />
           </CaseFigure>
           <CaseProse><p>Merchants need the exact item kept, so saving works per item. But it is not why they are on a product, so nothing sits beside Add to Bag.</p></CaseProse>
@@ -241,7 +245,7 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseClose label="11 / Where it stands" title="Designed, not yet built.">
-          <CaseProse><p>Awaiting development, so there are no results yet. Still open: how Buy again should group past purchases.</p></CaseProse>
+          <CaseProse><p>Awaiting development, so there are no results yet. Still open: how out-of-stock records are created, so Restock can be filled.</p></CaseProse>
           <CaseProse><p>I interviewed merchants and set the direction. Claude analysed the order data and drafted the requirements, screens, component code and this prototype; Codex made the product imagery; the brands are invented. The decisions are mine.</p></CaseProse>
         </CaseClose>
       </CaseKitSections>

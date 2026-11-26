@@ -1,0 +1,9 @@
+/* Two comparisons side by side, divided. Shared case tokens only. */
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); font-family: var(--case-font-body); }
+.group { min-width: 0; padding-top: var(--case-space-24); }
+.group + .group { border-left: var(--case-border-width) solid var(--case-line); }
+.group ul { padding: var(--case-space-16); gap: var(--case-space-16); }
+.head { text-align: center; padding-inline: var(--case-space-16); }
+.title { margin: 0; font-size: var(--case-text-18); font-weight: var(--case-weight-strong); line-height: 1.3; color: var(--case-ink); }
+.line { margin: var(--case-space-4) 0 0; font-size: var(--case-text-14); line-height: 1.5; color: var(--case-copy); }
+@media (max-width: 1099px) { .pair { grid-template-columns: minmax(0, 1fr); } .group + .group { border-left: 0; border-top: var(--case-border-width) solid var(--case-line); } }
