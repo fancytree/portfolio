@@ -1,6 +1,6 @@
 /* Options side by side, the chosen one marked. Shared case tokens only. */
 .grid { list-style: none; margin: 0; padding: var(--case-space-24); display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: var(--case-space-24) var(--case-space-16); align-items: start; }
-.item { display: flex; flex-direction: column; gap: var(--case-space-12); min-width: 0; }
+.item { display: flex; flex-direction: column; gap: var(--case-space-8); min-width: 0; }
 .shot { position: relative; border-radius: var(--case-radius-lg); border: var(--case-border-width) solid var(--case-line); background: var(--case-white); padding: var(--case-space-4); }
 .shot img { display: block; width: 100%; height: auto; border-radius: var(--case-radius-sm); }
 .chosen .shot { outline: 3px solid var(--case-flow-link); outline-offset: 2px; border-color: transparent; }
@@ -12,10 +12,10 @@
 .chosen .why { color: var(--case-ink); }
 @media (max-width: 899px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--case-space-16); } .grid.wide { grid-template-columns: 1fr; } }
 
-/* A few screens on the left, what is wrong with them on the right. */
-.split { display: grid; grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: var(--case-space-32); align-items: start; width: 100%; }
-.split .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: var(--case-space-16); }
-@media (max-width: 899px) { .split { grid-template-columns: 1fr; } }
+/* The previous screens on the left, the problems the redesign takes on to the right. */
+.split { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--case-space-32); align-items: start; width: 100%; }
+.split .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: var(--case-space-16); gap: var(--case-space-16); }
+@media (max-width: 1099px) { .split { grid-template-columns: 1fr; } }
 /* Beside the screens the three points should read as one list. */
-.split > ol { gap: var(--case-space-32); }
-.split > ol > li { gap: var(--case-space-12); }
+.split > ol { gap: var(--case-space-24); }
+.split > ol > li { gap: var(--case-space-8); }

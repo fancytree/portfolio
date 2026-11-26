@@ -153,16 +153,19 @@ export default function DefMiniProgramKitPage() {
             <p>DEF sells to merchants: salons, barbers, nail studios, spas. The first mini program had the structure of a consumer shop. It opened on a category grid and a promotion, gave browsing a tab of its own, and showed every visitor the same thing. It <a href="/projects/def-erp-kit">kept the look salons already knew</a> so it could launch quickly. This redesign takes up what that decision postponed.</p>
           </CaseProse>
           <div className={layout.split}>
-            <CaseFigure caption="Before · Home and the Categories tab, on demonstration data.">
-              <Compare columns={2} label="Previous home and categories" items={[
-                { shot: 'before-home', name: 'Home: eight category icons' },
-                { shot: 'before-catalog', name: 'Categories: a whole tab' },
+            <CaseFigure caption="Before · Home, the Categories tab and a product page, on demonstration data.">
+              <Compare columns={3} label="Previous home, categories and product page" items={[
+                { shot: 'before-home', name: 'Home' },
+                { shot: 'before-catalog', name: 'Categories' },
+                { shot: 'before-product', name: 'Product' },
               ]} />
             </CaseFigure>
             <CaseSteps items={[
-              { title: 'Everyone sees everything', body: 'Home opens on eight categories with equal weight: nails, lashes, hair removal, hair, beauty, furniture, sterilisation, consumables. A merchant buys within a trade, so a nail studio walks past most of them.' },
-              { title: 'Finding means browsing', body: 'A whole tab is given to the category tree, in Chinese inside an otherwise English interface. Even something bought many times is reached from the top.' },
-              { title: 'No shortlist', body: 'Past orders sat in the account, but there was no place for the exact products a business keeps buying.' },
+              { title: 'Everyone sees everything', body: 'Home opens on eight categories with equal weight, though a merchant buys within a trade. → For you, by business type (02).' },
+              { title: 'Finding means browsing', body: 'A whole tab goes to the category tree, and every visit starts from the top. → Search and filters (03).' },
+              { title: 'No shortlist', body: 'Past orders sit in the account, with no place for the exact products a business keeps buying. → A Saved tab (04).' },
+              { title: 'One page shape for every product', body: 'Built around a capacity button and a quantity bar, with no key facts up front and no room for shades, models or pack units. → A new product page and an adaptive sheet (08, 09).' },
+              { title: 'Red competes with the products', body: 'A strong brand colour around many brands of packaging. → Black, white and grey (06).' },
             ]} />
           </div>
         </CaseChapter>
