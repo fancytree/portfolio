@@ -157,17 +157,17 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="06 / Choosing" title="Several shades, taken in one go.">
-          <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So a long range is listed in parts, and the picker collects several shades before adding them.</p></CaseProse>
-          <CaseFigure caption="Several shades of one range, on demonstration data.">
+        <CaseChapter label="06 / Choosing" title="One shade at a time, with the running total in view.">
+          <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So a long range is listed in parts, and after each add the merchant sees what this product has put in the bag.</p></CaseProse>
+          <CaseFigure caption="One range, one shade at a time, on demonstration data.">
             <ShadeCallouts />
           </CaseFigure>
-          <CaseFigure caption="How I got there. I first chose one shade at a time; the order data brought the bulk grid back.">
+          <CaseFigure caption="How I got there. Each shade and its quantity are confirmed one at a time, so I kept the photo cards.">
             <Compare label="Shade selectors" items={[
               { shot: 'swatch-preview', name: 'Large preview', why: 'The other colours become dots that are hard to compare.' },
               { shot: 'swatch-compare', name: 'Side by side', why: 'An extra screen for a routine order.' },
-              { shot: 'swatch-cards', name: 'Photo cards', tag: 'First choice', why: 'Real colour, but one shade at a time.' },
-              { shot: 'swatch-bulk', name: 'Bulk grid', chosen: true, why: 'Several shades with quantities: the base of the final picker.' },
+              { shot: 'swatch-bulk', name: 'Bulk grid', why: 'Several shades at once, so no shade and quantity is confirmed on its own.' },
+              { shot: 'swatch-cards', name: 'Photo cards', chosen: true, why: 'Real colour, one shade at a time: the base of the final sheet.' },
             ]} />
           </CaseFigure>
           <CaseFigure caption="One sheet, shaped by the product’s attributes.">
