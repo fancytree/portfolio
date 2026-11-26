@@ -70,7 +70,7 @@ const items: ShowcaseItem[] = [
   {
     title: 'Save for later',
     lead: 'Saving is a side path.',
-    body: 'The heart opens its own sheet with SKU options only. The saved shade shows up under Saved.',
+    body: 'The heart opens its own sheet with SKU options only. In Saved, a range you buy opens straight to its shades.',
     seconds: 12, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoProductShade`,
     script: async (h) => {
       h.say('Save');
@@ -84,7 +84,9 @@ const items: ShowcaseItem[] = [
       await h.click(h.find('#over a[aria-label="Close"]'));
       await h.wait(700);
       await h.click(h.find('#jump button', 'Saved'));
-      await h.wait(2000);
+      await h.wait(1800);
+      await h.click(h.find('#base a', 'Choose shade'));
+      await h.wait(1800);
     },
   },
   {

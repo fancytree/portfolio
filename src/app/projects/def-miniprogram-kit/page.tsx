@@ -4,17 +4,21 @@ import CaseStudyControls from '../../components/case-kit/CaseKitControls';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
 import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
+import { ShareBars } from './ResearchCharts';
+import { FileSearch, MessageCircle, PackageSearch } from 'lucide-react';
 import layout from './Compare.module.css';
 import MiniProgramDemo from './MiniProgramDemo';
 import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 import {
   CaseChapter,
   CaseClose,
+  CaseEvidenceCards,
   CaseFigure,
   CaseHero,
   CaseKitPage,
   CaseKitSections,
   CaseProse,
+  CaseStats,
   CaseSteps,
 } from '../../components/case-kit/CaseKit';
 
@@ -27,18 +31,19 @@ export const metadata: Metadata = {
 
 const navLabels = [
   '01 / The problem',
-  '02 / For you',
-  '03 / Finding products',
-  '04 / Why Saved',
-  '05 / Try it',
-  '06 / Look',
-  '07 / Feed rhythm',
-  '08 / Choosing a product',
-  '09 / Product page',
-  '10 / Paying',
-  '11 / Less weight',
-  '12 / Working with AI',
-  '13 / Where it stands',
+  '02 / Research',
+  '03 / For you',
+  '04 / Finding products',
+  '05 / Why Saved',
+  '06 / Try it',
+  '07 / Look',
+  '08 / Feed rhythm',
+  '09 / Choosing a product',
+  '10 / Product page',
+  '11 / Paying',
+  '12 / Less weight',
+  '13 / Working with AI',
+  '14 / Where it stands',
 ];
 
 const homeDecision: Decision = {
@@ -49,6 +54,7 @@ const homeDecision: Decision = {
     { label: 'Make each merchant pick one trade first', verdict: 'Hides products the business may also need.' },
     { label: 'For you first, other trades one tap away', verdict: 'Relevant by default, with nothing locked away.', chosen: true },
   ],
+  evidence: '69% of repeat accounts spend at least 80% in one trade, but only 26% never leave it.',
   tradeoff: 'The first version recommends by rules, so it is only as good as the business type on file.',
 };
 
@@ -60,6 +66,7 @@ const tabDecision: Decision = {
     { label: 'Five tabs: Categories and Reorder', verdict: 'The brief’s plan. More choices, and reordering still sits beside browsing.' },
     { label: 'Saved takes the slot; categories move into search', verdict: 'Reordering gets a tab of its own. Browsing stays one tap behind the search box.', chosen: true },
   ],
+  evidence: '85% of repeat accounts buy a product again, 99% once they have ordered on four days.',
   tradeoff: 'Someone who likes to browse the whole tree now goes through search.',
 };
 
@@ -161,15 +168,55 @@ export default function DefMiniProgramKitPage() {
               ]} />
             </CaseFigure>
             <CaseSteps items={[
-              { title: 'Everyone sees everything', body: 'Home opens on eight categories with equal weight, though a merchant buys within a trade. → For you, by business type (02).' },
-              { title: 'Finding means browsing', body: 'A whole tab goes to the category tree, and every visit starts from the top. → Search and filters (03).' },
-              { title: 'No shortlist', body: 'Past orders sit in the account, with no place for the exact products a business keeps buying. → A Saved tab (04).' },
-              { title: 'One page shape for every product', body: 'Built around a capacity button and a quantity bar, with no key facts up front and no room for shades, models or pack units. → A new product page and an adaptive sheet (08, 09).' },
+              { title: 'Everyone sees everything', body: 'Home opens on eight categories with equal weight, though most of a merchant’s spend sits in one trade. → For you, by business type (03).' },
+              { title: 'Finding means browsing', body: 'A whole tab goes to the category tree, and every visit starts from the top. → Search and filters (04).' },
+              { title: 'No shortlist', body: 'Past orders sit in the account, with no place for the exact products a business keeps buying. → A Saved tab (05).' },
+              { title: 'One page shape for every product', body: 'Built around a capacity button and a quantity bar, with no key facts up front and no room for shades, models or pack units. → A new product page and an adaptive sheet (09, 10).' },
             ]} />
           </div>
         </CaseChapter>
 
-        <CaseChapter label="02 / For you" title="From a category grid to For you.">
+        <CaseChapter label="02 / Research" title="Almost every merchant comes back to what they already buy.">
+          <CaseProse>
+            <p>I used two sources: an interview with a salesperson, and <strong>six months of sales lines</strong> from the previous system (March to August 2026), for accounts that ordered on two or more days.</p>
+          </CaseProse>
+          <CaseEvidenceCards label="What the interview showed" items={[
+            { icon: <PackageSearch />, title: 'One shade, one listing', body: 'The same product in another colour had to be created as a separate item, and staff found it tedious to look things up. → One product page with a shade sheet.' },
+            { icon: <MessageCircle />, title: 'Orders arrive as messages', body: 'Many customers send what they want on WeChat and staff key it in. → Make reordering quick enough to do it themselves.' },
+            { icon: <FileSearch />, title: 'Money checked in four places', body: 'Payments were matched across the old system, chat, invoices and bank transfers. → Receipt and review live on the order.' },
+          ]} />
+          <CaseStats items={[
+            { value: '85%', label: 'Of repeat accounts bought the same product again; 99% of those with four or more order days' },
+            { value: '73%', label: 'Of account orders were return visits' },
+            { value: '87%', label: 'Of account sales came from accounts that ordered more than once' },
+          ]} />
+          <CaseFigure caption="Established accounts: items in August orders from accounts with six or more earlier order days. Across all return visits, including accounts only a few weeks old, the same-product share is 47%.">
+            <ShareBars title="How much of an order has been bought before" rows={[
+              { label: 'Same item, same shade', value: 42 },
+              { label: 'Same product, any shade', value: 75, key: true },
+              { label: 'Same brand', value: 94 },
+            ]} />
+          </CaseFigure>
+          <CaseFigure caption="The same orders, polish, gel and hair dye only. Only one item in ten comes from a range the account had not bought.">
+            <ShareBars title="When an established merchant buys a colour" rows={[
+              { label: 'New shade from a range they buy', value: 54, key: true },
+              { label: 'A shade they bought before', value: 36 },
+              { label: 'A range new to them', value: 10 },
+            ]} />
+          </CaseFigure>
+          <CaseProse><p><strong>So reordering earns its own tab, one product holds all its shades, and the way back is organised by range as well as by exact item.</strong></p></CaseProse>
+          <CaseStats items={[
+            { value: '69%', label: 'Of repeat accounts put at least 80% of their spend into one trade' },
+            { value: '26%', label: 'Buy from only one trade; the rest also cross into others' },
+            { value: '80%', label: 'Have nails as their main trade; hair 14%, hair removal 6%' },
+          ]} />
+          <CaseProse>
+            <p><strong>And For you leads with the main trade, keeping every other trade one tap away.</strong></p>
+            <p>Limits: six months of data, so shares rise as an account’s history grows. It includes counter and staff-entered orders and cannot isolate the mini program. The old system had no product level, so I grouped codes into products by name. Walk-in sales are excluded, and I have not yet interviewed merchants.</p>
+          </CaseProse>
+        </CaseChapter>
+
+        <CaseChapter label="03 / For you" title="From a category grid to For you.">
           <CaseProse>
             <p>The home page now starts from the merchant. Business verification asks for the <strong>main business type</strong> and any additional services, and For you is built from that answer. It can be changed later.</p>
           </CaseProse>
@@ -194,7 +241,7 @@ export default function DefMiniProgramKitPage() {
           </CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="03 / Finding products" title="Without the grid, everything still has to be findable.">
+        <CaseChapter label="04 / Finding products" title="Without the grid, everything still has to be findable.">
           <CaseProse>
             <p>The old grid mixed <strong>who a product is for</strong> (nails, hair) with <strong>what it is</strong> (furniture, consumables). I separated the questions and gave each its own way in.</p>
           </CaseProse>
@@ -214,9 +261,9 @@ export default function DefMiniProgramKitPage() {
           <CaseProse><p>When nothing matches, the page suggests other words, nearby categories and a way to reach support. I cut photo search: it cost too much to build well for what it would give.</p></CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="04 / Why Saved" title="Why the second tab is Saved, not Categories.">
+        <CaseChapter label="05 / Why Saved" title="Why the second tab is Saved, not Categories.">
           <CaseProse>
-            <p>A tab is for what someone comes back to do. A business knows its trade and restocks many of the same products, so walking a category tree is the occasional job. With For you handling relevance and search handling lookup, a Categories tab would repeat both. That frees its slot for <strong>the merchant’s own shortlist</strong>.</p>
+            <p>A tab is for what someone comes back to do. <strong>85% of repeat accounts buy the same product again</strong>, and almost all do once they have ordered four times. Browsing still matters, mostly for new shades and items inside familiar brands, and For you and search can carry it. A Categories tab would repeat both, so its slot goes to <strong>the merchant’s own shortlist</strong>.</p>
           </CaseProse>
           <CaseFigure caption="Tab bar, before and after.">
             <Compare wide columns={2} label="Tab bar before and after" items={[
@@ -229,13 +276,14 @@ export default function DefMiniProgramKitPage() {
             { title: 'Find it once', body: 'Through For you or search.' },
             { title: 'Keep the exact one', body: 'The heart saves one SKU: a shade, size or model, not just the product.' },
             { title: 'Reorder from the tab', body: 'Plus adds it straight to the bag, or opens the sheet when there is a pack size to choose.' },
+            { title: 'Go back to a range', body: 'Added after the research: Your ranges lists the lines an account keeps buying, and one tap opens the shades. It is built from orders, so nothing has to be saved.' },
             { title: 'Past orders beside it', body: 'Buy again sits in the same tab. Restock and Lists have their place and are still to be designed.' },
           ]} />
           <CaseFigure caption="From a product to the shortlist.">
             <Compare wide label="Save and reorder" items={[
               { shot: 'product-shade', name: '1 · Tap the heart', why: 'In the page header, away from the buy button.', alt: 'Product page with heart' },
               { shot: 'save-sheet', name: '2 · Pick the SKU', why: 'Only SKU options. No quantity, no packaging.' },
-              { shot: 'saved', name: '3 · Reorder in Saved', why: 'Every card is one exact item with its price and a plus.' },
+              { shot: 'saved', name: '3 · Reorder in Saved', why: 'Your ranges on top for a new shade; saved items below, each with a plus.' },
             ]} />
           </CaseFigure>
           <ReversalList items={savingReversals} />
@@ -245,15 +293,15 @@ export default function DefMiniProgramKitPage() {
               { shot: 'sheet-serum', name: 'Buy sheet without it', chosen: true, why: 'Nothing sits next to Add to Bag.', alt: 'Buy sheet without a heart' },
             ]} />
           </CaseFigure>
-          <CaseProse><p>That merchants reorder more than they browse is the assumption under this decision. It still has to be checked against usage once the redesign is live.</p></CaseProse>
+          <CaseProse><p>The orders behind these figures include counter sales. How often merchants use Saved and Your ranges in the mini program is the thing to check once it is live.</p></CaseProse>
         </CaseChapter>
 
-        <CaseChapter label="05 / Try it" title="Use the redesign.">
+        <CaseChapter label="06 / Try it" title="Use the redesign.">
           <CaseProse><p>Five tours play in turn. <strong>Move your pointer into the frame to take over</strong>: switch trades, search, add products, save a shade, check out and pay. Names, prices and orders are demonstration data.</p></CaseProse>
           <MiniProgramDemo />
         </CaseChapter>
 
-        <CaseChapter label="06 / Look" title="The products bring the colour.">
+        <CaseChapter label="07 / Look" title="The products bring the colour.">
           <CaseFigure caption="Round 1 · Three directions on the same content.">
             <Compare wide label="Home directions" items={[
               { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
@@ -278,7 +326,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="07 / Feed rhythm" title="Order first, variety last.">
+        <CaseChapter label="08 / Feed rhythm" title="Order first, variety last.">
           <CaseProse>
             <p>I explored many card types: products, collections, brands, video, articles and volume offers. A feed where every card has a different height looked chaotic and refused to line up.</p>
             <p>So the top of the feed runs <strong>fixed modules with full-width and aligned rows</strong>. The uneven two-column mix only appears at the very bottom, where nothing has to align after it.</p>
@@ -292,7 +340,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="08 / Choosing a product" title="One sheet that adapts to what is being sold.">
+        <CaseChapter label="09 / Choosing a product" title="One sheet that adapts to what is being sold.">
           <CaseFigure caption="How should someone pick a shade? Almost every product in the ERP already has an image per option.">
             <Compare label="Shade selectors" items={[
               { shot: 'swatch-preview', name: 'Large preview', why: 'One colour is huge; the others become small dots that are hard to compare.' },
@@ -324,7 +372,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="09 / Product page" title="One scroll, no inner pages.">
+        <CaseChapter label="10 / Product page" title="One scroll, no inner pages.">
           <CaseProse>
             <p>Everything a buyer needs sits on one page. Four or five facts they care about, such as material or the share of a key ingredient, come right under the price. The long product image tells the rest.</p>
           </CaseProse>
@@ -349,7 +397,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="10 / Paying" title="No online payment, so the order has to explain itself.">
+        <CaseChapter label="11 / Paying" title="No online payment, so the order has to explain itself.">
           <CaseProse>
             <p>Merchants place the order first, pay by their own method, upload the receipt and wait for finance to check it. Balance is deducted at checkout. Customers with payment terms receive goods and pay later.</p>
           </CaseProse>
@@ -376,7 +424,7 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
         </CaseChapter>
 
-        <CaseChapter label="11 / Less weight" title="Many of my review notes asked for less.">
+        <CaseChapter label="12 / Less weight" title="Many of my review notes asked for less.">
           <ReversalList items={chromeReversals} />
           <CaseFigure caption="The tab bar, four versions.">
             <Compare wide columns={2} label="Tab bar versions" items={[
@@ -393,14 +441,14 @@ export default function DefMiniProgramKitPage() {
           ]} />
         </CaseChapter>
 
-        <CaseChapter label="12 / Working with AI" title="AI drafted. I decided.">
+        <CaseChapter label="13 / Working with AI" title="AI drafted. I decided.">
           <CaseProse>
             <p>Claude drafted the requirements document from my first version, and generated the screens, the component code, the motion and this prototype. Codex generated the product photography. The brands in these screens are made up for the design.</p>
             <p>My work was framing the problem, giving direction, reviewing on the canvas and rejecting what was wrong. The sliding tab pill, the volume price table and the heart beside the buy button all made it into a draft. I removed each of them.</p>
           </CaseProse>
         </CaseChapter>
 
-        <CaseClose label="13 / Where it stands" title="Designed, not yet built.">
+        <CaseClose label="14 / Where it stands" title="Designed, not yet built.">
           <CaseProse>
             <p>The redesign is waiting for development, so there are no results to report yet.</p>
             <p>One question is still open: how Buy again should work.</p>
