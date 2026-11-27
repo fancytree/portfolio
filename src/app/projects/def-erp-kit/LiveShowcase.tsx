@@ -7,8 +7,7 @@ import styles from './DesignSystemShowcase.module.css';
 
 export type ShowcaseItem = {
   title: string;
-  /** A second heading above the description, for cases that use one. */
-  lead?: string;
+  /** What the visitor can do and gain. In a string, wrap the point to notice in **double asterisks**. */
   body: ReactNode;
   /** First-run estimate of the script's length in seconds; later runs use the measured length. */
   seconds?: number;
@@ -19,6 +18,11 @@ export type ShowcaseItem = {
   /** Start from a freshly loaded page. Without it, a step on the same page carries on from where the last one stopped. */
   fresh?: boolean;
 };
+
+/** Odd segments of a string sit between ** markers; other content passes through. */
+const emphasise = (body: ReactNode) => typeof body === 'string'
+  ? body.split('**').map((part, n) => (n % 2 ? <strong key={n}>{part}</strong> : part))
+  : body;
 
 /** A list of modules on the left; the real page on the right, played one module at a time. */
 export default function LiveShowcase({ items, src, label, title, baseWidth, ready, prepare, storage }: {
@@ -61,8 +65,7 @@ export default function LiveShowcase({ items, src, label, title, baseWidth, read
               </CaseButton>
               {on ? (
                 <div className={styles.copy}>
-                  {entry.lead ? <p className={styles.lead}>{entry.lead}</p> : null}
-                  <p className={styles.body}>{entry.body}</p>
+                  <p className={styles.body}>{emphasise(entry.body)}</p>
                 </div>
               ) : null}
             </li>

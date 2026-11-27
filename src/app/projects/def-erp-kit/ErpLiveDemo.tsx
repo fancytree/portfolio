@@ -28,8 +28,8 @@ const pickLabel = (h: Helpers, text: string) => h.all('.menu-pop label').find((l
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Select products', lead: 'One search, two ways to add.', seconds: 20, src: NEW_SALES, ready: 'table input', fresh: true,
-    body: 'Broad search groups shades; an exact match adds the SKU.',
+    title: "Find it in one search", seconds: 20, src: NEW_SALES, ready: 'table input', fresh: true,
+    body: "Type what you remember. **Browse every shade** or jump straight to the exact item, and keep building your order.",
     script: async (h) => {
       h.say('“lacquer”: grouped by product');
       const search = h.find('input[aria-label="Find a product"]');
@@ -64,8 +64,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Place the order', lead: 'Payment and pickup in one step.', seconds: 18, src: NEW_SALES, ready: 'table input', fresh: true,
-    body: 'Payment and pickup are asked once, at save.',
+    title: "Finish in one go", seconds: 18, src: NEW_SALES, ready: 'table input', fresh: true,
+    body: "Choose payment and pickup **just once, as you save**, and get back to your customer.",
     script: async (h) => {
       h.say('Saving needs a salesperson');
       await h.click(h.find('button', 'Save'));
@@ -92,8 +92,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Manage the order', lead: 'One record for every role.', seconds: 12, src: NEW_ORDER, ready: 'h1', fresh: true,
-    body: 'Shipping and payment tracked apart.',
+    title: "Know where it stands", seconds: 12, src: NEW_ORDER, ready: 'h1', fresh: true,
+    body: "Open one record to check **shipping and payment at a glance**, whatever your role.",
     script: async (h) => {
       const leaf = (t: string) => h.all('span, div, p').find((e) => e.childElementCount === 0 && e.textContent?.trim() === t)!;
       h.say('Shipping and payment apart');
@@ -117,8 +117,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Arrange a delivery', lead: 'Pickup or courier.', seconds: 20, src: NEW_ORDER, ready: 'h1', fresh: true,
-    body: 'Each method asks only what it needs.',
+    title: "Send it your way", seconds: 20, src: NEW_ORDER, ready: 'h1', fresh: true,
+    body: "Pick pickup or courier. You **only fill in what your choice needs**.",
     script: async (h) => {
       const dlg = '[role="dialog"][data-state="open"]';
       await h.click(h.find('[role="tab"]', 'Deliveries'));
@@ -181,8 +181,8 @@ function collapseNewSidebar(doc: Document) {
 
 const purchasing: ShowcaseItem[] = [
   {
-    title: 'Draft the order', lead: 'Edit lines in place.', seconds: 21, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
-    body: 'Stock and sales beside each line.',
+    title: "Shape your order", seconds: 21, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
+    body: "Change quantities right on the line, with **stock and sales beside you** so you can buy with confidence.",
     script: async (h) => {
       h.say('Sales guide quantities');
       await h.click(h.find('button[role="combobox"]'));
@@ -216,8 +216,8 @@ const purchasing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Add a new product', lead: 'Not in the library yet.', seconds: 18, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
-    body: 'A manual line now, its SKU later.',
+    title: "Order something new", seconds: 18, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
+    body: "Not in your library yet? **Add it by hand and keep going.** Create its product record later.",
     script: async (h) => {
       h.say('Not in the library yet');
       await h.click(h.find('button', 'Add product'));
@@ -244,8 +244,8 @@ const purchasing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Confirm with the supplier', lead: 'Differences on each line.', seconds: 24, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
-    body: 'The PDF is read; differences are marked.',
+    title: "Catch every change", seconds: 24, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
+    body: "Upload the supplier’s PDF and **see what differs, line by line**, without checking by eye.",
     script: async (h) => {
       h.say('Draft, grouped by product');
       await h.click(h.find('tbody button[aria-expanded]', 'Reinforced bonder'));
@@ -277,8 +277,8 @@ const purchasing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Receive the goods', lead: 'Delivery note against confirmation.', seconds: 13, src: NEW_INBOUND, ready: 'tbody button[aria-expanded]', fresh: true,
-    body: 'Delivery note checked against the order.',
+    title: "Check what was sent", seconds: 13, src: NEW_INBOUND, ready: 'tbody button[aria-expanded]', fresh: true,
+    body: "Compare the delivery note with your order and **spot gaps before they reach your stock**.",
     script: async (h) => {
       h.say('Upload the delivery note');
       await h.click(h.find('button', 'Upload DDT'));
@@ -299,8 +299,8 @@ const purchasing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Decide line by line', lead: 'Return, gift or stock in.', seconds: 13, src: `${NEW_INBOUND}&state=ddt`, ready: 'tbody button[aria-expanded]', fresh: true,
-    body: 'Unconfirmed goods: return, gift or stock.',
+    title: "You make the call", seconds: 13, src: `${NEW_INBOUND}&state=ddt`, ready: 'tbody button[aria-expanded]', fresh: true,
+    body: "Got something you never confirmed? **Return it, keep it as a gift, or stock it in.**",
     script: async (h) => {
       h.say('Arrived, but never confirmed');
       await h.zoom(h.find('tbody p', 'Not on confirmation'), 1.8);
@@ -328,8 +328,8 @@ const purchasing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Close what is still open', lead: 'Wait, delay, close or return.', seconds: 17, src: `${NEW_INBOUND}&state=received`, ready: 'tbody button[aria-expanded]', fresh: true,
-    body: 'Wait, delay, close or return the rest.',
+    title: "Leave nothing hanging", seconds: 17, src: `${NEW_INBOUND}&state=received`, ready: 'tbody button[aria-expanded]', fresh: true,
+    body: "For anything still missing, **wait, flag a delay, close it, or return it**. You always know what is open.",
     script: async (h) => {
       h.say('Some lines didn\'t arrive');
       await h.zoom(h.find('tbody p', 'Not on DDT'), 1.8);
@@ -375,8 +375,8 @@ const DLG = '[role="dialog"]';
 
 const invoicing: ShowcaseItem[] = [
   {
-    title: 'See what to invoice', lead: 'Paid orders, waiting for an invoice.', seconds: 18, src: INVOICES, ready: 'tbody tr', fresh: true,
-    body: 'Start from orders, not a blank invoice.',
+    title: "Start with what’s due", seconds: 18, src: INVOICES, ready: 'tbody tr', fresh: true,
+    body: "See **which paid orders still need an invoice**, and start from them instead of a blank form.",
     script: async (h) => {
       h.say('What\'s waiting');
       await h.zoom(h.find('p', 'Orders to invoice'), 1.6);
@@ -404,8 +404,8 @@ const invoicing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Combine orders', lead: 'Several orders, one invoice.', seconds: 15, src: COMPOSE, ready: '#invoice-total', fresh: true,
-    body: 'Lines, prices and tax come pre-filled.',
+    title: "Bill once, not many times", seconds: 15, src: COMPOSE, ready: '#invoice-total', fresh: true,
+    body: "Select several orders and get **one invoice with lines, prices, and tax filled in** for you.",
     script: async (h) => {
       h.say('Orders already loaded');
       await h.hover(h.find(`${DLG} span`, 'OUT-2026-001248'));
@@ -434,8 +434,8 @@ const invoicing: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Preview and issue', lead: 'As the tax office reads it.', seconds: 16, src: COMPOSE, ready: '#invoice-total',
-    body: 'Italian format, checked once, then issued.',
+    title: "Issue it with confidence", seconds: 16, src: COMPOSE, ready: '#invoice-total',
+    body: "Preview the invoice **in the Italian tax format**, check it once, then send it.",
     script: async (h) => {
       const back = h.all(`${DLG} button`).find((b) => b.textContent?.trim() === 'Back to edit');
       if (!back) {
@@ -508,8 +508,8 @@ const followInPhone = async (h: Helpers) => {
 
 const builder: ShowcaseItem[] = [
   {
-    title: 'Edit a module', lead: 'Edit right, see it on the phone.', seconds: 18, src: BUILDER, ready: PHONE, fresh: true,
-    body: 'The phone preview is the real mini-program.',
+    title: "See changes as you make them", seconds: 18, src: BUILDER, ready: PHONE, fresh: true,
+    body: "Edit on the right and **watch your real mini-program update** on the phone.",
     script: async (h) => {
       h.say('The real mini-program');
       await h.hover(h.find(PHONE));
@@ -536,8 +536,8 @@ const builder: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Add a module', lead: 'Search the catalogue to fill it.', seconds: 19, src: BUILDER, ready: PHONE, fresh: true,
-    body: 'Search the catalogue to fill it.',
+    title: "Build your storefront", seconds: 19, src: BUILDER, ready: PHONE, fresh: true,
+    body: "Add the block you want, then **search your catalogue to fill it**.",
     script: async (h) => {
       h.say('Add a collection');
       await h.click(addOrSelect(h, 'Product collection'));
@@ -567,8 +567,8 @@ const builder: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Arrange and publish', lead: 'Reorder, preview, publish.', seconds: 26, src: BUILDER, ready: PHONE, fresh: true,
-    body: 'Reorder, preview, publish.',
+    title: "Make it yours, then go live", seconds: 26, src: BUILDER, ready: PHONE, fresh: true,
+    body: "Drag blocks into order, **preview what shoppers will see**, and publish when you are happy.",
     script: async (h) => {
       h.say('Reorder shortcuts');
       await h.click(h.find(`${LIB} button`, 'Quick links'));
@@ -601,8 +601,8 @@ const builder: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Promote products', lead: 'Campaigns, a hero product, reorders.', seconds: 18, src: BUILDER, ready: PHONE, fresh: true,
-    body: 'Campaigns, a hero product, reorders.',
+    title: "Bring shoppers back", seconds: 18, src: BUILDER, ready: PHONE, fresh: true,
+    body: "Spotlight a hero product, run a campaign, and **make reordering easy** for your customers.",
     script: async (h) => {
       h.say('Add campaign products');
       await h.click(addOrSelect(h, 'Marketing campaign'));
@@ -633,8 +633,8 @@ const builder: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Link customer accounts', lead: 'One code binds WeChat to the ERP.', seconds: 10, src: ACCOUNTS, ready: '[role="tab"]', fresh: true,
-    body: 'A one-time code links WeChat to the ERP.',
+    title: "Connect your customers", seconds: 10, src: ACCOUNTS, ready: '[role="tab"]', fresh: true,
+    body: "Share a one-time code so a customer’s **WeChat and business account become one**.",
     script: async (h) => {
       h.say('Pick the customer');
       await h.click(h.find('[role="tab"]', 'Bellezza Milano'));

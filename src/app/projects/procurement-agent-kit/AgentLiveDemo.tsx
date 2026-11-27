@@ -23,8 +23,8 @@ function collapseSidebar(doc: Document) {
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Spot what to buy', lead: 'The agent finds it first.', seconds: 14, src: WORKSPACE, ready: CARDS, fresh: true,
-    body: 'Supplier cards say when to order and what the goods cover.',
+    title: "Never miss a reorder", seconds: 14, src: WORKSPACE, ready: CARDS, fresh: true,
+    body: "Open your workspace to see **which supplier to order from, when**, and how long the goods will last.",
     script: async (h) => {
       h.say('Checked every weekday at 09:00');
       const card = h.find(CARDS);
@@ -41,8 +41,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Ask for a plan', lead: 'Supplier and coverage, nothing more.', seconds: 16, src: WORKSPACE, ready: CARDS, fresh: true,
-    body: 'Progress shows in the panel while the table fills in.',
+    title: "Just say what you need", seconds: 16, src: WORKSPACE, ready: CARDS, fresh: true,
+    body: "Name a supplier and how long to cover. **Your plan fills in while you watch.**",
     script: async (h) => {
       h.say('Or ask in your own words');
       await h.click(h.find('button', 'Ask agent'));
@@ -62,8 +62,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Check the reasoning', lead: 'Every line explains itself.', seconds: 17, src: DRAFT, ready: TABLE, fresh: true,
-    body: 'Edit in place. Supplier terms keep their own place.',
+    title: "Trust it because you can check", seconds: 17, src: DRAFT, ready: TABLE, fresh: true,
+    body: "**Open any line to see why**, change what you know better, and keep supplier terms close by.",
     script: async (h) => {
       h.say('Ask why, on the line');
       await h.click(h.find(TABLE, 'Reinforced bonder'));
@@ -86,8 +86,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Review the confirmation', lead: 'Exceptions first, then a person decides.', seconds: 22, src: DRAFT, ready: TABLE, fresh: true,
-    body: 'Approving is not ordering.',
+    title: "Focus on what changed", seconds: 22, src: DRAFT, ready: TABLE, fresh: true,
+    body: "Go straight to the exceptions and decide. **Nothing is ordered until you do it.**",
     script: async (h) => {
       h.say('Upload the supplier confirmation');
       await h.click(h.find('button', 'Upload confirmation'));
@@ -112,8 +112,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Receive with the agent', lead: 'DDT, counts and differences.', seconds: 22, src: ORDERED, ready: TABLE, fresh: true,
-    body: 'Stock-in uses what the warehouse counted.',
+    title: "Count once, stock right", seconds: 22, src: ORDERED, ready: TABLE, fresh: true,
+    body: "Compare the delivery note with your count. **Your stock reflects what really arrived.**",
     script: async (h) => {
       h.say('Upload the delivery note');
       await h.click(h.find('button', 'Upload DDT'));
@@ -140,8 +140,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Learn from the order', lead: 'Reviewed before it becomes memory.', seconds: 14, src: RECEIVED, ready: TABLE, fresh: true,
-    body: 'Nothing is saved until the buyer chooses.',
+    title: "Teach it what matters", seconds: 14, src: RECEIVED, ready: TABLE, fresh: true,
+    body: "**Choose what to remember** from this order. Nothing is saved without your say.",
     script: async (h) => {
       h.say('Compare the plan with what happened');
       await h.click(h.find('button', 'Review this order'));
@@ -178,8 +178,8 @@ const SCORE_TILE = 'button[title="Why this score"]';
 
 const evaluation: ShowcaseItem[] = [
   {
-    title: 'Review before the next plan', lead: 'The agent compares; the buyer explains.', seconds: 38, src: V1, ready: CARDS, fresh: true,
-    body: 'Rate three dimensions, then name products in plain words. Skippable, but never counted then.',
+    title: "Make the next plan better", seconds: 38, src: V1, ready: CARDS, fresh: true,
+    body: "Rate three things and **name products in your own words**. You can skip, but skipped reviews won’t count.",
     script: async (h) => {
       h.say('Each supplier shows its plan accuracy');
       await h.zoom(h.find(`${CARDS} button`, 'Plan accuracy'), 1.8);
@@ -221,8 +221,8 @@ const evaluation: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Score follows the supplier', lead: 'Accuracy and confidence differ.', seconds: 14, src: V1, ready: CARDS, fresh: true,
-    body: 'Fewer reviewed orders, wider uncertainty.',
+    title: "Know how far to trust it", seconds: 14, src: V1, ready: CARDS, fresh: true,
+    body: "Compare accuracy by supplier. **With fewer reviewed orders, expect less certainty** and check more closely.",
     script: async (h) => {
       h.say('MNP: frequent orders, long history');
       await h.click(h.find(`${CARDS} button`, 'Plan accuracy'));
@@ -237,8 +237,8 @@ const evaluation: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Score the new plan', lead: 'Expected accuracy, with its basis.', seconds: 16, src: `${V1}&po=PO-2026-0843&generate=30`, ready: 'table', fresh: true,
-    body: 'Track record, minus what this plan’s data lacks.',
+    title: "See what to double-check", seconds: 16, src: `${V1}&po=PO-2026-0843&generate=30`, ready: 'table', fresh: true,
+    body: "Get an **expected accuracy before you order**, with your track record and any missing data.",
     script: async (h) => {
       h.say('The plan is drafted, then scored');
       await h.wait(4600);

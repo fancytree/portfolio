@@ -279,6 +279,7 @@ export default function DefErpKitPage() {
           <DecisionCards items={[builderDecision]} start={3} />
           <StorefrontBuilderLiveDemo />
           <CaseProse><p>Salons already ordered through a WeChat mini-program. Every choice below favoured getting all flows live fast.</p></CaseProse>
+          <CaseCrossLink href="/projects/def-miniprogram-kit" kicker="The next version, redesigned for merchants" title="DEF mini-program redesign" />
           <DecisionCards items={miniProgramDecisions} start={4} />
           <CaseProse><p>The customer screens, live on demonstration data.</p></CaseProse>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] gap-[var(--case-space-24)]" aria-label="WeChat mini-program screens">

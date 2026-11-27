@@ -20,8 +20,8 @@ const each = async (h: Helpers, selector: string, limit = 4) => {
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Principles', lead: 'Three words, then the rules.', seconds: 23,
-    body: 'Calm, layered, precise. Fourteen rules, one source of truth.',
+    title: "Start with the principles", seconds: 23,
+    body: "Keep your screens **calm, layered, and precise**. Fourteen rules give you one place to check.",
     script: async (h) => {
       await go(h, 'principles');
       h.say('Calm, layered, precise');
@@ -34,8 +34,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Colour', lead: 'Each colour has one job.', seconds: 9,
-    body: 'Blue acts. Status colours mean status.',
+    title: "Use colour with intent", seconds: 9,
+    body: "Reach for **blue when people need to act**, and save status colours for status.",
     script: async (h) => {
       await go(h, 'colour');
       h.say('Blue passes AA');
@@ -51,8 +51,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Type & shape', lead: 'Few values, repeated.', seconds: 24,
-    body: 'Four sizes, a 4px scale, six nested radii.',
+    title: "Choose with less effort", seconds: 24,
+    body: "Work from **four type sizes, a 4px scale, and six radii**, so you decide less and stay consistent.",
     script: async (h) => {
       await go(h, 'type');
       h.say('Four sizes');
@@ -72,8 +72,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Controls', lead: 'Every state is designed.', seconds: 14,
-    body: 'Pending, success, error.',
+    title: "Cover every state", seconds: 14,
+    body: "Show people what is happening with **ready-made pending, success, and error states**.",
     script: async (h) => {
       await go(h, 'buttons');
       h.say('Pending, then saved');
@@ -96,8 +96,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Patterns', lead: 'Components become patterns.', seconds: 18,
-    body: 'Status, progress, the list page.',
+    title: "Build pages faster", seconds: 18,
+    body: "Reuse **status, progress, and list-page patterns** instead of starting from zero.",
     script: async (h) => {
       await go(h, 'tags');
       h.say('Words first, colour second');
@@ -117,8 +117,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Data visualisation', lead: 'Charts follow the tables.', seconds: 18,
-    body: 'Same tokens, same formats.',
+    title: "Make numbers readable", seconds: 18,
+    body: "Give your charts **the same colours and formats as your tables**, so readers compare easily.",
     script: async (h) => {
       await go(h, 'dataviz');
       h.say('KPIs follow the period');
@@ -137,8 +137,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'States & overlays', lead: 'No page is ever blank.', seconds: 20,
-    body: 'Every state, every layer.',
+    title: "Never leave a blank page", seconds: 20,
+    body: "Pick a **ready state or overlay**, so people always know what to do next.",
     script: async (h) => {
       await go(h, 'states');
       h.say('Loading');
@@ -165,8 +165,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Check', lead: 'Ask by consequence, then audit.', seconds: 25,
-    body: 'Confirm by consequence. Audit the code.',
+    title: "Ship with confidence", seconds: 25,
+    body: "**Match each confirmation to its consequence**, then audit your code before release.",
     script: async (h) => {
       await go(h, 'confirm');
       h.say('Draft edits: no dialog');

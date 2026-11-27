@@ -18,9 +18,8 @@ async function toBoard(h: Helpers) {
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Where everything stands',
-    lead: 'The overview answers “how is it going” before the list starts.',
-    body: 'Numbers ease into place, the funnel follows the range you pick, and the Auto Apply card shows its rules rather than controls.',
+    title: "See how your search is going",
+    body: "Get **the big picture first**. Choose a time range and check the rules Auto Apply follows for you.",
     seconds: 14, fresh: true,
     script: async (h) => {
       h.say('Overview');
@@ -38,9 +37,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Follow the pipeline',
-    lead: 'From queue to offer, left to right.',
-    body: 'Auto Apply’s part first, then the employer’s. The stage tabs jump to any column.',
+    title: "Track every application",
+    body: "Follow each job **from queue to offer**, and jump to any stage with one tab.",
     seconds: 11,
     script: async (h) => {
       h.say('Pipeline');
@@ -56,9 +54,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'What “In process” means',
-    lead: 'The step it is on, and what is ready.',
-    body: 'Done steps, the current one, what comes next, and every answer prepared with its source.',
+    title: "Know what happens next",
+    body: "Open an application to see **what’s done, what’s next, and every answer prepared for you**.",
     seconds: 11,
     script: async (h) => {
       h.say('In process');
@@ -74,9 +71,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Fix a failed application',
-    lead: 'Where it stopped, why, and the fix.',
-    body: 'Answer the one missing question and Auto Apply carries on from that step. Everything prepared is kept.',
+    title: "Get unstuck in one answer",
+    body: "See where it stopped and why. **Answer the missing question and it carries on**, with your progress kept.",
     seconds: 13,
     script: async (h) => {
       h.say('Failed');
@@ -98,9 +94,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'See it by date',
-    lead: 'Interviews past and coming, and how each day went.',
-    body: 'Past interviews stay on the calendar with how they went. A day opens on what was scheduled, and what was sent.',
+    title: "Stay ready for interviews",
+    body: "**Open any day** to see your interviews and applications, and look back at how each one went.",
     seconds: 14,
     script: async (h) => {
       h.say('Calendar');

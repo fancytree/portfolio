@@ -18,8 +18,8 @@ const hoverAll = async (h: Helpers, els: HTMLElement[], limit = 3) => {
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Admin', lead: 'The whole business on one page.', seconds: 20, src: page('admin'), fresh: true,
-    body: 'Net sales by period, and what is waiting on each team.',
+    title: "Admin: run the business", seconds: 20, src: page('admin'), fresh: true,
+    body: "Check **net sales for any period** and see which team is waiting on you, all on one page.",
     script: async (h) => {
       h.say('Pick the period');
       await h.click(h.find('[role="tab"]', '7 days'));
@@ -37,8 +37,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Sales', lead: 'Am I on target, and who owes me?', seconds: 18, src: page('sales'), fresh: true,
-    body: 'A forecast against the monthly target, then the payments to chase.',
+    title: "Sales: hit your target", seconds: 18, src: page('sales'), fresh: true,
+    body: "See **how close you are this month** and which payments to chase next.",
     script: async (h) => {
       h.say('On track for November?');
       const target = card(h, 'November target');
@@ -54,8 +54,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Warehouse', lead: 'Today’s physical work, in order.', seconds: 22, src: page('warehouse'), fresh: true,
-    body: 'Rush items for the store, then pick, pack and hand over.',
+    title: "Warehouse: know what’s next", seconds: 22, src: page('warehouse'), fresh: true,
+    body: "Start with **rush items for the store**, then pick, pack, and hand over in order.",
     script: async (h) => {
       h.say('Rush items for the store');
       const cards = inCard(h, 'Rush to store', 'div[role="checkbox"]');
@@ -76,8 +76,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Finance', lead: 'Approve, invoice, chase.', seconds: 20, src: page('finance'), fresh: true,
-    body: 'Batch approvals and invoices, cash by period.',
+    title: "Finance: clear your queue", seconds: 20, src: page('finance'), fresh: true,
+    body: "**Approve and invoice in batches**, chase what is overdue, and follow cash by period.",
     script: async (h) => {
       h.say('Approve payments in a batch');
       const pays = inCard(h, 'Payment approvals', 'div[role="checkbox"]');

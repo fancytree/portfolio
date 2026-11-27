@@ -54,9 +54,8 @@ async function typeAtEnd(h: Helpers, el: HTMLElement, text: string) {
 
 const items: ShowcaseItem[] = [
   {
-    title: 'Nova rewrites in place',
-    lead: 'The resume is rewritten where it will be read.',
-    body: 'Lines change one by one; the score climbs only when Nova has finished, then the changes are named.',
+    title: "Watch your resume improve",
+    body: "Let Nova rewrite right on the page, then **review every change** and see your new score.",
     seconds: 16, fresh: true,
     script: async (h) => {
       h.say('Generation');
@@ -73,9 +72,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Fix one line with Nova',
-    lead: 'Select the words, then ask.',
-    body: 'Only the selected words change. Nova leaves a slot for a result it cannot know, and every change can be undone.',
+    title: "Sharpen a single line",
+    body: "Select the words and ask. **Only your selection changes**, you can add the real result, and undo anytime.",
     seconds: 12,
     script: async (h) => {
       h.say('Select and ask');
@@ -95,9 +93,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Check the job’s keywords',
-    lead: 'See what an applicant tracking system looks for.',
-    body: 'Missing terms can be added to the skills line in one click, only if they are true.',
+    title: "Get past the screening",
+    body: "See what hiring software looks for, and **add missing skills in one click, only if they’re true**.",
     seconds: 10,
     script: async (h) => {
       h.say('Keywords');
@@ -111,9 +108,8 @@ const items: ShowcaseItem[] = [
     },
   },
   {
-    title: 'Edit it like a document',
-    lead: 'Type anywhere on the page.',
-    body: 'Nova’s marks step aside while you write; the switch brings them back, for Nova’s words only.',
+    title: "Make it sound like you",
+    body: "**Click anywhere and type.** Nova’s highlights step aside until you want them back.",
     seconds: 12,
     script: async (h) => {
       h.say('Edit in place');
