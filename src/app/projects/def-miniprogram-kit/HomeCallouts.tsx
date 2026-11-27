@@ -4,10 +4,10 @@ import styles from './HomeCallouts.module.css';
 
 /** Circled areas of the new home screenshot, in its 390 × 844 points. */
 const points = [
-  { top: 105, height: 50, title: 'Search takes over categories', body: 'The Categories tab is gone. Search, with filters beside it, reaches every product.' },
-  { top: 369, height: 50, title: 'Tabs that are the merchant’s own', body: 'For you first, then the categories they work in, most bought first. This replaces the fixed icon grid.' },
-  { top: 433, height: 322, title: 'Products, with the next step', body: 'The price is on the card, and the button says what happens: add, or choose a shade.' },
-  { top: 757, height: 72, title: 'Saved, for coming back', body: 'It takes the Categories slot: new shades, restocks, offers and buying again.' },
+  { top: 105, height: 50, title: 'Find it fast', body: 'Invite them to search, then narrow down.' },
+  { top: 369, height: 50, title: 'Feel at home', body: 'Their own categories come first.' },
+  { top: 433, height: 322, title: 'Act right away', body: 'Make adding feel easy and clear.' },
+  { top: 757, height: 72, title: 'Come back for yours', body: 'Draw them back to check and reorder.' },
 ];
 
 /** The new home with its design points circled and explained beside it. */

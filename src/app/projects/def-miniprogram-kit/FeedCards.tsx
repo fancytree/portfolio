@@ -6,10 +6,10 @@ type Card = [keyof typeof dims, string];
 
 /* Grouped by what each card is for. */
 const groups: { title: string; note: string; cards: Card[] }[] = [
-  { title: 'Products', note: 'Buy now, or buy again.', cards: [['card-p1', 'Product tile'], ['card-p3', 'Reorder row'], ['card-p2', 'Immersive product']] },
-  { title: 'Collections', note: 'Several products at once.', cards: [['card-c1', 'Collection mosaic'], ['card-c2', 'Collection shelf'], ['card-c3', 'Shop the set']] },
-  { title: 'Brands and offers', note: 'Follow a range, see the price break.', cards: [['card-b1', 'Brand cover'], ['card-b2', 'Brand with picks'], ['card-o1', 'Volume offer']] },
-  { title: 'Content', note: 'Learn, then shop what was used.', cards: [['card-v1', 'Short video'], ['card-v2', 'Tutorial with products'], ['card-e1', 'Article']] },
+  { title: 'Products', note: 'Help them buy or restock.', cards: [['card-p1', 'Product tile'], ['card-p3', 'Reorder row'], ['card-p2', 'Immersive product']] },
+  { title: 'Collections', note: 'Encourage buying what goes together.', cards: [['card-c1', 'Collection mosaic'], ['card-c2', 'Collection shelf'], ['card-c3', 'Shop the set']] },
+  { title: 'Brands and offers', note: 'Keep them close to their brands.', cards: [['card-b1', 'Brand cover'], ['card-b2', 'Brand with picks'], ['card-o1', 'Volume offer']] },
+  { title: 'Content', note: 'Inspire them to try, then buy.', cards: [['card-v1', 'Short video'], ['card-v2', 'Tutorial with products'], ['card-e1', 'Article']] },
 ];
 
 /** The cards the For you feed is built from. */

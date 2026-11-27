@@ -106,10 +106,10 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
           <CaseFigure caption="Four features that serve coming back.">
             <Compare label="Main features" items={[
-              { shot: 'tab-saved-v2', name: 'Saved tab', why: 'New shades, restocks, offers and buying again in one place. → 05' },
-              { shot: 'home', name: 'For you home', why: 'Opens on the merchant’s own categories. → 04' },
-              { shot: 'search', name: 'Search with categories', why: 'Takes over the Categories tab, so everything else is one search away.' },
-              { shot: 'shade-sheet', name: 'One option sheet', why: 'The exact shade, size or pack is chosen without leaving the page. → 06' },
+              { shot: 'tab-saved-v2', name: 'Saved tab', why: 'Give merchants a reason to return. → 05' },
+              { shot: 'home', name: 'For you home', why: 'Help them start in their own trade. → 04' },
+              { shot: 'search', name: 'Search with categories', why: 'Let them search or browse their way.' },
+              { shot: 'shade-sheet', name: 'One option sheet', why: 'Help them pick without losing their place. → 06' },
             ]} />
           </CaseFigure>
         </CaseChapter>
@@ -184,11 +184,11 @@ export default function DefMiniProgramKitPage() {
           <CaseProse><p>Many categories and many brands of packaging clashed with a strong brand colour. I took Sephora as the reference and removed it: black, white and grey, with colour kept for products and state.</p></CaseProse>
           <CaseFigure caption="Two other directions, then four layouts of the chosen one, Editorial, which leaves the colour to the products.">
             <Compare label="Home exploration" items={[
-              { shot: 'dir-studio', name: 'Bold studio', why: 'Red blocks compete with every brand’s packaging.' },
-              { shot: 'dir-supply', name: 'Pro supply', why: 'Products shrink to thumbnails and navy adds one more colour.' },
+              { shot: 'dir-studio', name: 'Bold studio', why: 'Red pulls eyes away from products.' },
+              { shot: 'dir-supply', name: 'Pro supply', why: 'Small products are hard to judge.' },
               { shot: 'layout-cover', name: 'Editorial · Cover' },
               { shot: 'layout-index', name: 'Editorial · Index' },
-              { shot: 'layout-lookbook', name: 'Editorial · Lookbook', chosen: true, why: 'Stories, brands and priced products share one layout.' },
+              { shot: 'layout-lookbook', name: 'Editorial · Lookbook', chosen: true, why: 'Browse stories, shop clear prices.' },
               { shot: 'layout-column', name: 'Editorial · Column' },
             ]} />
           </CaseFigure>
