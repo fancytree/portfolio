@@ -5,7 +5,7 @@ import wide from '../def-erp-kit/DefDecisions.module.css';
 import { Compare } from './Compare';
 import layout from './Compare.module.css';
 import { CategoryFlow } from './CategoryFlow';
-import { SiteMap, TabMap } from './Diagrams';
+import { SiteMap } from './Diagrams';
 import { ShadeCallouts } from './ShadeCallouts';
 import { ShadeTradeoff } from './ShadeTradeoff';
 import { ResearchFlow } from './ResearchFlow';
@@ -101,9 +101,6 @@ export default function DefMiniProgramKitPage() {
 
         <CaseChapter label="03 / Structure" title="Rebuild the structure around coming back.">
           <CaseProse><p>The old structure started from the catalogue. The new one starts from what a merchant already buys, and rests on <strong>four features</strong>.</p></CaseProse>
-          <CaseFigure caption="From the previous tabs to the new ones.">
-            <TabMap />
-          </CaseFigure>
           <CaseFigure caption="Information architecture: four tabs, one job each.">
             <SiteMap />
           </CaseFigure>

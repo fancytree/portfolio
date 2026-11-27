@@ -1,30 +1,5 @@
 import styles from './Diagrams.module.css';
 
-/** The old five places, and where each job went. */
-export function TabMap() {
-  const rows = [
-    { from: 'Home · category grid', to: 'Home · For you', why: 'Tabs follow the merchant’s categories' },
-    { from: 'Categories tab', to: 'Search, inside Home', why: 'Categories, brands and filters' },
-    { from: 'No such place', to: 'Saved', why: 'Ranges, offers, restock, buy again', isNew: true },
-    { from: 'Cart', to: 'Bag', why: 'Order list and quote list' },
-    { from: 'Me', to: 'Account', why: 'Money owed first, orders, approvals' },
-  ];
-  return (
-    <div className={styles.panel}>
-      <ul className={styles.map}>
-        {rows.map((row) => (
-          <li key={row.to} className={`${styles.mapRow} ${row.isNew ? styles.isNew : ''}`}>
-            <span className={styles.from}>{row.from}</span>
-            <span className={styles.arrow} aria-hidden="true">→</span>
-            <span className={styles.to}>{row.to}</span>
-            <span className={styles.why}>{row.why}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 type Node = { name: string; note?: string; fresh?: boolean; planned?: boolean };
 
 /** Pages under each of the four tabs. */
