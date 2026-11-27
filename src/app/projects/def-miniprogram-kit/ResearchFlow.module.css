@@ -1,27 +1,66 @@
-/* Three steps joined by arrows. Blue marks what the merchant already buys. Shared case tokens only. */
-.flow { list-style: none; margin: 0; padding: var(--case-space-32) var(--case-space-24); display: flex; flex-direction: column; align-items: center; gap: var(--case-space-64); font-family: var(--case-font-body); }
-.step { position: relative; width: 100%; max-width: 52rem; display: flex; flex-direction: column; gap: var(--case-space-16); }
-.step + .step::before { content: '↓'; position: absolute; bottom: calc(100% + var(--case-space-16)); left: 50%; transform: translateX(-50%); font-size: var(--case-text-24); line-height: 1; color: var(--case-muted); }
-.title { margin: 0; display: flex; justify-content: center; align-items: center; gap: var(--case-space-8); font-size: var(--case-text-18); font-weight: var(--case-weight-strong); line-height: 1.3; color: var(--case-ink); text-align: center; }
-.number { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--case-space-24); height: var(--case-space-24); border-radius: 50%; background: var(--case-ink); color: var(--case-white); font-size: var(--case-text-12); }
-.four, .two { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--case-space-16); }
-.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.card { background: var(--case-white); border: var(--case-border-width) solid var(--case-line); border-radius: var(--case-radius-lg); padding: var(--case-space-16); min-width: 0; }
-.four .card { text-align: center; font-size: var(--case-text-16); line-height: 1.45; color: var(--case-ink); }
-.card em { font-style: normal; font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
-.finding { margin: 0; text-align: center; font-size: var(--case-text-16); font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
-.claim { margin: 0 0 var(--case-space-16); font-size: var(--case-text-16); font-weight: var(--case-weight-strong); line-height: 1.35; color: var(--case-ink); }
-.bar { display: grid; grid-template-columns: minmax(0, 1fr) 3rem; column-gap: var(--case-space-8); row-gap: var(--case-space-4); align-items: center; margin-top: var(--case-space-8); }
-.barLabel { grid-column: 1 / -1; font-size: var(--case-text-12); line-height: 1.5; color: var(--case-muted); }
-.track { display: block; height: var(--case-space-16); }
-.fill { display: block; width: var(--value); height: 100%; background: var(--case-faded); border-radius: 0 var(--case-radius-sm) var(--case-radius-sm) 0; }
-.strongBar .fill { background: var(--case-flow-link); }
-.barValue { text-align: right; font-size: var(--case-text-18); font-weight: var(--case-weight-strong); font-variant-numeric: tabular-nums; color: var(--case-ink); }
-.verdict { margin: 0; text-align: center; background: var(--case-ink); color: var(--case-white); border-radius: var(--case-radius-lg); padding: var(--case-space-24) var(--case-space-16); font-size: var(--case-text-18); line-height: 1.45; }
-.answer { text-align: center; background: var(--case-flow-link); color: var(--case-white); border-radius: var(--case-radius-lg); padding: var(--case-space-8); font-size: var(--case-text-14); font-weight: var(--case-weight-strong); line-height: 1.35; display: flex; align-items: center; justify-content: center; }
+/* Totals, the order flow, then the answer. Blue marks what the merchant already buys. Shared case tokens only. */
+.research { display: flex; flex-direction: column; gap: var(--case-space-32); font-family: var(--case-font-body); color: var(--case-ink); }
+.research p, .research ul { margin: 0; padding: 0; list-style: none; }
+.research em { font-style: normal; font-weight: var(--case-weight-strong); color: var(--case-flow-link); }
+
+.research .totals { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: var(--case-space-64); row-gap: var(--case-space-16); }
+.totals li { font-size: var(--case-text-14); color: var(--case-muted); }
+.totals strong { margin-right: var(--case-space-4); font-size: var(--case-text-36); font-weight: var(--case-weight-strong); line-height: var(--case-leading-none); font-variant-numeric: tabular-nums; color: var(--case-ink); }
+.research .period { margin-top: var(--case-space-8); text-align: center; font-size: var(--case-text-12); color: var(--case-muted); }
+
+.orders { display: flex; flex-direction: column; gap: var(--case-space-16); }
+.diagram { width: 100%; height: auto; margin: 0 auto; overflow: visible; }
+.wide { max-width: 57rem; }
+.narrow { display: none; max-width: 26rem; }
+.research .note { text-align: center; font-size: var(--case-text-12); line-height: 1.6; color: var(--case-muted); }
+
+.same, .shade, .category { fill: var(--case-flow-link); }
+.fresh { fill: var(--case-faded); }
+.total { fill: var(--case-ink); }
+.node.shade { opacity: 0.65; }
+.node.category { opacity: 0.4; }
+.band { opacity: 0.45; }
+.band.same { opacity: 0.35; }
+.band.main { opacity: 0.22; }
+.band.shade { opacity: 0.22; }
+.band.category { opacity: 0.14; }
+.diagram text { fill: var(--case-ink); }
+.big { font-size: var(--case-text-24); font-weight: var(--case-weight-strong); }
+.strong { font-size: var(--case-text-12); font-weight: var(--case-weight-strong); }
+.number, .share { font-size: var(--case-text-18); font-weight: var(--case-weight-strong); }
+.small { font-size: var(--case-text-14); }
+.tiny { font-size: var(--case-text-12); }
+.diagram .muted { font-size: var(--case-text-12); fill: var(--case-muted); }
+
+.solution { display: flex; flex-direction: column; gap: var(--case-space-16); padding-top: var(--case-space-24); border-top: var(--case-border-width) solid var(--case-line); }
+.research .verdict { text-align: center; font-size: var(--case-text-18); font-weight: var(--case-weight-strong); line-height: 1.4; }
+.research .asks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--case-space-16); }
+.asks li { min-width: 0; display: grid; grid-template-rows: subgrid; grid-row: span 4; row-gap: var(--case-space-8); text-align: center; }
+.research .ask { display: flex; align-items: center; justify-content: center; padding: var(--case-space-8); background: var(--case-white); border: var(--case-border-width) solid var(--case-line); border-radius: var(--case-radius-lg); font-size: var(--case-text-14); line-height: 1.45; }
+.arrow { font-size: var(--case-text-14); line-height: var(--case-leading-none); color: var(--case-muted); }
+.research .answer { display: flex; align-items: center; justify-content: center; padding: var(--case-space-8); background: var(--case-flow-link); border-radius: var(--case-radius-lg); font-size: var(--case-text-14); font-weight: var(--case-weight-strong); line-height: 1.45; color: var(--case-white); }
+.research .basis { font-size: var(--case-text-12); line-height: 1.5; color: var(--case-muted); }
+
+/* One pass, left to right: the split, then each match in turn, then the four answers. */
+.research[data-state='waiting'] :is(.band, .second, .end0, .end1, .end2, .end3, .answer) { opacity: 0; }
+.research[data-state='playing'] .band { animation: grow 0.8s ease-in-out both; }
+.research[data-state='playing'] .split { animation-delay: 0.2s; animation-duration: 1s; }
+.research[data-state='playing'] .second { animation: show 0.4s 1.1s both; }
+.research[data-state='playing'] .leaf0 { animation-delay: 1.5s; }
+.research[data-state='playing'] .end0 { animation: show 0.4s 2.2s both; }
+.research[data-state='playing'] .leaf1 { animation-delay: 2.3s; }
+.research[data-state='playing'] .end1 { animation: show 0.4s 3s both; }
+.research[data-state='playing'] .leaf2 { animation-delay: 3.1s; }
+.research[data-state='playing'] .end2 { animation: show 0.4s 3.8s both; }
+.research[data-state='playing'] .leaf3 { animation-delay: 3.9s; }
+.research[data-state='playing'] .end3 { animation: show 0.4s 4.6s both; }
+.research[data-state='playing'] .answer { animation: show 0.5s 5.1s both; }
+@keyframes grow { from { clip-path: inset(-10% 100% -10% 0); } to { clip-path: inset(-10% 0 -10% 0); } }
+@keyframes show { from { opacity: 0; } }
+
 @media (max-width: 699px) {
-  .flow { padding: var(--case-space-24) var(--case-space-8); }
-  .four { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--case-space-8); }
-  .two { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-8); }
+  .wide { display: none; }
+  .narrow { display: block; }
+  .research .totals { flex-direction: column; align-items: center; row-gap: var(--case-space-8); }
+  .research .asks { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--case-space-8); }
 }
