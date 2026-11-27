@@ -135,9 +135,9 @@ const items: ShowcaseItem[] = [
       await h.wait(900);
       await h.click(h.find('#base a', 'Submit receipt'));
       await h.wait(1400);
-      await h.click(h.find('#base button', 'Receipt looks right'));
+      await h.click(h.find('#finance', 'Receipt looks right'));
       await h.wait(1100);
-      await h.click(h.find('#base button', 'Funds arrived'));
+      await h.click(h.find('#finance', 'Funds arrived'));
       await h.wait(2000);
     },
   },

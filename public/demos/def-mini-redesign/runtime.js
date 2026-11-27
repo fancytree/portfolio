@@ -72,7 +72,7 @@ const INFO = {
   PhotoSearch: ['Search', 'Search by name, brand or SKU.'],
   UICheckout: ['Checkout', 'Use the balance, pick shipping, place the order.'],
   UIPayment: ['Payment', 'Upload a receipt within 30 minutes, then submit.'],
-  UIPaymentStatus: ['Payment status', 'Use the demo control to play the finance team.'],
+  UIPaymentStatus: ['Payment status', 'Play the finance team below and watch the status change.'],
   UIFilters: ['Filters', 'Filter sheet.']
 };
 const JUMP = ['PhotoMain', 'PhotoProduct', 'PhotoShadeRanges', 'PhotoSaved', 'PhotoBag', 'UICheckout', 'PhotoAccount'];
@@ -99,7 +99,13 @@ function show(name) {
   document.getElementById('title').textContent = info[0]; document.getElementById('tip').textContent = info[1];
   document.querySelectorAll('#jump button').forEach((b) => b.setAttribute('aria-current', String(b.dataset.to === name)));
   document.getElementById('phone').dataset.screen = name;
+  document.getElementById('finance').hidden = name !== 'UIPaymentStatus';
+  financeLabel();
 }
+// the finance team's side of the transfer, kept outside the phone
+const FINANCE = { review: ['Receipt looks right', 'waiting'], waiting: ['Funds arrived', 'confirmed'], confirmed: ['Show a rejected receipt', 'rejected'], rejected: ['Time runs out', 'released'], released: ['Start again', 'review'], credited: ['Start again', 'review'] };
+function financeLabel() { document.getElementById('finance').textContent = FINANCE[STORE.status][0]; }
+document.getElementById('finance').onclick = () => { STORE.status = FINANCE[STORE.status][1]; mount('base', 'UIPaymentStatus'); financeLabel(); };
 // board links drive the prototype; anything without a screen stays put
 function follow(e, a) {
   e.preventDefault();
