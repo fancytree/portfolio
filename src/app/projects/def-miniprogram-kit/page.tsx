@@ -96,9 +96,7 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="02 / Research" title="So what do merchants come for?">
-          <CaseFigure caption={<><strong>7</strong> merchant interviews, checked against <strong>7,354</strong> orders covering <strong>2,886</strong> items, <strong>March to August 2026</strong>.</>}>
-            <ResearchFlow />
-          </CaseFigure>
+          <ResearchFlow />
         </CaseChapter>
 
         <CaseChapter label="03 / Structure" title="Rebuild the structure around coming back.">
@@ -149,7 +147,7 @@ export default function DefMiniProgramKitPage() {
         </CaseChapter>
 
         <CaseChapter label="06 / Choosing" title="One shade at a time, with the running total in view.">
-          <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So a long range is listed in parts, and after each add the merchant sees what this product has put in the bag.</p></CaseProse>
+          <CaseProse><p>A gel polish can come in 120 shades, a hair colour in dozens. In six months of orders, <strong>59%</strong> of shade purchases took two or more shades of the same product, typically <strong>four</strong>. So a long range is listed in parts. Products with several SKUs also get one more step: after each add, a side panel shows what this product has put in the bag. Single-SKU products skip it.</p></CaseProse>
           <CaseFigure caption="One range, one shade at a time, on demonstration data.">
             <ShadeCallouts />
           </CaseFigure>

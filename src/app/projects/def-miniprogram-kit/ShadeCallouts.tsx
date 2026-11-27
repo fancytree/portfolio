@@ -9,7 +9,7 @@ const screens: Screen[] = [
     { left: 6, top: 696, width: 378, height: 142, title: 'One shade, one quantity', body: 'Each shade is confirmed with its own quantity.' },
   ] },
   { shot: 'shade-added', name: 'Added panel: check', marks: [
-    { left: 246, top: 96, width: 130, height: 170, flip: true, title: 'What this product added', body: 'The panel opens after adding and lists its shades in the bag, ready to adjust.' },
+    { left: 246, top: 96, width: 130, height: 170, flip: true, title: 'Multi-SKU products only', body: 'After adding, the panel lists what this product has put in the bag, ready to adjust.' },
     { left: 94, top: 662, width: 288, height: 170, title: 'Carry on, or check out', body: 'Keep choosing returns to the shades; View Bag opens the bag.' },
   ] },
 ];
