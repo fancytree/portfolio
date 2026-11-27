@@ -52,7 +52,9 @@ export default function Preloader() {
     const html = document.documentElement;
     const root = rootRef.current;
     const canvas = fishRef.current;
-    if (!root || !canvas || window.location.pathname !== "/" || !html.hasAttribute("data-preloading")) return;
+    if (!root || !canvas || window.location.pathname !== "/" || html.hasAttribute("data-preloaded")) return;
+    // set again in case an earlier run's cleanup removed it (next dev mounts twice)
+    html.setAttribute("data-preloading", "");
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const home = window.location.pathname === "/";
