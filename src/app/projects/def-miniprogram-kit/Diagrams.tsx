@@ -55,7 +55,7 @@ export function SiteMap() {
           </li>
         ))}
       </ul>
-      <p className={styles.note}>Blue edge: new or substantially changed. Dashed: planned.</p>
+      <p className={styles.note}>Blue fill: new or substantially changed. Dashed: planned.</p>
     </div>
   );
 }
