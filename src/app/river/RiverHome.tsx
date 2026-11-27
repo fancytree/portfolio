@@ -114,8 +114,8 @@ export default function RiverHome() {
                 <Label>SELECTED WORK</Label>
                 <h2 id="work-title" className={s.h2}>Selected Work.</h2>
                 <p className={s.sectionIntro}>
-                  AI agents, B2B SaaS and enterprise systems, taken from research to shipped
-                  product, with the numbers they moved.
+                  AI agents, B2B SaaS and enterprise systems, from research to design and
+                  shipped product, with the numbers where there are any.
                 </p>
               </div>
             </div>
