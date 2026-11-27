@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 // The featured projects use the same animated covers as the homepage, in the
 // homepage's own cover frame, so a project looks the same wherever it is listed.
 const COVERS: Record<string, () => React.JSX.Element> = {
-  "/projects/procurement-agent-kit": ProcurementCover,
+  "/projects/procurement-agent-decisions": ProcurementCover,
   "/projects/def-erp-kit": DefErpCover,
   "/projects/def-miniprogram-kit": DefMiniProgramCover,
   "/projects/jobnova-kit": JobNovaCover,

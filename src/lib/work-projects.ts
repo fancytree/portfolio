@@ -86,7 +86,7 @@ export const productProjects: WorkProject[] = [
     coverAccent: '#6c5ce7',
     coverScreenFit: 'contain',
     coverMotif: 'procurement',
-    href: '/projects/procurement-agent-kit',
+    href: '/projects/procurement-agent-decisions',
   },
   {
     title: 'ConnectNova',
