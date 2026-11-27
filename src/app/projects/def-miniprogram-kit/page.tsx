@@ -7,7 +7,7 @@ import layout from './Compare.module.css';
 import { CategoryFlow } from './CategoryFlow';
 import { SiteMap } from './Diagrams';
 import { ShadeCallouts } from './ShadeCallouts';
-import { ShadeTradeoff } from './ShadeTradeoff';
+import { InBagTradeoff, ShadeTradeoff } from './ShadeTradeoff';
 import { ResearchFlow } from './ResearchFlow';
 import { SaveCases } from './SaveCases';
 import { RestockFlow } from './RestockCallouts';
@@ -150,6 +150,9 @@ export default function DefMiniProgramKitPage() {
           </CaseFigure>
           <CaseFigure caption="How I got there, on demonstration data.">
             <ShadeTradeoff />
+          </CaseFigure>
+          <CaseFigure caption="Marking what is already in the bag, on demonstration data.">
+            <InBagTradeoff />
           </CaseFigure>
           <CaseFigure caption="One sheet, shaped by the product’s attributes.">
             <Compare label="Sheets by attribute" items={[

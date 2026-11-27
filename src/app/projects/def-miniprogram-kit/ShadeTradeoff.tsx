@@ -29,3 +29,32 @@ export function ShadeTradeoff() {
     </div>
   );
 }
+
+/* Then: showing, on the sheet, what is already in the bag. */
+const counts: Screen[] = [
+  { shot: 'shade-count-stepper', name: 'First: in the stepper', chosen: false, marks: [
+    { left: 244, top: 716, width: 134, height: 58, flip: true, title: 'Add three more?', body: 'They may read it as adding three.', cost: true },
+  ] },
+  { shot: 'shade-count-line', name: 'Then: mark and a line', chosen: false, marks: [
+    { left: 10, top: 674, width: 370, height: 46, title: 'More to read', body: 'One more line before they can add.', cost: true },
+  ] },
+  { shot: 'shade-count-label', name: 'Then: written mark', chosen: false, marks: [
+    { left: 10, top: 238, width: 370, height: 290, flip: true, title: 'Long counts crowd it', body: 'Two digits or more barely fit.', cost: true },
+  ] },
+  { shot: 'shade-count-icon', name: 'Now: bag and number', chosen: true, marks: [
+    { left: 10, top: 238, width: 370, height: 290, flip: true, title: 'Seen at a glance', body: 'They spot what they’ve added, however many.' },
+  ] },
+];
+
+/** How a shade already in the bag is shown. */
+export function InBagTradeoff() {
+  return (
+    <div>
+      <div className={`${styles.group} ${styles.head}`}>
+        <p className={styles.title}>Already in the bag</p>
+        <p className={styles.line}>I gave up a written note for a mark that fits any count.</p>
+      </div>
+      <ScreenCallouts screens={counts} />
+    </div>
+  );
+}

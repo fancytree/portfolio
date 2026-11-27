@@ -422,7 +422,8 @@
         h('span', { className: cx('bs-option__frame', p.ratio === 'portrait' && 'is-portrait') },
           h('span', { className: 'bs-option__photo', style: o.color ? { background: o.color } : undefined }, o.image ? h('img', { src: o.image, alt: '' }) : o.placeholder || null),
           on ? h('span', { className: 'bs-option__check' }, h(Icon, { name: 'check', size: 16 })) : null,
-          o.saved ? h('span', { className: 'bs-option__saved', role: 'img', 'aria-label': 'saved' }, h(Icon, { name: 'heart', size: 12 })) : null),
+          o.saved ? h('span', { className: 'bs-option__saved', role: 'img', 'aria-label': 'saved' }, h(Icon, { name: 'heart', size: 12 })) : null,
+          o.count ? h('span', { className: 'bs-option__count', role: 'img', 'aria-label': o.count + ' in bag' }, h(Icon, { name: 'bag', size: 12 }), o.count > 99 ? '99+' : o.count) : null),
         h('span', { className: 'bs-option__label' }, o.label, p.readOnly && o.out ? h('span', { className: 'bs-sr' }, ', out of stock') : null),
         o.sub ? h('span', { className: cx('bs-option__sub', o.tone && 'is-' + o.tone) }, o.sub) : null);
     }));
