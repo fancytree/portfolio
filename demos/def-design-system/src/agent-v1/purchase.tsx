@@ -523,7 +523,7 @@ export default function PurchaseOrder({ onBack, po, agent }: { onBack?: () => vo
       card: { title: 'What changes in the next MNP plan', tone: 'ok', sections: [
         { title: 'From your ratings', rows: overall },
         ...(r.mentions.length ? [{ title: 'From your notes', rows: r.mentions.map((m) => ({ label: m.label, after: INTENT[m.intent].toLowerCase() })) }] : []),
-      ], next: 'Rule changes wait until someone publishes them in Supply rules.' },
+      ], next: 'Rule changes wait until someone publishes them under Rules.' },
       actions: resumeAction() });
   };
   const skip = () => {
@@ -542,7 +542,7 @@ export default function PurchaseOrder({ onBack, po, agent }: { onBack?: () => vo
       : received ? { label: 'Partially received', v: 'warning' as const } : { label: 'Ordered', v: 'info' as const };
 
   return (
-    <div className={'grid h-[calc(100vh-2rem)] gap-5 ' + (isAgent ? 'grid-cols-[minmax(0,1fr)_23rem]' : 'grid-cols-[minmax(0,1fr)_20rem]')}>
+    <div className={'grid h-[calc(100vh-2rem)] gap-5 ' + 'grid-cols-[minmax(0,1fr)_20rem]'}>
       {/* ───────── 左：单头 + 明细 ───────── */}
       <div className="flex min-h-0 min-w-0 flex-col gap-5">
         <Card className="shrink-0 gap-0 py-5">

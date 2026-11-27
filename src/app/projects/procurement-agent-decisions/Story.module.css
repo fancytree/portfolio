@@ -1,0 +1,85 @@
+.explorer { display: flex; flex-direction: column; gap: var(--case-space-16); min-width: 0; }
+.stages { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--case-space-8); }
+.stages .stage { width: 100%; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: var(--case-space-8); padding: var(--case-space-16); border-radius: var(--case-radius-sm); text-align: left; text-transform: none; }
+.phase { font-size: var(--case-text-14); text-transform: uppercase; }
+.rule { font-family: var(--case-font-body); font-size: var(--case-text-16); line-height: 1.35; font-weight: var(--case-weight-strong); }
+.panels { display: grid; }
+.panels > ul { grid-area: 1 / 1; align-self: start; }
+.hidden { visibility: hidden; }
+.points { list-style: none; margin: 0; padding: 0; border-top: var(--case-border-width) solid var(--case-ink); }
+.point { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 3fr); gap: var(--case-space-24); align-items: center; padding: var(--case-space-24) 0; border-bottom: var(--case-border-width) solid var(--case-line); }
+.name { margin: 0; font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-flow-link); }
+.goal { margin: 0; font-size: var(--case-text-24); line-height: 1.3; font-weight: var(--case-weight-strong); color: var(--case-ink); }
+.pain { margin: 0; font-size: var(--case-text-16); line-height: 1.55; color: var(--case-copy); }
+.pain span { display: block; font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-muted); }
+
+.lead { display: flex; align-items: center; gap: var(--case-space-16); }
+.chip { display: grid; place-items: center; flex-shrink: 0; width: var(--case-button-height); height: var(--case-button-height); border-radius: 50%; background: var(--case-surface); color: var(--case-flow-link); }
+.chip svg { width: var(--case-space-24); height: var(--case-space-24); }
+.stages .stage .stageIcon { width: var(--case-space-24); height: var(--case-space-24); }
+
+/* Rows arrive one after another each time a stage is opened, and their icons draw themselves. */
+.points:not(.hidden) .point { animation: rise 0.45s var(--case-ease) both; }
+.points:not(.hidden) .point:nth-child(2) { animation-delay: 0.08s; }
+.points:not(.hidden) .point:nth-child(3) { animation-delay: 0.16s; }
+.points:not(.hidden) .point:nth-child(4) { animation-delay: 0.24s; }
+.points:not(.hidden) .chip { animation: appear 0.5s var(--case-ease) both; animation-delay: inherit; }
+
+/* A short gesture, then a rest, so the motion reads without competing with the text. */
+.points:not(.hidden) .chip svg, .stage[aria-pressed='true'] .stageIcon { animation-duration: 3.2s; animation-delay: 0.6s; animation-iteration-count: infinite; animation-timing-function: ease-in-out; transform-origin: center; }
+.points:not(.hidden) .chip .scan, .stage[aria-pressed='true'] .scan { animation-name: scan; }
+.points:not(.hidden) .chip .pop, .stage[aria-pressed='true'] .pop { animation-name: pop; }
+.points:not(.hidden) .chip .beat, .stage[aria-pressed='true'] .beat { animation-name: beat; }
+.points:not(.hidden) .chip .blink, .stage[aria-pressed='true'] .blink { animation-name: blink; }
+.points:not(.hidden) .chip .flip, .stage[aria-pressed='true'] .flip { animation-name: flip; }
+.points:not(.hidden) .chip .rewind, .stage[aria-pressed='true'] .rewind { animation-name: rewind; }
+.points:not(.hidden) .chip .turn, .stage[aria-pressed='true'] .turn { animation-name: turn; }
+.points:not(.hidden) .chip .sway, .stage[aria-pressed='true'] .sway { animation-name: sway; }
+.points:not(.hidden) .chip .ring, .stage[aria-pressed='true'] .ring { animation-name: ring; transform-origin: top center; }
+.scan, .pop, .beat, .blink, .flip, .rewind, .turn, .sway, .ring { overflow: visible; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(var(--case-space-8)); } }
+@keyframes appear { from { transform: scale(0.6); } 70% { transform: scale(1.08); } }
+@keyframes scan { 0%, 40%, 100% { transform: translate(0, 0); } 10% { transform: translate(2px, -2px); } 20% { transform: translate(-2px, 0); } 30% { transform: translate(1px, 2px); } }
+@keyframes pop { 0%, 30%, 100% { transform: scale(1); } 12% { transform: scale(1.2); } }
+@keyframes beat { 0%, 40%, 100% { transform: scale(1); } 10%, 28% { transform: scale(1.15); } 19% { transform: scale(0.95); } }
+@keyframes blink { 0%, 20%, 100% { transform: scaleY(1); } 10% { transform: scaleY(0.1); } }
+@keyframes flip { 0%, 10% { transform: rotate(0deg); } 35%, 100% { transform: rotate(180deg); } }
+@keyframes rewind { 0%, 10% { transform: rotate(0deg); } 40%, 100% { transform: rotate(-360deg); } }
+@keyframes turn { 0%, 10% { transform: rotate(0deg); } 40%, 100% { transform: rotate(180deg); } }
+@keyframes sway { 0%, 40%, 100% { transform: rotate(0deg); } 10% { transform: rotate(-14deg); } 20% { transform: rotate(12deg); } 30% { transform: rotate(-6deg); } }
+@keyframes ring { 0%, 40%, 100% { transform: rotate(0deg); } 8% { transform: rotate(18deg); } 16% { transform: rotate(-16deg); } 24% { transform: rotate(10deg); } 32% { transform: rotate(-6deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .points .point, .points .chip, .points .chip svg, .stages .stage .stageIcon { animation: none !important; }
+}
+
+
+.handoff { margin: 0; display: flex; gap: var(--case-space-16); align-items: baseline; padding-top: var(--case-space-16); border-top: var(--case-border-width) solid var(--case-ink); font-size: var(--case-text-16); line-height: 1.55; color: var(--case-ink); }
+.handoff span { flex-shrink: 0; font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-flow-link); }
+
+.thinking { list-style: none; margin: 0; padding: 0; }
+.thought { position: relative; padding: 0 0 var(--case-space-24) var(--case-space-24); border-left: var(--case-border-width) solid var(--case-line); }
+.thought::before { content: ""; position: absolute; left: calc(var(--case-space-8) / -2); top: var(--case-space-8); width: var(--case-space-8); height: var(--case-space-8); border-radius: 50%; background: var(--case-muted); }
+.thought:last-child { padding-bottom: 0; border-left-color: var(--case-flow-link); }
+.thought:last-child::before { background: var(--case-flow-link); }
+.tag { display: block; font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-muted); }
+.thought:last-child .tag { color: var(--case-flow-link); }
+.thought p { margin: var(--case-space-8) 0 0; font-size: var(--case-text-16); line-height: 1.6; color: var(--case-copy); }
+.thought:last-child p { color: var(--case-ink); }
+.uses { list-style: none; display: flex; flex-wrap: wrap; gap: var(--case-space-8); margin: var(--case-space-16) 0 0; padding: 0; }
+.uses li { padding: var(--case-space-8) var(--case-space-16); border-radius: var(--case-radius-sm); background: var(--case-surface); font-size: var(--case-text-14); color: var(--case-ink); }
+
+.value { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-24); margin: 0; padding: var(--case-space-24); border-radius: var(--case-radius-sm); background: var(--case-surface); }
+.value dt { font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-muted); }
+.value dd { margin: var(--case-space-8) 0 0; font-size: var(--case-text-16); line-height: 1.55; color: var(--case-ink); }
+
+.chevron { flex-shrink: 0; width: var(--case-space-24); height: var(--case-space-24); transition: transform var(--case-motion-fast) var(--case-ease); }
+button:hover > .chevron { transform: translateY(var(--case-space-4)); }
+button[aria-expanded='true'] > .chevron { transform: rotate(180deg); }
+
+@media (max-width: 767px) {
+  .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .point { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-8); }
+  .value { grid-template-columns: minmax(0, 1fr); }
+}

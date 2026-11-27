@@ -303,7 +303,7 @@ export default function ProcurementAgentKitPage() {
           ]} />
           <CaseEvidenceCards label="What is in use, measured, and still open" items={[
             { icon: <PackageCheck />, title: 'In use', body: 'Connected purchasing records and an Agent-drafted plan the buyer edits and orders.' },
-            { icon: <ScanSearch />, title: 'Now measurable', body: 'Iteration 2 scores plan accuracy per supplier from reviewed orders. Designed and prototyped in the ERP.' },
+            { icon: <ScanSearch />, title: 'Now measurable', body: 'Iteration 2 scores plan accuracy per supplier from reviewed orders. Built into the ERP.' },
             { icon: <UserCheck />, title: 'Still open', body: 'Acceptance rate, and whether the Agent stops at the right approval boundary.' },
           ]} />
         </CaseChapter>

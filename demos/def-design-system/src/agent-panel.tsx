@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, ArrowUp, Check, FileText, Loader2, Paperclip, Sparkles, X } from 'lucide-react';
+import { ArrowRight, ArrowUp, Check, ChevronRight, FileText, Loader2, Paperclip, Sparkles, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SlideTabs } from './motion';
@@ -63,13 +63,28 @@ export function useAgentThread(initial: Omit<Msg, 'id'>[] = []) {
 function Steps({ title, steps }: { title?: string; steps: NonNullable<Msg['steps']> }) {
   const done = steps.filter((s) => s.state === 'done').length;
   const finished = done === steps.length;
+  // 跑完停一下让人看到最后一步打勾，然后收成一行；点开可以回看过程
+  const [settled, setSettled] = useState(finished);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!finished || settled) return;
+    const t = setTimeout(() => setSettled(true), 700);
+    return () => clearTimeout(t);
+  }, [finished, settled]);
+  const heading = finished ? title?.replace(/^Preparing/, 'Prepared').replace(/^Checking/, 'Checked').replace(/^Comparing/, 'Compared') : title;
+  const row = 'flex w-full items-center justify-between gap-2 text-xs font-medium text-muted-foreground';
+  const lead = <span className="flex min-w-0 items-center gap-1.5">{finished ? <Check className="size-3.5 shrink-0 text-success-text" strokeWidth={2.5} /> : <Loader2 className="size-3.5 shrink-0 animate-spin text-primary" />}<span className="truncate">{heading}</span></span>;
   return (
     <div className="rounded-xl border border-border bg-card px-3.5 py-3">
-      <p className="flex items-center justify-between gap-2 text-xs font-medium text-muted-foreground">
-        <span className="flex items-center gap-1.5">{finished ? <Check className="size-3.5 text-success-text" strokeWidth={2.5} /> : <Loader2 className="size-3.5 animate-spin text-primary" />}{title}</span>
-        <span className="tabular-nums">{done}/{steps.length}</span>
-      </p>
-      <ol className="relative mt-2.5 space-y-2">
+      {settled ? (
+        <button type="button" aria-expanded={open} onClick={() => setOpen((o) => !o)} className={row + ' hover:text-foreground'}>
+          {lead}
+          <span className="flex shrink-0 items-center gap-1 tabular-nums">{steps.length} steps<ChevronRight className={'size-3.5 transition-transform ' + (open ? 'rotate-90' : '')} /></span>
+        </button>
+      ) : (
+        <p className={row}>{lead}<span className="tabular-nums">{done}/{steps.length}</span></p>
+      )}
+      {(!settled || open) && <ol className="relative mt-2.5 space-y-2">
         <span aria-hidden className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
         {steps.map((s) => (
           <li key={s.label} className="relative flex items-start gap-2.5 text-sm">
@@ -83,7 +98,7 @@ function Steps({ title, steps }: { title?: string; steps: NonNullable<Msg['steps
             </span>
           </li>
         ))}
-      </ol>
+      </ol>}
     </div>
   );
 }
@@ -178,7 +193,7 @@ export function AgentPanel({ thread, onSend, suggestions = [], tabs, tab, onTab,
   const end = useRef<HTMLDivElement>(null);
   useEffect(() => { end.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, [thread.msgs, thread.busy]);
   const send = (t = text) => { const v = t.trim(); if (!v || thread.busy) return; setText(''); thread.post({ role: 'user', text: v }); onSend(v); };
-  const items: { id: PanelTab; label: string }[] = [{ id: 'agent', label: 'Agent' }, ...(['evidence', 'rules', 'activity'] as const).filter((k) => tabs[k]).map((k) => ({ id: k, label: k === 'evidence' ? 'Evidence' : k === 'rules' ? 'Supply rules' : 'Activity' }))];
+  const items: { id: PanelTab; label: string }[] = [{ id: 'agent', label: 'Agent' }, ...(['evidence', 'rules', 'activity'] as const).filter((k) => tabs[k]).map((k) => ({ id: k, label: k === 'evidence' ? 'Evidence' : k === 'rules' ? 'Rules' : 'Activity' }))];
 
   return (
     <section className={'flex min-h-0 flex-col overflow-hidden rounded-2xl bg-card shadow-card ' + className} aria-label="Procurement agent">
@@ -196,7 +211,7 @@ export function AgentPanel({ thread, onSend, suggestions = [], tabs, tab, onTab,
         </div>
         {items.length > 1 ? <SlideTabs label="Agent panel" value={tab} onChange={onTab} items={items}
           className="-mx-5 mt-3 flex h-10 items-stretch gap-1 border-b border-border px-4"
-          itemClassName="flex h-full items-center px-2 text-sm" activeClassName="font-semibold text-foreground" idleClassName="text-muted-foreground hover:text-foreground"
+          itemClassName="flex h-full items-center whitespace-nowrap px-2 text-sm" activeClassName="font-semibold text-foreground" idleClassName="text-muted-foreground hover:text-foreground"
           indicatorClassName="after:absolute after:inset-x-1.5 after:bottom-0 after:h-0.5 after:rounded-full after:bg-primary" /> : <div className="-mx-5 mt-4 border-b border-border" />}
       </header>
 

@@ -92,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   // 样式页自己排左侧导航和内容，不再套全站的居中窄容器。
-  const caseFrame = ["/design-system", "/projects/case-kit", "/projects/def-erp-kit", "/projects/def-miniprogram-kit", "/projects/jobnova-kit", "/projects/connectnova-kit", "/projects/procurement-agent-kit", "/projects/memq-kit", "/projects/mono", "/playground/design-should-run"].includes(pathname ?? "");
+  const caseFrame = ["/design-system", "/projects/case-kit", "/projects/def-erp-kit", "/projects/def-miniprogram-kit", "/projects/jobnova-kit", "/projects/connectnova-kit", "/projects/procurement-agent-kit", "/projects/procurement-agent-decisions", "/projects/memq-kit", "/projects/mono", "/playground/design-should-run"].includes(pathname ?? "");
 
   return (
     // 外层容器：全屏高度，背景色和基础字体

@@ -157,6 +157,9 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
 
   const sectionOf = (label: string) => label.startsWith('SO-') || label.startsWith('OUT-') ? 'sales' : label.startsWith('PO-') ? ((window as unknown as { __agentNav?: string }).__agentNav ?? 'procurement') : [overviewSection, ...groups.flatMap((g) => g.sections), ...(settings ? [settings] : [])].find((s) => s.label === label || s.children?.includes(label))?.id;
   const activeSection = sectionOf(page);
+  // 侧栏只放一个采购 Agent 入口：当前在看哪个版本就指向哪个，名字不带版本号
+  const showV1 = activeSection === 'agent-v1' || (activeSection !== 'agent' && new URLSearchParams(location.search).get('v') === '1');
+  const shown = (s: Section) => s.id !== (showV1 ? 'agent' : 'agent-v1');
 
   const renderSection = (s: Section, glide = true) => {
     const Ic = s.icon;
@@ -164,6 +167,7 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
     const solid = isActive && !s.children; // 当前页就是这一项：实心蓝
     const expanded = !collapsed && open === s.id;
     const sum = total(s);
+    const name = s.label.replace(/ V[01]$/, '');
     const badge = (n: number, onSolid = false) => (
       <span className={'pop-in grid h-5 min-w-5 shrink-0 place-items-center rounded-full px-1.5 text-[11px] font-semibold leading-none tabular-nums ' + (onSolid ? 'bg-white/20 text-white' : '')} style={onSolid ? undefined : { background: 'var(--attention)', color: 'var(--attention-foreground)' }}>{n}</span>
     );
@@ -171,7 +175,7 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
       <div key={s.id}>
         <button
           type="button"
-          title={collapsed ? s.label : undefined}
+          title={collapsed ? name : undefined}
           aria-expanded={s.children ? expanded : undefined}
           onClick={() => {
             if (!s.children) { setPage(s.label); return; }
@@ -183,7 +187,7 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
           className={'relative flex h-10 w-full items-center gap-3 rounded-xl pl-2.5 pr-2 text-[0.9375rem] transition-colors duration-300 ' + (collapsed ? 'justify-center !px-0 ' : '') + (solid ? (glide ? '' : 'bg-primary ') + 'font-medium text-primary-foreground' : isActive ? 'font-semibold text-foreground ' + (glide ? '' : 'hover:bg-muted') : 'text-foreground/85 hover:text-foreground ' + (glide ? '' : 'hover:bg-muted'))}
         >
           <Ic className={'size-[18px] shrink-0 ' + (solid ? '' : isActive ? 'text-primary' : 'text-muted-foreground')} />
-          {!collapsed && <span className="min-w-0 flex-1 truncate text-left">{s.label}</span>}
+          {!collapsed && <span className="min-w-0 flex-1 truncate text-left">{name}</span>}
           {!collapsed && (sum !== undefined || s.children) && (
             <span className="flex shrink-0 items-center gap-1.5">
               {sum !== undefined && !expanded && badge(sum, solid)}
@@ -230,7 +234,15 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
       <aside className={'flex min-h-0 flex-1 flex-col rounded-2xl bg-card shadow-card transition-[width] duration-200 ' + (collapsed ? 'w-[4.75rem]' : 'w-60')} aria-label="Sidebar">
         <div className={'flex items-center px-3 pt-4 ' + (collapsed ? 'justify-center' : 'justify-between gap-2')}>
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-10 shrink-0 place-items-center rounded-xl text-base font-bold text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--primary)_80%,transparent)]" style={{ background: 'linear-gradient(140deg, color-mix(in srgb, var(--primary) 70%, white), var(--primary) 70%)' }}>D</span>
+            {/* 收起时不单独占一行放展开按钮：悬停或聚焦到 logo 才换成展开图标 */}
+            <span className="group/logo relative shrink-0">
+              <span className="grid size-10 place-items-center rounded-xl text-base font-bold text-white shadow-[0_8px_18px_-8px_color-mix(in_srgb,var(--primary)_80%,transparent)]" style={{ background: 'linear-gradient(140deg, color-mix(in srgb, var(--primary) 70%, white), var(--primary) 70%)' }}>D</span>
+              {collapsed && (
+                <button type="button" title="Expand sidebar" aria-label="Expand sidebar" onClick={() => setCollapsed(false)} className="absolute inset-0 grid place-items-center rounded-xl bg-muted text-foreground opacity-0 transition-opacity focus-visible:opacity-100 group-hover/logo:opacity-100">
+                  <PanelLeftOpen className="size-4" />
+                </button>
+              )}
+            </span>
             {!collapsed && (
               <div className="min-w-0 leading-tight">
                 <p className="truncate text-lg font-bold leading-tight tracking-tight">DEF ERP</p>
@@ -244,11 +256,6 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
             </button>
           )}
         </div>
-        {collapsed && (
-          <button type="button" title="Expand sidebar" onClick={() => setCollapsed(false)} className="mx-auto mt-2 grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
-            <PanelLeftOpen className="size-4" />
-          </button>
-        )}
 
         <nav ref={glideRef} onMouseOver={onNavHover} onMouseLeave={onNavLeave} className="relative mt-5 flex-1 space-y-7 overflow-y-auto px-3 pb-4" aria-label="Main">
           {/* 两块滑动底色：悬停跟随鼠标，选中跟随当前页；都用和分段切换一样的曲线 */}
@@ -258,7 +265,7 @@ export default function Shell({ children, initial = 'Overview', initialRole = 'a
           {groups.map((g) => (
             <div key={g.label} className="space-y-0.5">
               {!collapsed && <p className="px-2.5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground/70">{g.label}</p>}
-              {g.sections.map((s) => renderSection(s))}
+              {g.sections.filter(shown).map((s) => renderSection(s))}
             </div>
           ))}
         </nav>

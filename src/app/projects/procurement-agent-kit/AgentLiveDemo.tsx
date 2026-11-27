@@ -81,7 +81,7 @@ const items: ShowcaseItem[] = [
       await h.type(qty, '108');
       await h.wait(700);
       h.say('Supplier terms stay apart');
-      await h.click(h.find('[role="tab"]', 'Supply rules'));
+      await h.click(h.find('[role="tab"]', 'Rules'));
       await h.wait(1500);
     },
   },
@@ -158,10 +158,11 @@ const items: ShowcaseItem[] = [
   },
 ];
 
-export default function AgentLiveDemo() {
+/** steps: play only these steps (zero-based), for a page that places one beside the decision it shows. */
+export default function AgentLiveDemo({ steps }: { steps?: number[] } = {}) {
   return (
     <LiveShowcase
-      items={items}
+      items={steps ? steps.map((i) => items[i]) : items}
       src={WORKSPACE}
       label="procurement agent"
       title="DEF ERP — Procurement Agent, live demonstration data"
@@ -253,10 +254,10 @@ const evaluation: ShowcaseItem[] = [
   },
 ];
 
-export function AgentEvaluationLiveDemo() {
+export function AgentEvaluationLiveDemo({ steps }: { steps?: number[] } = {}) {
   return (
     <LiveShowcase
-      items={evaluation}
+      items={steps ? steps.map((i) => evaluation[i]) : evaluation}
       src={V1}
       label="plan accuracy"
       title="DEF ERP — Procurement Agent plan accuracy, demonstration data"

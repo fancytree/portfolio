@@ -2,7 +2,7 @@
 // and v = content hash, so a recaptured image never shows from cache with new callouts.
 export const DECISION_SHOTS = {
   "d1-agent-beside-the-order": {
-    "v": "47062930",
+    "v": "515cca40",
     "width": 2880,
     "height": 1800,
     "marks": [

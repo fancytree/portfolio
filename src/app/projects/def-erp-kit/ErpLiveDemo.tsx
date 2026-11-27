@@ -172,14 +172,14 @@ const NEW_PO = '/demos/def-design-system/index.html?view=po';
 const NEW_INBOUND = `${NEW_PO}&stage=inbound`;
 
 /** The redesigned demo: collapse its sidebar so the order table gets the full width. */
-function collapseNewSidebar(doc: Document) {
+export function collapseNewSidebar(doc: Document) {
   doc.querySelector<HTMLElement>('aside button[title="Collapse sidebar"]')?.click();
   const style = doc.createElement('style');
   style.textContent = 'aside button[title="Collapse sidebar"],aside button[title="Expand sidebar"]{display:none!important}';
   doc.head.appendChild(style);
 }
 
-const purchasing: ShowcaseItem[] = [
+export const purchasing: ShowcaseItem[] = [
   {
     title: "Shape your order", seconds: 21, src: NEW_PO, ready: 'tbody button[aria-expanded]', fresh: true,
     body: "Change quantities right on the line, with **stock and sales beside you** so you can buy with confidence.",
