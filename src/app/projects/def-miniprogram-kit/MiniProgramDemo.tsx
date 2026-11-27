@@ -9,8 +9,7 @@ import { DEF_MINI_REDESIGN_URL } from './demoUrl';
 const items: ShowcaseItem[] = [
   {
     title: 'Find by category and search',
-    lead: 'Help them find their way.',
-    body: 'Browse your category, or search for more.',
+    body: <>Help them find their way: <strong>their own category first</strong>, search for the rest.</>,
     seconds: 14, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoMain`,
     script: async (h) => {
       h.say('Find');
@@ -31,8 +30,7 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'Add to the bag',
-    lead: 'Make adding feel certain.',
-    body: 'Pick size and pack when you’re ready to buy.',
+    body: <>Make adding feel certain: size and pack are chosen <strong>only when buying</strong>.</>,
     seconds: 12, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoProduct`,
     script: async (h) => {
       h.say('Add to bag');
@@ -49,8 +47,7 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'Choose shades',
-    lead: 'Help them build a shade order.',
-    body: 'Add a shade, check the total, take another.',
+    body: <>Help them build a shade order: add one, <strong>check the total</strong>, take another.</>,
     seconds: 17, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoShadeRanges`,
     script: async (h) => {
       h.say('Shades');
@@ -75,8 +72,7 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'Save for later',
-    lead: 'Give them a reason to return.',
-    body: 'Save a shade; come back for news and restocks.',
+    body: <>Give them a <strong>reason to return</strong>: save a shade, then come back for news and restocks.</>,
     seconds: 12, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoProductShade`,
     script: async (h) => {
       h.say('Save');
@@ -101,8 +97,7 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'Reorder and restock',
-    lead: 'Help them restock the salon.',
-    body: 'Reorder, check restocks, or ask for more.',
+    body: <>Help them <strong>restock the salon</strong>: reorder, check what’s back, or ask for more.</>,
     seconds: 17, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoSaved`,
     script: async (h) => {
       h.say('Reorder');
@@ -127,8 +122,7 @@ const items: ShowcaseItem[] = [
   },
   {
     title: 'Pay by transfer',
-    lead: 'Guide them through payment.',
-    body: 'Pay, upload the receipt within 30 minutes, track it. A demo control plays finance.',
+    body: <>Guide them through payment: pay, <strong>upload the receipt within 30 minutes</strong>, track it. A demo control plays finance.</>,
     seconds: 18, fresh: true, src: `${DEF_MINI_REDESIGN_URL}?start=PhotoBag`,
     script: async (h) => {
       h.say('Pay');

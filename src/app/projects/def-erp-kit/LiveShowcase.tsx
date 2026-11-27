@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { CaseButton } from '../../components/case-kit/CaseButton';
 import LiveDemo, { type Script } from './LiveDemo';
 import styles from './DesignSystemShowcase.module.css';
 
 export type ShowcaseItem = {
   title: string;
-  lead: string;
-  body: string;
+  /** A second heading above the description, for cases that use one. */
+  lead?: string;
+  body: ReactNode;
   /** First-run estimate of the script's length in seconds; later runs use the measured length. */
   seconds?: number;
   script: Script;
@@ -60,7 +61,7 @@ export default function LiveShowcase({ items, src, label, title, baseWidth, read
               </CaseButton>
               {on ? (
                 <div className={styles.copy}>
-                  <p className={styles.lead}>{entry.lead}</p>
+                  {entry.lead ? <p className={styles.lead}>{entry.lead}</p> : null}
                   <p className={styles.body}>{entry.body}</p>
                 </div>
               ) : null}
