@@ -38,16 +38,14 @@ function sparkRows(points: number[], value: string, note?: string) {
   });
 }
 
-/** 指标卡（参考 Tilvo）：每张一个浅色底；图标 + 标签；大数值；白底涨跌胶囊；右下角小趋势线。 */
-const TONES = { blue: 'var(--viz-1)', green: 'var(--success)', amber: 'var(--warning)', rose: 'var(--destructive-tint)', purple: 'var(--viz-4)' } as const;
-type Tone = keyof typeof TONES;
-function Tile({ label, value, delta, up = true, good = up, points, tone = 'blue', icon: TileIcon, note, compare = 'vs previous', footnote, action }: { label: string; value: string; delta?: string; up?: boolean; good?: boolean; points?: number[]; tone?: Tone; icon?: LucideIcon; note?: string; compare?: string; footnote?: string; action?: string }) {
-  const c = TONES[tone];
+/** 指标卡：白底，文字用中性色；趋势线统一一个颜色，涨跌才用红绿。 */
+function Tile({ label, value, delta, up = true, good = up, points, icon: TileIcon, note, compare = 'vs previous', footnote, action }: { label: string; value: string; delta?: string; up?: boolean; good?: boolean; points?: number[]; icon?: LucideIcon; note?: string; compare?: string; footnote?: string; action?: string }) {
+  const c = 'var(--viz-1)';
   const gid = 'tile-' + useId().replace(/[^a-zA-Z0-9]/g, '');
   const Icon = up ? ArrowUpRight : ArrowDownRight;
   return (
-    <div className="flex min-w-0 flex-col rounded-2xl px-5 pb-5 pt-5 shadow-card" style={{ background: `color-mix(in srgb, ${c} 10%, var(--surface-raised))` }}>
-      <p className="flex items-center gap-1.5 truncate text-sm" style={{ color: `color-mix(in srgb, ${c} 55%, var(--foreground))` }}>
+    <div className="flex min-w-0 flex-col rounded-2xl bg-card px-5 pb-5 pt-5 shadow-card">
+      <p className="flex items-center gap-1.5 truncate text-sm text-muted-foreground">
         {TileIcon && <TileIcon className="size-4 shrink-0" />}
         <span className="truncate">{label}{note && <span className="opacity-70"> · {note}</span>}</span>
       </p>
@@ -64,14 +62,14 @@ function Tile({ label, value, delta, up = true, good = up, points, tone = 'blue'
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <p className="mt-2 flex items-center gap-1.5 text-xs" style={{ color: `color-mix(in srgb, ${c} 45%, var(--muted-foreground))` }}>
-        <span className={'inline-flex h-6 shrink-0 items-center gap-0.5 rounded-md bg-card px-2 font-semibold tabular-nums ' + (good ? 'text-success-text' : 'text-destructive')}><Icon className="size-3.5" />{delta!.replace(/^[+-]/, '')}</span>
+      <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <span className={'inline-flex h-6 shrink-0 items-center gap-0.5 rounded-md bg-muted px-2 font-semibold tabular-nums ' + (good ? 'text-success-text' : 'text-destructive')}><Icon className="size-3.5" />{delta!.replace(/^[+-]/, '')}</span>
         <span className="truncate">{compare}</span>
       </p>
       </>) : (
         <>
-          <p className="mt-1 text-xs" style={{ color: `color-mix(in srgb, ${c} 45%, var(--muted-foreground))` }}>{footnote}</p>
-          {action && <button type="button" className="group mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold" style={{ color: `color-mix(in srgb, ${c} 70%, var(--foreground))` }}>{action}<ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" /></button>}
+          <p className="mt-1 text-xs text-muted-foreground">{footnote}</p>
+          {action && <button type="button" className="group mt-auto inline-flex w-fit items-center gap-1 pt-4 text-sm font-semibold text-primary-strong">{action}<ChevronRight className="size-4 transition-transform group-hover:translate-x-0.5" /></button>}
         </>
       )}
     </div>
@@ -197,10 +195,10 @@ function AdminDashboard({ period }: { period: Period }) {
     <div className="space-y-5">
       <div className="grid grid-cols-[minmax(0,1fr)_19rem] gap-5">
         <div className="grid min-w-0 grid-cols-4 gap-5">
-          <Tile icon={Wallet} label="Avg. order value" value={m.aov} delta={m.aovD} points={spark(3, 14, 0.2)} tone="amber" />
-          <Tile icon={CircleDollarSign} label="Gross margin" value={m.margin} delta={m.marginD} up={m.marginUp} points={spark(4, 14, m.marginUp ? 0.15 : -0.15)} tone="rose" />
-          <Tile icon={ShoppingCart} label="Orders" note={DAYS[period] + ' days'} value={m.orders} delta={m.ordersD} points={spark(2)} tone="green" />
-          <Tile icon={TrendingUp} label="Net sales" note={DAYS[period] + ' days'} value={eur(total)} delta={`+${change.toFixed(1)}%`} points={spark(1)} tone="blue" />
+          <Tile icon={Wallet} label="Avg. order value" value={m.aov} delta={m.aovD} points={spark(3, 14, 0.2)} />
+          <Tile icon={CircleDollarSign} label="Gross margin" value={m.margin} delta={m.marginD} up={m.marginUp} points={spark(4, 14, m.marginUp ? 0.15 : -0.15)} />
+          <Tile icon={ShoppingCart} label="Orders" note={DAYS[period] + ' days'} value={m.orders} delta={m.ordersD} points={spark(2)} />
+          <Tile icon={TrendingUp} label="Net sales" note={DAYS[period] + ' days'} value={eur(total)} delta={`+${change.toFixed(1)}%`} points={spark(1)} />
         </div>
         <QuickTiles items={[['Customer', Users], ['Order', ShoppingCart], ['Product', Package], ['Payment', CircleDollarSign]]} />
         <ChartFrame
@@ -444,10 +442,10 @@ function SalesDashboard() {
     <div className="space-y-5">
       <div className="grid grid-cols-[minmax(0,1fr)_19rem] gap-5">
         <div className="grid min-w-0 grid-cols-4 gap-5">
-          <Tile icon={Truck} label="Orders to ship" value="17" footnote="Waiting to be dispatched" action="Ship now" tone="amber" />
-          <Tile icon={Wallet} label="Receivables" value="€84,312.50" footnote="18 open accounts" action="Chase payments" tone="rose" />
-          <Tile icon={AlertTriangle} label="Overdue" value="8" footnote="Customers past due" action="See who" tone="green" />
-          <Tile icon={PhoneCall} label="Follow-ups" value="6" footnote="Due today" action="Start calling" tone="blue" />
+          <Tile icon={Truck} label="Orders to ship" value="17" footnote="Waiting to be dispatched" action="Ship now" />
+          <Tile icon={Wallet} label="Receivables" value="€84,312.50" footnote="18 open accounts" action="Chase payments" />
+          <Tile icon={AlertTriangle} label="Overdue" value="8" footnote="Customers past due" action="See who" />
+          <Tile icon={PhoneCall} label="Follow-ups" value="6" footnote="Due today" action="Start calling" />
         </div>
         <QuickTiles items={[['Orders', ListChecks], ['Customer', Users], ['Ledger', ReceiptText], ['New quote', FileText]]} />
         <ChartFrame
@@ -1104,10 +1102,10 @@ function FinanceDashboard({ period }: { period: Period }) {
     <div className="space-y-5">
       <div className="grid grid-cols-[minmax(0,1fr)_19rem] gap-5">
         <div className="grid min-w-0 grid-cols-4 gap-5">
-          <Tile icon={Wallet} label="Receivables" value="€84,312.50" footnote="18 open accounts" action="View accounts" tone="amber" />
-          <Tile icon={AlertTriangle} label="Overdue" value="€26,952.50" footnote="8 customers past due" action="Chase" tone="rose" />
-          <Tile icon={BadgeEuro} label="Collected" note={DAYS[period] + 'd'} value={eur(received)} delta={RECEIVED[period][1]} points={spark(13, 14, 0.3)} tone="green" />
-          <Tile icon={ScrollText} label="Expenses" note={DAYS[period] + 'd'} value={EXPENSES[period]} delta="-3.6%" up={false} good points={spark(14, 14, -0.15)} tone="blue" />
+          <Tile icon={Wallet} label="Receivables" value="€84,312.50" footnote="18 open accounts" action="View accounts" />
+          <Tile icon={AlertTriangle} label="Overdue" value="€26,952.50" footnote="8 customers past due" action="Chase" />
+          <Tile icon={BadgeEuro} label="Collected" note={DAYS[period] + 'd'} value={eur(received)} delta={RECEIVED[period][1]} points={spark(13, 14, 0.3)} />
+          <Tile icon={ScrollText} label="Expenses" note={DAYS[period] + 'd'} value={EXPENSES[period]} delta="-3.6%" up={false} good points={spark(14, 14, -0.15)} />
         </div>
         <QuickTiles items={[['Payment', BadgeEuro], ['Invoices', FileText], ['Ledger', ScrollText], ['Accounts', Users]]} />
         <ChartFrame

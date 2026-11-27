@@ -8,6 +8,7 @@ import BeforeAfterSlider from './BeforeAfterSlider';
 import { DecisionCards, ReversalList, type Decision, type Reversal } from '../procurement-agent-kit/DecisionCards';
 import DashboardLiveDemo from './DashboardLiveDemo';
 import DesignSystemShowcase from './DesignSystemShowcase';
+import MiniProgramScreens from './MiniProgramScreens';
 import wide from './DefDecisions.module.css';
 import { ERP_DECISION_SHOTS } from './erpDecisionShots';
 import { ApprovalChainFlow, LaunchPhasesFlow } from './ErpDecisionDiagrams';
@@ -16,7 +17,6 @@ import { ArchitectureOptions, CapabilityMatrix, ConfirmationLadder, CaseCrossLin
 import {
   CaseChapter,
   CaseClose,
-  CaseDevicePreview,
   CaseFigure,
   CaseHero,
   CaseKitPage,
@@ -248,7 +248,7 @@ export default function DefErpKitPage() {
             beforeSrc="/img/def-erp/legacy-miniprogram-dashboard-crop.png"
             beforeAlt="Legacy ordering system Dashboard: one undifferentiated view mixing sales KPIs, pending approvals, and promotional panels for every user."
             beforeLabel="Before"
-            afterSrc="/img/def-erp/evidence/dashboard-admin-v3.webp"
+            afterSrc="/img/def-erp/evidence/dashboard-admin-v5.webp"
             afterAlt="New Admin dashboard: four tinted KPI tiles with trend lines, quick actions, net sales against the previous period, and an across-teams list of what is waiting on whom."
             afterLabel="After"
             aspectRatio={1.6}
@@ -282,32 +282,16 @@ export default function DefErpKitPage() {
           <CaseCrossLink href="/projects/def-miniprogram-kit" kicker="The next version, redesigned for merchants" title="DEF mini-program redesign" />
           <DecisionCards items={miniProgramDecisions} start={4} />
           <CaseProse><p>The customer screens, live on demonstration data.</p></CaseProse>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,var(--case-grid-column-min)),1fr))] gap-[var(--case-space-24)]" aria-label="WeChat mini-program screens">
-            <CaseFigure caption="Home — curated categories and salon products.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=home" title="DEF mini-program — Home" />
-            </CaseFigure>
-            <CaseFigure caption="Catalog — browse products by category.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=catalog" title="DEF mini-program — Catalog" />
-            </CaseFigure>
-            <CaseFigure caption="Product — capacity, customer price, and product details.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=product" title="DEF mini-program — Product" />
-            </CaseFigure>
-            <CaseFigure caption="Cart — quantities and VAT-inclusive totals.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=cart" title="DEF mini-program — Cart" />
-            </CaseFigure>
-            <CaseFigure caption="Sign in — customer access and account benefits.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=signin" title="DEF mini-program — Sign in" />
-            </CaseFigure>
-            <CaseFigure caption="Account — customer balances and order progress.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=account" title="DEF mini-program — Account" />
-            </CaseFigure>
-            <CaseFigure caption="Link account — pair the mini-program with an ERP customer.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=bind" title="DEF mini-program — Link account" />
-            </CaseFigure>
-            <CaseFigure caption="Order details — payment, dispatch, and tracking.">
-              <CaseDevicePreview src="/demos/def-mini-program/screen.html?screen=order" title="DEF mini-program — Order details" />
-            </CaseFigure>
-          </div>
+          <MiniProgramScreens screens={[
+            { id: 'home', caption: 'Home — curated categories and salon products.' },
+            { id: 'catalog', caption: 'Catalog — browse products by category.' },
+            { id: 'product', caption: 'Product — capacity, customer price, and product details.' },
+            { id: 'cart', caption: 'Cart — quantities and VAT-inclusive totals.' },
+            { id: 'signin', caption: 'Sign in — customer access and account benefits.' },
+            { id: 'account', caption: 'Account — customer balances and order progress.' },
+            { id: 'bind', caption: 'Link account — pair the mini-program with an ERP customer.' },
+            { id: 'order', caption: 'Order details — payment, dispatch, and tracking.' },
+          ]} />
         </CaseChapter>
 
         <CaseChapter label="10 / How it was built" title="A shared system, and 381 commits of iteration.">
