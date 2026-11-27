@@ -31,7 +31,6 @@ export const metadata: Metadata = {
   title: 'DEF mini-program redesign | Mei Chai',
   description:
     'Redesigning a retail-style WeChat storefront for the merchants who actually buy from it, mostly by deciding what to take away.',
-  robots: { index: false, follow: false },
 };
 
 const navLabels = [
