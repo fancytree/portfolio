@@ -26,6 +26,7 @@ type Stop = { target: string; mood: Mood; text: string; solution?: boolean };
 // both over the design's own screens (the tiles below say the same).
 const STOPS: Stop[] = [
   { target: 'problem', mood: 'thinking', text: 'I kept asking AI the same word. And kept forgetting it.' },
+  { target: 'flow', mood: 'excited', solution: true, text: 'So I designed MemQ. Keep what you learn as cards, get quizzed right before you’d forget, and come back a little each day.' },
   { target: 'stages', mood: 'focused', text: 'Quiz apps already nail remembering. The hard part? Making the cards.' },
   { target: 'addterms', mood: 'excited', solution: true, text: 'First try: AI makes the cards. Paste text, type a topic, or drop in a PDF. No more typing every card, and you check the list before anything saves.' },
   { target: 'addterms', mood: 'surprised', text: 'But you still had to dig up the material and bring it here. And my AI could bend what it meant.' },
