@@ -1,0 +1,155 @@
+/* Redrawn screens at the app's own 402 × 874 layout, in the 2.0 tokens (theme/colors, theme/components). */
+.app {
+  --bg: #fcfced; --surf: #fff; --panel: #f7f5fa; --line: #e5dfeb; --tint: #ede1fd;
+  --text: #301a50; --sub: #4b2c78; --faint: #7f61a9; --action: #6c3cbc; --lime: #f4fab1;
+}
+
+/* ── Top bars ── */
+.top { flex: none; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; gap: 12px; padding: 8px 24px 12px; }
+.pageTitle { text-align: center; font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 26px; line-height: 32px; color: var(--sub); }
+.round { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 22px; background: var(--surf); color: var(--sub); box-shadow: 0 2px 0 var(--line), inset 0 0 0 1px var(--line); }
+.slot { width: 44px; }
+.heroHead { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 20px 16px 8px; }
+.bigTitle { font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 34px; line-height: 40px; color: var(--text); }
+
+/* ── Body ── */
+.body { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 16px; padding: 4px 16px 24px; }
+.card { display: flex; flex-direction: column; gap: 16px; padding: 16px; border-radius: 24px; background: var(--surf); box-shadow: 0 3px 0 var(--line), inset 0 0 0 1px rgb(229 223 235 / .6); }
+.cardKicker { font-size: 13px; line-height: 18px; font-weight: 500; color: var(--faint); }
+.section { padding: 4px 4px 0; font-size: 18px; line-height: 26px; font-weight: 600; color: var(--text); }
+.hint { font-size: 13px; line-height: 18px; color: var(--faint); text-align: center; }
+
+/* ── Chips (theme/components chip: off = the page's colours, on = the action colour) ── */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { display: block; padding-bottom: 2px; border-radius: 16px; background: var(--line); }
+.chipFace { display: block; padding: 9px 14px; border-radius: 16px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; line-height: 20px; font-weight: 500; color: var(--sub); white-space: nowrap; }
+.chipOn { background: var(--sub); }
+.chipOn .chipFace { background: var(--action); color: #fff; box-shadow: none; }
+
+/* ── Fields (theme/components field: a well a shade off the card) ── */
+.field { display: flex; flex-direction: column; gap: 8px; }
+.fieldLabel { font-size: 15px; line-height: 20px; font-weight: 600; color: var(--text); }
+.well { display: block; min-height: 52px; padding: 14px 16px; border-radius: 16px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line); font-size: 16px; line-height: 24px; color: var(--faint); }
+.wellTall { min-height: 92px; }
+.wellFilled { color: var(--text); }
+
+/* ── The lead button: a face on a deep shell ── */
+.lead { display: block; padding-bottom: 3px; border-radius: 100px; background: var(--sub); }
+.leadFace { display: flex; align-items: center; justify-content: center; gap: 8px; height: 48px; border-radius: 100px; background: var(--action); color: #fff; font-size: 16px; line-height: 24px; font-weight: 600; }
+.leadOff { opacity: .45; }
+
+/* ── Upload well ── */
+.drop { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 28px 16px; border-radius: 16px; background: var(--panel); border: 2px dashed #c9b0f1; text-align: center; font-size: 13px; line-height: 18px; color: var(--faint); }
+.drop b { font-size: 16px; line-height: 24px; color: var(--text); font-weight: 600; }
+.dropIcon { display: grid; place-items: center; width: 56px; height: 56px; margin-bottom: 6px; border-radius: 28px; background: var(--tint); color: var(--action); }
+
+/* ── Lesson rows (as on Library) ── */
+.row { display: flex; align-items: center; gap: 14px; }
+.rowCopy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rowName { font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 20px; line-height: 26px; color: var(--text); }
+.rowSub { font-size: 14px; line-height: 20px; color: var(--sub); }
+.rowFacts { font-size: 13px; line-height: 18px; font-weight: 500; color: var(--faint); }
+.rowCard { padding: 14px 16px; }
+.featured { gap: 12px; }
+.chev { color: var(--faint); }
+.cover { flex: none; position: relative; width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; overflow: hidden; color: var(--sub); }
+.cover::after { content: ''; position: absolute; width: 44px; height: 44px; right: -16px; top: -16px; border-radius: 50%; background: rgb(255 255 255 / .45); }
+.peach { background: linear-gradient(135deg, #ffe4c7, #f4b69e); }
+.lilac { background: linear-gradient(135deg, #f1e4ff, #cdb2f3); }
+.lime { background: linear-gradient(135deg, #f4ffb5, #d4eb79); }
+.sky { background: linear-gradient(135deg, #e3f3fb, #a9d6ea); }
+
+.lessonHead { display: flex; flex-direction: column; gap: 8px; }
+.pageTitleLeft { font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 34px; line-height: 40px; color: var(--text); }
+.termCard { gap: 4px; padding: 14px 16px; }
+.term { font-size: 17px; line-height: 24px; font-weight: 600; color: var(--text); }
+
+/* ── Bottom navigation (as on Today and Library) ── */
+.nav { position: absolute; left: 16px; right: 16px; bottom: 34px; height: 71px; padding-bottom: 3px; border-radius: 100px; background: var(--line); }
+.navFace { height: 100%; display: flex; align-items: center; padding: 0 12px; border-radius: 100px; background: var(--panel); }
+.navItem { flex: 1; min-width: 0; height: 54px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border-radius: 100px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--sub); }
+.navOn { background: var(--lime); }
+
+/* ── Chat (as in Learn something) ── */
+.chatTop { flex: none; display: flex; align-items: center; gap: 12px; padding: 12px 24px; }
+.chatTitle { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--text); }
+.tabs { flex: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; margin: 0 16px 8px; padding: 4px; border-radius: 100px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--line), 0 2px 0 var(--line); }
+.tab { display: grid; place-items: center; height: 36px; border-radius: 100px; font-size: 14px; line-height: 20px; font-weight: 500; color: var(--sub); }
+.tabOn { background: var(--action); color: #fff; font-weight: 600; box-shadow: 0 2px 0 var(--sub); }
+.chatBody { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 16px; padding: 12px 16px; }
+.opening { margin: 0; font-size: 16px; line-height: 24px; color: var(--sub); }
+.asked { align-self: flex-end; max-width: 85%; padding: 8px 16px; border-radius: 24px; background: var(--lime); font-size: 16px; line-height: 24px; font-weight: 500; color: var(--text); }
+.said { margin: 0; font-size: 16px; line-height: 24px; color: var(--text); }
+.starters { flex: none; display: flex; flex-direction: column; padding: 0 16px 12px; }
+.starter { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 14px; line-height: 20px; color: var(--text); }
+.starter svg { flex: none; color: var(--faint); }
+.bar { flex: none; padding: 16px 16px 42px; border-top: 1px solid var(--line); background: var(--surf); }
+.boxRow { display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 24px; background: var(--panel); }
+.add { width: 36px; height: 36px; flex: none; display: grid; place-items: center; color: var(--sub); }
+.box { flex: 1; min-width: 0; font-size: 16px; line-height: 24px; color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.send { width: 36px; height: 36px; flex: none; display: block; padding-bottom: 2px; border-radius: 18px; background: var(--sub); opacity: .4; }
+.sendFace { display: grid; place-items: center; width: 36px; height: 34px; border-radius: 18px; background: var(--action); color: #fff; }
+
+/* ── Today, v1: the goal, the lessons, and the Assistant floating over them ── */
+.goal { font-family: var(--font-oswald), sans-serif; font-weight: 600; font-size: 46px; line-height: 52px; color: var(--text); }
+.goal small { font-family: var(--font-geist-sans), sans-serif; font-size: 16px; font-weight: 500; color: var(--sub); }
+.track { display: block; height: 6px; border-radius: 6px; background: var(--tint); overflow: hidden; }
+.track span { display: block; height: 100%; border-radius: 6px; background: var(--action); }
+.rowCopy .track { margin-top: 8px; }
+.fab { position: absolute; right: 20px; bottom: 122px; z-index: 2; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 30px; background: var(--action); color: #fff; box-shadow: 0 3px 0 var(--sub), 0 10px 24px -8px rgb(48 26 80 / .45); }
+
+/* ── Use your own AI (app/import-cards.tsx) ── */
+.lead2 { margin: 0; padding: 0 4px; font-size: 16px; line-height: 24px; color: var(--sub); }
+.step { display: flex; align-items: center; gap: 8px; }
+.step b { font-size: 16px; line-height: 24px; font-weight: 600; color: var(--text); }
+.stepNum { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 13px; background: var(--tint); color: var(--action); font-size: 13px; font-weight: 600; }
+.small { display: block; padding-bottom: 2px; border-radius: 100px; }
+.smallFace { display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; border-radius: 100px; font-size: 14px; line-height: 20px; font-weight: 600; }
+.primary { background: var(--sub); }
+.primary .smallFace { background: var(--action); color: #fff; }
+.secondary { background: var(--line); }
+.secondary .smallFace { background: var(--surf); color: var(--text); box-shadow: inset 0 0 0 1px var(--line); }
+.ghost { padding-bottom: 0; }
+.ghost .smallFace { color: var(--sub); height: 32px; }
+.checkHead { display: flex; justify-content: space-between; font-size: 14px; line-height: 20px; color: var(--sub); }
+.checkHead b { color: var(--action); font-weight: 600; }
+.importRow { display: flex; gap: 12px; align-items: flex-start; padding: 4px 0; }
+.tickBox { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; background: var(--bg); box-shadow: inset 0 0 0 1.5px var(--line); color: var(--action); }
+.tickOn { background: var(--lime); box-shadow: inset 0 0 0 1.5px var(--action); }
+.importText { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.importText b { font-size: 15px; line-height: 20px; font-weight: 600; color: var(--text); }
+.importText span { font-size: 14px; line-height: 20px; color: var(--sub); }
+.importText em { font-style: normal; font-size: 12px; line-height: 16px; color: var(--faint); }
+.importText em.flag { color: #875807; }
+.dim b, .dim span { opacity: .55; }
+
+/* ── The host's chat (neutral, its own font) with MemQ's view inside ── */
+.host { background: #fff !important; font-family: -apple-system, system-ui, 'Segoe UI', sans-serif; color: #1f1f1f; }
+.hostTop { flex: none; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px 12px; border-bottom: 1px solid #eee; font-size: 16px; }
+.hostMark { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 13px; background: #1f1f1f; color: #fff; }
+.hostBody { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; gap: 14px; padding: 16px; }
+.hostAsked { align-self: flex-end; max-width: 80%; padding: 9px 14px; border-radius: 18px; background: #f0f0f0; font-size: 15px; line-height: 21px; }
+.hostSaid { margin: 0; font-size: 15px; line-height: 22px; color: #1f1f1f; }
+.hostBar { flex: none; display: flex; align-items: center; justify-content: space-between; margin: 0 12px 38px; padding: 10px 10px 10px 16px; border-radius: 24px; background: #f4f4f4; font-size: 15px; color: #8a8a8a; }
+.hostSend { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 16px; background: #1f1f1f; color: #fff; }
+
+.mcpCard { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: #fff; border: 1px solid #e6e6e6; }
+.mcpHead { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+.mcpCover { flex: none; width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #f4ffb5, #d4eb79); }
+.mcpRow { display: flex; flex-direction: column; gap: 1px; padding: 8px 10px; border-radius: 10px; background: #f7f7f7; }
+.mcpRow b { font-size: 14px; line-height: 19px; }
+.mcpRow span { font-size: 13px; line-height: 18px; color: #6b6b6b; }
+.mcpButtons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mcpBtn { display: block; border-radius: 100px; }
+.mcpBtn > span { display: grid; place-items: center; height: 40px; border-radius: 100px; font-size: 14px; font-weight: 600; }
+.mcpPrimary { padding-bottom: 3px; background: #4b2c78; }
+.mcpPrimary > span { background: #6c3cbc; color: #fff; }
+.mcpSecondary > span { background: #fff; color: #1f1f1f; box-shadow: inset 0 0 0 1px #d6d6d6; }
+.mcpTitle { font-size: 20px; line-height: 26px; }
+.mcpField { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 12px; border: 1px solid #e0e0e0; font-size: 12px; color: #6b6b6b; }
+.mcpField b { font-size: 15px; color: #1f1f1f; }
+.mcpFoot { flex: none; padding: 12px 16px 40px; border-top: 1px solid #eee; }
+.mcpSaved { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #f4fab1; color: #3d4a00; font-size: 14px; font-weight: 600; }
+.host .checkHead { color: #6b6b6b; }
+.host .importText b { color: #1f1f1f; }
+.host .importText span { color: #6b6b6b; }

@@ -32,7 +32,7 @@ const COVERS: Record<string, () => React.JSX.Element> = {
   "/projects/def-miniprogram-kit": DefMiniProgramCover,
   "/projects/jobnova-kit": JobNovaCover,
   "/projects/connectnova-kit": ConnectNovaCover,
-  "/projects/memq-kit": MemQCover,
+  "/projects/memq-decisions": MemQCover,
 };
 
 function Label({ children }: { children: string }) {

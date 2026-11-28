@@ -130,7 +130,7 @@ export const productProjects: WorkProject[] = [
     coverDevice: 'phone-stack',
     coverAccent: '#1A8A72',
     coverMotif: 'learning',
-    href: '/projects/memq-kit',
+    href: '/projects/memq-decisions',
   },
   {
     title: 'Mono',

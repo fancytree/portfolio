@@ -1,0 +1,63 @@
+/* The own-AI journey left to right, with what their AI does hung beneath its stop. */
+.flow { display: flex; flex-direction: column; gap: 20px; padding: var(--case-space-24); border-radius: 24px; background: #faf9fc; box-shadow: inset 0 0 0 1px var(--case-line); }
+
+.journey { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 26px; }
+.journey > .works { order: 1; grid-column: 1 / -1; }
+.stop { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 16px; min-width: 0; }
+.stop:not(:first-child)::before { content: '→'; position: absolute; left: -13px; top: 50%; transform: translate(-50%, -50%); color: #6c3cbc; font-size: 18px; }
+.place { font-family: var(--case-font-heading); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.stop b { font-size: 15px; line-height: 1.3; font-weight: 600; color: var(--case-ink); }
+.sub { font-size: 13px; line-height: 1.4; color: var(--case-muted); }
+
+.memq { background: #f5f0fd; box-shadow: inset 0 0 0 1px #d9c6f6; }
+.memq .place { color: #6c3cbc; }
+.ai { background: #fff; box-shadow: inset 0 0 0 1.5px #301a50; }
+.ai .place { color: #301a50; }
+.out { background: #f4fab1; box-shadow: inset 0 0 0 1px #d4e36a; }
+.out .place { color: #4b5a00; }
+
+/* The AI's stop is where the detail hangs from: a line drops from it to the panel. */
+.hub::after { content: ''; position: absolute; left: 50%; top: 100%; width: 2px; height: 26px; margin-left: -1px; background: #301a50; }
+
+.works { display: flex; flex-direction: column; gap: 12px; padding: 16px 18px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1.5px #301a50; }
+.worksHead { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #301a50; }
+.worksSteps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.work { position: relative; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.work + .work::before { content: '→'; position: absolute; left: -12px; top: 2px; transform: translateX(-50%); color: #6c3cbc; font-size: 16px; }
+.workHead { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.3; font-weight: 600; color: var(--case-ink); }
+.workNum { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 12px; background: #301a50; color: #fff; font-family: var(--case-font-heading); font-size: 12px; }
+.work ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.work ul li { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 8px 10px; border-radius: 10px; background: #faf9fc; font-size: 13px; line-height: 1.4; color: var(--case-copy); }
+
+.read { margin: 0; font-size: 14px; line-height: 1.5; color: var(--case-copy); }
+.read b { color: var(--case-ink); }
+.tested { display: inline-block; padding: 1px 7px; border-radius: 999px; background: #f4fab1; box-shadow: inset 0 0 0 1px #d4e36a; font-style: normal; font-size: 10.5px; font-weight: 600; letter-spacing: .02em; color: #4b5a00; vertical-align: 1px; }
+
+@media (max-width: 1000px) {
+  .journey { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .journey > .works { order: 0; }
+  .stop:not(:first-child)::before { content: '↓'; left: 50%; top: -12px; }
+  .hub::after { height: 24px; }
+  .worksSteps { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .work + .work::before { content: '↓'; left: 12px; top: -18px; }
+}
+
+/* ── Playing: what is ahead waits faded, the current step lifts and rings, what is done stays. ── */
+.stop, .work, .works { transition: opacity .35s ease, transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease; }
+.ahead { opacity: .35; }
+.stop.on { transform: translateY(-3px); box-shadow: inset 0 0 0 2px #6c3cbc, 0 10px 24px -12px rgb(108 60 188 / .55); }
+.out.on { box-shadow: inset 0 0 0 2px #8aa000, 0 10px 24px -12px rgb(138 160 0 / .55); }
+.stop:not(:first-child)::before { transition: color .35s ease, transform .35s ease; }
+.stop.on:not(:first-child)::before { color: #6c3cbc; transform: translate(-50%, -50%) scale(1.3); }
+.stop.ahead::before { color: #d9c6f6; }
+.hub::after { transition: background .35s ease; }
+.hub.feeding::after { background: #6c3cbc; }
+.works.worksOn { box-shadow: inset 0 0 0 2px #6c3cbc; }
+.work.ahead { opacity: .3; }
+.work.on ul li { background: #f5f0fd; }
+.work.on .workNum { background: #6c3cbc; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stop, .work, .works { transition: none; }
+  .stop.on { transform: none; }
+}

@@ -1,0 +1,110 @@
+.tone { --case-flow-link: #6c3cbc; --case-flow-break: #875807; --case-content-wide: 1400px; --case-rail-width: 200px; }
+
+/* A block label: MemQ purple, a rule above so each block starts fresh. */
+.beat {
+  margin: var(--case-space-16) 0 0;
+  padding-top: var(--case-space-16);
+  border-top: var(--case-border-width) solid var(--case-ink);
+  font-family: var(--case-font-heading); font-size: var(--case-text-14); line-height: 1.4;
+  text-transform: uppercase; letter-spacing: .04em; color: #6c3cbc;
+  max-width: var(--case-prose-width, 720px);
+}
+
+/* A single phone in a figure: kept to a phone's width so its callouts have room either side. */
+.narrow { width: min(100%, 720px); margin: 0 auto; }
+
+/* Four versions on one line, joined by a rail; stacked on a phone. */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--case-space-16); }
+.timeline > li { position: relative; }
+.timeline > li + li::before { content: ''; position: absolute; left: calc(-1 * var(--case-space-16)); top: 31px; width: var(--case-space-16); height: 2px; background: rgb(108 60 188 / .35); }
+.stop {
+  height: 100%; display: flex; flex-direction: column; gap: 6px;
+  padding: var(--case-space-24); border-radius: 20px; background: #fff; color: var(--case-ink); text-decoration: none;
+  box-shadow: inset 0 0 0 1px rgb(108 60 188 / .18);
+  transition: box-shadow var(--case-motion-fast, .15s) var(--case-ease, ease);
+}
+.stop:hover { box-shadow: inset 0 0 0 1.5px #6c3cbc; }
+.stop:focus-visible { outline: 2px solid #6c3cbc; outline-offset: 3px; }
+.now .stop { background: #f5f0fd; box-shadow: inset 0 0 0 1.5px #6c3cbc; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px #6c3cbc; margin-bottom: 4px; }
+.now .dot { background: #6c3cbc; }
+.when { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6c3cbc; }
+.stopTitle { font-size: 19px; line-height: 1.3; font-weight: 600; letter-spacing: -.01em; }
+.stopBody { font-size: 14px; line-height: 1.5; color: var(--case-copy); }
+
+/* The lesson one version handed to the next. */
+.carry {
+  margin: 0; max-width: var(--case-prose-width, 720px);
+  display: flex; flex-direction: column; gap: 6px;
+  padding: var(--case-space-16) var(--case-space-24); border-radius: 16px; background: #f5f0fd;
+  font-size: var(--case-text-16); line-height: 1.55; color: var(--case-ink); font-weight: 500;
+}
+.carry span { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #6c3cbc; font-weight: 400; }
+
+/* Screens left and large, the learner's card right, as with the decision cards. */
+.beside { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: var(--case-space-32, 32px); align-items: start; }
+.besideScreen { margin: 0; min-width: 0; position: sticky; top: var(--case-space-24, 24px); }
+.needCard { min-width: 0; border-radius: 20px; background: var(--case-white, #fff); box-shadow: 0 1px 2px rgb(48 26 80 / .04), 0 16px 36px -24px rgb(48 26 80 / .28), inset 0 0 0 1px var(--case-line); overflow: hidden; }
+.needHead { display: flex; flex-direction: column; gap: 6px; padding: var(--case-space-24) var(--case-space-24) var(--case-space-16); }
+.needKicker { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #6c3cbc; }
+.needTitle { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -.01em; color: var(--case-ink); }
+/* The flow: stages joined by arrows; the design fans out into its ways in and meets again. */
+.flowList { list-style: none; margin: 0; padding: 0 var(--case-space-24) var(--case-space-24); display: flex; flex-direction: column; }
+.flowStage { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.flowStage + .flowStage { padding-top: 34px; }
+.flowStage + .flowStage::before { content: ''; position: absolute; left: 50%; top: 6px; width: 2px; height: 18px; margin-left: -1px; background: #c9b0f1; }
+.flowStage + .flowStage::after { content: ''; position: absolute; left: 50%; top: 22px; margin-left: -5px; border: 5px solid transparent; border-top: 7px solid #c9b0f1; border-bottom: 0; }
+.flowTag { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--case-muted); text-align: center; }
+.node { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 12px; border-radius: 14px; text-align: center; background: #faf9fc; box-shadow: inset 0 0 0 1px var(--case-line); }
+.node b { font-size: 15px; line-height: 1.35; font-weight: 600; color: var(--case-ink); }
+.node span { font-size: 13px; line-height: 1.35; color: var(--case-muted); }
+.nodeNeed { background: #fff; }
+.fan { position: relative; display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); gap: 8px; padding-bottom: 22px; }
+/* The three ways in join into one line, then one arrow down. */
+.fan::before { content: ''; position: absolute; left: calc(50% / var(--n, 3)); right: calc(50% / var(--n, 3)); bottom: 10px; height: 10px; border: 2px solid #c9b0f1; border-top: 0; border-radius: 0 0 8px 8px; }
+.fan::after { content: ''; position: absolute; left: 50%; bottom: 0; width: 2px; height: 10px; margin-left: -1px; background: #c9b0f1; }
+.nodeBranch { padding: 10px 8px; background: #fff; }
+.nodeBranch b { font-size: 14px; }
+.nodeDesign { background: #f5f0fd; box-shadow: inset 0 0 0 1.5px #6c3cbc; }
+.nodeMet { background: #f4fab1; box-shadow: inset 0 0 0 1px #d4e36a; }
+
+/* What happened: a row of tiles under the module they belong to. */
+.outcomes { display: flex; flex-direction: column; gap: 10px; }
+.outcomesHead { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--case-muted); }
+.outcomeGrid { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; }
+.outcome { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 18px; border-radius: 18px; }
+.outcome b { font-size: 17px; line-height: 1.3; font-weight: 600; color: var(--case-ink); }
+.outcome > span:last-child { font-size: 14px; line-height: 1.45; color: var(--case-copy); }
+.outcomeIcon { display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 4px; border-radius: 20px; }
+.good { background: #f7fbd6; box-shadow: inset 0 0 0 1px #e2ec9e; }
+.good .outcomeIcon { background: #eaf59a; color: #4b5a00; }
+.bad { background: #fff4ef; box-shadow: inset 0 0 0 1px #f6d6c8; }
+.bad .outcomeIcon { background: #ffe1d3; color: #b5482f; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.splitCol { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1px var(--case-line); }
+.splitKeep { background: #f5f0fd; box-shadow: inset 0 0 0 1.5px #6c3cbc; }
+.splitHead { font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--case-muted); }
+.splitKeep .splitHead { color: #6c3cbc; }
+.splitCol ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.splitCol li { font-size: 15px; line-height: 1.4; color: var(--case-ink); }
+.splitArrow { align-self: center; color: #6c3cbc; font-size: 20px; }
+
+@media (max-width: 860px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .splitArrow { transform: rotate(90deg); justify-self: center; }
+  .outcomeGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .beside { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-16, 16px); }
+  .besideScreen { position: static; }
+}
+
+@media (max-width: 960px) {
+  .timeline { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .timeline > li + li::before { display: none; }
+}
+@media (max-width: 560px) {
+  .timeline { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stop { transition: none; }
+}

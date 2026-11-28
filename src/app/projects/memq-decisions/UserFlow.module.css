@@ -1,0 +1,67 @@
+/* MemQ's own palette: purple content on a pale lime ground. */
+.flow {
+  --p: #6c3cbc; --deep: #4b2c78; --ink: #301a50; --muted: #795ba3; --track: #f0e4fc; --sky: #f6ff7c; --picked: #f4fab1;
+  display: flex; flex-direction: column; gap: var(--case-space-24, 24px);
+  padding: var(--case-space-24, 24px);
+  border-radius: 24px;
+  background: linear-gradient(180deg, #fbffd6 0%, #fdfff0 60%, #fff 100%);
+  color: var(--ink);
+}
+
+/* First time: a single row of chips. */
+.first { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.firstLabel { margin-right: 8px; font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.chip { position: relative; padding: 6px 12px; border-radius: 999px; background: #fff; box-shadow: inset 0 0 0 1px rgb(108 60 188 / .2); font-size: 14px; line-height: 20px; }
+.chip + .chip { margin-left: 20px; }
+.chip + .chip::before { content: '→'; position: absolute; left: -22px; width: 20px; text-align: center; color: var(--muted); }
+
+/* Three columns, an arrow between each. */
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.col { position: relative; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.col + .col::before { content: '→'; position: absolute; left: -32px; top: 6px; width: 24px; text-align: center; font-size: 22px; color: var(--p); }
+.colHead { display: flex; gap: 12px; align-items: flex-start; }
+.colHead > span { flex-shrink: 0; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--p); color: #fff; font-family: var(--case-font-heading); font-size: 16px; box-shadow: 0 3px 0 var(--deep); }
+.colHead b { display: block; font-size: 19px; line-height: 1.25; }
+.colHead em { display: block; margin-top: 2px; font-style: normal; font-size: 14px; line-height: 1.4; color: var(--muted); }
+
+/* Steps joined by a short line. */
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.steps > li { position: relative; }
+.steps > li + li { padding-top: 24px; }
+.steps > li + li::before { content: ''; position: absolute; left: 24px; top: 4px; width: 2px; height: 16px; border-radius: 2px; background: rgb(108 60 188 / .35); }
+
+/* A step: a white face on a darker lip, the app's one depth rule. */
+.box { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px rgb(75 44 120 / .14), 0 3px 0 rgb(75 44 120 / .16); min-width: 0; }
+.boxHead { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.boxHead b { font-size: 15px; line-height: 1.3; }
+.note { font-size: 13px; line-height: 1.4; color: var(--muted); }
+.quiet { background: var(--track); box-shadow: 0 0 0 1px rgb(75 44 120 / .1); }
+.end { background: var(--p); box-shadow: 0 3px 0 var(--deep); }
+.end b, .end .note { color: #fff; }
+
+.fork { margin: 0 0 8px; font-family: var(--case-font-heading); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.doors { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.branch { margin: 8px 0 0; display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.4; color: var(--ink); }
+
+/* The way back: a U under columns 2 and 3, rising into Today. On a phone the last box says it instead. */
+.endStep { display: none; }
+.col:nth-of-type(3) .steps { flex: 1; }
+.col:nth-of-type(3) .steps::after { content: ''; flex: 1; min-height: 16px; align-self: flex-end; border-right: 2px dashed rgb(108 60 188 / .45); }
+.loop { grid-column: 2 / 4; position: relative; height: 28px; margin-top: -16px; border: 2px dashed rgb(108 60 188 / .45); border-top: 0; border-radius: 0 0 18px 18px; }
+.loop::before { content: ''; position: absolute; left: -7px; top: -6px; border: 6px solid transparent; border-bottom: 9px solid var(--p); border-top: 0; }
+.loop span { position: absolute; left: 50%; bottom: -11px; transform: translateX(-50%); padding: 0 10px; background: #fff; white-space: nowrap; font-size: 13px; line-height: 20px; color: var(--p); font-weight: 600; }
+
+
+@media (max-width: 960px) {
+  .cols { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .col + .col::before { content: '↓'; left: 4px; top: -34px; }
+  .chip + .chip { margin-left: 0; }
+  .chip + .chip::before { display: none; }
+  .loop, .col:nth-of-type(3) .steps::after { display: none; }
+  .endStep { display: block; }
+}
+@media (max-width: 480px) {
+  .flow { padding: 16px; }
+  .pair { grid-template-columns: minmax(0, 1fr); }
+}
