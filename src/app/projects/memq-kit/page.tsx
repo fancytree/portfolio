@@ -414,7 +414,7 @@ export default function MemQKitPage() {
         <CaseChapter label="13 / Results" title="Shipped, rebuilt, and honest about what is measured.">
           <CaseStats items={[
             { value: 'Live', label: 'Version 1 on the App Store; 2.0 built and its store set ready' },
-            { value: '126', label: 'Commits in the six days that took 2.0 from tokens to App Store screenshots' },
+            { value: '133', label: 'Commits in the six days that took 2.0 from tokens to App Store screenshots' },
             { value: '23', label: 'Composable character states from about 16 still parts' },
           ]} />
           <CaseProse>

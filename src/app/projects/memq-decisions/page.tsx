@@ -77,7 +77,7 @@ export default function MemQDecisionsPage() {
             { label: 'Client', value: 'Self-initiated' },
             { label: 'Role', value: 'Solo product designer & developer' },
             { label: 'Duration', value: 'Apr – Nov 2026' },
-            { label: 'Status', value: 'v1 on the App Store · 2.0 built' },
+            { label: 'Status', value: 'Live on the App Store' },
             { label: 'Research', value: '8 interviews · 24 surveys · 11 usability sessions · 15 beta users' },
             { label: 'Tools', value: 'Figma, Expo, Supabase, Claude Code' },
           ]}
@@ -87,7 +87,7 @@ export default function MemQDecisionsPage() {
             items: [
               { label: 'Problem', body: 'Answers stay in the chat. Flashcard apps make you build every card, and that is where people give up.' },
               { label: 'Approach', body: 'Four stages of card creation, each built from what the last one showed. The AI tested on the real model before every prompt change.' },
-              { label: 'Outcome', body: 'v1 on the App Store, 2.0 built. 184 of 184 chat runs passed; a free account costs under 2¢ a month in AI.' },
+              { label: 'Outcome', body: 'Live on the App Store. 184 of 184 chat runs passed; a free account costs under 2¢ a month in AI.' },
             ],
             deliverables: ['Research', 'iOS app', 'AI chat', 'AI credits', 'Design system', 'Rigged mascot'],
           }}
@@ -105,7 +105,7 @@ export default function MemQDecisionsPage() {
             <ul>
               <li><strong>Research:</strong> <strong>8</strong> interviews, <strong>24</strong> surveys, <strong>11</strong> usability sessions, <strong>15</strong> TestFlight users. A written spec for each part.</li>
               <li><strong>Visual:</strong> briefs, not blueprints. AI tools rendered <strong>5</strong> directions on the same screens; I chose one and set its rules.</li>
-              <li><strong>Code:</strong> Expo, Supabase and Claude Code. <strong>126</strong> commits in six days for 2.0; the chat tested on the real model, <strong>23</strong> cases × <strong>8</strong> runs.</li>
+              <li><strong>Code:</strong> Expo, Supabase and Claude Code. <strong>133</strong> commits in six days for 2.0; the chat tested on the real model, <strong>23</strong> cases × <strong>8</strong> runs.</li>
             </ul>
           </CaseProse>
         </CaseChapter>
@@ -363,7 +363,7 @@ export default function MemQDecisionsPage() {
         <CaseChapter label="09 / Results" title="Shipped, and honest about what is measured.">
           <TourMark id="results">
             <CaseStats items={[
-              { value: 'Live', label: 'v1 on the App Store; 2.0 built' },
+              { value: 'Live', label: 'On the App Store' },
               { value: '184 / 184', label: 'Chat runs passed on the real model' },
               { value: '< 2¢', label: 'AI cost of a free account, per month' },
             ]} />
