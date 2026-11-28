@@ -25,19 +25,19 @@ type Stop = { target: string; mood: Mood; text: string; solution?: boolean };
 // Each design: what it does for the learner, then what it still left them with,
 // both over the design's own screens (the tiles below say the same).
 const STOPS: Stop[] = [
-  { target: 'problem', mood: 'thinking', text: 'I kept asking AI the same things. A word, an idea I’d looked up just last week. I’d get the answer, close the chat, and forget it all over again.' },
-  { target: 'flow', mood: 'excited', solution: true, text: 'So I designed MemQ. Keep what you learn as cards, get quizzed right before you’d forget, and come back a little each day.' },
-  { target: 'stages', mood: 'focused', text: 'Quiz apps already nail remembering. The hard part? Making the cards.' },
-  { target: 'addterms', mood: 'excited', solution: true, text: 'First try: AI makes the cards. Paste text, type a topic, or drop in a PDF. No more typing every card, and you check the list before anything saves.' },
-  { target: 'addterms', mood: 'surprised', text: 'But you still had to dig up the material and bring it here. And my AI could bend what it meant.' },
-  { target: 'aiv1', mood: 'happy', solution: true, text: 'AI v1: just ask. The answer becomes a card in one tap, right where you learned it.' },
-  { target: 'aiv1', mood: 'oops', text: 'But you had to pick a mode before you could even ask. One answer, one card. And a wrong answer got saved, unchecked.' },
-  { target: 'aiv2', mood: 'excited', solution: true, text: 'AI v2: it explains first, so you actually get it. Cards only when you ask, as drafts you tick. No junk sneaks into your deck.' },
-  { target: 'aiv2', mood: 'wondering', text: 'But you already learn in other AI apps, and this chat knows none of that. Plus every message eats your credits.' },
-  { target: 'ownai', mood: 'happy', solution: true, text: 'So: use your own AI. It already knows what you talked about, writes cards in MemQ’s format, and it’s free, no limit.' },
-  { target: 'ownai', mood: 'thinking', text: 'But you still copy a prompt over, then paste the reply back. Two hops, every time.' },
-  { target: 'mcp', mood: 'excited', solution: true, text: 'MCP: ask in your own AI, and the cards land in MemQ. No switching apps, and you still tick what’s saved.' },
-  { target: 'reflection', mood: 'learningComplete', solution: true, text: 'Looking back, every version got closer to where people already learn.\n\nThe iOS app is live! Try it with the button below. Tap me to go again.' },
+  { target: 'problem', mood: 'thinking', text: 'I kept asking AI the same things. A word, an idea I’d looked up just last week. I’d get the answer, close the chat, and **forget it all over again**.' },
+  { target: 'flow', mood: 'excited', solution: true, text: 'So I designed MemQ. **Keep what you learn as cards**, **get quizzed right before you’d forget**, and come back a little each day.' },
+  { target: 'stages', mood: 'focused', text: 'Quiz apps already nail remembering. The hard part? **Making the cards.**' },
+  { target: 'addterms', mood: 'excited', solution: true, text: 'First try: **AI makes the cards.** Paste text, type a topic, or drop in a PDF. **No more typing every card**, and you check the list before anything saves.' },
+  { target: 'addterms', mood: 'surprised', text: 'But you still had to **dig up the material** and bring it here. And my AI could **bend what it meant**.' },
+  { target: 'aiv1', mood: 'happy', solution: true, text: 'AI v1: just ask. **The answer becomes a card in one tap**, right where you learned it.' },
+  { target: 'aiv1', mood: 'oops', text: 'But you had to **pick a mode before you could even ask**. One answer, one card. And **a wrong answer got saved, unchecked**.' },
+  { target: 'aiv2', mood: 'excited', solution: true, text: 'AI v2: **it explains first**, so you actually get it. Cards only when you ask, **as drafts you tick**. No junk sneaks into your deck.' },
+  { target: 'aiv2', mood: 'wondering', text: 'But you already learn in other AI apps, and **this chat knows none of that**. Plus **every message eats your credits**.' },
+  { target: 'ownai', mood: 'happy', solution: true, text: 'So: **use your own AI**. It already knows what you talked about, writes cards in MemQ’s format, and it’s **free, no limit**.' },
+  { target: 'ownai', mood: 'thinking', text: 'But you still **copy a prompt over, then paste the reply back**. Two hops, every time.' },
+  { target: 'mcp', mood: 'excited', solution: true, text: 'MCP: **ask in your own AI, and the cards land in MemQ**. No switching apps, and you still tick what’s saved.' },
+  { target: 'reflection', mood: 'learningComplete', solution: true, text: 'Looking back, every version got **closer to where people already learn**.\n\n**The iOS app is live!** Try it with the button below. Tap me to go again.' },
 ];
 
 type Phase = 'away' | 'greet' | 'tour' | 'paused' | 'hidden';
@@ -46,7 +46,20 @@ const RIG_SRC = '/demos/memq-mascot/mascot-rig.js';
 /** Set once a tour has been started this visit, so a tap later goes straight back in. */
 const TOURED_KEY = 'memq-case-guide-toured';
 const TYPE_MS = 22;
-const READ_MS = (text: string) => 1600 + text.length * 38;
+/** Lines mark their key words with **…**; these count and draw what the reader sees. */
+const size = (text: string) => text.replaceAll('**', '').length;
+const READ_MS = (text: string) => 1600 + size(text) * 38;
+
+/** The first `upto` visible characters of a line, bold where it is marked. */
+function Rich({ text, upto }: { text: string; upto: number }) {
+  let left = upto;
+  return text.split('**').map((part, i) => {
+    const shown = part.slice(0, Math.max(0, left));
+    left -= part.length;
+    if (!shown) return null;
+    return i % 2 ? <b key={i}>{shown}</b> : <span key={i}>{shown}</span>;
+  });
+}
 
 /** Marks a part of the page as a stop on the tour. */
 export function TourMark({ id, children }: { id: string; children: ReactNode }) {
@@ -231,9 +244,9 @@ export function InklingGuide() {
       gliding.current = false;
       if (el) { el.setAttribute('data-tour-on', ''); lookAt(el); }
       setMood(stop.mood); setPoke((p) => p + 1);
-      if (still) setTyped(stop.text.length);
-      else for (let c = 1; c <= stop.text.length; c++) later(() => setTyped(c), c * TYPE_MS);
-      const read = (still ? 0 : stop.text.length * TYPE_MS) + READ_MS(stop.text) * (stop.solution ? 1.4 : 1) + (stop.solution ? 1500 : 0);
+      if (still) setTyped(size(stop.text));
+      else for (let c = 1; c <= size(stop.text); c++) later(() => setTyped(c), c * TYPE_MS);
+      const read = (still ? 0 : size(stop.text) * TYPE_MS) + READ_MS(stop.text) * (stop.solution ? 1.4 : 1) + (stop.solution ? 1500 : 0);
       if (i < STOPS.length - 1) later(() => playNext.current(i + 1), read);
       else later(() => { setPhase('hidden'); setMood('todayIdle'); setLook([-0.6, 0]); document.querySelectorAll('[data-tour-on]').forEach((n) => n.removeAttribute('data-tour-on')); setAt(0); }, read + 2500);
     };
@@ -247,7 +260,7 @@ export function InklingGuide() {
 
   const pause = useCallback(() => {
     clear();
-    setTyped(STOPS[at].text.length);
+    setTyped(size(STOPS[at].text));
     setPhase('paused'); setMood('idle');
   }, [at]);
   const resume = () => { remember('touring'); play(stopHere()); };
@@ -274,7 +287,7 @@ export function InklingGuide() {
         if (atRef.current === i) return;
         atRef.current = i;
         setAt(i);
-        setTyped(STOPS[i].text.length);
+        setTyped(size(STOPS[i].text));
         document.querySelectorAll('[data-tour-on]').forEach((n) => n.removeAttribute('data-tour-on'));
       });
     };
@@ -304,15 +317,14 @@ export function InklingGuide() {
 
   if (!mounted) return null;
   const stop = STOPS[at];
-  const line = phase === 'greet'
-    ? 'Hi! MemQ turns what you look up into cards, then quizzes you before you forget. I made it, start to finish. Quick tour?'
-    : stop.text.slice(0, typed);
+  const GREETING = 'Hi! MemQ **turns what you look up into cards**, then **quizzes you before you forget**. I made it, start to finish. Quick tour?';
+  const line = phase === 'greet' ? <Rich text={GREETING} upto={size(GREETING)} /> : <Rich text={stop.text} upto={typed} />;
 
   return createPortal(
     <div className={`${g.guide} ${g[phase] ?? ''}`} aria-live="polite">
       {(phase === 'greet' || phase === 'tour' || phase === 'paused') && (
         <div className={g.bubble} role="dialog" aria-label="Inkling, your guide to this case">
-          <p>{line}{phase === 'tour' && typed < stop.text.length && <span className={g.caret} aria-hidden="true" />}</p>
+          <p>{line}{phase === 'tour' && typed < size(stop.text) && <span className={g.caret} aria-hidden="true" />}</p>
           {phase === 'greet' ? (
             <div className={g.row}>
               <button type="button" className={g.ghost} onClick={hide}>Not now</button>
