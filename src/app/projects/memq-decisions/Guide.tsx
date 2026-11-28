@@ -12,7 +12,7 @@
  * Reduced motion: no scrolling animation, no typing, a still Inkling.
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { createPortal } from 'react-dom';
+import { createPortal, preload } from 'react-dom';
 import { RIG_SVG } from '../../components/memq-cover/rigSvg';
 import g from './Guide.module.css';
 
@@ -41,6 +41,7 @@ const STOPS: Stop[] = [
 
 type Phase = 'away' | 'greet' | 'tour' | 'paused' | 'hidden';
 const SEEN_KEY = 'memq-case-guide';
+const RIG_SRC = '/demos/memq-mascot/mascot-rig.js';
 /** Set once a tour has been started this visit, so a tap later goes straight back in. */
 const TOURED_KEY = 'memq-case-guide-toured';
 const TYPE_MS = 22;
@@ -108,7 +109,7 @@ function LiveInkling({ mood, look, poke, still }: { mood: Mood; look: [number, n
       let tag = document.querySelector<HTMLScriptElement>('script[data-memq-rig]');
       if (!tag) {
         tag = document.createElement('script');
-        tag.src = '/demos/memq-mascot/mascot-rig.js';
+        tag.src = RIG_SRC;
         tag.async = true;
         tag.dataset.memqRig = '';
         document.head.appendChild(tag);
@@ -167,6 +168,8 @@ function stopHere(): number {
 /* ───────────────────────── The guide ───────────────────────── */
 
 export function InklingGuide() {
+  // Fetch the rig with the page, not after it hydrates, so Inkling moves as soon as it shows.
+  preload(RIG_SRC, { as: 'script' });
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<Phase>('away');
   const [at, setAt] = useState(0);
@@ -190,14 +193,16 @@ export function InklingGuide() {
   useEffect(() => {
     let seen: string | null = null;
     try { seen = sessionStorage.getItem(SEEN_KEY); } catch { /* private window: greet anyway */ }
+    // Told "not now" already: be at the edge from the first frame, no slide in.
     const ready = window.setTimeout(() => {
       setMounted(true);
       setStill(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      if (seen === 'hidden') { setMood('todayIdle'); setPhase('hidden'); }
     }, 0);
     const arrive = window.setTimeout(() => {
-      if (seen === 'hidden') { setMood('todayIdle'); setPhase('hidden'); return; }
+      if (seen === 'hidden') return;
       setMood('happy'); setPhase('greet'); setPoke((p) => p + 1);
-    }, 1200);
+    }, 350);
     const pending = timers.current;
     return () => { window.clearTimeout(ready); window.clearTimeout(arrive); pending.forEach((t) => window.clearTimeout(t)); cancelGlide.current(); };
   }, []);
