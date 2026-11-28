@@ -33,7 +33,7 @@ export default function Choices() {
     <>
       {QUESTIONS.map((item, n) => (
         <section key={item.question} className={styles.exploration} aria-label={item.question}>
-          <div data-tour={`choice-${n + 1}`} className={styles.exploration}>
+          <div data-mei-tour={`choice-${n + 1}`} className={styles.exploration}>
             <h3 className={styles.question}>{item.question}</h3>
             <ol className={styles.directions}>
               {item.directions.map((d, i) => (
@@ -51,7 +51,7 @@ export default function Choices() {
             <p className={styles.decision}><span>{PRINCIPLES[item.principle - 1].phase} · {PRINCIPLES[item.principle - 1].rule}</span>{item.decision}</p>
           </div>
           {/* Where the first two answers show up on screen. */}
-          {n === 0 ? <div data-tour="entries"><EntryPoints /></div> : null}
+          {n === 0 ? <div data-mei-tour="entries"><EntryPoints /></div> : null}
           {n === 1 ? <TrustEvidence /> : null}
         </section>
       ))}

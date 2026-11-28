@@ -34,8 +34,8 @@
 .controls { display: flex; gap: var(--case-space-8); margin-left: auto; }
 
 /* The part of the page being talked about: ruled off in ink, as on the homepage. */
-:global([data-tour]) { outline: 2px dashed transparent; outline-offset: var(--case-space-8); transition: outline-color 0.2s steps(4); }
-:global([data-tour-on]) { outline-color: var(--case-ink); }
+:global([data-mei-tour]) { outline: 2px dashed transparent; outline-offset: var(--case-space-8); transition: outline-color 0.2s steps(4); }
+:global([data-mei-tour-on]) { outline-color: var(--case-ink); }
 
 @keyframes bubbleIn { from { opacity: 0; transform: translateY(var(--case-space-8)); } }
 @keyframes blink { 50% { opacity: 0; } }

@@ -64,7 +64,7 @@ function Said({ text, count }: { text: string; count: number }) {
 
 /** Marks a part of the page as a stop on the tour. */
 export function TourMark({ id, children }: { id: string; children: ReactNode }) {
-  return <div data-tour={id}>{children}</div>;
+  return <div data-mei-tour={id}>{children}</div>;
 }
 
 /* ───────────────────────── Scrolling ───────────────────────── */
@@ -109,7 +109,7 @@ function stopHere(): number {
   const line = window.innerHeight * 0.35;
   let best = 0, bestGap = Infinity;
   STOPS.forEach((stop, i) => {
-    const el = document.querySelector<HTMLElement>(`[data-tour="${stop.target}"]`);
+    const el = document.querySelector<HTMLElement>(`[data-mei-tour="${stop.target}"]`);
     if (!el) return;
     const r = el.getBoundingClientRect();
     const gap = r.top <= line && r.bottom >= line ? 0 : Math.min(Math.abs(r.top - line), Math.abs(r.bottom - line));
@@ -174,20 +174,20 @@ export function TourGuide() {
   const play = useCallback((i: number) => {
     clear();
     const stop = STOPS[i];
-    const el = document.querySelector<HTMLElement>(`[data-tour="${stop.target}"]`);
+    const el = document.querySelector<HTMLElement>(`[data-mei-tour="${stop.target}"]`);
     setAt(i); setTyped(0); setPhase('tour');
-    document.querySelectorAll('[data-tour-on]').forEach((n) => n.removeAttribute('data-tour-on'));
+    document.querySelectorAll('[data-mei-tour-on]').forEach((n) => n.removeAttribute('data-mei-tour-on'));
     const speak = () => {
       gliding.current = false;
       setMoving(false);
-      if (el) { el.setAttribute('data-tour-on', ''); lookAt(el); }
+      if (el) { el.setAttribute('data-mei-tour-on', ''); lookAt(el); }
       if (stop.action && !still) head.current?.play(stop.action);
       const { length } = plain(stop.text);
       if (still) setTyped(length);
       else for (let c = 1; c <= length; c++) later(() => setTyped(c), c * TYPE_MS);
       const read = (still ? 0 : length * TYPE_MS) + READ_MS(plain(stop.text)) + (stop.dwell ?? 0);
       if (i < STOPS.length - 1) later(() => playNext.current(i + 1), read);
-      else later(() => { setPhase('hidden'); document.querySelectorAll('[data-tour-on]').forEach((n) => n.removeAttribute('data-tour-on')); setAt(0); }, read + 2500);
+      else later(() => { setPhase('hidden'); document.querySelectorAll('[data-mei-tour-on]').forEach((n) => n.removeAttribute('data-mei-tour-on')); setAt(0); }, read + 2500);
     };
     if (!el) { speak(); return; }
     gliding.current = true;
@@ -204,7 +204,7 @@ export function TourGuide() {
     setPhase('paused');
   }, [at]);
   const resume = () => { remember('touring'); play(stopHere()); };
-  const hide = () => { clear(); setMoving(false); setLook([-0.8, 0]); remember('hidden'); setPhase('hidden'); document.querySelectorAll('[data-tour-on]').forEach((n) => n.removeAttribute('data-tour-on')); };
+  const hide = () => { clear(); setMoving(false); setLook([-0.8, 0]); remember('hidden'); setPhase('hidden'); document.querySelectorAll('[data-mei-tour-on]').forEach((n) => n.removeAttribute('data-mei-tour-on')); };
 
   // Scrolling yourself mid-tour pauses it, so the page is never fought over.
   useEffect(() => {
@@ -228,7 +228,7 @@ export function TourGuide() {
         atRef.current = i;
         setAt(i);
         setTyped(plain(STOPS[i].text).length);
-        document.querySelectorAll('[data-tour-on]').forEach((n) => n.removeAttribute('data-tour-on'));
+        document.querySelectorAll('[data-mei-tour-on]').forEach((n) => n.removeAttribute('data-mei-tour-on'));
       });
     };
     window.addEventListener('scroll', follow, { passive: true });

@@ -52,7 +52,7 @@ export default function AnnotatedShot({ src, alt, notes, caption, tour }: {
   return (
     <figure className={styles.entries}>
       <div className={styles.map} style={{ '--drawing-height': H, '--drawing-top': top } as CSSProperties}>
-        <div data-tour={tour} className={styles.shot}>
+        <div data-mei-tour={tour} className={styles.shot}>
           <Image src={src} width={2880} height={1800} sizes="(min-width: 900px) 920px, 100vw" alt={alt} />
           <svg viewBox="0 0 1440 900" aria-hidden="true">
             <defs>

@@ -108,7 +108,7 @@ export default function ReviewFlow() {
           return (
             <div key={screen.step} className={styles.stage}>
               <p className={styles.step} style={{ left: pc(screen.stepAt ?? screen.x, W), bottom: pc(H - screen.y + 8, H) }}>{screen.step}</p>
-              <div data-tour={screen.tour} className={styles.screen} style={{ left: pc(screen.x, W), top: pc(screen.y, H), width: pc(cw * screen.scale, W), aspectRatio: `${cw} / ${ch}` }}>
+              <div data-mei-tour={screen.tour} className={styles.screen} style={{ left: pc(screen.x, W), top: pc(screen.y, H), width: pc(cw * screen.scale, W), aspectRatio: `${cw} / ${ch}` }}>
                 <Image src={screen.src} width={2880} height={1800} sizes="(min-width: 900px) 1000px, 250vw" alt={screen.alt}
                   style={{ width: pc(1440, cw), left: pc(-cx, cw), top: pc(-cy, ch) }} />
                 <svg viewBox={screen.crop.join(' ')} aria-hidden="true">
