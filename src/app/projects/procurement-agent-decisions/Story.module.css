@@ -13,6 +13,11 @@
 .pain { margin: 0; font-size: var(--case-text-16); line-height: 1.55; color: var(--case-copy); }
 .pain span { display: block; font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-muted); }
 
+.why { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-16); list-style: none; margin: var(--case-space-24) 0 0; padding: 0; }
+.why li { display: flex; flex-direction: column; align-items: flex-start; gap: var(--case-space-8); padding: var(--case-space-24); border-radius: var(--case-radius-sm); background: var(--case-surface); }
+.why .chip { background: var(--case-white); }
+.why .chip svg { width: var(--case-icon-evidence-size); height: var(--case-icon-evidence-size); }
+.answer { margin: 0; font-size: var(--case-text-16); line-height: 1.55; color: var(--case-ink); }
 .lead { display: flex; align-items: center; gap: var(--case-space-16); }
 .chip { display: grid; place-items: center; flex-shrink: 0; width: var(--case-button-height); height: var(--case-button-height); border-radius: 50%; background: var(--case-surface); color: var(--case-flow-link); }
 .chip svg { width: var(--case-space-24); height: var(--case-space-24); }
@@ -70,9 +75,6 @@
 .uses { list-style: none; display: flex; flex-wrap: wrap; gap: var(--case-space-8); margin: var(--case-space-16) 0 0; padding: 0; }
 .uses li { padding: var(--case-space-8) var(--case-space-16); border-radius: var(--case-radius-sm); background: var(--case-surface); font-size: var(--case-text-14); color: var(--case-ink); }
 
-.value { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--case-space-24); margin: 0; padding: var(--case-space-24); border-radius: var(--case-radius-sm); background: var(--case-surface); }
-.value dt { font-family: var(--case-font-heading); font-size: var(--case-text-14); text-transform: uppercase; color: var(--case-muted); }
-.value dd { margin: var(--case-space-8) 0 0; font-size: var(--case-text-16); line-height: 1.55; color: var(--case-ink); }
 
 .chevron { flex-shrink: 0; width: var(--case-space-24); height: var(--case-space-24); transition: transform var(--case-motion-fast) var(--case-ease); }
 button:hover > .chevron { transform: translateY(var(--case-space-4)); }
@@ -80,6 +82,6 @@ button[aria-expanded='true'] > .chevron { transform: rotate(180deg); }
 
 @media (max-width: 767px) {
   .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .why { grid-template-columns: minmax(0, 1fr); }
   .point { grid-template-columns: minmax(0, 1fr); gap: var(--case-space-8); }
-  .value { grid-template-columns: minmax(0, 1fr); }
 }

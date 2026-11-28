@@ -179,6 +179,8 @@ export default function LiveDemo({ src, title, script, label, onDriving, onDone,
     let rest = window.scrollY;
     const mark = () => { userAt = Date.now(); };
     const onScroll = () => {
+      // A guided tour moving the page counts as intended scrolling.
+      if (document.documentElement.dataset.guidedScroll !== undefined) { rest = window.scrollY; return; }
       if (Date.now() - userAt < 1000) { userAt = Date.now(); rest = window.scrollY; return; }
       if (Math.abs(window.scrollY - rest) > 1) window.scrollTo({ top: rest, behavior: 'instant' });
     };

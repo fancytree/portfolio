@@ -12,7 +12,25 @@ import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import { LOGO_PATHS } from "./logoPaths";
 import { SHELF_ASPECT, SHELF_EYE_Y, SHELF_TOOL_SCALE, SHELF_TOOL_Y, SHELF_WIDTH, TOOL_SLOTS, dropShare, type ToolFall, type ToolId } from "./toolLayout";
 
-export type Variant = "hero" | "contact" | "fish" | "portrait" | "tools" | "works";
+export type Variant = "hero" | "contact" | "fish" | "portrait" | "tools" | "works" | "head";
+
+/** One frame of the head's rig. Angles in radians; the rest roughly 0..1 or -1..1. */
+export type HeadPose = {
+  yaw: number; pitch: number; roll: number;
+  lift: number; squash: number;
+  eyeL: number; eyeR: number; happy: number;
+  gazeX: number; gazeY: number;
+  brow: number; browSkew: number; worry: number;
+  smile: number; mouthOpen: number; mouthWide: number;
+  blush: number;
+  hairX: number; hairZ: number;
+};
+export const NEUTRAL_HEAD: HeadPose = {
+  yaw: 0, pitch: 0, roll: 0, lift: 0, squash: 0,
+  eyeL: 1, eyeR: 1, happy: 0, gazeX: 0, gazeY: 0,
+  brow: 0, browSkew: 0, worry: 0,
+  smile: 0.6, mouthOpen: 0, mouthWide: 1, blush: 0, hairX: 0, hairZ: 0,
+};
 
 /** One project card in flight: its centre and size on screen (css px), its tilt, and whether it shows. */
 export type WorkCard = { x: number; y: number; w: number; h: number; turn: number; visible: boolean };
@@ -62,6 +80,8 @@ export type SceneHandle = {
   setRunnerHidden(hidden: boolean): void;
   /** Portrait only: how far she has come toward the camera (0 far … 1 bust), and where she looks (-1..1). */
   setPortrait(approach: number, lookX: number, lookY: number): void;
+  /** Head only: the rig's pose for the next frame. */
+  setHead(pose: HeadPose): void;
   /** Journey only: where each stage node is on screen, and how present it should be (0..1). */
   nodesScreen(): { x: number; y: number; k: number }[];
   dispose(): void;
@@ -767,6 +787,66 @@ type Person = {
   pose(phase: number, run: number, lookX: number, lookY: number, t: number): void;
 };
 
+/** Her hair, shared by the homepage figure and the head on its own. */
+function hairdo(head: THREE.Object3D) {
+  const hair = new THREE.Group();
+  head.add(hair);
+  const HAIR = M(0.12);
+  const lock = (g: THREE.Object3D, r: number, x: number, y: number, z: number, sx: number, sy: number, sz: number, seed: number) => {
+    const m = mesh(g, new THREE.IcosahedronGeometry(r, 1), HAIR, x, y, z);
+    m.scale.set(sx, sy, sz);
+    m.rotation.set(seed, seed * 1.9, seed * 0.7);
+    return m;
+  };
+  // Her hair, from the photograph: a full, wavy bob. It lifts at the crown, parts high
+  // on her right, and sweeps in one long curve across the forehead to her left temple.
+  // The sides swell outward from the cheekbones and are widest at the jaw, where the
+  // ends turn under in large soft curls, just clear of the shoulders.
+  // (+x is the viewer's right, which is her left: the side the fringe falls to.)
+  const mass = (g: THREE.Object3D, r: number, x: number, y: number, z: number, sx: number, sy: number, sz: number, tilt = 0) => {
+    const m = mesh(g, new THREE.IcosahedronGeometry(r, 2), HAIR, x, y, z); // smooth: a mass of hair, not a tuft
+    m.scale.set(sx, sy, sz);
+    m.rotation.z = tilt;
+    return m;
+  };
+  // volume over the crown, lifted at the roots
+  mass(hair, 0.19, 0, 0.085, -0.04, 1.02, 0.74, 1.0);
+  // the fringe: from the part, down and across to the far temple in one sweep
+  mass(hair, 0.095, 0.05, 0.132, 0.105, 1.6, 0.46, 0.6, -0.55);
+  mass(hair, 0.06, 0.138, 0.06, 0.085, 0.62, 1.2, 0.7, -0.12);
+  for (const [x, y] of [[0.0, 0.168], [0.045, 0.148], [0.09, 0.118]] as const) {
+    mesh(hair, box(0.075, 0.006, 0.006), M(0.5), x, y, 0.158 - x * 0.25, false).rotation.z = -0.55; // strands along the sweep
+  }
+  // the short side of the part, tucked back toward the ear
+  mass(hair, 0.05, -0.105, 0.162, 0.08, 1.05, 0.4, 0.6, 0.55);
+  const hairBack = new THREE.Group();
+  hairBack.position.set(0, 0.02, -0.11);
+  hair.add(hairBack);
+  mass(hairBack, 0.175, 0, -0.09, -0.01, 1.05, 1.08, 0.6);
+  mass(hairBack, 0.085, -0.09, -0.2, 0.0, 1.0, 0.7, 0.75);
+  mass(hairBack, 0.085, 0.09, -0.2, 0.0, 1.0, 0.7, 0.75);
+  // the sides: a smooth swell from the temple, widest at the jaw, the ends curled under
+  const hairSides = [-1, 1].map((side) => {
+    const g = new THREE.Group();
+    g.position.set(side * 0.15, 0.05, -0.01);
+    hair.add(g);
+    const fwd = side > 0 ? 0.025 : -0.015; // her left side falls forward over the cheek; her right is tucked behind the ear
+    mass(g, 0.085, side * 0.022, -0.05, fwd, 0.62, 1.45, 1.05, side * -0.1);
+    mass(g, 0.095, side * 0.05, -0.15, fwd, 0.82, 1.0, 1.05, side * -0.2);
+    // the curl at the end, level with the chin: a round turn under and in, with a wisp kicking out
+    mass(g, 0.055, side * 0.04, -0.235, fwd + 0.02, 1.15, 0.72, 0.95, side * 0.35);
+    lock(g, 0.034, side * 0.118, -0.205, fwd, 1.0, 0.7, 0.9, 3.3 + side).rotation.z = side * 0.8;
+    // a few lighter strands following the wave, so the mass reads as hair
+    for (const [dx, dy, len, tilt] of [[0.035, -0.06, 0.13, -0.12], [0.075, -0.13, 0.11, -0.3]] as const) {
+      mesh(g, box(0.007, len, 0.006), M(0.5), side * dx, dy, fwd + 0.088, false).rotation.z = side * tilt;
+    }
+    return g;
+  });
+  // hair throws no shadow of its own onto the face: at this size it only muddies it
+  hair.traverse((o) => (o.castShadow = false));
+  return { hair, hairBack, hairSides };
+}
+
 /**
  * Mei as a small traveller, drawn from her photograph: a full, wavy shoulder-length
  * bob parted to one side, a white camisole on thin straps, a fine chain with a
@@ -864,61 +944,7 @@ function person(parent: THREE.Object3D): Person {
   mesh(head, box(0.012, 0.03, 0.02), M(0.82), 0, -0.022, 0.157, false); // nose
   for (const sx of [-1, 1]) mesh(head, new THREE.SphereGeometry(0.013, 8, 6), M(1), sx * 0.15, -0.075, 0.03, false); // pearl studs
 
-  const hair = new THREE.Group();
-  head.add(hair);
-  const HAIR = M(0.12);
-  const lock = (g: THREE.Object3D, r: number, x: number, y: number, z: number, sx: number, sy: number, sz: number, seed: number) => {
-    const m = mesh(g, new THREE.IcosahedronGeometry(r, 1), HAIR, x, y, z);
-    m.scale.set(sx, sy, sz);
-    m.rotation.set(seed, seed * 1.9, seed * 0.7);
-    return m;
-  };
-  // Her hair, from the photograph: a full, wavy bob. It lifts at the crown, parts high
-  // on her right, and sweeps in one long curve across the forehead to her left temple.
-  // The sides swell outward from the cheekbones and are widest at the jaw, where the
-  // ends turn under in large soft curls, just clear of the shoulders.
-  // (+x is the viewer's right, which is her left: the side the fringe falls to.)
-  const mass = (g: THREE.Object3D, r: number, x: number, y: number, z: number, sx: number, sy: number, sz: number, tilt = 0) => {
-    const m = mesh(g, new THREE.IcosahedronGeometry(r, 2), HAIR, x, y, z); // smooth: a mass of hair, not a tuft
-    m.scale.set(sx, sy, sz);
-    m.rotation.z = tilt;
-    return m;
-  };
-  // volume over the crown, lifted at the roots
-  mass(hair, 0.19, 0, 0.085, -0.04, 1.02, 0.74, 1.0);
-  // the fringe: from the part, down and across to the far temple in one sweep
-  mass(hair, 0.095, 0.05, 0.132, 0.105, 1.6, 0.46, 0.6, -0.55);
-  mass(hair, 0.06, 0.138, 0.06, 0.085, 0.62, 1.2, 0.7, -0.12);
-  for (const [x, y] of [[0.0, 0.168], [0.045, 0.148], [0.09, 0.118]] as const) {
-    mesh(hair, box(0.075, 0.006, 0.006), M(0.5), x, y, 0.158 - x * 0.25, false).rotation.z = -0.55; // strands along the sweep
-  }
-  // the short side of the part, tucked back toward the ear
-  mass(hair, 0.05, -0.105, 0.162, 0.08, 1.05, 0.4, 0.6, 0.55);
-  const hairBack = new THREE.Group();
-  hairBack.position.set(0, 0.02, -0.11);
-  hair.add(hairBack);
-  mass(hairBack, 0.175, 0, -0.09, -0.01, 1.05, 1.08, 0.6);
-  mass(hairBack, 0.085, -0.09, -0.2, 0.0, 1.0, 0.7, 0.75);
-  mass(hairBack, 0.085, 0.09, -0.2, 0.0, 1.0, 0.7, 0.75);
-  // the sides: a smooth swell from the temple, widest at the jaw, the ends curled under
-  const hairSides = [-1, 1].map((side) => {
-    const g = new THREE.Group();
-    g.position.set(side * 0.15, 0.05, -0.01);
-    hair.add(g);
-    const fwd = side > 0 ? 0.025 : -0.015; // her left side falls forward over the cheek; her right is tucked behind the ear
-    mass(g, 0.085, side * 0.022, -0.05, fwd, 0.62, 1.45, 1.05, side * -0.1);
-    mass(g, 0.095, side * 0.05, -0.15, fwd, 0.82, 1.0, 1.05, side * -0.2);
-    // the curl at the end, level with the chin: a round turn under and in, with a wisp kicking out
-    mass(g, 0.055, side * 0.04, -0.235, fwd + 0.02, 1.15, 0.72, 0.95, side * 0.35);
-    lock(g, 0.034, side * 0.118, -0.205, fwd, 1.0, 0.7, 0.9, 3.3 + side).rotation.z = side * 0.8;
-    // a few lighter strands following the wave, so the mass reads as hair
-    for (const [dx, dy, len, tilt] of [[0.035, -0.06, 0.13, -0.12], [0.075, -0.13, 0.11, -0.3]] as const) {
-      mesh(g, box(0.007, len, 0.006), M(0.5), side * dx, dy, fwd + 0.088, false).rotation.z = side * tilt;
-    }
-    return g;
-  });
-  // hair throws no shadow of its own onto the face: at this size it only muddies it
-  hair.traverse((o) => (o.castShadow = false));
+  const { hairBack, hairSides } = hairdo(head);
 
   const pose = (phase: number, run: number, lookX: number, lookY: number, t: number) => {
     const sw = Math.sin(phase);
@@ -1133,6 +1159,7 @@ type Built = {
   leave?: () => void;
   enter?: () => void;
   portraitIn?: { approach: number; lookX: number; lookY: number };
+  headIn?: (pose: HeadPose) => void;
   dropIn?: number;
   /** Solid objects: the colour drawn where a surface carries no ink (r, g, b in 0..1). Without it, white is see-through. */
   paper?: [number, number, number];
@@ -2595,6 +2622,120 @@ function buildPortrait(scene: THREE.Scene): Built {
   };
 }
 
+/**
+ * Mei's head on its own, rigged so it can act: a neck to turn on, hair that follows
+ * through, and eyes, brows and mouth that move separately. Driven by setHead().
+ */
+function buildHead(scene: THREE.Scene): Built {
+  const neck = new THREE.Group(); // the pivot she nods and turns on, under the chin
+  neck.position.y = -0.13;
+  scene.add(neck);
+  const head = new THREE.Group();
+  head.position.y = 0.13;
+  neck.add(head);
+
+  const SKIN = M(0.985);
+  const LINE = M(0.05);
+  mesh(head, new THREE.IcosahedronGeometry(0.165, 3), SKIN, 0, 0, 0, false).scale.set(0.92, 1.08, 0.94);
+  mesh(head, box(0.012, 0.028, 0.02), M(0.82), 0, -0.022, 0.157, false); // nose
+  for (const sx of [-1, 1]) mesh(head, new THREE.SphereGeometry(0.013, 8, 6), M(1), sx * 0.15, -0.075, 0.03, false); // pearl studs
+  const { hairBack, hairSides } = hairdo(head);
+
+  const eyes = [-1, 1].map((side) => {
+    const g = new THREE.Group();
+    g.position.set(side * 0.058, 0.01, 0.148);
+    head.add(g);
+    const open = mesh(g, new THREE.SphereGeometry(0.022, 12, 10), LINE, 0, 0, 0, false);
+    const glint = mesh(g, new THREE.SphereGeometry(0.007, 8, 6), M(1), 0.007, 0.007, 0.016, false);
+    const lid = mesh(g, box(0.046, 0.01, 0.01), LINE, 0, 0, 0.006, false); // shut
+    const arc = new THREE.Group(); // smiling eyes: ^ ^
+    g.add(arc);
+    for (const sx of [-1, 1]) mesh(arc, box(0.028, 0.011, 0.01), LINE, sx * 0.011, 0, 0.008, false).rotation.z = -sx * 0.6;
+    return { g, open, glint, lid, arc };
+  });
+  const brows = [-1, 1].map((side) => mesh(head, box(0.048, 0.01, 0.01), M(0.12), side * 0.058, 0.046, 0.176, false));
+
+  // the mouth: closed, a line of short strokes that bends into a smile or a frown;
+  // open, a single dark shape in its place (a round one, or the grin below)
+  const mouth = new THREE.Group();
+  mouth.position.set(0, -0.074, 0.148);
+  head.add(mouth);
+  const lips = Array.from({ length: 7 }, () => mesh(mouth, box(1, 0.011, 0.012), M(0.15), 0, 0, 0, false));
+  const hole = mesh(mouth, new THREE.SphereGeometry(1, 16, 12), LINE, 0, 0, -0.002, false);
+  // open and smiling it is one shape instead: corners up, a shallow top, a round bottom
+  const cup = new THREE.Shape();
+  cup.moveTo(-1, 0);
+  cup.quadraticCurveTo(0, -0.34, 1, 0);
+  cup.bezierCurveTo(0.8, -1.32, -0.8, -1.32, -1, 0);
+  const grin = mesh(mouth, new THREE.ShapeGeometry(cup, 12), LINE, 0, 0, 0.004, false);
+  const blush = [-1, 1].map((side) => {
+    const g = new THREE.Group();
+    g.position.set(side * 0.092, -0.036, 0.132);
+    head.add(g);
+    for (let i = 0; i < 3; i++) mesh(g, box(0.006, 0.02, 0.004), M(0.45), (i - 1) * 0.014, 0, -Math.abs(i - 1) * 0.003, false).rotation.z = -0.5;
+    return g;
+  });
+
+  const pose = (p: HeadPose) => {
+    neck.rotation.set(p.pitch, p.yaw, p.roll);
+    neck.position.y = -0.13 + p.lift;
+    neck.scale.set(1 - p.squash * 0.5, 1 + p.squash, 1);
+    eyes.forEach((eye, i) => {
+      const open = THREE.MathUtils.clamp(i ? p.eyeR : p.eyeL, 0, 1.35);
+      const happy = p.happy > 0.5;
+      const shut = !happy && open < 0.18;
+      eye.g.position.x = (i ? 1 : -1) * 0.058 + p.gazeX * 0.012;
+      eye.g.position.y = 0.01 + p.gazeY * 0.009;
+      eye.arc.visible = happy;
+      eye.lid.visible = shut;
+      eye.open.visible = eye.glint.visible = !happy && !shut;
+      eye.open.scale.set(1.05, 1.02 * open, 0.6);
+      eye.glint.position.y = 0.007 * open;
+    });
+    brows.forEach((brow, i) => {
+      const side = i ? 1 : -1;
+      brow.position.y = 0.046 + p.brow * 0.022 + side * p.browSkew * 0.012;
+      brow.rotation.z = side * (-0.12 + p.worry * 0.45);
+    });
+    const half = 0.04 * p.mouthWide;
+    const curve = (x: number) => p.smile * 0.024 * ((x / half) ** 2 - 0.35);
+    const gape = THREE.MathUtils.clamp(p.mouthOpen, 0, 1);
+    const talking = gape > 0.08;
+    const grinning = talking && p.smile > 0.4;
+    lips.forEach((lip, i) => {
+      lip.visible = !talking;
+      const w = (half * 2) / lips.length;
+      const x = -half + w * (i + 0.5);
+      lip.position.set(x, curve(x), -Math.abs(x) * 0.08);
+      lip.rotation.z = Math.atan(p.smile * 0.048 * (x / half ** 2));
+      lip.scale.x = w * 1.25;
+    });
+    grin.visible = grinning;
+    grin.position.y = 0.006;
+    grin.scale.set(half * 0.92, 0.012 + gape * 0.042, 1);
+    hole.visible = talking && !grinning;
+    hole.position.set(0, -gape * 0.006, 0.002);
+    hole.scale.set(half * 0.82, 0.005 + gape * 0.025, 0.008);
+    blush.forEach((g) => (g.visible = p.blush > 0.5));
+    hairBack.rotation.set(p.hairX * 0.7, 0, p.hairZ * 0.5);
+    hairSides.forEach((panel) => panel.rotation.set(p.hairX * 0.6, 0, p.hairZ));
+  };
+  let current = NEUTRAL_HEAD;
+  return {
+    camPos: new THREE.Vector3(0, -0.01, 1.26),
+    target: new THREE.Vector3(0, -0.01, 0),
+    fov: 30,
+    mute: 1e6,
+    shadowTarget: new THREE.Vector3(0, 0, 0),
+    lightFrom: new THREE.Vector3(-3.2, 4.2, 8),
+    narrow: false,
+    plain: true,
+    paper: [1, 1, 1], // solid, so the page never shows through her face
+    headIn: (next: HeadPose) => (current = next),
+    update: () => pose(current),
+  };
+}
+
 /** Cathedral front with its neighbours; built around the origin, facing +z. */
 function city(parent: THREE.Object3D) {
   const g = new THREE.Group();
@@ -2845,6 +2986,8 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
         ? buildFishOverlay(scene)
         : variant === "portrait"
           ? buildPortrait(scene)
+          : variant === "head"
+            ? buildHead(scene)
           : variant === "tools"
             ? buildTools(scene)
             : variant === "works"
@@ -3135,6 +3278,9 @@ export function createScene(variant: Variant, canvas: HTMLCanvasElement): SceneH
     },
     setRunnerHidden(hidden) {
       built.hideRunner?.(hidden);
+    },
+    setHead(pose) {
+      built.headIn?.(pose);
     },
     setPortrait(approach, lookX, lookY) {
       if (built.portraitIn) built.portraitIn = { approach, lookX, lookY };

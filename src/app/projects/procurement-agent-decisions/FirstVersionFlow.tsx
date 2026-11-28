@@ -1,6 +1,7 @@
 /**
  * Version 1 on one purchase record: where AI took part, what it did,
- * and what was still lost. Same SVG language as the other procurement diagrams.
+ * and (with `showLost`) what was still lost. Same SVG language as the other
+ * procurement diagrams.
  */
 import { Sparkles } from 'lucide-react';
 import { FlowPulse } from '../procurement-agent-kit/ProcurementFlowDiagrams';
@@ -45,17 +46,18 @@ const LOWER = 180;
 const CROSS = ['M280 216 H320 V120 H358', 'M600 216 H640 V120 H678'] as const;
 const pulse = ['M160 156 V178', CROSS[0], 'M480 156 V178', CROSS[1], 'M800 156 V178'];
 
-export default function FirstVersionFlow() {
-  const id = 'procurement-v1';
+export default function FirstVersionFlow({ showLost = false }: { showLost?: boolean }) {
+  const id = showLost ? 'procurement-v1-lost' : 'procurement-v1';
+  const height = showLost ? 476 : 340;
   return (
     <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="Where AI took part in version 1; scroll horizontally on small screens">
-      <svg viewBox="0 0 960 476" role="img" aria-labelledby={`${id}-t ${id}-d`}>
-        <title id={`${id}-t`}>Version 1: AI compared documents, and context was still lost</title>
-        <desc id={`${id}-d`}>The buyer drafts the order from three months of sales. AI compares the supplier confirmation with the draft and flags differences, which the buyer checks. At receiving, AI compares the delivery note and flags short or missing goods. Still lost: demand hidden by stockouts, seasons and customer growth; which shortages repeat; and what went differently never reaches the next order.</desc>
+      <svg viewBox={`0 0 960 ${height}`} role="img" aria-labelledby={`${id}-t ${id}-d`}>
+        <title id={`${id}-t`}>{showLost ? 'Version 1: AI compared documents, and context was still lost' : 'Version 1: one purchase record, with AI at two checks'}</title>
+        <desc id={`${id}-d`}>The buyer drafts the order from three months of sales. AI compares the supplier confirmation with the draft and flags differences, which the buyer checks. At receiving, AI compares the delivery note and flags short or missing goods.{showLost && ' Still lost: demand hidden by stockouts, seasons and customer growth; which shortages repeat; and what went differently never reaches the next order.'}</desc>
         <defs>
           <marker id={`${id}-a`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill={LINK} /></marker>
         </defs>
-        <rect width="960" height="476" fill="var(--case-white)" />
+        <rect width="960" height={height} fill="var(--case-white)" />
 
         {ZONES.map((zone) => (
           <g key={zone.label}>
@@ -85,7 +87,7 @@ export default function FirstVersionFlow() {
         }))}
 
         {/* What leaves the record at each stage. */}
-        {ZONES.map((zone, i) => (
+        {showLost && ZONES.map((zone, i) => (
           <g key={zone.label}>
             <path className={styles.carry} d={`M${zone.x + 136} 272 V304`} stroke={BREAK} strokeWidth="var(--case-focus-width)" strokeDasharray="5 4" />
             <circle className={`${styles.ring} ${i % 2 ? styles.ringLate : ''}`} cx={zone.x + 136} cy="288" r="10" fill="none" stroke={BREAK} />
@@ -98,13 +100,15 @@ export default function FirstVersionFlow() {
           </g>
         ))}
 
-        <g fontFamily={BODY} fontSize={SIZE} fill="var(--case-copy)">
+        <g fontFamily={BODY} fontSize={SIZE} fill="var(--case-copy)" transform={`translate(0 ${height - 476})`}>
           <AiBadge x={24} y={438} />
           <text x="90" y="454">AI takes part: it compares documents</text>
           <rect x="368" y="441" width="22" height="16" rx="4" fill="var(--case-white)" stroke="var(--case-ink)" strokeWidth="var(--case-focus-width)" />
           <text x="402" y="454">A person judges</text>
-          <path d="M572 449 H620" stroke={BREAK} strokeWidth="var(--case-focus-width)" strokeDasharray="5 4" />
-          <text x="634" y="454" fill={BREAK}>Context drops out of the record</text>
+          {showLost && <>
+            <path d="M572 449 H620" stroke={BREAK} strokeWidth="var(--case-focus-width)" strokeDasharray="5 4" />
+            <text x="634" y="454" fill={BREAK}>Context drops out of the record</text>
+          </>}
         </g>
       </svg>
     </div>

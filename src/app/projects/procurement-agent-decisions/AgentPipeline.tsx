@@ -42,8 +42,8 @@ export default function AgentPipeline() {
   return (
     <div className="case-diagram-scroll" tabIndex={0} role="region" aria-label="The whole Agent flow; scroll horizontally on small screens">
       <svg viewBox="0 -28 960 468" role="img" aria-labelledby={`${id}-t ${id}-d`}>
-        <title id={`${id}-t`}>Six stages of the Agent, the data each reads, and where you step in</title>
-        <desc id={`${id}-d`}>{STAGES.map((s, i) => `Stage ${i + 1}, ${s.name.toLowerCase()}: reads ${s.data.toLowerCase()}; you ${s.you.toLowerCase()}${s.when ? ` ${s.when}` : ''}.`).join(' ')} What you keep feeds the next plan. The Agent never places the order.</desc>
+        <title id={`${id}-t`}>Six stages of the Agent, the data each reads, and where the user steps in</title>
+        <desc id={`${id}-d`}>{STAGES.map((s, i) => `Stage ${i + 1}, ${s.name.toLowerCase()}: reads ${s.data.toLowerCase()}; the user step is ${s.you.toLowerCase()}${s.when ? ` ${s.when}` : ''}.`).join(' ')} What the user keeps feeds the next plan. The Agent never places the order.</desc>
         <defs>
           <marker id={`${id}-a`} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill={LINK} /></marker>
         </defs>
@@ -54,7 +54,7 @@ export default function AgentPipeline() {
           <path d={LOOP} strokeDasharray="6 5" />
         </g>
         <FlowPulse id={`${id}-p`} paths={[...TRUNK, LOOP]} speed={300} />
-        <text x="560" y="12" textAnchor="middle" fill={LINK} fontFamily={BODY} fontSize={SIZE}>what you keep feeds the next plan</text>
+        <text x="560" y="12" textAnchor="middle" fill={LINK} fontFamily={BODY} fontSize={SIZE}>what the user keeps feeds the next plan</text>
 
         {STAGES.map((s, i) => (
           <g key={s.name} textAnchor="middle" fontFamily={BODY} fontSize={SIZE}>
@@ -82,7 +82,7 @@ export default function AgentPipeline() {
         <g fontFamily={BODY} fontSize={SIZE} fill={COPY}>
           <circle cx="230" cy="420" r="8" fill="var(--case-surface)" /><text x="246" y="425">Data it reads</text>
           <circle cx="390" cy="420" r="8" fill="var(--case-white)" stroke={LINK} strokeWidth="var(--case-focus-width)" /><text x="406" y="425">Agent stage</text>
-          <circle cx="548" cy="420" r="8" fill={INK} /><text x="564" y="425">You</text>
+          <circle cx="548" cy="420" r="8" fill={INK} /><text x="564" y="425">User</text>
           <path d="M634 420 H668" stroke={INK} strokeWidth="var(--case-focus-width)" strokeDasharray="5 4" /><text x="678" y="425">Only when needed</text>
         </g>
       </svg>

@@ -159,10 +159,14 @@ const items: ShowcaseItem[] = [
 ];
 
 /** steps: play only these steps (zero-based), for a page that places one beside the decision it shows. */
-export default function AgentLiveDemo({ steps }: { steps?: number[] } = {}) {
+/** `edit`: lets another page word a step differently without changing this one's. */
+type Edit = (item: ShowcaseItem) => ShowcaseItem;
+
+export default function AgentLiveDemo({ steps, edit }: { steps?: number[]; edit?: Edit } = {}) {
+  const chosen = steps ? steps.map((i) => items[i]) : items;
   return (
     <LiveShowcase
-      items={steps ? steps.map((i) => items[i]) : items}
+      items={edit ? chosen.map(edit) : chosen}
       src={WORKSPACE}
       label="procurement agent"
       title="DEF ERP — Procurement Agent, live demonstration data"
@@ -254,10 +258,11 @@ const evaluation: ShowcaseItem[] = [
   },
 ];
 
-export function AgentEvaluationLiveDemo({ steps }: { steps?: number[] } = {}) {
+export function AgentEvaluationLiveDemo({ steps, edit }: { steps?: number[]; edit?: Edit } = {}) {
+  const chosen = steps ? steps.map((i) => evaluation[i]) : evaluation;
   return (
     <LiveShowcase
-      items={steps ? steps.map((i) => evaluation[i]) : evaluation}
+      items={edit ? chosen.map(edit) : chosen}
       src={V1}
       label="plan accuracy"
       title="DEF ERP — Procurement Agent plan accuracy, demonstration data"

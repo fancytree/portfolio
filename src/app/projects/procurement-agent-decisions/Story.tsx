@@ -1,3 +1,4 @@
+import { Calculator, Files, History } from 'lucide-react';
 import styles from './Story.module.css';
 
 /** The four stages of my Agent UX map. Each step below names the ones it used. */
@@ -8,14 +9,24 @@ export const PRINCIPLES = [
   { id: 4, phase: 'Over time', rule: 'Remember, and show up at the right time.' },
 ] as const;
 
-/** What the design means to the person using it. */
-export function ForTheBuyer({ need, help, act }: { need: string; help: string; act: string }) {
+/** What a purchase decision asks of the buyer, and the part an Agent takes over. */
+const WHY = [
+  { Icon: Files, load: 'Many places to read', agent: 'It gathers sales, stock, and supplier terms for this purchase.' },
+  { Icon: Calculator, load: 'A sum for every product', agent: 'It calls a calculation engine and shows the reason on each line.' },
+  { Icon: History, load: 'Lessons kept in one head', agent: 'It keeps the user’s review, so the next plan starts from it.' },
+] as const;
+
+export function WhyAgent() {
   return (
-    <dl className={styles.value}>
-      <div><dt>Why you need it</dt><dd>{need}</dd></div>
-      <div><dt>How it helps</dt><dd>{help}</dd></div>
-      <div><dt>What you do</dt><dd>{act}</dd></div>
-    </dl>
+    <ul className={styles.why}>
+      {WHY.map(({ Icon, load, agent }) => (
+        <li key={load}>
+          <span className={styles.chip}><Icon aria-hidden="true" /></span>
+          <p className={styles.name}>{load}</p>
+          <p className={styles.answer}>{agent}</p>
+        </li>
+      ))}
+    </ul>
   );
 }
 

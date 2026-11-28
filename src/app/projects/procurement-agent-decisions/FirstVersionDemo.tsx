@@ -10,11 +10,11 @@ import { collapseNewSidebar, purchasing } from '../def-erp-kit/ErpLiveDemo';
 
 /** [step in the ERP purchasing demo, title, body] */
 const STEPS: [number, string, string][] = [
-  [0, 'Draft your order', 'Set quantities from recent sales and stock. **The decision is yours**: nothing here suggests a number.'],
-  [2, 'AI checks the confirmation', 'Upload the supplier PDF. **AI reads it and marks what changed**, so you only look at those lines.'],
+  [0, 'Draft the order', 'Set quantities from recent sales and stock. **The decision is the user’s**: nothing here suggests a number.'],
+  [2, 'AI checks the confirmation', 'Upload the supplier PDF. **AI reads it and marks what changed**, so the user only looks at those lines.'],
   [3, 'AI checks the delivery', 'Upload the delivery note. **AI compares it with the confirmation** and flags short or extra goods.'],
-  [4, 'Settle each exception', 'For goods you never confirmed, **choose to return them, keep a gift, or stock them in**.'],
-  [5, 'Close what is missing', 'Wait, flag a delay, close, or return. **You always know what is still open.**'],
+  [4, 'Settle each exception', 'For goods never confirmed, **choose to return them, keep a gift, or stock them in**.'],
+  [5, 'Close what is missing', 'Wait, flag a delay, close, or return. **The user always knows what is still open.**'],
 ];
 const items: ShowcaseItem[] = STEPS.map(([i, title, body]) => ({ ...purchasing[i], title, body }));
 

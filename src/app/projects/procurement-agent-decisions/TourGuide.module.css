@@ -1,0 +1,54 @@
+/* The guide: Mei in the bottom-right corner, speaking in a bubble beside her,
+   and ducking to the edge when told "not now". */
+.guide { position: fixed; inset: auto 0 0 auto; z-index: 900; pointer-events: none; font-family: var(--case-font-body); }
+.me { position: fixed; right: var(--case-space-24); bottom: var(--case-space-24); pointer-events: auto; transition: transform var(--case-motion-fast) var(--case-ease); }
+/* Just her head, standing on the page with no frame. */
+.me .tap { width: 144px; height: 144px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--case-ink); }
+.me .tap:hover { background: transparent; }
+/* The scene sizes its own canvas inline, so the frame's size has to win. */
+.avatar { display: block; width: 100% !important; height: 100% !important; image-rendering: pixelated; }
+.away .me { transform: translateY(200%); }
+.hidden .me { transform: translateX(60%); }
+.hidden .me:hover, .hidden .me:focus-within { transform: translateX(20%); }
+/* The homepage's language: paper, an ink rule, a hard offset shadow, mono labels,
+   square buttons. The same card as the stages along the river. */
+/* Pinned to the top left of her hair: the head's frame has empty room round it. */
+.peekHint { position: absolute; right: calc(100% - var(--case-space-32) - var(--case-space-8)); top: var(--case-space-8); padding: var(--case-space-8); border: 2px solid var(--case-ink); background: var(--case-ink); color: var(--case-white); font-family: var(--case-font-code); font-size: var(--case-text-12); line-height: 1; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+.bubble { position: fixed; right: calc(var(--case-space-24) * 2 + 120px); bottom: var(--case-space-24); width: min(360px, calc(100vw - var(--case-space-32))); display: flex; flex-direction: column; box-sizing: border-box; border: 1px solid var(--case-ink); border-radius: var(--case-radius-sm); background: var(--case-paper); color: var(--case-ink); pointer-events: auto; box-shadow: 5px 5px 0 var(--case-ink); animation: bubbleIn 0.32s steps(4); }
+/* the stem that points to her */
+.bubble::after { content: ""; position: absolute; left: 100%; bottom: var(--case-space-64); width: var(--case-space-8); height: 1px; margin-left: 5px; background: var(--case-ink); }
+.bubble p { margin: 0; min-height: 3em; padding: var(--case-space-16); font-size: var(--case-text-16); line-height: 1.5; white-space: pre-line; }
+.bubble p strong { font-weight: var(--case-weight-strong); }
+.caret { display: inline-block; width: var(--case-space-8); height: 1.05em; margin-left: 2px; vertical-align: -2px; background: var(--case-ink); animation: blink 0.8s steps(1) infinite; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: var(--case-space-8); padding: 0 var(--case-space-16) var(--case-space-16); }
+.row button { border: 1px solid var(--case-ink); border-radius: var(--case-radius-none); background: transparent; color: var(--case-ink); font-family: var(--case-font-code); font-size: var(--case-text-12); font-weight: var(--case-weight-regular); letter-spacing: 0.06em; text-transform: uppercase; }
+/* Two classes, so the side padding holds against the case kit's own text button. */
+.bubble .row > button { min-height: var(--case-button-height); padding: 0 var(--case-space-24); }
+.row button:hover { background: var(--case-ink); color: var(--case-white); }
+/* Not now: a ghost, text only until it is pointed at. */
+.bubble .row > button:first-child { border-color: transparent; background: transparent; color: var(--case-muted); }
+.bubble .row > button:first-child:hover { background: var(--case-surface); color: var(--case-ink); }
+.row > button:last-child { background: var(--case-ink); color: var(--case-white); }
+.row > button:last-child:hover { background: var(--case-copy); }
+.count { font-family: var(--case-font-code); font-size: var(--case-text-12); letter-spacing: 0.04em; color: var(--case-muted); }
+.controls { display: flex; gap: var(--case-space-8); margin-left: auto; }
+
+/* The part of the page being talked about: ruled off in ink, as on the homepage. */
+:global([data-tour]) { outline: 2px dashed transparent; outline-offset: var(--case-space-8); transition: outline-color 0.2s steps(4); }
+:global([data-tour-on]) { outline-color: var(--case-ink); }
+
+@keyframes bubbleIn { from { opacity: 0; transform: translateY(var(--case-space-8)); } }
+@keyframes blink { 50% { opacity: 0; } }
+
+@media (max-width: 640px) {
+  .me { right: var(--case-space-16); bottom: var(--case-space-16); }
+  .me .tap { width: 96px; height: 96px; }
+  .peekHint { right: calc(100% - var(--case-space-24)); top: 0; }
+  .bubble { right: var(--case-space-16); left: var(--case-space-16); bottom: calc(96px + var(--case-space-16)); width: auto; }
+  /* here she stands below the card, so the stem points down */
+  .bubble::after { left: auto; right: var(--case-space-32); top: 100%; bottom: auto; width: 1px; height: var(--case-space-8); margin: 5px 0 0; }
+  .bubble p { font-size: var(--case-text-14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .me, .bubble, .caret { transition: none; animation: none; }
+}

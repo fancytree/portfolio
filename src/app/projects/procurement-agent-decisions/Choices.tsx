@@ -1,5 +1,7 @@
 /** Design exploration for version 2: three directions per question, what each gains and costs. */
 import { Check, X } from 'lucide-react';
+import EntryPoints from './EntryPoints';
+import TrustEvidence from './TrustEvidence';
 import { PRINCIPLES } from './Story';
 import { SKETCHES } from './Sketches';
 import styles from './Visual.module.css';
@@ -24,37 +26,33 @@ const QUESTIONS: { question: string; principle: number; decision: string; direct
       { sketch: 'onePlan', name: 'One plan with reasons', gain: 'Fast to check and edit.', cost: 'The Agent must defend a single answer.', chosen: true },
     ],
   },
-  {
-    question: 'Where must the Agent stop?', principle: 2,
-    decision: 'Ordering creates a real commitment outside the platform. The Agent prepares it and a person makes it.',
-    directions: [
-      { sketch: 'autoOrder', name: 'Order below a threshold', gain: 'Least manual work.', cost: 'No accuracy data to justify it.' },
-      { sketch: 'approveSends', name: 'Approval places the order', gain: 'One click.', cost: 'Mixes accepting a risk with carrying it out.' },
-      { sketch: 'personOrders', name: 'A person orders outside', gain: 'Responsibility stays clear.', cost: 'One manual step stays.', chosen: true },
-    ],
-  },
 ];
 
 export default function Choices() {
   return (
     <>
-      {QUESTIONS.map((item) => (
+      {QUESTIONS.map((item, n) => (
         <section key={item.question} className={styles.exploration} aria-label={item.question}>
-          <h3 className={styles.question}>{item.question}</h3>
-          <ol className={styles.directions}>
-            {item.directions.map((d, i) => (
-              <li key={d.name} className={d.chosen ? styles.chosen : undefined}>
-                {SKETCHES[d.sketch]}
-                <p className={styles.name}>
-                  {d.chosen ? <Check aria-hidden="true" /> : <X aria-hidden="true" />}
-                  {String.fromCharCode(65 + i)} · {d.name}
-                  {d.chosen ? <em>Chosen</em> : null}
-                </p>
-                <dl><dt>Gain</dt><dd>{d.gain}</dd><dt>Cost</dt><dd>{d.cost}</dd></dl>
-              </li>
-            ))}
-          </ol>
-          <p className={styles.decision}><span>{PRINCIPLES[item.principle - 1].phase} · {PRINCIPLES[item.principle - 1].rule}</span>{item.decision}</p>
+          <div data-tour={`choice-${n + 1}`} className={styles.exploration}>
+            <h3 className={styles.question}>{item.question}</h3>
+            <ol className={styles.directions}>
+              {item.directions.map((d, i) => (
+                <li key={d.name} className={d.chosen ? styles.chosen : undefined}>
+                  {SKETCHES[d.sketch]}
+                  <p className={styles.name}>
+                    {d.chosen ? <Check aria-hidden="true" /> : <X aria-hidden="true" />}
+                    {String.fromCharCode(65 + i)} · {d.name}
+                    {d.chosen ? <em>Chosen</em> : null}
+                  </p>
+                  <dl><dt>Gain</dt><dd>{d.gain}</dd><dt>Cost</dt><dd>{d.cost}</dd></dl>
+                </li>
+              ))}
+            </ol>
+            <p className={styles.decision}><span>{PRINCIPLES[item.principle - 1].phase} · {PRINCIPLES[item.principle - 1].rule}</span>{item.decision}</p>
+          </div>
+          {/* Where the first two answers show up on screen. */}
+          {n === 0 ? <div data-tour="entries"><EntryPoints /></div> : null}
+          {n === 1 ? <TrustEvidence /> : null}
         </section>
       ))}
     </>

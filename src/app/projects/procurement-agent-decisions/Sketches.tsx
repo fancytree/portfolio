@@ -76,28 +76,4 @@ export const SKETCHES = {
       <Box x={94} y={86} w={130} h={44} fill={FILL} /><Text x={159} y={103}>sales − stock</Text><Text x={159} y={120} color={MUTED}>+ lead time</Text>
     </Frame>
   ),
-  autoOrder: (
-    <Frame label="the Agent sends small orders by itself">
-      <Box x={14} y={50} w={78} h={50} /><Text x={53} y={72}>Draft</Text><Text x={53} y={89} color={MUTED}>under €…</Text>
-      <path d="M94 75 H142" stroke={INK} strokeWidth="2" strokeDasharray="5 4" /><path d="M142 70 L150 75 L142 80 Z" fill={INK} />
-      <Box x={152} y={50} w={74} h={50} fill={INK} /><Text x={189} y={80} color={WHITE}>Sent</Text>
-      <Text x={120} y={124} color={MUTED}>no one checks</Text>
-    </Frame>
-  ),
-  approveSends: (
-    <Frame label="one button that approves and places the order">
-      <Box x={40} y={18} w={160} h={114} /><Bar x={56} y={34} w={90} color={INK} /><Rows x={56} y={52} w={128} n={3} />
-      <Box x={56} y={104} w={128} h={20} fill={INK} /><Text x={120} y={118} color={WHITE}>Approve &amp; order</Text>
-    </Frame>
-  ),
-  personOrders: (
-    <Frame label="export the request, order outside, then record it">
-      <Box x={10} y={20} w={76} h={54} /><Text x={48} y={42}>Request</Text><Text x={48} y={60} color={MUTED}>file</Text>
-      <path d="M88 47 H146" stroke={INK} strokeWidth="2" /><path d="M146 42 L154 47 L146 52 Z" fill={INK} />
-      <Text x={120} y={36} color={MUTED}>you send</Text>
-      <Box x={156} y={20} w={74} h={54} /><Text x={193} y={52}>Supplier</Text>
-      <path d="M193 76 V112 H152" fill="none" stroke={INK} strokeWidth="2" /><path d="M152 107 L144 112 L152 117 Z" fill={INK} />
-      <Box x={20} y={100} w={122} h={26} accent /><Text x={81} y={118} color={LINK}>Record as ordered</Text>
-    </Frame>
-  ),
 };
